@@ -72,11 +72,12 @@ import type {
 } from '@application/ports';
 import { checkLevelAvailability } from '@application/use-cases/level-availability';
 import {
-  exportProgress,
   loadProgress,
   saveProgress,
   type SaveProgressDeps,
 } from '@application/use-cases/save-progress';
+import type { SaveTransferOptions } from '@ui/save-transfer';
+import { downloadSaveFile, saveTransferOptions } from './save-transfer';
 import { defaultSettings, withSettings } from '@domain/entities/player';
 import { reachLevelEnd } from '@domain/entities/level-end';
 import {
@@ -658,8 +659,16 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
 
   let entries = entriesNow();
 
+  /**
+   * Held while a save file replaces the save, and for good once it has
+   * (ADR-0046): the game in memory is then the one the file replaced, and
+   * writing it would put the old game back over the file before the restart.
+   */
+  let writesHeld = false;
+
   /** Write the game down. Nothing waits for it and a failure never stops play. */
   const persist = (): void => {
+    if (writesHeld) return;
     void saveProgress(save, progress).then((written) => {
       if (written.ok) {
         examEvents.emit('progress/saved');
@@ -721,26 +730,36 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     };
   };
 
+  /**
+   * "Save to a file" and "Open a file" (`TN-SAVE-06`, ADR-0046), handed to
+   * Settings on the title screen and in a level. `./save-transfer.ts` says why a
+   * replacement holds the game's own saves and then starts the game again.
+   */
+  const saveTransfer: SaveTransferOptions = saveTransferOptions({
+    deps: { ...save, maxImportBytes: rules.maxImportBytes },
+    progress: () => progress,
+    writes: {
+      hold: () => {
+        writesHeld = true;
+      },
+      release: () => {
+        writesHeld = false;
+      },
+    },
+    download: (file) => {
+      downloadSaveFile(document, file);
+    },
+    restart: () => {
+      window.location.reload();
+    },
+  });
 
   /**
    * `TN-TITLE-04` and `TN-HUD-03`: the way out the storage warning has to offer.
-   *
-   * A `Blob` and an object URL rather than a `data:` URI: a save can be larger
-   * than some browsers allow in a URL, and the object URL is revoked as soon as
-   * the click has been dispatched.
+   * The same file Settings' "Save to a file" makes, made the same way.
    */
   const exportSave = (): void => {
-    const encoded = exportProgress(save, progress);
-    if (!encoded.ok) {
-      console.error(`[bootstrap] the save could not be exported. ${encoded.error.code}`);
-      return;
-    }
-    const url = URL.createObjectURL(new Blob([encoded.value], { type: 'application/json' }));
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'truenorth-save.json';
-    link.click();
-    URL.revokeObjectURL(url);
+    saveTransfer.onExport();
   };
 
   /* ------------------------------------------------------- the character */
@@ -845,6 +864,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
        `app/ui` never reads the save, so the field is handed to it. */
     lastPlayedLevelId: progress.lastPlayedLevelId,
     onExportSave: exportSave,
+    saveTransfer,
     creator: {
       slots: creatorSlots,
       required: progress.character === null,
@@ -1269,6 +1289,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       questions: studySource,
       record: recordAnswer,
       onExportSave: exportSave,
+      saveTransfer,
       /*
        * Reaching the end of the level earns its stamp **only when the level's
        * task is done** (ADR-0036).
@@ -1629,6 +1650,8 @@ interface LevelWiring {
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   readonly onExportSave: () => void;
+  /** Settings' "Your progress" section, the same one the title screen's Settings draws (ADR-0046). */
+  readonly saveTransfer?: SaveTransferOptions;
   /**
    * The player reached the end of the world: decide what that is worth, write
    * the stamp if it earned one, and say which it was.
@@ -1916,6 +1939,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     settings ??= createSettingsScreen(hud.main, {
       store,
       announce: wiring.announce,
+      ...(wiring.saveTransfer === undefined ? {} : { saveTransfer: wiring.saveTransfer }),
       onClose: () => {
         settings?.hide();
         pause.release('settings');

@@ -492,11 +492,35 @@ const screen = params.get('screen') ?? 'settings';
 
 switch (screen) {
   case 'settings': {
+    /*
+     * `?save=1` draws "Your progress" (`TN-SAVE-06`, ADR-0046). The file chosen
+     * decides the answer, so `tests/a11y/save-transfer.spec.ts` reaches every
+     * state through the real file input: a file containing `"newer"` is a save
+     * from a newer build, one containing `"version"` is a save, and anything
+     * else is refused as unreadable. `?saved=0` makes the replacement fail, and
+     * "Continue" marks `<html>` rather than reloading the harness.
+     */
+    const saveTransfer: Parameters<typeof createSettingsScreen>[1]['saveTransfer'] =
+      params.get('save') === '1'
+        ? {
+            onExport: () => undefined,
+            onImport: async (file) => {
+              const contents = await file.text();
+              if (contents.includes('"newer"')) return { kind: 'refused', reason: 'newer' };
+              if (!contents.includes('"version"')) return { kind: 'refused', reason: 'unreadable' };
+              return { kind: 'ready', replace: () => Promise.resolve(params.get('saved') !== '0') };
+            },
+            onRestart: () => {
+              document.documentElement.setAttribute('data-tn-harness-restarted', 'true');
+            },
+          }
+        : undefined;
     createSettingsScreen(ui, {
       store,
       announce,
       onClose: () => undefined,
       showSound: params.get('sound') === '1',
+      ...(saveTransfer === undefined ? {} : { saveTransfer }),
     }).show();
     break;
   }

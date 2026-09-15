@@ -674,6 +674,34 @@ const EN = {
   'storage.warning.help':
     'You can keep playing, but everything will be gone when you close the tab.',
   'save.export': 'Save to a file',
+  /* The rest of `TN-SAVE-06`'s rows, drawn by the "Your progress" section of
+     Settings (ADR-0046). `save.newer.title` is `TN-SAVE-04`'s sentence about a
+     saved game from a newer build, and a file from a newer build is the same
+     fact, so the same row says it. */
+  'save.import': 'Open a file',
+  'save.import.error': 'We could not read that file.',
+  'save.import.tooBig': 'That file is too big.',
+  'save.import.done': 'Your game is back.',
+  'save.newer.title': 'This saved game is from a newer version.',
+  /* **Written by app/ui and listed in {@link COPY_GAPS}** (ADR-0046): no story
+     table carries the section's heading and reading line, the confirmation's
+     question, cost and two answers, the sentence under each refusal, or the
+     dialog that starts the game again from the file. The refusal sentences say
+     what to do next, never what the player did: choose another file, update the
+     game, or nothing at all because nothing changed. "Keep my progress" rather
+     than "Cancel", so the safe answer names what it keeps. */
+  'save.section': 'Your progress',
+  'save.section.help': 'Keep a copy in a file, or bring your progress from another device.',
+  'save.import.confirm': 'Replace your progress with this file?',
+  'save.import.confirm.body':
+    'Your progress and settings on this device will be replaced by the ones in the file.',
+  'save.import.replace': 'Replace',
+  'save.import.keep': 'Keep my progress',
+  'save.import.error.help': 'Choose a file that was saved from this game.',
+  'save.import.newer.help': 'Update the game, then open the file again.',
+  'save.import.notSaved.help': 'Nothing was changed.',
+  'save.import.done.help': 'The game will start again with the progress from your file.',
+  'save.import.continue': 'Continue',
 
   /* docs/stories/TN-MOVE-locomotion-labels.md */
   /* A mode label belongs to the **mode**, not to the level that uses it: `walk`
@@ -1352,6 +1380,27 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'storage.warning.help':
     "Vous pouvez continuer à jouer, mais tout sera perdu à la fermeture de l'onglet.",
   'save.export': 'Enregistrer dans un fichier',
+  'save.import': 'Ouvrir un fichier',
+  'save.import.error': "Nous n'avons pas pu lire ce fichier.",
+  'save.import.tooBig': 'Ce fichier est trop volumineux.',
+  'save.import.done': 'Votre partie est restaurée.',
+  'save.newer.title': "Cette partie sauvegardée provient d'une version plus récente.",
+  /* Listed in COPY_GAPS with the English. « remplacés » agrees with « votre
+     progression et vos réglages », never with the player; « Garder ma
+     progression » names what the safe answer keeps, as the English does. */
+  'save.section': 'Votre progression',
+  'save.section.help':
+    "Gardez une copie dans un fichier, ou apportez votre progression d'un autre appareil.",
+  'save.import.confirm': 'Remplacer votre progression par ce fichier?',
+  'save.import.confirm.body':
+    'Votre progression et vos réglages sur cet appareil seront remplacés par ceux du fichier.',
+  'save.import.replace': 'Remplacer',
+  'save.import.keep': 'Garder ma progression',
+  'save.import.error.help': 'Choisissez un fichier enregistré depuis ce jeu.',
+  'save.import.newer.help': 'Mettez le jeu à jour, puis ouvrez le fichier de nouveau.',
+  'save.import.notSaved.help': "Rien n'a été modifié.",
+  'save.import.done.help': 'Le jeu va recommencer avec la progression de votre fichier.',
+  'save.import.continue': 'Continuer',
 
   'locomotion.walk.label': 'Marche',
   /* « Glissade » is the activity — « faire de la glissade » — and « Toboggan »
@@ -1641,6 +1690,22 @@ export const COPY_GAPS: readonly CopyKey[] = [
   /* ADR-0043: what the strip says while a drive holds the player at a stop,
      proposed for `TN-REACH-12` until that story's owner takes the words. */
   'hud.stop.hint',
+  /* ADR-0046's eleven, Settings' "Your progress" section: its heading and
+     reading line, the confirmation before a file replaces the save (question,
+     cost, both answers), the sentence under each refusal, and the dialog that
+     starts the game again from the file. `TN-SAVE`'s table carries the controls
+     and the refusals' first sentences, and those are transcribed, not listed. */
+  'save.section',
+  'save.section.help',
+  'save.import.confirm',
+  'save.import.confirm.body',
+  'save.import.replace',
+  'save.import.keep',
+  'save.import.error.help',
+  'save.import.newer.help',
+  'save.import.notSaved.help',
+  'save.import.done.help',
+  'save.import.continue',
   /* ADR-0034's amendment: the sentence on the card a level shows instead of
      opening, offline, when its art was never kept. */
   'level.needsConnection.body',

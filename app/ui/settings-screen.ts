@@ -25,6 +25,7 @@ import {
   type UiLocale,
 } from './copy';
 import { button, element, switchTrack } from './dom';
+import { createSaveSection, type SaveSection, type SaveTransferOptions } from './save-transfer';
 import { createScreen, type Screen } from './screen';
 import { SWITCH_MAX_HOLD_ATTRIBUTE } from './single-switch';
 import {
@@ -64,6 +65,16 @@ export interface SettingsScreenOptions {
    * section on in one line. Off in slice 1 — reported with the task.
    */
   readonly showSound?: boolean;
+  /**
+   * "Your progress": "Save to a file" and "Open a file" (`TN-SAVE-06`, ADR-0046).
+   *
+   * **Absent draws no section**, the way an absent `onChangeCharacter` draws no
+   * control: a caller that holds no save has nothing to put in a file and
+   * nowhere to put one back, and a button that does nothing is worse than none.
+   * The composition root passes it from both routes into Settings — the title
+   * screen and a level — so the section is where a player looks either way.
+   */
+  readonly saveTransfer?: SaveTransferOptions;
   /** Injected for tests, and for a switch user's own hold threshold. */
   readonly now?: () => number;
 }
@@ -191,6 +202,37 @@ export function createSettingsScreen(
   );
   if (options.showSound === true) screen.card.append(soundSection());
 
+  /* `TN-SAVE-06`: last before Close, because saving to a file and opening one
+     are about the whole game rather than about how it looks or moves. The
+     section's dialogs mount beside this screen and cover it while they are up,
+     so Escape and the switch belong to the dialog and not to Settings. */
+  const saveSection: SaveSection | null =
+    options.saveTransfer === undefined
+      ? null
+      : createSaveSection(doc, {
+          transfer: options.saveTransfer,
+          host,
+          locale,
+          singleSwitch: () => ({
+            enabled: store.current.singleSwitch,
+            holdMs: store.current.holdToChooseMs,
+          }),
+          ...(options.announce === undefined ? {} : { announce: options.announce }),
+          cover: (covered) => {
+            screen.setCovered(covered);
+          },
+          ...(options.now === undefined ? {} : { now: options.now }),
+        });
+  if (saveSection !== null) {
+    const section = saveSection;
+    screen.card.append(section.element);
+    rows.push({
+      refresh: (next) => {
+        section.refresh(next);
+      },
+    });
+  }
+
   const closeButton = button(doc, {
     testId: 'settings-close',
     text: text(locale(), 'common.close'),
@@ -235,6 +277,7 @@ export function createSettingsScreen(
     },
     destroy(): void {
       unsubscribe();
+      saveSection?.destroy();
       screen.destroy();
     },
   };

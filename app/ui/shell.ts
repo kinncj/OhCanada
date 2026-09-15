@@ -72,6 +72,7 @@ import { text, type UiLocale } from './copy';
 import type { HereFacts } from './journey';
 import { createLevelSelect, type LevelSelect, type MapEntry } from './level-select';
 import { injectScreenStyles } from './screen-styles';
+import type { SaveTransferOptions } from './save-transfer';
 import { createSettingsScreen, type SettingsScreen } from './settings-screen';
 import { createStorageWarning, type StorageWarning } from './storage-warning';
 import { createSwitchRing, type SwitchRing } from './single-switch';
@@ -188,6 +189,11 @@ export interface ShellOptions {
   readonly onOpenPassport?: () => void;
   /** `TN-TITLE-04`: storage is blocked, and the warning belongs on this screen. */
   readonly onExportSave?: () => void;
+  /**
+   * Settings' "Your progress" section (`TN-SAVE-06`, ADR-0046), handed to the
+   * settings screen this shell builds. Absent draws no section.
+   */
+  readonly saveTransfer?: SaveTransferOptions;
   readonly now?: () => number;
   readonly random?: () => number;
 }
@@ -548,6 +554,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
         notify?.();
       },
       ...(options.now === undefined ? {} : { now: options.now }),
+      ...(options.saveTransfer === undefined ? {} : { saveTransfer: options.saveTransfer }),
     });
     closed = wanted;
     setModalOpen(true);
