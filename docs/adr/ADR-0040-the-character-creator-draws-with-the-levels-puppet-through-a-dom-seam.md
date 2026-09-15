@@ -110,3 +110,19 @@ picture back to front. Pixels are not comparable on a software GPU; "choosing ti
   crop is `PREVIEW_WINDOW`, and a unit test fails if a frame any choice changes falls outside it.
 - If the Rive path ships for levels, the creator's backend is changed in `app/bootstrap/creator-art.ts` and
   nowhere else.
+
+## Amendment, 2026-09-15: the whole figure, in the jacket
+
+A second live-site audit found the picture cut off at the thighs and always in the winter parka
+(`fr03-creator-random-1`), while eight levels of ten now dress the player in a jacket (`playerCostume`).
+
+- **The whole figure.** `PREVIEW_WINDOW` is `{ x: 48, y: -6, w: 144, h: 476 }`, the toque's bobble to the soles,
+  replacing the mid-thigh crop in the consequence above. The box is 100 × 240 CSS px instead of 118 × 188, so the
+  head is drawn at about the size it was (scale 0.504 against 0.534) and the words beside it gain 18 px. The
+  sticky panel is 52 px taller at 100 % text, and `scroll-padding-block-start` grows from 16rem to 19.5rem so a
+  focused control still lands below it. At larger text the panel stacks, as before.
+- **The jacket.** `costume` is not player-selectable, so the creator offers no choice of it. The composition root
+  hands the adapter `CREATOR_COSTUME` (`jacket`), laid over the selection: it is what most levels, and Halifax
+  where the journey starts, put on the player, and it shows the hands in the chosen skin tone. A preview-only
+  toggle was rejected as a control for a choice the rig says nobody makes, and a labelled parka as a new sentence
+  for the costume of two levels in ten. Without a costume the adapter still draws the artboard's own parka.

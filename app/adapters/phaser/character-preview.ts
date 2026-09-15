@@ -422,17 +422,22 @@ export interface PreviewWindow {
 }
 
 /**
- * What the picture shows: the figure from just above the crown to mid-thigh.
+ * What the picture shows: the whole figure, from just above the toque's bobble
+ * to the soles of the boots.
  *
- * Every choice the creator offers is on the head — skin on the face and neck,
- * both hair slots, the toque, the glasses, and presentation in the face — and
- * the costume is fixed. A full-length figure in a box a phone can afford puts
- * the face at about twenty pixels; this window gives the head half as much
- * again, and still shows a person standing in a parka rather than a floating
- * head. The level draws the same parts from the same frames; this is where the
- * camera stands.
+ * It used to stop at mid-thigh, on the argument that every choice is on the
+ * head. A live-site audit read that as a figure cut off at the thighs: a player
+ * choosing how they look is choosing a person, and a person stands on feet. So
+ * the window is the figure's own extent in character space — the widest head
+ * frame starts at x 62, the boots end at x 189 and y 470 — with a few units of
+ * air, centred on `centreX` so the figure stands in the middle of the box.
+ *
+ * The box is tall and narrow to match (`.tn-creator__art`, 100 × 240 CSS px),
+ * which draws the head at about the size the thigh crop drew it in 118 × 188.
+ * The level draws the same parts from the same frames; this is where the camera
+ * stands.
  */
-export const PREVIEW_WINDOW: PreviewWindow = { x: 18, y: -8, w: 204, h: 352 };
+export const PREVIEW_WINDOW: PreviewWindow = { x: 48, y: -6, w: 144, h: 476 };
 
 /**
  * Fit a window into a canvas: uniform scale, centred across, feet-side edge on
@@ -487,6 +492,15 @@ interface PreviewResponse {
 export interface CharacterPreviewDeps {
   /** `content/characters/rig.json`, handed in by the composition root (ADR-0022). */
   readonly rig: RigDocument;
+  /**
+   * What the player wears in the picture: a rig `costume` option.
+   *
+   * `costume` is not player-selectable. A level puts it on the player for its
+   * season, and the creator is not a level, so the composition root decides
+   * which one the picture shows. It is laid over the selection, so a selection
+   * can never change it. Absent draws the player artboard's own costume.
+   */
+  readonly costume?: string;
   /** Where `manifest.json` is served. Defaults to the build's base path. */
   readonly assetsBaseUrl?: string;
   readonly fetch?: (url: string) => Promise<PreviewResponse>;
@@ -528,6 +542,12 @@ export function createCharacterPreview(
 ): CharacterPreview {
   const doc = host.ownerDocument;
   const rig = deps.rig;
+  /* The costume, checked against the rig once and laid over every selection. */
+  const worn = skinsFor(rig, deps.costume === undefined ? {} : { costume: deps.costume });
+  const dressFor = (chosen: Readonly<Record<string, string>>): Readonly<Record<string, string>> => ({
+    ...skinsFor(rig, chosen),
+    ...worn,
+  });
   const baseUrl = deps.assetsBaseUrl ?? defaultBaseUrl();
   const fetchJson =
     deps.fetch ?? ((url: string): Promise<PreviewResponse> => globalThis.fetch(url));
@@ -585,7 +605,7 @@ export function createCharacterPreview(
       if (disposed) return;
       selection = next;
       if (puppet === null) return;
-      const skins = skinsFor(rig, next);
+      const skins = dressFor(next);
       for (const [slot, option] of Object.entries(skins)) {
         if (dressed[slot] === option) continue;
         const changed = puppet.setSkin(slot, option);
@@ -679,7 +699,7 @@ export function createCharacterPreview(
     }
     const loaded = atlas;
     const nextParts = createCanvasPartHost();
-    const skins = skinsFor(rig, selection);
+    const skins = dressFor(selection);
     const built = createSpriteCharacterRenderer(specFor(rig, artboard, skins), {
       textureKey: loaded.key,
       frames: { hasFrame: (key, frame) => key === loaded.key && loaded.frames.has(frame) },

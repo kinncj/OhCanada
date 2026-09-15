@@ -830,11 +830,14 @@ const CSS = `
 .tn-creator__preview[data-art] > h2 { grid-area: heading; }
 .tn-creator__preview[data-art] > p { grid-area: text; }
 
+/* The whole figure, crown to boots (ADR-0040, amended): tall and narrow like the
+   figure, so the head is drawn at about the size the old thigh crop drew it and
+   the words beside it keep their width. */
 .tn-creator__art {
   grid-area: art;
   box-sizing: border-box;
-  inline-size: 118px;
-  block-size: 188px;
+  inline-size: 100px;
+  block-size: 240px;
   border: var(--tn-edge-width) solid var(--tn-edge-soft);
   border-radius: 0.75rem;
   background: var(--tn-paper);
@@ -869,7 +872,9 @@ const CSS = `
 }
 :root[data-tn-text-scale="100"] .tn-creator:has(.tn-creator__preview[data-art="loading"]),
 :root[data-tn-text-scale="100"] .tn-creator:has(.tn-creator__preview[data-art="ready"]) {
-  scroll-padding-block-start: 16rem;
+  /* Below the stuck panel: 0.5rem from the top, the 240 px picture, the panel's
+     own padding and edge, and the paper ring round it. */
+  scroll-padding-block-start: 19.5rem;
 }
 
 @media (forced-colors: active) {

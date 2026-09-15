@@ -21,14 +21,37 @@ import type { CreatorArt, CreatorArtFactory, CreatorArtRequest } from '@ui/chara
 
 const RIG = rigJson as unknown as RigDocument;
 
+/**
+ * What the creator's picture dresses the player in: the jacket.
+ *
+ * `costume` is not player-selectable. A level puts it on the player for its
+ * season (`playerCostume`), and the creator is not a level, so this is the one
+ * place that decides what the picture wears. The jacket, because it is what the
+ * player wears most: eight levels of ten put it on, Halifax among them, where
+ * the journey starts, and only Ottawa and Québec City put on the parka. It also
+ * leaves the hands bare, in the skin tone the player is choosing.
+ *
+ * Two other answers were weighed. A costume toggle beside the picture would be
+ * a control for a choice the rig says no player makes, and would add a stop to
+ * every keyboard and switch walk through the screen. The parka with a "winter
+ * look" label would need a new sentence and would still show the costume of
+ * two levels in ten. `tests/unit/bootstrap/creator-art.test.ts` holds this to
+ * the level documents, so it fails if most levels stop wearing it.
+ */
+export const CREATOR_COSTUME = 'jacket';
+
 /** A renderer that can draw the picture: the shape of `createCharacterPreview`. */
 export type CreatorArtBackend = (
   host: HTMLElement,
   request: CreatorArtRequest,
-  deps: { readonly rig: RigDocument },
+  deps: { readonly rig: RigDocument; readonly costume: string },
 ) => CreatorArt;
 
 /** The factory the shell hands both of the creator's errands. */
-export function creatorArt(backend: CreatorArtBackend, rig: RigDocument = RIG): CreatorArtFactory {
-  return (host, request) => backend(host, request, { rig });
+export function creatorArt(
+  backend: CreatorArtBackend,
+  rig: RigDocument = RIG,
+  costume: string = CREATOR_COSTUME,
+): CreatorArtFactory {
+  return (host, request) => backend(host, request, { rig, costume });
 }

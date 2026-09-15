@@ -159,6 +159,7 @@ function stage(
     readonly routes?: Readonly<Record<string, ReturnType<typeof response>>>;
     readonly image?: () => Promise<PreviewImage>;
     readonly noContext?: boolean;
+    readonly costume?: string;
   } = {},
 ): Stage {
   const statuses: PreviewStatus[] = [];
@@ -202,6 +203,7 @@ function stage(
     { selection: SELECTION, motion: options.motion ?? 'full', onStatus: (status) => void statuses.push(status) },
     {
       rig: RIG,
+      ...(options.costume === undefined ? {} : { costume: options.costume }),
       assetsBaseUrl: '/OhCanada/',
       devicePixelRatio: () => 3,
       fetch: (url) => {
@@ -499,6 +501,33 @@ describe('what the picture shows', () => {
     expect(outside).toEqual([]);
   });
 
+  it('shows the whole figure, crown to boots, in either costume the levels dress the player in', () => {
+    /* The audit's picture stopped at the thighs. Every frame the player's figure
+       draws at rest — head, hair, coverings, and each costume's body, arms,
+       hands, legs and boots — sits inside the window, on the side it was drawn
+       for and mirrored for the other, and the window reaches the soles. */
+    const worn = /^character-(torso|arm-upper|arm-lower|hand|bare-hand|leg-upper|leg-lower|foot-l|foot-r)-(parka|jacket)\b/u;
+    const head = /^character-(head-skin|neck|hair|face|head-covering|feature)-/u;
+    const figure = Object.entries(RIG.frames).filter(
+      ([name]) => worn.test(name) || head.test(name) || name === 'character-ground-shadow',
+    );
+    expect(figure.filter(([name]) => name.includes('-jacket')).length).toBeGreaterThan(5);
+    expect(figure.some(([name]) => name.startsWith('character-foot-'))).toBe(true);
+
+    const centre = RIG.characterSpace.centreX;
+    const inside = (frame: { x: number; y: number; w: number; h: number }): boolean =>
+      frame.x >= PREVIEW_WINDOW.x &&
+      frame.y >= PREVIEW_WINDOW.y &&
+      frame.x + frame.w <= PREVIEW_WINDOW.x + PREVIEW_WINDOW.w &&
+      frame.y + frame.h <= PREVIEW_WINDOW.y + PREVIEW_WINDOW.h;
+    const outside = figure
+      .filter(([, frame]) => !inside(frame) || !inside({ ...frame, x: 2 * centre - frame.x - frame.w }))
+      .map(([name]) => name);
+    expect(outside).toEqual([]);
+    expect(PREVIEW_WINDOW.y + PREVIEW_WINDOW.h).toBeGreaterThanOrEqual(RIG.characterSpace.soleY);
+    expect(PREVIEW_WINDOW.x + PREVIEW_WINDOW.w / 2).toBe(centre);
+  });
+
   it('dresses only what the rig can: declared slots, offered options, nothing reserved', () => {
     const rig = {
       ...RIG,
@@ -563,6 +592,23 @@ describe('the picture, from load to release', () => {
     expect(after).toBe(before + 1);
     preview.draw({ ...SELECTION, hairShape: 'coil', headCovering: 'toque', feature: 'glasses' });
     expect(statuses.length).toBe(after);
+  });
+
+  it('wears the costume it is handed, and no selection can change it', async () => {
+    /* The composition root dresses the creator's picture in the jacket; the
+       costume is not a player's choice, so a selection naming one is ignored. */
+    const { statuses, preview } = stage({ costume: 'jacket' });
+    await flush();
+    const frames = last(statuses)?.frames ?? [];
+    expect(frames).toContain('character-torso-jacket');
+    expect(frames).toContain('character-bare-hand-jacket-skin-2');
+    expect(frames).not.toContain('character-torso-parka');
+
+    preview.draw({ ...SELECTION, skin: 'skin-5', costume: 'parka' });
+    const after = last(statuses)?.frames ?? [];
+    expect(after).toContain('character-torso-jacket');
+    expect(after).toContain('character-bare-hand-jacket-skin-5');
+    expect(after).not.toContain('character-torso-parka');
   });
 
   it('keeps the latest choice made while the art was still loading', async () => {
