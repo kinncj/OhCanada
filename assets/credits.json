@@ -2621,6 +2621,15 @@
       "modifications": "Original work. Drawn from the driftwood band along the shore in assets/refs/the-north/yukon-river-bluff-and-aspen.jpg and the bars in yukon-river-valley.jpg under the rules in assets/style/art-bible.md; never traced. Natural debris only: every log lies, nothing is stacked, leaned or arranged, and there is no structure, shelter, weir, marker, cairn, inuksuk or figure at any scale, per assets/style/the-north-level.md and docs/content-review.md. The @1x suffix pins the source to one scale; the key the-north-prop-driftwood-pile carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 700 x 340 and passed at both probes; at 2x it would cost 3.63 MiB of decoded texture instead of 0.91 MiB."
     },
     {
+      "path": "src/svg/screens/title-landscape.svg",
+      "kind": "shipped",
+      "title": "Title landscape - the country behind the title screen and the Study home, 1080 x 900",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/screens/title-landscape.svg",
+      "modifications": "Original work, drawn for ADR-0041. Peggy's Point Lighthouse and the CN Tower are lifted shape for shape from this project's own level art (assets/src/svg/peggys-cove/landmark-lighthouse@1x.svg and assets/src/svg/toronto/landmark-cn-tower@1x.svg, both CC-BY-4.0, TrueNorth contributors), with their titles removed and the tower's surroundings left out; the mountains, hills, lake, canoe, spruce and snow are generic landforms drawn here. Palette colours only; no lettering, no emblem, no person. See assets/style/title-landscape.md."
+    },
+    {
       "path": "src/svg/screens/map-canada.svg",
       "kind": "shipped",
       "title": "Map of Canada - the level-select country inset, 1080 x 600",
