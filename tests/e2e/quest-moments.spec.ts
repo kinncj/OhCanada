@@ -349,8 +349,14 @@ test.describe('a quest giver speaks at the moments a step cannot', () => {
     await expect(page.getByTestId('dialogue-speaker')).toHaveText(LANDMARK.name.en);
     await expect(page.getByTestId('dialogue-speaker')).not.toHaveText(LANDMARK.id);
     await expect(page.getByTestId('dialogue-text')).toHaveText(LANDMARK_QUEST.afterLine.text.en);
-    /* No portrait of any kind: a plaque has no face. */
-    await expect(dialogue.locator('img, canvas, svg, picture')).toHaveCount(0);
+    /* A plaque has no face (ADR-0041): nothing painted, and at most the landmark's
+       own picture in the portrait frame, loaded from its level art, never a figure. */
+    await expect(dialogue.locator('canvas, svg, picture')).toHaveCount(0);
+    const pictures = dialogue.locator('img');
+    expect(await pictures.count()).toBeLessThanOrEqual(1);
+    for (const src of await pictures.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('src') ?? ''))) {
+      expect(src, 'the landmark speaker drew a painted figure').not.toMatch(/^(?:data|blob):/u);
+    }
   });
 
   test('finishing the task draws the quest’s own closing line first on the card', async ({

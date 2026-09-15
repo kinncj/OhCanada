@@ -476,7 +476,7 @@ describe('a landmark speaks in its own name, and is asked for no face', () => {
     expect(resolution.ok && resolution.engageable.kind).toBe('landmark');
   });
 
-  it('draws no figure: no portrait, no pose, nothing but words and a button', () => {
+  it('draws no figure: no face, no pose, only its own picture beside the words', () => {
     /*
      * The live defect this file was written beside — `promptTargets` offering
      * "Talk to this person" for a lighthouse — was a second path that did not
@@ -491,8 +491,18 @@ describe('a landmark speaks in its own name, and is asked for no face', () => {
     expect(dialog).not.toBe(null);
     const tags = (dialog?.querySelectorAll('*') ?? []).map((node) => node.tagName.toLowerCase());
     expect(tags.length, 'the dialogue drew nothing').toBeGreaterThan(0);
-    expect([...new Set(tags)].sort()).toEqual(['button', 'div', 'h1', 'p']);
-    expect(dialog?.querySelectorAll('img')).toEqual([]);
+    /* ADR-0041: a landmark speaker may show the landmark's own picture in the
+       portrait frame, and never a face. So the one image allowed is decoration in
+       that frame, and it is never a painted figure (a data: or blob: URL is what
+       the puppet paints a face into). */
+    expect([...new Set(tags)].sort().filter((tag) => tag !== 'img')).toEqual(['button', 'div', 'h1', 'p']);
+    const images = [...(dialog?.querySelectorAll('img') ?? [])];
+    expect(images.length).toBeLessThanOrEqual(1);
+    for (const image of images) {
+      expect(image.closest('[data-testid="dialogue-portrait"]'), 'an image outside the portrait frame').not.toBe(null);
+      expect(image.getAttribute('alt')).toBe('');
+      expect(image.getAttribute('src') ?? '').not.toMatch(/^(?:data|blob):/u);
+    }
     expect(dialog?.querySelectorAll('canvas')).toEqual([]);
     expect(dialog?.querySelectorAll('[data-tn-pose]')).toEqual([]);
     expect(dialog?.querySelectorAll('[data-tn-expression]')).toEqual([]);
