@@ -34,9 +34,12 @@
  *     holds exactly when the player asked for bigger text. Every length in this
  *     sheet is in `rem` for that reason; `px` appears nowhere.
  *  2. **200 % text.** Every layout is single-column and wraps; nothing is sized
- *     in `vw`; long words break rather than push the page sideways
- *     (`overflow-wrap: anywhere`), which is what "the page does not scroll
- *     sideways" comes down to at 390 px. Rows that hold a label and a badge
+ *     in `vw`; a word moves to the next line whole, and breaks only when that
+ *     one word is wider than its line (`overflow-wrap: break-word`, and
+ *     `anywhere` in the few boxes that must shrink below a word), which is what
+ *     "the page does not scroll sideways" comes down to at 390 px. **No
+ *     automatic hyphenation** (ADR-0045): "citoyen-neté" is two words to a
+ *     reader who is learning the language. Rows that hold a label and a badge
  *     wrap rather than clip.
  *     **Chrome that holds still (ADR-0039).** Text scales; the space around it
  *     does not have to. On a 390 px phone at 200 % text, padding, card edges and
@@ -250,6 +253,23 @@ const CSS = `
 .tn-screen h3 { font-size: 1.0625rem; }
 .tn-screen p { margin: 0; color: var(--tn-ink); }
 
+/*
+  No automatic hyphenation, anywhere (ADR-0045).
+
+  Automatic hyphenation split words a grade-6 or dyslexic reader has to put back together
+  -- "cov-ering", "citoyen-neté", "govern-ment" -- on lines that had room for
+  the whole word. A word now moves to the next line whole. break-word breaks
+  inside a word only when that one word is wider than its whole line, and it
+  does not shrink a box to force a break, so a word is split only where nothing
+  else would fit. The few narrow boxes that must shrink below a word -- a map
+  card's name and pills, a state word -- say overflow-wrap: anywhere on their
+  own rule, and still draw no hyphen.
+*/
+.tn-screen,
+.tn-hud {
+  hyphens: manual;
+}
+
 .tn-screen p,
 .tn-screen li,
 .tn-screen label,
@@ -258,8 +278,7 @@ const CSS = `
 .tn-screen h3,
 .tn-screen button,
 .tn-screen span {
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .tn-screen__help {
@@ -310,7 +329,9 @@ const CSS = `
   gap: 0.75rem;
   row-gap: 0.25rem;
   inline-size: 100%;
-  padding: 0.75rem 1rem;
+  /* The side padding holds still at large text (ADR-0039, ADR-0045): at 200 % it
+     took 64 px of a 274 px option, and "Masculin" split inside the word. */
+  padding: 0.75rem calc(1rem / var(--tn-text-scale, 1));
   border: var(--tn-edge-width) solid var(--tn-action-edge);
   border-radius: var(--tn-radius);
   background: var(--tn-action);
@@ -376,7 +397,9 @@ const CSS = `
   background: var(--tn-paper-2);
   border: var(--tn-edge-width) solid var(--tn-edge-soft);
   border-radius: var(--tn-radius);
-  padding: 0.875rem;
+  /* Holds still at large text, so the options inside keep the line their words
+     need (ADR-0045). */
+  padding: calc(0.875rem / var(--tn-text-scale, 1));
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
@@ -398,6 +421,191 @@ const CSS = `
   border-width: 0.25rem;
   box-shadow: 0 var(--tn-lift) 0 var(--tn-accent-edge);
 }
+
+/*
+  High contrast: on is filled, off is an outline (ADR-0045).
+
+  The theme made every control a black slab and the chosen one white, so a
+  switch read backwards: Off solid, On an empty outline. A switch and a radio
+  that are not chosen are paper with an ink edge; a chosen one is solid ink with
+  paper words. The word and the switch track below still say it without colour.
+*/
+[data-tn-contrast="high"] .tn-screen [role="switch"],
+[data-tn-contrast="high"] .tn-screen [role="radio"] {
+  background: var(--tn-paper);
+  color: var(--tn-ink);
+  border-color: var(--tn-ink);
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-ink);
+}
+[data-tn-contrast="high"] .tn-screen [aria-checked="true"],
+[data-tn-contrast="high"] .tn-screen [aria-pressed="true"] {
+  background: var(--tn-ink);
+  color: var(--tn-paper);
+  border-color: var(--tn-ink);
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-ink);
+}
+[data-tn-contrast="high"] .tn-screen [aria-checked="true"] .tn-creator__swatch {
+  border-color: var(--tn-paper);
+}
+
+/*
+  The focus ring on a chosen control.
+
+  The rules above come after the focus rule and replace its halo and its double
+  edge, so a focused chosen option drew a brass-light ring straight onto a brass
+  fill and the ring disappeared. This puts the dark halo back between the two.
+*/
+.tn-screen [role="switch"]:focus-visible,
+.tn-screen [role="radio"]:focus-visible,
+.tn-screen [aria-pressed]:focus-visible,
+.tn-screen [role="switch"][data-switch-highlight="true"],
+.tn-screen [role="radio"][data-switch-highlight="true"],
+.tn-screen [aria-pressed][data-switch-highlight="true"] {
+  box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
+  border-style: double;
+  border-width: 0.25rem;
+}
+
+/*
+  A switch's track: the knob at the start and an outline when off, at the end on
+  a filled track when on. A shape beside the word On or Off, so the state does
+  not rest on colour. Drawn with borders, which forced colours keep, and sized to
+  hold still at large text like every other picture.
+*/
+.tn-switch {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  inline-size: calc(3rem / var(--tn-text-scale, 1));
+  block-size: calc(1.75rem / var(--tn-text-scale, 1));
+  padding: calc(0.1875rem / var(--tn-text-scale, 1));
+  border: calc(0.1875rem / var(--tn-text-scale, 1)) solid currentColor;
+  border-radius: var(--tn-radius-pill);
+}
+.tn-switch__knob {
+  box-sizing: border-box;
+  display: block;
+  inline-size: calc(1rem / var(--tn-text-scale, 1));
+  block-size: calc(1rem / var(--tn-text-scale, 1));
+  border: calc(0.5rem / var(--tn-text-scale, 1)) solid currentColor;
+  border-radius: var(--tn-radius-pill);
+}
+[aria-checked="true"] > .tn-switch {
+  justify-content: flex-end;
+  background: currentColor;
+}
+[aria-checked="true"] > .tn-switch > .tn-switch__knob { border-color: var(--tn-accent); }
+[data-tn-contrast="high"] [aria-checked="true"] > .tn-switch > .tn-switch__knob {
+  border-color: var(--tn-ink);
+}
+
+@media (forced-colors: active) {
+  .tn-switch,
+  .tn-switch__knob {
+    forced-color-adjust: none;
+    border-color: ButtonText;
+  }
+  [aria-checked="true"] > .tn-switch { background: ButtonText; }
+  [aria-checked="true"] > .tn-switch > .tn-switch__knob { border-color: ButtonFace; }
+  .tn-screen [aria-pressed="true"] { border-width: 0.25rem; }
+}
+
+/*
+  A switch reads label, track, state: "Less movement", the track, "Off".
+
+  The label's basis is 10em, so it grows with the text. At 100 % the three share
+  one line. At large text the label takes a line of its own, where its longest
+  word fits whole, and the track and its word sit together at the end of the
+  line below. A basis that held still squeezed the label beside the track until
+  "mouvement" and "Déplacement" split inside the word.
+*/
+.tn-screen [role="switch"] > span:not(.tn-switch):not(.tn-screen__state) {
+  flex: 1 1 10em;
+  min-inline-size: 0;
+}
+.tn-screen [role="switch"] > .tn-switch { margin-inline-start: auto; }
+.tn-screen [role="switch"] > .tn-switch + .tn-screen__state { margin-inline-start: 0; }
+
+/* A switch's words: its label, and under it the value it would apply. */
+.tn-switch__words {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 10em;
+  min-inline-size: 0;
+}
+.tn-switch__value { font-weight: 600; }
+
+/* ------------------------------------------------------------------ *
+ * The question card (ADR-0045).
+ *
+ * The place the question belongs to, then the counter and the tag on one line
+ * when they fit, then the question. The sheet hugs these, so nothing is left
+ * blank under the options before the player answers.
+ * ------------------------------------------------------------------ */
+.tn-question .tn-screen__card { gap: 0.75rem; }
+.tn-question__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.75rem;
+  row-gap: 0.125rem;
+}
+.tn-question__head > h1 { font-size: 1.375rem; }
+.tn-question__place {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--tn-ink-muted);
+}
+.tn-question__place-gap { padding-inline: 0.375rem; }
+
+/* ------------------------------------------------------------------ *
+ * The exam's two steps side by side, and a control that cannot be taken.
+ *
+ * Previous and Next share a row while both words fit, and stack at large text.
+ * A disabled action (Previous on question 1, Next on the last) is a dashed paper
+ * outline with no lift, so it does not look like the slab beside it; its words
+ * stay ink, and aria-disabled says the same thing to a screen reader.
+ * ------------------------------------------------------------------ */
+.tn-exam__step {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.tn-exam__step > button {
+  flex: 1 1 8rem;
+  inline-size: auto;
+}
+.tn-screen__actions button[aria-disabled="true"] {
+  background: var(--tn-paper-3);
+  color: var(--tn-ink);
+  border-color: var(--tn-edge-soft);
+  border-style: dashed;
+  box-shadow: none;
+  cursor: default;
+}
+@media (forced-colors: active) {
+  .tn-screen__actions button[aria-disabled="true"] { border: 0.125rem dashed ButtonText; }
+}
+
+/* ------------------------------------------------------------------ *
+ * The text size: its name and its value on one line, over a slider whose thumb
+ * is big enough to see and to take hold of.
+ * ------------------------------------------------------------------ */
+.tn-settings__size-head {
+  display: flex;
+  align-items: baseline;
+  column-gap: 0.75rem;
+}
+/* The name wraps inside its own box at large text, so the value keeps its place
+   on the name's first line instead of dropping under it. */
+.tn-settings__size-head > label {
+  flex: 1 1 0%;
+  min-inline-size: 0;
+  font-weight: 800;
+}
+.tn-settings__size-head > .tn-screen__state { flex: 0 0 auto; }
 
 .tn-screen__mark {
   font-weight: 800;
@@ -522,7 +730,58 @@ const CSS = `
 
 .tn-screen input[type="range"] {
   inline-size: 100%;
+  margin: 0;
   accent-color: var(--tn-action);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.tn-screen input[type="range"]::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  block-size: 0.75rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-paper-3);
+}
+.tn-screen input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  inline-size: 2rem;
+  block-size: 2rem;
+  margin-block-start: calc((0.75rem - 2 * var(--tn-edge-width) - 2rem) / 2);
+  border: 0.25rem solid var(--tn-paper);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-action);
+  box-shadow: 0 0 0 var(--tn-edge-width) var(--tn-ink);
+}
+.tn-screen input[type="range"]::-moz-range-track {
+  box-sizing: border-box;
+  block-size: 0.75rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-paper-3);
+}
+.tn-screen input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border: 0.25rem solid var(--tn-paper);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-action);
+  box-shadow: 0 0 0 var(--tn-edge-width) var(--tn-ink);
+}
+@media (forced-colors: active) {
+  .tn-screen input[type="range"] { forced-color-adjust: none; }
+  .tn-screen input[type="range"]::-webkit-slider-runnable-track {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+  .tn-screen input[type="range"]::-webkit-slider-thumb {
+    border-color: Canvas;
+    background: CanvasText;
+    box-shadow: 0 0 0 var(--tn-edge-width) CanvasText;
+  }
 }
 
 .tn-screen__preview {
@@ -759,11 +1018,22 @@ const CSS = `
  * ------------------------------------------------------------------ */
 
 .tn-screen--sheet { background: transparent; }
-.tn-screen--sheet > .tn-screen__card {
+/*
+  A sheet, and a screen that hugs its content (ADR-0045).
+
+  tn-screen--hug is the same sheet at the foot of the screen with the night kept
+  behind it, for a surface over something that is not the level: the exam's menu
+  over the exam, a Study question over the Study home. Either way the actions sit
+  directly under the words, so no screen draws a column of white between its
+  heading and its buttons.
+*/
+.tn-screen--sheet > .tn-screen__card,
+.tn-screen--hug > .tn-screen__card {
   flex: 0 0 auto;
   margin-block-start: auto;
 }
-.tn-screen--sheet .tn-screen__actions { margin-block-start: 0; }
+.tn-screen--sheet .tn-screen__actions,
+.tn-screen--hug .tn-screen__actions { margin-block-start: 0; }
 
 body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 
@@ -1441,7 +1711,6 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   font-size: 1.1875rem;
   font-weight: 800;
   overflow-wrap: anywhere;
-  hyphens: auto;
 }
 
 /* The subject line takes a line of its own, so a card reads number and place,
@@ -1452,8 +1721,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   color: var(--tn-ink-muted);
   font-size: 0.9375rem;
   font-weight: 600;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 /* The stamp in the passport, said as a word on a brass badge. */
@@ -1616,7 +1884,6 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   font-size: 1.1875rem;
   font-weight: 800;
   overflow-wrap: anywhere;
-  hyphens: auto;
 }
 
 /*
@@ -1679,6 +1946,24 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 
 .tn-passport__empty-slot:empty { display: none; }
 
+/*
+  The stamp itself, on an earned page (ADR-0045): the completion card's stamp,
+  smaller, pressed beside the word Earned. aria-hidden, like the card's, because
+  the word says it. It is pressed once, on the completion card; here it is
+  already on the page, so it does not animate.
+*/
+.tn-passport__stamp {
+  order: 2;
+  margin-inline-start: auto;
+  inline-size: calc(3.5rem / var(--tn-text-scale, 1));
+  block-size: calc(3.5rem / var(--tn-text-scale, 1));
+  animation: none;
+}
+.tn-passport__stamp .tn-stamp__ring {
+  padding: calc(0.375rem / var(--tn-text-scale, 1));
+  border-width: calc(0.25rem / var(--tn-text-scale, 1));
+}
+
 @media (forced-colors: active) {
   .tn-passport__page { border: 0.125rem solid CanvasText; }
   .tn-passport [data-state="not-earned"] .tn-passport__page {
@@ -1737,15 +2022,18 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  gap: calc(0.5rem / var(--tn-text-scale, 1));
+  /* Tighter than the sheets (ADR-0045): at 200 % text a third of a phone holds
+     the offer, Settings and Menu and the task only if the space between them
+     holds still and stays small. The words keep growing to 200 %. */
+  gap: calc(0.25rem / var(--tn-text-scale, 1));
   padding:
-    calc(0.75rem / var(--tn-text-scale, 1))
+    calc(0.375rem / var(--tn-text-scale, 1))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
-    max(calc(0.75rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
+    max(calc(0.375rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 1rem;
-  line-height: 1.35;
+  line-height: 1.2;
   color: var(--tn-on-night);
   /* Opaque, not a wash over the canvas: text on a translucent panel over a
      gradient has no computable contrast, and axe reports "incomplete" rather
@@ -1759,8 +2047,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 
 .tn-hud p {
   margin: 0;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .tn-hud__status {
@@ -1775,7 +2062,17 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   letter-spacing: 0.01em;
 }
 
-.tn-hud__task { color: var(--tn-on-night); }
+/*
+  The task, directly under Settings and Menu (ADR-0045).
+
+  Third in the strip and never behind a paragraph, so at 200 % text it is inside
+  the part of the strip that is on screen. Semi-bold so it reads as the line to
+  act on, not as the explanation under it; the words still scale to 200 %.
+*/
+.tn-hud__task {
+  color: var(--tn-on-night);
+  font-weight: 600;
+}
 
 .tn-hud__slot {
   display: flex;
@@ -1815,14 +2112,14 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   align-items: center;
   justify-content: center;
   gap: calc(0.5rem / var(--tn-text-scale, 1));
-  padding: calc(0.5rem / var(--tn-text-scale, 1)) calc(0.75rem / var(--tn-text-scale, 1));
+  padding: calc(0.125rem / var(--tn-text-scale, 1)) calc(0.75rem / var(--tn-text-scale, 1));
   border: calc(var(--tn-edge-width) / var(--tn-text-scale, 1)) solid var(--tn-ink);
   border-radius: calc(var(--tn-radius) / var(--tn-text-scale, 1));
   background: var(--tn-paper-2);
   color: var(--tn-ink);
   font: inherit;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.15;
   text-align: center;
   overflow-wrap: anywhere;
   cursor: pointer;
@@ -1841,7 +2138,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   color: var(--tn-accent-ink);
   border-color: var(--tn-accent-edge);
   box-shadow: 0 calc(var(--tn-lift) / var(--tn-text-scale, 1)) 0 var(--tn-accent-edge);
-  font-size: 1.0625rem;
+  font-size: 1rem;
 }
 
 /*
@@ -2044,8 +2341,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   margin: 0;
   color: var(--tn-ink);
   font-weight: 800;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .tn-update-notice__actions {

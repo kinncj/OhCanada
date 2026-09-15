@@ -78,6 +78,7 @@ import { text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { journeyRail, journeyRoute, type JourneyStop } from './journey';
 import { levelTitle, type MapEntry } from './level-select';
+import { createStamp, type StampArt } from './screen-art';
 import { createScreen, type Screen } from './screen';
 
 /**
@@ -138,6 +139,14 @@ export interface PassportOptions {
   readonly exam?: PassportExam;
   /** Opens the exam. Absent draws no control, whatever the panel says. */
   readonly onOpenExam?: () => void;
+  /**
+   * The picture an earned stamp is pressed in the shape of, for one level
+   * (ADR-0045): the same landmark image the completion card presses its stamp
+   * with (ADR-0041), resolved by the composition root. `null` or absent draws the
+   * slot without a stamp, exactly as it was. Asked only for earned slots, so an
+   * unearned level's art is never fetched to draw an empty page.
+   */
+  readonly stampArt?: (levelId: string) => string | null | undefined;
   readonly singleSwitch?: boolean;
   readonly holdMs?: number;
   readonly now?: () => number;
@@ -218,6 +227,9 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
   });
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
+
+  /* The stamps drawn by the last render, let go of when the slots are redrawn. */
+  const stamps: StampArt[] = [];
 
   screen.card.append(title, intro, counts, emptySlot, list, examPanel, actions);
 
@@ -300,6 +312,22 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
           })
         : null;
 
+    /*
+     * The stamp, pressed beside "Earned" (ADR-0045): the completion card's own
+     * stamp, inked, in the shape of the level's landmark. The live-site audit
+     * found an earned slot drew only a word on a pill while the card that
+     * awarded it drew a red stamp. `aria-hidden`, because "Earned" says it.
+     */
+    const artSrc =
+      state === 'earned' && entry.id !== undefined ? options.stampArt?.(String(entry.id)) : null;
+    if (artSrc !== null && artSrc !== undefined && artSrc !== '') {
+      const stamp = createStamp(doc, { testId: `passport-stamp-art-${handle}` });
+      stamp.element.className = 'tn-stamp tn-passport__stamp';
+      stamp.show(artSrc, true);
+      stamps.push(stamp);
+      parts.push(stamp.element);
+    }
+
     const page = element(doc, 'div', {
       className: 'tn-passport__page',
       children: help === null ? parts : [...parts, help],
@@ -379,7 +407,9 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     );
 
     /* One route, derived from the whole journey: a slot's legs depend on the
-       slot before it, so no slot can work its own out. */
+       slot before it, so no slot can work its own out. The last render's
+       stamps are let go of first. */
+    for (const stamp of stamps.splice(0)) stamp.destroy();
     replaceChildren(
       list,
       journeyRoute(entries).map(({ step, stop }) => slot(step, stop)),
@@ -584,6 +614,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     },
 
     destroy(): void {
+      for (const stamp of stamps.splice(0)) stamp.destroy();
       screen.destroy();
     },
   };

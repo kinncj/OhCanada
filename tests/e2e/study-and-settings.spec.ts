@@ -116,6 +116,10 @@ test.describe('Study, on the shipped build', () => {
       const feedback = card.locator('[data-testid="question-feedback"]');
       await expect(feedback).toBeVisible();
       await expect(feedback).toContainText(/That's right!|Not quite\./);
+      /* ADR-0045: the way on is brought into view with the result, so a player
+         never scrolls to find it, and focus stays on the result it follows. */
+      await expect(card.locator('[data-testid="question-next"]')).toBeInViewport();
+      await expect(feedback).toBeFocused();
       await card.locator('[data-testid="question-next"]').click();
     }
 

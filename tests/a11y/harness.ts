@@ -348,6 +348,11 @@ const FIXED_CHARACTER = (
 
 const level = LEVEL[locale];
 
+/* The place a level names above its question (ADR-0045): the map's title for
+   the level and the landmark card's heading, as the composition root hands them
+   over. Both are the game's own names, not fixtures of this page's. */
+const QUESTION_PLACE: readonly string[] = [text(locale, 'level.ottawa.title'), level.poi.title];
+
 /*
  * The pictures the screens draw (ADR-0041).
  *
@@ -412,6 +417,14 @@ const titleFigure: (() => Promise<string | null>) | undefined =
 
 const withArt = (art: string | undefined): { readonly art?: string } =>
   art === undefined ? {} : { art };
+
+/* An earned stamp's picture on the passport (ADR-0045): the fixture drawing
+   under `?art=fixture`, Parliament Hill's own image under `?art=real`, and no
+   stamp at all with no parameter, so every passport scan written before is the
+   screen it was written for. */
+const passportStamp = await landmarkPicture('ottawa-landmark-parliament-hill');
+const PASSPORT_STAMP_ART: { readonly stampArt?: () => string } =
+  passportStamp === undefined ? {} : { stampArt: () => passportStamp };
 
 /**
  * The "About this place" panel's two branches (`docs/content-review.md` §10.2).
@@ -549,7 +562,9 @@ switch (screen) {
       onNext: () => undefined,
       onDismiss: () => undefined,
     });
-    card.present(QUESTION);
+    /* `?where=1` draws the place line a level hands the card (ADR-0045); no
+       parameter is Study's card, which belongs to no place. */
+    card.present(params.get('where') === '1' ? { ...QUESTION, place: QUESTION_PLACE } : QUESTION);
     /*
      * `?answered=<index>` takes an option, which is the state where the card
      * draws colour at all: a green fill on the right answer and a red one on the
@@ -747,6 +762,7 @@ switch (screen) {
       announce,
       singleSwitch: store.current.singleSwitch,
       onBack: () => undefined,
+      ...PASSPORT_STAMP_ART,
     }).show();
     break;
   }
@@ -917,17 +933,26 @@ switch (screen) {
           announce,
           singleSwitch: store.current.singleSwitch,
           onBack: () => undefined,
+          ...PASSPORT_STAMP_ART,
         }).show();
         break;
       }
       case 'card': {
+        /* As a level asks it (ADR-0045): a sheet over the level, with the level's
+           name and the landmark's above the question. `?answered=<index>` takes
+           an option, so a scan can measure where the way on is afterwards. */
         createQuestionCard(hud.main, {
           locale,
           announce,
+          overLevel: true,
           onAnswer: () => undefined,
           onNext: () => undefined,
           onDismiss: () => undefined,
-        }).present(QUESTION);
+        }).present({ ...QUESTION, place: QUESTION_PLACE });
+        const taken = params.get('answered');
+        if (taken !== null) {
+          document.querySelector<HTMLElement>(`[data-testid="option-${taken}"]`)?.click();
+        }
         break;
       }
       default:

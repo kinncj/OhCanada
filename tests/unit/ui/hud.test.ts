@@ -186,9 +186,35 @@ describe('what the player can do comes first (ADR-0039)', () => {
     for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'hud-quest-tracker', 'interact-hint']) {
       expect(index('menu-button'), `${words} is drawn before Menu`).toBeLessThan(index(words));
     }
-    /* The mode and the task stay together, and the hint is last. */
-    expect(index('hud-mode-label')).toBeLessThan(index('hud-quest-tracker'));
-    expect(index('hud-quest-tracker')).toBeLessThan(index('interact-hint'));
+    /*
+     * The task is next, before every paragraph (ADR-0045). At 200 % text in
+     * French on Halifax it used to follow the warning, the notice and the mode
+     * and ended below the screen. The hint is still last.
+     */
+    for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'interact-hint']) {
+      expect(index('hud-quest-tracker'), `${words} is drawn before the task`).toBeLessThan(
+        index(words),
+      );
+    }
+    expect(index('hud-mode-label')).toBeLessThan(index('interact-hint'));
+    expect(order.at(-1)).toBe('interact-hint');
+  });
+
+  it('keeps the task in its place when it arrives after the paragraphs below it', () => {
+    /* The order is the slots', not the order the calls came in. */
+    const { hud, at } = mount();
+    hud.setHint('A mark shows someone or something you can choose. Get close, then choose.');
+    hud.setMode('Walking');
+    hud.setNotice('The questions are not ready right now. Try again later.');
+    hud.setTask('Find the Town Clock');
+
+    const order = testIdsIn(at('hud'));
+    expect(order.indexOf('hud-quest-tracker')).toBeLessThan(order.indexOf('hud-notice'));
+    expect(order.indexOf('hud-quest-tracker')).toBeGreaterThan(order.indexOf('menu-button'));
+
+    hud.setTask('Answer 2 questions (1 of 2)');
+    expect(at('hud-quest-tracker')?.textContent).toBe('Task: Answer 2 questions (1 of 2)');
+    expect(testIdsIn(at('hud')).filter((id) => id === 'hud-quest-tracker')).toHaveLength(1);
   });
 
   it('brings a new offer back to the top of the strip', () => {

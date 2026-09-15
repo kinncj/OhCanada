@@ -46,7 +46,7 @@
  */
 
 import { count, labelled, text, type UiLocale } from './copy';
-import { button, element, mark, replaceChildren } from './dom';
+import { button, element, replaceChildren, switchTrack } from './dom';
 import { MINUTE_MS } from './exam-clock';
 import { createScreen, type Screen } from './screen';
 
@@ -358,11 +358,21 @@ export function createExamStartScreen(
    * on the screen rather than left to be inferred from an absent clock. The
    * limit is drawn beside the switch as its value whether the switch is on or
    * off, so the player knows what they would be agreeing to before they agree.
+   *
+   * **The limit is inside the switch, under its label** (ADR-0045). It was a
+   * paragraph of its own between the help and "No timer. Take as long as you
+   * like.", so the screen read "30 minutes" and then "No timer" as two facts
+   * about the same exam. Under "Use the timer" it reads as what the timer is.
    */
   function timerGroup(timeLimitMs: number): HTMLElement {
     const label = element(doc, 'span', { text: text(locale, 'exam.timer.use') });
+    const limit = element(doc, 'span', {
+      testId: 'exam-timer-limit',
+      className: 'tn-switch__value',
+      text: count(locale, 'exam.timer.limit', Math.round(timeLimitMs / MINUTE_MS)),
+    });
+    const words = element(doc, 'span', { className: 'tn-switch__words', children: [label, limit] });
     const stateWord = element(doc, 'span', { className: 'tn-screen__state' });
-    const shape = mark(doc, '✓');
 
     const help = element(doc, 'p', {
       id: 'tn-exam-timer-help',
@@ -373,7 +383,9 @@ export function createExamStartScreen(
     const control = button(doc, {
       testId: 'exam-timer-toggle',
       attrs: { role: 'switch', 'aria-checked': 'false', 'aria-describedby': help.id },
-      children: [shape, label, stateWord],
+      /* The track is the shape beside the word, the same one Settings draws, so
+         a player meets one kind of switch in this game. */
+      children: [words, switchTrack(doc), stateWord],
       onClick: () => {
         timed = !timed;
         paint();
@@ -383,11 +395,6 @@ export function createExamStartScreen(
           locale,
         );
       },
-    });
-
-    const limit = element(doc, 'p', {
-      testId: 'exam-timer-limit',
-      text: count(locale, 'exam.timer.limit', Math.round(timeLimitMs / MINUTE_MS)),
     });
 
     const off = element(doc, 'p', {
@@ -402,9 +409,9 @@ export function createExamStartScreen(
     function paint(): void {
       control.setAttribute('aria-checked', String(timed));
       stateWord.textContent = stateText();
-      /* The shape is the second signal, beside the word; the fill is the third
-         and is the stylesheet's. Removing colour loses nothing. */
-      shape.hidden = !timed;
+      /* The track is the second signal, beside the word, and follows
+         `aria-checked` in the stylesheet; the fill is the third. Removing colour
+         loses nothing. */
       off.hidden = timed;
     }
 
@@ -413,7 +420,7 @@ export function createExamStartScreen(
     return element(doc, 'div', {
       className: 'tn-screen__group',
       testId: 'exam-timer',
-      children: [control, help, limit, off],
+      children: [control, help, off],
     });
   }
 

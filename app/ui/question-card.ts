@@ -22,6 +22,14 @@
  * (`content/questions/*`), verified by the content agents. Nothing here writes
  * question wording.
  *
+ * ## The layout (ADR-0045)
+ *
+ * The card hugs its content at the foot of the screen, so nothing is left blank
+ * under the options before the player answers. In a level it is a sheet over the
+ * level, like the landmark card before it (ADR-0041); in Study it keeps the night
+ * behind it. When the answer arrives the result gets focus, as it always did, and
+ * the way on is scrolled into view with it, so "Next" is never below the fold.
+ *
  * DOM only (ADR-0005). Study mode reuses this card exactly (`TN-STUDY`).
  */
 
@@ -46,6 +54,14 @@ export interface QuestionView {
    * question itself instead.
    */
   readonly progress?: { readonly n: number; readonly of: number };
+  /**
+   * Where the question is being asked, widest first: the level's name, then the
+   * landmark's (ADR-0045). Already localised, and names the game already draws —
+   * the map's title for the level and the landmark card's heading — so this card
+   * writes no words of its own about the place. Absent or empty draws no line,
+   * which is Study, where a question belongs to no place.
+   */
+  readonly place?: readonly string[];
   readonly prompt: string;
   /** Authored order (`OQ-CARD-2`). Four of them, in slice 1. */
   readonly options: readonly string[];
@@ -65,6 +81,12 @@ export interface QuestionCardOptions {
   readonly onDismiss?: () => void;
   /** The dismissal message, for a HUD that wants to show it as well as speak it. */
   readonly onNotice?: (message: string) => void;
+  /**
+   * The card is asked over a running level (ADR-0045): a sheet, with the level
+   * dimmed in view above it, as the landmark card before it is. Absent, the card
+   * keeps the night behind it — Study, whose home screen is not a level.
+   */
+  readonly overLevel?: boolean;
   readonly singleSwitch?: boolean;
   readonly holdMs?: number;
   readonly now?: () => number;
@@ -96,6 +118,7 @@ export function createQuestionCard(
     id: 'tn-question-card',
     testId: 'question-card',
     locale,
+    className: `tn-question ${options.overLevel === true ? 'tn-screen--sheet' : 'tn-screen--hug'}`,
     onEscape: dismiss,
     ...(options.announce === undefined ? {} : { announce: options.announce }),
     switch: {
@@ -105,6 +128,15 @@ export function createQuestionCard(
     },
   });
 
+  /* Where the question is asked. Outside the dialog's name and description, so
+     a screen reader opening the card still hears the counter and the question
+     first, and reads the place when it reads the card. */
+  const place = element(doc, 'p', {
+    testId: 'question-place',
+    className: 'tn-question__place',
+  });
+  place.hidden = true;
+
   /* The accessible name is the progress line, so a screen reader opening the
      dialog hears "Question 1 of 3" before the prompt (`TN-CARD-08`). */
   const progress = element(doc, 'h1', { id: 'tn-question-progress', testId: 'question-progress' });
@@ -112,6 +144,12 @@ export function createQuestionCard(
 
   /* Words, not an icon (`TN-CARD-08`). */
   const kind = element(doc, 'p', { testId: 'question-kind', className: 'tn-screen__help' });
+
+  /* The counter and the tag share a line when both fit, and wrap when not. */
+  const head = element(doc, 'div', {
+    className: 'tn-question__head',
+    children: [progress, kind],
+  });
 
   const prompt = element(doc, 'p', { id: 'tn-question-prompt', testId: 'question-prompt' });
   screen.describedBy(prompt);
@@ -142,17 +180,12 @@ export function createQuestionCard(
     onClick: dismiss,
   });
 
-  screen.card.append(
-    progress,
-    kind,
-    prompt,
-    optionList,
-    feedback,
-    element(doc, 'div', {
-      className: 'tn-screen__actions',
-      children: [nextButton, closeButton],
-    }),
-  );
+  const actions = element(doc, 'div', {
+    className: 'tn-screen__actions',
+    children: [nextButton, closeButton],
+  });
+
+  screen.card.append(place, head, prompt, optionList, feedback, actions);
 
   /**
    * The dismissal message. It outlives the card by design — the card is gone
@@ -191,6 +224,9 @@ export function createQuestionCard(
       /* A question not yet answered can be left; see `answer` for why an
          answered one cannot be left this way. */
       closeButton.hidden = false;
+      /* A new question starts at its top, not where the last explanation was
+         scrolled to. */
+      screen.element.scrollTop = 0;
 
       screen.show();
       screen.refreshSwitch();
@@ -241,7 +277,31 @@ export function createQuestionCard(
     return text(locale, 'card.progress', { n, total: of });
   }
 
+  /**
+   * The place line: each name in its own span, with a dot between them that is
+   * drawn and never read. No name is written here.
+   */
+  function paintPlace(question: QuestionView): void {
+    const names = (question.place ?? []).filter((name) => name !== '');
+    const parts: HTMLElement[] = [];
+    for (const [index, name] of names.entries()) {
+      if (index > 0) {
+        parts.push(
+          element(doc, 'span', {
+            className: 'tn-question__place-gap',
+            text: '·',
+            attrs: { 'aria-hidden': 'true' },
+          }),
+        );
+      }
+      parts.push(element(doc, 'span', { text: name }));
+    }
+    replaceChildren(place, parts);
+    place.hidden = names.length === 0;
+  }
+
   function paintQuestion(question: QuestionView): void {
+    paintPlace(question);
     /*
      * The counter, or none. With a counter the dialog is named by it and
      * described by the question (`TN-CARD-08`: a screen reader hears "Question 1
@@ -306,10 +366,55 @@ export function createQuestionCard(
     closeButton.hidden = current.index + 1 >= current.total;
     screen.refreshSwitch();
     /* Focus the result so it is read, rather than left behind on the option
-       the player just pressed (`TN-CARD-06`). */
-    feedback.focus();
+       the player just pressed (`TN-CARD-06`). The scroll is `revealWayOn`'s. */
+    feedback.focus({ preventScroll: true });
+    revealWayOn();
 
     options.onAnswer?.(index, correct);
+  }
+
+  /**
+   * Bring the result and the way on into view together (ADR-0045).
+   *
+   * The live-site audit found "Next" below the fold after answering at 100 %
+   * text, and 257 px below it at 200 %. When the result and the actions fit on
+   * screen together, the actions are scrolled just far enough to be seen, which
+   * keeps the whole result above them. When they do not fit, the result is
+   * scrolled to the top, so its first line — "Not quite." — is what is seen, and
+   * the way on follows it directly. Instant under reduced motion, from the
+   * setting or from the device.
+   *
+   * A document with no layout (the unit suite's) has nothing to scroll.
+   */
+  function revealWayOn(): void {
+    const target = actions as Partial<Pick<HTMLElement, 'scrollIntoView' | 'getBoundingClientRect'>>;
+    const result = feedback as Partial<Pick<HTMLElement, 'scrollIntoView' | 'getBoundingClientRect'>>;
+    const scroller = screen.element as Partial<Pick<HTMLElement, 'getBoundingClientRect'>>;
+    if (
+      target.scrollIntoView === undefined ||
+      target.getBoundingClientRect === undefined ||
+      result.scrollIntoView === undefined ||
+      result.getBoundingClientRect === undefined ||
+      scroller.getBoundingClientRect === undefined
+    ) {
+      return;
+    }
+    const behavior: ScrollBehavior = motionReduced() ? 'auto' : 'smooth';
+    const needed = target.getBoundingClientRect().bottom - result.getBoundingClientRect().top;
+    if (needed <= scroller.getBoundingClientRect().height) {
+      target.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior });
+    } else {
+      result.scrollIntoView({ block: 'start', inline: 'nearest', behavior });
+    }
+  }
+
+  /** Less movement, from the setting (`applySettings`) or from the device. */
+  function motionReduced(): boolean {
+    const root = doc.documentElement as HTMLElement | null | undefined;
+    if (root?.getAttribute('data-tn-motion') === 'reduced') return true;
+    const view = doc.defaultView as (Window & typeof globalThis) | null | undefined;
+    const query = view?.matchMedia as Window['matchMedia'] | undefined;
+    return query?.call(view, '(prefers-reduced-motion: reduce)').matches === true;
   }
 
   function repaintOptionMarks(): void {

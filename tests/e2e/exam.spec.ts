@@ -141,6 +141,9 @@ test.describe('the practice exam, on the shipped build', () => {
       'No timer. Take as long as you like.',
     );
     await expect(page.locator('[data-testid="exam-timer-limit"]')).toHaveText(/^\d+ minutes$/);
+    /* ADR-0045: the limit is the switch's value, drawn inside it under its label,
+       not a line of its own beside "No timer". */
+    await expect(toggle.locator('[data-testid="exam-timer-limit"]')).toHaveCount(1);
 
     await page.locator('[data-testid="exam-begin"]').click();
     await expect(page.locator('[data-testid="exam-screen"]')).toBeVisible();

@@ -168,13 +168,19 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
    */
   modeLabel.hidden = true;
 
-  /* The status rows: text only, no `aria-live` of their own (`TN-HUD-07`). A
-     change to either is announced once, through the one live region. */
+  /* The mode row: text only, no `aria-live` of its own (`TN-HUD-07`). A change
+     is announced once, through the one live region. The task has its own slot
+     further up (ADR-0045). */
   const status = element(doc, 'div', {
     className: 'tn-hud__status',
     children: [modeLabel],
   });
 
+  /* The task has a slot of its own, directly under Settings and Menu (ADR-0045):
+     at 200 % text only the top of the strip is on screen, and the task is the
+     line a player acts on, so it is never below a paragraph that explains
+     something else. */
+  const taskSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   const warningSlot = element(doc, 'div', { className: 'tn-hud__slot' });
   /* The hint has a slot of its own, after the prompt's and the controls, rather
      than sharing one: the offer is what the player can act on, the hint explains
@@ -235,6 +241,11 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
    * scroll. The DOM order *is* the visual order, so reading order and focus
    * order agree with what a sighted player sees (WCAG 1.3.2, 2.4.3).
    *
+   * **The task comes straight after them** (ADR-0045). It used to follow the
+   * warning, the notice and the mode, and at 200 % text in French on Halifax it
+   * ended 63 px below the screen. The task is what the player is acting on; the
+   * mode, the notice and the hint are what may scroll.
+   *
    * One scroll box and not two: a strip with a text-only scroll area inside it
    * would be a scrollable region with nothing focusable (axe's
    * `scrollable-region-focusable`), and a pinned footer over scrolling text would
@@ -244,7 +255,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     testId: 'hud',
     className: 'tn-hud',
     attrs: { 'aria-label': text(locale, 'hud.label') },
-    children: [promptSlot, controls, warningSlot, noticeSlot, status, hintSlot],
+    children: [promptSlot, controls, taskSlot, warningSlot, noticeSlot, status, hintSlot],
   });
   main.append(region);
 
@@ -300,7 +311,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       existing.textContent = wording;
       return;
     }
-    status.append(
+    taskSlot.append(
       element(doc, 'p', {
         testId: 'hud-quest-tracker',
         className: 'tn-hud__task',
@@ -310,7 +321,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   }
 
   function trackerElement(): HTMLElement | null {
-    return status.querySelector<HTMLElement>('[data-testid="hud-quest-tracker"]');
+    return taskSlot.querySelector<HTMLElement>('[data-testid="hud-quest-tracker"]');
   }
 
   function renderPrompt(): void {

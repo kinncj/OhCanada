@@ -83,6 +83,12 @@ export interface ScreenArtDeps {
   readonly revoke?: (url: string) => void;
   /** Defaults to `console.warn`. */
   readonly report?: (message: string) => void;
+  /**
+   * A level's points of interest, for the stamp of a level that is not the one
+   * loaded (ADR-0045: the passport draws every earned stamp). `null` for a level
+   * with no document. Absent, no other level's stamp is ever drawn.
+   */
+  readonly levelPois?: (levelId: string) => Promise<readonly { readonly artKey: string }[] | null>;
 }
 
 export interface ScreenArt {
@@ -92,6 +98,16 @@ export interface ScreenArt {
   pictureOf(artKey: string | null | undefined): string | null;
   /** The picture the level's stamp is pressed in the shape of. */
   stampOf(pois: readonly { readonly artKey: string }[]): string | null;
+  /**
+   * The same picture for a level by id, once {@link ScreenArt.learnStamps} has
+   * read that level; `null` before, and when it has none.
+   */
+  stampOfLevel(levelId: string): string | null;
+  /**
+   * Read these levels' stamps, each once. Resolves `true` when a picture was
+   * learned that was not known before, so a caller knows to redraw.
+   */
+  learnStamps(levelIds: readonly string[]): Promise<boolean>;
   /** A character's face, once painted; `null` before, and when it could not be. */
   portraitOf(characterId: string): string | null;
   /** Paint the faces of these characters, in the background. Each is painted once. */
@@ -144,6 +160,8 @@ export function createScreenArt(deps: ScreenArtDeps): ScreenArt {
   let manifest: AssetManifest | null = null;
   let reading: Promise<void> | null = null;
   const portraits = new Map<string, string | null>();
+  /** A level's stamp picture by id, once read; `null` for a level with none. */
+  const levelStamps = new Map<string, string | null>();
   const painting = new Map<string, Promise<void>>();
   let figureKey: string | null = null;
   let figureUrl: string | null = null;
@@ -218,6 +236,33 @@ export function createScreenArt(deps: ScreenArtDeps): ScreenArt {
       /* Nothing to press without the manifest, and nothing is read until there is. */
       if (manifest === null) return null;
       return pictureOf(stampLandmark(pois)?.artKey);
+    },
+
+    stampOfLevel(levelId): string | null {
+      return levelStamps.get(levelId) ?? null;
+    },
+
+    async learnStamps(levelIds): Promise<boolean> {
+      const read = deps.levelPois;
+      if (read === undefined) return false;
+      await prime();
+      if (manifest === null) return false;
+      let learned = false;
+      for (const id of new Set(levelIds)) {
+        if (levelStamps.has(id)) continue;
+        try {
+          /* The same rule as the completion card's, over the level's own
+             points of interest, so the passport presses the same stamp. */
+          const pois = await read(id);
+          const src = pois === null ? null : pictureOf(stampLandmark(pois)?.artKey);
+          levelStamps.set(id, src);
+          if (src !== null) learned = true;
+        } catch (cause) {
+          /* Not remembered: a document that did not arrive this time may next. */
+          report(`the stamp for "${id}" could not be read. ${messageOf(cause)}`);
+        }
+      }
+      return learned;
     },
 
     portraitOf(characterId): string | null {

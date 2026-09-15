@@ -24,7 +24,7 @@ import {
   type CopyKey,
   type UiLocale,
 } from './copy';
-import { button, element } from './dom';
+import { button, element, switchTrack } from './dom';
 import { createScreen, type Screen } from './screen';
 import { SWITCH_MAX_HOLD_ATTRIBUTE } from './single-switch';
 import {
@@ -343,7 +343,10 @@ export function createSettingsScreen(
     const control = button(doc, {
       testId: spec.testId,
       attrs: { role: 'switch', 'aria-checked': 'false' },
-      children: [labelText, state],
+      /* The track beside its word: a knob and a fill that follow `aria-checked`,
+         so on and off are a shape as well as a word (ADR-0045). It is
+         `aria-hidden`, so the name is still the label and the state. */
+      children: [labelText, switchTrack(doc), state],
       onClick: () => {
         const next = store.toggle(spec.key);
         paint();
@@ -571,9 +574,15 @@ export function createSettingsScreen(
       },
     });
 
+    /* The name and the value on one line, over the slider (ADR-0045): the value
+       used to sit alone at the far end of a line under the slider, apart from
+       the words it belongs to. */
     return element(doc, 'div', {
       className: 'tn-screen__row',
-      children: [label, input, value],
+      children: [
+        element(doc, 'div', { className: 'tn-settings__size-head', children: [label, value] }),
+        input,
+      ],
     });
   }
 

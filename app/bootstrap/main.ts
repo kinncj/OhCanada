@@ -50,6 +50,7 @@ import { browserIndexedDb, browserLocalStorage, openProgressStore } from '@adapt
 import { createSeededRandom } from '@adapters/random';
 import {
   GameRenderer,
+  bundledLevelCatalog,
   createCharacterPreview,
   hasLevel,
   parseBootConfig,
@@ -372,6 +373,13 @@ function main(): void {
       baseUrl: assetsBaseUrl(),
       devicePixelRatio: () => window.devicePixelRatio,
       document,
+      /* An earned level's points of interest, for its stamp on the passport
+         (ADR-0045). The level's own document chunk, which the worker already
+         precaches; nothing is drawn for a level that is not earned. */
+      levelPois: async (levelId) => {
+        const loaded = await bundledLevelCatalog.load(levelId, config.locomotionModes);
+        return loaded.ok ? loaded.value.pois : null;
+      },
     }),
   });
 }
@@ -913,6 +921,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
         announce,
         singleSwitch: store.current.singleSwitch,
         holdMs: store.current.holdToChooseMs,
+        /* Each earned stamp, pressed in its level's landmark (ADR-0045). */
+        stampArt: (levelId) => screenArt.stampOfLevel(levelId),
         /* `TN-PASSPORT-06`. Drawn from what is already saved, so it is right the
            moment the screen opens; the one thing it cannot know yet is whether
            the bank can run an exam at all, which arrives below. */
@@ -929,6 +939,14 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       });
       shell.setModalOpen(true);
       shellPassport.show();
+      /* Earned stamps not read yet arrive after the screen opens, and redraw it
+         once (ADR-0045). Nothing is drawn in their place while they load. */
+      const openedPassport = shellPassport;
+      void screenArt.learnStamps(earnedIds(entriesNow())).then((learned) => {
+        if (learned && shellPassport === openedPassport && openedPassport.visible) {
+          openedPassport.setEntries(entriesNow());
+        }
+      });
       /*
        * Whether the exam can run, asked once and folded in when it answers.
        *
@@ -1915,12 +1933,14 @@ function openLevel(wiring: LevelWiring): LevelSession {
   let passport: Passport | null = null;
   function openPassport(): void {
     passport?.destroy();
-    passport = createPassport(hud.main, {
+    const opened = createPassport(hud.main, {
       locale,
       entries: wiring.entries(),
       announce: wiring.announce,
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
+      /* Each earned stamp, pressed in its level's landmark (ADR-0045). */
+      stampArt: (levelId) => wiring.screenArt.stampOfLevel(levelId),
       onBack: () => {
         passport?.hide();
         pause.release('passport');
@@ -1928,9 +1948,14 @@ function openLevel(wiring: LevelWiring): LevelSession {
            menu restored to on its way out. Moving it here would take that away. */
       },
     });
+    passport = opened;
     takeOverFromMenu();
     pause.hold('passport');
-    passport.show();
+    opened.show();
+    /* Stamps not read yet arrive after the screen opens, and redraw it once. */
+    void wiring.screenArt.learnStamps(earnedIds(wiring.entries())).then((learned) => {
+      if (learned && passport === opened && opened.visible) opened.setEntries(wiring.entries());
+    });
   }
 
   /**
@@ -2028,6 +2053,16 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * asked.
    */
   let learning: string | null = null;
+  /*
+   * The name the landmark's card has just drawn as its heading, or `null`.
+   *
+   * The question card names the place it is asked (ADR-0045): the level, and the
+   * landmark only when its own card has just named it. A giver that is a
+   * landmark (Peggy's Cove's lighthouse, the North's sternwheeler) and a
+   * landmark whose card was withheld drew no heading, so the question names only
+   * the level there, as the completion card does (`TN-DONE`).
+   */
+  let learningName: LocalizedText | null = null;
 
   /**
    * What the quest step the player has just finished has to say, waiting for the
@@ -2104,6 +2139,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
     announce: wiring.announce,
     singleSwitch: store.current.singleSwitch,
     holdMs: store.current.holdToChooseMs,
+    /* A sheet over the level, as the landmark card before it is (ADR-0045). */
+    overLevel: true,
     onAnswer: (question, chosenIndex) => {
       /* Asked before the answer is recorded: once it completes the last step,
          no quest is answering any more, and the card needs to know which did. */
@@ -2585,6 +2622,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       if (quests.answeringStep === undefined) return;
       if (card.visible || runner.running) return;
       learning = bareTargetId(String(quest.giver));
+      learningName = null;
       pause.hold('poi');
       void askAbout();
     },
@@ -2663,6 +2701,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       if (!visit.advanced) return;
       markEngaged(detail);
       learning = quiet.id;
+      learningName = null;
       pause.hold('poi');
       pendingVisit = visit;
       afterTheCard();
@@ -2670,6 +2709,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     }
     markEngaged(detail);
     learning = poi.id;
+    learningName = poi.name;
     /* One hold for the whole chain: the landmark card, and the question after
        it. Released by `askAbout` or by the runner finishing. */
     pause.hold('poi');
@@ -2725,7 +2765,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   async function askAbout(): Promise<void> {
     const about = learning;
+    const aboutName = learningName;
     learning = null;
+    learningName = null;
     if (about === null) {
       pause.release('poi');
       /* The chain was torn down rather than finished — a language change, the
@@ -2773,7 +2815,23 @@ function openLevel(wiring: LevelWiring): LevelSession {
     hud.setNotice(null);
     /* A short bank asks fewer than the step has left (`TN-QUEST-05`), and the
        card never counts to a question that is not coming. */
-    runner.start(drawn.value.questions, counterForDrawn(draw, drawn.value.questions.length));
+    /* Where the questions are asked, for the card's place line (ADR-0045): the
+       map's name for this level, then the landmark's own heading when its card
+       has just drawn it. Resolved per language, so a language change is right on
+       the next question. */
+    const levelId = level === null ? null : String(level.id);
+    const placeFor = (which: UiLocale): readonly string[] => {
+      const names: string[] = [];
+      const titleKey = levelId === null ? '' : `level.${levelId}.title`;
+      if (hasCopyRow(titleKey)) names.push(text(which, titleKey));
+      if (aboutName !== null) names.push(localised(aboutName, which));
+      return names;
+    };
+    runner.start(
+      drawn.value.questions,
+      counterForDrawn(draw, drawn.value.questions.length),
+      placeFor,
+    );
   }
 
   /*
@@ -3317,6 +3375,13 @@ function toDomainSettings(
 function localised(value: LocalizedText | undefined, locale: UiLocale): string {
   if (value === undefined) return '';
   return locale === 'fr' ? value.fr : value.en;
+}
+
+/** The levels whose stamp is earned, by id: the ones the passport presses (ADR-0045). */
+function earnedIds(entries: readonly MapEntry[]): readonly string[] {
+  return entries.flatMap((entry) =>
+    entry.stamped === true && entry.id !== undefined ? [String(entry.id)] : [],
+  );
 }
 
 /**

@@ -103,6 +103,11 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
     id: 'tn-menu',
     testId: 'menu',
     locale,
+    /* A sheet over the paused level, hugging its title and its items (ADR-0045),
+       not a full white page with the items at the bottom of a blank column. The
+       level stays in view above it, dimmed, as it does behind the landmark card
+       (ADR-0041). */
+    className: 'tn-screen--sheet',
     onEscape: () => dismiss(),
     ...(options.announce === undefined ? {} : { announce: options.announce }),
     switch: {
@@ -163,6 +168,8 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
       button(doc, {
         testId: 'menu-close',
         text: text(locale, 'common.close'),
+        /* Quiet, as the exam menu's Close is: the way back, not a place to go. */
+        attrs: { 'data-tn-action': 'quiet' },
         onClick: () => dismiss(),
       }),
     ]);

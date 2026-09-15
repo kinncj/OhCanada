@@ -282,9 +282,17 @@ export function createExamScreen(host: HTMLElement, options: ExamScreenOptions):
     },
   });
 
+  /* Previous and Next share a row while both words fit (ADR-0045): they are two
+     directions of one movement, and four full-width slabs stacked under the
+     options read as four equal choices. The reading order and the switch ring
+     are unchanged — Previous, Next, Finish, then the menu. */
   const controls = element(doc, 'div', {
     className: 'tn-screen__actions',
-    children: [previous, next, finish, menuButton],
+    children: [
+      element(doc, 'div', { className: 'tn-exam__step', children: [previous, next] }),
+      finish,
+      menuButton,
+    ],
   });
 
   screen.card.append(heading, clockLine, untimedLine, progress, card, controls);
@@ -295,6 +303,10 @@ export function createExamScreen(host: HTMLElement, options: ExamScreenOptions):
     id: 'tn-exam-menu',
     testId: 'exam-menu',
     locale,
+    /* It hugs its items at the foot of the screen (ADR-0045) instead of a white
+       page with the items under a blank column. The night stays behind it: the
+       exam is not a level to dim. */
+    className: 'tn-screen--hug',
     onEscape: () => {
       closeMenu();
     },

@@ -99,6 +99,23 @@ export function chosenMark(doc: Document, chosen: boolean): HTMLElement {
   return node;
 }
 
+/**
+ * A switch's track: a knob that sits at the start when off and at the end, on a
+ * filled track, when on (ADR-0045).
+ *
+ * It carries no state of its own. The stylesheet reads the switch's
+ * `aria-checked`, so the track can never disagree with what a screen reader is
+ * told, and it is `aria-hidden` because the word "On" or "Off" beside it is what
+ * is read. A shape beside the word, so a switch's state never rests on colour.
+ */
+export function switchTrack(doc: Document): HTMLElement {
+  return element(doc, 'span', {
+    className: 'tn-switch',
+    attrs: { 'aria-hidden': 'true' },
+    children: [element(doc, 'span', { className: 'tn-switch__knob' })],
+  });
+}
+
 /** Replace an element's children in one step, without innerHTML. */
 export function replaceChildren(node: HTMLElement, children: readonly HTMLElement[]): void {
   while (node.firstChild !== null) node.removeChild(node.firstChild);

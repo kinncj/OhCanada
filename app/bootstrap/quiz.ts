@@ -62,6 +62,11 @@ export interface DrillRunnerOptions {
   readonly singleSwitch: boolean;
   readonly holdMs: number;
   /**
+   * The card is asked over a running level, so it is a sheet with the level in
+   * view above it (ADR-0045). Absent for Study.
+   */
+  readonly overLevel?: boolean;
+  /**
    * One answer, once. The caller records it — `answerQuestion` plus the save —
    * and this runner never sees the result of doing so.
    */
@@ -83,8 +88,15 @@ export interface DrillRunner {
    *
    * `counter` is what the card counts when it counts more than this list — a
    * quest step's questions. Omitted, it counts the list.
+   *
+   * `placeFor` names where the questions are asked, in a language, for the
+   * card's place line (ADR-0045). Omitted, the card draws no place: Study.
    */
-  start(questions: readonly StudyQuestion[], counter?: DrillCounter | null): void;
+  start(
+    questions: readonly StudyQuestion[],
+    counter?: DrillCounter | null,
+    placeFor?: (locale: UiLocale) => readonly string[],
+  ): void;
   /** Close the card without finishing. Used when the whole screen goes away. */
   stop(): void;
   setLocale(locale: UiLocale): void;
@@ -117,6 +129,9 @@ export function questionView(
    * Absent, the card counts through the drill — Study's case.
    */
   counter: DrillCounter | null = null,
+  /* Where it is asked, already localised: the level's name, then the
+     landmark's when its card has just named it (ADR-0045). Empty for Study. */
+  place: readonly string[] = [],
 ): QuestionView {
   const { question } = selected;
   const explanation = localised(question.explanation, locale);
@@ -127,6 +142,7 @@ export function questionView(
     ...(counter === null
       ? {}
       : { progress: { n: counter.answered + index + 1, of: counter.total } }),
+    ...(place.length === 0 ? {} : { place }),
     prompt: localised(question.prompt, locale),
     options: question.options.map((option) => localised(option, locale)),
     correctIndex: question.correctIndex,
@@ -141,6 +157,7 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
   let locale = options.locale;
   let queue: readonly StudyQuestion[] = [];
   let counting: DrillCounter | null = null;
+  let placing: ((locale: UiLocale) => readonly string[]) | null = null;
   let at = 0;
   let correct = 0;
   const returning: string[] = [];
@@ -178,12 +195,15 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
     },
     singleSwitch: options.singleSwitch,
     holdMs: options.holdMs,
+    ...(options.overLevel === true ? { overLevel: true } : {}),
   });
 
   function present(): void {
     const selected = queue[at];
     if (selected === undefined) return;
-    card.present(questionView(selected, locale, at, queue.length, counting));
+    card.present(
+      questionView(selected, locale, at, queue.length, counting, placing?.(locale) ?? []),
+    );
   }
 
   function finish(left: boolean): void {
@@ -200,9 +220,10 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
       return live;
     },
 
-    start(questions, counter = null): void {
+    start(questions, counter = null, placeFor): void {
       queue = questions;
       counting = counter;
+      placing = placeFor ?? null;
       at = 0;
       correct = 0;
       returning.length = 0;
