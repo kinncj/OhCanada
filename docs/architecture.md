@@ -414,6 +414,19 @@ the page never holds a second WebGL context. The atlas is the level's page, fetc
 released when it closes. The host reports `data-state` and `data-frames`, so a browser test reads what is drawn
 without comparing pixels.
 
+### The screen art seam
+
+The landmark card, the dialogue, the completion card, the title screen and the Study home draw pictures
+(ADR-0041). Like the creator's, the seam is **not an application port**: a screen is handed a URL, or a
+function that resolves to one, and draws it as decoration through `app/ui/screen-art.ts` — an `aria-hidden`
+frame, an `alt=""` image, hidden when it cannot load. `app/bootstrap/screen-art.ts` decides what each URL is:
+the level's own image for a point of interest's `artKey`, the level's hero landmark for its stamp, and faces
+and the player's figure painted as stills by `app/adapters/phaser/character-still.ts`, which paints the level's
+puppet into a canvas that never reaches the page and releases the decoded atlas before it returns. The title
+and Study landscape is screen art under `assets/src/svg/screens/`, resolved through Vite like the map's
+drawing. The three cards a level opens are sheets over it; the level behind is dimmed by a brightness filter on
+the canvas, never by a wash over words.
+
 ## 6. Seams deliberately left open
 
 Named here so a later slice picks them up on purpose rather than inventing them under pressure.
