@@ -80,6 +80,7 @@ import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from '.
 import { stopSubjectsFor } from './stand-off';
 import { backingBounds, backingTuning, createBacking, facingForward, type BackingWatch } from './backing';
 import { createKeyPresses, directionPressed, pressedAny, type KeyPresses } from './key-presses';
+import { canvasTopColour, meanRowColour, type Rgba, type SkyTopLayer } from './sky-top';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -230,6 +231,24 @@ const JUMP_KEYS = ['SPACE', 'UP', 'W'] as const;
 const INTERACT_KEYS = ['E', 'ENTER'] as const;
 const READ_KEYS = [...LEFT_KEYS, ...RIGHT_KEYS, ...JUMP_KEYS, ...INTERACT_KEYS] as const;
 
+/**
+ * A texture source a 2D canvas can draw: an image, a canvas or a bitmap.
+ *
+ * Phaser's `getSourceImage` may also answer with a render texture or a GL
+ * wrapper, which `drawImage` cannot take; those are skipped rather than thrown on
+ * (`#textureRowColour`). Each constructor is checked for existence first, so a
+ * runtime without one of them is a `false` and not a `ReferenceError`.
+ */
+function isDrawableSource(
+  source: unknown,
+): source is HTMLImageElement | HTMLCanvasElement | ImageBitmap {
+  return (
+    (typeof HTMLImageElement !== 'undefined' && source instanceof HTMLImageElement) ||
+    (typeof HTMLCanvasElement !== 'undefined' && source instanceof HTMLCanvasElement) ||
+    (typeof ImageBitmap !== 'undefined' && source instanceof ImageBitmap)
+  );
+}
+
 export interface LevelSceneOptions {
   readonly level: SceneLevel;
   readonly designWidth: number;
@@ -304,6 +323,15 @@ export interface LevelSceneOptions {
    * subscription when the words exist.
    */
   readonly onMilestone?: SceneMilestoneListener;
+  /**
+   * The colour the canvas draws on its first row, `#rrggbb`, whenever it changes.
+   *
+   * The page paints the band above a letterboxed canvas with it (ADR-0044).
+   * Reported at `create`, and again only when the answer moves: the tier switched
+   * a layer off, the time-of-day tint repainted a sky that shows, or the camera
+   * scrolled a different row onto the top. Never on a frame where nothing moved.
+   */
+  readonly onSkyTop?: (colour: string) => void;
 }
 
 /** One placeholder or textured parallax band, plus the document row it came from. */
@@ -551,6 +579,12 @@ export class LevelScene extends Phaser.Scene {
   #levelComplete = false;
   /** The five-second clock that lets the sky follow the device's time of day. */
   #skyClock: Phaser.Time.TimerEvent | null = null;
+  /** The first-row colour last handed to `onSkyTop`, so an unchanged answer is not sent twice. */
+  #skyTop: string | null = null;
+  /** The camera row that answer was worked out at. `NaN` until the first one. */
+  #skyTopCameraY = Number.NaN;
+  /** One colour per texture row asked for. A row of a loaded image never changes. */
+  readonly #rowColours = new Map<string, Rgba | null>();
   /** The rig's atlas key, resolved once. `undefined` is "not asked yet". */
   #atlasKey: string | null | undefined = undefined;
   /**
@@ -785,6 +819,9 @@ export class LevelScene extends Phaser.Scene {
     this.#buildAffordances();
     this.#bindInput();
     this.applyProfile(this.#profile);
+    /* After the layers, the camera and the tier: every input to the first row.
+       `applyProfile` reports too, but returns before it with no tier yet. */
+    this.#reportSkyTop();
     this.#startSkyClock();
 
     this.#ready = true;
@@ -857,6 +894,8 @@ export class LevelScene extends Phaser.Scene {
       this.#placed.clear();
       this.#skyClock?.remove();
       this.#skyClock = null;
+      /* The rows belong to textures the unload path is about to drop. */
+      this.#rowColours.clear();
     });
   }
 
@@ -913,6 +952,8 @@ export class LevelScene extends Phaser.Scene {
     }
     this.#scrollLayers();
     this.#scrollGroundDressing();
+    /* A tier that switched the sky layer off shows the gradient on the first row. */
+    this.#reportSkyTop();
 
     this.#snowQuantity = 0;
     const emitter = {
@@ -1040,6 +1081,9 @@ export class LevelScene extends Phaser.Scene {
 
     this.#camera = followCamera(this.#followInput(dt));
     this.cameras.main.setScroll(this.#camera.x, this.#camera.y);
+    /* A number compare on every frame, and nothing more on any shipped level: a
+       world one viewport tall clamps the vertical scroll to 0, so it never moves. */
+    if (this.#camera.y !== this.#skyTopCameraY) this.#reportSkyTop();
 
     this.#elapsedMs += delta;
     this.#placeRide(dt);
@@ -1771,6 +1815,115 @@ export class LevelScene extends Phaser.Scene {
     draw();
   }
 
+  /**
+   * A placeholder band's colour: far bands close to the sky, near ones close to
+   * the ground.
+   *
+   * The same aerial perspective an atlas would paint, expressed in two theme
+   * colours so the placeholder cannot clash with the level it stands in for —
+   * including the level after dusk, which is why it is read from the tinted
+   * palette on every repaint rather than fixed at the colour of noon. One method,
+   * because the first-row report (ADR-0044) has to name the same colour the band
+   * is filled with.
+   */
+  #placeholderColour(index: number, count: number): number {
+    const shade = count <= 1 ? 0.5 : index / (count - 1);
+    return blendColors(
+      toPhaserColor(this.#palette.sky),
+      toPhaserColor(this.#palette.ground),
+      0.25 + shade * 0.7,
+    );
+  }
+
+  /**
+   * Tell the renderer what the canvas draws on its first row, if that changed.
+   *
+   * The page paints the band above a letterboxed canvas with it (ADR-0044). The
+   * rule is `sky-top.ts`; this only describes the layers as they stand right now
+   * — visible or switched off by the tier, textured or a placeholder, and where
+   * the camera has put them.
+   */
+  #reportSkyTop(): void {
+    this.#skyTopCameraY = this.#camera.y;
+    const colour = canvasTopColour({
+      /* The sky gradient's first band is `mixColor(sky, ground, 0)`, which is
+         the tinted sky exactly. */
+      backdrop: this.#palette.sky,
+      layers: this.#skyTopLayers(),
+      cameraY: this.#camera.y,
+    });
+    if (colour === this.#skyTop) return;
+    this.#skyTop = colour;
+    this.#options.onSkyTop?.(colour);
+  }
+
+  /** Every parallax band as the first row sees it. `#layers` is already in depth order. */
+  #skyTopLayers(): SkyTopLayer[] {
+    const ordered = [...this.#options.level.layers].sort((a, b) => a.depth - b.depth);
+    return this.#layers.flatMap((view, index): SkyTopLayer[] => {
+      const layer = ordered.find((candidate) => candidate.key === view.key);
+      if (layer === undefined) return [];
+      const { scrollFactorY } = view.object as unknown as { readonly scrollFactorY: number };
+      if (this.textures.exists(view.key)) {
+        return [
+          {
+            depth: index,
+            visible: view.object.visible,
+            offsetY: layer.offset.y,
+            scrollFactorY,
+            height: this.textures.get(view.key).getSourceImage().height,
+            rowColour: (row) => this.#textureRowColour(view.key, row),
+          },
+        ];
+      }
+      const flat = this.#placeholderColour(ordered.indexOf(layer), ordered.length);
+      return [
+        {
+          depth: index,
+          visible: view.object.visible,
+          offsetY: layer.offset.y,
+          scrollFactorY,
+          height: PLACEHOLDER_BAND_HEIGHT,
+          rowColour: () => ({ r: (flat >> 16) & 0xff, g: (flat >> 8) & 0xff, b: flat & 0xff, a: 255 }),
+        },
+      ];
+    });
+  }
+
+  /**
+   * One row of a loaded texture, as one colour. Read once per row, then cached.
+   *
+   * Through a one-row 2D canvas that is dropped as soon as it is read: no GL
+   * texture, so nothing on the decoded-texture budget (ADR-0013), and no GPU
+   * readback, so no stalled frame. `null` for a source that cannot be drawn
+   * into a canvas, which the caller treats as "look underneath".
+   */
+  #textureRowColour(key: string, row: number): Rgba | null {
+    const cacheKey = `${key}@${String(row)}`;
+    const cached = this.#rowColours.get(cacheKey);
+    if (cached !== undefined) return cached;
+
+    let colour: Rgba | null = null;
+    try {
+      const source: unknown = this.textures.get(key).getSourceImage();
+      if (isDrawableSource(source) && typeof document !== 'undefined') {
+        const canvas = document.createElement('canvas');
+        canvas.width = source.width;
+        canvas.height = 1;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        if (context !== null && source.width > 0) {
+          context.drawImage(source, 0, row, source.width, 1, 0, 0, source.width, 1);
+          colour = meanRowColour(context.getImageData(0, 0, source.width, 1).data);
+        }
+      }
+    } catch (cause) {
+      console.warn(`[level] could not read row ${String(row)} of "${key}" for the page's sky band.`, cause);
+      colour = null;
+    }
+    this.#rowColours.set(cacheKey, colour);
+    return colour;
+  }
+
   #paintSky(): void {
     const { designWidth, designHeight } = this.#options;
     const graphics = this.add.graphics().setScrollFactor(0, 0).setDepth(this.#depths.sky);
@@ -1866,22 +2019,9 @@ export class LevelScene extends Phaser.Scene {
       }
 
       const band = this.add.graphics().setDepth(depth);
-      const shade = ordered.length <= 1 ? 0.5 : index / (ordered.length - 1);
       this.#repaint(() => {
         band.clear();
-        /* Far bands sit close to the sky, near ones close to the ground: the
-           same aerial perspective an atlas would paint, expressed in two theme
-           colours so the placeholder cannot clash with the level it stands in
-           for — including the level after dusk, which is why it is repainted
-           with everything else rather than fixed at the colour of noon. */
-        band.fillStyle(
-          blendColors(
-            toPhaserColor(this.#palette.sky),
-            toPhaserColor(this.#palette.ground),
-            0.25 + shade * 0.7,
-          ),
-          1,
-        );
+        band.fillStyle(this.#placeholderColour(index, ordered.length), 1);
         band.fillRect(0, layer.offset.y, level.size.x, PLACEHOLDER_BAND_HEIGHT);
       });
       this.#layers.push({ key: layer.key, object: band, tiled: null });
@@ -2892,6 +3032,8 @@ export class LevelScene extends Phaser.Scene {
 
     this.#palette = palette;
     for (const draw of this.#repaintables) draw();
+    /* The gradient, or a placeholder sky, may be what the first row shows. */
+    this.#reportSkyTop();
     this.#options.probe?.publish({ dayPhase: next });
   };
 

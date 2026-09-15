@@ -47,6 +47,14 @@
         --tn-page: #060d16;
 
         /*
+          The colour of the canvas's first row, which the band above the canvas
+          is painted with (ADR-0044). Not a literal: before boot the canvas is
+          the boot scene, whose first row is --tn-sky. app/bootstrap writes the
+          scene's measured value over this once a level draws.
+        */
+        --tn-sky-top: var(--tn-sky);
+
+        /*
           The land at the horizon, and the three heights it occupies, as a
           fraction of the page. Same pre-boot story as the colours above:
           app/adapters/phaser computes all four from the palette and the ridge
@@ -86,37 +94,12 @@
         overscroll-behavior: none;
 
         /*
-          The desktop side panels.
-
-          The canvas is Scale.FIT and is never stretched, so a window wider than
-          9:16 leaves letterbox space to the left and right of it. That space is
-          these gradients: the same colours the scene paints, running
-          top-to-bottom over the same box height, so sky, land and ground read as
-          continuing past the canvas edge. No second camera, no extra draw calls.
-
-          Two layers, front to back. The first is the land under the horizon —
-          opaque from the crest to the foot of the hills, then fading out exactly
-          where the scene's own land fades back into the gradient. Without it the
-          hills stopped dead at the letterbox edge and a wide window showed the
-          canvas as a framed picture. The second is the sky-to-ground gradient
-          the panels have always been.
-
-          The heights line up wherever they are visible: side panels exist only
-          when the viewport is wider than 9:16, and such a viewport is
-          height-constrained under FIT, so the canvas is exactly as tall as this
-          box. On a portrait phone the canvas is full width and the land layer is
-          hidden behind it. See `landBand` in app/adapters/phaser.
-
-          A phone TALLER than 9:16 letterboxes the other way: FIT makes the
-          canvas as wide as the screen and centres it, leaving a band ABOVE and
-          BELOW it (76 CSS px each at 390x844). A ramp over the whole page is
-          already part-way to the ground at the canvas's first row, so the top
-          band read as a strip of a different sky over the level. The ramp
-          therefore runs over the CANVAS box, not the page: flat sky above the
-          canvas, flat ground below it. The box is FIT + CENTER_BOTH inside
-          #game's safe-area insets. When the viewport is wider than 9:16 that
-          box is all of #game, so the side panels are the same ramp as before.
-          16 / 9 is the design resolution, 1080x1920 (ADR-0002).
+          Where the canvas sits, for the letterbox gradients #game::before
+          paints (see that rule). FIT + CENTER_BOTH inside #game's safe-area
+          insets, so the canvas is as wide as #game on a phone taller than 9:16
+          and as tall as #game on a window wider than it. 16 / 9 is the design
+          resolution, 1080x1920 (ADR-0002). Declared here so both the body and
+          the pseudo-element inherit them.
         */
         --tn-game-height: calc(100dvh - var(--tn-safe-top) - var(--tn-safe-bottom));
         --tn-game-width: calc(100vw - var(--tn-safe-left) - var(--tn-safe-right));
@@ -125,23 +108,13 @@
           var(--tn-safe-top) + (var(--tn-game-height) - var(--tn-canvas-height)) / 2
         );
         --tn-canvas-bottom: calc(var(--tn-canvas-top) + var(--tn-canvas-height));
-        background:
-          linear-gradient(
-              180deg,
-              transparent var(--tn-land-crest),
-              var(--tn-land) var(--tn-land-crest),
-              var(--tn-land) var(--tn-land-skirt),
-              transparent var(--tn-land-end)
-            )
-            no-repeat fixed,
-          linear-gradient(
-              180deg,
-              var(--tn-sky) 0,
-              var(--tn-sky) var(--tn-canvas-top),
-              var(--tn-ground) var(--tn-canvas-bottom),
-              var(--tn-ground) 100%
-            )
-            no-repeat fixed;
+        /*
+          The gradients themselves are painted by #game::before, below, and not
+          here: the level is dimmed by a filter on #game while a card is open
+          (ADR-0041), and a filter on #game cannot reach the body's background.
+          Painted here, the band above the canvas stayed bright over a dimmed
+          level (ADR-0044).
+        */
         background-color: var(--tn-page);
 
         color: #e9f1f8;
@@ -170,6 +143,73 @@
         bottom: var(--tn-safe-bottom);
         left: var(--tn-safe-left);
         touch-action: none;
+      }
+
+      /*
+        The letterbox: the desktop side panels, and the bands above and below
+        the canvas on a phone taller than 9:16 (ADR-0002, ADR-0044).
+
+        The canvas is Scale.FIT and is never stretched, so a window wider than
+        9:16 leaves letterbox space to the left and right of it. That space is
+        these gradients: the same colours the scene paints, running
+        top-to-bottom over the same box height, so sky, land and ground read as
+        continuing past the canvas edge. No second camera, no extra draw calls.
+
+        Two layers, front to back. The first is the land under the horizon —
+        opaque from the crest to the foot of the hills, then fading out exactly
+        where the scene's own land fades back into the gradient. Without it the
+        hills stopped dead at the letterbox edge and a wide window showed the
+        canvas as a framed picture. The second is the sky-to-ground ramp. The
+        heights line up wherever they are visible: side panels exist only when
+        the viewport is wider than 9:16, and such a viewport is
+        height-constrained under FIT, so the canvas is exactly as tall as this
+        box. On a portrait phone the land layer is hidden behind the canvas. See
+        `landBand` in app/adapters/phaser.
+
+        A phone TALLER than 9:16 letterboxes the other way: a band ABOVE and
+        BELOW the canvas (75 CSS px each at 390x844). The ramp runs over the
+        CANVAS box, not the page, so the band above it is flat. Its colour is
+        --tn-sky-top: what the canvas actually draws on its first row, reported
+        by the scene. That is the untinted sky image on every shipped level, and
+        --tn-sky, the tinted theme sky, was a visible step away from it.
+
+        Painted by a pseudo-element of #game, not by body, so the filter that
+        dims #game while a card is open (ADR-0041) dims the letterbox with the
+        level. Its box is #game pushed out by the safe-area insets, which is the
+        whole viewport, so the stops measured from the top of the page land
+        where they did on body; it reaches under a notch and a home indicator.
+        z-index -1 keeps it under the canvas inside #game's stacking context
+        (fixed positioning makes one), and it takes no pointer events. Forced
+        colours leave it alone for the same reason they leave the canvas alone:
+        it is the picture, not text.
+      */
+      #game::before {
+        content: '';
+        position: absolute;
+        top: calc(-1 * var(--tn-safe-top));
+        right: calc(-1 * var(--tn-safe-right));
+        bottom: calc(-1 * var(--tn-safe-bottom));
+        left: calc(-1 * var(--tn-safe-left));
+        z-index: -1;
+        pointer-events: none;
+        forced-color-adjust: none;
+        background:
+          linear-gradient(
+              180deg,
+              transparent var(--tn-land-crest),
+              var(--tn-land) var(--tn-land-crest),
+              var(--tn-land) var(--tn-land-skirt),
+              transparent var(--tn-land-end)
+            )
+            no-repeat,
+          linear-gradient(
+              180deg,
+              var(--tn-sky-top) 0,
+              var(--tn-sky-top) var(--tn-canvas-top),
+              var(--tn-ground) var(--tn-canvas-bottom),
+              var(--tn-ground) 100%
+            )
+            no-repeat;
       }
 
       #game canvas {

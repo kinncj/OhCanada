@@ -155,6 +155,18 @@ export interface GameRendererOptions {
    */
   readonly onLevelReady?: (levelId: string) => void;
   /**
+   * {@link GameRenderer.cssVariables} would now answer differently, with no
+   * level change to prompt a caller to ask.
+   *
+   * The open level reports the colour of the canvas's first row, and the band of
+   * page above a letterboxed canvas is painted with it (ADR-0044). That colour is
+   * known only once the level's textures exist, and it moves when the tier
+   * switches a layer off or the time-of-day tint repaints a sky that shows. The
+   * composition root re-applies the variables; the adapter still never touches
+   * the page's styling itself.
+   */
+  readonly onPageThemeChange?: () => void;
+  /**
    * The device clock, injectable so a test can put the level at any hour.
    *
    * A level's sky follows the real time of day (`time-of-day.ts`). Local only:
@@ -186,6 +198,11 @@ export class GameRenderer {
   #level: LevelScene | null = null;
   #levelDocument: SceneLevel | null = null;
   #marker: PlayableMarker | null = null;
+  /**
+   * The colour the open level draws on the canvas's first row, as it last
+   * reported it, or `null` before it has (ADR-0044).
+   */
+  #skyTop: string | null = null;
   /** One manifest fetch per session, shared by every level that opens after. */
   #manifest: Promise<Result<AssetManifest>> | null = null;
   /** One rig fetch per session, shared by every level that opens after. */
@@ -446,11 +463,20 @@ export class GameRenderer {
     }
     if (this.#game.scene.isActive(BootScene.KEY)) this.#game.scene.stop(BootScene.KEY);
 
+    /* The previous level's first row is not this one's. Until the new scene
+       reports, the page falls back to the tinted theme sky. */
+    this.#skyTop = null;
     const scene = new LevelScene({
       level: document.value,
       designWidth: this.#config.designWidth,
       designHeight: this.#config.designHeight,
       probe: this.#scene,
+      onSkyTop: (colour: string) => {
+        /* A scene that has since been replaced does not speak for the canvas. */
+        if (this.#level !== scene) return;
+        this.#skyTop = colour;
+        this.#options.onPageThemeChange?.();
+      },
       marker,
       profile: this.renderProfile,
       assets,
@@ -606,7 +632,22 @@ export class GameRenderer {
     const band = level === null ? landBand(this.#config.designHeight, HORIZON_FRACTION) : null;
 
     return {
+      /* The theme sky under the current light: the ramp's colour, the browser
+         chrome's, and what the e2e day-and-night checks read. Not the band above
+         the canvas any more — see `--tn-sky-top`. */
       '--tn-sky': palette.sky,
+      /*
+       * What the canvas draws on its first row, which the band of page above a
+       * letterboxed canvas is painted with (ADR-0044).
+       *
+       * Not `--tn-sky`. Every level's backmost layer is an opaque sky image that
+       * starts at world row 0 and is never tinted, so under any light but noon
+       * the tinted sky is a visible step away from the canvas under it — 36 to
+       * 59 per channel at 19:00. The scene works the colour out from what it
+       * draws; until it has, and on the boot screen, whose gradient starts on
+       * the untinted config sky, the two are the same answer.
+       */
+      '--tn-sky-top': level === null ? palette.sky : (this.#skyTop ?? palette.sky),
       '--tn-ground': palette.ground,
       '--tn-horizon': palette.horizon,
       /* A shade of the ground, computed once here so the page and the scene

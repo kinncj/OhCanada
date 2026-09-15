@@ -264,6 +264,12 @@ function main(): void {
     onLevelReady: (levelId) => {
       for (const listen of [...playableListeners]) listen(levelId);
     },
+    /* The page's colours moved without a level change: the band above the
+       canvas follows the canvas's first row (ADR-0044). Never called before this
+       constructor returns — a level has to open first. */
+    onPageThemeChange: () => {
+      applyPageTheme(renderer);
+    },
   });
   applyPageTheme(renderer);
 
