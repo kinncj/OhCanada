@@ -274,13 +274,19 @@ test.describe('let go when the prompt appears, then tap it (ADR-0037, TN-REACH-1
         subject.name,
       );
       await expect(page.getByTestId(subject.npc ? 'poi-card' : 'dialogue')).toBeHidden();
-      /* And the engagement was recorded against the subject in reach: the offer
-         behind the modal now says it is done (`TN-REACH-03`), which only engaging
-         that subject can make it say. */
+      /* And the engagement was recorded against the subject in reach: a landmark's
+         offer behind the modal now says it is done (`TN-REACH-03`), which only
+         engaging that landmark can make it say. A character who gives a quest keeps
+         its own prompt while that quest is running (ADR-0039), so for a character
+         the dialogue above, named for them, is the proof, and the offer may read
+         either way. */
+      const done = text('en', 'hud.interact.done');
+      const escape = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+      const settled = subject.npc ? [done, wanted] : [done];
       await expect(
         prompt,
         `the tap did not record "${subject.id}" as engaged, so the offer still invites it`,
-      ).toHaveText(text('en', 'hud.interact.done'));
+      ).toHaveText(new RegExp(`^(?:${settled.map(escape).join('|')})$`, 'u'));
     });
   }
 });
