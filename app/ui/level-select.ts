@@ -415,6 +415,9 @@ export function createLevelSelect(
         ...(step.id === undefined ? {} : { id: step.id }),
         state: levelCardState(step),
         stop,
+        /* The pin's numeral is the card's "Level 4", so the two are matched by
+           sight as well as by the order. */
+        number: step.number,
       })),
     );
     const controls: HTMLElement[] = [];

@@ -19,7 +19,10 @@
  *
  *  - The drawing has no lettering (`assets/style/map-canada.md` §0). Nothing is
  *    written on or under it either: a place name in art cannot be translated,
- *    and `OQ-MAP-3` refuses any sentence about which way the journey runs.
+ *    and `OQ-MAP-3` refuses any sentence about which way the journey runs. The
+ *    one thing drawn on a pin is **its stop's number**, the numeral its card
+ *    already shows as "Level 4": the same in both languages, and the only way a
+ *    sighted player can tell which dot is which card (second live-site audit).
  *  - Each pin is **the rail's pin, in the rail's words**. It carries the same
  *    `data-journey-state`, `data-journey-reached` and `data-journey-current`
  *    tokens the rail beside that card carries, computed once by
@@ -133,12 +136,15 @@ export interface MapStopInput {
   readonly id?: LevelId;
   readonly state: string;
   readonly stop: JourneyStop;
+  /** The stop's map number, 1 to 10, drawn on the pin. Absent draws a bare pin. */
+  readonly number?: number;
 }
 
 /** One pin, placed. */
 export interface PlacedStop {
   readonly id: LevelId;
   readonly state: string;
+  readonly number?: number;
   readonly reached: boolean;
   readonly current: boolean;
   /** Pinned at the inset's anchor rather than the main map's. */
@@ -169,7 +175,7 @@ export function placeStops(
 ): readonly PlacedStop[] {
   const [minX, minY, width, height] = anchors.viewBox;
   const placed: PlacedStop[] = [];
-  for (const { id, state, stop } of stops) {
+  for (const { id, state, stop, number } of stops) {
     if (id === undefined) continue;
     const inInset: MapPoint | undefined = anchors.inset?.anchors[id];
     const point = inInset ?? anchors.anchors[id];
@@ -177,6 +183,7 @@ export function placeStops(
     placed.push({
       id,
       state,
+      ...(number === undefined ? {} : { number }),
       reached: stop.reached,
       current: stop.current,
       inset: inInset !== undefined,
@@ -352,7 +359,13 @@ export function createLevelMap(doc: Document, anchors: MapAnchorsDocument): Leve
         'data-journey-reached': String(placed.reached),
         'data-journey-current': String(placed.current),
       },
-      children: [element(doc, 'span', { className: 'tn-journey__pin' })],
+      /* The numeral its card shows, and nothing else: the map stays wordless. */
+      children: [
+        element(doc, 'span', {
+          className: 'tn-journey__pin',
+          ...(placed.number === undefined ? {} : { text: String(placed.number) }),
+        }),
+      ],
     });
     /* Custom properties through the CSSOM rather than a style attribute: the
        sheet owns how a pin is placed, this owns only where. */

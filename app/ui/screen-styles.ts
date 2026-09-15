@@ -1527,26 +1527,48 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   transform: translate(-50%, -50%);
 }
 
+/*
+  A pin carries its stop's number, the numeral on that stop's card ("Level 4"),
+  so a sighted player can tell which dot is which place without the map saying
+  a word (second live-site audit, st-L01-quest-map). The numeral is the same in
+  both languages. It is sized to the drawing like the pin: 4.2 % of the map's
+  width is as big as a pin gets before Toronto's and Ottawa's touch, 14.4 CSS px
+  apart at 347 px. Ink on paper, or the badge's ink on brass for an earned stop.
+*/
 .tn-map .tn-map__stop .tn-journey__pin {
-  inline-size: 0.75rem;
-  block-size: 0.75rem;
-  border-width: 0.125rem;
-  inline-size: 3.2cqi;
-  block-size: 3.2cqi;
-  border-width: 0.6cqi;
-}
-
-/* Where the route has got to: bigger and ringed, as on the rail, in the same
-   proportions. The size difference survives forced colours; the ring does not. */
-.tn-map .tn-map__stop[data-journey-current="true"] .tn-journey__pin {
   inline-size: 0.875rem;
   block-size: 0.875rem;
+  border-width: 0.125rem;
+  font-size: 0.5625rem;
+  inline-size: 4.2cqi;
+  block-size: 4.2cqi;
+  border-width: 0.5cqi;
+  font-size: 2.5cqi;
+  letter-spacing: -0.04em;
+  color: var(--tn-ink);
+}
+.tn-map .tn-map__stop[data-journey-reached="true"] .tn-journey__pin { color: var(--tn-accent-ink); }
+
+/* Where the route has got to: bigger and ringed, as on the rail, in the same
+   proportions, and drawn over a neighbour it touches. The size difference
+   survives forced colours; the ring does not. */
+.tn-map .tn-map__stop[data-journey-current="true"] { z-index: 1; }
+.tn-map .tn-map__stop[data-journey-current="true"] .tn-journey__pin {
+  inline-size: 1rem;
+  block-size: 1rem;
   border-width: 0.1875rem;
+  font-size: 0.625rem;
   box-shadow: 0 0 0 0.125rem var(--tn-paper), 0 0 0 0.1875rem var(--tn-ink);
-  inline-size: 3.8cqi;
-  block-size: 3.8cqi;
-  border-width: 0.9cqi;
+  inline-size: 4.9cqi;
+  block-size: 4.9cqi;
+  border-width: 0.7cqi;
+  font-size: 2.8cqi;
   box-shadow: 0 0 0 0.5cqi var(--tn-paper), 0 0 0 0.9cqi var(--tn-ink);
+}
+
+@media (forced-colors: active) {
+  .tn-map .tn-map__stop .tn-journey__pin { color: CanvasText; }
+  .tn-map .tn-map__stop[data-journey-reached="true"] .tn-journey__pin { color: HighlightText; }
 }
 
 /*
@@ -1761,12 +1783,38 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   .tn-levels__here { border: 0.25rem double CanvasText; }
 }
 
+/*
+  The state word is a status, not a control (second live-site audit,
+  st-L01-quest-map). It was a paper pill with an ink edge, which is the shape of
+  every quiet button in the game, so "Open" read as a second button inside the
+  card. It is plain bold words now, after a small mark in the card's own shape
+  vocabulary: a filled disc for open, a dashed ring for locked, a dotted ring for
+  not made yet. The mark is borders round no text, so a screen reader hears the
+  word alone and forced colours keep the shape.
+*/
 .tn-levels .tn-screen__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
   font-size: 0.875rem;
-  padding: 0.1875rem 0.625rem;
-  border-radius: 1em;
-  border: 0.125rem solid var(--tn-ink);
-  background: var(--tn-paper);
+  padding-block: 0.1875rem;
+  color: var(--tn-ink);
+}
+.tn-levels .tn-screen__state::before {
+  content: "";
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  inline-size: 0.75em;
+  block-size: 0.75em;
+  border: 0.125rem solid currentColor;
+  border-radius: 50%;
+}
+.tn-levels [data-state="open"] .tn-screen__state::before { background: currentColor; }
+.tn-levels [data-state="locked"] .tn-screen__state::before { border-style: dashed; }
+.tn-levels [data-state="not-built"] .tn-screen__state::before { border-style: dotted; }
+
+@media (forced-colors: active) {
+  .tn-levels .tn-screen__state { color: CanvasText; }
 }
 
 /*

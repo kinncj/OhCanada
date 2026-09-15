@@ -251,6 +251,21 @@ describe('the map, drawn', () => {
     expect(gamma?.style.getPropertyValue('--tn-map-y')).toBe('10%');
   });
 
+  it("draws a stop's number on its pin, and a bare pin for a stop given none", () => {
+    const { root } = drawn([
+      { id: id('alpha'), state: 'open', stop: stop(), number: 3 },
+      { id: id('beta'), state: 'locked', stop: stop({ current: true }), number: 10 },
+      { id: id('gamma'), state: 'not-built', stop: stop() },
+    ]);
+    const numerals = root
+      .querySelectorAll('.tn-map__stop')
+      .map((pin) => pin.querySelector('.tn-journey__pin')?.textContent ?? null);
+    expect(numerals).toEqual(['3', '10', '']);
+    /* Still hidden, still unfocusable: a numeral is not a control or a name. */
+    expect(root.getAttribute('aria-hidden')).toBe('true');
+    expect(root.querySelectorAll('[tabindex]')).toHaveLength(0);
+  });
+
   it('moves the marks without drawing the drawing again', () => {
     const { root, map } = drawn(three);
     const art = root.querySelector('img');

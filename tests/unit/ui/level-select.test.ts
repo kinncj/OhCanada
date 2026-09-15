@@ -357,13 +357,28 @@ describe('the map above the route', () => {
     expect(at('level-select-list')?.querySelectorAll('li')).toHaveLength(10);
   });
 
-  it('carries no words, in either language', () => {
+  it('carries no words, in either language, only the numbers the cards carry', () => {
     /* No place name baked into the page, no caption, and no sentence about
-       which way the journey runs (`OQ-MAP-3`). */
+       which way the journey runs (`OQ-MAP-3`). Each pin carries its stop's
+       numeral, which is the same in both languages. */
     const { at, screen } = open();
-    expect(at('level-select-map')?.textContent).toBe('');
+    const numerals = SPINE.map(([number]) => String(number)).join('');
+    expect(at('level-select-map')?.textContent).toBe(numerals);
     screen.setLocale('fr');
-    expect(at('level-select-map')?.textContent).toBe('');
+    expect(at('level-select-map')?.textContent).toBe(numerals);
+  });
+
+  it('numbers each pin with the number on its card, so a dot can be matched to a place by sight', () => {
+    const { at } = open();
+    const pins = at('level-select-map')?.querySelectorAll('.tn-map__stop') ?? [];
+    expect(pins).toHaveLength(10);
+    for (const pin of pins) {
+      const handle = pin.getAttribute('data-map-handle') ?? '?';
+      const numeral = pin.querySelector('.tn-journey__pin')?.textContent ?? '';
+      expect(numeral, handle).toMatch(/^\d+$/u);
+      const cardNumber = at(`level-card-${handle}`)?.querySelector('.tn-levels__number')?.textContent;
+      expect(cardNumber, handle).toBe(`Level ${numeral}`);
+    }
   });
 
   it('says nothing the card for that place does not already say', () => {
