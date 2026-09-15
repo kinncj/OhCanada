@@ -24,7 +24,7 @@ import type { RigDocument } from '../../app/application/ports';
 import type { LevelId } from '../../app/domain/ids';
 
 import { createCharacterCreator, type CreatorSlot } from '../../app/ui/character-creator';
-import { describeEntry, type MapEntry } from '../../app/ui/level-select';
+import { type MapEntry } from '../../app/ui/level-select';
 import { createShell } from '../../app/ui/shell';
 import { createDialogue } from '../../app/ui/dialogue';
 import { createHud } from '../../app/ui/hud';
@@ -742,18 +742,9 @@ switch (screen) {
             next: {
               /* The level that just opened, exactly as the composition root
                  hands it over: that level's own `level.<id>.play` row, and the
-                 map's own description of its card. */
+                 one sentence the card says about it. */
               label: text(locale, 'level.quebec-city.play'),
-              description: describeEntry(
-                {
-                  locale,
-                  entries: [
-                    { number: 3, id: 'quebec-city' as LevelId, built: true, unlocked: true },
-                  ],
-                  stampsToUnlock: 1,
-                },
-                'quebec-city' as LevelId,
-              ) ?? '',
+              description: text(locale, 'level.complete.nextOpen'),
             },
           }),
     });
@@ -829,6 +820,9 @@ switch (screen) {
 
     hud.setMode(level.mode);
     if (params.get('task') === '1') hud.setTask(level.task);
+    /* `?behind=1`: the stop the task names is behind the player, so "Behind you"
+       follows the task line. */
+    if (params.get('behind') === '1') hud.setTaskCue('behind');
     if (params.get('warning') === '1') hud.setStorageWarning(true);
 
     /*

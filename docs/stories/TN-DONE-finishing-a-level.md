@@ -191,6 +191,13 @@ as `OQ-DONE-2` so the alternative is written down rather than argued again.
 | `level.complete.none` | You did not answer any questions here. Every place in this level has something to teach you. | Vous n'avez répondu à aucune question ici. Chaque lieu de ce niveau a quelque chose à vous apprendre. |
 | `level.complete.score` | Right answers in this level: {{correct}} out of {{total}} | Bonnes réponses dans ce niveau : {{correct}} sur {{total}} |
 
+**Proposed row, pending ratification (`COPY_GAPS`), second live-site audit:** `level.complete.nextOpen` —
+"A new level is open. You can play it now." / « Un nouveau niveau est ouvert. Vous pouvez y jouer maintenant. »
+It is `quest-complete-next-level` and the description of `quest-complete-next`. The card used to draw the map
+card's three rows joined, "Peggy's Cove. Open. You can play this now.", which read like screen-reader text to a
+sighted player. The sentence names no level, because the button under it does (`level.<id>.play`). The map's
+own arrival announcement still uses the three rows.
+
 **One slot, two rows.** `quest-complete-progress` carries `level.complete.score` when at least one question
 was answered in this level, and `level.complete.none` when none was. It is never empty and never both, and
 it never reads "0 out of 0" — a total of zero is what `level.complete.none` *is*, not a value the score row

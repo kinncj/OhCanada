@@ -122,6 +122,7 @@ import {
 } from './character-slots';
 import { newSaveLocale } from './browser-locale';
 import { creatorArt } from './creator-art';
+import { createTaskCue } from './task-cue';
 import { assetsBaseUrl, createScreenArt, type ScreenArt } from './screen-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { readGameRules, type GameRules } from './game-rules';
@@ -1364,7 +1365,11 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          */
         const playKey = `level.${String(next)}.play`;
         if (!hasCopyRow(playKey) || description === null) return null;
-        return { label: text(forLocale, playKey), description };
+        /* The map's card exists, and the line on this card is one plain sentence
+           rather than the map's three rows joined ("Peggy's Cove. Open. You can
+           play this now."), which read like screen-reader text to a sighted
+           player. The button beside it names the place. */
+        return { label: text(forLocale, playKey), description: text(forLocale, 'level.complete.nextOpen') };
       },
       /*
        * What opened while this level was open.
@@ -2614,6 +2619,29 @@ function openLevel(wiring: LevelWiring): LevelSession {
   const placementsNow = (): LevelPlacements | null => levelPlacements(renderer.level);
 
   /**
+   * "Behind you" after the task (`./task-cue.ts`, second live-site audit).
+   *
+   * The player is taken to stand where the last thing they reached stands, from
+   * the spawn on, and the cue is redrawn when reach or the task changes.
+   * `questsBuilt` rather than `quests`, so a task drawn while the controller is
+   * still being built never reads the controller before it exists.
+   */
+  const placeX = (targetId: string): number | null => {
+    const level = renderer.level;
+    if (level === null) return null;
+    const bare = bareTargetId(targetId);
+    const poi = level.pois.find((candidate) => String(candidate.id) === bare);
+    if (poi !== undefined) return poi.position.x;
+    const character = level.characters.find((candidate) => String(candidate.characterId) === bare);
+    return character?.position.x ?? null;
+  };
+  const taskCue = createTaskCue(placeX);
+  let questsBuilt: QuestController | null = null;
+  const refreshTaskCue = (): void => {
+    hud.setTaskCue(taskCue.cue(questsBuilt?.taskPlace ?? null));
+  };
+
+  /**
    * The quest, from the offer to the stamp (`app/bootstrap/quest.ts`).
    *
    * Built with the level whether or not the level has one: with no quests it
@@ -2649,6 +2677,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     commit: wiring.commitProgress,
     setTask: (step) => {
       hud.setTask(step);
+      refreshTaskCue();
     },
     onOpen: () => {
       pause.hold('quest');
@@ -2689,6 +2718,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
     },
     restoreFocusTo: () => hud.prompt ?? hud.main,
   });
+  /* The cue may read the controller from here on, and is drawn once for a task
+     the controller may have drawn while it was being built. */
+  questsBuilt = quests;
+  refreshTaskCue();
 
   /**
    * What the prompt says about what is in reach, in the language in force now.
@@ -3039,6 +3072,18 @@ function openLevel(wiring: LevelWiring): LevelSession {
     hud.setHint(hintOnScreen ? interactHint(locale) : null);
   });
 
+  /* Where the player is, for "Behind you" after the task: the spawn when the
+     level arrives, then whatever they last came up to. */
+  const offArrivedForCue = bus.on('level/ready', () => {
+    taskCue.arrive(renderer.level?.spawn.x ?? null);
+    refreshTaskCue();
+  });
+  const offReachedForCue = bus.on('poi/entered', ({ detail }) => {
+    if (detail === undefined) return;
+    taskCue.reached(detail);
+    refreshTaskCue();
+  });
+
   /**
    * The end of the level, and the two milestones that are not it.
    *
@@ -3286,6 +3331,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
       offNpcEngaged();
       offStopped();
       offMoved();
+      offArrivedForCue();
+      offReachedForCue();
       offMilestone();
       offPlayable();
       announcer.destroy();

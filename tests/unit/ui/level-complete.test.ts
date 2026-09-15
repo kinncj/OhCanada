@@ -54,7 +54,9 @@ const NEXT = {
      does, and the French takes « dans la » where three of the four built levels
      take « à » (`TN-DONE-04`). */
   label: text('en', 'level.quebec-city.play'),
-  description: 'Québec City. Open. You can play this now.',
+  /* One plain sentence, the same for a sighted player and a listener, rather
+     than the map's three rows joined. */
+  description: text('en', 'level.complete.nextOpen'),
 } as const;
 
 const OTTAWA_STAMP = text('en', 'stamp.ottawa.earned');
@@ -285,6 +287,22 @@ describe('the way on from a finished level', () => {
       play?.getAttribute('aria-describedby'),
       'the reason is read after the name, never as part of it (TN-MAP-09)',
     ).toBe('tn-level-complete-next');
+  });
+
+  it('says the level opened in a sentence, in both languages, not in the map card rows', () => {
+    /* The audit read "Peggy's Cove. Open. You can play this now." as text written
+       for a screen reader. The line is one sentence, ends as one, and does not
+       repeat the state word the map draws. */
+    for (const locale of ['en', 'fr'] as const) {
+      const { card, at } = open({ locale });
+      const sentence = text(locale, 'level.complete.nextOpen');
+      card.show({ next: { label: text(locale, 'level.quebec-city.play'), description: sentence } });
+      const line = at('quest-complete-next-level')?.textContent ?? '';
+      expect(line).toBe(sentence);
+      expect(line.endsWith('.')).toBe(true);
+      expect(line.startsWith(`${text(locale, 'map.state.open')}.`)).toBe(false);
+      expect(line).not.toContain(`. ${text(locale, 'map.state.open')}. `);
+    }
   });
 
   it('sends the player there on one press, not two', () => {

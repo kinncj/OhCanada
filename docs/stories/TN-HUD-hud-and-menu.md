@@ -79,6 +79,13 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 | `hud.interact.<target>` | that level's own story — Ottawa's two are in `TN-LEVEL-ottawa.md` | `interact-prompt` |
 | `hud.interact.hint` | `TN-REACH-what-is-in-reach.md` | `interact-hint` |
 | `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` | `storage-warning` |
+| `hud.task.behind` | *proposed, see below* | `hud-task-cue` |
+
+**Proposed row, pending ratification (`COPY_GAPS`), second live-site audit:** `hud.task.behind` — "Behind you" /
+« Derrière vous ». Drawn after `hud-quest-tracker`, in the task's slot, while the stop the task names is behind
+the player: the composition root takes the player to stand where the last thing they reached stands, from the
+spawn on (`app/bootstrap/task-cue.ts`). Said once, as "Behind you: Find the Town Clock", when it appears. After
+the task and never before it, so the task line stays where ADR-0045 measured it at 200 %.
 
 A string is written down in exactly one copy table. If a word is needed in two places, the second place
 names the key and the file, as above. Two tables carrying the same words is how they stop being the same

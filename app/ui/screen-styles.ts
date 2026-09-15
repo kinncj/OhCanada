@@ -2127,6 +2127,32 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   font-weight: 600;
 }
 
+/*
+  "Behind you", after the task (second live-site audit, ck51-gate-after-attempts).
+  A skipped stop is still the task, and nothing said it was behind the player.
+  After the task line and never before it, so the task stays where ADR-0045
+  measured it at 200 %. The arrow points the way the player came and is drawn
+  with borders, not a glyph: a screen reader hears the words alone, and
+  forced-color-adjust keeps the transparent edges from becoming a box.
+*/
+.tn-hud__cue {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  color: var(--tn-on-night);
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+.tn-hud__cue::before {
+  content: "";
+  flex: 0 0 auto;
+  inline-size: 0;
+  block-size: 0;
+  border-block: 0.4em solid transparent;
+  border-inline-end: 0.6em solid currentColor;
+  forced-color-adjust: none;
+}
+
 .tn-hud__slot {
   display: flex;
   flex-direction: column;

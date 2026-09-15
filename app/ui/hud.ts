@@ -104,6 +104,17 @@ export interface Hud {
    * A line that changes is announced once, unless `options.announce` is `false`.
    */
   setTask(step: string | null, options?: TaskOptions): void;
+  /**
+   * `hud-task-cue`: a short label after the task saying where its stop is —
+   * today only "Behind you" (second live-site audit: a skipped Town Clock still
+   * read "Find the Town Clock" with no hint it was behind the player).
+   *
+   * Drawn only while there is a task, in the task's own slot and **after** the
+   * task line, so the task never moves down for it (ADR-0045). Said once, with
+   * the task, when it appears. `null` removes it. The caller decides where the
+   * player is; this draws the words.
+   */
+  setTaskCue(cue: 'behind' | null): void;
   /** `interact-prompt`. `null` withdraws the offer (`TN-LEVEL-05`). */
   setPrompt(label: string | null): void;
   /**
@@ -159,6 +170,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   let promptLabel: string | null = null;
   let hint: string | null = null;
   let notice: string | null = null;
+  let taskCue: 'behind' | null = null;
 
   const main = findOrCreateMain(doc, host);
   /*
@@ -342,6 +354,32 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     return taskSlot.querySelector<HTMLElement>('[data-testid="hud-quest-tracker"]');
   }
 
+  /**
+   * The cue after the task. Removed, not hidden, whenever there is no task or no
+   * cue, for the tracker's reason. Appended after the tracker, so it follows the
+   * task line in reading order and on screen.
+   */
+  function renderTaskCue(): void {
+    const existing = taskSlot.querySelector<HTMLElement>('[data-testid="hud-task-cue"]');
+    if (task === null || taskCue === null) {
+      existing?.remove();
+      return;
+    }
+    const words = text(locale, 'hud.task.behind');
+    if (existing !== null) {
+      existing.textContent = words;
+      return;
+    }
+    taskSlot.append(
+      element(doc, 'p', {
+        testId: 'hud-task-cue',
+        className: 'tn-hud__cue',
+        attrs: { 'data-cue': taskCue },
+        text: words,
+      }),
+    );
+  }
+
   function renderPrompt(): void {
     const existing = promptElement();
     if (promptLabel === null) {
@@ -449,9 +487,21 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       if (step === task) return;
       task = step;
       renderTask();
+      renderTaskCue();
       if (step !== null && options?.announce !== false) {
         say(labelled(locale, text(locale, 'hud.task'), step));
       }
+    },
+
+    setTaskCue(cue): void {
+      if (cue === taskCue) return;
+      const appeared = taskCue === null && cue !== null;
+      taskCue = cue;
+      renderTaskCue();
+      /* "Behind you: Find the Town Clock", once, when it starts to be true. Not
+         when it stops: the player walking back to the stop is the news, and the
+         prompt there says so. */
+      if (appeared && task !== null) say(labelled(locale, text(locale, 'hud.task.behind'), task));
     },
 
     setPrompt(label): void {
@@ -505,6 +555,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       menuButton.textContent = text(next, 'hud.menu');
       settingsButton.textContent = text(next, 'common.settings');
       renderTask();
+      renderTaskCue();
       /* The hint is the caller's string in the caller's language, so it is
          re-supplied rather than translated here; what this does is keep whatever
          is on screen consistent when the strip is redrawn. */

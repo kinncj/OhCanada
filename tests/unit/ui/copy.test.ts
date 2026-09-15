@@ -237,8 +237,13 @@ describe('the copy table', () => {
       /* ADR-0048: a task step asking again what the level visit already
          answered. */
       'quest.askedAgain',
+      /* The second live-site audit's P3 pass: one plain sentence for the level
+         that just opened, instead of the map card's three rows joined, and the
+         cue after the task when its stop is behind the player. */
+      'level.complete.nextOpen',
+      'hud.task.behind',
     ]);
-    expect(COPY_GAPS).toHaveLength(73);
+    expect(COPY_GAPS).toHaveLength(75);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

@@ -468,6 +468,14 @@ const EN = {
      `TN-COPY`'s counting rule 1 — so neither language needs plural rows and
      neither can draw "1 right answers". */
   'level.complete.score': 'Right answers in this level: {{correct}} out of {{total}}',
+  /* The line above "Play Peggy's Cove" when finishing this level opened another,
+     and that button's description. Written by app/ui and listed in `COPY_GAPS`
+     (second live-site audit): the card used to draw the map's own three rows
+     joined, "Peggy's Cove. Open. You can play this now.", which read like
+     screen-reader text to a sighted player and like a list to a listener. One
+     plain sentence for both, naming no level: the button right under it names
+     the place, and French needs no article or agreement for a place here. */
+  'level.complete.nextOpen': 'A new level is open. You can play it now.',
 
   /* The card at the end of a level whose task is not done (ADR-0036). Written by
      app/ui and listed in `COPY_GAPS`: `TN-DONE` has no row for this state,
@@ -552,6 +560,11 @@ const EN = {
   'hud.menu.title': 'Menu',
   /* docs/stories/TN-QUEST-parliament-hill.md — drawn by `hud-quest-tracker`. */
   'hud.task': 'Task',
+  /* Drawn by `hud-task-cue` after the task when the stop it names is behind the
+     player (second live-site audit, a skipped Town Clock). Written by app/ui and
+     listed in `COPY_GAPS`. A label, so no full stop; "behind" and not "left",
+     because it is about the way the player has come, not a screen direction. */
+  'hud.task.behind': 'Behind you',
 
   /* docs/stories/TN-REACH-what-is-in-reach.md — what `interact-prompt` says,
      and the one-time explanation of the marks beside it.
@@ -1262,6 +1275,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.complete.none':
     "Vous n'avez répondu à aucune question ici. Chaque lieu de ce niveau a quelque chose à vous apprendre.",
   'level.complete.score': 'Bonnes réponses dans ce niveau : {{correct}} sur {{total}}',
+  /* See the English table. « Un nouveau niveau » agrees with the level, never
+     with the player, and « y jouer » needs no preposition for a place. */
+  'level.complete.nextOpen': 'Un nouveau niveau est ouvert. Vous pouvez y jouer maintenant.',
 
   /* See the English table (ADR-0036). « Vous êtes au bout » agrees with nobody,
      so no row needs a gender. */
@@ -1326,6 +1342,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.menu': 'Menu',
   'hud.menu.title': 'Menu',
   'hud.task': 'Mission',
+  /* « Derrière vous » agrees with nobody, and names the way the player came. */
+  'hud.task.behind': 'Derrière vous',
 
   'hud.interact.poi': 'Regarder ce lieu',
   /* « Ce qu'il y a à faire » rather than « vos missions » or « les tâches ici »:
@@ -1720,6 +1738,12 @@ export const COPY_GAPS: readonly CopyKey[] = [
   /* ADR-0048: what the strip says when a task step asks again what this visit
      already answered. */
   'quest.askedAgain',
+  /* The second live-site audit's P3 pass: the completion card's line about the
+     level that just opened, in one plain sentence instead of the map's three
+     rows joined, and the cue after the task when its stop is behind the player.
+     Proposed rows in `TN-DONE` and `TN-HUD`. */
+  'level.complete.nextOpen',
+  'hud.task.behind',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

@@ -70,12 +70,12 @@
  *  - What the player answered here is the caller's arithmetic and the caller's
  *    row: this module cannot count answers and does not choose the wording.
  *  - The level that just opened arrives as {@link LevelCompleteNext}: its own
- *    `level.<id>.play` label, and the map's own description of the card
- *    (`app/ui/level-select.ts`'s `describeEntry` — "Halifax. Open. You can play
- *    this now."). **No sentence naming the newly opened level is written here.**
- *    No story writes one, and inventing it would be this module authoring
- *    player-facing copy (ADR-0010); joining three rows the map already draws is
- *    the same fact in words that have been reviewed.
+ *    `level.<id>.play` label, and one sentence about it,
+ *    `level.complete.nextOpen` — "A new level is open. You can play it now."
+ *    It used to be the map's three rows joined ("Halifax. Open. You can play
+ *    this now."), which a second live-site audit found read like screen-reader
+ *    text to a sighted player. The sentence names no level, because the button
+ *    under it does, and the caller still looks it up.
  *
  * ## Three ways on, and none of them is chosen for the player
  *
@@ -156,9 +156,10 @@ export interface LevelCompleteNext {
    */
   readonly label: string;
   /**
-   * The map's own description of that card, already localised: "Halifax. Open.
-   * You can play this now." It is the button's accessible description and the
-   * only sentence on the card that names the new level.
+   * One sentence about it, already localised: `level.complete.nextOpen`, "A new
+   * level is open. You can play it now." Drawn above the actions for a sighted
+   * player and used as the button's accessible description, so both hear the
+   * same words.
    */
   readonly description: string;
 }

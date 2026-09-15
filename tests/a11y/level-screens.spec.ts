@@ -58,6 +58,8 @@ interface HarnessOptions {
   readonly motion?: 'reduced';
   /** `level` only: the state of the strip. */
   readonly task?: boolean;
+  /** "Behind you" after the task: its stop is behind the player. */
+  readonly behind?: boolean;
   readonly prompt?: boolean;
   readonly warning?: boolean;
   readonly stalled?: boolean;
@@ -182,6 +184,7 @@ async function open(
   if (options.font !== undefined) params.set('font', options.font);
   if (options.motion !== undefined) params.set('motion', options.motion);
   if (options.task === true) params.set('task', '1');
+  if (options.behind === true) params.set('behind', '1');
   if (options.prompt === true) params.set('prompt', '1');
   if (options.warning === true) params.set('warning', '1');
   if (options.stalled === true) params.set('stalled', '1');
@@ -406,6 +409,56 @@ test.describe('the HUD', () => {
     await expect(page.locator('[data-testid="hud-quest-tracker"]')).toHaveText(
       'Task: Answer 3 questions (0 of 3)',
     );
+  });
+
+  test('says a stop behind the player after the task, clean in both languages, at 200 % and in high contrast', async ({
+    page,
+  }) => {
+    /*
+     * The second live-site audit walked past the Town Clock and the task still
+     * read "Find the Town Clock" with no hint. The cue follows the task line in
+     * its own slot, so the task stays where ADR-0045 measured it, and the task's
+     * own words do not change.
+     */
+    const cases = [
+      { locale: 'en' as const },
+      { locale: 'fr' as const },
+      { locale: 'en' as const, textScale: 200 },
+      { locale: 'fr' as const, textScale: 200, font: 'dyslexia' as const },
+      { locale: 'en' as const, contrast: 'high' as const },
+    ];
+    for (const options of cases) {
+      const label = JSON.stringify(options);
+      await open(page, 'level', { task: true, prompt: true, behind: true, ...options });
+      const tracker = page.locator('[data-testid="hud-quest-tracker"]');
+      const cue = page.locator('[data-testid="hud-task-cue"]');
+
+      await expect(cue, label).toHaveText(options.locale === 'fr' ? 'Derrière vous' : 'Behind you');
+      await expect(tracker, label).toHaveText(
+        options.locale === 'fr' ? 'Mission : Répondez à 3 questions (0 sur 3)' : 'Task: Answer 3 questions (0 of 3)',
+      );
+      /* After the task, in the same slot, never above it. */
+      expect(
+        await cue.evaluate(
+          (node) => node.previousElementSibling?.getAttribute('data-testid') ?? 'none',
+        ),
+        label,
+      ).toBe('hud-quest-tracker');
+      const taskBox = await tracker.boundingBox();
+      const cueBox = await cue.boundingBox();
+      expect(taskBox, label).not.toBeNull();
+      expect(cueBox, label).not.toBeNull();
+      expect((cueBox?.y ?? 0) + 1, label).toBeGreaterThanOrEqual((taskBox?.y ?? 0) + (taskBox?.height ?? 0));
+      /* Words, not a control and not a second live region. */
+      await expect(cue, label).not.toHaveAttribute('aria-live', /.*/u);
+      await expect(page.locator('[aria-live]'), label).toHaveCount(1);
+
+      const results = await pageScan(page).analyze();
+      expect(results.violations, `${label}: ${violationsOf(results)}`).toEqual([]);
+    }
+
+    await open(page, 'level', { task: true });
+    await expect(page.locator('[data-testid="hud-task-cue"]')).toHaveCount(0);
   });
 
   test('keeps every control at 44 CSS px, at 100 % and at 200 % text', async ({ page }) => {

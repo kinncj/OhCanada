@@ -102,6 +102,8 @@ import { createDialogue, type Dialogue } from '@ui/dialogue';
 import { bareTargetId } from '@ui/interact';
 import type { SettingsStore } from '@ui/settings';
 
+import { placeOfStep } from './task-cue';
+
 import {
   resolveEngageable,
   whyNotEngageable,
@@ -300,6 +302,13 @@ export interface QuestController {
    * played. What the card at the end of an unfinished level says is left.
    */
   readonly task: string | null;
+  /**
+   * Where the step being played sends the player — a target id the level
+   * places — or `null` when no quest is being played. An `answer` step is asked
+   * where the step before it sent the player, so it names that place. What the
+   * HUD's "Behind you" cue is measured against (`./task-cue.ts`).
+   */
+  readonly taskPlace: string | null;
   /** Is a quest dialogue on screen? */
   readonly dialogueOpen: boolean;
   /**
@@ -996,6 +1005,14 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
     get task(): string | null {
       return trackerLine();
+    },
+
+    get taskPlace(): string | null {
+      const quest = active();
+      if (quest === null) return null;
+      const state = stateOf(quest);
+      if (state === undefined) return null;
+      return placeOfStep(quest.steps, state.stepIndex);
     },
 
     get dialogueOpen(): boolean {

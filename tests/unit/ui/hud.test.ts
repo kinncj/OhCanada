@@ -312,6 +312,82 @@ describe('the one-time hint, and the notice', () => {
   });
 });
 
+/**
+ * "Behind you", after the task. A second live-site audit walked past the Town
+ * Clock and the tracker still read "Find the Town Clock" with no hint that the
+ * clock was behind. The composition root decides when; the HUD draws the words.
+ */
+describe('the cue after the task', () => {
+  const slotOrder = (at: Fixture['at']): (string | null)[] =>
+    (at('hud-quest-tracker')?.parentElement?.children ?? []).map((child) =>
+      child.getAttribute('data-testid'),
+    );
+
+  it('says the stop is behind, after the task line, and leaves the task words alone', () => {
+    const { hud, at, announce } = mount();
+    hud.setTask('Find the Town Clock');
+    announce.mockClear();
+
+    hud.setTaskCue('behind');
+    expect(at('hud-task-cue')?.textContent).toBe('Behind you');
+    expect(at('hud-quest-tracker')?.textContent).toBe('Task: Find the Town Clock');
+    expect(slotOrder(at)).toEqual(['hud-quest-tracker', 'hud-task-cue']);
+
+    /* Said once, with the task, when it starts to be true. */
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith('Behind you: Find the Town Clock', 'en');
+    hud.setTaskCue('behind');
+    expect(announce).toHaveBeenCalledTimes(1);
+
+    hud.setTaskCue(null);
+    expect(at('hud-task-cue')).toBeNull();
+    expect(announce).toHaveBeenCalledTimes(1);
+  });
+
+  it('is a paragraph with no live region and no place in the switch ring or the Tab order', () => {
+    const { hud, at } = mount();
+    hud.setTask('Find the Town Clock');
+    hud.setTaskCue('behind');
+    const cue = at('hud-task-cue');
+    expect(cue?.tagName).toBe('P');
+    expect(cue?.getAttribute('aria-live')).toBeNull();
+    expect(cue?.getAttribute('role')).toBeNull();
+    expect(cue?.tabIndex).toBe(-1);
+  });
+
+  it('is drawn only while there is a task, and stays in the task slot above the paragraphs', () => {
+    const { hud, at, announce } = mount();
+    hud.setTaskCue('behind');
+    expect(at('hud-task-cue'), 'a cue with no task says nothing about anything').toBeNull();
+    expect(announce).not.toHaveBeenCalled();
+
+    hud.setMode('Walking');
+    hud.setNotice('The questions are not ready right now. Try again later.');
+    hud.setTask('Find the Town Clock');
+    expect(slotOrder(at)).toEqual(['hud-quest-tracker', 'hud-task-cue']);
+
+    hud.setTask(null);
+    expect(at('hud-quest-tracker')).toBeNull();
+    expect(at('hud-task-cue')).toBeNull();
+  });
+
+  it('is French, and follows a change of language in place', () => {
+    const french = mount({ locale: 'fr' });
+    french.hud.setTask("Trouvez la tour de l'horloge");
+    french.announce.mockClear();
+    french.hud.setTaskCue('behind');
+    expect(french.at('hud-task-cue')?.textContent).toBe('Derrière vous');
+    expect(french.announce).toHaveBeenCalledWith("Derrière vous : Trouvez la tour de l'horloge", 'fr');
+
+    const { hud, at } = mount();
+    hud.setTask('Find the Town Clock');
+    hud.setTaskCue('behind');
+    hud.setLocale('fr');
+    expect(at('hud-task-cue')?.textContent).toBe('Derrière vous');
+    expect(slotOrder(at)).toEqual(['hud-quest-tracker', 'hud-task-cue']);
+  });
+});
+
 describe('the storage warning', () => {
   it('is absent from the tree when nothing is wrong', () => {
     /* TN-HUD-03: "not merely hidden behind a style rule that something else can

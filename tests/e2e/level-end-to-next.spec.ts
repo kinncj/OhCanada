@@ -303,13 +303,14 @@ test.describe('reaching the end of a level sends the player on only when the tas
     await expect(card).toHaveAccessibleName(text('en', 'quest.done.title'));
     await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
 
-    /* The level that just opened: a label that says what pressing does,
-       described in the map's own words. */
+    /* The level that just opened: a label that says what pressing does, and one
+       plain sentence about it. */
     const play = card.getByTestId('quest-complete-next');
     await expect(play).toHaveText(NEXT_LEVEL_PLAY_LABEL ?? '');
-    await expect(card.getByTestId('quest-complete-next-level')).toContainText(
-      'You can play this now.',
+    await expect(card.getByTestId('quest-complete-next-level')).toHaveText(
+      text('en', 'level.complete.nextOpen'),
     );
+    await expect(play).toHaveAccessibleDescription(text('en', 'level.complete.nextOpen'));
     await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
 
     await play.click();
