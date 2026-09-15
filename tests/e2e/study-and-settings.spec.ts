@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { sharesProposition } from '@application/content/proposition';
 import { hasCopyRow, text } from '@ui/copy';
 
 import { START_LEVEL } from './start-level';
@@ -10,12 +11,20 @@ import { letGo } from './walk';
 
 /**
  * What the prompt reads for each landmark the start level places that opens a
- * card, asked of the same sources the game asks.
+ * card **and has a question to ask with no task running**, asked of the same
+ * sources the game asks.
  *
  * A landmark draws its own row where one is written (`TN-REACH` rule 2, and
  * ADR-0039 wrote one for most of them) and the generic row otherwise; a landmark
  * that gives a quest opens a dialogue, not a card, so it is left out. A spec that
  * typed "Look at this place" stopped matching the day the Town Clock was named.
+ *
+ * Since ADR-0048 a landmark with no task step asks only a question resting on
+ * the sentence it told, or nothing — the Town Clock tells a sentence history
+ * grades, so it asks nothing in Halifax. The walk goes on to the first landmark
+ * that has one: a verified question in the level's subject whose `source.quote`
+ * shares a proposition with the landmark's, worked out the way the game works it
+ * out.
  */
 const LANDMARK_PROMPTS: ReadonlySet<string> = ((): ReadonlySet<string> => {
   const read = (path: string): unknown =>
@@ -26,11 +35,40 @@ const LANDMARK_PROMPTS: ReadonlySet<string> = ((): ReadonlySet<string> => {
       .map((name) => (read(`../../content/quests/${name}`) as { giver: string }).giver),
   );
   const level = read(`../../content/levels/${START_LEVEL}.json`) as {
-    readonly pois?: readonly { readonly id: string }[];
+    readonly subject: string;
+    readonly pois?: readonly {
+      readonly id: string;
+      readonly fact?: { readonly source?: { readonly quote?: string } | null } | null;
+    }[];
   };
+  const questionsDir = fileURLToPath(new URL('../../content/questions', import.meta.url));
+  const questions = readdirSync(questionsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) =>
+      readdirSync(`${questionsDir}/${entry.name}`)
+        .filter((name) => name.endsWith('.json'))
+        .map(
+          (name) =>
+            read(`../../content/questions/${entry.name}/${name}`) as {
+              readonly subject?: string;
+              readonly source?: { readonly quote?: string };
+              readonly verification?: { readonly status?: string };
+            },
+        ),
+    );
+  const asksAbout = (quote: string | undefined): boolean =>
+    quote !== undefined &&
+    questions.some(
+      (question) =>
+        question.subject === level.subject &&
+        question.verification?.status === 'verified' &&
+        typeof question.source?.quote === 'string' &&
+        sharesProposition(question.source.quote, quote),
+    );
   return new Set(
     (level.pois ?? [])
       .filter((poi) => !givers.has(poi.id))
+      .filter((poi) => asksAbout(poi.fact?.source?.quote))
       .map((poi) => {
         const own = `hud.interact.${poi.id}`;
         return hasCopyRow(own) ? text('en', own) : text('en', 'hud.interact.poi');
@@ -276,7 +314,9 @@ test.describe('reaching a landmark teaches, then asks', () => {
      * generous for that reason and for no other — nothing here asserts how long
      * the walk took, only that it arrives and what happens when it does.
      */
-    test.slow();
+    /* Past the guide and the Town Clock, which asks nothing with no task running
+       (ADR-0048), to the first landmark that has something to ask. */
+    test.setTimeout(360_000);
 
     await page.goto(`./?level=${START_LEVEL}`);
     await expect(page.locator('html')).toHaveAttribute('data-tn-level', 'ready');
@@ -308,10 +348,13 @@ test.describe('reaching a landmark teaches, then asks', () => {
      * what a player does when they are heading somewhere, and this scenario is
      * about arriving.
      */
-    expect(LANDMARK_PROMPTS.size, `${START_LEVEL} places no landmark that opens a card`).toBeGreaterThan(0);
+    expect(
+      LANDMARK_PROMPTS.size,
+      `${START_LEVEL} places no landmark that opens a card and asks about its own sentence`,
+    ).toBeGreaterThan(0);
     const aPlace = async (): Promise<boolean> =>
       (await prompt.isVisible()) && LANDMARK_PROMPTS.has((await prompt.textContent()) ?? '');
-    for (let step = 0; step < 30; step += 1) {
+    for (let step = 0; step < 120; step += 1) {
       await page.keyboard.down('ArrowRight');
       await page.waitForTimeout(600);
       /* Waited for: the guide stands before the landmark, a held walk comes to
