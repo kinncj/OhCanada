@@ -12,9 +12,15 @@ import officerDocument from '@content/characters/officer.json';
 import { readGameRules } from '../../../app/bootstrap/game-rules';
 import { completionLine } from '../../../app/bootstrap/quest';
 import { readQuests } from '../../../app/bootstrap/quests';
+import { PROGRESS_STORAGE_KEY } from '@adapters/persistence/record-progress-repository';
+import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
+import { toProgressSnapshot } from '@application/persistence/progress-document';
+import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { unlockedLevelIds } from '@domain/entities/level';
+import { defaultSettings } from '@domain/entities/player';
+import { newProgress, withQuestState } from '@domain/entities/progress';
 import { hasCopyRow, text } from '@ui/copy';
-import type { LevelId } from '@domain/ids';
+import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
 
 /**
  * The front door, and what the page is while a level has it.
@@ -200,6 +206,8 @@ const hoisted = vi.hoisted(() => {
     notices: (string | null)[];
     /** Every value the quest tracker was given, `null` for "no task". */
     tasks: (string | null)[];
+    /** For each of those, whether the HUD was asked to announce it. */
+    taskAnnounced: boolean[];
     /** Every state the Study screen was shown in. */
     studyShown: unknown[];
     /**
@@ -277,6 +285,7 @@ const hoisted = vi.hoisted(() => {
     hints: [],
     notices: [],
     tasks: [],
+    taskAnnounced: [],
     studyShown: [],
     stampFor: null,
     answersAreCorrect: true,
@@ -464,8 +473,9 @@ vi.mock('@ui/hud', () => ({
         hoisted.state.calls.push('hud.focus');
       },
       setMode: () => undefined,
-      setTask: (step: string | null): void => {
+      setTask: (step: string | null, options?: { readonly announce?: boolean }): void => {
         hoisted.state.tasks.push(step);
+        hoisted.state.taskAnnounced.push(options?.announce !== false);
       },
       setPrompt: (label: string | null): void => {
         hoisted.state.prompts.push(label);
@@ -968,6 +978,7 @@ beforeEach(() => {
   hoisted.state.hints = [];
   hoisted.state.notices = [];
   hoisted.state.tasks = [];
+  hoisted.state.taskAnnounced = [];
   hoisted.state.studyShown = [];
   hoisted.state.stampFor = null;
   hoisted.state.answersAreCorrect = true;
@@ -2873,6 +2884,142 @@ describe('a quest is offered, accepted and tracked', () => {
       'the level was left frozen behind a dialogue that has gone',
     ).toBe('false');
     expect(hoisted.state.tasks.filter((task) => task !== null).length).toBeGreaterThan(0);
+  });
+});
+
+/* ------------------------------------------------------ the task a save comes back with */
+
+/**
+ * `TN-FLOW-02`, `TN-FLOW-03` and `TN-SAVE-01`: a save with a quest in progress
+ * opens with its task in the HUD.
+ *
+ * It did not. The tracker was drawn only when a quest *moved* — an accept, a
+ * visit, an answer, a language change — and a level session builds a new HUD,
+ * so a reload, Continue or the map opened the level with no task line until the
+ * player engaged something (found by the second audit, on Halifax in French at
+ * 200 %).
+ *
+ * The save is the game's own: `newProgress`, `withQuestState`,
+ * `toProgressSnapshot` and the JSON codec, put in `localStorage`, which is
+ * where `openProgressStore` reads when there is no IndexedDB (ADR-0026) — the
+ * state of this `node` environment. The quest is the start level's real one.
+ */
+describe('a level opens with the task the save was left on', () => {
+  const START_QUEST = readQuests().quests.find(
+    (quest) => String(quest.levelId) === String(START_LEVEL),
+  );
+  if (START_QUEST === undefined) {
+    throw new Error(`${String(START_LEVEL)} ships no quest, so no save can come back with a task.`);
+  }
+  const SAVED_QUEST_ID = START_QUEST.id;
+  /** The step after the offer: where a player who accepted and walked away stands. */
+  const SAVED_STEP_INDEX = 1;
+  const savedStep = START_QUEST.steps[SAVED_STEP_INDEX];
+  if (savedStep === undefined) {
+    throw new Error(`${String(START_QUEST.id)} has no step after its offer.`);
+  }
+
+  /** The tracker's line for that step, filled the way the tracker fills it. */
+  const lineFor = (locale: 'en' | 'fr'): string =>
+    savedStep.prompt[locale]
+      .replace(/\{\{done\}\}/gu, '0')
+      .replace(/\{\{count\}\}/gu, String(savedStep.count ?? 1));
+
+  const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE_MIGRATIONS });
+
+  function seedSave(locale: 'en' | 'fr', status: 'active' | 'completed'): void {
+    const now = 1_700_000_000_000 as EpochMillis;
+    const progress = withQuestState(
+      newProgress(defaultSettings(locale as LocaleCode), [START_LEVEL]),
+      START_LEVEL,
+      {
+        questId: SAVED_QUEST_ID as QuestId,
+        status,
+        stepIndex: SAVED_STEP_INDEX,
+        stepProgress: 0,
+        updatedAt: now,
+      },
+    );
+    const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });
+    if (!snapshot.ok) throw new Error(`the seeded save is not a save: ${snapshot.error.message}`);
+    const encoded = codec.encode(snapshot.value);
+    if (!encoded.ok) throw new Error(`the seeded save would not encode: ${encoded.error.message}`);
+    const items = new Map<string, string>([[PROGRESS_STORAGE_KEY, encoded.value]]);
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string): string | null => items.get(key) ?? null,
+      setItem: (key: string, value: string): void => {
+        items.set(key, value);
+      },
+      removeItem: (key: string): void => {
+        items.delete(key);
+      },
+    });
+  }
+
+  beforeEach(() => {
+    hoisted.state.level = LOADED_LEVEL;
+  });
+
+  it('draws the saved task as the level becomes playable, and not before', async () => {
+    seedSave('en', 'active');
+    hoisted.state.scenesBoot = false;
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(hoisted.state.tasks, 'a task was drawn before the level could be played').toEqual([]);
+
+    hoisted.state.playable?.(`${START_LEVEL}`);
+    expect(
+      hoisted.state.tasks,
+      `the save has ${String(START_QUEST.id)} on step "${savedStep.id}", and the level opened ` +
+        'with no task line',
+    ).toEqual([lineFor('en')]);
+  });
+
+  it('draws it without saying it: the level opens in that state, it did not change', async () => {
+    seedSave('en', 'active');
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(hoisted.state.tasks).toEqual([lineFor('en')]);
+    expect(hoisted.state.taskAnnounced, 'the task was announced on arrival').toEqual([false]);
+  });
+
+  it('draws it in the language the save is in', async () => {
+    seedSave('fr', 'active');
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(hoisted.state.tasks).toEqual([lineFor('fr')]);
+  });
+
+  it('draws it again when the player leaves and comes back through the map', async () => {
+    seedSave('en', 'active');
+    await boot(`?level=${START_LEVEL}`);
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+    hoisted.state.tasks = [];
+    hoisted.state.taskAnnounced = [];
+
+    shellOption<(id: string) => void>('onPlayLevel')(`${START_LEVEL}`);
+    await flush();
+
+    expect(hoisted.state.tasks, 'the new HUD came back with no task line').toEqual([lineFor('en')]);
+    expect(hoisted.state.taskAnnounced).toEqual([false]);
+  });
+
+  it('follows a language change, and says that change', async () => {
+    seedSave('en', 'active');
+    await boot(`?level=${START_LEVEL}`);
+
+    shellOption<{ set: (key: string, value: unknown) => void }>('store').set('locale', 'fr');
+
+    expect(hoisted.state.tasks.at(-1)).toBe(lineFor('fr'));
+    expect(hoisted.state.taskAnnounced.at(-1)).toBe(true);
+  });
+
+  it('draws nothing for a quest that is already finished', async () => {
+    seedSave('en', 'completed');
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(hoisted.state.tasks.filter((task) => task !== null)).toEqual([]);
   });
 });
 

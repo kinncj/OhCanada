@@ -3157,6 +3157,21 @@ function openLevel(wiring: LevelWiring): LevelSession {
     applyPageTheme(renderer);
     const label = modeLabel(renderer, locale);
     if (label !== null) hud.setMode(label);
+    /*
+     * The task the player arrived with (`TN-FLOW-02`, `TN-SAVE-01`): a save with
+     * a quest in progress, opened by a reload, Continue, the map or the next
+     * level. The HUD is new with this session and the tracker used to be drawn
+     * only when a quest moved — an accept, a visit, an answer or a language
+     * change — so a returning player saw no task until they engaged something.
+     *
+     * Drawn, not said. It is the state the level opens in, as the mode is, and
+     * `TN-HUD-07` announces a change; the arrival announcement is the one
+     * sentence said on arrival. The line is in the tree as text from here, and
+     * the next change to it is announced as before, because `setTask` ignores a
+     * value it already holds. With no quest being played nothing is drawn.
+     */
+    const task = quests.task;
+    if (task !== null) hud.setTask(task, { announce: false });
   }
 
   const offPlayable = wiring.onLevelPlayable(() => {
