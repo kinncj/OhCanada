@@ -37,6 +37,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   SUPPORTED_MANIFEST_VERSION,
+  artUrlsOf,
   atlasKeyOf,
   parseAssetManifest,
   preferredAssetScale,
@@ -56,6 +57,43 @@ const parsed = (files: unknown[]): AssetManifest => {
 };
 
 const BASE = '/OhCanada/';
+
+describe('artUrlsOf', () => {
+  /*
+   * ADR-0034, amended 2026-09-15: offline, a level opens only when every file it
+   * would fetch is in the browser's cache. The list must be exactly what the
+   * scene queues — an atlas is two files, not one — or a level missing its frame
+   * data would be reported as ready to draw.
+   */
+  it('lists an image once, and an atlas as its sheet and then its frame data', () => {
+    expect(
+      artUrlsOf([
+        { kind: 'image', key: 'halifax-sky', url: `${BASE}img/halifax-sky@1x.aaaaaaaa.webp` },
+        {
+          kind: 'atlas',
+          key: 'shared',
+          textureUrl: `${BASE}atlas/shared@1x.bbbbbbbb.webp`,
+          dataUrl: `${BASE}atlas/shared@1x.cccccccc.json`,
+        },
+      ]),
+    ).toEqual([
+      `${BASE}img/halifax-sky@1x.aaaaaaaa.webp`,
+      `${BASE}atlas/shared@1x.bbbbbbbb.webp`,
+      `${BASE}atlas/shared@1x.cccccccc.json`,
+    ]);
+  });
+
+  it('names a file two requests share once, and nothing for a level with no requests', () => {
+    const url = `${BASE}img/pinned@1x.dddddddd.webp`;
+    expect(
+      artUrlsOf([
+        { kind: 'image', key: 'a', url },
+        { kind: 'image', key: 'b', url },
+      ]),
+    ).toEqual([url]);
+    expect(artUrlsOf([])).toEqual([]);
+  });
+});
 
 describe('parseAssetManifest', () => {
   it('reads the pipeline manifest', () => {

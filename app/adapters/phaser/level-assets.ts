@@ -238,6 +238,29 @@ export function keysIn(
 }
 
 /**
+ * Every URL the requests fetch, once each, in request order: an image's file, an
+ * atlas's sheet and then its frame data.
+ *
+ * What a level needs from the network, or from the browser's cache when there is
+ * no network (ADR-0034, amended 2026-09-15). Derived from the requests the scene
+ * will actually queue rather than from the manifest's list for the level, so a
+ * file this device would never ask for — the other scale — is never reported as
+ * missing, and a file it will ask for is never left out.
+ */
+export function artUrlsOf(requests: readonly LoadRequest[]): readonly string[] {
+  const urls = new Set<string>();
+  for (const request of requests) {
+    if (request.kind === 'image') {
+      urls.add(request.url);
+    } else {
+      urls.add(request.textureUrl);
+      urls.add(request.dataUrl);
+    }
+  }
+  return [...urls];
+}
+
+/**
  * `atlas/ottawa@2x.fa99afcd.webp` -> `ottawa`.
  *
  * The scale and the content hash are stripped, which is what makes the key

@@ -32,7 +32,10 @@
  *   4. Level art: from truenorth-level-<id>, else the network. The first file a
  *      level fetches starts caching the REST of that level in the background -
  *      both scales, so a device whose pixel ratio changes while offline still
- *      has what it asks for. That is "Workbox per level" (ADR-0006).
+ *      has what it asks for. That is "Workbox per level" (ADR-0006). And once
+ *      this worker controls a page, the page asks it to cache every other level
+ *      too, in the background, so a level never played online still opens
+ *      offline (ADR-0034, amended 2026-09-15; see the message listener).
  *
  * Everything else - every cross-origin request, and any same-origin URL that is
  * none of the above - matches no route, so the browser fetches it exactly as it
@@ -57,6 +60,13 @@ const SCOPE_PATH = SCOPE.pathname;
  * writes the sender; deploy-check fails if the two stop agreeing.
  */
 const WARM_MESSAGE = 'truenorth:warm';
+
+/**
+ * The field of that message that asks for every level's art, not only the
+ * page's (ADR-0034, amended 2026-09-15). Same string as `WARM_EVERY_LEVEL` in
+ * scripts/lib/pwa.mjs; deploy-check fails if the two stop agreeing.
+ */
+const WARM_EVERY_LEVEL = 'everyLevel';
 
 /**
  * `truenorth-` is the prefix the archived 3D build used for its runtime caches
@@ -236,12 +246,26 @@ async function fillLevel(level) {
 }
 
 /*
+ * Two gaps, one message.
+ *
  * The first visit's gap. A page that loaded before this worker took control
  * fetched its art past the worker, so nothing above saw it. The registration
  * script sends the page's resource URLs the moment control arrives, and every
- * level they belong to is cached whole. URLs outside the scope, and files this
- * build does not ship, are ignored - which is also why a message from any other
- * page on the shared origin can do nothing but cache TrueNorth's own art.
+ * level they belong to is cached whole, first.
+ *
+ * The first-offline gap (ADR-0034, amended 2026-09-15). A level never played
+ * online had no art cached, so opening it offline drew flat bands. So the same
+ * message - sent on the first control and on every later load of a controlled
+ * page - carries `everyLevel`, and when it is true every level this build ships
+ * is cached after the page's own, one level and one file at a time so a level
+ * being played is never competing with a burst. It is all the level art there
+ * is, both scales, and deploy-check holds it and the precache together under the
+ * initial payload ceiling. The page sends `false` when the browser asks to save
+ * data, and then a level is cached only when it is played, as before.
+ *
+ * URLs outside the scope, and files this build does not ship, are ignored -
+ * which is also why a message from any other page on the shared origin can do
+ * nothing but cache TrueNorth's own art.
  */
 self.addEventListener('message', (event) => {
   const data = event.data;
@@ -260,5 +284,12 @@ self.addEventListener('message', (event) => {
     const owners = artLevelsByPath.get(scopedPath(url));
     if (owners !== undefined && owners.length === 1) levels.add(owners[0]);
   }
-  event.waitUntil(Promise.all([...levels].map((level) => warmLevel(level))));
+  event.waitUntil(warmInTurn([...levels], data[WARM_EVERY_LEVEL] === true));
 });
+
+/** The page's own levels, then - when asked - every level this build ships, one at a time. */
+async function warmInTurn(first, everyLevel) {
+  for (const level of first) await warmLevel(level);
+  if (!everyLevel) return;
+  for (const level of artPathsByLevel.keys()) await warmLevel(level);
+}

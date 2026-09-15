@@ -111,6 +111,67 @@ the worker the page's resource URLs (`truenorth:warm`), and every level among th
 uncovered is a visitor who leaves before the worker has installed; they have nothing offline, which is what "offline
 after first load" means.
 
+### A level never played online (amended 2026-09-15)
+
+**The defect.** The second live-site audit let the worker take control on the title, went offline and opened
+Halifax for the first time (`ck30-offline-title`, `ck31-offline-level`). The worker answered the navigation
+and the code; the level started, and because none of its art had been cached it drew flat sky and ground
+bands with no landmark, the console filled with `net::ERR_FAILED` and "the ground dressing
+halifax-ground-boardwalk-edge has no texture", and nothing told the player the level needed a connection.
+"Offline after first load" was true of levels already played and silently false of the rest.
+
+**The decision: both halves.**
+
+1. **Every level's art is cached in the background once the worker controls a page.** The `truenorth:warm`
+   message gains an `everyLevel` field. The registration script sends it on the first control (with the
+   page's resource URLs, as before) and again on the `load` of every page the worker already controls, and it
+   sends `false` when `navigator.connection.saveData` is true. The worker caches the page's own levels first,
+   then every level in `LEVEL_ART`, one level and one file at a time, into the same per-level caches and
+   under the same prune. A shared file (the character atlas) is still cached with the first level that
+   names it.
+2. **A level whose art is not all cached does not open offline.** Before `loadLevel`, the level session asks
+   `checkLevelAvailability` (`app/application/use-cases/level-availability.ts`). Online it opens without asking
+   anything. Offline it asks the new `LevelArtCache` port, which `GameRenderer.missingLevelArt` implements by
+   looking up, in Cache Storage, exactly the files the scene would queue at this device's scale. Anything
+   missing — or no way to tell — shows the level's error card in its `needsConnection` form instead: the
+   level's own error title, "This place needs an internet connection the first time you open it. Connect,
+   then try again.", and the same "Try again" and "Go back". `data-tn-level` is `failed`. The level is not
+   started with missing art.
+
+Half 1 is what makes offline play true; half 2 is what makes the remaining gaps honest — a Save-Data browser,
+a visit that left before the background cache finished, a cache the browser evicted, or a browser with no
+Cache Storage.
+
+**Why the budget allows it.** Measured on this build: all level art, both scales, is 108 files and 2.92 MiB
+(1x 2.44 MiB, 2x 0.48 MiB, because full-screen layers ship at 1x only); the precache is 31 files and
+3 621.2 kB. Together about 6.4 MiB, against the 8 MiB `budgets.initialPayloadBytes` the precache alone was
+held to. `deploy-check` now holds **the precache plus every level art file** under that ceiling, because a
+first visit that stays downloads both; a build whose art outgrows it fails, and this decision is reopened
+rather than made expensive by accident. It also fails a worker that does not carry the `everyLevel` literal
+the page sends.
+
+**What the other kinds of art are.** Ground dressing strips (ADR-0042) and ride frames (ADR-0035) are
+`image` entries in `dist/manifest.json` owned by their level, so they are level art under every rule above;
+`deploy-check` already fails a manifest file the worker would never cache. Screen art (ADR-0041) —
+`title-landscape.svg` and the map — is a content-hashed file under `assets/`, so it is in the precache, and
+the landmark pictures and portraits the DOM screens draw are the level's own art files.
+
+**Alternatives considered for this amendment.** Only the message (half 2 alone): an honest failure where
+play was possible, for every level a player had not happened to open online. Only the background cache
+(half 1 alone): the grey level stays for a Save-Data browser or an evicted cache. Adding the art to the
+install precache: the same bytes, but the install then fails whole on one failed file and competes with the
+first paint, where the background cache retries a level the next time a page loads. The rejection of
+"Precache every level's art" under Alternatives stands for the install precache; the plan's "per level" is
+kept as the unit of caching and pruning.
+
+**Tests.** `tests/unit/application/use-cases/level-availability.test.ts` (online never asks; offline opens
+only with nothing missing; "cannot tell" and a throw are "needs a connection"),
+`tests/unit/adapters/phaser/level-assets.test.ts` (`artUrlsOf`: an atlas is two files),
+`tests/unit/ui/level-screens.test.ts` (the `needsConnection` card, its own ids, French), and
+`tests/e2e/offline.spec.ts`: a level never played online opens offline drawn from its textures once every
+level's art is cached, and with its level cache removed the same level shows the card, stays `failed`, and
+asks again on "Try again". Written, not run locally; CI runs them.
+
 ### Registration lives in the artefact
 
 The inline script is written by the build, not by `app/bootstrap`. That is partly who may edit what (fact 4), but

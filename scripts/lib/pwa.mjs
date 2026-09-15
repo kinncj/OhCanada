@@ -58,6 +58,12 @@ export const TOMBSTONE_SOURCE = 'infra/pages/sw.js';
 export const WORKER_BANNER = '/* TrueNorth service worker';
 /** Must equal `WARM_MESSAGE` in infra/pages/service-worker.js; deploy-check holds them together. */
 export const WARM_MESSAGE = 'truenorth:warm';
+/**
+ * The field of that message that asks the worker to cache every level's art, not
+ * only the page's (ADR-0034, amended 2026-09-15). Must equal `WARM_EVERY_LEVEL` in
+ * infra/pages/service-worker.js; deploy-check holds them together.
+ */
+export const WARM_EVERY_LEVEL = 'everyLevel';
 export const PRECACHE_SENTINEL = 'tn:precache';
 export const LEVEL_ART_SENTINEL = 'tn:level-art';
 
@@ -124,28 +130,44 @@ export function levelArtFrom(assetManifest) {
  * worker the URLs the page already fetched, so a level opened before the worker
  * took over is cached whole all the same.
  *
+ * Every page the worker already controls says so again on `load`, and both
+ * messages carry `everyLevel`: the worker then caches every level's art after
+ * the page's own, so a level never played online still opens offline (ADR-0034,
+ * amended 2026-09-15). A browser that asks to save data sends `false`, and a
+ * level is then cached only when it is played.
+ *
  * It tolerates `register` resolving to nothing: that is what Playwright's
  * `serviceWorkers: 'block'` stubs it with, and every browser suite but the
- * offline spec runs that way (ADR-0034).
+ * offline and update specs runs that way (ADR-0034). A page with no controller
+ * sends nothing.
  */
 export function registrationScript(basePath) {
   const url = JSON.stringify(`${basePath}${SERVICE_WORKER_FILE}`);
   const scope = JSON.stringify(basePath);
   const warm = JSON.stringify(WARM_MESSAGE);
+  const every = JSON.stringify(WARM_EVERY_LEVEL);
   return [
     '(function () {',
     '  var sw = navigator.serviceWorker;',
     '  if (!sw) return;',
     '  var firstControl = !sw.controller;',
+    '  var connection = navigator.connection;',
+    '  var everyLevel = !(connection && connection.saveData === true);',
+    '  function warm(urls) {',
+    '    if (!sw.controller) return;',
+    `    var message = { type: ${warm}, urls: urls };`,
+    `    message[${every}] = everyLevel;`,
+    '    sw.controller.postMessage(message);',
+    '  }',
     "  sw.addEventListener('controllerchange', function () {",
     '    if (!firstControl || !sw.controller) return;',
     '    firstControl = false;',
-    "    var urls = performance.getEntriesByType('resource').map(function (entry) { return entry.name; });",
-    `    sw.controller.postMessage({ type: ${warm}, urls: urls });`,
+    "    warm(performance.getEntriesByType('resource').map(function (entry) { return entry.name; }));",
     '  });',
     "  addEventListener('load', function () {",
     `    var registering = sw.register(${url}, { scope: ${scope}, updateViaCache: 'none' });`,
     "    if (registering && typeof registering.catch === 'function') registering.catch(function () {});",
+    '    if (!firstControl) warm([]);',
     '  });',
     '})();',
   ].join('\n');
@@ -374,7 +396,7 @@ export function progressiveWebApp({ root }) {
       const built = await buildServiceWorker({ root, outDir, config });
       logger?.info(
         `service worker: precache ${built.precacheFiles} file(s), ${(built.precacheBytes / 1000).toFixed(1)} kB; ` +
-          `${built.artFiles} level art file(s) cached per level on first play`,
+          `${built.artFiles} level art file(s), every level cached in the background once the worker controls a page`,
       );
     },
   };

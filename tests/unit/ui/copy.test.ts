@@ -217,8 +217,11 @@ describe('the copy table', () => {
       /* ADR-0043: what the strip says while a drive holds the player at a stop,
          proposed for TN-REACH-12. */
       'hud.stop.hint',
+      /* ADR-0034's amendment: the card a level shows offline when its art was
+         never kept. */
+      'level.needsConnection.body',
     ]);
-    expect(COPY_GAPS).toHaveLength(60);
+    expect(COPY_GAPS).toHaveLength(61);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

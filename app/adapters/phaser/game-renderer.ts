@@ -6,6 +6,7 @@ import { BootScene, HORIZON_FRACTION } from './boot-scene';
 import { blendColors, toCssColor, toPhaserColor } from './boot-config';
 import type { BootConfig } from './boot-config';
 import {
+  artUrlsOf,
   parseAssetManifest,
   preferredAssetScale,
   selectLevelAssets,
@@ -185,6 +186,24 @@ export interface GameRendererOptions {
   readonly fetch?: typeof globalThis.fetch;
   /** Overrides `devicePixelRatio` when choosing between the 1x and 2x sets. */
   readonly devicePixelRatio?: number;
+  /**
+   * Where {@link GameRenderer.missingLevelArt} looks for a level's files. Defaults
+   * to the page's Cache Storage, which the service worker fills (ADR-0034); `null`
+   * says there is none. Injectable so the offline answer can be driven without a
+   * worker.
+   */
+  readonly artCache?: LevelArtStore | null;
+}
+
+/** The part of Cache Storage {@link GameRenderer.missingLevelArt} reads. */
+export interface LevelArtStore {
+  match(url: string): Promise<unknown>;
+}
+
+/** The page's Cache Storage, or `null` in a browser (or an insecure page) that has none. */
+function browserArtStore(): LevelArtStore | null {
+  if (typeof caches === 'undefined') return null;
+  return { match: (url: string): Promise<unknown> => caches.match(url) };
 }
 
 export class GameRenderer {
@@ -528,9 +547,38 @@ export class GameRenderer {
    * anybody, which is what it meant before.
    */
   async #resolveAssets(id: string): Promise<readonly LoadRequest[]> {
+    const requests = await this.#requestsFor(id);
+    /* The level is still playable on placeholders, so a failure is reported (by
+       `#requestsFor`) and not returned: a level a player can walk beats a blank
+       page. */
+    if (!requests.ok) return [];
+    if (requests.value.length === 0) {
+      console.error(
+        `[renderer] the asset manifest lists nothing for level "${id}"; every layer will ` +
+          `draw its placeholder band.`,
+      );
+    }
+    return requests.value;
+  }
+
+  /**
+   * This level's load list as a `Result`, for the one caller that must not read
+   * "the manifest would not load" as "the level draws nothing":
+   * {@link GameRenderer.missingLevelArt}. It logs exactly what `#resolveAssets`
+   * always logged, and `#resolveAssets` turns its error into the empty list the
+   * scene has always opened on.
+   */
+  async #requestsFor(id: string): Promise<Result<readonly LoadRequest[]>> {
     const base = this.#options.assetsBaseUrl ?? assetsBaseUrl();
     const fetchImpl = this.#options.fetch ?? globalThis.fetch?.bind(globalThis);
-    if (fetchImpl === undefined) return [];
+    if (fetchImpl === undefined) {
+      return appErr(
+        'unsupported',
+        'renderer.assets.noFetch',
+        'this page has no fetch to read the asset manifest with.',
+        { level: id },
+      );
+    }
 
     try {
       this.#manifest ??= (async () => {
@@ -543,25 +591,66 @@ export class GameRenderer {
       const manifest = await this.#manifest;
       if (!manifest.ok) {
         console.error(`[renderer] ${manifest.error.code}: ${manifest.error.message}`);
-        return [];
+        return manifest;
       }
       const scale = preferredAssetScale(
         this.#options.devicePixelRatio ??
           (typeof window === 'undefined' ? 1 : window.devicePixelRatio),
       );
-      const requests = selectLevelAssets(manifest.value, id, { scale, baseUrl: base });
-      if (requests.length === 0) {
-        console.error(
-          `[renderer] the asset manifest lists nothing for level "${id}"; every layer will ` +
-            `draw its placeholder band.`,
-        );
-      }
-      return requests;
+      return ok(selectLevelAssets(manifest.value, id, { scale, baseUrl: base }));
     } catch (cause) {
-      /* The level is still playable on placeholders, so this is reported and not
-         returned: a level a player can walk beats a blank page. */
       console.error(`[renderer] could not read the asset manifest.`, cause);
-      return [];
+      return appErr(
+        'io',
+        'renderer.assets.manifestUnreadable',
+        'the asset manifest could not be read.',
+        { level: id },
+        cause,
+      );
+    }
+  }
+
+  /**
+   * The files this level would draw on this device that the browser's cache
+   * cannot answer for — `LevelArtCache` (ADR-0034, amended 2026-09-15).
+   *
+   * `app/bootstrap` asks only while the browser reports no network, and before
+   * {@link GameRenderer.loadLevel}: a level whose art is not all here would open
+   * on placeholder bands, which is what the second live-site audit found Halifax
+   * doing. The files are the ones the scene would queue — this device's scale,
+   * and a pinned file at the scale it was pinned to — so the other scale is never
+   * reported missing and nothing the scene asks for is left out.
+   *
+   * An error, never `[]`, when it cannot tell: no Cache Storage, a manifest that
+   * will not read, or a cache that throws (ADR-0024).
+   */
+  async missingLevelArt(id: string): Promise<Result<readonly string[]>> {
+    const store = this.#options.artCache === undefined ? browserArtStore() : this.#options.artCache;
+    if (store === null) {
+      return appErr(
+        'unsupported',
+        'renderer.art.noCache',
+        `there is no cache to open level "${id}" from.`,
+        { level: id },
+      );
+    }
+    const requests = await this.#requestsFor(id);
+    if (!requests.ok) return requests;
+
+    try {
+      const missing: string[] = [];
+      for (const url of artUrlsOf(requests.value)) {
+        if ((await store.match(url)) === undefined) missing.push(url);
+      }
+      return ok(missing);
+    } catch (cause) {
+      return appErr(
+        'io',
+        'renderer.art.cacheUnreadable',
+        `the cache could not be read for level "${id}".`,
+        { level: id },
+        cause,
+      );
     }
   }
 

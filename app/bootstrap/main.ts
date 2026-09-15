@@ -65,10 +65,12 @@ import { countAnswered, countRight } from '@application/use-cases/exam-attempt';
 import { createStudySession, type StudySession } from '@application/use-cases/study-session';
 import type {
   Clock,
+  Connectivity,
   LocalizedText,
   QuestDocument,
   ShippableQuestion,
 } from '@application/ports';
+import { checkLevelAvailability } from '@application/use-cases/level-availability';
 import {
   exportProgress,
   loadProgress,
@@ -718,6 +720,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       questCompleted: result.value.questCompleted,
     };
   };
+
 
   /**
    * `TN-TITLE-04` and `TN-HUD-03`: the way out the storage warning has to offer.
@@ -1789,6 +1792,15 @@ interface LevelWiring {
 function openLevel(wiring: LevelWiring): LevelSession {
   const { id, root, uiHost, gameHost, bus, renderer, pause, store, words } = wiring;
   let locale = store.current.locale;
+  /**
+   * The browser's own answer to "is there a network" (`Connectivity`, ADR-0034,
+   * amended 2026-09-15). `false` only when the browser is sure; a page with no
+   * `navigator` at all — the node doubles `tests/unit/bootstrap/` boot this file
+   * under — reads as online, which asks nothing and changes nothing.
+   */
+  const browserConnectivity: Connectivity = {
+    isOnline: () => typeof navigator === 'undefined' || navigator.onLine !== false,
+  };
 
   const hud = createHud(uiHost, {
     locale,
@@ -3010,11 +3022,66 @@ function openLevel(wiring: LevelWiring): LevelSession {
     }
   });
 
+  /**
+   * The card a level shows instead of opening when the browser is offline and
+   * the level's art was never kept (ADR-0034, amended 2026-09-15): the level's
+   * own error title, its own sentence, and the same two ways on. Built the first
+   * time it is needed, which online is never.
+   */
+  let offline: ReturnType<typeof createLevelError> | null = null;
+  const needsConnectionCard = (): ReturnType<typeof createLevelError> => {
+    offline ??= createLevelError(hud.main, {
+      locale,
+      reason: 'needsConnection',
+      title: words(locale).errorTitle,
+      singleSwitch: store.current.singleSwitch,
+      holdMs: store.current.holdToChooseMs,
+      onBack: wiring.onLeave,
+      onRetry: () => {
+        offline?.hide();
+        void load();
+      },
+    });
+    return offline;
+  };
+
   async function load(): Promise<void> {
     root.dataset['tnLevel'] = 'loading';
     loading.show();
     announceWait();
     await renderer.ready;
+    /*
+     * Offline, a level whose art is not all in the browser's cache is not
+     * started: it would draw placeholder bands and nothing it is about.
+     * `checkLevelAvailability` never asks the cache while the browser is online,
+     * and it is not even awaited then, so the online path is the one it was.
+     */
+    if (!browserConnectivity.isOnline()) {
+      const availability = await checkLevelAvailability(
+        { connectivity: browserConnectivity, art: renderer },
+        `${id}`,
+      );
+      if (availability.kind === 'needsConnection') {
+        loading.hide();
+        root.dataset['tnLevel'] = 'failed';
+        console.warn(
+          `[bootstrap] level "${String(id)}" was not opened: the browser is offline and ` +
+            (availability.known
+              ? `${String(availability.missing.length)} of its art file(s) are not cached`
+              : 'whether its art is cached cannot be told') +
+            ' (ADR-0034).',
+        );
+        needsConnectionCard().show();
+        /* The dialog takes focus, so a screen reader reads it on arrival; the one
+           live region says it once as well, because `level/failed` is not
+           published for a level that was never asked to load. */
+        wiring.announce(
+          `${words(locale).errorTitle} ${text(locale, 'level.needsConnection.body')}`,
+          locale,
+        );
+        return;
+      }
+    }
     const result = await renderer.loadLevel(`${id}`);
     if (!result.ok) {
       /* Gone before the error card arrives (`TN-WAIT-02`: "the element
@@ -3123,6 +3190,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
          them knows the id of. */
       loading.setLocale(next, { title: words(next).title, message: words(next).loading });
       failure.setLocale(next, words(next).errorTitle);
+      offline?.setLocale(next, words(next).errorTitle);
       announcer.setLocale(next);
       const label = modeLabel(renderer, next);
       if (label !== null) hud.setMode(label);
@@ -3165,6 +3233,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
       card.destroy();
       loading.destroy();
       failure.destroy();
+      offline?.destroy();
+      offline = null;
       settings?.destroy();
       settings = null;
       hud.destroy();

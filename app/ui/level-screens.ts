@@ -38,7 +38,7 @@
  * DOM only (ADR-0005).
  */
 
-import { text, type UiLocale } from './copy';
+import { text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { createScreen, type Screen } from './screen';
 
@@ -183,8 +183,49 @@ export function createLevelLoading(
   };
 }
 
+/**
+ * Why the card is up instead of the level.
+ *
+ * `failed` is `TN-LEVEL-02`'s card and the default. `needsConnection` is
+ * ADR-0034's, amended 2026-09-15: the browser has no network and this level's
+ * art was never kept, so the level is not started rather than drawn as flat
+ * bands. The title and both ways on are the same; the sentence is its own, and
+ * so are the ids, because both cards can be in one page at once.
+ */
+export type LevelErrorReason = 'failed' | 'needsConnection';
+
+const ERROR_CARD: Readonly<
+  Record<
+    LevelErrorReason,
+    {
+      readonly id: string;
+      readonly testId: string;
+      readonly body: CopyKey;
+      readonly retryTestId: string;
+      readonly backTestId: string;
+    }
+  >
+> = {
+  failed: {
+    id: 'tn-level-error',
+    testId: 'level-error',
+    body: 'level.error.body',
+    retryTestId: 'level-retry',
+    backTestId: 'level-back',
+  },
+  needsConnection: {
+    id: 'tn-level-offline',
+    testId: 'level-needs-connection',
+    body: 'level.needsConnection.body',
+    retryTestId: 'level-offline-retry',
+    backTestId: 'level-offline-back',
+  },
+};
+
 export interface LevelErrorOptions {
   readonly locale: UiLocale;
+  /** Which card this is. Absent is `failed`. */
+  readonly reason?: LevelErrorReason;
   /**
    * "We could not load Halifax." — `level.<id>.error.title` for the level that
    * failed, already localised, and the dialog's accessible name.
@@ -226,9 +267,11 @@ export function createLevelError(host: HTMLElement, options: LevelErrorOptions):
   const doc = host.ownerDocument;
   let locale = options.locale;
 
+  const card = ERROR_CARD[options.reason ?? 'failed'];
+
   const screen: Screen = createScreen(host, {
-    id: 'tn-level-error',
-    testId: 'level-error',
+    id: card.id,
+    testId: card.testId,
     locale,
     /*
      * `alertdialog`, not `dialog`: the level failed to open and this interrupted
@@ -245,24 +288,24 @@ export function createLevelError(host: HTMLElement, options: LevelErrorOptions):
   });
 
   const title = element(doc, 'h1', {
-    id: 'tn-level-error-title',
+    id: `${card.id}-title`,
     text: options.title,
   });
   screen.labelledBy(title);
 
   const body = element(doc, 'p', {
-    id: 'tn-level-error-body',
-    text: text(locale, 'level.error.body'),
+    id: `${card.id}-body`,
+    text: text(locale, card.body),
   });
   screen.describedBy(body);
 
   const retry = button(doc, {
-    testId: 'level-retry',
+    testId: card.retryTestId,
     text: text(locale, 'level.error.retry'),
     ...(options.onRetry === undefined ? {} : { onClick: options.onRetry }),
   });
   const back = button(doc, {
-    testId: 'level-back',
+    testId: card.backTestId,
     text: text(locale, 'level.error.back'),
     ...(options.onBack === undefined ? {} : { onClick: options.onBack }),
   });
@@ -289,7 +332,7 @@ export function createLevelError(host: HTMLElement, options: LevelErrorOptions):
       locale = next;
       screen.setLocale(next);
       title.textContent = nextTitle;
-      body.textContent = text(next, 'level.error.body');
+      body.textContent = text(next, card.body);
       retry.textContent = text(next, 'level.error.retry');
       back.textContent = text(next, 'level.error.back');
     },

@@ -58,6 +58,7 @@ import {
   LEVEL_ART_SENTINEL,
   PRECACHE_SENTINEL,
   SERVICE_WORKER_FILE,
+  WARM_EVERY_LEVEL,
   WARM_MESSAGE,
   WEB_MANIFEST_FILE,
   WORKER_BANNER,
@@ -455,6 +456,15 @@ if (config !== null && existsSync(SW_FILE)) {
           'and scripts/lib/pwa.mjs have stopped agreeing, and a first visit would cache no level whole.',
       );
     }
+    // The quoted literal in either quote style, not the bare word: the worker's
+    // own code names a parameter after the field, and that must not pass for it.
+    if (!worker.includes(`"${WARM_EVERY_LEVEL}"`) && !worker.includes(`'${WARM_EVERY_LEVEL}'`)) {
+      fail(
+        `dist/sw.js does not read the "${WARM_EVERY_LEVEL}" field of that message; infra/pages/service-worker.js ` +
+          'and scripts/lib/pwa.mjs have stopped agreeing, and a level never played online would not open ' +
+          'offline (ADR-0034, amended 2026-09-15).',
+      );
+    }
     if (!html.includes(registrationScript(basePath))) {
       fail(
         'dist/index.html does not carry the registration script scripts/lib/pwa.mjs writes, so no ' +
@@ -586,10 +596,38 @@ if (config !== null && existsSync(SW_FILE)) {
       }
     }
 
+    // ---- what a first visit downloads in the background
+    // ADR-0034, amended 2026-09-15: the precache installs, and then every page the
+    // worker controls asks it for every level's art, both scales, so a level never
+    // played online still opens offline. A first visit that stays downloads both,
+    // so both are held together under the ceiling the precache alone was held to.
+    // A build whose art outgrows it fails here, and the decision to cache every
+    // level in the background is reopened rather than quietly made expensive.
+    let artBytes = 0;
+    if (art.value !== null && typeof art.value === 'object' && !Array.isArray(art.value)) {
+      for (const path of Object.keys(art.value)) {
+        const file = join(DIST_DIR, path);
+        if (existsSync(file) && statSync(file).isFile()) artBytes += statSync(file).size;
+      }
+    }
+    if (
+      typeof budget === 'number' &&
+      Number.isFinite(budget) &&
+      budget > 0 &&
+      precacheBytes + artBytes > budget
+    ) {
+      fail(
+        `dist/sw.js precaches ${mib(precacheBytes)} and then caches every level's art, ${mib(artBytes)}, in ` +
+          `the background: ${mib(precacheBytes + artBytes)} against budgets.initialPayloadBytes, ${mib(budget)}. ` +
+          'A first visit that stays downloads all of it. Make the art smaller, or stop caching every level in ' +
+          'the background (ADR-0034).',
+      );
+    }
+
     workerSummary =
-      `service worker ON: precache ${precacheFiles} file(s), ${kb(precacheBytes)} against ` +
-      `${mib(typeof budget === 'number' ? budget : 0)}; ${artFiles} level art file(s) over ${artLevels} ` +
-      'level(s) cached per level on first play';
+      `service worker ON: precache ${precacheFiles} file(s), ${kb(precacheBytes)}, then ${artFiles} level art ` +
+      `file(s) over ${artLevels} level(s), ${kb(artBytes)}, in the background: ${kb(precacheBytes + artBytes)} ` +
+      `against ${mib(typeof budget === 'number' ? budget : 0)}`;
   }
 }
 

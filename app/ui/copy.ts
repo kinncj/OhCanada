@@ -726,6 +726,12 @@ const EN = {
   'level.error.body': 'Check your connection and try again.',
   'level.error.retry': 'Try again',
   'level.error.back': 'Go back',
+  /* ADR-0034, amended 2026-09-15, and **listed in {@link COPY_GAPS}**: the card a
+     level shows instead of opening when the network is gone and its art was
+     never kept. It takes the level's own error title and the two buttons above;
+     this sentence is the one thing that differs, and it says what to do. */
+  'level.needsConnection.body':
+    'This place needs an internet connection the first time you open it. Connect, then try again.',
 
   /* One waiting sentence and one error title per level, keyed on the level's
      id, each transcribed from that level's own story: `TN-LEVEL-halifax.md`,
@@ -1366,6 +1372,10 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'level.error.body': 'Vérifiez votre connexion et réessayez.',
   'level.error.retry': 'Réessayer',
   'level.error.back': 'Retour',
+  /* Listed in COPY_GAPS with the English. « Internet » takes its capital in
+     Canadian French, and « l'ouvrez » is the place, never the player. */
+  'level.needsConnection.body':
+    "Cet endroit a besoin d'une connexion Internet la première fois que vous l'ouvrez. Connectez-vous, puis réessayez.",
 
   'level.halifax.loading': 'Préparation du port.',
   /* « La côte rocheuse » is one letter from « les Rocheuses », which level 8's
@@ -1631,6 +1641,9 @@ export const COPY_GAPS: readonly CopyKey[] = [
   /* ADR-0043: what the strip says while a drive holds the player at a stop,
      proposed for `TN-REACH-12` until that story's owner takes the words. */
   'hud.stop.hint',
+  /* ADR-0034's amendment: the sentence on the card a level shows instead of
+     opening, offline, when its art was never kept. */
+  'level.needsConnection.body',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

@@ -294,3 +294,51 @@ describe('the level did not load', () => {
     }
   });
 });
+
+describe('the level needs a connection the first time (ADR-0034, amended 2026-09-15)', () => {
+  it('names the level, says what to do, and offers both ways on', () => {
+    const { at, page, onRetry, onBack } = openError({ reason: 'needsConnection' });
+    const root = at('level-needs-connection');
+
+    expect(root?.getAttribute('role')).toBe('alertdialog');
+    expect(
+      page.doc.getElementById(root?.getAttribute('aria-labelledby') ?? '')?.textContent,
+    ).toBe('We could not load Halifax.');
+    expect(
+      page.doc.getElementById(root?.getAttribute('aria-describedby') ?? '')?.textContent,
+    ).toBe(text('en', 'level.needsConnection.body'));
+
+    at('level-offline-retry')?.click();
+    at('level-offline-back')?.click();
+    expect(onRetry).toHaveBeenCalledTimes(1);
+    expect(onBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('shares no id or test id with the failure card, so both can be in one page', () => {
+    const page = buildPage();
+    const title = text('en', 'level.halifax.error.title');
+    createLevelError(page.host, { locale: 'en', title }).show();
+    createLevelError(page.host, { locale: 'en', title, reason: 'needsConnection' }).show();
+
+    const ids = page.doc
+      .querySelectorAll('[id]')
+      .map((node) => node.id)
+      .filter((id) => id.startsWith('tn-level-'));
+    expect(new Set(ids).size, ids.join(', ')).toBe(ids.length);
+    expect(page.doc.byTestId('level-error')).not.toBeNull();
+    expect(page.doc.byTestId('level-needs-connection')).not.toBeNull();
+    expect(page.doc.byTestId('level-retry')).not.toBeNull();
+    expect(page.doc.byTestId('level-offline-retry')).not.toBeNull();
+  });
+
+  it('follows a language change with its own sentence', () => {
+    const { screen, at } = openError({ reason: 'needsConnection' });
+    screen.setLocale('fr', text('fr', 'level.halifax.error.title'));
+    expect(at('level-needs-connection')?.textContent).toContain(
+      text('fr', 'level.needsConnection.body'),
+    );
+    expect(at('level-needs-connection')?.textContent).not.toContain(
+      text('fr', 'level.error.body'),
+    );
+  });
+});

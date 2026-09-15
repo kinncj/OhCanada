@@ -99,6 +99,8 @@ export type {
 
 export type { SaveCodec } from './save-codec';
 
+export type { Connectivity, LevelArtCache } from './level-art';
+
 export type { Clock } from './clock';
 export type { RandomSource, SeededRandomSource } from './random-source';
 
