@@ -722,13 +722,18 @@ export function createCharacterCreator(
     for (const slot of slots) {
       const group = groups.get(slot.id);
       if (group === undefined) continue;
-      for (const control of Array.from(
-        group.querySelectorAll<HTMLElement>('[data-option-id]'),
-      )) {
+      const controls = Array.from(group.querySelectorAll<HTMLElement>('[data-option-id]'));
+      /* Roving tabindex: the group is one Tab stop, on its chosen option, or on
+         its first when nothing in it is chosen, so no group is ever skipped
+         (the ARIA radio group pattern, and `app/ui/focus-trap.ts`'s rule). */
+      const anyChosen = controls.some(
+        (control) => control.getAttribute('data-option-id') === selection[slot.id],
+      );
+      for (const [position, control] of controls.entries()) {
         const chosen = control.getAttribute('data-option-id') === selection[slot.id];
         control.setAttribute('aria-checked', String(chosen));
         control.setAttribute('data-chosen', String(chosen));
-        control.tabIndex = chosen ? 0 : -1;
+        control.tabIndex = chosen || (!anyChosen && position === 0) ? 0 : -1;
         const indicator = control.querySelector<HTMLElement>('[data-tn-chosen]');
         if (indicator !== null) {
           indicator.textContent = chosen ? CHOSEN_GLYPH : UNCHOSEN_GLYPH;

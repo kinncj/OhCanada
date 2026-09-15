@@ -397,6 +397,79 @@ describe('the character creator', () => {
       expect(stops[0]?.getAttribute('data-option-id')).toBe('coily');
     });
 
+    it('keeps a group with nothing chosen reachable, on its first option', () => {
+      /* A save that predates a slot has no key for it until it is repaired. */
+      const { group } = open({ initialSelection: { skin: 'skin-1', coat: 'parka' } });
+      const stops = group('slot-hair')
+        .querySelectorAll('[data-option-id]')
+        .filter((option) => option.tabIndex === 0);
+      expect(stops.map((option) => option.getAttribute('data-option-id'))).toEqual(['coily']);
+      expect(
+        group('slot-hair').querySelectorAll('[aria-checked="true"]'),
+        'the fallback stop is a stop, not a choice',
+      ).toHaveLength(0);
+    });
+
+    it('stops Tab once per group, on the chosen option, both ways round and wrapping', () => {
+      const { root, page } = open({
+        initialSelection: { skin: 'skin-4', hair: 'straight', coat: 'anorak' },
+      });
+      const walk = (shiftKey: boolean): string[] => {
+        const seen: string[] = [];
+        for (let index = 0; index < 6; index += 1) {
+          press(root, 'Tab', { shiftKey });
+          seen.push(page.doc.activeElement?.getAttribute('data-testid') ?? 'none');
+        }
+        return seen;
+      };
+
+      expect(walk(false)).toEqual([
+        'slot-skin-skin-4',
+        'slot-hair-straight',
+        'slot-coat-anorak',
+        'randomise-character',
+        'start-playing',
+        'slot-skin-skin-4',
+      ]);
+      expect(walk(true)).toEqual([
+        'start-playing',
+        'randomise-character',
+        'slot-coat-anorak',
+        'slot-hair-straight',
+        'slot-skin-skin-4',
+        'start-playing',
+      ]);
+    });
+
+    it('moves Tab out of a group from an option that is focused but not chosen', () => {
+      /* Where a switch highlight, or a pointer that has not let go yet, leaves focus. */
+      const { option, page, root } = open({
+        initialSelection: { skin: 'skin-1', hair: 'coily', coat: 'parka' },
+      });
+      option('slot-hair', 'braids').focus();
+
+      press(root, 'Tab');
+      expect(page.doc.activeElement?.getAttribute('data-testid')).toBe('slot-coat-parka');
+
+      option('slot-hair', 'braids').focus();
+      press(root, 'Tab', { shiftKey: true });
+      expect(page.doc.activeElement?.getAttribute('data-testid')).toBe('slot-skin-skin-1');
+    });
+
+    it('wraps the arrow keys at both ends of a group, and never changes another group', () => {
+      const { group, creator, page } = open({
+        initialSelection: { skin: 'skin-6', hair: 'coily', coat: 'parka' },
+      });
+
+      press(group('slot-skin'), 'ArrowRight');
+      expect(creator.selection['skin']).toBe('skin-1');
+      press(group('slot-skin'), 'ArrowUp');
+      expect(creator.selection['skin']).toBe('skin-6');
+      press(group('slot-skin'), 'ArrowDown');
+      expect(creator.selection).toEqual({ skin: 'skin-1', hair: 'coily', coat: 'parka' });
+      expect(page.doc.activeElement?.getAttribute('data-testid')).toBe('slot-skin-skin-1');
+    });
+
     it('ignores keys that are not arrows', () => {
       const { group, creator } = open();
       const before = { ...creator.selection };

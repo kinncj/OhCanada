@@ -143,10 +143,8 @@ test.describe("the creator's picture", () => {
     const preview = page.getByTestId('character-preview');
     await expect(preview).toHaveCSS('position', 'sticky');
 
-    const hidden: string[] = [];
-    for (let index = 0; index < 30; index += 1) {
-      await page.keyboard.press('Tab');
-      const finding = await page.evaluate(() => {
+    const coveredByPanel = (): Promise<string | null> =>
+      page.evaluate(() => {
         const active = document.activeElement as HTMLElement | null;
         const panel = document.querySelector('[data-testid="character-preview"]');
         if (active === null || panel === null || panel.contains(active)) return null;
@@ -157,9 +155,44 @@ test.describe("the creator's picture", () => {
           ? `${active.getAttribute('data-testid') ?? active.tagName} at ${String(Math.round(a.top))} under ${String(Math.round(p.bottom))}`
           : null;
       });
+
+    /*
+     * Every option a keyboard can focus, the way a keyboard focuses it: Tab stops
+     * once per group, on its chosen option, and the arrow keys reach the rest
+     * (the ARIA radio group pattern). Each group is walked all the way round, so
+     * it ends on the option it started on, and the walk stops when Tab comes back
+     * to a control it has already visited.
+     */
+    const hidden: string[] = [];
+    const visited = new Set<string>();
+    let options = 0;
+    for (let index = 0; index < 40; index += 1) {
+      await page.keyboard.press('Tab');
+      const stop = await page.evaluate(() => {
+        const active = document.activeElement;
+        const group = active?.closest('[role="radiogroup"]') ?? null;
+        return {
+          id: active?.getAttribute('data-testid') ?? active?.tagName ?? 'none',
+          size: group === null ? 0 : group.querySelectorAll('[role="radio"]').length,
+        };
+      });
+      if (visited.has(stop.id)) break;
+      visited.add(stop.id);
+
+      const finding = await coveredByPanel();
       if (finding !== null) hidden.push(finding);
+      for (let step = 0; step < stop.size; step += 1) {
+        await page.keyboard.press('ArrowRight');
+        options += 1;
+        const moved = await coveredByPanel();
+        if (moved !== null) hidden.push(moved);
+      }
     }
     expect(hidden, hidden.join(' | ')).toEqual([]);
+    expect(
+      options,
+      'the walk reached no radio: Tab never landed in a group',
+    ).toBe(await page.locator('[data-testid="character-creator"] [role="radio"]').count());
 
     await page.getByTestId('slot-presentation').scrollIntoViewIfNeeded();
     const box = await boxOf(preview);

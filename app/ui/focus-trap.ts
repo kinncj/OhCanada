@@ -19,14 +19,37 @@
  *    document on the first Tab even with the whole background inert. Wrapping
  *    back to the container is the only way to hold it.
  *
+ * **The handler has to walk the Tab order the browser would, or it is worse than
+ * none.** Because it always prevents the native Tab, whatever it skips nobody
+ * reaches, and whatever it adds everybody has to pass. It used to stop on every
+ * element the selector below matched, and `button:not([disabled])` matches a
+ * button whose `tabindex` is `-1`. Every radio group in the game is a row of
+ * such buttons with a roving `tabindex`, so a keyboard player pressed Tab
+ * twenty-two times to cross the creator's six groups rather than six. Two rules
+ * now hold here, and {@link nextTabStop} is both of them as arithmetic:
+ *
+ *  - a negative `tabindex` takes an element out of the Tab order, whatever its
+ *    tag;
+ *  - **a radio group is one stop**: its checked radio, or its first when none is
+ *    checked (the ARIA radio group pattern). Tab from any radio in a group
+ *    leaves the group, including from one a switch highlight or a script
+ *    focused.
+ *
+ * The arrow keys inside a group belong to the group's own screen, which also
+ * keeps the roving `tabindex` that makes the checked radio the stop.
+ * `app/ui/single-switch.ts` builds its ring from its own selector and never
+ * reads `tabindex`, so one switch still reaches every option.
+ *
  * DOM only, no adapters, no scenes (ADR-0005). Nothing here is Phaser-aware; the
  * caller decides when a surface becomes modal.
  */
 
 /**
- * What the browser will put in the Tab order. Deliberately conservative: a
- * negative `tabindex` is programmatically focusable but not tabbable, so it is
- * excluded, and `[inert]` subtrees are filtered out at query time below.
+ * What can take focus inside a trap. Deliberately conservative, and **not on
+ * its own the Tab order**: `[tabindex]` entries with a negative value are
+ * excluded here, but a button, input or link with `tabindex="-1"` still matches
+ * its tag's entry. The trap reads `tabindex` and radio groups at key time
+ * ({@link nextTabStop}), and filters out hidden and `[inert]` subtrees.
  */
 export const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -80,6 +103,101 @@ export function nextTrapIndex(
 
   const step = backwards ? -1 : 1;
   return (currentIndex + step + size) % size;
+}
+
+/**
+ * An ARIA radio that holds a roving `tabindex`. It may be `div`, which
+ * {@link FOCUSABLE_SELECTOR} leaves out while its `tabindex` is `-1`, and focus
+ * can still be on it. Queried alongside, so Tab from it knows where it is.
+ */
+const ROVING_RADIO_SELECTOR = '[role="radio"][tabindex]';
+
+/** One focusable element, as far as Tab needs to know it. */
+export interface TabCandidate {
+  /** No negative `tabindex`: the browser would stop here if it were not in a radio group. */
+  readonly tabbable: boolean;
+  /**
+   * The radio group this element is a radio in, or `null`. Any value, compared
+   * by identity: the `radiogroup` element for an ARIA radio, the name for a
+   * native one.
+   */
+  readonly group: unknown;
+  /** A radio that is checked. */
+  readonly checked: boolean;
+}
+
+/**
+ * The indices, in document order, that Tab stops on: every tabbable candidate
+ * outside a radio group, and exactly one per group. A group's stop is its
+ * checked radio, or its first radio when none is checked, **whatever their
+ * `tabindex`**. A group whose screen forgot to rove its `tabindex` still costs
+ * one Tab, and a group with nothing checked is never skipped.
+ */
+export function tabStopIndices(candidates: readonly TabCandidate[]): number[] {
+  const stops: number[] = [];
+  const groups = new Set<unknown>();
+  for (const [index, candidate] of candidates.entries()) {
+    if (candidate.group === null) {
+      if (candidate.tabbable) stops.push(index);
+      continue;
+    }
+    if (groups.has(candidate.group)) continue;
+    groups.add(candidate.group);
+    const checked = candidates.findIndex(
+      (other) => other.group === candidate.group && other.checked,
+    );
+    stops.push(checked === -1 ? index : checked);
+  }
+  return stops.sort((a, b) => a - b);
+}
+
+/**
+ * Where Tab goes next inside a trap, over the whole list of focusable elements
+ * rather than a list of stops, because focus may be on an element that is not a
+ * stop: an unchecked radio a switch highlight moved to, or a control whose
+ * `tabindex` a screen just set to `-1`.
+ *
+ * @param candidates Every focusable element in the trap, in document order.
+ * @param currentIndex Index of the focused element in `candidates`, or `-1`
+ *   when focus is on the container or outside it.
+ * @param backwards `true` for Shift+Tab.
+ * @returns The index to focus, or `-1` meaning "focus the container itself",
+ *   the answer for a dialog with no stop in it.
+ */
+export function nextTabStop(
+  candidates: readonly TabCandidate[],
+  currentIndex: number,
+  backwards: boolean,
+): number {
+  const stops = tabStopIndices(candidates);
+  if (stops.length === 0) return -1;
+
+  const size = candidates.length;
+  const current =
+    Number.isInteger(currentIndex) && currentIndex >= 0 && currentIndex < size
+      ? candidates[currentIndex]
+      : undefined;
+  if (current === undefined) {
+    /* Focus is on the container or has drifted: enter at the end going back, the start going forward. */
+    return stops[nextTrapIndex(stops.length, -1, backwards)] ?? -1;
+  }
+
+  /*
+   * Walk from where focus is, in the direction pressed, to the first stop that
+   * is not in the focused radio's own group. From a plain stop this is exactly
+   * `nextTrapIndex` over the stops, wrap-around included.
+   */
+  const isStop = new Set(stops);
+  const step = backwards ? -1 : 1;
+  for (let offset = 1; offset <= size; offset += 1) {
+    const index = (((currentIndex + step * offset) % size) + size) % size;
+    const candidate = candidates[index];
+    if (candidate === undefined) continue;
+    if (current.group !== null && candidate.group === current.group) continue;
+    if (isStop.has(index)) return index;
+  }
+  /* The focused radio's own group is the only stop there is: Tab stays on it. */
+  return stops[0] ?? -1;
 }
 
 export interface FocusTrapOptions {
@@ -136,18 +254,18 @@ export function createFocusTrap(
   /* Only what *we* set, so releasing never clears someone else's `inert`. */
   const inerted: HTMLElement[] = [];
 
-  const tabbables = (): HTMLElement[] =>
-    Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-      isTabbable,
-    );
+  const focusables = (): HTMLElement[] =>
+    Array.from(
+      container.querySelectorAll<HTMLElement>(`${FOCUSABLE_SELECTOR},${ROVING_RADIO_SELECTOR}`),
+    ).filter(isReachable);
 
   const onKeydown = (event: KeyboardEvent): void => {
     if (event.key !== 'Tab' || event.defaultPrevented) return;
 
-    const stops = tabbables();
+    const elements = focusables();
     const current = activeElementOf(doc);
-    const index = current === null ? -1 : stops.indexOf(current);
-    const next = nextTrapIndex(stops.length, index, event.shiftKey);
+    const index = current === null ? -1 : elements.indexOf(current);
+    const next = nextTabStop(elements.map(candidateOf), index, event.shiftKey);
 
     /*
      * Always prevented, never delegated to the browser. Letting the native Tab
@@ -155,7 +273,7 @@ export function createFocusTrap(
      * correctly but the browser has already moved on to its own chrome.
      */
     event.preventDefault();
-    (next === -1 ? container : (stops[next] ?? container)).focus({ preventScroll: true });
+    (next === -1 ? container : (elements[next] ?? container)).focus({ preventScroll: true });
   };
 
   const applyInert = (): void => {
@@ -243,11 +361,46 @@ function asHtmlElement(node: Element): HTMLElement | null {
     : null;
 }
 
-/** Matching the selector is not enough: a hidden or inert element is not in the Tab order. */
-function isTabbable(element: HTMLElement): boolean {
+/** Matching the selector is not enough: a hidden or inert element cannot take focus. */
+function isReachable(element: HTMLElement): boolean {
   if (element.closest('[inert]') !== null) return false;
   if (typeof element.checkVisibility === 'function') return element.checkVisibility();
   return !element.hidden;
+}
+
+/**
+ * What Tab needs to know about one element. Structural and defensive, like
+ * {@link asHtmlElement}: an element with no `getAttribute` reads as a plain,
+ * tabbable control.
+ */
+function candidateOf(element: HTMLElement): TabCandidate {
+  const tabindex = attributeOf(element, 'tabindex');
+  const parsed = tabindex === null ? Number.NaN : Number.parseInt(tabindex, 10);
+  /* An unparseable `tabindex` is ignored by the browser, so it is here too. */
+  const tabbable = !(parsed < 0);
+
+  if (attributeOf(element, 'role') === 'radio') {
+    const group =
+      typeof element.closest === 'function' ? element.closest('[role="radiogroup"]') : null;
+    return { tabbable, group, checked: attributeOf(element, 'aria-checked') === 'true' };
+  }
+
+  const input = element as Partial<HTMLInputElement>;
+  if (
+    typeof element.tagName === 'string' &&
+    element.tagName.toUpperCase() === 'INPUT' &&
+    input.type === 'radio' &&
+    typeof input.name === 'string' &&
+    input.name !== ''
+  ) {
+    return { tabbable, group: `radio:${input.name}`, checked: input.checked === true };
+  }
+
+  return { tabbable, group: null, checked: false };
+}
+
+function attributeOf(element: HTMLElement, name: string): string | null {
+  return typeof element.getAttribute === 'function' ? element.getAttribute(name) : null;
 }
 
 function activeElementOf(doc: Document): HTMLElement | null {
