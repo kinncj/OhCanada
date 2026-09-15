@@ -39,5 +39,11 @@ so the range stands out against the sky; `pine-base`/`pine-shade` hills; `water-
 `path` ramp granite shore at the left; the tower beyond the lake at the right; a `snow` foreground whose
 middle is left clear, because the title screen stands the player there.
 
+**Nothing small sits behind the middle.** The figure covers about x 356 to 725 of the drawing at every box the
+title gives it, so a prop there shows only its ends. The canoe was drawn at x 544 to 692 and showed as a red
+blade sticking out of the figure's hip (second live-site audit, `fr01-title`, `ax20-frca-title`). It floats at
+x 754 to 902 now, on open water between the figure and the right-hand spruce, whole inside the narrowest crop
+the title uses; the glint that was there moved under it.
+
 The screens crop it with `object-fit: cover` anchored at 80 % down, so the foreground and the shore survive every
 box a phone gives the picture, from 12rem tall at 200 % text to half the screen at 100 %.

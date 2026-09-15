@@ -70,10 +70,12 @@
   <rect x="0" y="600" width="1080" height="10" fill="#1a487a"/>
   <g fill="#5cbfd6">
     <rect x="520" y="630" width="120" height="8" rx="4"/>
-    <rect x="880" y="628" width="140" height="8" rx="4"/>
+    <rect x="780" y="666" width="110" height="8" rx="4"/>
     <rect x="600" y="674" width="70" height="7" rx="3.5"/>
   </g>
-  <g transform="translate(-150 -34)">
+  <!-- The canoe floats on open water right of the middle, where the title's figure never stands: behind the
+       figure only its stern showed, at the hip, as a stray red shape. -->
+  <g transform="translate(60 -34)">
     <path d="M 700 652 L 836 652 C 826 670 800 678 768 678 C 736 678 710 670 700 652 Z" fill="#941835"/>
     <path d="M 700 652 L 836 652 C 832 660 820 666 804 668 L 732 668 C 716 666 704 660 700 652 Z" fill="#d8262c"/>
     <rect x="694" y="648" width="148" height="6" rx="3" fill="#5a2d19"/>
