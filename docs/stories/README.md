@@ -764,7 +764,9 @@ level), and `data-rides` / `data-rides-drawn` (whether the mode the player moves
 whether its art drew: `0`/`0` or `1`/`1` on a healthy level), and `data-parts-interleaved` (a count of
 drawn things that sit, by depth, between the first and last part of a character they are not part of: `0`
 on a healthy level), and `data-ground-dressing-drawn` (whether the strip that dresses the band below the
-walking line drew from its art: `true` on a healthy level, ADR-0042).
+walking line drew from its art: `true` on a healthy level, ADR-0042), and `data-texture-units-per-batch`
+(how many textures one WebGL batch may choose between, read back from the renderer: `1` on a healthy
+build, `unknown` on a renderer with no batches, ADR-0047).
 
 `data-character-mode`, `data-pose` and `data-mode-gaps` exist because the HUD named a mode the
 character did not play: every level animated walking whatever the mode was. `data-character-mode` is
@@ -782,6 +784,14 @@ marks: nothing was missing. The guide drew its parts at depths `500 + z` and the
 wherever the player stopped on the guide the two puppets were shuffled together. It is read off the
 scene's display list when the level is ready, not restated from `depth-plan.ts`, so a depth set anywhere
 in the scene is counted.
+
+`data-texture-units-per-batch` exists because the player then drew with holes in them on five levels -- the
+background through the face and legs, the torso in strips -- while `data-parts-interleaved` read `0`:
+nothing was missing and nothing was out of order. Phaser 4.2.1's batch shader picked each quad's texture
+with an exact float comparison, and a fragment that matched no texture drew transparent wherever the
+character atlas shared a batch with enough landmark textures to land off unit 0. The renderer is pinned to
+one texture per batch (ADR-0047), and the attribute is the renderer's own read-back, published once at
+boot.
 
 It carries no player-facing text, so it is invisible to axe and to a screen reader. See `OQ-TEST-1`.
 It is absent during an exam, because an exam is not a level (`TN-EXAM-01`).

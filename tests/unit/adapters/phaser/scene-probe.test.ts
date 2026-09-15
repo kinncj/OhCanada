@@ -165,6 +165,12 @@ describe('snapshotToAttributes', () => {
            depth, inside a character it is not part of, and reads 0 on a
            healthy level. */
         'data-parts-interleaved',
+        /* Nothing missing, nothing out of order, and still drawn with holes: the
+           batch shader chose each quad's texture by an exact float comparison,
+           and a fragment matching none drew transparent. One texture per batch
+           puts every quad on unit 0, the one index that compares exactly; this is
+           the renderer's own count, 1 on a healthy build (ADR-0047). */
+        'data-texture-units-per-batch',
         /* The vehicle or animal the player rides (ADR-0031), and whether its art
            drew. A player reported the Prairies figure "walks by itself on a
            track"; a ride whose art never packed would seat the same figure in

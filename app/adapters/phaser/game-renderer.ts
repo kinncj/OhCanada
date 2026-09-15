@@ -47,6 +47,7 @@ import {
   type SceneProbe,
   type SceneProbeHandle,
 } from './scene-probe';
+import { pinTextureUnitsPerBatch } from './texture-batching';
 
 /**
  * GameRenderer — the Phaser adapter's whole surface to the composition root.
@@ -276,10 +277,20 @@ export class GameRenderer {
       callbacks: {
         postBoot: (game) => {
           hideCanvasFromAssistiveTech(game.canvas);
+          /* One texture per WebGL batch on every device, before the first
+             frame (ADR-0047, `texture-batching.ts`). Phaser's batch shader picks
+             a quad's texture with an exact float comparison, and a fragment that
+             matches none draws transparent: the player drew with holes on every
+             level whose character atlas landed off unit 0. Phones already run
+             this path; this puts desktops and iPads on it too. */
+          const textureUnitsPerBatch = pinTextureUnitsPerBatch(game.renderer);
           const search = options.search ?? readLocationSearch();
           /* `?e2e=1` only. A normal load creates no element and installs no
              global, so the probe costs one query-string read and nothing else. */
           this.#scene = installSceneProbe(options.parent, search);
+          /* The renderer's own read-back, not the constant: a renderer that kept
+             its own limit is published as it is. Absent on a Canvas renderer. */
+          if (textureUnitsPerBatch !== null) this.#scene?.publish({ textureUnitsPerBatch });
           this.#marker = installPlayableMarker(options.parent);
           /* The perf suite's tier override, fenced twice: `tierOverrideFrom`
              reads `tier` only behind the same `?e2e=1` gate, and it is not even

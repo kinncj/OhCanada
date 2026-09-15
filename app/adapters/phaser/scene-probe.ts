@@ -273,6 +273,21 @@ export interface SceneSnapshot {
    */
   readonly partsInterleaved?: number;
   /**
+   * How many textures one WebGL batch may choose between, read back from the
+   * renderer. 1 on a healthy build; unknown on a renderer with no batches.
+   *
+   * Every counter above, `partsInterleaved` included, read full marks over a
+   * player drawn with holes in them: the background through the face and legs,
+   * the torso in strips, on five levels. Nothing was missing and nothing was out
+   * of order. Phaser 4.2.1's batch shader chose each quad's texture with an exact
+   * float comparison, and a fragment that matched no texture drew transparent,
+   * wherever the character atlas shared a batch with enough landmark textures to
+   * land off unit 0. `texture-batching.ts` pins one texture per batch, and this
+   * is the renderer's own answer, so a build that lost the pin says so on every
+   * level.
+   */
+  readonly textureUnitsPerBatch?: number;
+  /**
    * How many things are marked as tappable right now, and how many of those are
    * in reach.
    *
@@ -504,6 +519,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'groundDressingDrawn',
   'placeholders',
   'partsInterleaved',
+  'textureUnitsPerBatch',
   'affordances',
   'affordancesReady',
   'claimsExamined',
@@ -571,6 +587,9 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     /* Nothing missing and still wrong: parts of two characters shuffled
        together by depth. 0 on a healthy level. */
     'data-parts-interleaved': num(snapshot.partsInterleaved),
+    /* Nothing missing, nothing out of order, and still drawn with holes: how
+       many textures one WebGL batch may choose between. 1 on a healthy build. */
+    'data-texture-units-per-batch': num(snapshot.textureUnitsPerBatch),
     'data-affordances': num(snapshot.affordances),
     'data-affordances-ready': num(snapshot.affordancesReady),
     'data-claims-examined': num(snapshot.claimsExamined),
