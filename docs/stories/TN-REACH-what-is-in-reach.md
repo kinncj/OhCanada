@@ -848,6 +848,66 @@ Feature: Stopping at a person leaves room for both of us
     Then every character and landmark stands where its level document places it
 ```
 
+## TN-REACH-12 — A stop waits for an answer, from any hand, and says how to go on (ADR-0043)
+
+Added 2026-09-15 after a second live-site audit (390×844). On the Prairies a player who pressed right while the
+train braked for the guide rode past him, and the level ended with its task never started; steering back ran the
+train backwards at cruise speed to the start of the world. On Halifax a keyboard-only player let go and pressed right
+fourteen times at the Town Clock and never moved, and `Enter` at a stop opened nothing, while a finger went on at once.
+The rules are `app/adapters/phaser/auto-stop.ts`, `backing.ts` and `key-presses.ts`; the arithmetic is proved in
+`tests/unit/adapters/phaser/auto-stop.test.ts`, `backing.test.ts` and `key-presses.test.ts`, and the shipped build in
+`tests/e2e/train-stops-at-the-guide.spec.ts` and `tests/e2e/keyboard-at-a-stop.spec.ts`.
+
+```gherkin
+Feature: A stop is an answer the player gives once they have stopped
+  Scenario: A press that lands while the brake is on is not an answer
+    Given a drive is being brought to rest at something
+    When I press the way I was going before I am at rest
+    Then I still come to rest at it, on the side the stand-off chooses
+    And "interact-prompt" offers it
+    When I let go and press again once I am at rest
+    Then I move on past it
+
+  Scenario: The Prairies train stops at the guide however I press
+    Given the Prairies level is playable
+    When I hold "move-right" from the start, or press it as the train brakes
+    Then the train comes to rest past the guide, within its reach, clear of its glass
+    And "interact-prompt" reads "Talk to the guide"
+
+  Scenario: A key is a press however short
+    Given I am at rest at a stop with "move-right" held
+    When I let go of "move-right" and press it again, however quickly
+    Then I move on, exactly as lifting and holding a finger does
+    When something is in reach and I press the key bound to "interact", however briefly
+    Then it is engaged
+
+  Scenario: The strip says why I stopped and how to go on
+    When a drive brings me to rest with something on offer that I have not engaged in this sitting
+    Then "interact-hint" reads "Stopped here. Choose it, or move again to go on."
+    And "#tn-live-region" says it once for that thing in this sitting, and not again while I stand there
+    And it names no input
+    When I move on, or engage it
+    Then it goes
+
+  Scenario: A ride with a front backs up only while I press back
+    Given the level's ride does not turn with its rider
+    When I press "move-left"
+    Then it backs up no faster than the level's "backingMaxSpeed"
+    When I let go
+    Then it comes to rest within a few pixels and waits
+    And nothing moves while I do nothing
+    When I press "move-right", or engage what is in reach
+    Then the drive carries it forward again
+
+  Scenario: The ride stays on the glass
+    When I back a ride with a front up as far as it goes
+    Then its tail stops at the world's edge
+    And the rider is between a quarter and three quarters of the way across the screen
+```
+
+Proposed row, pending ratification (`COPY_GAPS`): `hud.stop.hint` — "Stopped here. Choose it, or move again to go on." /
+« Arrêt ici. Faites votre choix, ou avancez de nouveau pour continuer. »
+
 ## Open questions
 
 - **`OQ-REACH-1` — Ottawa's two rows are respelled, and nothing else about them changes.**
