@@ -214,8 +214,11 @@ describe('the copy table', () => {
          flow"), which names this list as their home until a story ratifies them. */
       'update.ready',
       'update.reload',
+      /* ADR-0043: what the strip says while a drive holds the player at a stop,
+         proposed for TN-REACH-12. */
+      'hud.stop.hint',
     ]);
-    expect(COPY_GAPS).toHaveLength(59);
+    expect(COPY_GAPS).toHaveLength(60);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
@@ -747,10 +750,13 @@ describe('the copy table', () => {
       'appuyez',
       'maintenez',
     ];
+    /* And the sentence at a stop (ADR-0043), which is shown to the same four. */
     for (const locale of UI_LOCALES) {
-      const hint = text(locale, 'hud.interact.hint').toLowerCase();
-      for (const word of banned) {
-        expect(hint.includes(word), `the hint (${locale}) names an input: ${word}`).toBe(false);
+      for (const key of ['hud.interact.hint', 'hud.stop.hint'] as const) {
+        const hint = text(locale, key).toLowerCase();
+        for (const word of banned) {
+          expect(hint.includes(word), `${key} (${locale}) names an input: ${word}`).toBe(false);
+        }
       }
     }
   });

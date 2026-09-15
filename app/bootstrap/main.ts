@@ -1830,6 +1830,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
   let hintShown = false;
   /** Is it on screen right now? Only then does a language change redraw it. */
   let hintOnScreen = false;
+  /**
+   * What a drive is holding the player at rest beside, while the strip says how
+   * to go on (ADR-0043), or `null`. See `offStopped`.
+   */
+  let stopHint: string | null = null;
+  /** What that sentence has already been said aloud for, in this sitting. */
+  const stopHintSaid = new Set<string>();
 
   /* Focus follows the page. Without this the control the player pressed on the
      map has just been detached and focus falls to the body (`TN-FLOW-06`). */
@@ -2694,6 +2701,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     renderer.markEngaged(bareTargetId(detail));
     hintShown = true;
     hintOnScreen = false;
+    stopHint = null;
     hud.setHint(null);
     refreshPrompt();
   }
@@ -2864,6 +2872,38 @@ function openLevel(wiring: LevelWiring): LevelSession {
     engage(detail);
   });
 
+  /*
+   * At a stop, say why the world stopped and how to go on (ADR-0043).
+   *
+   * A drive — held, auto-move, or a mode that drives itself — comes to rest
+   * beside what it holds, and the prompt already offers that (`TN-REACH-07`).
+   * Nothing said the halt was on purpose, or how to go on without choosing: a
+   * keyboard player at a stop in a live-site audit pressed right fourteen times.
+   * So while the player is at rest with something on offer they have not engaged
+   * in this sitting, the strip draws `hud.stop.hint` in the hint's place, and the
+   * live region says it once per thing per sitting — not once per stop, which a
+   * player walking back and forth would hear as a loop (`TN-LEVEL-08`). Moving on
+   * takes it away and gives back the one-time hint if that is still owed;
+   * engaging takes it away with every other hint (`markEngaged`).
+   */
+  const offStopped = bus.on('player/stopped', () => {
+    const reach = announcer.inReach;
+    if (reach === null) return;
+    const id = bareTargetId(reach);
+    if (engaged.has(id)) return;
+    stopHint = id;
+    const message = text(locale, 'hud.stop.hint');
+    hud.setHint(message);
+    if (stopHintSaid.has(id)) return;
+    stopHintSaid.add(id);
+    wiring.announce(message, locale);
+  });
+  const offMoved = bus.on('player/moved', () => {
+    if (stopHint === null) return;
+    stopHint = null;
+    hud.setHint(hintOnScreen ? interactHint(locale) : null);
+  });
+
   /**
    * The end of the level, and the two milestones that are not it.
    *
@@ -3012,7 +3052,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
       /* The hint follows the language too, but only while it is still on screen:
          `hintOnScreen` is false once anything has been engaged, so a language
          change cannot bring back a hint that has already gone (`TN-REACH-04`). */
-      if (hintOnScreen) hud.setHint(interactHint(next));
+      if (stopHint !== null) hud.setHint(text(next, 'hud.stop.hint'));
+      else if (hintOnScreen) hud.setHint(interactHint(next));
       /* Both level screens are handed their own strings again, in the new
          language. They cannot look a row up: it is keyed on a level neither of
          them knows the id of. */
@@ -3037,6 +3078,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
       offFailure();
       offEngaged();
       offNpcEngaged();
+      offStopped();
+      offMoved();
       offMilestone();
       offPlayable();
       announcer.destroy();

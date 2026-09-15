@@ -597,6 +597,14 @@ const EN = {
      lighthouse and a building alike, still names no kind and no input, and
      "choose" is still the single-switch contract's word. */
   'hud.interact.hint': 'A mark shows someone or something you can choose. Get close, then choose.',
+  /* ADR-0043, proposed for `TN-REACH-12` and listed in {@link COPY_GAPS}. Drawn in
+     the hint's place while a drive has brought the player to rest beside something
+     they can choose, and said once per thing per sitting. A live-site audit found a
+     keyboard player at a stop who could not tell why the world had stopped or how
+     to go on. Like `hud.interact.hint` it names no input: "move" is the game's own
+     action, true of a key, a thumb and auto-move's nudge, and "choose" is the
+     single-switch contract's word. */
+  'hud.stop.hint': 'Stopped here. Choose it, or move again to go on.',
   /* docs/stories/TN-LEVEL-ottawa.md — that level's own two rows, keyed on the
      ids its document gives the targets. Ottawa may write them because its
      character is named and its landmark is not on `TN-NAMES`'s list; a level
@@ -1292,6 +1300,10 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.interact.done': 'Terminé. Revoir',
   'hud.interact.hint':
     "Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez.",
+  /* Voir le bloc anglais (ADR-0043). « Faites votre choix » plutôt que
+     « choisissez-le », dont le pronom devrait s'accorder avec ce qui est offert,
+     un lieu ou une personne. */
+  'hud.stop.hint': 'Arrêt ici. Faites votre choix, ou avancez de nouveau pour continuer.',
   'hud.interact.officer': "Parler à l'agent",
   'hud.interact.parliament-hill': 'Regarder la Colline du Parlement',
   /* « Au », the contraction of « à le », and it agrees with the « votre guide »
@@ -1616,6 +1628,9 @@ export const COPY_GAPS: readonly CopyKey[] = [
      ratifies them. */
   'update.ready',
   'update.reload',
+  /* ADR-0043: what the strip says while a drive holds the player at a stop,
+     proposed for `TN-REACH-12` until that story's owner takes the words. */
+  'hud.stop.hint',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {
