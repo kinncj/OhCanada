@@ -11,6 +11,7 @@ import { describe, expect, it } from 'vitest';
 import {
   counterForDrawn,
   landmarkDraw,
+  rememberAnswered,
   teachingQuotes,
 } from '../../../app/bootstrap/landmark-questions';
 
@@ -147,5 +148,76 @@ describe('what a landmark told', () => {
     expect(teachingQuotes(pois, 'fixture')).toEqual([]);
     expect(teachingQuotes(pois, 'not-placed')).toEqual([]);
     expect(teachingQuotes(undefined, 'market-stall')).toEqual([]);
+  });
+});
+
+describe('a stop with no task step asks only what it told (ADR-0048)', () => {
+  /*
+   * The second live-site audit, on the Prairies with the task declined: the grain
+   * bins asked about Québec's referendums and the container car about Bombardier,
+   * because a landmark with no step drew from the whole subject and only
+   * preferred what it had told.
+   */
+  const MODERN = subjectId('modern-canada');
+  const told = ['is the country’s largest producer of grains and oilseeds'];
+
+  it('draws from nothing but the sentence the landmark just told', () => {
+    const draw = landmarkDraw({ levelSubject: MODERN, answering: undefined, teaches: told });
+    expect(draw.scope.onlyWhatItTells).toBe(true);
+    expect(draw.scope.teaches).toEqual(told);
+    expect(draw.scope.subject).toBe('modern-canada');
+    expect(draw.count).toBe(1);
+  });
+
+  it('never asks a stop with no step to come round again', () => {
+    const draw = landmarkDraw({ levelSubject: MODERN, answering: undefined, teaches: told });
+    expect(draw.scope.repeatWhenExhausted).not.toBe(true);
+  });
+
+  it('leaves an answer step to fill its count from its pool, as ADR-0036 says', () => {
+    const draw = landmarkDraw({
+      levelSubject: RIGHTS,
+      answering: { step: { subject: RIGHTS }, done: 0, required: 2 },
+      teaches: told,
+    });
+    expect(draw.scope.onlyWhatItTells).not.toBe(true);
+  });
+});
+
+describe('nothing is asked twice in one level visit (ADR-0048)', () => {
+  const referendums = questionId('mc-16-sovereignty-referendums');
+  const bombardier = questionId('mc-35-bombardier-snowmobile');
+
+  it('tells a stop with no step what the visit has already answered', () => {
+    const draw = landmarkDraw({
+      levelSubject: RIGHTS,
+      answering: undefined,
+      teaches: [],
+      answeredHere: [bombardier, referendums],
+    });
+    expect(draw.scope.answeredHere).toEqual([bombardier, referendums]);
+  });
+
+  it('tells an answer step too, and lets only a step ask again once its pool is spent', () => {
+    const draw = landmarkDraw({
+      levelSubject: RIGHTS,
+      answering: { step: { subject: RIGHTS }, done: 1, required: 2 },
+      teaches: [],
+      answeredHere: [referendums],
+    });
+    expect(draw.scope.answeredHere).toEqual([referendums]);
+    expect(draw.scope.repeatWhenExhausted).toBe(true);
+  });
+
+  it('carries an empty list for a visit that has answered nothing', () => {
+    expect(landmarkDraw({ levelSubject: RIGHTS, answering: undefined, teaches: [] }).scope.answeredHere).toEqual(
+      [],
+    );
+  });
+
+  it('remembers an answer once, most recent first', () => {
+    expect(rememberAnswered([], referendums)).toEqual([referendums]);
+    expect(rememberAnswered([referendums], bombardier)).toEqual([bombardier, referendums]);
+    expect(rememberAnswered([bombardier, referendums], referendums)).toEqual([referendums, bombardier]);
   });
 });

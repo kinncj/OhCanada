@@ -428,6 +428,12 @@ const EN = {
   'quest.accept': "Yes, let's go",
   'quest.decline': 'Not now',
   'quest.noQuestions': 'The questions are not ready right now. Try again later.',
+  /* ADR-0048, and **listed in {@link COPY_GAPS}**: said in the strip and aloud
+     when a task step asks again some of what this level visit already answered,
+     because it has nothing new left. "Some": the set can hold new questions
+     too, as the Prairies' combine does after the grain elevator. The card's own
+     tag says which one was seen before. */
+  'quest.askedAgain': 'You have already answered some of these questions here.',
   'quest.done.title': 'Task done!',
   'common.keepPlaying': 'Keep playing',
   /* **`npc.officer.name` and `npc.guide.name` were here and are deleted.** They
@@ -1243,6 +1249,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'quest.accept': 'Oui, allons-y',
   'quest.decline': 'Pas maintenant',
   'quest.noQuestions': "Les questions ne sont pas prêtes pour l'instant. Réessayez plus tard.",
+  /* Listed in COPY_GAPS with the English (ADR-0048). */
+  'quest.askedAgain': 'Vous avez déjà répondu à certaines de ces questions ici.',
   'quest.done.title': 'Mission accomplie!',
   'common.keepPlaying': 'Continuer à jouer',
   /* `npc.officer.name` and `npc.guide.name` were here — see the English table for
@@ -1709,6 +1717,9 @@ export const COPY_GAPS: readonly CopyKey[] = [
   /* ADR-0034's amendment: the sentence on the card a level shows instead of
      opening, offline, when its art was never kept. */
   'level.needsConnection.body',
+  /* ADR-0048: what the strip says when a task step asks again what this visit
+     already answered. */
+  'quest.askedAgain',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

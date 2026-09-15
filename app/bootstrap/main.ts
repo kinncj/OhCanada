@@ -86,7 +86,7 @@ import {
   withCharacter,
   type Progress,
 } from '@domain/entities/progress';
-import type { EpochMillis, LevelId, LocaleCode } from '@domain/ids';
+import type { EpochMillis, LevelId, LocaleCode, QuestionId } from '@domain/ids';
 import { createAboutThisPlace, type AboutThisPlace as AboutPanel } from '@ui/about-this-place';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createHud, type Hud } from '@ui/hud';
@@ -138,7 +138,12 @@ import {
 import { isPlayable, journeyEntries } from './journey';
 import { createExamController, type ExamController } from './exam';
 import { createExamEventLog } from './exam-events';
-import { counterForDrawn, landmarkDraw, teachingQuotes } from './landmark-questions';
+import {
+  counterForDrawn,
+  landmarkDraw,
+  rememberAnswered,
+  teachingQuotes,
+} from './landmark-questions';
 import { promptTargets } from './prompt-targets';
 import { levelPlacements, type LevelPlacements } from './engageables';
 import {
@@ -2183,6 +2188,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       const answering = quests.answering;
       const outcome = wiring.record(question, chosenIndex);
       answeredHere += 1;
+      answeredThisVisit = rememberAnswered(answeredThisVisit, question.id);
       if (outcome.correct) correctHere += 1;
       /* Remembered rather than acted on: the completion card must not open over
          the explanation the player is still reading. It opens when the question
@@ -2197,6 +2203,11 @@ function openLevel(wiring: LevelWiring): LevelSession {
       quests.refresh();
     },
     onFinished: () => {
+      /* The set that came round again is over, so the strip stops saying so. */
+      if (askingAgain) {
+        askingAgain = false;
+        hud.setNotice(null);
+      }
       backToTheLevel();
     },
   });
@@ -2295,6 +2306,20 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   let answeredHere = 0;
   let correctHere = 0;
+  /**
+   * Which questions this level visit has answered at its landmarks, most recent
+   * first (ADR-0048).
+   *
+   * Every landmark draw is told, so nothing answered here is asked again while
+   * anything else can be: the second live-site audit met the same question at
+   * the grain bins and at the combine harvester, because a wrong answer comes due
+   * within minutes and the scheduler puts a missed question first. Held with the
+   * level, so leaving the level is the end of the visit; answers, not draws, so a
+   * card closed unanswered is asked again (`TN-CARD-05`).
+   */
+  let answeredThisVisit: readonly QuestionId[] = [];
+  /** The strip is saying that a task step's questions came round again. */
+  let askingAgain = false;
 
   /**
    * The card that says the level's task is done, and offers the way on.
@@ -2818,6 +2843,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       levelSubject: level?.subject,
       answering: quests.answeringStep,
       teaches: teachingQuotes(level?.teachingPois, about),
+      answeredHere: answeredThisVisit,
     });
     const drawn = await wiring.questions.drill(draw.count, draw.scope);
     if (!drawn.ok || drawn.value.questions.length === 0) {
@@ -2849,6 +2875,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
     /* Whatever the notice was about has stopped being true. */
     hud.setNotice(null);
+    /* ADR-0048: a task step whose questions this visit has all answered asks
+       again what it answered — and says so, in the strip and aloud, rather than
+       let "You have seen this question before" stand as the only word on it. */
+    askingAgain = (drawn.value.repeated ?? 0) > 0;
+    if (askingAgain) {
+      const message = text(locale, 'quest.askedAgain');
+      hud.setNotice(message);
+      wiring.announce(message, locale);
+    }
     /* A short bank asks fewer than the step has left (`TN-QUEST-05`), and the
        card never counts to a question that is not coming. */
     /* Where the questions are asked, for the card's place line (ADR-0045): the

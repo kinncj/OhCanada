@@ -234,8 +234,11 @@ describe('the copy table', () => {
       /* ADR-0034's amendment: the card a level shows offline when its art was
          never kept. */
       'level.needsConnection.body',
+      /* ADR-0048: a task step asking again what the level visit already
+         answered. */
+      'quest.askedAgain',
     ]);
-    expect(COPY_GAPS).toHaveLength(72);
+    expect(COPY_GAPS).toHaveLength(73);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

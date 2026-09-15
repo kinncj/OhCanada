@@ -195,6 +195,8 @@ const hoisted = vi.hoisted(() => {
     drillCalls: number[];
     /** The scope each drill was asked for: subject, pool, what a landmark told. */
     drillScopes: unknown[];
+    /** How many of each drill's questions the fake says came round again (ADR-0048). */
+    drillRepeated: number;
     availableCalls: number;
     /** Every answer that reached `answerQuestion`, as [questionId, index]. */
     recorded: [string, number][];
@@ -279,6 +281,7 @@ const hoisted = vi.hoisted(() => {
     scenesBoot: true,
     drillCalls: [],
     drillScopes: [],
+    drillRepeated: 0,
     availableCalls: 0,
     recorded: [],
     prompts: [],
@@ -616,6 +619,7 @@ vi.mock('@application/use-cases/study-session', () => ({
             },
           })),
           shortfall: 0,
+          repeated: hoisted.state.drillRepeated,
         },
       });
     },
@@ -972,6 +976,7 @@ beforeEach(() => {
   hoisted.state.emit = null;
   hoisted.state.drillCalls = [];
   hoisted.state.drillScopes = [];
+  hoisted.state.drillRepeated = 0;
   hoisted.state.availableCalls = 0;
   hoisted.state.recorded = [];
   hoisted.state.prompts = [];
@@ -1679,6 +1684,63 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     card.onAnswer(0, true);
 
     expect(hoisted.state.recorded).toEqual([['q-0', 0]]);
+  });
+
+  it('asks a landmark with no task only what it told, and tells the next draw what this visit answered (ADR-0048)', async () => {
+    /*
+     * The second live-site audit: the Prairies' grain bins asked about Québec's
+     * referendums, answered wrongly, and the combine harvester asked it again.
+     */
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.drillScopes[0]).toMatchObject({ onlyWhatItTells: true, answeredHere: [] });
+    const card = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    card.onAnswer(1, false);
+    card.onNext();
+    await flush();
+
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.drillCalls).toEqual([1, 1]);
+    expect(hoisted.state.drillScopes[1]).toMatchObject({ answeredHere: ['q-0'] });
+  });
+
+  it('says so, and stops saying so, when questions come round again (ADR-0048)', async () => {
+    hoisted.state.drillRepeated = 1;
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.notices.at(-1)).toBe(text('en', 'quest.askedAgain'));
+
+    const card = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    };
+    card.onAnswer(0, true);
+    card.onNext();
+    await flush();
+
+    expect(hoisted.state.notices.at(-1), 'the strip still says so after the set ended').toBeNull();
+  });
+
+  it('says nothing about asking again when nothing came round again', async () => {
+    await arrive();
+    emit('poi/engaged', 'town-clock');
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await flush();
+
+    expect(hoisted.state.questionsAsked).toHaveLength(1);
+    expect(hoisted.state.notices).not.toContain(text('en', 'quest.askedAgain'));
   });
 
   it('opens no question when the level never loaded, and does not fail loudly', async () => {

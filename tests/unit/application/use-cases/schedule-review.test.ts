@@ -247,6 +247,273 @@ describe('what may be asked', () => {
   });
 });
 
+describe('a level visit (ADR-0048)', () => {
+  it('asks nothing but what the place told, when told to', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      {
+        questions: makeBank(10),
+        count: 3,
+        progress: emptyProgress(),
+        tuning,
+        prefer: [questionId('q-06')],
+        preferOnly: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    expect(drawn.value.questions.map((question) => question.questionId)).toEqual(['q-06']);
+    expect(drawn.value.shortfall).toBe(2);
+    expect(drawn.value.repeated).toBe(0);
+  });
+
+  it('is an empty draw, not a refusal, at a place that told nothing a question grades', () => {
+    /* The Prairies' grain bins: no modern-canada question rests on their sentence. */
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      { questions: makeBank(10), count: 1, progress: emptyProgress(), tuning, prefer: [], preferOnly: true },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    expect(drawn.value.questions).toEqual([]);
+    expect(drawn.value.shortfall).toBe(1);
+  });
+
+  it('still says the questions are not ready when the bank itself has none', () => {
+    const quarantined = makeQuestion('gov-01', {
+      verification: { ...makeQuestion('gov-01').verification, status: 'quarantined' },
+    });
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      {
+        questions: [quarantined],
+        count: 1,
+        progress: emptyProgress(),
+        tuning,
+        prefer: [questionId('gov-01')],
+        preferOnly: true,
+      },
+    );
+    expect(drawn.ok).toBe(false);
+    if (!drawn.ok) expect(drawn.error.code).toBe('scheduler.bank.empty');
+  });
+
+  it('holds back what the place told once it was answered in this sitting', () => {
+    /* Answered in a Study drill over the level, then the landmark is engaged. */
+    const bank = makeBank(10);
+    const told = bank[5];
+    if (told === undefined) throw new Error('the fixture bank is short');
+    const answered = answerQuestion(
+      { clock: testClock() },
+      { question: told, chosenIndex: told.correctIndex, progress: emptyProgress() },
+    );
+    expect(answered.ok).toBe(true);
+    if (!answered.ok) return;
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      {
+        questions: bank,
+        count: 1,
+        progress: answered.value.progress,
+        tuning,
+        recentlyAsked: [told.id],
+        prefer: [told.id],
+        preferOnly: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) expect(drawn.value.questions).toEqual([]);
+  });
+
+  it('asks again what the place told when it was put on screen and never answered (TN-CARD-05)', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      {
+        questions: makeBank(10),
+        count: 1,
+        progress: emptyProgress(),
+        tuning,
+        recentlyAsked: [questionId('q-06')],
+        prefer: [questionId('q-06')],
+        preferOnly: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (drawn.ok) {
+      expect(drawn.value.questions).toEqual([{ questionId: 'q-06', familiarity: 'new' }]);
+    }
+  });
+
+  it('counts a question the visit answered twice once when it makes up a spent scope', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      {
+        questions: makeBank(4),
+        count: 2,
+        progress: emptyProgress(),
+        tuning,
+        pool: [questionId('q-01'), questionId('q-02')],
+        answeredHere: [questionId('q-01'), questionId('q-02'), questionId('q-01')],
+        repeatWhenExhausted: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    expect(drawn.value.questions.map((question) => question.questionId)).toEqual(['q-02', 'q-01']);
+    expect(drawn.value.repeated).toBe(2);
+  });
+
+  it('still refuses a drill of zero when a spent scope may repeat', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      {
+        questions: makeBank(4),
+        count: 0,
+        progress: emptyProgress(),
+        tuning,
+        pool: [questionId('q-01')],
+        answeredHere: [questionId('q-01')],
+        repeatWhenExhausted: true,
+      },
+    );
+    expect(drawn.ok).toBe(false);
+    if (!drawn.ok) expect(drawn.error.code).toBe('scheduler.count.invalid');
+  });
+
+  it('still refuses a drill of zero at a place with nothing to ask', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(4) },
+      { questions: makeBank(4), count: 0, progress: emptyProgress(), tuning, prefer: [], preferOnly: true },
+    );
+    expect(drawn.ok).toBe(false);
+    if (!drawn.ok) expect(drawn.error.code).toBe('scheduler.count.invalid');
+  });
+
+  it('never asks again what this visit answered, even a missed question that has come due', () => {
+    /*
+     * The audit's repeat: answered wrongly at the grain bins, due a minute later,
+     * and first in the missed tier at the combine harvester — the exclusion window
+     * holds back only a question whose moment has not come.
+     */
+    const clock = testClock();
+    const bank = makeBank(10);
+    const missed = bank[0];
+    if (missed === undefined) throw new Error('the fixture bank is short');
+    const answered = answerQuestion(
+      { clock },
+      {
+        question: missed,
+        chosenIndex: (missed.correctIndex + 1) % missed.options.length,
+        progress: emptyProgress(),
+      },
+    );
+    expect(answered.ok).toBe(true);
+    if (!answered.ok) return;
+    clock.advance(11 * 60_000);
+
+    const unguarded = scheduleReview(
+      { clock, random: seededRandomSource(8) },
+      {
+        questions: bank,
+        count: 1,
+        progress: answered.value.progress,
+        tuning,
+        recentlyAsked: [missed.id],
+      },
+    );
+    expect(unguarded.ok).toBe(true);
+    if (!unguarded.ok) return;
+    expect(unguarded.value.questions.map((question) => question.questionId)).toEqual([missed.id]);
+
+    const guarded = scheduleReview(
+      { clock, random: seededRandomSource(8) },
+      {
+        questions: bank,
+        count: 1,
+        progress: answered.value.progress,
+        tuning,
+        recentlyAsked: [missed.id],
+        answeredHere: [missed.id],
+      },
+    );
+    expect(guarded.ok).toBe(true);
+    if (!guarded.ok) return;
+    expect(guarded.value.questions).toHaveLength(1);
+    expect(guarded.value.questions.map((question) => question.questionId)).not.toContain(missed.id);
+  });
+
+  it('asks a spent scope again only when allowed, least recently answered first, and counts it', () => {
+    const pool = [questionId('q-01'), questionId('q-02'), questionId('q-03')];
+    const answeredHere = [questionId('q-03'), questionId('q-01')];
+
+    const again = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      {
+        questions: makeBank(6),
+        count: 2,
+        progress: emptyProgress(),
+        tuning,
+        pool,
+        answeredHere,
+        repeatWhenExhausted: true,
+      },
+    );
+    expect(again.ok).toBe(true);
+    if (!again.ok) return;
+    expect(again.value.questions.map((question) => question.questionId)).toEqual(['q-02', 'q-01']);
+    expect(again.value.repeated).toBe(1);
+    expect(again.value.shortfall).toBe(0);
+
+    const short = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      { questions: makeBank(6), count: 2, progress: emptyProgress(), tuning, pool, answeredHere },
+    );
+    expect(short.ok).toBe(true);
+    if (!short.ok) return;
+    expect(short.value.questions.map((question) => question.questionId)).toEqual(['q-02']);
+    expect(short.value.repeated).toBe(0);
+    expect(short.value.shortfall).toBe(1);
+  });
+
+  it('repeats nothing while the scope still holds enough it has not answered', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      {
+        questions: makeBank(6),
+        count: 2,
+        progress: emptyProgress(),
+        tuning,
+        pool: [questionId('q-01'), questionId('q-02'), questionId('q-03')],
+        answeredHere: [questionId('q-01')],
+        repeatWhenExhausted: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    expect(drawn.value.questions.map((question) => question.questionId).sort()).toEqual(['q-02', 'q-03']);
+    expect(drawn.value.repeated).toBe(0);
+  });
+
+  it('makes up a whole draw from the visit when the visit has answered everything', () => {
+    const drawn = scheduleReview(
+      { clock: testClock(), random: seededRandomSource(6) },
+      {
+        questions: makeBank(6),
+        count: 1,
+        progress: emptyProgress(),
+        tuning,
+        pool: [questionId('q-01'), questionId('q-02')],
+        answeredHere: [questionId('q-02'), questionId('q-01')],
+        repeatWhenExhausted: true,
+      },
+    );
+    expect(drawn.ok).toBe(true);
+    if (!drawn.ok) return;
+    expect(drawn.value.questions.map((question) => question.questionId)).toEqual(['q-01']);
+    expect(drawn.value.repeated).toBe(1);
+  });
+});
+
 describe('the ports it holds', () => {
   it('replays the same draw from the same seed, and a different one from another', () => {
     const draw = (seed: number): readonly string[] => {

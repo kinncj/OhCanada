@@ -77,6 +77,22 @@ export interface DrillScope {
    * scope and was not asked in this sitting.
    */
   readonly teaches?: readonly string[] | undefined;
+  /**
+   * Ask only what the place told, or nothing (ADR-0048): a landmark with no task
+   * step being played. Without it `teaches` is asked first and the rest of the
+   * scope fills the drill.
+   */
+  readonly onlyWhatItTells?: boolean | undefined;
+  /**
+   * What this level visit has already answered, most recent first (ADR-0048).
+   * None of it is asked again while the scope holds anything else.
+   */
+  readonly answeredHere?: readonly QuestionId[] | undefined;
+  /**
+   * A task step whose scope this visit has spent asks again what it answered,
+   * least recently first, rather than stopping short (ADR-0048).
+   */
+  readonly repeatWhenExhausted?: boolean | undefined;
 }
 
 export interface StudyDrill {
@@ -84,6 +100,12 @@ export interface StudyDrill {
   readonly questions: readonly StudyQuestion[];
   /** How many fewer than asked for. `TN-STUDY-02`: a short drill is stated, not padded. */
   readonly shortfall: number;
+  /**
+   * How many of `questions`, at the end, this level visit has already answered:
+   * asked again because nothing else was left (ADR-0048). The caller says so.
+   * Absent is none.
+   */
+  readonly repeated?: number;
 }
 
 /**
@@ -154,6 +176,9 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
           subject: scope?.subject,
           pool: scope?.pool,
           prefer,
+          preferOnly: scope?.onlyWhatItTells,
+          answeredHere: scope?.answeredHere,
+          repeatWhenExhausted: scope?.repeatWhenExhausted,
         },
       );
       if (!drawn.ok) return drawn;
@@ -174,7 +199,14 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
         return question === undefined ? [] : [{ question, familiarity: selected.familiarity }];
       });
 
-      return { ok: true, value: { questions, shortfall: Math.max(0, count - questions.length) } };
+      return {
+        ok: true,
+        value: {
+          questions,
+          shortfall: Math.max(0, count - questions.length),
+          repeated: drawn.value.repeated,
+        },
+      };
     },
   };
 };

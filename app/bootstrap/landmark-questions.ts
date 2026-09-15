@@ -1,5 +1,5 @@
 /**
- * What a level asks at a landmark, and how the card counts it (ADR-0036).
+ * What a level asks at a landmark, and how the card counts it (ADR-0036, ADR-0048).
  *
  * The play-through that found this: Toronto's streetcar — a card about what
  * cities look after — asked about Magna Carta; the CN Tower asked about
@@ -8,6 +8,13 @@
  * questions about voting" over a card reading "Question 1 of 1" that asked about
  * the police. Every in-level question was one draw from the whole bank, because
  * the loaded level did not carry its subject.
+ *
+ * The second live-site audit found what was left (ADR-0048): on the Prairies,
+ * with the task declined, the grain bins asked about Québec's referendums, the
+ * combine harvester asked the same question again, and the container car asked
+ * about Bombardier. With no step being played a landmark still drew from the
+ * whole subject, and the missed-first tier put a wrong answer straight back on
+ * the next stop's card.
  *
  * ## The rules
  *
@@ -22,11 +29,21 @@
  *     `questionPool`, when it names one, narrows the draw.
  *  3. **The card counts the step, not the draw.** "Question 2 of 2" is the second
  *     of the step's two questions, so the tracker and the card count the same
- *     thing. With no step being played the landmark asks one question, and the
- *     card draws no counter at all — "Question 1 of 1" counts nothing.
+ *     thing. With no step being played the card draws no counter at all —
+ *     "Question 1 of 1" counts nothing.
  *  4. **What the landmark just told comes first.** A question resting on the
  *     sentence its blurb rests on is asked first, when it is inside the subject
  *     and was not asked in this sitting (`@application/content/proposition`).
+ *  5. **With no step being played, a landmark asks only what it just told, or
+ *     nothing** (ADR-0048). One question at most, resting on its own sentence and
+ *     inside the subject. The rest of the subject is not about the place, and a
+ *     task's pool belongs to a step the player has not taken. Rule 4's "not
+ *     asked in this sitting" holds for it too, for a question the player
+ *     answered; one closed unanswered is asked again (`TN-CARD-05`).
+ *  6. **Nothing is asked twice in one level visit** (ADR-0048). Every draw is
+ *     told what the visit has already answered. A landmark with no step asks
+ *     nothing rather than repeat; a task step whose pool the visit has spent asks
+ *     again what it answered, and the caller says so.
  *
  * Pure: no DOM, no session. `main.ts` asks this and hands the answer to the
  * drill and the card.
@@ -59,6 +76,8 @@ export interface LandmarkDrawInput {
   readonly answering: AnsweringNow | undefined;
   /** The `source.quote` of what the landmark just told, or nothing. */
   readonly teaches: readonly string[];
+  /** What this level visit has answered at its landmarks, most recent first. */
+  readonly answeredHere?: readonly QuestionId[] | undefined;
 }
 
 export interface LandmarkDraw {
@@ -71,9 +90,14 @@ export interface LandmarkDraw {
 export function landmarkDraw(input: LandmarkDrawInput): LandmarkDraw {
   const { answering, teaches } = input;
   const subject = input.levelSubject ?? answering?.step.subject;
+  const answeredHere = input.answeredHere ?? [];
 
   if (answering === undefined) {
-    return { count: 1, scope: { subject, teaches }, counter: null };
+    return {
+      count: 1,
+      scope: { subject, teaches, onlyWhatItTells: true, answeredHere },
+      counter: null,
+    };
   }
 
   const required = Math.max(1, answering.required);
@@ -84,9 +108,25 @@ export function landmarkDraw(input: LandmarkDrawInput): LandmarkDraw {
       subject,
       teaches,
       ...(answering.step.questionPool === undefined ? {} : { pool: answering.step.questionPool }),
+      answeredHere,
+      repeatWhenExhausted: true,
     },
     counter: { answered: done, total: required },
   };
+}
+
+/**
+ * The visit's answers with one more, most recent first and each id once.
+ *
+ * Counted on the answer, not the draw: a question put on screen and closed
+ * unanswered is asked again at the landmark (`TN-CARD-05`), so only an answer
+ * spends it.
+ */
+export function rememberAnswered(
+  answered: readonly QuestionId[],
+  id: QuestionId,
+): readonly QuestionId[] {
+  return [id, ...answered.filter((earlier) => earlier !== id)];
 }
 
 /**

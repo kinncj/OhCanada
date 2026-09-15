@@ -11,6 +11,8 @@
 import { describe, expect, it } from 'vitest';
 
 import albertaFoothills from '@content/levels/alberta-foothills.json';
+import prairieRail from '@content/levels/prairie-rail.json';
+import prairieQuest from '@content/quests/prairie-rail-grain-elevator.json';
 import toronto from '@content/levels/toronto.json';
 import {
   BUNDLED_QUESTION_MODULES,
@@ -19,6 +21,10 @@ import {
 } from '@adapters/content';
 import { createSeededRandom } from '@adapters/random';
 import type { Clock, SchedulerTuning } from '@application/ports';
+import { sharesProposition } from '@application/content/proposition';
+import { loadEveryBank } from '@application/content/question-bank';
+import { answerQuestion } from '@application/use-cases/answer-question';
+import { shippableQuestions } from '@domain/entities/question';
 import { newProgress } from '@domain/entities/progress';
 import type { Progress } from '@domain/entities/progress';
 import { defaultSettings } from '@domain/entities/player';
@@ -199,5 +205,122 @@ describe('the Study seam, over the shipped bank', () => {
     const drill = await sourceOver().drill(0);
     expect(drill.ok).toBe(false);
     if (!drill.ok) expect(drill.error.code).toBe('scheduler.count.invalid');
+  });
+});
+
+describe('the Prairies with the task declined, over the shipped bank (ADR-0048)', () => {
+  /*
+   * The second live-site audit: the grain bins asked about Québec's referendums,
+   * the combine harvester asked the same question again ("You have seen this
+   * question before"), and the container car asked about Bombardier.
+   */
+  const SUBJECT = prairieRail.subject as SubjectId;
+  const STOPS = ['grain-bins', 'grain-elevator', 'combine-harvester', 'container-car'];
+
+  const quoteOf = (id: string): string => {
+    const quote = prairieRail.pois.find((poi) => poi.id === id)?.fact.source?.quote;
+    if (quote === undefined) throw new Error(`content/levels/prairie-rail.json places no sourced ${id}`);
+    return quote;
+  };
+
+  it('asks at each stop only what rests on the stop’s own sentence, or nothing', async () => {
+    const bank = await loadEveryBank(createQuestionBank({}));
+    expect(bank.ok).toBe(true);
+    if (!bank.ok) return;
+
+    for (const stop of STOPS) {
+      const quote = quoteOf(stop);
+      /* Worked out from the documents, not the session: every askable question in
+         the level's subject resting on this stop's sentence. */
+      const related = shippableQuestions(bank.value)
+        .filter((question) => question.subject === SUBJECT)
+        .filter((question) => sharesProposition(question.source.quote, quote))
+        .map((question) => String(question.id));
+
+      const drill = await sourceOver().drill(5, { subject: SUBJECT, teaches: [quote], onlyWhatItTells: true });
+      expect(drill.ok, `${stop}: a stop with nothing to ask is an empty drill, not a failure`).toBe(true);
+      if (!drill.ok) return;
+      const asked = drill.value.questions.map((drawn) => String(drawn.question.id));
+      expect(asked.sort(), `${stop} asked what it did not tell`).toEqual([...related].sort());
+      expect(asked.some((id) => /^mc-(16|35)-/u.test(id)), `${stop} asked the audit's questions`).toBe(false);
+    }
+  });
+
+  it('never puts one question on the card twice in a visit, even one answered wrongly and come due', async () => {
+    let now = 1_764_000_000_000;
+    let progress = emptyProgress();
+    const clock: Clock = { now: () => now as EpochMillis, elapsed: () => 0 };
+    const session = createStudySession({
+      bank: createQuestionBank({}),
+      clock,
+      random: createSeededRandom(2026),
+      progress: () => progress,
+      tuning: TUNING,
+      drillSize: 5,
+    });
+
+    /* What the build did at the first stop: one question from the whole subject. */
+    const first = await session.drill(1, { subject: SUBJECT });
+    expect(first.ok).toBe(true);
+    if (!first.ok) return;
+    const asked = first.value.questions[0]?.question;
+    expect(asked).toBeDefined();
+    if (asked === undefined) return;
+
+    const answered = answerQuestion(
+      { clock },
+      { question: asked, chosenIndex: (asked.correctIndex + 1) % asked.options.length, progress },
+    );
+    expect(answered.ok).toBe(true);
+    if (!answered.ok) return;
+    progress = answered.value.progress;
+    /* The ride to the next stop: past both learning steps, so the question is due
+       and sits in the missed tier. */
+    now += 11 * 60_000;
+
+    /* The audit's repeat, as it was: nothing told the draw what the visit had answered. */
+    const unguarded = await session.drill(1, { subject: SUBJECT });
+    expect(unguarded.ok).toBe(true);
+    if (!unguarded.ok) return;
+    expect(String(unguarded.value.questions[0]?.question.id)).toBe(String(asked.id));
+
+    const guarded = await session.drill(1, { subject: SUBJECT, answeredHere: [asked.id] });
+    expect(guarded.ok).toBe(true);
+    if (!guarded.ok) return;
+    expect(guarded.value.questions).toHaveLength(1);
+    expect(guarded.value.questions.map((drawn) => String(drawn.question.id))).not.toContain(
+      String(asked.id),
+    );
+    expect(guarded.value.repeated).toBe(0);
+  });
+
+  it('asks a spent task step again only when told to, and counts what came round again', async () => {
+    const step = prairieQuest.steps.find((candidate) => candidate.id === 'answer-at-the-combine-harvester');
+    const pool = (step !== undefined && 'questionPool' in step ? step.questionPool : []) as unknown as QuestionId[];
+    expect(pool.length, 'the combine’s pool no longer holds exactly its two questions').toBe(2);
+    const [spent, fresh] = pool;
+    if (spent === undefined || fresh === undefined) return;
+
+    const again = await sourceOver().drill(2, {
+      subject: SUBJECT,
+      pool,
+      answeredHere: [spent],
+      repeatWhenExhausted: true,
+    });
+    expect(again.ok).toBe(true);
+    if (!again.ok) return;
+    expect(again.value.questions.map((drawn) => String(drawn.question.id))).toEqual([
+      String(fresh),
+      String(spent),
+    ]);
+    expect(again.value.repeated).toBe(1);
+    expect(again.value.shortfall).toBe(0);
+
+    const short = await sourceOver().drill(2, { subject: SUBJECT, pool, answeredHere: [spent] });
+    expect(short.ok).toBe(true);
+    if (!short.ok) return;
+    expect(short.value.questions.map((drawn) => String(drawn.question.id))).toEqual([String(fresh)]);
+    expect(short.value.repeated).toBe(0);
+    expect(short.value.shortfall).toBe(1);
   });
 });
