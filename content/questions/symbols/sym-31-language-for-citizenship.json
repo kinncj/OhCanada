@@ -3,8 +3,8 @@
   "id": "sym-31-language-for-citizenship",
   "subject": "symbols",
   "prompt": {
-    "en": "What language requirement does the guide set for becoming a Canadian citizen?",
-    "fr": "Quelle exigence linguistique le guide fixe-t-il pour devenir citoyen canadien?"
+    "en": "What language requirement does Discover Canada set for becoming a Canadian citizen?",
+    "fr": "Quelle exigence linguistique Découvrir le Canada fixe-t-il pour devenir citoyen canadien?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "To become a citizen you need adequate knowledge of English or of French. Those are the two official languages, and the guide calls them important symbols of identity.",
-    "fr": "Pour devenir citoyen, il faut une connaissance suffisante de l'anglais ou du français. Ce sont les deux langues officielles, et le guide les présente comme d'importants symboles d'identité."
+    "en": "To become a citizen you need adequate knowledge of English or of French. Those are the two official languages, and Discover Canada calls them important symbols of identity.",
+    "fr": "Pour devenir citoyen, il faut une connaissance suffisante de l'anglais ou du français. Ce sont les deux langues officielles, et Découvrir le Canada les présente comme d'importants symboles d'identité."
   },
   "source": {
     "sourceId": "discover-canada",

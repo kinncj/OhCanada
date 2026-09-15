@@ -3,8 +3,8 @@
   "id": "eco-36-halifax-deep-water-ice-free-port",
   "subject": "economy",
   "prompt": {
-    "en": "What kind of port does the guide say Halifax is?",
-    "fr": "Quel genre de port Halifax est-il, selon le guide?"
+    "en": "What kind of port does Discover Canada say Halifax is?",
+    "fr": "Quel genre de port Halifax est-il, selon Découvrir le Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 2,
   "explanation": {
-    "en": "The guide describes Halifax as a deep-water port that is free of ice. It also says Halifax has played an important role in Atlantic trade.",
-    "fr": "Le guide décrit Halifax comme un port en eau profonde libre de glace. Il précise aussi qu'Halifax a joué un rôle important dans le commerce de l'Atlantique."
+    "en": "Discover Canada describes Halifax as a deep-water port that is free of ice. It also says Halifax has played an important role in Atlantic trade.",
+    "fr": "Découvrir le Canada décrit Halifax comme un port en eau profonde libre de glace. Il précise aussi qu'Halifax a joué un rôle important dans le commerce de l'Atlantique."
   },
   "source": {
     "sourceId": "discover-canada",

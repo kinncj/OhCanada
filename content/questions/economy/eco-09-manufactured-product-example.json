@@ -3,8 +3,8 @@
   "id": "eco-09-manufactured-product-example",
   "subject": "economy",
   "prompt": {
-    "en": "Which of these does the guide list as a Canadian manufactured product?",
-    "fr": "Lequel de ces produits le guide présente-t-il comme un produit manufacturé canadien?"
+    "en": "Which of these does Discover Canada list as a Canadian manufactured product?",
+    "fr": "Lequel de ces produits Découvrir le Canada présente-t-il comme un produit manufacturé canadien?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 1,
   "explanation": {
-    "en": "Aerospace technology is on the guide's list of manufactured products, along with paper, high technology equipment, automobiles, machinery, food and clothing.",
-    "fr": "La technologie aérospatiale figure dans la liste des produits manufacturés du guide, avec le papier, le matériel de haute technologie, les automobiles, la machinerie, les aliments et les vêtements."
+    "en": "Aerospace technology is on the list of manufactured products in Discover Canada, along with paper, high technology equipment, automobiles, machinery, food and clothing.",
+    "fr": "La technologie aérospatiale figure dans la liste des produits manufacturés de Découvrir le Canada, avec le papier, le matériel de haute technologie, les automobiles, la machinerie, les aliments et les vêtements."
   },
   "source": {
     "sourceId": "discover-canada",

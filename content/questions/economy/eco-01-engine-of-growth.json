@@ -3,8 +3,8 @@
   "id": "eco-01-engine-of-growth",
   "subject": "economy",
   "prompt": {
-    "en": "What does the guide call the engine of economic growth in Canada?",
-    "fr": "Qu'est-ce que le guide décrit comme le moteur de la croissance économique au Canada?"
+    "en": "What does Discover Canada call the engine of economic growth in Canada?",
+    "fr": "Qu'est-ce que Découvrir le Canada décrit comme le moteur de la croissance économique au Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 1,
   "explanation": {
-    "en": "Canada has traded with other countries throughout its history, and the guide says commerce is still what drives the economy forward.",
-    "fr": "Le Canada a fait du commerce avec d'autres pays tout au long de son histoire, et le guide affirme que le commerce demeure ce qui fait avancer l'économie."
+    "en": "Canada has traded with other countries throughout its history, and Discover Canada says commerce is still what drives the economy forward.",
+    "fr": "Le Canada a fait du commerce avec d'autres pays tout au long de son histoire, et Découvrir le Canada affirme que le commerce demeure ce qui fait avancer l'économie."
   },
   "source": {
     "sourceId": "discover-canada",

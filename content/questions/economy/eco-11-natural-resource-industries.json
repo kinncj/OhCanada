@@ -3,8 +3,8 @@
   "id": "eco-11-natural-resource-industries",
   "subject": "economy",
   "prompt": {
-    "en": "Which group of industries does the guide count as natural resources industries?",
-    "fr": "Quel groupe d'industries le guide compte-t-il parmi les industries des ressources naturelles?"
+    "en": "Which group of industries does Discover Canada count as natural resources industries?",
+    "fr": "Quel groupe d'industries Découvrir le Canada compte-t-il parmi les industries des ressources naturelles?"
   },
   "options": [
     {

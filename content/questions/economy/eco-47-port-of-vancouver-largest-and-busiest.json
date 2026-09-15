@@ -3,8 +3,8 @@
   "id": "eco-47-port-of-vancouver-largest-and-busiest",
   "subject": "economy",
   "prompt": {
-    "en": "Which port does the guide call Canada's largest and busiest?",
-    "fr": "Quel port le guide présente-t-il comme le plus grand et le plus achalandé du Canada?"
+    "en": "Which port does Discover Canada call Canada's largest and busiest?",
+    "fr": "Quel port Découvrir le Canada présente-t-il comme le plus grand et le plus achalandé du Canada?"
   },
   "options": [
     {

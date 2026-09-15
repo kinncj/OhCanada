@@ -3,8 +3,8 @@
   "id": "wwa-10-treaties-not-always-respected",
   "subject": "who-we-are",
   "prompt": {
-    "en": "What does the guide say about the treaties negotiated with newcomers?",
-    "fr": "Que dit le guide au sujet des traités négociés avec les nouveaux arrivants?"
+    "en": "What does Discover Canada say about the treaties negotiated with newcomers?",
+    "fr": "Que dit Découvrir le Canada au sujet des traités négociés avec les nouveaux arrivants?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The Royal Proclamation of 1763 set the basis for negotiating treaties with newcomers, and the guide states plainly that those treaties were not always fully respected.",
-    "fr": "La Proclamation royale de 1763 a établi la base de la négociation de traités avec les nouveaux arrivants, et le guide indique clairement que ces traités n'ont pas toujours été pleinement respectés."
+    "en": "The Royal Proclamation of 1763 set the basis for negotiating treaties with newcomers, and Discover Canada states plainly that those treaties were not always fully respected.",
+    "fr": "La Proclamation royale de 1763 a établi la base de la négociation de traités avec les nouveaux arrivants, et Découvrir le Canada indique clairement que ces traités n'ont pas toujours été pleinement respectés."
   },
   "source": {
     "sourceId": "discover-canada",

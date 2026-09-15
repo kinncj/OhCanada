@@ -3,8 +3,8 @@
   "id": "wwa-04-three-founding-peoples",
   "subject": "who-we-are",
   "prompt": {
-    "en": "Which three founding peoples does the guide say you should know about?",
-    "fr": "Quels sont les trois peuples fondateurs que le guide dit qu'il faut connaître?"
+    "en": "Which three founding peoples does Discover Canada say you should know about?",
+    "fr": "Quels sont les trois peuples fondateurs que Découvrir le Canada dit qu'il faut connaître?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide names three founding peoples — Aboriginal, French and British — and says knowing about all three is important to understanding what it means to be Canadian.",
-    "fr": "Le guide nomme trois peuples fondateurs — autochtone, français et britannique — et dit qu'il est important de les connaître tous les trois pour comprendre ce que signifie être Canadien."
+    "en": "Discover Canada names three founding peoples — Aboriginal, French and British — and says knowing about all three is important to understanding what it means to be Canadian.",
+    "fr": "Découvrir le Canada nomme trois peuples fondateurs — autochtone, français et britannique — et dit qu'il est important de les connaître tous les trois pour comprendre ce que signifie être Canadien."
   },
   "source": {
     "sourceId": "discover-canada",

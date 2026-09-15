@@ -4,7 +4,7 @@
   "subject": "justice",
   "prompt": {
     "en": "You see a crime taking place. What does Discover Canada say you can do?",
-    "fr": "Vous êtes témoin d'un crime. Que dit le guide Découvrir le Canada que vous pouvez faire?"
+    "fr": "Vous êtes témoin d'un crime. Que dit Découvrir le Canada que vous pouvez faire?"
   },
   "options": [
     {

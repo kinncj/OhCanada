@@ -3,8 +3,8 @@
   "id": "jus-26-when-to-ask-police-for-help",
   "subject": "justice",
   "prompt": {
-    "en": "Which of these is a situation where the guide says you can ask the police for help?",
-    "fr": "Dans laquelle de ces situations le guide dit-il que vous pouvez demander l'aide de la police?"
+    "en": "Which of these is a situation where Discover Canada says you can ask the police for help?",
+    "fr": "Dans laquelle de ces situations Découvrir le Canada dit-il que vous pouvez demander l'aide de la police?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide lists an accident, a theft, an assault, a crime you witness, and a person you know going missing.",
-    "fr": "Le guide mentionne un accident, un vol, une agression, un crime dont vous êtes témoin et la disparition d'une personne que vous connaissez."
+    "en": "Discover Canada lists an accident, a theft, an assault, a crime you witness, and a person you know going missing.",
+    "fr": "Découvrir le Canada mentionne un accident, un vol, une agression, un crime dont vous êtes témoin et la disparition d'une personne que vous connaissez."
   },
   "source": {
     "sourceId": "discover-canada",

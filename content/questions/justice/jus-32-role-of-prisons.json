@@ -4,7 +4,7 @@
   "subject": "justice",
   "prompt": {
     "en": "According to Discover Canada, what role do prisons have?",
-    "fr": "Selon le guide Découvrir le Canada, quel rôle jouent les prisons?"
+    "fr": "Selon Découvrir le Canada, quel rôle jouent les prisons?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide says prisons punish people who commit crimes and discourage others from committing them.",
-    "fr": "Le guide indique que les prisons punissent les personnes qui commettent des crimes et en dissuadent d'autres d'en commettre."
+    "en": "Discover Canada says prisons punish people who commit crimes and discourage others from committing them.",
+    "fr": "Découvrir le Canada indique que les prisons punissent les personnes qui commettent des crimes et en dissuadent d'autres d'en commettre."
   },
   "source": {
     "sourceId": "discover-canada",

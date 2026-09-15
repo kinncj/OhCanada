@@ -3,8 +3,8 @@
   "id": "eco-42-ontario-farm-products",
   "subject": "economy",
   "prompt": {
-    "en": "What do Ontario farmers raise, according to the guide?",
-    "fr": "Selon le guide, que produisent les agriculteurs de l'Ontario?"
+    "en": "What do Ontario farmers raise, according to Discover Canada?",
+    "fr": "Selon Découvrir le Canada, que produisent les agriculteurs de l'Ontario?"
   },
   "options": [
     {

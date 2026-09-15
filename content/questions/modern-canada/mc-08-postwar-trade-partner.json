@@ -4,7 +4,7 @@
   "subject": "modern-canada",
   "prompt": {
     "en": "Discover Canada says Canada's standard of living is kept up by hard work and by trade with other nations. Which nation does it name in particular?",
-    "fr": "Le guide Découvrir le Canada dit que le niveau de vie du pays est maintenu par le travail et par le commerce avec d'autres pays. Lequel nomme-t-il en particulier?"
+    "fr": "Découvrir le Canada dit que le niveau de vie du pays est maintenu par le travail et par le commerce avec d'autres pays. Lequel nomme-t-il en particulier?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide names the United States as the trading partner that matters most to the Canadian standard of living.",
-    "fr": "Le guide nomme les États-Unis comme le partenaire commercial le plus important pour le niveau de vie des Canadiens."
+    "en": "Discover Canada names the United States as the trading partner that matters most to the Canadian standard of living.",
+    "fr": "Découvrir le Canada nomme les États-Unis comme le partenaire commercial le plus important pour le niveau de vie des Canadiens."
   },
   "source": {
     "sourceId": "discover-canada",

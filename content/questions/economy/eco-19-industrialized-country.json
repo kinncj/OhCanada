@@ -3,8 +3,8 @@
   "id": "eco-19-industrialized-country",
   "subject": "economy",
   "prompt": {
-    "en": "Discover Canada places Canada in a group of leading countries of the world. How does the guide describe those countries?",
-    "fr": "Découvrir le Canada place le Canada dans un groupe de grands pays du monde. Comment le guide décrit-il ces pays?"
+    "en": "Discover Canada places Canada in a group of leading countries of the world. How does Discover Canada describe those countries?",
+    "fr": "Découvrir le Canada place le Canada dans un groupe de grands pays du monde. Comment Découvrir le Canada décrit-il ces pays?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide counts Canada among the world's leading industrialized countries. An industrialized country has large factories and service businesses as well as farms, forests and mines.",
-    "fr": "Le guide compte le Canada parmi les principaux pays industrialisés du monde. Un pays industrialisé possède de grandes usines et des entreprises de services, en plus de ses fermes, de ses forêts et de ses mines."
+    "en": "Discover Canada counts Canada among the world's leading industrialized countries. An industrialized country has large factories and service businesses as well as farms, forests and mines.",
+    "fr": "Découvrir le Canada compte le Canada parmi les principaux pays industrialisés du monde. Un pays industrialisé possède de grandes usines et des entreprises de services, en plus de ses fermes, de ses forêts et de ses mines."
   },
   "source": {
     "sourceId": "discover-canada",

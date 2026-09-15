@@ -3,8 +3,8 @@
   "id": "eco-38-quebec-pulp-and-paper",
   "subject": "economy",
   "prompt": {
-    "en": "Which province does the guide call Canada's main producer of pulp and paper?",
-    "fr": "Quelle province le guide présente-t-il comme le principal producteur de pâtes et papiers au Canada?"
+    "en": "Which province does Discover Canada call Canada's main producer of pulp and paper?",
+    "fr": "Quelle province Découvrir le Canada présente-t-il comme le principal producteur de pâtes et papiers au Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "Forestry is one of Quebec's important industries, and the guide names Quebec as Canada's main producer of pulp and paper.",
-    "fr": "La foresterie est l'une des industries importantes du Québec, et le guide présente le Québec comme le principal producteur de pâtes et papiers au Canada."
+    "en": "Forestry is one of Quebec's important industries, and Discover Canada names Quebec as Canada's main producer of pulp and paper.",
+    "fr": "La foresterie est l'une des industries importantes du Québec, et Découvrir le Canada présente le Québec comme le principal producteur de pâtes et papiers au Canada."
   },
   "source": {
     "sourceId": "discover-canada",

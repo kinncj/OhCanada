@@ -3,8 +3,8 @@
   "id": "eco-25-ontario-quebec-manufacturing",
   "subject": "economy",
   "prompt": {
-    "en": "Which two provinces make most of Canada's manufactured goods, according to the guide?",
-    "fr": "Selon le guide, quelles deux provinces fabriquent la plus grande partie des produits manufacturés du Canada?"
+    "en": "Which two provinces make most of Canada's manufactured goods, according to Discover Canada?",
+    "fr": "Selon Découvrir le Canada, quelles deux provinces fabriquent la plus grande partie des produits manufacturés du Canada?"
   },
   "options": [
     {

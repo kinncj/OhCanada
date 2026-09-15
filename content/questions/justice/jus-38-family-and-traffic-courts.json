@@ -3,8 +3,8 @@
   "id": "jus-38-family-and-traffic-courts",
   "subject": "justice",
   "prompt": {
-    "en": "Besides courts for lesser offences and small claims, which other courts does the guide say the provinces have?",
-    "fr": "En plus des tribunaux pour les infractions mineures et des cours des petites créances, quels autres tribunaux le guide dit-il que les provinces possèdent?"
+    "en": "Besides courts for lesser offences and small claims, which other courts does Discover Canada say the provinces have?",
+    "fr": "En plus des tribunaux pour les infractions mineures et des cours des petites créances, quels autres tribunaux Découvrir le Canada dit-il que les provinces possèdent?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "Along with provincial courts for lesser offences and small claims courts, the guide names family courts and traffic courts.",
-    "fr": "En plus des tribunaux provinciaux pour les infractions mineures et des cours des petites créances, le guide nomme les tribunaux de la famille et les tribunaux de la circulation."
+    "en": "Along with provincial courts for lesser offences and small claims courts, Discover Canada names family courts and traffic courts.",
+    "fr": "En plus des tribunaux provinciaux pour les infractions mineures et des cours des petites créances, Découvrir le Canada nomme les tribunaux de la famille et les tribunaux de la circulation."
   },
   "source": {
     "sourceId": "discover-canada",

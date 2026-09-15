@@ -3,8 +3,8 @@
   "id": "eco-07-service-industry-example",
   "subject": "economy",
   "prompt": {
-    "en": "Which of these is a service industry, as the guide describes them?",
-    "fr": "Laquelle de ces activités est une industrie de services, selon le guide?"
+    "en": "Which of these is a service industry, as Discover Canada describes them?",
+    "fr": "Laquelle de ces activités est une industrie de services, selon Découvrir le Canada?"
   },
   "options": [
     {

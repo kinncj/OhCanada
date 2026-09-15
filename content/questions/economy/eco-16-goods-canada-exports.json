@@ -3,8 +3,8 @@
   "id": "eco-16-goods-canada-exports",
   "subject": "economy",
   "prompt": {
-    "en": "Canada exports billions of dollars of goods every year. Which of these is on the guide's list?",
-    "fr": "Le Canada exporte pour des milliards de dollars de biens chaque année. Lequel de ces éléments figure dans la liste du guide?"
+    "en": "Canada exports billions of dollars of goods every year. Which of these is on the list in Discover Canada?",
+    "fr": "Le Canada exporte pour des milliards de dollars de biens chaque année. Lequel de ces éléments figure dans la liste de Découvrir le Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 1,
   "explanation": {
-    "en": "The guide's list of yearly exports takes in energy products, industrial goods, machinery and equipment, automotive goods, farm, fishing and forestry products, and goods people buy.",
-    "fr": "La liste des exportations annuelles du guide comprend les produits énergétiques, les biens industriels, la machinerie et l'équipement, les produits de l'automobile, les produits agricoles, de la pêche et de la foresterie, ainsi que les biens de consommation."
+    "en": "The list of yearly exports in Discover Canada takes in energy products, industrial goods, machinery and equipment, automotive goods, farm, fishing and forestry products, and goods people buy.",
+    "fr": "La liste des exportations annuelles de Découvrir le Canada comprend les produits énergétiques, les biens industriels, la machinerie et l'équipement, les produits de l'automobile, les produits agricoles, de la pêche et de la foresterie, ainsi que les biens de consommation."
   },
   "source": {
     "sourceId": "discover-canada",

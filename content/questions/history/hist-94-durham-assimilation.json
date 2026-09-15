@@ -3,8 +3,8 @@
   "id": "hist-94-durham-assimilation",
   "subject": "history",
   "prompt": {
-    "en": "What does the guide say about Lord Durham's advice that the Canadiens should assimilate into English-speaking Protestant culture?",
-    "fr": "Que dit le guide au sujet du conseil de lord Durham selon lequel les Canadiens devaient s'assimiler à la culture protestante anglophone?"
+    "en": "What does Discover Canada say about Lord Durham's advice that the Canadiens should assimilate into English-speaking Protestant culture?",
+    "fr": "Que dit Découvrir le Canada au sujet du conseil de lord Durham selon lequel les Canadiens devaient s'assimiler à la culture protestante anglophone?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "Lord Durham told London to join the two Canadas and let them govern themselves. He also urged the Canadiens to give up their own culture, which he thought would speed their progress. The guide says that advice showed he had understood nothing about a people determined to keep French Canada distinct.",
-    "fr": "Lord Durham a conseillé à Londres de réunir les deux Canadas et de les laisser se gouverner eux-mêmes. Il a aussi pressé les Canadiens de renoncer à leur culture, croyant que cela accélérerait leur progrès. Le guide indique que ce conseil montrait qu'il n'avait rien compris à un peuple déterminé à préserver un Canada français distinct."
+    "en": "Lord Durham told London to join the two Canadas and let them govern themselves. He also urged the Canadiens to give up their own culture, which he thought would speed their progress. Discover Canada says that advice showed he had understood nothing about a people determined to keep French Canada distinct.",
+    "fr": "Lord Durham a conseillé à Londres de réunir les deux Canadas et de les laisser se gouverner eux-mêmes. Il a aussi pressé les Canadiens de renoncer à leur culture, croyant que cela accélérerait leur progrès. Découvrir le Canada indique que ce conseil montrait qu'il n'avait rien compris à un peuple déterminé à préserver un Canada français distinct."
   },
   "source": {
     "sourceId": "discover-canada",

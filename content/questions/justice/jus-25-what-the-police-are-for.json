@@ -3,8 +3,8 @@
   "id": "jus-25-what-the-police-are-for",
   "subject": "justice",
   "prompt": {
-    "en": "A newcomer is not sure what the police in Canada are for. What does the guide say?",
-    "fr": "Une personne nouvellement arrivée ne sait pas trop à quoi servent les policiers au Canada. Que dit le guide?"
+    "en": "A newcomer is not sure what the police in Canada are for. What does Discover Canada say?",
+    "fr": "Une personne nouvellement arrivée ne sait pas trop à quoi servent les policiers au Canada. Que dit Découvrir le Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide says the police keep people safe, enforce the law, and are there to help you.",
-    "fr": "Le guide indique que les policiers assurent la sécurité des gens, font respecter la loi et sont là pour vous aider."
+    "en": "Discover Canada says the police keep people safe, enforce the law, and are there to help you.",
+    "fr": "Découvrir le Canada indique que les policiers assurent la sécurité des gens, font respecter la loi et sont là pour vous aider."
   },
   "source": {
     "sourceId": "discover-canada",

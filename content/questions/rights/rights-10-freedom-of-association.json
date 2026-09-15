@@ -3,8 +3,8 @@
   "id": "rights-10-freedom-of-association",
   "subject": "rights",
   "prompt": {
-    "en": "Which of these is one of the four fundamental freedoms listed in the guide?",
-    "fr": "Laquelle de ces libertés fait partie des quatre libertés fondamentales énumérées dans le guide?"
+    "en": "Which of these is one of the four fundamental freedoms listed in Discover Canada?",
+    "fr": "Laquelle de ces libertés fait partie des quatre libertés fondamentales énumérées dans Découvrir le Canada?"
   },
   "options": [
     {

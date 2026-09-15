@@ -3,8 +3,8 @@
   "id": "sym-01-what-symbols-do",
   "subject": "symbols",
   "prompt": {
-    "en": "According to the guide, what do Canada's symbols do?",
-    "fr": "Selon le guide, à quoi servent les symboles du Canada?"
+    "en": "According to Discover Canada, what do Canada's symbols do?",
+    "fr": "Selon Découvrir le Canada, à quoi servent les symboles du Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "Canada's symbols are objects, events and people that carry a special meaning. Taken together, they show what being Canadian means, and they appear all through the study guide.",
-    "fr": "Les symboles du Canada sont des objets, des événements et des personnes qui ont un sens particulier. Ensemble, ils montrent ce que signifie être Canadien, et on les retrouve partout dans le guide d'étude."
+    "en": "Canada's symbols are objects, events and people that carry a special meaning. Taken together, they show what being Canadian means, and they appear all through Discover Canada.",
+    "fr": "Les symboles du Canada sont des objets, des événements et des personnes qui ont un sens particulier. Ensemble, ils montrent ce que signifie être Canadien, et on les retrouve partout dans Découvrir le Canada."
   },
   "source": {
     "sourceId": "discover-canada",

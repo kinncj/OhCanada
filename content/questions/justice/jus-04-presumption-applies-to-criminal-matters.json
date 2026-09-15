@@ -4,7 +4,7 @@
   "subject": "justice",
   "prompt": {
     "en": "In which kind of matters does Discover Canada say the presumption of innocence is the foundation of our judicial system?",
-    "fr": "Dans quel type d'affaires le guide Découvrir le Canada dit-il que la présomption d'innocence est le fondement de notre système judiciaire?"
+    "fr": "Dans quel type d'affaires Découvrir le Canada dit-il que la présomption d'innocence est le fondement de notre système judiciaire?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide names criminal matters when it explains that our judicial system rests on this principle.",
-    "fr": "Le guide nomme les affaires criminelles lorsqu'il explique que notre système judiciaire repose sur ce principe."
+    "en": "Discover Canada names criminal matters when it explains that our judicial system rests on this principle.",
+    "fr": "Découvrir le Canada nomme les affaires criminelles lorsqu'il explique que notre système judiciaire repose sur ce principe."
   },
   "source": {
     "sourceId": "discover-canada",

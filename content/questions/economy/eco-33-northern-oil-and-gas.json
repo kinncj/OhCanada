@@ -3,8 +3,8 @@
   "id": "eco-33-northern-oil-and-gas",
   "subject": "economy",
   "prompt": {
-    "en": "The guide says the northern territories have mines. Which other energy resource does it say is being developed there?",
-    "fr": "Le guide dit que les territoires du Nord ont des mines. Quelle autre ressource énergétique y est mise en valeur, selon lui?"
+    "en": "Discover Canada says the northern territories have mines. Which other energy resource does it say is being developed there?",
+    "fr": "Découvrir le Canada dit que les territoires du Nord ont des mines. Quelle autre ressource énergétique y est mise en valeur, selon lui?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 3,
   "explanation": {
-    "en": "As well as its mines, the North holds oil and gas underground. The guide says work is under way to develop those deposits.",
-    "fr": "En plus de ses mines, le Nord renferme du pétrole et du gaz dans son sous-sol. Le guide indique que ces gisements sont en cours de mise en valeur."
+    "en": "As well as its mines, the North holds oil and gas underground. Discover Canada says work is under way to develop those deposits.",
+    "fr": "En plus de ses mines, le Nord renferme du pétrole et du gaz dans son sous-sol. Découvrir le Canada indique que ces gisements sont en cours de mise en valeur."
   },
   "source": {
     "sourceId": "discover-canada",

@@ -3,8 +3,8 @@
   "id": "gov-62-shared-responsibilities",
   "subject": "government",
   "prompt": {
-    "en": "In the guide's summary table of responsibilities, which ones are shared by the federal government and the provinces?",
-    "fr": "Dans le tableau récapitulatif des responsabilités du guide, lesquelles sont partagées entre le gouvernement fédéral et les provinces?"
+    "en": "In the summary table of responsibilities in Discover Canada, which ones are shared by the federal government and the provinces?",
+    "fr": "Dans le tableau récapitulatif des responsabilités de Découvrir le Canada, lesquelles sont partagées entre le gouvernement fédéral et les provinces?"
   },
   "options": [
     {

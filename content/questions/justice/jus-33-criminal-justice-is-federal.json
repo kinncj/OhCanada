@@ -3,8 +3,8 @@
   "id": "jus-33-criminal-justice-is-federal",
   "subject": "justice",
   "prompt": {
-    "en": "In the guide's table of responsibilities, which government looks after criminal justice?",
-    "fr": "Dans le tableau des responsabilités du guide, quel gouvernement s'occupe de la justice pénale?"
+    "en": "In the table of responsibilities in Discover Canada, which government looks after criminal justice?",
+    "fr": "Dans le tableau des responsabilités de Découvrir le Canada, quel gouvernement s'occupe de la justice pénale?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 0,
   "explanation": {
-    "en": "The guide lists criminal justice in the federal column, beside national defence, foreign policy and citizenship. Policing is shared out differently, but criminal justice is named only for Ottawa.",
-    "fr": "Le guide inscrit la justice pénale dans la colonne fédérale, à côté de la défense nationale, de la politique étrangère et de la citoyenneté. Les services de police sont répartis autrement, mais la justice pénale n'est nommée que pour Ottawa."
+    "en": "Discover Canada lists criminal justice in the federal column, beside national defence, foreign policy and citizenship. Policing is shared out differently, but criminal justice is named only for Ottawa.",
+    "fr": "Découvrir le Canada inscrit la justice pénale dans la colonne fédérale, à côté de la défense nationale, de la politique étrangère et de la citoyenneté. Les services de police sont répartis autrement, mais la justice pénale n'est nommée que pour Ottawa."
   },
   "source": {
     "sourceId": "discover-canada",

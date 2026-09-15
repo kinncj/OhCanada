@@ -3,8 +3,8 @@
   "id": "eco-32-northern-mines",
   "subject": "economy",
   "prompt": {
-    "en": "According to the guide, which of these is mined in Canada's northern territories?",
-    "fr": "Selon le guide, laquelle de ces ressources est extraite dans les territoires du Nord canadien?"
+    "en": "According to Discover Canada, which of these is mined in Canada's northern territories?",
+    "fr": "Selon Découvrir le Canada, laquelle de ces ressources est extraite dans les territoires du Nord canadien?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 2,
   "explanation": {
-    "en": "The guide lists mines in the North for gold, lead, copper, diamonds and zinc.",
-    "fr": "Le guide mentionne dans le Nord des mines d'or, de plomb, de cuivre, de diamants et de zinc."
+    "en": "Discover Canada lists mines in the North for gold, lead, copper, diamonds and zinc.",
+    "fr": "Découvrir le Canada mentionne dans le Nord des mines d'or, de plomb, de cuivre, de diamants et de zinc."
   },
   "source": {
     "sourceId": "discover-canada",

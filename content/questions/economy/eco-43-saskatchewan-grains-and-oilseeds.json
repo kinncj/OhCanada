@@ -3,8 +3,8 @@
   "id": "eco-43-saskatchewan-grains-and-oilseeds",
   "subject": "economy",
   "prompt": {
-    "en": "Which province does the guide call Canada's largest producer of grains and oilseeds?",
-    "fr": "Quelle province le guide présente-t-il comme le plus grand producteur de céréales et d'oléagineux au Canada?"
+    "en": "Which province does Discover Canada call Canada's largest producer of grains and oilseeds?",
+    "fr": "Quelle province Découvrir le Canada présente-t-il comme le plus grand producteur de céréales et d'oléagineux au Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 1,
   "explanation": {
-    "en": "The guide names Saskatchewan as the country's largest producer of grains and oilseeds. It was once known as the wheat province.",
-    "fr": "Le guide présente la Saskatchewan comme le plus grand producteur de céréales et d'oléagineux du pays. On l'a déjà appelée la province du blé."
+    "en": "Discover Canada names Saskatchewan as the country's largest producer of grains and oilseeds. It was once known as the wheat province.",
+    "fr": "Découvrir le Canada présente la Saskatchewan comme le plus grand producteur de céréales et d'oléagineux du pays. On l'a déjà appelée la province du blé."
   },
   "source": {
     "sourceId": "discover-canada",

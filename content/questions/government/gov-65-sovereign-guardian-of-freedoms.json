@@ -3,8 +3,8 @@
   "id": "gov-65-sovereign-guardian-of-freedoms",
   "subject": "government",
   "prompt": {
-    "en": "In Canada's constitutional monarchy, what does the guide say the Sovereign guards?",
-    "fr": "Dans la monarchie constitutionnelle du Canada, qu'est-ce que le souverain ou la souveraine protège, selon le guide?"
+    "en": "In Canada's constitutional monarchy, what does Discover Canada say the Sovereign guards?",
+    "fr": "Dans la monarchie constitutionnelle du Canada, qu'est-ce que le souverain ou la souveraine protège, selon Découvrir le Canada?"
   },
   "options": [
     {
@@ -26,8 +26,8 @@
   ],
   "correctIndex": 3,
   "explanation": {
-    "en": "The guide calls the Sovereign a guardian of constitutional freedoms, as well as a symbol of Canada's sovereignty and a reflection of its history. The Sovereign stays out of party politics.",
-    "fr": "Le guide présente le souverain ou la souveraine comme le gardien des libertés constitutionnelles, ainsi qu'un symbole de la souveraineté du Canada et un reflet de son histoire. Ce rôle se tient à l'écart de la politique partisane."
+    "en": "Discover Canada calls the Sovereign a guardian of constitutional freedoms, as well as a symbol of Canada's sovereignty and a reflection of its history. The Sovereign stays out of party politics.",
+    "fr": "Découvrir le Canada présente le souverain ou la souveraine comme le gardien des libertés constitutionnelles, ainsi qu'un symbole de la souveraineté du Canada et un reflet de son histoire. Ce rôle se tient à l'écart de la politique partisane."
   },
   "source": {
     "sourceId": "discover-canada",
