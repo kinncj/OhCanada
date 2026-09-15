@@ -20,20 +20,29 @@
  *     device by `touch-controls.ts` and passed in here);
  *   - a mode that cannot engage anything shows no marks at all, because a ring
  *     over something a tap will refuse is a lie;
- *   - reduced motion removes the pulse and nothing else.
+ *   - reduced motion removes the pulse and nothing else;
+ *   - a mark points at its subject's **art**, from just above it, and never
+ *     covers the player's head where a stop holds them (ADR-0049).
  */
 
 import { describe, expect, it } from 'vitest';
 
+import { silhouetteBounds, silhouetteFromBoxes, topWithin, type ArtSilhouette } from '@adapters/phaser/art-silhouette';
 import {
   MARK_GAP_PX,
+  MARK_RING_FRACTION,
+  MARK_TIP_FRACTION,
   MIN_MARK_PX,
   PULSE_AMPLITUDE,
   PULSE_PERIOD_MS,
   affordanceMarks,
+  markAnchor,
+  markExtent,
   markPulse,
+  type AffordanceMark,
   type AffordanceSubject,
 } from '@adapters/phaser/interaction-affordance';
+import type { TargetRect } from '@adapters/phaser/touch-controls';
 
 const npc: AffordanceSubject = {
   id: 'npc-one',
@@ -54,6 +63,21 @@ const options = {
   reachPx: 240,
   minTouchPx: 122,
 };
+
+const only = (marks: readonly AffordanceMark[]): AffordanceMark => {
+  const mark = marks[0];
+  if (mark === undefined) throw new Error('no mark');
+  return mark;
+};
+
+const art = (boxes: readonly TargetRect[]): ArtSilhouette => {
+  const silhouette = silhouetteFromBoxes(boxes);
+  if (silhouette === null) throw new Error('no art');
+  return silhouette;
+};
+
+const overlaps = (a: TargetRect, b: TargetRect): boolean =>
+  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
 
 describe('every engageable subject is marked', () => {
   it('marks a subject that is out of reach, so it reads as interactive before it is touched', () => {
@@ -151,18 +175,110 @@ describe('where the mark sits', () => {
   });
 
   it('clears the top of the art rather than covering the face', () => {
-    const marks = affordanceMarks([npc], options);
-    const mark = marks[0];
-    if (mark === undefined) throw new Error('no mark');
-    expect(mark.y + mark.size / 2).toBeLessThanOrEqual(npc.rect.y - MARK_GAP_PX + 1e-9);
+    const mark = only(affordanceMarks([npc], options));
+    expect(markAnchor(mark).y).toBeLessThanOrEqual(npc.rect.y - MARK_GAP_PX + 1e-9);
   });
 
   it('stays on screen when the subject is tall enough to reach the top of the world', () => {
     const tall: AffordanceSubject = { ...landmark, rect: { ...landmark.rect, y: 10 } };
-    const marks = affordanceMarks([tall], { ...options, playerX: 5400 });
-    const mark = marks[0];
-    if (mark === undefined) throw new Error('no mark');
+    const mark = only(affordanceMarks([tall], { ...options, playerX: 5400 }));
     expect(mark.y - mark.size / 2).toBeGreaterThanOrEqual(0);
+  });
+
+  it('draws its ring, its halo and its point inside the box it is measured by, at the top of its pulse', () => {
+    const mark = { x: 0, y: 0, size: 100 };
+    const extent = markExtent(mark);
+    expect(markAnchor(mark)).toEqual({ x: 0, y: 100 * MARK_TIP_FRACTION });
+    expect(extent.width).toBeCloseTo(100 * (1 + PULSE_AMPLITUDE), 9);
+    expect(extent.y + extent.height).toBeGreaterThanOrEqual(markAnchor(mark).y * (1 + PULSE_AMPLITUDE));
+    /* The ring's radius plus the 10 px halo's outer half. */
+    expect(extent.width / 2).toBeGreaterThan(100 * MARK_RING_FRACTION * (1 + PULSE_AMPLITUDE) + 5);
+  });
+});
+
+describe('a mark points at the art, not at the rectangle around it (ADR-0049)', () => {
+  it('rests just above the art under it — a character whose box starts above the crown', () => {
+    /* The guide's defect: `characterSpace` starts 40 px above his head, and the
+       ring floated in the gap. */
+    const mark = only(affordanceMarks([{ ...npc, art: art([{ x: 2380, y: 1390, width: 40, height: 110 }]) }], options));
+    expect(mark.x).toBe(2400);
+    expect(markAnchor(mark).y).toBeCloseTo(1390 - MARK_GAP_PX, 9);
+  });
+
+  it('points at the art under its own width, not at a tall part beside it', () => {
+    /* A landmark whose tallest part is off to one side: the grain elevator's
+       texture starts 520 px above the roof under its centre. */
+    const elevator = art([
+      { x: 5290, y: 720, width: 40, height: 780 },
+      { x: 5340, y: 1200, width: 170, height: 300 },
+    ]);
+    const mark = only(affordanceMarks([{ ...landmark, art: elevator }], { ...options, playerX: 5400 }));
+    expect(mark.x).toBe(5400);
+    expect(markAnchor(mark).y).toBeCloseTo(1200 - MARK_GAP_PX, 9);
+  });
+
+  it('moves to the nearest art when the middle of the rectangle is empty, and the higher of two', () => {
+    const legs = art([
+      { x: 5290, y: 1000, width: 40, height: 500 },
+      { x: 5470, y: 1100, width: 40, height: 400 },
+    ]);
+    const mark = only(affordanceMarks([{ ...landmark, art: legs }], { ...options, playerX: 5400 }));
+    expect(mark.x).toBeLessThan(5400);
+    expect(topWithin(legs, mark.x - mark.size / 2, mark.x + mark.size / 2)).toBe(1000);
+    expect(markAnchor(mark).y).toBeCloseTo(1000 - MARK_GAP_PX, 9);
+  });
+});
+
+describe('a mark keeps off the player a stop holds at its subject (ADR-0049)', () => {
+  const size = options.minTouchPx;
+
+  it('moves along the art, off the head, when the art is lower than the player', () => {
+    /* The North's sternwheeler: long, lower than the player, and the player rests
+       level with its middle. */
+    const hull = { x: 4940, y: 1220, width: 920, height: 280 };
+    const head = { x: 5340, y: 1080, width: 120, height: 110 };
+    const boat: AffordanceSubject = { ...landmark, rect: hull, art: art([hull]), clear: [head] };
+    const covered = only(affordanceMarks([{ ...boat, clear: [] }], { ...options, playerX: 5400 }));
+    expect(overlaps(markExtent(covered), head), 'the case does not put the mark on the head').toBe(true);
+
+    const mark = only(affordanceMarks([boat], { ...options, playerX: 5400 }));
+    expect(overlaps(markExtent(mark), head)).toBe(false);
+    expect(markAnchor(mark).y).toBeCloseTo(1220 - MARK_GAP_PX, 9);
+    const bounds = silhouetteBounds(art([hull]));
+    expect(mark.x).toBeGreaterThanOrEqual(bounds?.left ?? Number.NaN);
+    expect(mark.x).toBeLessThanOrEqual(bounds?.right ?? Number.NaN);
+    /* The same distance either way, and the same height: the right-hand place,
+       so the answer never depends on the order anything was listed in. */
+    expect(mark.x).toBeGreaterThan(5400);
+  });
+
+  it('takes the higher of two clear places at the same distance', () => {
+    const tiers = art([
+      { x: 4940, y: 1000, width: 460, height: 500 },
+      { x: 5400, y: 1220, width: 460, height: 280 },
+    ]);
+    const head = { x: 5340, y: 850, width: 120, height: 340 };
+    const mark = only(
+      affordanceMarks([{ ...landmark, rect: { x: 4940, y: 1000, width: 920, height: 500 }, art: tiers, clear: [head] }], {
+        ...options,
+        playerX: 5400,
+      }),
+    );
+    expect(overlaps(markExtent(mark), head)).toBe(false);
+    expect(mark.x).toBeLessThan(5400);
+    expect(markAnchor(mark).y).toBeCloseTo(1000 - MARK_GAP_PX, 9);
+  });
+
+  it('rises above the head only when no place on the art is clear of it', () => {
+    const head = { x: 2300, y: 1300, width: 200, height: 100 };
+    const mark = only(
+      affordanceMarks([{ ...npc, art: art([{ x: 2380, y: 1390, width: 40, height: 110 }]), clear: [head] }], options),
+    );
+    const extent = markExtent(mark);
+    expect(mark.x).toBe(2400);
+    expect(overlaps(extent, head)).toBe(false);
+    expect(extent.y + extent.height).toBeCloseTo(head.y - MARK_GAP_PX, 9);
+    expect(size).toBe(mark.size);
   });
 });
 

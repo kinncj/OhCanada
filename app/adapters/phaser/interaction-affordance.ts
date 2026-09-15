@@ -43,6 +43,23 @@
  * same number is passed in here, so what the player sees is at least what they
  * can hit. It is not the other way round: the art is never resized.
  *
+ * ## Where a mark sits (ADR-0049)
+ *
+ * **On the art, not on its rectangle.** The mark's point — the ready chevron's
+ * tip — rests {@link MARK_GAP_PX} above the highest art under the mark's own
+ * width, read from the subject's silhouette (`art-silhouette.ts`). A texture's
+ * top edge and `characterSpace`'s are not the art: the guide's box starts 40 px
+ * above his crown and a grain elevator's texture 520 px above the roof under its
+ * centre, and a live-site audit photographed both marks as hollow rings in
+ * empty sky.
+ *
+ * **Never on the player's head at a stop.** A subject can name boxes the mark
+ * must keep clear of — the player's head wherever a stop holds them there
+ * (`mark-clearance.ts`). A landmark lower than the player put its mark on their
+ * face at the North's sternwheeler. Such a mark moves sideways along the art to
+ * the nearest place that is clear, still on the art; only when no place is does
+ * it rise above what it must clear.
+ *
  * ## Cost
  *
  * Pure arithmetic over a list built once at level create. The scene calls this
@@ -53,6 +70,12 @@
 
 import type { Vec2 } from '@application/ports';
 
+import {
+  silhouetteBounds,
+  silhouetteOfRect,
+  topWithin,
+  type ArtSilhouette,
+} from './art-silhouette';
 import type { TargetRect } from './touch-controls';
 
 /** What a mark is claiming. See the table in the header. */
@@ -67,6 +90,13 @@ export interface AffordanceSubject {
   readonly position: Vec2;
   /** Where its art was actually drawn; what a finger has to land on. */
   readonly rect: TargetRect;
+  /**
+   * Where inside `rect` the art is, band by band. Absent or `null` takes the
+   * rectangle as solid art, which is what a placeholder is.
+   */
+  readonly art?: ArtSilhouette | null;
+  /** World boxes the mark may not overlap: the player's head wherever a stop rests them here. */
+  readonly clear?: readonly TargetRect[];
 }
 
 export interface AffordanceOptions {
@@ -109,8 +139,18 @@ export interface AffordanceMark {
  */
 export const MIN_MARK_PX = 64;
 
-/** Clear air between the top of the subject's art and the bottom of the mark. */
-export const MARK_GAP_PX = 26;
+/** Clear air between the mark's point and the art under it, and between the mark and what it must clear. */
+export const MARK_GAP_PX = 12;
+
+/** The ring's radius, as a fraction of the mark's size. `level-scene.ts` draws with it. */
+export const MARK_RING_FRACTION = 0.34;
+
+/**
+ * How far below its centre the mark points, as a fraction of its size: the tip of
+ * the ready chevron, the lowest thing any state draws. `level-scene.ts` draws the
+ * chevron to it.
+ */
+export const MARK_TIP_FRACTION = MARK_RING_FRACTION * 1.4;
 
 export const PULSE_PERIOD_MS = 1600;
 
@@ -122,6 +162,77 @@ export const PULSE_PERIOD_MS = 1600;
  * under reduced motion (CLAUDE.md) rather than merely slowed.
  */
 export const PULSE_AMPLITUDE = 0.08;
+
+/** A sideways step, as a fraction of the mark, when looking for a place that is clear. */
+const SEARCH_STRIDE_FRACTION = 0.25;
+
+/**
+ * Everything a mark can cover at its largest: the square about its centre, grown
+ * by the pulse. The ring, its halo and the chevron's tip all lie inside it.
+ */
+export function markExtent(mark: Pick<AffordanceMark, 'x' | 'y' | 'size'>): TargetRect {
+  const half = (mark.size / 2) * (1 + PULSE_AMPLITUDE);
+  return { x: mark.x - half, y: mark.y - half, width: 2 * half, height: 2 * half };
+}
+
+/** The point a mark points at: the tip of its chevron. */
+export function markAnchor(mark: Pick<AffordanceMark, 'x' | 'y' | 'size'>): Vec2 {
+  return { x: mark.x, y: mark.y + mark.size * MARK_TIP_FRACTION };
+}
+
+function overlaps(a: TargetRect, b: TargetRect): boolean {
+  return a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+}
+
+/** Where a mark of `size` goes over one subject. See "Where a mark sits" in the header. */
+function markPosition(subject: AffordanceSubject, size: number): { readonly x: number; readonly y: number } {
+  const art = subject.art ?? silhouetteOfRect(subject.rect);
+  const clear = subject.clear ?? [];
+  const half = size / 2;
+  const tip = size * MARK_TIP_FRACTION;
+  const centre = subject.rect.x + subject.rect.width / 2;
+
+  /* The mark over column `x`, pointing at the highest art under its own width,
+     and never off the top of the world: a landmark whose art reaches the sky
+     would otherwise put its mark outside the canvas. */
+  const over = (x: number): { readonly x: number; readonly y: number } | null => {
+    const top = topWithin(art, x - half, x + half);
+    return top === null ? null : { x, y: Math.max(half, top - MARK_GAP_PX - tip) };
+  };
+  const isClear = (spot: { readonly x: number; readonly y: number }): boolean =>
+    !clear.some((box) => overlaps(markExtent({ ...spot, size }), box));
+
+  const first = over(centre);
+  if (first !== null && isClear(first)) return first;
+
+  /* Along the art, nearest first. At the same distance the higher place wins,
+     then the right-hand one, so the answer never depends on list order. */
+  const bounds = silhouetteBounds(art);
+  if (bounds !== null) {
+    const stride = Math.max(1, size * SEARCH_STRIDE_FRACTION);
+    for (let step = 1; centre + step * stride <= bounds.right || centre - step * stride >= bounds.left; step += 1) {
+      const spots = [centre + step * stride, centre - step * stride]
+        .filter((x) => x >= bounds.left && x <= bounds.right)
+        .map(over)
+        .filter((spot): spot is { readonly x: number; readonly y: number } => spot !== null && isClear(spot))
+        .sort((a, b) => a.y - b.y || b.x - a.x);
+      const found = spots[0];
+      if (found !== undefined) return found;
+    }
+  }
+
+  /* Nowhere on the art is clear. Above everything it must clear that is under
+     it, at the centre: a mark above a head is better than a mark on one. */
+  const base = first ?? { x: centre, y: Math.max(half, subject.rect.y - MARK_GAP_PX - tip) };
+  const extent = markExtent({ ...base, size });
+  const growth = extent.height / 2;
+  let y = base.y;
+  for (const box of clear) {
+    if (box.x >= extent.x + extent.width || box.x + box.width <= extent.x) continue;
+    y = Math.min(y, box.y - MARK_GAP_PX - growth);
+  }
+  return { x: base.x, y: Math.max(half, y) };
+}
 
 /**
  * One mark per engageable subject, in the order they were given.
@@ -148,20 +259,8 @@ export function affordanceMarks(
       : distance <= reach || subject.id === options.held
         ? 'ready'
         : 'idle';
-
-    /* Above the art, and never off the top of the world: a landmark whose
-       texture reaches the sky would otherwise put its mark outside the canvas,
-       which is a mark that does not exist. */
-    const above = subject.rect.y - MARK_GAP_PX - size / 2;
-
-    return {
-      id: subject.id,
-      npc: subject.npc,
-      state,
-      x: subject.rect.x + subject.rect.width / 2,
-      y: Math.max(size / 2, above),
-      size,
-    };
+    const { x, y } = markPosition(subject, size);
+    return { id: subject.id, npc: subject.npc, state, x, y, size };
   });
 }
 

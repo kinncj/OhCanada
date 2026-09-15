@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+import type { ArtSilhouette } from '@adapters/phaser/art-silhouette';
 import { parseLevelDocument, type SceneLevel } from '@adapters/phaser/level-document';
 import { MAX_STEP_SECONDS } from '@adapters/phaser/locomotion';
 import { rideFor } from '@adapters/phaser/ride';
@@ -26,9 +27,12 @@ import {
   landingSlackPx,
   mirrorSpan,
   restPointsBeside,
+  rideCrossesFeet,
   rideFootprintSpan,
   riderSpan,
   stopSubjectsFor,
+  type FeetAgainstRide,
+  type FeetExtent,
   type HorizontalSpan,
 } from '@adapters/phaser/stand-off';
 
@@ -219,6 +223,39 @@ describe('where the drive comes to rest beside somebody', () => {
     }
   });
 
+  it('takes the far side when the near side is not allowed, and the near side when it is (ADR-0049)', () => {
+    /* Short is 60 + 50 + 16 = 126 and past is 50 + 60 + 16 + 20 = 146, both in a 400 px reach. */
+    const rest = restPointsBeside({
+      x,
+      subject: person,
+      riderRight: rider,
+      riderLeft: rider,
+      reachPx: 400,
+      slackPx: 20,
+      allows: (at) => at >= x,
+    });
+    expect(rest).toEqual({ right: x + 146, left: x + 126 });
+  });
+
+  it('asks about the whole landing, not only the aim', () => {
+    const rest = restPointsBeside({
+      x,
+      subject: person,
+      riderRight: rider,
+      riderLeft: rider,
+      reachPx: 400,
+      slackPx: 20,
+      allows: (at) => at !== x - 126 - 20,
+    });
+    expect(rest.right).toBe(x + 146);
+  });
+
+  it('keeps the first side in reach when no side is allowed, and level when none is in reach', () => {
+    const base = { x, subject: person, riderRight: rider, riderLeft: rider, slackPx: 20, allows: () => false };
+    expect(restPointsBeside({ ...base, reachPx: 400 })).toEqual({ right: x - 126, left: x + 126 });
+    expect(restPointsBeside({ ...base, reachPx: 100 })).toEqual({ right: x, left: x });
+  });
+
   it('honours a gap it is given', () => {
     const rest = restPointsBeside({ x, subject: person, riderRight: rider, riderLeft: rider, reachPx: 400, slackPx: 0, gapPx: 40 });
     expect(rest.right).toBe(x - (60 + 50 + 40));
@@ -228,6 +265,74 @@ describe('where the drive comes to rest beside somebody', () => {
     const tuning = { ...ANY_TUNING, maxSpeed: 600, maxSpeedMultiplierDownhill: 1.5 };
     expect(landingSlackPx(tuning)).toBeCloseTo(600 * 1.5 * MAX_STEP_SECONDS, 9);
     expect(landingSlackPx({ ...tuning, maxSpeedMultiplierDownhill: 0.5 })).toBeCloseTo(600 * MAX_STEP_SECONDS, 9);
+  });
+});
+
+describe("whether a ride's art crosses a character's feet (ADR-0049)", () => {
+  /*
+   * A ride 100 px wide, its rider at art x 50 with the art's row 50 on the ground.
+   * With the rider at 1000 on ground at 1280, art column c is world x 950 + c and
+   * art row r is world y 1230 + r. Columns 20..69 are a body starting 10 px below
+   * the walking line; columns 70..89 a head rising 40 px above it.
+   */
+  const tops = Array.from({ length: 100 }, (_, column) => (column < 20 || column >= 90 ? null : column < 70 ? 60 : 10));
+  const head: ArtSilhouette = { x: 0, step: 1, tops, bottom: 100 };
+  const horse: Ride = {
+    mode: 'amble',
+    art: [{ key: 'horse', side: 'behind' }],
+    riderAnchor: { x: 50, y: 80 },
+    groundLineY: 50,
+    turnsWithRider: true,
+    footprint: { x: 40, width: 20 },
+  };
+  const feet: FeetExtent = { left: -10, right: 10, top: -30, bottom: 5 };
+  const against = (over: Partial<FeetAgainstRide>): boolean =>
+    rideCrossesFeet({
+      ride: horse,
+      art: [head],
+      riderX: 1000,
+      riderGroundY: 1280,
+      heading: 1,
+      characterX: 1030,
+      soleY: 1280,
+      feet,
+      body: { left: -20, right: 20 },
+      ...over,
+    });
+
+  it('crosses feet that a head rises over, where the art does not run the width of them', () => {
+    expect(against({})).toBe(true);
+  });
+
+  it('crosses feet the art covers only in part', () => {
+    expect(against({ characterX: 1012 })).toBe(true);
+  });
+
+  it('leaves feet alone that the art starts below, or that are beyond the art', () => {
+    expect(against({ characterX: 1000 })).toBe(false);
+    expect(against({ characterX: 940 })).toBe(false);
+  });
+
+  it('turns with a ride that turns, and not with one that does not', () => {
+    expect(against({ heading: -1 })).toBe(false);
+    expect(against({ heading: -1, ride: { ...horse, turnsWithRider: false } })).toBe(true);
+  });
+
+  it('allows feet hidden behind a flank: art over the walking line across the whole body', () => {
+    const flank: ArtSilhouette = { x: 0, step: 1, tops: Array.from({ length: 100 }, () => 10), bottom: 100 };
+    expect(against({ art: [flank] })).toBe(false);
+  });
+
+  it('reads a band wider than a column as one top across it', () => {
+    const banded: ArtSilhouette = { x: 0, step: 50, tops: [null, 10], bottom: 100 };
+    expect(against({ art: [banded] })).toBe(false);
+    expect(against({ art: [banded], characterX: 1000 })).toBe(true);
+  });
+
+  it('crosses when any texture the ride shows at rest crosses, and never with no art at all', () => {
+    const empty: ArtSilhouette = { x: 0, step: 1, tops: Array.from({ length: 100 }, () => null), bottom: 0 };
+    expect(against({ art: [empty, head] })).toBe(true);
+    expect(against({ art: [] })).toBe(false);
   });
 });
 
@@ -250,6 +355,34 @@ describe('the subjects a drive stops for, as the scene lists them', () => {
         }
       }
     }
+  });
+
+  it("aims past a character when resting short of them would put the ride's art across their feet (ADR-0049)", () => {
+    const level = LEVELS.find(
+      (candidate) => candidate.characters.length > 0 && candidate.rides.some((ride) => ride.turnsWithRider),
+    );
+    expect(level, 'no shipped level places a character beside a ride that turns').toBeDefined();
+    if (level === undefined) return;
+    const ride = level.rides.find((candidate) => candidate.turnsWithRider);
+    const tuning = level.locomotion.find((candidate) => candidate.mode === ride?.mode);
+    const character = level.characters[0];
+    if (ride === undefined || tuning === undefined || character === undefined) throw new Error('no ridden mode');
+
+    /* Art that rises 10 px over the walking line in every column ahead of the
+       rider, and is not there behind them: whoever stands ahead has it across
+       their feet. */
+    const width = ride.riderAnchor.x + 800;
+    const ahead: ArtSilhouette = {
+      x: 0,
+      step: 1,
+      tops: Array.from({ length: width }, (_, column) => (column > ride.riderAnchor.x ? ride.groundLineY - 10 : null)),
+      bottom: ride.groundLineY,
+    };
+    const id = String(character.characterId);
+    const blind = stopSubjectsFor({ level, rig: RIG, tuning, ride }).find((subject) => subject.id === id);
+    const seeing = stopSubjectsFor({ level, rig: RIG, tuning, ride, rideArt: [ahead] }).find((subject) => subject.id === id);
+    expect(blind?.rest?.right ?? Number.NaN, 'the case needs a stop that rests short of them').toBeLessThan(character.position.x);
+    expect(seeing?.rest?.right ?? Number.NaN).toBeGreaterThan(character.position.x);
   });
 
   it('aims level with everybody when there is no rig to measure, or nothing can be engaged', () => {

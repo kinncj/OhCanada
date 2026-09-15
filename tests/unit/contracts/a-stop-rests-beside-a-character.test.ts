@@ -20,16 +20,24 @@
  *     or at the spawn;
  *  4. the same, arithmetically, for a drive arriving from either side, anywhere
  *     inside the landing slack the stop line leaves;
- *  5. a ride's footprint lies inside its own art.
+ *  5. a ride's footprint lies inside its own art;
+ *  6. no character's feet are drawn inside a ride's art at rest (ADR-0049): the
+ *     Alberta guide stood on the horse's head, because the head crossed his feet.
  *
- * And the gate is shown to fail: a stop level with each character — the old
- * one — overlaps them on every level that places one.
+ * Clear means clear by a margin, not by a pixel: the arithmetic keeps
+ * `STAND_OFF_GAP_PX`, and a real drive, which lands anywhere in its slack, keeps
+ * at least half of it.
+ *
+ * And the gates are shown to fail: a stop level with each character — the old
+ * one — overlaps them on every level that places one, and somewhere in reach a
+ * ride draws over a character's feet.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import sharp from 'sharp';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
   brakingIntent,
@@ -37,12 +45,15 @@ import {
   createAutoStop,
   restXFor,
 } from '@adapters/phaser/auto-stop';
+import { SILHOUETTE_ALPHA_MIN, silhouetteFromRgba, type ArtSilhouette } from '@adapters/phaser/art-silhouette';
 import { artboardFor, playerArtboard } from '@adapters/phaser/character-cast';
+import { FOOT_PARTS, figureBoxes, mirrorBox } from '@adapters/phaser/figure-extent';
 import { groundYAt, levelBounds, slopeAt } from '@adapters/phaser/ground-profile';
 import { parseLevelDocument, type SceneLevel } from '@adapters/phaser/level-document';
 import { applyBounds, createLocomotion } from '@adapters/phaser/locomotion';
-import { rideFor } from '@adapters/phaser/ride';
+import { rideFor, ridePlacement } from '@adapters/phaser/ride';
 import {
+  STAND_OFF_GAP_PX,
   figureSpan,
   landingSlackPx,
   mirrorSpan,
@@ -52,7 +63,14 @@ import {
   type HorizontalSpan,
 } from '@adapters/phaser/stand-off';
 
-import type { LevelCharacter, LocomotionIntent, LocomotionTuning, RigDocument } from '@application/ports';
+import type {
+  LevelCharacter,
+  LocomotionIntent,
+  LocomotionTuning,
+  Ride,
+  RideArt,
+  RigDocument,
+} from '@application/ports';
 
 import rigJson from '@content/characters/rig.json';
 import gameConfigJson from '@content/game.config.json';
@@ -61,6 +79,65 @@ const RIG = rigJson as unknown as RigDocument;
 const CONFIG = gameConfigJson as { readonly locomotionModes: readonly string[] };
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 const DT = 1 / 60;
+
+/**
+ * The least clear air a real drive leaves beside a character. Half the stand-off
+ * gap: a stop lands anywhere in one frame's slack, and on the Prairies that has
+ * measured 14 px of the 16 aimed for.
+ */
+const CLEARANCE_PX = STAND_OFF_GAP_PX / 2;
+
+interface Raster {
+  readonly width: number;
+  readonly height: number;
+  readonly pixels: Uint8Array;
+}
+
+/** Every ride texture a level can show at rest, rasterised once at 1x as `make assets` does. */
+const rasters = new Map<string, Raster>();
+
+/** The textures a ride shows while it stands: its rest frame, and the still reduced motion holds (ADR-0035). */
+const atRest = (layer: RideArt): readonly string[] => [
+  ...new Set([layer.key, ...(layer.cycle === undefined ? [] : [layer.cycle.rest])]),
+];
+
+const rideSource = (levelId: string, key: string): string =>
+  `${REPO_ROOT}assets/src/svg/${levelId}/${key.slice(levelId.length + 1)}@1x.svg`;
+
+function rasterOf(level: SceneLevel, key: string): Raster {
+  const raster = rasters.get(rideSource(String(level.id), key));
+  if (raster === undefined) throw new Error(`${String(level.id)}: "${key}" was not rasterised`);
+  return raster;
+}
+
+/** A ride's silhouette in each texture it shows at rest, one band per column, as the scene reads it for a stop. */
+function rideArtOf(level: SceneLevel, ride: Ride | null): readonly ArtSilhouette[] {
+  if (ride === null) return [];
+  return ride.art
+    .flatMap((layer) => atRest(layer))
+    .map((key) => {
+      const raster = rasterOf(level, key);
+      const art = silhouetteFromRgba(raster.pixels, raster.width, raster.height, { step: 1 });
+      if (art === null) throw new Error(`${String(level.id)}: "${key}" draws nothing`);
+      return art;
+    });
+}
+
+beforeAll(async () => {
+  for (const level of LEVELS) {
+    for (const ride of level.rides) {
+      for (const key of ride.art.flatMap((layer) => atRest(layer))) {
+        const path = rideSource(String(level.id), key);
+        if (rasters.has(path)) continue;
+        const { data, info } = await sharp(readFileSync(path), { density: 72 })
+          .ensureAlpha()
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        rasters.set(path, { width: info.width, height: info.height, pixels: data });
+      }
+    }
+  }
+}, 120_000);
 
 const LEVELS: readonly SceneLevel[] = readdirSync(`${REPO_ROOT}content/levels`)
   .filter((name) => name.endsWith('.json'))
@@ -130,7 +207,7 @@ function restAt(
   const braking = createLocomotion(brakingTuning(tuning));
   const watch = createAutoStop(tuning);
   const bounds = levelBounds(level.ground, level.size);
-  const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride });
+  const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride, rideArt: rideArtOf(level, ride) });
 
   let state = driving.spawn(level.spawn.x, groundYAt(level.ground, level.spawn.x), 'right');
   let pressUntil = -1;
@@ -213,14 +290,18 @@ describe('a drive comes to rest beside each character, not inside them (ADR-0037
 
         const body = place(character.position.x, standing(character));
         const clear = overlap(place(rest.x, rider(tuning, ride, 1)), body);
-        expect(clear, `${where}: the rider at ${String(Math.round(rest.x))} overlaps them by ${String(Math.round(clear))} px`).toBeLessThan(0);
+        expect(
+          clear,
+          `${where}: the rider at ${String(Math.round(rest.x))} is ${String(Math.round(-clear))} px clear of them, ` +
+            `less than ${String(CLEARANCE_PX)} px`,
+        ).toBeLessThanOrEqual(-CLEARANCE_PX);
 
         if (ride !== null) {
           const footprint = overlap(place(rest.x, rideFootprintSpan(ride)), body);
           expect(
             footprint,
             `${where}: they stand inside the ride's footprint at its stop — seen through its glass, inside the car`,
-          ).toBeLessThan(0);
+          ).toBeLessThanOrEqual(-CLEARANCE_PX);
         }
       });
     }
@@ -230,7 +311,7 @@ describe('a drive comes to rest beside each character, not inside them (ADR-0037
     it(`${nameOf(level, tuning)}: from either side, anywhere the stop can land, clear and in reach`, () => {
       const reach = tuning.interaction?.reachPx ?? 0;
       const slack = landingSlackPx(tuning);
-      const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride });
+      const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride, rideArt: rideArtOf(level, ride) });
       for (const character of level.characters) {
         const id = String(character.characterId);
         const subject = subjects.find((candidate) => candidate.id === id);
@@ -242,7 +323,10 @@ describe('a drive comes to rest beside each character, not inside them (ADR-0037
           for (const landed of [aim, aim - heading * slack]) {
             const where = `${nameOf(level, tuning, character)} heading ${heading > 0 ? 'right' : 'left'} at ${String(Math.round(landed))}`;
             expect(Math.abs(landed - character.position.x), where).toBeLessThanOrEqual(reach);
-            expect(overlap(place(landed, rider(tuning, ride, heading)), body), where).toBeLessThan(0);
+            expect(
+              overlap(place(landed, rider(tuning, ride, heading)), body),
+              `${where}: closer than the ${String(STAND_OFF_GAP_PX)} px the stand-off keeps`,
+            ).toBeLessThanOrEqual(-STAND_OFF_GAP_PX + 1e-6);
           }
         }
       }
@@ -291,5 +375,161 @@ describe('a drive comes to rest beside each character, not inside them (ADR-0037
       }
     }
     expect(checked).toBeGreaterThan(0);
+  });
+});
+
+/* ------------------------------------------------- feet and ride art (ADR-0049) --- */
+
+/** Every (level, mode) that rides, and places somebody to ride up to. */
+const RIDDEN = CASES.flatMap(({ level, tuning, ride }) => (ride === null ? [] : [{ level, tuning, ride }]));
+
+interface Feet {
+  /** Pixels of the character's foot windows that the ride's art is drawn over. */
+  readonly covered: number;
+  readonly total: number;
+  /** Whether the ride's art reaches the walking line in every column of the character's body. */
+  readonly flank: () => boolean;
+}
+
+/** A character's feet against one texture of a ride, with the rider at rest at `landed`. */
+function feetAgainst(
+  level: SceneLevel,
+  ride: Ride,
+  character: LevelCharacter,
+  landed: number,
+  heading: 1 | -1,
+  raster: Raster,
+): Feet {
+  const placement = ridePlacement({
+    ride,
+    size: { width: raster.width, height: raster.height },
+    riderX: landed,
+    groundY: groundYAt(level.ground, landed),
+    facing: heading > 0 ? 'right' : 'left',
+    bobPx: 0,
+  });
+  const artLeft = placement.centreX - raster.width / 2;
+  const drawn = (x: number, y: number): boolean => {
+    const column = Math.floor(x - artLeft);
+    const inArt = placement.flipX ? raster.width - 1 - column : column;
+    const row = Math.floor(y - placement.top);
+    if (inArt < 0 || row < 0 || inArt >= raster.width || row >= raster.height) return false;
+    return (raster.pixels[(row * raster.width + inArt) * 4 + 3] ?? 0) >= SILHOUETTE_ALPHA_MIN;
+  };
+
+  const board = artboardFor(RIG, String(character.characterId));
+  const feet = (board === null ? null : figureBoxes(RIG, board.artboard, null, { parts: FOOT_PARTS })) ?? [];
+  if (feet.length === 0) throw new Error(`the rig draws no feet for "${String(character.characterId)}"`);
+  const sole = groundYAt(level.ground, character.position.x);
+
+  let covered = 0;
+  let total = 0;
+  for (const foot of feet.map((box) => (character.facing === 'left' ? mirrorBox(box) : box))) {
+    const left = character.position.x + foot.x;
+    const top = sole + foot.y;
+    for (let y = Math.floor(top); y < top + foot.height; y += 1) {
+      for (let x = Math.floor(left); x < left + foot.width; x += 1) {
+        total += 1;
+        if (drawn(x, y)) covered += 1;
+      }
+    }
+  }
+
+  const flank = (): boolean => {
+    const [from, to] = place(character.position.x, standing(character));
+    for (let x = Math.floor(from); x < to; x += 1) {
+      let reaches = false;
+      for (let y = Math.floor(placement.top); y <= sole && !reaches; y += 1) reaches = drawn(x, y);
+      if (!reaches) return false;
+    }
+    return true;
+  };
+  return { covered, total, flank };
+}
+
+/** `null` when the feet are wholly clear of the ride, or wholly behind a flank of it; what is wrong otherwise. */
+function feetProblem(feet: Feet): string | null {
+  if (feet.covered === 0) return null;
+  if (feet.covered < feet.total) {
+    return (
+      `${String(feet.covered)} of their ${String(feet.total)} foot pixels are under the ride's art and the rest ` +
+      'are not, so they read as standing on it'
+    );
+  }
+  return feet.flank() ? null : 'their feet are hidden by ride art that does not run the width of them';
+}
+
+describe("no character's feet are drawn inside a ride's art at rest (ADR-0049)", () => {
+  it('has a ridden mode and a character to check, so this is not a pass over nothing (ADR-0024)', () => {
+    expect(RIDDEN.length).toBeGreaterThan(0);
+  });
+
+  for (const { level, tuning, ride } of RIDDEN) {
+    it(`${nameOf(level, tuning)}: every character's feet are wholly clear of the ride, or wholly behind a flank of it, wherever the stop lands`, () => {
+      const slack = landingSlackPx(tuning);
+      const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride, rideArt: rideArtOf(level, ride) });
+      const problems: string[] = [];
+      for (const character of level.characters) {
+        const subject = subjects.find((candidate) => candidate.id === String(character.characterId));
+        expect(subject?.rest, `${nameOf(level, tuning, character)} has no rest point`).toBeDefined();
+        if (subject === undefined) continue;
+        for (const heading of [1, -1] as const) {
+          const aim = restXFor(subject, heading);
+          for (const landed of [aim, aim - heading * slack]) {
+            for (const key of ride.art.flatMap((layer) => atRest(layer))) {
+              const problem = feetProblem(feetAgainst(level, ride, character, landed, heading, rasterOf(level, key)));
+              if (problem !== null) {
+                problems.push(
+                  `${nameOf(level, tuning, character)} heading ${heading > 0 ? 'right' : 'left'} at ` +
+                    `${String(Math.round(landed))} over "${key}": ${problem}`,
+                );
+              }
+            }
+          }
+        }
+      }
+      expect(problems, problems.join('\n')).toEqual([]);
+    });
+  }
+
+  it("the gate can fail: somewhere in reach of a character, a ride's art crosses their feet", () => {
+    let found = 0;
+    for (const { level, tuning, ride } of RIDDEN) {
+      const reach = tuning.interaction?.reachPx ?? 0;
+      for (const key of ride.art.flatMap((layer) => atRest(layer))) {
+        const raster = rasterOf(level, key);
+        for (const character of level.characters) {
+          for (const heading of [1, -1] as const) {
+            for (let landed = character.position.x - reach; landed <= character.position.x + reach; landed += 8) {
+              if (feetProblem(feetAgainst(level, ride, character, landed, heading, raster)) !== null) found += 1;
+            }
+          }
+        }
+      }
+    }
+    expect(found, "no place in reach puts a ride's art over a character's feet, so the check above proves nothing").toBeGreaterThan(0);
+  });
+
+  it("the gate can fail: a stop that does not read the ride's art rests it across somebody's feet", () => {
+    let crossed = 0;
+    for (const { level, tuning, ride } of RIDDEN) {
+      const slack = landingSlackPx(tuning);
+      const blind = stopSubjectsFor({ level, rig: RIG, tuning, ride });
+      for (const character of level.characters) {
+        const subject = blind.find((candidate) => candidate.id === String(character.characterId));
+        if (subject === undefined) continue;
+        for (const heading of [1, -1] as const) {
+          const aim = restXFor(subject, heading);
+          for (const landed of [aim, aim - heading * slack]) {
+            for (const key of ride.art.flatMap((layer) => atRest(layer))) {
+              if (feetProblem(feetAgainst(level, ride, character, landed, heading, rasterOf(level, key))) !== null) {
+                crossed += 1;
+              }
+            }
+          }
+        }
+      }
+    }
+    expect(crossed, "the stop ADR-0037 aimed for already kept every foot clear, so reading the art proves nothing").toBeGreaterThan(0);
   });
 });

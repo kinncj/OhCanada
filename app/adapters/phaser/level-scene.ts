@@ -50,11 +50,18 @@ import {
   type AutoStopWatch,
 } from './auto-stop';
 import {
+  MARK_RING_FRACTION,
+  MARK_TIP_FRACTION,
   affordanceMarks,
+  markAnchor,
+  markExtent,
   markPulse,
   type AffordanceMark,
   type AffordanceSubject,
 } from './interaction-affordance';
+import { placeSilhouette, silhouetteFromRgba, type ArtSilhouette } from './art-silhouette';
+import { figureSilhouette } from './figure-extent';
+import { restingHeadBoxes } from './mark-clearance';
 import {
   MAX_PHASE_STEP,
   PHASE_REFRESH_MS,
@@ -492,6 +499,10 @@ export class LevelScene extends Phaser.Scene {
     readonly position: Vec2;
     readonly npc: boolean;
     readonly rect: TargetRect;
+    /** Where inside `rect` the art is, for the mark to point at (ADR-0049). */
+    readonly art: ArtSilhouette | null;
+    /** The player's head wherever a stop holds them here, for the mark to keep off. */
+    readonly clear: readonly TargetRect[];
   }[] = [];
   /**
    * The same set again, as `auto-stop.ts` wants it: an id and a world x.
@@ -503,6 +514,18 @@ export class LevelScene extends Phaser.Scene {
   #stopSubjects: readonly AutoStopSubject[] = [];
   /** Where each engageable thing was drawn, filled in by the paint passes. */
   readonly #drawnRects = new Map<string, TargetRect>();
+  /**
+   * Where inside each drawn rectangle the art actually is (ADR-0049): a texture's
+   * alpha for a landmark, the rig's frame windows for a character. A rectangle's
+   * top edge is not the art, and a mark placed over one floated in empty sky.
+   */
+  readonly #drawnArt = new Map<string, ArtSilhouette>();
+  /**
+   * The ride's art in each texture it shows at rest, in its own pixels, a band
+   * per column: what a stop reads to keep a ride off a character's feet
+   * (ADR-0049). Empty for no ride, or a ride whose art could not be read.
+   */
+  #rideSilhouettes: readonly ArtSilhouette[] = [];
   #jumpQueued = false;
   #interactQueued = false;
   /** An engaged puppet to advance to its gesture on the frame a pause freezes. See `#holdGesture`. */
@@ -1656,29 +1679,39 @@ export class LevelScene extends Phaser.Scene {
      * the level document declaring the role, and the list is derived in
      * `level-document.ts`.
      */
-    this.#reachTargets = [
-      ...level.reachablePois.map((poi) => ({
-        id: poi.id as string,
-        position: poi.position,
-        npc: false,
-        rect: rectFor(poi.id as string, poi.position),
-      })),
-      ...level.characters.map((character) => ({
-        id: character.characterId as string,
-        position: character.position,
-        npc: true,
-        rect: rectFor(character.characterId as string, character.position),
-      })),
-    ];
-    /* The same subjects, in the same order, with a rest point beside every
-       character the rig can measure: a drive comes to rest next to a person,
-       not inside them (ADR-0037, `stand-off.ts`). */
+    /* The subjects a drive stops for, in the order the targets are listed below,
+       with a rest point beside every character the rig can measure: a drive
+       comes to rest next to a person, not inside them (ADR-0037, `stand-off.ts`). */
     this.#stopSubjects = stopSubjectsFor({
       level,
       rig: this.#options.rig,
       tuning: this.#tuning,
       ride: this.#ride,
+      rideArt: this.#rideSilhouettes,
     });
+    /* Where the player's head is while each of those stops holds them, so no
+       mark is drawn on it (ADR-0049, `mark-clearance.ts`). */
+    const heads = restingHeadBoxes({
+      ground: level.ground,
+      subjects: this.#stopSubjects,
+      rig: this.#options.rig,
+      tuning: this.#tuning,
+      ride: this.#ride,
+    });
+    const target = (id: string, position: Vec2, npc: boolean) => ({
+      id,
+      position,
+      npc,
+      rect: rectFor(id, position),
+      art: this.#drawnArt.get(id) ?? null,
+      clear: heads.get(id) ?? [],
+    });
+    this.#reachTargets = [
+      ...level.reachablePois.map((poi) => target(poi.id as string, poi.position, false)),
+      ...level.characters.map((character) =>
+        target(character.characterId as string, character.position, true),
+      ),
+    ];
   }
 
   #reachPx(): number {
@@ -2187,6 +2220,8 @@ export class LevelScene extends Phaser.Scene {
           height: image.height,
         };
         this.#drawnRects.set(poi.id as string, rect);
+        const art = this.#textureSilhouette(poi.artKey, rect);
+        if (art !== null) this.#drawnArt.set(poi.id as string, art);
         this.#artBounds.push({ kind: 'actor', rect });
         continue;
       }
@@ -2263,6 +2298,17 @@ export class LevelScene extends Phaser.Scene {
           this.#drawnRects.set(id, rect);
           this.#artBounds.push({ kind: 'actor', rect });
         }
+        const rig = this.#options.rig;
+        const board = artboardFor(rig, id);
+        const art =
+          rig === null || rig === undefined || board === null
+            ? null
+            : figureSilhouette(rig, board.artboard, {
+                x: character.position.x,
+                groundY: y,
+                facing: character.facing,
+              });
+        if (art !== null) this.#drawnArt.set(id, art);
         continue;
       }
 
@@ -2378,6 +2424,17 @@ export class LevelScene extends Phaser.Scene {
       const object = this.add.image(0, 0, layer.key).setOrigin(0.5, 0).setDepth(depth);
       this.#rideArt.push({ object, layer, shown: layer.key });
     }
+
+    /* Where the ride's art is while it stands — its rest frame, and the still
+       reduced motion holds — so a stop never rests it across somebody's feet
+       (ADR-0049, `stand-off.ts`). One band per column: a foot is narrow. */
+    const standing = new Set(
+      ride.art.flatMap((layer) => [layer.key, ...(layer.cycle === undefined ? [] : [layer.cycle.rest])]),
+    );
+    this.#rideSilhouettes = [...standing].flatMap((key) => {
+      const read = this.#textureLocalSilhouette(key, 1);
+      return read === null ? [] : [read.art];
+    });
 
     if (ride.track !== undefined) {
       const size = sizeOf(ride.track.artKey);
@@ -2643,6 +2700,58 @@ export class LevelScene extends Phaser.Scene {
     };
   }
 
+  /**
+   * Where a landmark's art is inside its rectangle, read from its texture's alpha
+   * once, when the level is built (ADR-0049).
+   *
+   * The region read is exactly what `add.image(x, y, key)` draws: the texture's
+   * base frame. Through a 2D canvas that is dropped as soon as it is read, like
+   * `#textureRowColour`: no GL texture, so nothing on the decoded-texture budget,
+   * and no GPU readback. `null` for a source that cannot be drawn into a canvas,
+   * and the mark then goes over the rectangle, as it always did.
+   */
+  #textureSilhouette(key: string, rect: TargetRect): ArtSilhouette | null {
+    const read = this.#textureLocalSilhouette(key);
+    return read === null
+      ? null
+      : placeSilhouette(read.art, { x: rect.x, y: rect.y, scale: rect.width / read.width });
+  }
+
+  /** A texture's silhouette in its own pixels, with the width it was read at, or `null`. */
+  #textureLocalSilhouette(
+    key: string,
+    step?: number,
+  ): { readonly art: ArtSilhouette; readonly width: number } | null {
+    if (!this.textures.exists(key)) return null;
+    try {
+      const texture = this.textures.get(key);
+      const source: unknown = texture.getSourceImage();
+      const frame = texture.get();
+      if (!isDrawableSource(source) || typeof document === 'undefined') return null;
+      const width = Math.round(frame.cutWidth);
+      const height = Math.round(frame.cutHeight);
+      if (width <= 0 || height <= 0) return null;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (context === null) return null;
+      context.drawImage(source, frame.cutX, frame.cutY, width, height, 0, 0, width, height);
+      const art = silhouetteFromRgba(
+        context.getImageData(0, 0, width, height).data,
+        width,
+        height,
+        step === undefined ? {} : { step },
+      );
+      canvas.width = 0;
+      canvas.height = 0;
+      return art === null ? null : { art, width };
+    } catch (cause) {
+      console.warn(`[level] could not read where "${key}" is drawn; marks and stops fall back to its rectangle.`, cause);
+      return null;
+    }
+  }
+
   /** Where a rig-composed character stands, in world space. */
   #characterRect(x: number, groundY: number): TargetRect | null {
     const space = this.#options.rig?.characterSpace;
@@ -2793,6 +2902,8 @@ export class LevelScene extends Phaser.Scene {
       npc: target.npc,
       position: target.position,
       rect: target.rect,
+      art: target.art,
+      clear: target.clear,
     }));
   }
 
@@ -2856,7 +2967,7 @@ export class LevelScene extends Phaser.Scene {
    * contrast requirement names.
    */
   #drawMark(object: Phaser.GameObjects.Graphics, mark: AffordanceMark): void {
-    const radius = mark.size * 0.34;
+    const radius = mark.size * MARK_RING_FRACTION;
     const bright = blendColors(toPhaserColor(this.#palette.horizon), 0xffffff, 0.3);
     const muted = toPhaserColor(this.#palette.inkMuted);
     const halo = toPhaserColor(this.#palette.ink);
@@ -2885,7 +2996,14 @@ export class LevelScene extends Phaser.Scene {
     object.fillStyle(bright, 1);
     object.fillCircle(0, 0, radius * 0.34);
     /* The chevron points at the thing, so a mark over a crowd is unambiguous. */
-    object.fillTriangle(-radius * 0.5, radius * 0.78, radius * 0.5, radius * 0.78, 0, radius * 1.4);
+    object.fillTriangle(
+      -radius * 0.5,
+      radius * 0.78,
+      radius * 0.5,
+      radius * 0.78,
+      0,
+      mark.size * MARK_TIP_FRACTION,
+    );
   }
 
   /**
@@ -2903,11 +3021,13 @@ export class LevelScene extends Phaser.Scene {
     const pulse = markPulse(this.#elapsedMs, reduced);
 
     for (const entry of this.#marks.values()) {
-      const half = entry.mark.size / 2;
-      const visible = intersectsView(
-        { x: entry.mark.x - half, y: entry.mark.y - half, width: entry.mark.size, height: entry.mark.size },
-        view,
-      );
+      /* Shown only while the column it points at is on screen: half a ring at the
+         edge of the glass, pointing at something off it, is a mark for nothing. */
+      const anchor = markAnchor(entry.mark);
+      const visible =
+        anchor.x >= view.x &&
+        anchor.x <= view.x + view.width &&
+        intersectsView(markExtent(entry.mark), view);
       entry.object.setVisible(visible);
       if (!visible) continue;
       if (entry.mark.state === 'ready') entry.object.setScale(pulse);
