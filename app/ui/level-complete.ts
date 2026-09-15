@@ -94,6 +94,7 @@
 
 import { text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { createStamp } from './screen-art';
 import { createScreen, type Screen } from './screen';
 
 export interface LevelCompleteOptions {
@@ -219,6 +220,17 @@ export interface LevelCompleteContent {
   readonly progressMessage?: string;
   /** The level that just opened, when one did. */
   readonly next?: LevelCompleteNext;
+  /**
+   * The level's landmark picture, whose shape the stamp is pressed in
+   * (ADR-0041). A URL the composition root resolved from the level's own art.
+   *
+   * Decoration: the stamp sentence already names the place, so the stamp is
+   * `aria-hidden`. Inked on every card that is not `'unfinished'` — the card is
+   * only drawn that way when the stamp is earned or already held (ADR-0036) —
+   * and an outline waiting to be pressed on the unfinished card. Absent draws
+   * no stamp at all.
+   */
+  readonly stampArt?: string;
 }
 
 /**
@@ -275,6 +287,9 @@ export function createLevelComplete(
     id: 'tn-level-complete',
     testId: 'quest-complete-card',
     locale,
+    /* A sheet over the level the player just finished, not a screen that
+       replaces it (ADR-0041). */
+    className: 'tn-screen--sheet',
     /* Escape is "keep playing", not "choose a level": leaving a dialog must
        never be a route the player did not ask for. */
     onEscape: keepPlaying,
@@ -289,6 +304,19 @@ export function createLevelComplete(
   const title = element(doc, 'h1', { id: 'tn-level-complete-title' });
   screen.labelledBy(title);
 
+  /*
+   * The level's stamp, pressed beside the heading (ADR-0041): a ring and the
+   * silhouette of the level's landmark, in stamp ink. `aria-hidden`, because
+   * the stamp sentence below already names the place and the live region
+   * already says it was earned — a picture that said so a third time would be
+   * heard as nothing and seen as the only reward on the card.
+   */
+  const stamp = createStamp(doc, { testId: 'quest-complete-stamp-art' });
+  const head = element(doc, 'div', {
+    className: 'tn-complete__head',
+    children: [title, stamp.element],
+  });
+
   const body = element(doc, 'div', {
     id: 'tn-level-complete-body',
     className: 'tn-screen__notice',
@@ -296,7 +324,7 @@ export function createLevelComplete(
   screen.describedBy(body);
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
-  screen.card.append(title, body, actions);
+  screen.card.append(head, body, actions);
 
   /** Everything the card is saying right now, in reading order. */
   function lines(): HTMLElement[] {
@@ -352,6 +380,9 @@ export function createLevelComplete(
     /* Which card this is, as a fact a test or a stylesheet can read without
        parsing the heading's words. */
     screen.element.setAttribute('data-reason', content.reason ?? 'level');
+    /* Inked when the card is the reward, an outline when it is the reminder of
+       what is left (ADR-0036: the unfinished card earns nothing). */
+    stamp.show(content.stampArt, content.reason !== 'unfinished');
 
     if (content.reason === 'unfinished') {
       renderUnfinished();
@@ -520,6 +551,7 @@ export function createLevelComplete(
     },
 
     destroy(): void {
+      stamp.destroy();
       screen.destroy();
     },
   };

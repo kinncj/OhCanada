@@ -53,6 +53,7 @@ import {
 import { hasCopyRow, isUiLocale, text, type UiLocale } from '../../app/ui/copy';
 import { creatorSlots, repairSelection } from '../../app/bootstrap/character-slots';
 import { creatorArt } from '../../app/bootstrap/creator-art';
+import { assetsBaseUrl, createScreenArt } from '../../app/bootstrap/screen-art';
 /* The adapter file, not the phaser barrel: the picture needs no Phaser, and the
    harness should not load a game engine to scan a DOM screen. */
 import { createCharacterPreview } from '../../app/adapters/phaser/character-preview';
@@ -347,6 +348,71 @@ const FIXED_CHARACTER = (
 
 const level = LEVEL[locale];
 
+/*
+ * The pictures the screens draw (ADR-0041).
+ *
+ * `?art=fixture` hands every screen a small inline drawing, so a scan meets a
+ * picture that has really loaded, without a network or a build. `?art=real`
+ * resolves the game's own art from `assets/dist` through
+ * `app/bootstrap/screen-art.ts`, exactly as the composition root does. No
+ * parameter draws no picture, so every scan written before pictures existed
+ * still measures the screen it was written for.
+ *
+ * The fixtures are test drawings and ship in no build.
+ */
+const ART = params.get('art');
+const svgUri = (viewBox: string, body: string): string =>
+  `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${body}</svg>`,
+  )}`;
+const FIXTURE_PICTURE = svgUri(
+  '0 0 100 120',
+  '<rect x="32" y="24" width="36" height="96" fill="#f0f2f5"/><rect x="28" y="4" width="44" height="24" fill="#d8262c"/>',
+);
+const FIXTURE_FACE = svgUri(
+  '0 0 100 100',
+  '<circle cx="50" cy="52" r="38" fill="#c68550"/><circle cx="64" cy="46" r="5" fill="#1a2036"/>',
+);
+const FIXTURE_FIGURE = svgUri(
+  '0 0 100 200',
+  '<rect x="28" y="52" width="44" height="140" rx="14" fill="#153f86"/><circle cx="50" cy="30" r="24" fill="#c68550"/>',
+);
+const screenArt =
+  ART === 'real'
+    ? createScreenArt({
+        fetch: (url) => window.fetch(url),
+        baseUrl: assetsBaseUrl(),
+        devicePixelRatio: () => window.devicePixelRatio,
+        document,
+      })
+    : null;
+
+/** A level picture, as the landmark card and the stamp are handed one. */
+async function landmarkPicture(artKey: string): Promise<string | undefined> {
+  if (ART === 'fixture') return FIXTURE_PICTURE;
+  if (screenArt === null) return undefined;
+  await screenArt.prime();
+  return screenArt.pictureOf(artKey) ?? undefined;
+}
+
+/** A speaker's face, as the dialogue is handed one. */
+async function portraitOf(characterId: string): Promise<string | undefined> {
+  if (ART === 'fixture') return FIXTURE_FACE;
+  if (screenArt === null) return undefined;
+  await screenArt.paintPortraits([characterId]);
+  return screenArt.portraitOf(characterId) ?? undefined;
+}
+
+const titleFigure: (() => Promise<string | null>) | undefined =
+  ART === 'fixture'
+    ? () => Promise.resolve(FIXTURE_FIGURE)
+    : screenArt === null
+      ? undefined
+      : () => screenArt.figure(FIXED_CHARACTER);
+
+const withArt = (art: string | undefined): { readonly art?: string } =>
+  art === undefined ? {} : { art };
+
 /**
  * The "About this place" panel's two branches (`docs/content-review.md` §10.2).
  *
@@ -445,6 +511,7 @@ switch (screen) {
   }
 
   case 'dialogue': {
+    const portrait = await portraitOf('officer');
     createDialogue(ui, {
       speakerName: locale === 'fr' ? 'Agent' : 'Officer',
       locale,
@@ -468,6 +535,7 @@ switch (screen) {
          `content/quests/` is the content author's. */
       accept: { label: text(locale, 'quest.accept'), onSelect: () => undefined },
       decline: { label: text(locale, 'quest.decline'), onSelect: () => undefined },
+      ...(portrait === undefined ? {} : { portrait }),
     });
     break;
   }
@@ -582,6 +650,10 @@ switch (screen) {
      * level in the chain and a replayed level.
      */
     const walkedPast = params.get('answered') === '0';
+    /* `?reason=unfinished` is the card at the end of a level whose task is not
+       done (ADR-0036): what is left, and the stamp as an outline. */
+    const unfinished = params.get('reason') === 'unfinished';
+    const stampArt = await landmarkPicture('ottawa-landmark-parliament-hill');
     const nothingOpened = params.get('next') === '0';
     /* `?reason=quest` is the quest path — "Task done!" — and the default is the
        path this card is drawn on most: the player reached the end of the level.
@@ -604,7 +676,16 @@ switch (screen) {
       onOpenPassport: () => undefined,
       ...(nothingOpened ? {} : { onPlayNext: () => undefined }),
     }).show({
-      reason: finishedAQuest ? 'quest' : 'level',
+      reason: unfinished ? 'unfinished' : finishedAQuest ? 'quest' : 'level',
+      ...(unfinished
+        ? {
+            leftMessages: [
+              text(locale, 'passport.intro'),
+              text(locale, 'level.unfinished.notStarted'),
+            ],
+          }
+        : {}),
+      ...(stampArt === undefined ? {} : { stampArt }),
       ...(doneMessage === undefined ? {} : { doneMessage }),
       ...(params.get('stamp') === '0'
         ? {}
@@ -671,12 +752,13 @@ switch (screen) {
   }
 
   case 'poi': {
+    const art = await landmarkPicture('ottawa-landmark-parliament-hill');
     createPoiCard(ui, {
       locale,
       announce,
       onClose: () => undefined,
       singleSwitch: store.current.singleSwitch,
-    }).show(level.poi);
+    }).show({ ...level.poi, ...withArt(art) });
     break;
   }
 
@@ -811,7 +893,7 @@ switch (screen) {
           announce,
           onClose: () => undefined,
           restoreFocusTo: () => hud.prompt,
-        }).show(level.poi);
+        }).show({ ...level.poi, ...withArt(await landmarkPicture('ottawa-landmark-parliament-hill')) });
         break;
       /*
        * `docs/content-review.md` §10.2. Scanned over the running level rather
@@ -1108,6 +1190,7 @@ switch (screen) {
       ...(params.get('passport') === '1' ? { onOpenPassport: (): void => undefined } : {}),
       ...(params.get('exam') === '1' ? { onOpenExam: (): void => undefined } : {}),
       examUnfinished: params.get('unfinished') === '1',
+      ...(titleFigure === undefined ? {} : { titleFigure }),
       ...(params.get('export') === '1' ? { onExportSave: (): void => undefined } : {}),
     });
 

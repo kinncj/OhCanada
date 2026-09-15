@@ -172,6 +172,12 @@ export interface ShellOptions {
    */
   readonly examUnfinished?: boolean;
   /**
+   * The player's character on the title screen (ADR-0041): painted by the
+   * composition root and handed back as an image URL, or `null`. Absent, the
+   * title screen draws its landscape alone.
+   */
+  readonly titleFigure?: () => Promise<string | null>;
+  /**
    * The passport, from the level select (`TN-PASSPORT-01`).
    *
    * The same seam as {@link ShellOptions.onOpenStudy} and for the same reason:
@@ -565,6 +571,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
       ...(options.onOpenExam === undefined ? {} : { onOpenExam: options.onOpenExam }),
       examUnfinished,
+      ...(options.titleFigure === undefined ? {} : { figure: options.titleFigure }),
       onOpenSettings: () => {
         openSettings();
       },

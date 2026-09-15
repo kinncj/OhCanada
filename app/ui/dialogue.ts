@@ -18,11 +18,21 @@
  * choosing is not a decline"), so Escape and Close route to `onClose` and never
  * to the decline handler.
  *
+ * **Who is speaking, drawn (ADR-0041).** Beside the speaker's name sits a
+ * portrait: the character's face, painted by the composition root from the
+ * level's own puppet, or — when the speaker is a landmark, as on Peggy's Cove and
+ * in the North — the landmark's own picture, never a face. It is decoration: the
+ * dialog is already named by the speaker, so the portrait is `alt=""` inside an
+ * `aria-hidden` frame (`./screen-art.ts`), and a speaker with no portrait draws
+ * the name alone. The dialogue is a sheet over the level, so the person the
+ * player walked up to stays in view, dimmed, above it.
+ *
  * DOM only (ADR-0005).
  */
 
 import { type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { createArtFrame } from './screen-art';
 import { createScreen, type Screen } from './screen';
 
 export interface DialogueChoice {
@@ -38,6 +48,11 @@ export interface DialogueContent {
   readonly decline?: DialogueChoice;
   /** For a line with nothing to decide: a single way onward. */
   readonly next?: DialogueChoice;
+  /**
+   * The speaker's portrait, as a URL. Decoration only: absent draws the name
+   * alone, which is every fact the dialog has.
+   */
+  readonly portrait?: string;
 }
 
 export interface DialogueOptions {
@@ -70,7 +85,7 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
     id: 'tn-dialogue',
     testId: 'dialogue',
     locale: options.locale,
-    className: 'tn-screen--dialogue',
+    className: 'tn-screen--dialogue tn-screen--sheet',
     ...(options.onClose === undefined ? {} : { onEscape: options.onClose }),
     ...(options.announce === undefined ? {} : { announce: options.announce }),
     switch: {
@@ -95,6 +110,18 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
   });
   screen.labelledBy(speaker);
 
+  const portrait = createArtFrame(doc, {
+    className: 'tn-dialogue__portrait',
+    testId: 'dialogue-portrait',
+  });
+
+  /* The face and the name read as one line: who is talking. Presentation only;
+     the heading is still the first thing in reading order that is read. */
+  const head = element(doc, 'div', {
+    className: 'tn-dialogue__head',
+    children: [portrait.element, speaker],
+  });
+
   const body = element(doc, 'div', {
     id: 'tn-dialogue-text',
     testId: 'dialogue-text',
@@ -103,7 +130,7 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
   screen.describedBy(body);
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
-  screen.card.append(speaker, body, actions);
+  screen.card.append(head, body, actions);
 
   return {
     element: screen.element,
@@ -116,6 +143,7 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
         body,
         content.lines.map((line) => element(doc, 'p', { text: line })),
       );
+      portrait.show(content.portrait);
 
       const choices: HTMLElement[] = [];
       if (content.accept !== undefined) {
@@ -150,6 +178,7 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
     },
 
     destroy(): void {
+      portrait.destroy();
       screen.destroy();
     },
   };

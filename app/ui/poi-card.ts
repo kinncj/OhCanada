@@ -17,11 +17,22 @@
  * open" — and closing it puts focus back on `interact-prompt`, which is where the
  * player was.
  *
+ * **The landmark's own picture (ADR-0041).** A card that names a landmark and
+ * shows nothing of it was one of the audit's "huge, text-only white screens".
+ * The picture is the level's own art for that landmark — the image the level
+ * already drew behind the card, so it is a cache hit, not a download — and it is
+ * decoration: the heading names the place, so the image is `alt=""` inside an
+ * `aria-hidden` frame (`./screen-art.ts`), and a picture that cannot load is
+ * gone rather than an empty box. The card is a sheet over the level rather than
+ * a full screen, so the place the player walked up to stays in view, dimmed,
+ * above it.
+ *
  * DOM only (ADR-0005).
  */
 
 import { text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { createArtFrame } from './screen-art';
 import { createScreen, type Screen } from './screen';
 
 export interface PoiContent {
@@ -29,6 +40,12 @@ export interface PoiContent {
   readonly title: string;
   /** One or more paragraphs, already localised. */
   readonly body: readonly string[];
+  /**
+   * The landmark's picture: a URL the composition root resolved from the level's
+   * own art. Decoration only. Absent draws no picture, and the card is exactly
+   * the card it was before pictures existed.
+   */
+  readonly art?: string;
 }
 
 export interface PoiCardOptions {
@@ -71,6 +88,7 @@ export function createPoiCard(host: HTMLElement, options: PoiCardOptions): PoiCa
     id: 'tn-poi-card',
     testId: 'poi-card',
     locale,
+    className: 'tn-screen--sheet',
     onEscape: close,
     ...(options.announce === undefined ? {} : { announce: options.announce }),
     switch: {
@@ -79,6 +97,10 @@ export function createPoiCard(host: HTMLElement, options: PoiCardOptions): PoiCa
       ...(options.now === undefined ? {} : { now: options.now }),
     },
   });
+
+  /* First in the card, so it heads the sheet; `aria-hidden`, so the heading is
+     still the first thing read. */
+  const art = createArtFrame(doc, { className: 'tn-card-art', testId: 'poi-card-art' });
 
   const title = element(doc, 'h1', { id: 'tn-poi-card-title' });
   screen.labelledBy(title);
@@ -93,6 +115,7 @@ export function createPoiCard(host: HTMLElement, options: PoiCardOptions): PoiCa
   });
 
   screen.card.append(
+    art.element,
     title,
     body,
     element(doc, 'div', { className: 'tn-screen__actions', children: [closeButton] }),
@@ -127,6 +150,7 @@ export function createPoiCard(host: HTMLElement, options: PoiCardOptions): PoiCa
         body,
         content.body.map((paragraph) => element(doc, 'p', { text: paragraph })),
       );
+      art.show(content.art);
       screen.show();
       screen.refreshSwitch();
     },
@@ -144,6 +168,7 @@ export function createPoiCard(host: HTMLElement, options: PoiCardOptions): PoiCa
     },
 
     destroy(): void {
+      art.destroy();
       screen.destroy();
     },
   };

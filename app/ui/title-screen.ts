@@ -40,6 +40,7 @@
 
 import { text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { createArtFrame, LANDSCAPE_URL } from './screen-art';
 import { injectScreenStyles } from './screen-styles';
 
 /**
@@ -92,6 +93,15 @@ export interface TitleScreenOptions {
   readonly onOpenSettings?: () => void;
   /** An exam is saved and unfinished, so the exam item offers to finish it. */
   readonly examUnfinished?: boolean;
+  /**
+   * The player's character, standing in front of the landscape (ADR-0041).
+   *
+   * Asked once, when the screen is built, and answered later: the composition
+   * root paints the level's own puppet into a still image and hands back its
+   * URL, or `null` when it cannot. Decoration only — absent, pending or failed,
+   * the screen is the landscape and the words.
+   */
+  readonly figure?: () => Promise<string | null>;
 }
 
 export interface TitleScreen {
@@ -191,7 +201,48 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
     text: text(locale, 'title.notOfficial'),
   });
 
-  root.append(hero, lastPlayed, actions, disclaimer);
+  /*
+   * The picture: the player's character in front of the country (ADR-0041).
+   *
+   * The audit found 40 % of this screen blank between the tagline and the
+   * controls. The landscape is screen art — one SVG, precached with the shell —
+   * and the figure is the level's own puppet, painted by the composition root
+   * into a still image when it asks. Both are decoration: `aria-hidden` frames
+   * holding `alt=""` images, no control, nothing that moves, and every scenario
+   * in `TN-TITLE` reads identically with them removed (`TN-TITLE-08`: "any art
+   * behind the controls is still, and is not the only signal of anything").
+   *
+   * Between the words and the ways in, so the eye meets the name, then the
+   * picture, then Play; the reading order is unchanged.
+   */
+  const landscape = createArtFrame(doc, {
+    className: 'tn-title__landscape',
+    testId: 'title-landscape',
+  });
+  landscape.show(LANDSCAPE_URL);
+  const figure = createArtFrame(doc, { className: 'tn-title__figure', testId: 'title-figure' });
+  const art = element(doc, 'div', {
+    className: 'tn-title__art',
+    testId: 'title-art',
+    attrs: { 'aria-hidden': 'true' },
+    children: [landscape.element, figure.element],
+  });
+
+  let destroyed = false;
+  if (options.figure !== undefined) {
+    options
+      .figure()
+      .then((src) => {
+        if (!destroyed) figure.show(src);
+      })
+      /* A figure that could not be painted is no figure: the landscape and the
+         words are the whole screen, which is what they were before. */
+      .catch(() => {
+        if (!destroyed) figure.show(null);
+      });
+  }
+
+  root.append(hero, art, lastPlayed, actions, disclaimer);
   host.append(root);
 
   render();
@@ -329,6 +380,9 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
       (primary ?? heading).focus();
     },
     destroy(): void {
+      destroyed = true;
+      landscape.destroy();
+      figure.destroy();
       root.remove();
     },
   };

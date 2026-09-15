@@ -734,6 +734,204 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * Screens with art (ADR-0041).
+ *
+ * The live-site audit found the landmark card, the dialogue, the completion
+ * card, the Study home and the title screen to be huge text-only sheets, most of
+ * them blank. Two changes answer it, and neither weakens a rule above.
+ *
+ *  1. A SHEET OVER THE LEVEL. The three cards a level opens are sheets that
+ *     hug their content at the foot of the screen, and the level stays in view
+ *     above them. The modal root keeps its role, its trap and its size -- a tap
+ *     above the sheet still lands on the dialog, not on the game -- and only
+ *     its fill goes: it paints nothing, so the sheet is the only surface, and
+ *     the sheet is still opaque paper, so every word on it has a background axe
+ *     can compute. The level is dimmed by darkening the canvas itself with a
+ *     brightness filter -- a change to the picture, not a translucent wash laid
+ *     over it -- and the canvas carries no text and is aria-hidden.
+ *  2. PICTURES THAT ARE DECORATION. Every picture is an aria-hidden frame
+ *     holding an image with an empty alt (app/ui/screen-art.ts). Pictures are
+ *     sized in rem divided by the text scale: the same CSS px at every scale,
+ *     so text scaling grows the words and not the decoration (ADR-0040 made the
+ *     same choice for the creator's picture). Nothing here animates except the
+ *     stamp being pressed, and reduced motion removes that with every other
+ *     animation below.
+ * ------------------------------------------------------------------ */
+
+.tn-screen--sheet { background: transparent; }
+.tn-screen--sheet > .tn-screen__card {
+  flex: 0 0 auto;
+  margin-block-start: auto;
+}
+.tn-screen--sheet .tn-screen__actions { margin-block-start: 0; }
+
+body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
+
+/* The landmark's own picture, heading the landmark card. */
+.tn-card-art {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  block-size: calc(10.5rem / var(--tn-text-scale, 1));
+  padding: calc(0.625rem / var(--tn-text-scale, 1));
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+  overflow: hidden;
+}
+.tn-card-art-image {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+/* Who is speaking: a round portrait beside the speaker's name. */
+.tn-dialogue__head {
+  display: flex;
+  align-items: center;
+  gap: calc(0.875rem / var(--tn-text-scale, 1));
+}
+.tn-dialogue__head > h1 { flex: 1 1 0%; min-inline-size: 0; }
+.tn-dialogue__portrait {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  inline-size: calc(5rem / var(--tn-text-scale, 1));
+  block-size: calc(5rem / var(--tn-text-scale, 1));
+  padding: calc(0.25rem / var(--tn-text-scale, 1));
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-paper-2);
+  overflow: hidden;
+}
+.tn-dialogue__portrait-image {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+/*
+  The level's stamp, pressed beside the completion card's heading: a double ring
+  and the landmark's silhouette in stamp ink. The silhouette is the landmark's
+  own picture used as a mask over one flat fill. Earned is solid ink; not yet
+  earned is a dashed outline in a quieter ink, so the two differ in shape and
+  not only in colour.
+*/
+.tn-complete__head {
+  display: flex;
+  align-items: center;
+  gap: calc(0.75rem / var(--tn-text-scale, 1));
+}
+.tn-complete__head > h1 { flex: 1 1 0%; min-inline-size: 0; }
+.tn-stamp {
+  flex: 0 0 auto;
+  inline-size: calc(6rem / var(--tn-text-scale, 1));
+  block-size: calc(6rem / var(--tn-text-scale, 1));
+  transform: rotate(-8deg);
+  animation: tn-stamp-press 240ms ease-out;
+}
+@keyframes tn-stamp-press {
+  from { transform: rotate(-8deg) scale(1.35); }
+  to { transform: rotate(-8deg) scale(1); }
+}
+.tn-stamp__ring {
+  box-sizing: border-box;
+  display: flex;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: calc(0.625rem / var(--tn-text-scale, 1));
+  border: calc(0.375rem / var(--tn-text-scale, 1)) double var(--tn-primary);
+  border-radius: var(--tn-radius-pill);
+  background: var(--tn-paper);
+}
+.tn-stamp__mark {
+  display: block;
+  flex: 1 1 auto;
+  background: var(--tn-primary);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.tn-stamp:not([data-state="ready"]) .tn-stamp__mark { background: transparent; }
+.tn-stamp[data-inked="false"] { animation: none; }
+.tn-stamp[data-inked="false"] .tn-stamp__ring {
+  border: calc(0.1875rem / var(--tn-text-scale, 1)) dashed var(--tn-edge-soft);
+}
+.tn-stamp[data-inked="false"][data-state="ready"] .tn-stamp__mark { background: var(--tn-edge-soft); }
+
+@media (forced-colors: active) {
+  .tn-card-art,
+  .tn-dialogue__portrait { border-color: CanvasText; }
+  .tn-stamp__ring { border-color: CanvasText; }
+  .tn-stamp[data-state="ready"] .tn-stamp__mark {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}
+
+/*
+  The landscape the title screen and the Study home stand on. It takes the
+  space the words do not need, and never less than enough to read as a picture.
+*/
+.tn-title__art,
+.tn-study__art {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+  overflow: hidden;
+}
+/* Small enough that a returning player's five ways in and the disclaimer still
+   fit a 390 x 844 phone at 100 % text with the picture on it; it grows into
+   whatever else is free. */
+.tn-title__art { min-block-size: calc(8rem / var(--tn-text-scale, 1)); }
+.tn-study__art {
+  min-block-size: calc(9rem / var(--tn-text-scale, 1));
+  max-block-size: calc(28rem / var(--tn-text-scale, 1));
+}
+.tn-title__landscape,
+.tn-title__figure {
+  position: absolute;
+  inset: 0;
+}
+.tn-title__landscape-image,
+.tn-study__art-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center 80%;
+}
+.tn-title__figure {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-block-end: calc(0.5rem / var(--tn-text-scale, 1));
+}
+.tn-title__figure-image {
+  display: block;
+  block-size: 80%;
+  max-inline-size: 70%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
+@media (forced-colors: active) {
+  .tn-title__art,
+  .tn-study__art { border-color: CanvasText; }
+}
+
+/* ------------------------------------------------------------------ *
  * The shell: the title screen and the level select.
  *
  * The shell's root is the page's <main>. It carries .tn-screen for the

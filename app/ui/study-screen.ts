@@ -26,6 +26,7 @@
 
 import { count, text, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
+import { createArtFrame, LANDSCAPE_URL } from './screen-art';
 import { createScreen, type Screen } from './screen';
 
 /** What the screen is showing. The drill itself is not one of these: the card is. */
@@ -92,12 +93,22 @@ export function createStudyScreen(
     },
   });
 
+  /*
+   * The landscape the title screen stands on, heading the sheet (ADR-0041). The
+   * Study home was one of the audit's "huge, text-only white screens"; the
+   * picture fills the space the words do not need and says nothing the words do
+   * not, so it is `aria-hidden` with `alt=""` and the heading is still the first
+   * thing read. It is the title's own file, so it costs nothing a second time.
+   */
+  const art = createArtFrame(doc, { className: 'tn-study__art', testId: 'study-art' });
+  art.show(LANDSCAPE_URL);
+
   const title = element(doc, 'h1', { id: 'tn-study-title', text: text(locale, 'study.title') });
   screen.labelledBy(title);
 
   const panel = element(doc, 'div', { className: 'tn-screen__row' });
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
-  screen.card.append(title, panel, actions);
+  screen.card.append(art.element, title, panel, actions);
 
   return {
     element: screen.element,
@@ -149,6 +160,7 @@ export function createStudyScreen(
     },
 
     destroy(): void {
+      art.destroy();
       screen.destroy();
     },
   };

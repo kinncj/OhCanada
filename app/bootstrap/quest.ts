@@ -179,6 +179,12 @@ export interface QuestWiring {
   readonly onAccepted?: (quest: SpokenQuest) => void;
   /** Where focus goes when the dialogue closes back into the level. */
   readonly restoreFocusTo: () => HTMLElement | null;
+  /**
+   * The picture beside a speaker's name (ADR-0041): a character's face, or a
+   * landmark's own art when the speaker is a landmark. `null` draws the name
+   * alone. Optional, because a dialogue with no pictures is a whole dialogue.
+   */
+  readonly portraitOf?: (speaker: Engageable) => string | null;
 }
 
 /**
@@ -624,6 +630,11 @@ export function createQuestController(wiring: QuestWiring): QuestController {
    * announced as nothing, or — worse for the one user this matters most to —
    * announced as a kebab-case id read out one hyphen at a time.
    */
+  function giverEngageable(quest: SpokenQuest): Engageable | null {
+    const resolution = giverOf(quest);
+    return resolution.ok ? resolution.engageable : null;
+  }
+
   function speakerName(quest: SpokenQuest): string | null {
     const resolution = giverOf(quest);
     return resolution.ok ? localised(resolution.engageable.name, locale) : null;
@@ -655,14 +666,10 @@ export function createQuestController(wiring: QuestWiring): QuestController {
     const speech = momentSpeech(quest, moment, wiring.placements(), String(wiring.levelId));
     switch (speech.said) {
       case 'spoken':
-        /* `line.text` and the resolved name, and nothing else: no pose, no
-           portrait, whichever kind of thing is speaking. */
-        return open(
-          quest,
-          [localised(speech.line.text, locale)],
-          false,
-          localised(speech.speaker.name, locale),
-        );
+        /* `line.text` and the resolved speaker, and nothing else: no pose,
+           whichever kind of thing is speaking. The portrait is the speaker's,
+           not the line's (ADR-0041). */
+        return open(quest, [localised(speech.line.text, locale)], false, speech.speaker);
       case 'unverified':
         console.error(
           `[bootstrap] "${String(quest.id)}" says nothing at ${moment}. ` + speech.silenced.message,
@@ -740,20 +747,24 @@ export function createQuestController(wiring: QuestWiring): QuestController {
     quest: SpokenQuest,
     lines: readonly string[],
     offer: boolean,
-    speaker?: string,
+    speaker?: Engageable,
   ): boolean {
-    const name = speaker ?? speakerName(quest);
-    if (name === null) {
+    const who = speaker ?? giverEngageable(quest);
+    if (who === null) {
       refuse(quest);
       return false;
     }
     if (lines.length === 0) return false;
 
-    const view = ensureDialogue(name);
+    const view = ensureDialogue(localised(who.name, locale));
+    /* Decoration beside the name, and only when there is one to draw: absent,
+       the dialog is exactly the dialog it was before pictures existed. */
+    const portrait = wiring.portraitOf?.(who) ?? null;
     talking = quest;
     wiring.onOpen();
     view.show({
       lines,
+      ...(portrait === null ? {} : { portrait }),
       ...(offer
         ? {
             accept: {
@@ -952,7 +963,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
         /* `line.text`, and nothing else off the line. See above. */
         const said = lines.map((line) => localised(line.text, locale));
-        if (!open(quest, said, false, localised(resolution.engageable.name, locale))) {
+        if (!open(quest, said, false, resolution.engageable)) {
           onClosed();
           return 'unnamed';
         }

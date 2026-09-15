@@ -118,6 +118,7 @@ import {
 } from './character-slots';
 import { newSaveLocale } from './browser-locale';
 import { creatorArt } from './creator-art';
+import { assetsBaseUrl, createScreenArt, type ScreenArt } from './screen-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { readGameRules, type GameRules } from './game-rules';
 import {
@@ -337,6 +338,9 @@ function main(): void {
    * before the trap engages, and every later check re-engages it over whatever
    * is there.
    */
+  /* Read off the window rather than assumed: a page without it draws no
+     screen pictures, and nothing else changes (ADR-0041). */
+  const pageFetch = (window as Partial<Pick<Window, 'fetch'>>).fetch;
   void openFrontDoor({
     root,
     uiHost,
@@ -355,6 +359,14 @@ function main(): void {
     rules: rules.value,
     onMounted: syncOrientation,
     updates,
+    /* The pictures the DOM screens draw (ADR-0041). With no page `fetch` there
+       are none, and every screen is its words. */
+    screenArt: createScreenArt({
+      fetch: pageFetch === undefined ? undefined : (url) => pageFetch.call(window, url),
+      baseUrl: assetsBaseUrl(),
+      devicePixelRatio: () => window.devicePixelRatio,
+      document,
+    }),
   });
 }
 
@@ -381,6 +393,8 @@ interface FrontDoor {
   readonly onMounted: () => void;
   /** The update notice's watch, started in `main` before anything awaited. */
   readonly updates: UpdateWatch;
+  /** Where the screens' pictures come from (ADR-0041). */
+  readonly screenArt: ScreenArt;
 }
 
 /**
@@ -399,7 +413,8 @@ interface FrontDoor {
  * frame time in a game — and nothing is drawn twice waiting for it.
  */
 async function openFrontDoor(deps: FrontDoor): Promise<void> {
-  const { root, uiHost, gameHost, bus, milestones, renderer, pause, config, rules } = deps;
+  const { root, uiHost, gameHost, bus, milestones, renderer, pause, config, rules, screenArt } =
+    deps;
   const { onLevelPlayable } = deps;
 
   /*
@@ -822,6 +837,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          2D canvas, loaded when the creator opens and released when it closes. */
       art: creatorArt(createCharacterPreview),
     },
+    /* The player's character in front of the title's landscape (ADR-0041): the
+       appearance in the save, or the one the creator will open on. Read at the
+       call, so a character changed in Settings is the one drawn next time. */
+    titleFigure: () => screenArt.figure(characterSelection),
     /*
      * Two callbacks, not one with a flag (`TN-FIRSTRUN`, ruling 3). The first
      * is the first run and is what the route waits on; the second is Settings,
@@ -1194,6 +1213,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     session = openLevel({
       id,
       words,
+      screenArt,
       root,
       uiHost,
       gameHost,
@@ -1642,6 +1662,8 @@ interface LevelWiring {
    * unlock rule (that is `app/domain`'s) and it does not hold the map.
    */
   readonly openedNext: () => LevelId | null;
+  /** The pictures the level's cards draw: its landmarks, its stamp, its speakers (ADR-0041). */
+  readonly screenArt: ScreenArt;
 }
 
 /**
@@ -2298,7 +2320,19 @@ function openLevel(wiring: LevelWiring): LevelSession {
               total: answeredHere,
             }),
       ...(described === null ? {} : { next: described }),
+      ...stampArtNow(),
     };
+  }
+
+  /**
+   * The picture the level's stamp is pressed in the shape of (ADR-0041), as a
+   * key to spread: none when the manifest has not got it, so the card draws no
+   * stamp rather than an empty ring.
+   */
+  function stampArtNow(): { readonly stampArt?: string } {
+    const level = renderer.level;
+    const stampArt = level === null ? null : wiring.screenArt.stampOf(level.pois);
+    return stampArt === null ? {} : { stampArt };
   }
 
   /**
@@ -2366,6 +2400,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
           ? text(forLocale, 'level.unfinished.notStarted')
           : text(forLocale, 'level.unfinished.next', { step: task }),
       ],
+      /* The same stamp, as an outline: what the task is for. */
+      ...stampArtNow(),
     };
   }
 
@@ -2488,6 +2524,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
        `loadLevel` resolves, and a level read here would be the one just left. */
     placements: placementsNow,
     host: hud.main,
+    /* A character's face, or a landmark's own art for a landmark speaker, and
+       never a face for a landmark (ADR-0029, ADR-0041). */
+    portraitOf: (speaker) => {
+      if (speaker.kind === 'character') return wiring.screenArt.portraitOf(speaker.id);
+      const placed = (renderer.level?.pois ?? []).find((candidate) => candidate.id === speaker.id);
+      return wiring.screenArt.pictureOf(placed?.artKey);
+    },
     store,
     clock: wiring.clock,
     announce: wiring.announce,
@@ -2624,7 +2667,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
      * the quest is on the `answer` step and that step has nothing to say.
      */
     pendingVisit = quests.visited(detail);
-    card.show({ title: localised(poi.name, locale), body: [localised(poi.blurb, locale)] });
+    /* The landmark's own picture, when the manifest has it: the image the
+       level already drew for this point of interest (ADR-0041). No key at
+       all otherwise, so the card is exactly the card it was. */
+    const art = wiring.screenArt.pictureOf(poi.artKey);
+    card.show({
+      title: localised(poi.name, locale),
+      body: [localised(poi.blurb, locale)],
+      ...(art === null ? {} : { art }),
+    });
   }
 
   /**
@@ -2915,8 +2966,17 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   const offPlayable = wiring.onLevelPlayable(() => {
     levelIsPlayable();
+    /* The faces of the characters this level places, painted once the level is
+       playable and before anyone is spoken to (ADR-0041). In the background:
+       a dialogue opened before a face is ready draws the name alone. */
+    void wiring.screenArt.paintPortraits(
+      (renderer.level?.characters ?? []).map((placed) => String(placed.characterId)),
+    );
   });
 
+  /* The manifest the landmark card and the stamp resolve pictures from: the
+     file the renderer is about to read, so this is the same request. */
+  void wiring.screenArt.prime();
   void load();
 
   return {
