@@ -74,6 +74,21 @@ export interface HudOptions {
   readonly canvasHost?: HTMLElement;
 }
 
+/** How a task line arrives in the strip. */
+export interface TaskOptions {
+  /**
+   * `false` draws the line without saying it.
+   *
+   * For the task a player **arrived with**: a save with a quest in progress,
+   * opened by a reload, Continue or the map. That is the state the level opens
+   * in, not a change, and `TN-HUD-07` announces a change. The line is in the
+   * accessibility tree as text from the moment it is drawn (`TN-QUEST-08`, "readable
+   * at any time, not only when it changes"). Absent or `true`, a new line is
+   * announced once, as it always was.
+   */
+  readonly announce?: boolean;
+}
+
 export interface Hud {
   /** The `hud` region. */
   readonly element: HTMLElement;
@@ -84,8 +99,11 @@ export interface Hud {
   readonly prompt: HTMLElement | null;
   /** `hud-mode-label`: "Skating" / « Patinage ». Already localised. */
   setMode(label: string): void;
-  /** `hud-quest-tracker`. `null` removes it: there is no task (`TN-HUD-01`). */
-  setTask(step: string | null): void;
+  /**
+   * `hud-quest-tracker`. `null` removes it: there is no task (`TN-HUD-01`).
+   * A line that changes is announced once, unless `options.announce` is `false`.
+   */
+  setTask(step: string | null, options?: TaskOptions): void;
   /** `interact-prompt`. `null` withdraws the offer (`TN-LEVEL-05`). */
   setPrompt(label: string | null): void;
   /**
@@ -427,11 +445,13 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       if (!first) say(label);
     },
 
-    setTask(step): void {
+    setTask(step, options): void {
       if (step === task) return;
       task = step;
       renderTask();
-      if (step !== null) say(labelled(locale, text(locale, 'hud.task'), step));
+      if (step !== null && options?.announce !== false) {
+        say(labelled(locale, text(locale, 'hud.task'), step));
+      }
     },
 
     setPrompt(label): void {

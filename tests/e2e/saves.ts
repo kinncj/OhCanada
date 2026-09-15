@@ -77,6 +77,43 @@ export function oneAnswerFromDoneSave(quest: SeededQuest): string {
   return encodeSave(progress, now);
 }
 
+/** Where a saved quest in progress stands, and how the save was set up. */
+export interface SavedTask {
+  /** The step the player is on: `1` is the step after the offer. */
+  readonly stepIndex: number;
+  /** Answers already counted on that step. */
+  readonly stepProgress?: number;
+  readonly locale?: 'en' | 'fr';
+  /** 1 to 2, the way the save keeps text size (100 % to 200 %). */
+  readonly textScale?: number;
+}
+
+/**
+ * A save with this level's quest accepted and in progress, as a player leaves
+ * one when they close the tab mid-task: no stamp, the quest on `stepIndex`, and
+ * the language and text size they chose. What a reload, Continue or the map
+ * opens the level with (`TN-FLOW-02`, `TN-SAVE-01`).
+ */
+export function activeQuestSave(quest: SeededQuest, saved: SavedTask): string {
+  if (quest.steps[saved.stepIndex] === undefined) {
+    throw new Error(`${quest.id} has no step ${String(saved.stepIndex)} to save a player on.`);
+  }
+  const now = Date.now() as EpochMillis;
+  const level = quest.levelId as LevelId;
+  const settings = {
+    ...defaultSettings((saved.locale ?? 'en') as LocaleCode),
+    textScale: saved.textScale ?? 1,
+  };
+  const progress = withQuestState(newProgress(settings, [level]), level, {
+    questId: quest.id as QuestId,
+    status: 'active',
+    stepIndex: saved.stepIndex,
+    stepProgress: saved.stepProgress ?? 0,
+    updatedAt: now,
+  });
+  return encodeSave(progress, now);
+}
+
 /** The save as the game writes one: snapshot, then the JSON codec. */
 function encodeSave(progress: ReturnType<typeof newProgress>, now: EpochMillis): string {
   const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });

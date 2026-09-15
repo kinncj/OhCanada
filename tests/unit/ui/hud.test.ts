@@ -114,6 +114,24 @@ describe('the HUD is there while the player plays', () => {
     expect(at('hud-mode-label')?.getAttribute('aria-live')).toBeNull();
   });
 
+  it('draws the task a player arrived with without saying it, and says the next change', () => {
+    /* A save with a quest in progress: the line is the state the level opens in,
+       not a change (TN-HUD-07), and it is text in the tree from the start. */
+    const { hud, at, announce } = mount();
+    hud.setTask('Find the Town Clock', { announce: false });
+
+    expect(at('hud-quest-tracker')?.textContent).toBe('Task: Find the Town Clock');
+    expect(announce).not.toHaveBeenCalled();
+
+    /* The same line again, as a later refresh sends it, is still not news. */
+    hud.setTask('Find the Town Clock');
+    expect(announce).not.toHaveBeenCalled();
+
+    hud.setTask('Answer 2 questions about voting (0 of 2)');
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith('Task: Answer 2 questions about voting (0 of 2)', 'en');
+  });
+
   it('does not repeat the arrival announcement for the mode it arrived in', () => {
     const { hud, announce } = mount();
     hud.setMode('Skating');
