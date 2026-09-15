@@ -1,6 +1,9 @@
 # ADR-0037: Letting go in reach stops there, and a stop rests beside a character
 
 - Status: Accepted (2026-09-14)
+- Amended by: ADR-0049 — §4's choice of side also reads the ride's art at rest, and a side is taken only where a
+  character's feet are wholly clear of it or wholly behind a flank of it. The Alberta horse's saddle footprint
+  rested it with its head across the guide's feet; the stop now rests past him. The footprint (§5) is unchanged.
 - Amends: ADR-0032 §1 — "Not caught: a glide nobody is pressing" — for the one glide that begins inside reach,
   and ADR-0032's aim, which was the subject's `x`. `TN-LEVEL-06` keeps its words ("releasing it glides exactly as it
   does after a released touch"): the rule below is the same for a key and a finger. ADR-0031: a ride now declares
