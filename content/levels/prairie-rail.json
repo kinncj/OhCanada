@@ -392,6 +392,7 @@
       },
       "groundLineY": 330,
       "turnsWithRider": false,
+      "backingMaxSpeed": 240,
       "footprint": {
         "x": 220,
         "width": 400

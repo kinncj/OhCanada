@@ -32,9 +32,16 @@ import type { Page } from '@playwright/test';
  *    thing the walk is for turns up. A leg that ends mid-stride costs a step of
  *    glide; a leg that ends at a stop is the re-press.
  *
- * Either way, between letting go and pressing again the level has to *see* the
- * key up — `#sampleIntent` reads `Key.isDown` once per frame, so an up and a down
- * inside one frame are a press the level never saw end.
+ * Either way the walk lets the level run a frame with nothing pressed between
+ * letting go and pressing again. The level no longer needs that frame: since
+ * ADR-0043 a key let go and pressed again inside one frame is a new press
+ * (`key-presses.ts`, held by `keyboard-at-a-stop.spec.ts`). A hand leaves one
+ * anyway, and it keeps these walks' traces readable.
+ *
+ * **A press only answers a stop once the player is at rest** (ADR-0043). A leg
+ * that ends while a stop is still braking presses again into the brake, is held
+ * on, and costs one more leg; {@link walkWithProbe} waits for rest and never pays
+ * it.
  */
 
 /** Wait for `count` animation frames in the page — the loop Phaser steps the level on. */

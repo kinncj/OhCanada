@@ -478,6 +478,12 @@ export interface Ride {
   readonly turnsWithRider: boolean;
   /** The span of the art a figure beyond the ride would be seen inside (ADR-0037). */
   readonly footprint: RideFootprint;
+  /**
+   * How fast a ride that does not turn with its rider backs up, design px/s
+   * (ADR-0043). Backing is held and braked, never automatic; this caps it.
+   * Absent on a ride that turns, which never backs up.
+   */
+  readonly backingMaxSpeed?: number;
   readonly bob?: RideBob;
   readonly track?: RideTrack;
 }

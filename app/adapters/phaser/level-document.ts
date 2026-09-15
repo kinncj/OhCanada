@@ -711,6 +711,20 @@ function readRides(
       footprint,
     };
 
+    /* ADR-0043. Only a ride with a front backs up; one that turns faces the way it
+       goes, so a backing speed on it is a number nothing could ever read. */
+    if (item['backingMaxSpeed'] !== undefined) {
+      const backing = readNumber(item, 'backingMaxSpeed', { exclusiveMin: 0 });
+      if (!backing.ok) return invalid(`${where}.backingMaxSpeed`, backing.error.message);
+      if (turnsWithRider) {
+        return invalid(
+          `${where}.backingMaxSpeed`,
+          `"${where}.backingMaxSpeed" is for a ride that does not turn with its rider; one that turns never backs up.`,
+        );
+      }
+      ride.backingMaxSpeed = backing.value;
+    }
+
     const bob = item['bob'];
     if (bob !== undefined) {
       if (!isRecord(bob)) return invalid(`${where}.bob`, `"${where}.bob" must be an object when present.`);

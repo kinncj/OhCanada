@@ -585,6 +585,28 @@ describe('a ride is read strictly, because the schema cannot compare it with its
     expect('track' in (only ?? {})).toBe(false);
   });
 
+  /* ADR-0043: a ride with a front backs up, held and capped at its own number. */
+  it('reads a backing speed on a ride that does not turn, and omits one never declared', () => {
+    const declared = parsed({ rides: [ride({ backingMaxSpeed: 240 })] });
+    if (!declared.ok) throw new Error(declared.error.message);
+    expect(declared.value.rides[0]?.backingMaxSpeed).toBe(240);
+
+    const absent = parsed({ rides: [ride()] });
+    if (!absent.ok) throw new Error(absent.error.message);
+    expect('backingMaxSpeed' in (absent.value.rides[0] ?? {})).toBe(false);
+  });
+
+  it('refuses a backing speed on a ride that turns, or one that is not a positive number', () => {
+    for (const patch of [
+      { turnsWithRider: true, backingMaxSpeed: 240 },
+      { backingMaxSpeed: 0 },
+      { backingMaxSpeed: -40 },
+      { backingMaxSpeed: '240' },
+    ]) {
+      expect(parsed({ rides: [ride(patch)] }).ok, JSON.stringify(patch)).toBe(false);
+    }
+  });
+
   /* ADR-0035: a layer may declare frames, advanced by distance. */
   const cycle = (patch: Record<string, unknown> = {}): Record<string, unknown> => ({
     rest: 'horse-stand',

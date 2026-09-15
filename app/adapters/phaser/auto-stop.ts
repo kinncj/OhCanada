@@ -111,7 +111,12 @@
  *    into the landmark, and letting it overrule the stop would mean the stop never
  *    happens, because a held control is intent ≥ `MOVE_DEADZONE` on every frame.
  *    For an automatic drive, which is stopped with nothing pressed, every press is
- *    a new one, so this is exactly the nudge auto-move has always had;
+ *    a new one, so this is exactly the nudge auto-move has always had. Once the
+ *    brake is on, the press has to begin with the player **at rest** (ADR-0043):
+ *    a press that lands while the drive is still being brought to rest is not an
+ *    answer to a stop the player has not reached yet, and on a mode that drives
+ *    itself it was the first press of the level. "Begins" also counts a key let
+ *    go and pressed again between two frames ({@link AutoStopFrame.pressBegan});
  *  - **the player steers the other way.** Always, at once, however long the
  *    control has been held, because a setting a player cannot overrule is the trap
  *    `TN-SET-05` forbids.
@@ -205,6 +210,18 @@ export interface AutoStopFrame {
   readonly velocityX: number;
   /** The player's own intent this frame: keyboard and finger, already summed. */
   readonly playerMove: number;
+  /**
+   * A direction whose key went down since the previous frame, whatever
+   * `playerMove` reads now (ADR-0043).
+   *
+   * `playerMove` is a level, read once a frame. A key let go and pressed again
+   * between two frames reads as held on both, so the lift and the new press are
+   * invisible in it — and that press is the one that lets a held stop go. The
+   * scene counts key-down events (`key-presses.ts`) and hands the direction here.
+   * Absent, or 0, for an input that cannot do it: a finger is a tap for its
+   * first 160 ms (`touch-controls.ts`), so a new hold always shows a frame of 0.
+   */
+  readonly pressBegan?: -1 | 0 | 1;
   readonly subjects: readonly AutoStopSubject[];
 }
 
@@ -372,7 +389,11 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
     },
     update(frame: AutoStopFrame): boolean {
       const pressed = pressedDirection(frame.playerMove);
-      const began = pressed !== 0 && pressed !== lastPressed;
+      /* New when this frame's direction differs from the last one's, or when a
+         key for it went down between the two frames — a let-go and a press again
+         that the level, reading each key once a frame, saw as one long hold
+         (ADR-0043). */
+      const began = pressed !== 0 && (pressed !== lastPressed || frame.pressBegan === pressed);
       const lifted = pressed === 0 && lastPressed !== 0;
       lastPressed = pressed;
 
@@ -382,13 +403,29 @@ export function createAutoStop(tuning: LocomotionTuning): AutoStopWatch {
       }
 
       if (holding !== null) {
-        /* Steering back always wins, on the frame it arrives. A press that began
-           while held wins too, whichever way it points. A control held down
-           since before the stop, the way the player was already going, does
-           not: that is the thumb that walked them here. The threshold is the
-           strategy's own, so the input that would move the player is exactly
+        /* Steering back always wins, on the frame it arrives. The threshold is
+           the strategy's own, so the input that would move the player is exactly
            the input that can release them. */
-        if (pressed !== 0 && (pressed !== holding.heading || began)) {
+        if (pressed !== 0 && pressed !== holding.heading) {
+          letGo();
+          return false;
+        }
+        /*
+         * A press the way they were already going wins when it **began** while
+         * held. A control held down since before the stop does not: that is the
+         * thumb that walked them here.
+         *
+         * And once the brake is on, only a press that begins **at rest** does
+         * (ADR-0043). A press that lands while the brake is still bringing the
+         * drive to rest is not an answer to the stop — the player has not been
+         * stopped yet — and on the Prairies it was the first press of the level:
+         * the train drives itself to the guide, a player pressed "go" as it
+         * braked, and the task's giver was let go and passed before anyone had
+         * seen the offer. A hold that is still gliding on to its stop line keeps
+         * ADR-0037's rule, because the player lifted to choose it and a press
+         * then is a change of mind.
+         */
+        if (began && (!holding.braking || frame.velocityX === 0)) {
           letGo();
           return false;
         }

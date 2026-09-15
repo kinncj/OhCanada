@@ -78,6 +78,8 @@ import { cameraView, followCamera, intersectsView, type WorldRect } from './leve
 import { rideArtProblems, rideBobPx, rideFor, rideFrameKey, ridePlacement, type RideArtSize } from './ride';
 import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from './depth-plan';
 import { stopSubjectsFor } from './stand-off';
+import { backingBounds, backingTuning, createBacking, facingForward, type BackingWatch } from './backing';
+import { createKeyPresses, directionPressed, pressedAny, type KeyPresses } from './key-presses';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -222,7 +224,11 @@ const FLAKE_MAX_RADIUS = 8;
  * WASD block, so the level is playable with either hand; `#sampleIntent` is
  * where they are summed into an intent.
  */
-const READ_KEYS = ['LEFT', 'RIGHT', 'A', 'D', 'SPACE', 'UP', 'W', 'E', 'ENTER'] as const;
+const LEFT_KEYS = ['LEFT', 'A'] as const;
+const RIGHT_KEYS = ['RIGHT', 'D'] as const;
+const JUMP_KEYS = ['SPACE', 'UP', 'W'] as const;
+const INTERACT_KEYS = ['E', 'ENTER'] as const;
+const READ_KEYS = [...LEFT_KEYS, ...RIGHT_KEYS, ...JUMP_KEYS, ...INTERACT_KEYS] as const;
 
 export interface LevelSceneOptions {
   readonly level: SceneLevel;
@@ -372,6 +378,25 @@ export class LevelScene extends Phaser.Scene {
    * rule left in here is a rule proved only by a browser.
    */
   readonly #autoStop: AutoStopWatch;
+  /**
+   * A ride with a front, backing up (ADR-0043, `backing.ts`): never on its own,
+   * held, capped at the ride's own number, and waiting at rest afterwards until
+   * a press forward or an engagement. Inert for a ride that turns, or none.
+   */
+  readonly #backingWatch: BackingWatch;
+  /** The same mode backing up. Stepped only on the frames `#backingWatch` says so. */
+  readonly #backing: ReturnType<typeof createLocomotion>;
+  /**
+   * The keys that went down since the last frame (ADR-0043, `key-presses.ts`).
+   *
+   * `Key.isDown` is read once a frame, so a key let go and pressed again — or
+   * pressed and let go — between two frames never happened as far as it can
+   * tell. This is what makes a quick tap of the interact key engage, and a quick
+   * let-go-and-press-again leave a stop, exactly as a finger does.
+   */
+  readonly #keyPresses: KeyPresses = createKeyPresses();
+  /** The direction a key press began toward this frame, for the auto-stop. */
+  #pressBegan: -1 | 0 | 1 = 0;
   readonly #tuning: LocomotionTuning;
   /**
    * What carries the player in the mode they spawn in, or `null` (ADR-0031).
@@ -576,7 +601,12 @@ export class LevelScene extends Phaser.Scene {
     this.#locomotion = createLocomotion(tuning);
     this.#braking = createLocomotion(brakingTuning(tuning));
     this.#autoStop = createAutoStop(tuning);
-    this.#bounds = levelBounds(options.level.ground, options.level.size);
+    this.#backingWatch = createBacking(this.#ride);
+    this.#backing = createLocomotion(backingTuning(tuning, this.#ride));
+    /* A ride that backs up stops where its tail meets the world's edge, so the
+       camera, which stops scrolling there, keeps the rider on the glass
+       (ADR-0043). Every other level's bounds are exactly `levelBounds`. */
+    this.#bounds = backingBounds(levelBounds(options.level.ground, options.level.size), this.#ride);
     /*
      * `designWidth / zoom` is what the camera can see, in world units, at every
      * render scale: `#followInput` multiplies both by the backing scale and the
@@ -808,6 +838,7 @@ export class LevelScene extends Phaser.Scene {
          scene; the map is dropped so nothing holds a `Key` from a level that no
          longer exists. */
       this.#keys.clear();
+      this.#keyPresses.forget();
       this.game.events.off(Phaser.Core.Events.BLUR, this.#releaseEveryPointer);
       this.events.off(Phaser.Scenes.Events.PAUSE, this.#releaseEveryPointer);
       this.events.off(Phaser.Scenes.Events.SLEEP, this.#releaseEveryPointer);
@@ -960,12 +991,31 @@ export class LevelScene extends Phaser.Scene {
       playerX: this.#state.x,
       velocityX: this.#state.velocityX,
       playerMove: intent.move,
+      pressBegan: this.#pressBegan,
       subjects: this.#stopSubjects,
     });
+    /*
+     * Is a ride with a front backing up, or waiting after it? (ADR-0043)
+     *
+     * Asked every frame, halted or not, so it sees the ride come to rest from
+     * backing even when a stop was what brought it to rest. `parked` steps the
+     * brake, so nothing moves while the player decides; `backing` steps the
+     * held, capped mode; `forward` is the mode as authored, faced forward at rest
+     * so an automatic drive never reads a passenger turned round in the seat as
+     * the way on. For a ride that turns, or none, the answer is always `forward`
+     * and `facingForward` hands the state back unchanged.
+     */
+    const drive = this.#backingWatch.update({
+      velocityX: this.#state.velocityX,
+      playerMove: intent.move,
+    });
 
-    const step = halted
-      ? this.#braking.step(this.#state, brakingIntent(intent), dt)
-      : this.#locomotion.step(this.#state, intent, dt);
+    const step =
+      halted || drive === 'parked'
+        ? this.#braking.step(this.#state, brakingIntent(intent), dt)
+        : drive === 'backing'
+          ? this.#backing.step(this.#state, intent, dt)
+          : this.#locomotion.step(facingForward(this.#state, this.#ride), intent, dt);
     this.#state = applyBounds(step.state, this.#bounds, this.#tuning, dt);
 
     for (const event of step.events) this.#publishLocomotionEvent(event.kind);
@@ -1096,7 +1146,14 @@ export class LevelScene extends Phaser.Scene {
      */
     for (const name of READ_KEYS) {
       const key = keyboard?.addKey(name, false);
-      if (key !== undefined) this.#keys.set(name, key);
+      if (key === undefined) continue;
+      this.#keys.set(name, key);
+      /* Every real key-down, whenever it arrives, and never the browser's
+         auto-repeat: `Key` emits `down` only on the way down. `#sampleIntent`
+         takes them once a frame (ADR-0043). */
+      key.on(Phaser.Input.Keyboard.Events.DOWN, (_key: unknown, event: KeyboardEvent) => {
+        this.#keyPresses.down(name, event.repeat);
+      });
     }
 
     this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer: Phaser.Input.Pointer) => {
@@ -1145,6 +1202,11 @@ export class LevelScene extends Phaser.Scene {
   /** Bound once so `off` can find it again; see `#bindInput` and SHUTDOWN. */
   readonly #releaseEveryPointer = (): void => {
     this.#touch.cancelAll();
+    /* A key pressed into a card that has since closed is not a press into the
+       level: `Enter` on a focused prompt reaches both, and the card pauses the
+       level before the next frame could take it (ADR-0043). */
+    this.#keyPresses.forget();
+    this.#pressBegan = 0;
     /* The same moment hides the player's hands from the auto-stop: a thumb
        lifted while a card or the menu was open never reached a frame, so the
        first press seen afterwards has to count as a new one (ADR-0032). */
@@ -1209,12 +1271,22 @@ export class LevelScene extends Phaser.Scene {
      * about neither. So the port is still `PROVISIONAL` and unconsumed, and what
      * crosses the boundary from `touch-controls.ts` is intent, not events.
      */
-    const left = down('LEFT') || down('A');
-    const right = down('RIGHT') || down('D');
-    const jumpHeld = down('SPACE') || down('UP') || down('W');
-    const interact = down('E') || down('ENTER');
+    const left = LEFT_KEYS.some(down);
+    const right = RIGHT_KEYS.some(down);
+    const jumpHeld = JUMP_KEYS.some(down);
+    const interact = INTERACT_KEYS.some(down);
 
-    const jumpPressed = this.#jumpQueued || (jumpHeld && !this.#lastJumpHeld);
+    /*
+     * What went down since the last frame, which the levels above cannot show
+     * (ADR-0043). A tap of the interact key shorter than a frame is a press; a
+     * direction let go and pressed again inside one frame is a new press, which
+     * is what a held stop waits for. The levels still decide what is held.
+     */
+    const presses = this.#keyPresses.take();
+    this.#pressBegan = directionPressed(presses, LEFT_KEYS, RIGHT_KEYS);
+
+    const jumpPressed =
+      this.#jumpQueued || pressedAny(presses, JUMP_KEYS) || (jumpHeld && !this.#lastJumpHeld);
     this.#lastJumpHeld = jumpHeld;
     this.#jumpQueued = false;
 
@@ -1229,7 +1301,10 @@ export class LevelScene extends Phaser.Scene {
     this.#tapTarget = null;
 
     const interactPressed =
-      this.#interactQueued || this.#pendingEngage !== null || (interact && !this.#lastInteract);
+      this.#interactQueued ||
+      this.#pendingEngage !== null ||
+      pressedAny(presses, INTERACT_KEYS) ||
+      (interact && !this.#lastInteract);
     this.#lastInteract = interact;
     this.#interactQueued = false;
 
@@ -1647,6 +1722,7 @@ export class LevelScene extends Phaser.Scene {
      * prompt's route reaches the same call through {@link markEngaged}.
      */
     this.#autoStop.release(best.id);
+    this.#backingWatch.release();
     /* The rig has a `once` interact state; firing it is what makes an engagement
        visible in the world rather than only in the DOM above it. A rig that
        declares no such trigger simply has nothing fired at it. */
@@ -2720,6 +2796,9 @@ export class LevelScene extends Phaser.Scene {
    */
   markEngaged(subjectId: string): void {
     this.#autoStop.release(subjectId);
+    /* And a ride waiting after backing up goes on when the card closes, as a
+       stop does (ADR-0043). */
+    this.#backingWatch.release();
   }
 
   /**

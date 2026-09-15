@@ -313,6 +313,11 @@
           "type": "boolean"
         },
         "footprint": { "$ref": "#/$defs/rideFootprint" },
+        "backingMaxSpeed": {
+          "description": "How fast a ride that does not turn with its rider may back up, in design px/s (ADR-0043). Backing is never automatic: the ride moves backwards only while the player presses back, brakes to rest on the mode's own brake when they let go, and waits there until they press forward or engage something. This caps it, so going back to something passed is a slow move and not a run at cruise speed. Only for a ride whose `turnsWithRider` is false: a ride that turns faces the way it goes and never backs up. Absent, the mode's own `maxSpeed` caps it.",
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
         "bob": { "$ref": "#/$defs/rideBob" },
         "track": { "$ref": "#/$defs/rideTrack" }
       },

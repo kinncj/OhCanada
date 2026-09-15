@@ -663,13 +663,37 @@ describe('the small print', () => {
     expect(watch.update(frame({ subjects: [{ id: 'another', x: LINE * 0.5 }] }))).toBe(true);
   });
 
-  it('a press that begins while an automatic drive is held releases it on that frame', () => {
+  it('a press that begins while an automatic drive is held at rest releases it on that frame', () => {
     const watch = createAutoStop(ANY_TUNING);
     expect(watch.update(frame({}))).toBe(true);
-    expect(watch.update(frame({ playerMove: 1 }))).toBe(false);
+    expect(watch.update(frame({ velocityX: 0 }))).toBe(true);
+    expect(watch.update(frame({ velocityX: 0, playerMove: 1 }))).toBe(false);
     expect(watch.holding).toBeNull();
     /* And the subject they steered past does not catch them again. */
     expect(watch.update(frame({}))).toBe(false);
+  });
+
+  it('a press the way it is going that begins while the brake is still on does not release it (ADR-0043)', () => {
+    /* The Prairies' P1: the train drives itself to the guide, a player presses
+       "go" as it brakes, and the guide was let go and passed before the offer had
+       been seen. Held or automatic, the answer is the same. */
+    for (const automatic of [true, false]) {
+      const where = `automatic: ${String(automatic)}`;
+      const watch = createAutoStop(ANY_TUNING);
+      const at = (over: Partial<AutoStopFrame>): AutoStopFrame => frame({ automatic, ...over });
+      /* Caught, and braking. */
+      expect(watch.update(at({ playerMove: automatic ? 0 : 1 })), where).toBe(true);
+      expect(watch.update(at({ playerMove: 0, velocityX: SPEED * 0.6 })), where).toBe(true);
+      /* A press that begins while still moving: still held. */
+      expect(watch.update(at({ playerMove: 1, velocityX: SPEED * 0.4 })), where).toBe(true);
+      expect(watch.holding, where).toBe('ahead');
+      /* Held down into rest: the same press, and still not an answer. */
+      expect(watch.update(at({ playerMove: 1, velocityX: 0 })), where).toBe(true);
+      /* Let go, and press again at rest: released. */
+      expect(watch.update(at({ playerMove: 0, velocityX: 0 })), where).toBe(true);
+      expect(watch.update(at({ playerMove: 1, velocityX: 0 })), where).toBe(false);
+      expect(watch.holding, where).toBeNull();
+    }
   });
 
   it('ignores an input the strategy would ignore, so the two agree on “no input”', () => {
@@ -734,7 +758,9 @@ describe('the small print', () => {
        skater back to a 0.9 glide past the thing they were stopping at. */
     expect(watch.update(frame({ automatic: false }))).toBe(true);
     expect(watch.holding).toBe('ahead');
-    expect(watch.update(frame({ automatic: false, playerMove: 1 }))).toBe(false);
+    /* At rest: a press that begins while the brake is still on is not an answer
+       to the stop (ADR-0043). */
+    expect(watch.update(frame({ automatic: false, velocityX: 0, playerMove: 1 }))).toBe(false);
     expect(watch.holding).toBeNull();
   });
 
@@ -1010,5 +1036,89 @@ describe('letting go in reach is a choice, and the drive stops there (ADR-0037)'
       passedThrough,
       'no shipped mode glides through the reach of what it was let go short of, so "the glide is theirs" is not exercised',
     ).toBe(true);
+  });
+});
+
+/* ------------------------------------ a press the level could not see, ADR-0043 --- */
+
+describe('a press is a press however short, and only an answer once stopped (ADR-0043)', () => {
+  const SPEED = ANY_TUNING.maxSpeed / 2;
+  const LINE = stopLinePx(SPEED, ANY_TUNING);
+
+  /** A held drive pressing the way it travels, with one thing inside its stop line. */
+  const held = (over: Partial<AutoStopFrame>): AutoStopFrame => ({
+    automatic: false,
+    playerX: 0,
+    velocityX: SPEED,
+    playerMove: 1,
+    subjects: [{ id: 'ahead', x: LINE * 0.5 }],
+    ...over,
+  });
+
+  it('a key let go and pressed again between two frames lets a held stop go', () => {
+    /* The Halifax Town Clock in the audit: the level read the arrow as down on
+       every frame, so each "press again" was the same press, fourteen times. */
+    const watch = createAutoStop(ANY_TUNING);
+    expect(watch.update(held({}))).toBe(true);
+    expect(watch.update(held({ velocityX: 0 }))).toBe(true);
+    expect(watch.update(held({ velocityX: 0 })), 'a key held down throughout is not a new press').toBe(true);
+    expect(watch.update(held({ velocityX: 0, pressBegan: 1 }))).toBe(false);
+    expect(watch.holding).toBeNull();
+  });
+
+  it('a key-down that is not what the player is pressing now is not a press toward anything', () => {
+    const watch = createAutoStop(ANY_TUNING);
+    expect(watch.update(held({}))).toBe(true);
+    expect(watch.update(held({ velocityX: 0, pressBegan: -1 }))).toBe(true);
+    expect(watch.update(held({ velocityX: 0, playerMove: 0, pressBegan: 1 }))).toBe(true);
+    expect(watch.holding).toBe('ahead');
+  });
+
+  /** Every shipped level whose spawn mode drives itself and can engage. */
+  const AUTOMATIC = EVERY_MODE.filter(
+    ({ level, tuning }) =>
+      tuning === level.locomotion[0] && tuning.drive === 'auto' && (tuning.interaction?.reachPx ?? 0) > 0,
+  );
+
+  it('a press the way it goes, begun while it brakes for the first thing, does not carry it past', () => {
+    expect(AUTOMATIC.length, 'no shipped level drives itself, so this proves nothing').toBeGreaterThan(0);
+    for (const { level, tuning } of AUTOMATIC) {
+      const where = nameOf(level, tuning);
+      const reach = tuning.interaction?.reachPx ?? 0;
+      const subject = firstAhead(level);
+      const aim = stopSubjectsFor({ level, rig: RIG, tuning, ride: rideFor(level.rides, tuning.mode) }).find(
+        (candidate) => candidate.id === subject.id,
+      );
+      if (aim === undefined) throw new Error(`${where}: "${subject.id}" is not a stop subject`);
+      const restX = restXFor(aim, 1);
+
+      /* The audit's press: a quarter of a second into the brake, not on the frame
+         the stop caught the drive — that one is a control already down. */
+      const DELAY = 15;
+      const press = { caught: -1 };
+      const run = drive(level, tuning, {
+        frames: 60 * 30,
+        hold: (state, frameIndex) => {
+          if (press.caught < 0 && state.velocityX > 0 && restX - state.x <= stopLinePx(state.velocityX, tuning)) {
+            press.caught = frameIndex;
+          }
+          return press.caught >= 0 && frameIndex >= press.caught + DELAY ? 1 : 0;
+        },
+      });
+
+      expect(press.caught, `${where} never braked for "${subject.id}"`).toBeGreaterThanOrEqual(0);
+      expect(
+        run.frames[press.caught + DELAY - 1]?.velocityX ?? 0,
+        `${where}: the drive was already at rest when the press began, so this is not the audit's press`,
+      ).toBeGreaterThan(0);
+      expect(
+        run.state.velocityX === 0 && run.frames.at(-1)?.holding === subject.id,
+        `${where}: a press begun while braking carried the drive past "${subject.id}" to ` +
+          `${String(Math.round(run.state.x))} (held at ${String(run.frames.at(-1)?.holding)})`,
+      ).toBe(true);
+      expect(Math.abs(run.state.x - subject.x), where).toBeLessThanOrEqual(reach);
+      /* On the side the stand-off chose (ADR-0037), not level with the character. */
+      expect(Math.sign(run.state.x - subject.x), where).toBe(Math.sign(restX - subject.x));
+    }
   });
 });
