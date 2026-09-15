@@ -378,7 +378,7 @@ reads, and 22 % over even in head units. What ships now is 96 px bare (**0.229**
 
 **A garment may add bulk; a body may not.** A parka genuinely broadens the shoulders and a fitted tunic
 barely does, so the costumes are allowed to differ *within one budget*: the widest point of the dressed
-figure at rest is **115 px on all three costumes since §7.7**, arms and hands included (108 on the parka, 104 on the serge and 113 at the beaver's waist before it). Two things
+figure at rest is **115 px on the parka and the serge and 116 px on the guide**, arms and hands included. The guide measures at its belly since its friendly redraw (`guide.md` §0). Before §7.7 the figures were 108 on the parka, 104 on the serge and 113 at the beaver's waist. Two things
 are measured beside that rather than inside it, because neither is the body: the officer's **hat brim at
 106 px**, which is headgear above the crown exactly as the toque is, and the guide's **paddle tail at
 132 px**, which is a limb held out to one side. Everything is inside the 116 px cap. What
@@ -472,8 +472,12 @@ mass with only a tonal break where the pale cheek fur meets the darker pelt. The
 `docs/content-review.md` §6.2 only lets you compare characters if everyone is compared and a second neck
 canon is a second canon. What is exempt is the SURFACE, on the one non-human artboard and on no human one
 ever: the guide's column is pelt, not skin — `head-shell-beaver` covers the shared `neck-{skin}` exactly as
-it already covers the shared head and the shared short crop — and it is `leather-shade` where the body is
-`leather-base`, so it reads as the animal's heavy neck ruff rather than as a person's column. That is the
+it already covers the shared head and the shared short crop — and until the guide's friendly redraw it was `leather-shade` where the body was
+`leather-base`, so it read as the animal's heavy neck ruff rather than as a person's column. Since `guide.md` §0 the
+column is a `felt-base` throat. It sits under the cream muzzle's jaw ink and above the `wood-base` chest, the same
+lit-column-over-darker-collar sandwich as the humans. Measured at x 130–135 it is **14.5 px** between the jaw ink
+and the column's base ink, the top 4 px in occlusion; at x 120 the near shoulder cap is the lower bound, as it is
+on the parka. That is the
 same exemption `guide.md` already holds for the skin ramp, extended one part, and it is the only one.
 
 **Judge it at 390 px on the three-figure comparison.** Everything in this section was invisible in the SVG
@@ -656,7 +660,9 @@ still stands: read the page.
 - At rest, the near sleeve still lies over the back half of the coat, and the standing figure reads as a column
   until it walks.
 - In `train/*` and `toboggan/*` the rigid coat hangs below the lap.
-- The guide still stands on the human leg canon, so it is long in the leg for a beaver.
+- The guide still stands on the human leg canon, so it is long in the leg for a beaver. **Eased, not solved, on
+  2026-09-14 (`guide.md` §0):** its body hem now falls below the knee, so 89.5 px of leg shows where 131.5 did.
+  The leg canon itself did not change.
 - ~~The faint rectangular hairlines around characters in the running game are older than this redraw. They show in
   the before screenshots too, and they are not in any source.~~ **Fixed 2026-09-14 (ADR-0033).** They were in the
   atlas, not the art. The old packer's `extrude` option ringed every trimmed frame with a 1 px rectangle in a

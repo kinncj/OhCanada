@@ -316,7 +316,7 @@ collar and its UPPER bound is `head-shell-beaver`, which has to CONTAIN it or `m
 guide's not-applicable claim for `skin` — that gate caught this, and it was right to.
 
 **The same UPPER bound holds over `hair`, and it is a rule about pixels, not about rectangles.**
-`head-shell-beaver`'s window is 116 x 130 at (66, 24), and it contains both the neck's 36 x 46 at (102, 100)
+`head-shell-beaver`'s window is 113 x 127 at (68, 26), and it contains both the neck's 36 x 46 at (102, 100)
 and `hair-crop-*`'s 84 x 73 at (77, 34) — which is what `make verify-art` checks. Since 2026-09-14 the
 generator that drew them also composites the four and refuses to write if a single half-pixel sample of head,
 crop or neck is left uncovered by the pelt, which is the pixel check this paragraph asks for. What it cannot check is

@@ -3,7 +3,48 @@
 The design sheet for `costume: beaver` — the artboard `guide`. Read with `art-bible.md`, `rig-contract.md`,
 `docs/content-review.md` and `palette.json` open.
 
-## 0. Redrawn 2026-09-14 — read `art-bible.md` §7.7 first
+## 0. Redrawn again 2026-09-14, after "the beaver looks like a crackhead"
+
+The product owner reported the guide as manic and unhealthy. It was measured on composites built from the
+rig, beside the default player, before anything was drawn. Four causes were found, and **none of them was the
+eyes**: the guide plays the shared `face-*-neutral` frames, with the same pupils, catchlights and brows as
+every person in the game.
+
+| measured before | why it read manic | now |
+|---|---|---|
+| mean L\* around the eyes 32.7 / 34.7, brow ink contrast 19.4 L\* (the player: 56.0 / 60.2 and 42.4) | `leather-base` (L\* 34.9) is as dark as `skin-5-base`; the ink brows vanished and white eyes stared out of a dark face | a `wood` pelt: 44.1 / 42.4 around the eyes, 31 L\* of brow contrast |
+| torso widest at the chest (113 px at y 206), head as wide as the body, 131.5 px of leg below the hem (30 % of height) | a column on human legs | a pear: 87 px at the shoulder row, 114.5 px at the belly (y 300), the hem below the knee at y 374.5, 89.5 px of leg showing (20.5 %) |
+| incisors 22 × 21 px with ink, hanging 8.5 px below the snout pad; the nose 29 px ahead of the smile | buck teeth in a gape | two teeth 17 × 14 px tucked under the shared smile on a cream bean-shaped muzzle, with a line from the nose down to the smile |
+| 13.7 % of pixels dark non-ink fills: `hide` paws, feet and tail and a `leather-shade` jaw | bruised | 8.3 %: warm `leather` paws and feet, no jaw shade; only the tail keeps the cool dark `hide` it was measured from |
+
+**Three directions were sketched** on the real skeleton and keys (`renders/beaver/directions/` in the art agent's
+scratchpad; not shipped):
+
+- **A, chestnut:** a brown face, a cream muzzle and a hanging paddle. **Chosen.**
+- **B, plush:** a brick pelt, a cream face mask and a tail on the ground. It read as a person's face in a
+  beaver-suit hood, and the pelt as a fox. Rejected.
+- **C, natural:** a lighter `leather` pelt and an oval muzzle. The body stayed as dark as before. Rejected.
+
+A was then taken through three iterations at 390 px:
+
+1. One bean-shaped muzzle, because two outlined cheek rings read as a moustache.
+2. The hem to the knee, a pear taper, and a cream front from the throat to the belly.
+3. No wrist cuff, because a banded cuff read as a sleeve.
+
+**What did not change, on purpose:**
+
+- the rig: its parts, pivots, keys and z-order, and the shared face frames;
+- the 116 px rest cap (the guide is at 116 now, at the belly beside the near paw);
+- the pelt's pixel-for-pixel cover of the shared head, crop and neck, which the generator still checks.
+
+The guide's stand-off span shrank from {-100, 62} to {-96, 61}. **No accessory**: `references.json` `neverAdd`
+forbids one. **The idle pose is the rig's**, shared by every character, so the relaxed read comes from shape,
+a low belly and a paddle to lean on, and not from keys.
+
+Everything below this section records earlier passes. Where its numbers disagree with this section, they are
+history.
+
+### 0.1 The previous redraw, 2026-09-14 — read `art-bible.md` §7.7
 
 Redrawn on the same rig with the player and the officer. The pelt head is one round mass that still covers
 the shared head, the short crop and the neck (the generator refuses to write if a half-pixel sample shows),
@@ -117,7 +158,8 @@ shell. The lit face was then enlarged to cover most of the upper half, because a
 the hind feet were both `hide-base` and merged into one dark mass; the hind feet now sit a tone lighter,
 which is also correct, since a sole plane faces the sky and a hanging tail does not.
 
-**The incisors.** Two of them, deliberately larger than life, white, hanging below the shared mouth line.
+**The incisors.** Two of them, white, tucked under the shared smile and ending well above the chin. Until §0
+they were deliberately larger than life and hung below the snout pad, where they read as buck teeth in a gape.
 Exaggerating an identifying feature is simplification; adding one would be invention (`art-bible.md` §5).
 
 **One labelled departure from the reference.** Beaver incisors are orange — iron-rich enamel, plainly orange
@@ -132,7 +174,7 @@ so it reads as a decision.
 |---|---|---|
 | pelt | `leather` | Fur medians #654c3d (Ontario, winter sun), #54483b (Alberta, overcast) and #5b4d46 (Szmurlo, backlit) — hue 20–31°, L 28–32, and desaturated in every one because the fur is wet or the light is flat. `leather-base` is hsl(19°, 53 %, 32 %): the same hue and lightness, at the saturation the rest of the palette's browns work at. **No new fur ramp was added**, because one would have duplicated `leather` to within a few points and a ramp that duplicates another is a defect. |
 | belly, cheeks, snout pad, inner ear | `felt` | The pale ventral fur and cheek. |
-| tail, forepaws, hind feet, nose | `hide` | **New ramp — see below.** |
+| tail, nose | `hide` | **New ramp — see below.** The forepaws and hind feet were `hide` too until §0. Since §0 they are `leather`, a warm dark brown that does not merge with the cool tail, and the pelt is `wood` (L\* 46.5 against `leather-base`'s 34.9). That lighter pelt is a labelled legibility lift, like the white incisors: at the photographed fur's darkness the shared ink brows vanish. |
 | incisors | `white` | |
 
 ### The `hide` ramp and its derivation
