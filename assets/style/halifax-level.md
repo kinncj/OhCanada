@@ -720,3 +720,15 @@ layer tiles — so 7 200 → 7 560 moves the arrival line to 7 020 and would hav
 214 px of margin and a 754 px tail, at a cost of 0 bytes, 0 textures and 0.86 s of extra walk. It was **not**
 taken, because moving points in is what was asked for and because a world's length is a level-design call
 rather than an art one. It is written down here so that choosing it later is a decision and not a discovery.
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `halifax-ground-boardwalk-edge` | `ground-boardwalk-edge@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The boardwalk nearest the viewer: weathered grey deck boards (`path-base`, `path-light`, a few `stone-base` replacements) in courses that widen toward the bottom, staggered butt joints in `path-shade`, and on the deck a mooring cleat, a coil of rope, a slatted wooden lobster trap with a red-and-white buoy, and an iron mooring ring. It continues the plank deck of `layer-40-quayside` toward the viewer.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

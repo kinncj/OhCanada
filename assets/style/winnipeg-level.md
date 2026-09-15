@@ -353,3 +353,15 @@ planters, three trees and six people; the corridor was not short of things to lo
   'cable-stayed-bridge': singleSource(),
   'autumn-maple': singleSource(),
 ```
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `winnipeg-ground-promenade-paving` | `ground-promenade-paving@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The promenade nearest the viewer: courses of mottled buff limestone slabs, widening toward the bottom, with a lit top edge and `limestone-shade` joints; a cast-iron drain grate; and fallen maple leaves in `oxide-light`, `flag-red-base` and `brass-base`, for early autumn.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

@@ -504,3 +504,15 @@ holding right from the spawn to about x 1 900, then letting go and turning back:
 ```
 
 Applied with this change, as the park car's was.
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `alberta-foothills-ground-rangeland` | `ground-rangeland@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The rangeland nearest the viewer in late summer: rough fescue in tufts with dry `felt-light` seed heads, `brass-light` gumweed and small fieldstones; the grass under the horse trail, which draws over it at world 1536; and taller, darker `pasture-shade` grass below.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

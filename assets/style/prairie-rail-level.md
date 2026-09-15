@@ -438,3 +438,15 @@ perf lane to discover.
 ```js
   'park-car': singleSource(),
 ```
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `prairie-rail-ground-railway-shoulder` | `ground-railway-shoulder@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The right of way nearest the viewer: the siding's ballast shoulder in grey and rust chips, a ditch of prairie grass with dry `felt-light` seed heads, the main line's ballast bed under the ride's track strip (which draws over it at world 1532), a post-and-wire fence, and a harvested field of broken stubble rows.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

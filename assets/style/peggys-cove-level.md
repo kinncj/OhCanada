@@ -616,3 +616,15 @@ is free: 7 040 → 7 560 moves the arrival line to 7 020 and would have let all 
 §12 put them — hero in the middle included — at a cost of 0 bytes and 0 textures. It was **not** taken,
 because moving points in is what was asked for and a world's length is a level-design call rather than an art
 one. It is recorded so that choosing it later is a decision and not a discovery.
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `peggys-cove-ground-granite-ledge` | `ground-granite-ledge@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The ledge nearest the viewer: weathered granite slabs with irregular edges, a lit `limestone-light` top and a shaded foot, grass in the joints, yellow `felt-light` lichen, and two tide pools rimmed with `brass-shade` rockweed. It continues the jointed rock of `layer-40-granite-barrens`. No erratic: the erratic is a POI.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

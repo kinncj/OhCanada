@@ -651,3 +651,15 @@ the two dead ends named, so the third person to find it does not re-derive them.
 ```
 
 Same shape as `chateau-frontenac`. Until they land, `make verify-art` names two more failures.
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `quebec-city-ground-snowbank` | `ground-snowbank@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The near lanes of the run, in the §7 vocabulary: packed `snow-base` scored by straight, level runner streaks, a modelled divider ridge, the chute's near timber wall capped with snow, and a drifted bank crossed by footprints. `layer-60-slope`, drawn for this band before anything could show it, is still under the fill.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

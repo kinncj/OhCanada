@@ -296,3 +296,15 @@ two cedars, gulls and four people, and `layer-30-inlet.svg` a ferry, a bulk carr
   'marina-boats': singleSource(),
   'bulk-carrier': singleSource(),
 ```
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `vancouver-ground-seawall-paving` | `ground-seawall-paving@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
+
+The walkway nearest the viewer: scored concrete panels with a dashed `brass-base` lane line, a granite curb, and a planting bed of sword ferns and salal with a few river rocks.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

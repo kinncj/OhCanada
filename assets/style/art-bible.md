@@ -266,9 +266,13 @@ y=1920  └───────────────────────
      four each for the same reason. A layer earns its texture only if its world band is not covered by a
      nearer opaque layer. Never put an identifying feature on any repeating layer at all — see §5.
 
-- **Nothing you draw below the ground line will ever be seen.** `level-scene.ts` paints the ground polygon
-  opaque at depth 400, over every parallax layer at depth 100+, filling from the polyline down to the bottom
-  of the world. `selectLayers` models this correctly and the painter enforces it. Two shipped levels do not
+- **Nothing you draw below the ground line on a parallax layer will ever be seen.** `level-scene.ts` paints the
+  ground polygon opaque at depth 400, over every parallax layer at depth 100+, filling from the polyline down
+  to the bottom of the world. **The band below the line is the level's ground dressing** (ADR-0042): one strip,
+  `groundDressing` in the level document, drawn over the fill and under every actor at every tier. It is a
+  1x-pinned source 1080 wide, opaque in every row, and runs from `topY` to the bottom of the world. `topY` is at
+  or below the ground's lowest point. Put its most legible detail in its first ~160 rows, which stay visible above
+  the HUD with a prompt showing, and draw calmer, larger shapes below. `selectLayers` models this correctly and the painter enforces it. Two shipped levels do not
   respect it — Ottawa's ice band shows 30 of its 230 rows and Québec City's toboggan run shows none of its
   560 — and both are one `offset.y` in a level document, not art. Draw the ground plane *behind* the player
   as rows **above** y = 1280, and let `theme.ground` be the surface at the player's feet.

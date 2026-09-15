@@ -546,3 +546,15 @@ lamps, spruces, skaters, a bridge and a hut, and the ice. What the level was sho
 
 Same shape as `peace-tower`, which is already `singleSource()`. Until they land, `make verify-art` names
 three more failures and says why.
+
+---
+
+## Ground dressing (ADR-0042)
+
+| key | source | authored px | world y | decoded |
+|---|---|---|---|---|
+| `ottawa-ground-canal-bank` | `ground-canal-bank@1x.svg` | 1080 × 450 | 1470 … 1920 | 1.87 MiB |
+
+The near bank of the Skateway: the lit `ice-light` edge of the ice sheet, a rounded snowbank crest with `snow-shade` shadow, red-osier dogwood stems in `oxide-base` standing out of the snow, and drifts crossed by footprints. It starts at world 1470 because that is the lowest point of this level's ground (ADR-0042 §2). On the high stretch the 230 rows between the walking line and the bank are the ice fill, which reads as the lane between two banks.
+
+A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
