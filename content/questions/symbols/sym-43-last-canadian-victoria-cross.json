@@ -40,9 +40,9 @@
     "quote": "Lieutenant Robert Hampton Gray, a navy pilot born in Trail, B.C., was killed while bombing and sinking a Japanese warship in August 1945, a few days before the end of the Second World War, and was the last Canadian to receive the V.C. to date."
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-15T11:12:20Z",
+    "checkedAt": "2026-09-15T12:09:25Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "The V.C. has been awarded to 96 Canadians since 1854, including: … Lieutenant Robert Hampton Gray, a navy pilot born in Trail, B.C., was killed while bombing and sinking a Japanese warship in August 1945, a few days before the end of the Second World War, and was the last Canadian to receive the V.C. to date."
   }

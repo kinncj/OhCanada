@@ -40,10 +40,10 @@
     "quote": "Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "verified",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-15T12:09:25Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "Postwar Canada enjoyed record prosperity and material progress. … Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations."
   }
 }
