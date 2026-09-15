@@ -153,6 +153,8 @@ describe('interpreting what came back', () => {
     layers: [
       { key: 'band', depth: 1, scrollFactor: { x: 1, y: 1 }, offset: { x: 0, y: 0 }, repeatX: true },
     ],
+    /* Required since ADR-0042; the ground here is flat at 900. */
+    groundDressing: { key: 'strip', topY: 900 },
     locomotion: [
       {
         mode: 'walk',

@@ -163,6 +163,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "alberta-foothills-ground-rangeland", "topY": 1280 },
   "locomotion": [
     {
       "mode": "horse",
@@ -430,5 +431,5 @@
     }
   ],
   "assets": [],
-  "textureBudgetBytes": 37748736
+  "textureBudgetBytes": 41943040
 }

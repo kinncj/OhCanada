@@ -46,6 +46,7 @@ import { describe, expect, it } from 'vitest';
 
 import gameConfigJson from '@content/game.config.json';
 
+import { groundDressingProblems } from '@adapters/phaser/ground-dressing';
 import { selectLayers, type LayerViewport } from '@adapters/phaser/level-effects';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
@@ -87,6 +88,7 @@ interface LevelDoc {
   readonly locomotion: readonly { readonly mode: string }[];
   readonly pois: readonly { readonly id: string; readonly artKey: string; readonly position: Vec2 }[];
   readonly rides?: readonly RideDoc[];
+  readonly groundDressing: { readonly key: string; readonly topY: number };
 }
 
 /** Every texture a ride layer can draw — its still, its rest frame and its gait — each once (ADR-0035). */
@@ -162,6 +164,57 @@ describe('every key a level document names has a source under its own level dire
             `cropped.`,
         ).toBeGreaterThanOrEqual(gameConfigJson.designWidth);
       }
+    });
+  }
+});
+
+/**
+ * ### 2b. The band below the ground is dressed with art that exists, under the ground everywhere (ADR-0042)
+ *
+ * A strip is a key and a world row, and the schema is satisfied by a key no
+ * source produces and by a row above the ground. The first draws the flat band
+ * the strip exists to close, and the second draws the strip in the air over the
+ * backdrop wherever the ground falls away. Neither stops a level reaching
+ * `ready`. The parser refuses the row at load; this refuses both in CI, against
+ * the sources on disk.
+ */
+describe('every level dresses the band below its ground with art that exists (ADR-0042)', () => {
+  it('has levels to check', () => {
+    expect(levels.length).toBeGreaterThan(0);
+  });
+
+  for (const level of levels) {
+    it(`${level.id}: the ground dressing is a 1x-pinned source under its own level directory`, () => {
+      const { key } = level.groundDressing;
+      const path = sourceFor(level.id, key);
+      expect(
+        path,
+        `${level.id}.json names ground dressing "${key}", and no source under assets/src/svg/${level.id}/ ` +
+          'produces it. The band below the walking line would be one flat colour on a level that looks finished.',
+      ).not.toBeNull();
+      expect(
+        path?.endsWith('@1x.svg'),
+        `${String(path)} is not pinned to 1x. topY is a design row and the strip's height is its art's rows, ` +
+          'which agree only at 1x; a 2x copy would also cost four times the texture for a band the HUD half covers.',
+      ).toBe(true);
+    });
+
+    it(`${level.id}: the ground dressing starts at or below the ground's lowest point and ends on the bottom of the world`, () => {
+      const problems = groundDressingProblems(level.groundDressing, level.ground, level.size.y);
+      expect(problems, problems.join('\n')).toEqual([]);
+
+      const path = sourceFor(level.id, level.groundDressing.key);
+      if (path === null) return;
+      const size = sizeOfSource(path);
+      /* Exactly, not "at most". Past the bottom is texture nobody can see. Short
+         of it, the scene fills the whole world under the strip again, and the
+         third of a screen of overdraw the strip was drawn to replace comes back
+         (`groundFillFloor`). */
+      expect(
+        level.groundDressing.topY + size.height,
+        `${level.id}'s ground dressing is ${String(size.height)} rows from world row ` +
+          `${String(level.groundDressing.topY)}; it must end on the bottom of the world, ${String(level.size.y)}`,
+      ).toBe(level.size.y);
     });
   }
 });

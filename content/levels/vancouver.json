@@ -155,6 +155,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "vancouver-ground-seawall-paving", "topY": 1280 },
   "locomotion": [
     {
       "mode": "skateboard",

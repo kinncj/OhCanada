@@ -106,6 +106,8 @@ const minimal = (): Record<string, unknown> => ({
       repeatX: true,
     },
   ],
+  /* Required since ADR-0042, and on the walking line: the ground is flat at 1000. */
+  groundDressing: { key: 'strip', topY: 1000 },
   locomotion: [
     {
       mode: 'walk',
@@ -462,6 +464,65 @@ describe('a level says what the player wears, and nothing is assumed', () => {
     const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     expect(offered).toContain(result.value.playerCostume);
+  });
+});
+
+describe('a level dresses the band below its ground, and the strip never hangs in the air (ADR-0042)', () => {
+  /** Flat, then falling away to the right, as Ottawa's canal does. */
+  const falling = [
+    { x: 0, y: 1000 },
+    { x: 2000, y: 1000 },
+    { x: 2400, y: 1200 },
+    { x: 4000, y: 1230 },
+  ];
+
+  it('carries the strip through to the scene', () => {
+    const result = parsed({ groundDressing: { key: 'testville-ground-strip', topY: 1000 } });
+    expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
+    if (result.ok) expect(result.value.groundDressing).toEqual({ key: 'testville-ground-strip', topY: 1000 });
+  });
+
+  it('refuses a level that does not say, because the default is the flat band', () => {
+    const silent = Object.fromEntries(Object.entries(minimal()).filter(([key]) => key !== 'groundDressing'));
+    expect('groundDressing' in silent).toBe(false);
+    const result = parseLevelDocument(silent, MODES);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.code).toBe('content.level.groundDressing');
+  });
+
+  it('refuses a strip that starts above the lowest point of a ground that falls away', () => {
+    const result = parsed({ ground: falling, groundDressing: { key: 'strip', topY: 1000 } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.code).toBe('content.level.groundDressing.topY');
+      expect(result.error.message).toContain('y 1230 at x 4000');
+    }
+  });
+
+  it('accepts the same strip moved down to that lowest point', () => {
+    expect(parsed({ ground: falling, groundDressing: { key: 'strip', topY: 1230 } }).ok).toBe(true);
+  });
+
+  it.each([
+    ['no key', { topY: 1000 }, 'content.level.groundDressing.key'],
+    ['a key that is not kebab-case', { key: 'Strip_1', topY: 1000 }, 'content.level.groundDressing.key'],
+    ['no topY', { key: 'strip' }, 'content.level.groundDressing.topY'],
+    ['a negative topY', { key: 'strip', topY: -1 }, 'content.level.groundDressing.topY'],
+    ['a topY at the bottom of the world', { key: 'strip', topY: 1920 }, 'content.level.groundDressing.topY'],
+    ['a string', 'strip', 'content.level.groundDressing'],
+    ['null', null, 'content.level.groundDressing'],
+  ])('refuses %s', (_label, groundDressing, code) => {
+    const result = parsed({ groundDressing });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.code).toBe(code);
+  });
+
+  it.each(levelFiles)('%s: dresses its ground band with a strip that starts at or below its lowest ground point', (file) => {
+    const result = parseLevelDocument(readLevel(file), MODES);
+    expect(result.ok, result.ok ? '' : result.error.message).toBe(true);
+    if (!result.ok) return;
+    const lowest = Math.max(...result.value.ground.map((point) => point.y));
+    expect(result.value.groundDressing.topY).toBeGreaterThanOrEqual(lowest);
   });
 });
 

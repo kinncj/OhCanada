@@ -207,6 +207,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "ottawa-ground-canal-bank", "topY": 1470 },
   "locomotion": [
     {
       "mode": "skate",

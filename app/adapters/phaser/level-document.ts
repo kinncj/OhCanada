@@ -73,6 +73,7 @@
 
 import type {
   CameraTuning,
+  GroundDressing,
   LevelAssetRef,
   LevelCharacter,
   LevelDocument,
@@ -93,6 +94,7 @@ import type { CharacterId, LevelId, PoiId, SubjectId } from '@domain/ids';
 import { appErr, ok, type Result } from '@common/result';
 
 import { DEFAULT_PALETTE } from './boot-config';
+import { groundDressingProblems } from './ground-dressing';
 import {
   createClaimLedger,
   readFactClaim,
@@ -138,6 +140,7 @@ export interface SceneLevel
       | 'camera'
       | 'ground'
       | 'layers'
+      | 'groundDressing'
       | 'locomotion'
       | 'pois'
       | 'characters'
@@ -437,6 +440,38 @@ function readLayers(source: Record<string, unknown>): Result<readonly ParallaxLa
     });
   }
   return ok(layers);
+}
+
+/**
+ * The level's ground dressing (ADR-0042), required and refused when absent.
+ *
+ * The schema holds the shape; this also holds the one rule the schema cannot
+ * state, because it compares a number with the ground array: the strip starts at
+ * or below the ground's lowest point. A strip higher than that is drawn in the
+ * air over the backdrop wherever the ground falls away, and a level that reached
+ * `ready` like that would look like a decision.
+ */
+function readGroundDressing(
+  source: Record<string, unknown>,
+  ground: readonly Vec2[],
+  worldHeight: number,
+): Result<GroundDressing> {
+  const raw = source['groundDressing'];
+  if (!isRecord(raw)) {
+    return invalid(
+      'groundDressing',
+      '"groundDressing" must be an object with key and topY. It has no default: without it the ' +
+        'band below the walking line is one flat colour, which is the defect it exists to close (ADR-0042).',
+    );
+  }
+  const key = readId(raw, 'key');
+  if (!key.ok) return invalid('groundDressing.key', '"groundDressing.key" must be a kebab-case texture key.');
+  const topY = readNumber(raw, 'topY', { min: 0 });
+  if (!topY.ok) return invalid('groundDressing.topY', topY.error.message);
+  const dressing: GroundDressing = { key: key.value, topY: topY.value };
+  const [problem] = groundDressingProblems(dressing, ground, worldHeight);
+  if (problem !== undefined) return invalid('groundDressing.topY', problem);
+  return ok(dressing);
 }
 
 /**
@@ -1005,6 +1040,8 @@ export function parseLevelDocument(
   if (!ground.ok) return ground;
   const layers = readLayers(raw);
   if (!layers.ok) return layers;
+  const groundDressing = readGroundDressing(raw, ground.value, size.value.y);
+  if (!groundDressing.ok) return groundDressing;
 
   const rawLocomotion = readArray(raw, 'locomotion', 1);
   if (!rawLocomotion.ok) return rawLocomotion;
@@ -1045,6 +1082,7 @@ export function parseLevelDocument(
     camera: camera.value,
     ground: ground.value,
     layers: layers.value,
+    groundDressing: groundDressing.value,
     locomotion,
     pois: pois.value.pois,
     teachingPois: pois.value.teaching,

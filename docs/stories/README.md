@@ -762,7 +762,8 @@ and present **only** when the page is opened with `?e2e=1`:
 level), and `data-rides` / `data-rides-drawn` (whether the mode the player moves by has a ride, and
 whether its art drew: `0`/`0` or `1`/`1` on a healthy level), and `data-parts-interleaved` (a count of
 drawn things that sit, by depth, between the first and last part of a character they are not part of: `0`
-on a healthy level).
+on a healthy level), and `data-ground-dressing-drawn` (whether the strip that dresses the band below the
+walking line drew from its art: `true` on a healthy level, ADR-0042).
 
 `data-character-mode`, `data-pose` and `data-mode-gaps` exist because the HUD named a mode the
 character did not play: every level animated walking whatever the mode was. `data-character-mode` is

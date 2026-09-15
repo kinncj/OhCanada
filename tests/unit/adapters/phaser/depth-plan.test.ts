@@ -34,6 +34,7 @@ import type { RigDocument } from '@application/ports';
 import {
   DEPTH_ACTORS,
   DEPTH_GROUND,
+  DEPTH_GROUND_DRESSING,
   DEPTH_LAYERS,
   DEPTH_RIDE_TRACK,
   DEPTH_SKY,
@@ -83,6 +84,7 @@ function everythingDrawn(level: LevelDoc, plan: DepthPlan): readonly Drawn[] {
     { owner: 'haze', depth: plan.haze },
     { owner: 'ground', depth: plan.ground },
     { owner: 'sheen', depth: plan.sheen },
+    { owner: 'ground dressing', depth: plan.groundDressing },
     { owner: 'ride track', depth: plan.rideTrack },
     { owner: 'snow', depth: plan.snow },
     { owner: 'affordance', depth: plan.affordance },
@@ -107,11 +109,24 @@ describe('depthPlan', () => {
     expect(plan.layer(0)).toBe(DEPTH_LAYERS);
     expect(plan.haze).toBeLessThan(plan.layer(0));
     expect(plan.ground).toBe(DEPTH_GROUND);
+    expect(plan.groundDressing).toBe(DEPTH_GROUND_DRESSING);
     expect(plan.rideTrack).toBe(DEPTH_RIDE_TRACK);
     expect(plan.poi).toBeLessThan(DEPTH_ACTORS);
     expect(plan.poi).toBeGreaterThan(plan.rideTrack);
     expect(plan.affordance).toBeGreaterThan(plan.rideFront);
     expect(plan.snow).toBeGreaterThan(plan.affordance);
+  });
+
+  it('draws the ground dressing over the fill and its sheen, and under the ride track and every actor (ADR-0042)', () => {
+    const plan = depthPlan({ characters: 2, partZ: PART_Z });
+    expect(plan.sheen).toBeGreaterThan(plan.ground);
+    expect(plan.groundDressing).toBeGreaterThan(plan.sheen);
+    expect(plan.rideTrack).toBeGreaterThan(plan.groundDressing);
+    expect(plan.poi).toBeGreaterThan(plan.rideTrack);
+    const [first] = plan.characters;
+    expect(first, 'the plan placed no band for the first character').toBeDefined();
+    if (first === undefined) return;
+    expect(partDepthRange(first, PART_Z).first).toBeGreaterThan(plan.groundDressing);
   });
 
   it('gives a character and the player ranges that do not interleave — the Toronto defect', () => {

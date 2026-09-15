@@ -1802,6 +1802,96 @@
       "modifications": "Original work. The track a ride runs on (ADR-0031): a 480 px strip with ten ties on a 48 px period, repeated across the view and fixed to the world so the ties go by under the train. Drawn to match the right of way in assets/src/svg/prairie-rail/layer-40-railbed.svg. The @1x suffix pins the source to one scale."
     },
     {
+      "path": "src/svg/halifax/ground-boardwalk-edge@1x.svg",
+      "kind": "shipped",
+      "title": "The harbour boardwalk nearest the viewer: weathered deck boards, a cleat, rope, a lobster trap and a mooring ring",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/halifax/ground-boardwalk-edge@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the plank deck of assets/src/svg/halifax/layer-40-quayside.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/peggys-cove/ground-granite-ledge@1x.svg",
+      "kind": "shipped",
+      "title": "The granite ledge nearest the viewer: jointed slabs, grass in the joints, lichen and two tide pools",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/peggys-cove/ground-granite-ledge@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the jointed rock of assets/src/svg/peggys-cove/layer-40-granite-barrens.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/quebec-city/ground-snowbank@1x.svg",
+      "kind": "shipped",
+      "title": "The near lanes of the toboggan run: runner streaks, a divider ridge, the chute's near timber wall and a drifted bank",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/ground-snowbank@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Uses the packed-snow lane, straight level runner streaks and divider ridges that assets/style/quebec-city-level.md section 7 sets for the run. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/ottawa/ground-canal-bank@1x.svg",
+      "kind": "shipped",
+      "title": "The near bank of the skateway: the ice edge, a snowbank crest, red-osier dogwood stems and footprints",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/ground-canal-bank@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 450 strip, opaque in every row, repeated across the view over the ground fill from the lowest point of the level's ground (world y 1470) to the bottom of the world. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/toronto/ground-trail-verge@1x.svg",
+      "kind": "shipped",
+      "title": "The near lane of the waterfront trail: asphalt, a white edge line, a curb, a grass verge and a sidewalk",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/toronto/ground-trail-verge@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the trail of assets/src/svg/toronto/layer-40-boulevard.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/winnipeg/ground-promenade-paving@1x.svg",
+      "kind": "shipped",
+      "title": "The riverside promenade nearest the viewer: mottled limestone slabs, a drain grate and fallen maple leaves",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/winnipeg/ground-promenade-paving@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the limestone paving of assets/src/svg/winnipeg/layer-40-plaza.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/prairie-rail/ground-railway-shoulder@1x.svg",
+      "kind": "shipped",
+      "title": "The right of way nearest the viewer: a ballast shoulder, a grass ditch, the main line's ballast bed and a stubble field",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/prairie-rail/ground-railway-shoulder@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Its ballast bed lies under the ride track of ride-park-car-track@1x.svg, which draws over it. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/alberta-foothills/ground-rangeland@1x.svg",
+      "kind": "shipped",
+      "title": "The rangeland nearest the viewer in late summer: rough fescue, dry seed heads, gumweed and fieldstones",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/alberta-foothills/ground-rangeland@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. The horse trail strip ride-ranch-horse-trail@1x.svg draws over it. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/vancouver/ground-seawall-paving@1x.svg",
+      "kind": "shipped",
+      "title": "The seawall walkway nearest the viewer: scored concrete, a yellow lane line, a granite curb, ferns and salal",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/vancouver/ground-seawall-paving@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the paving of assets/src/svg/vancouver/layer-40-seawall.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/the-north/ground-gravel-bar@1x.svg",
+      "kind": "shipped",
+      "title": "The river gravel bar nearest the viewer: rounded cobbles, silt sand, driftwood and willow tufts",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/the-north/ground-gravel-bar@1x.svg",
+      "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Continues the gravel bar of assets/src/svg/the-north/layer-40-river-and-bar.svg toward the viewer. The @1x suffix pins the source to one scale."
+    },
+    {
       "path": "refs/winnipeg/cmhr-from-the-forks-tower.jpg",
       "kind": "reference",
       "title": "Canadian Museum for Human Rights from The Forks Tower",

@@ -419,6 +419,21 @@ export interface ParallaxLayer {
 }
 
 /**
+ * The art over the ground fill, below the walking line (ADR-0042).
+ *
+ * A repeating strip fixed to the world, drawn over the ground polygon and under
+ * every landmark, character and ride, at every visual tier. Not a
+ * `ParallaxLayer`: every layer draws under the ground polygon, which is why the
+ * lower third of every screen was one flat colour.
+ */
+export interface GroundDressing {
+  /** Texture key of the strip, a 1x-pinned source; its width is the tile. */
+  readonly key: string;
+  /** World row of the strip's first row, at or below the lowest point of the ground. */
+  readonly topY: number;
+}
+
+/**
  * A landmark the player taps to engage. The blurb is the fact it teaches, which
  * is why a POI is content and a backdrop is a `ParallaxLayer`.
  */
@@ -594,6 +609,8 @@ export interface LevelDocument {
   /** The surface as a polyline, ordered left to right; slope is sampled from it. */
   readonly ground: readonly Vec2[];
   readonly layers: readonly ParallaxLayer[];
+  /** The strip over the ground fill (ADR-0042). Required: every level has a band below its line. */
+  readonly groundDressing: GroundDressing;
   /**
    * Locomotion modes this level offers, in the order the player unlocks them. The
    * first is the mode the player spawns in. Walking and skating differ by these

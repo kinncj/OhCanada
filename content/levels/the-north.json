@@ -153,6 +153,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "the-north-ground-gravel-bar", "topY": 1280 },
   "locomotion": [
     {
       "mode": "walk",

@@ -153,6 +153,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "toronto-ground-trail-verge", "topY": 1280 },
   "locomotion": [
     {
       "mode": "bike",
@@ -305,5 +306,5 @@
     }
   ],
   "assets": [],
-  "textureBudgetBytes": 35651584
+  "textureBudgetBytes": 37748736
 }

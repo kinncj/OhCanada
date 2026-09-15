@@ -249,7 +249,9 @@ function readLevels() {
   const layerKeys = new Set();
   // key -> the lowest world row any level document puts that tile's top edge at.
   const layerTops = new Map();
-  if (!existsSync(LEVELS_DIR)) return { ids, layerKeys, layerTops };
+  // key -> the lowest world row any level document puts that ground dressing's top edge at (ADR-0042).
+  const dressingTops = new Map();
+  if (!existsSync(LEVELS_DIR)) return { ids, layerKeys, layerTops, dressingTops };
   for (const name of readdirSync(LEVELS_DIR).sort()) {
     if (!name.endsWith('.json')) continue;
     try {
@@ -266,14 +268,28 @@ function readLevels() {
           layerTops.set(layer.key, Math.max(layerTops.get(layer.key) ?? 0, top));
         }
       }
+      // The ground dressing (ADR-0042) is a TileSprite whose top edge is inside the
+      // frame as well, so it takes the same transparent foot. It is not a
+      // full-screen layer: it is not in layers[], it pins itself to 1x by filename,
+      // and its manifest role stays "sprite".
+      const dressing = doc?.groundDressing;
+      if (typeof dressing?.key === 'string' && dressing.key.length > 0) {
+        const top = Number.isFinite(dressing?.topY) ? dressing.topY : 0;
+        dressingTops.set(dressing.key, Math.max(dressingTops.get(dressing.key) ?? 0, top));
+      }
     } catch (error) {
       fatal(`content/levels/${name} is not valid JSON (${error.message}).`);
     }
   }
-  return { ids: [...new Set(ids)].sort(), layerKeys, layerTops };
+  return { ids: [...new Set(ids)].sort(), layerKeys, layerTops, dressingTops };
 }
 
-const { ids: LEVELS, layerKeys: LAYER_KEYS, layerTops: LAYER_TOPS } = readLevels();
+const {
+  ids: LEVELS,
+  layerKeys: LAYER_KEYS,
+  layerTops: LAYER_TOPS,
+  dressingTops: DRESSING_TOPS,
+} = readLevels();
 
 // A level named after a reserved directory would make `assets/src/svg/<id>/`
 // mean two things, and `assign` would silently pick one of them.
@@ -353,8 +369,15 @@ const mustStandAlone = (key, pin) => pin !== null || isFullScreenLayer(key);
  * footprint: two rows. Four is the margin, and costs 4 x width x 4 B.
  */
 const LAYER_WRAP_PAD_ROWS = 4;
-const wrapPadRowsFor = (key, scale) =>
-  isFullScreenLayer(key) && (LAYER_TOPS.get(key) ?? 0) > 0 ? LAYER_WRAP_PAD_ROWS * scale : 0;
+/*
+ * A level's ground dressing (ADR-0042) takes the same foot for the same reason: it
+ * is a TileSprite whose top edge sits on the walking line, where a hairline in the
+ * colour of its last row would be drawn across the ground crest.
+ */
+const wrapPadRowsFor = (key, scale) => {
+  const top = isFullScreenLayer(key) ? LAYER_TOPS.get(key) : DRESSING_TOPS.get(key);
+  return (top ?? 0) > 0 ? LAYER_WRAP_PAD_ROWS * scale : 0;
+};
 
 /**
  * Work out the owning level and the texture key for a source file.
@@ -578,6 +601,7 @@ let standalone = 0;
 /** One line per atlas page, printed after the summary: size, frames, and the layout that won. */
 const atlasReport = [];
 let paddedLayers = 0;
+let paddedDressings = 0;
 
 /**
  * owner -> scale -> [{ key, png, width, height }]
@@ -667,7 +691,32 @@ for (const { file, owner, key, pin } of sources) {
         );
         continue;
       }
-      paddedLayers += 1;
+      if (isFullScreenLayer(key)) paddedLayers += 1;
+      else paddedDressings += 1;
+      /*
+       * A ground dressing is opaque in every row of its art (ADR-0042). The scene
+       * stops painting the ground fill at a dressing's first row when the strip
+       * reaches the bottom of the world, because the fill under it would be
+       * covered in the same frame; a see-through pixel would then show the
+       * backdrop through the ground. Read from the WebP that ships, as the foot is.
+       */
+      if (!isFullScreenLayer(key)) {
+        let seeThrough = 0;
+        for (let y = 0; y < r.height; y += 1) {
+          for (let x = 0; x < info.width; x += 1) {
+            if (data[(y * info.width + x) * info.channels + info.channels - 1] !== 255) seeThrough += 1;
+          }
+        }
+        if (seeThrough > 0) {
+          fatal(
+            `img/${key}@${r.scale}x is a ground dressing with ${seeThrough} pixel(s) that are not fully opaque ` +
+              `in its ${r.width}x${r.height} px of art. The ground fill is not painted under a dressing that ` +
+              'reaches the bottom of the world (ADR-0042), so each one would show the backdrop through the ' +
+              'ground. Give the strip a full-width background shape.',
+          );
+          continue;
+        }
+      }
     }
     standalone += 1;
     emit(`img/${key}@${r.scale}x.${hash8(webp)}.webp`, webp, {
@@ -883,6 +932,10 @@ if (atlasReport.length > 0) {
 console.log(
   `layer feet: ${paddedLayers} parallax layer file(s) below world 0 end in ${LAYER_WRAP_PAD_ROWS} transparent ` +
     'row(s), read back from the WebP, so a tile top does not wrap to its foot.',
+);
+console.log(
+  `ground dressing feet: ${paddedDressings} ground dressing file(s) end in ${LAYER_WRAP_PAD_ROWS} transparent ` +
+    'row(s), read back from the WebP, for the same reason (ADR-0042).',
 );
 
 // ------------------------------------------------------------------- gate ---

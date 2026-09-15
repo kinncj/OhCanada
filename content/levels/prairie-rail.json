@@ -158,6 +158,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "prairie-rail-ground-railway-shoulder", "topY": 1280 },
   "locomotion": [
     {
       "mode": "train",

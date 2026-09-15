@@ -59,6 +59,10 @@
       "items": { "$ref": "#/$defs/parallaxLayer" },
       "minItems": 1
     },
+    "groundDressing": {
+      "description": "The art drawn over the ground fill, below the walking line (ADR-0042). Every layer draws under the ground polygon, so without this the lower third of every screen was one flat colour. Required, with no default: every level's ground line sits near world y 1280 (art bible section 6), so every level has that band to dress.",
+      "$ref": "#/$defs/groundDressing"
+    },
     "locomotion": {
       "description": "Locomotion modes this level offers, in the order the player unlocks them. The first is the mode the player spawns in. Walking and skating differ by these numbers alone (slice 1 task 1.14).",
       "type": "array",
@@ -107,6 +111,7 @@
     "camera",
     "ground",
     "layers",
+    "groundDressing",
     "locomotion",
     "quests",
     "pois",
@@ -204,6 +209,25 @@
         }
       },
       "required": ["key", "depth", "scrollFactor", "offset", "repeatX"],
+      "additionalProperties": false
+    },
+
+    "groundDressing": {
+      "title": "Ground dressing",
+      "description": "A horizontally repeating strip drawn over the ground fill and under every landmark, character and ride (ADR-0042): the near part of the ground the player walks on, seen closer. It is fixed to the world, so it goes by under the player as the ground does, and it is not a parallax layer: layers draw under the ground polygon and the visual tier drops them, and this is drawn over the polygon at every tier. The HUD covers the bottom of the canvas (at 390 x 844, the canvas below about world 1440 with a prompt showing and below about 1810 without), so a strip keeps its detail in its first rows.",
+      "type": "object",
+      "properties": {
+        "key": {
+          "description": "Texture key, `<levelId>-<file>` for a source under assets/src/svg/<levelId>/, pinned to 1x by its filename so an art pixel is a design pixel. The texture's width is the tile; the strip is drawn one screen wide.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "topY": {
+          "description": "The world row of the strip's first row. At or below the LOWEST point of the ground polyline (its largest y), so that no row of the strip is ever drawn above the ground, over the backdrop, on a level whose ground falls away. JSON Schema cannot compare a number with an array, so the parser refuses a strip that starts higher, and tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts refuses it in CI.",
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["key", "topY"],
       "additionalProperties": false
     },
 

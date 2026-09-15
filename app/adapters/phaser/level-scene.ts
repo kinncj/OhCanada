@@ -16,6 +16,7 @@ import type {
 
 import { blendColors, mixColor, toPhaserColor } from './boot-config';
 import { backingScaleOf, fitCameraToDesign } from './design-viewport';
+import { groundFillFloor } from './ground-dressing';
 import { groundYAt, levelBounds, slopeAt, type LevelBounds } from './ground-profile';
 import type { LoadRequest } from './level-assets';
 import {
@@ -385,6 +386,8 @@ export class LevelScene extends Phaser.Scene {
   /** Each layer's image, and the texture it shows now, so a frame is set only when it changes (ADR-0035). */
   #rideArt: { readonly object: Phaser.GameObjects.Image; readonly layer: RideArt; shown: string }[] = [];
   #rideTrack: Phaser.GameObjects.TileSprite | null = null;
+  /** The strip over the ground fill (ADR-0042), or `null` when its art did not load. */
+  #groundDressing: Phaser.GameObjects.TileSprite | null = null;
   #rideSize: RideArtSize | null = null;
   #ridesDrawn = 0;
   #rideDistancePx = 0;
@@ -700,6 +703,7 @@ export class LevelScene extends Phaser.Scene {
     this.#buildLayers();
     this.#paintGround();
     this.#paintOverlays();
+    this.#paintGroundDressing();
     this.#paintPois();
     this.#paintCharacters();
     this.#paintPlayer();
@@ -783,6 +787,7 @@ export class LevelScene extends Phaser.Scene {
       claimsDrawable: level.claims.drawable,
       claimsRefused: level.claims.refused.length,
       playerDrawn: this.#playerCharacter !== null,
+      groundDressingDrawn: this.#groundDressing !== null,
       placeholders: this.#placeholders,
       /* Read off the display list, after every character and the ride exist. */
       partsInterleaved: this.#partsInterleaved(),
@@ -817,6 +822,7 @@ export class LevelScene extends Phaser.Scene {
          so nothing holds a texture from a level that no longer exists. */
       this.#rideArt = [];
       this.#rideTrack = null;
+      this.#groundDressing = null;
       this.#placed.clear();
       this.#skyClock?.remove();
       this.#skyClock = null;
@@ -875,6 +881,7 @@ export class LevelScene extends Phaser.Scene {
       );
     }
     this.#scrollLayers();
+    this.#scrollGroundDressing();
 
     this.#snowQuantity = 0;
     const emitter = {
@@ -992,6 +999,7 @@ export class LevelScene extends Phaser.Scene {
     this.#holdGesture();
     this.#updateAffordances();
     this.#scrollLayers();
+    this.#scrollGroundDressing();
     this.#updateSnow(dt);
 
     const probe = this.#options.probe;
@@ -1721,6 +1729,9 @@ export class LevelScene extends Phaser.Scene {
       const a = profile[index - 1];
       const b = profile[index];
       if (a === undefined || b === undefined) continue;
+      /* Nothing to fill where the band has no height at either end: a flat
+         ground whose fill stops at a strip starting on the same row. */
+      if (bottom(a) <= a.y && bottom(b) <= b.y) continue;
       graphics.fillTriangle(a.x, a.y, b.x, b.y, a.x, bottom(a));
       graphics.fillTriangle(b.x, b.y, b.x, bottom(b), a.x, bottom(a));
     }
@@ -1849,7 +1860,10 @@ export class LevelScene extends Phaser.Scene {
     this.#repaint(() => {
       ground.clear();
       ground.fillStyle(blendColors(toPhaserColor(this.#palette.ground), 0x000000, 0.06), 1);
-      this.#fillUnder(ground, level.ground, () => level.size.y);
+      /* Down to the ground dressing, when one drew to the bottom of the world:
+         the fill below it would be covered in the same frame (ADR-0042). */
+      const floor = this.#groundFloor();
+      this.#fillUnder(ground, level.ground, () => floor);
 
       ground.lineStyle(6, toPhaserColor(this.#palette.horizon), 0.9);
       ground.beginPath();
@@ -1859,6 +1873,55 @@ export class LevelScene extends Phaser.Scene {
       });
       ground.strokePath();
     });
+  }
+
+  /**
+   * The level's ground dressing (ADR-0042): the strip over the ground fill.
+   *
+   * One screen wide and fixed to the world through its tile offset, as a
+   * repeating band and a ride's track are, so it costs one quad however long the
+   * level is. Not given to the tier: every tier draws it, because the flat band
+   * it dresses is the defect a dropped strip would put back. A strip placed above
+   * the ground's lowest point never reaches the scene (the parser refuses it), so
+   * the one failure left here is art that did not load — a sentence, and
+   * `data-ground-dressing-drawn` false, rather than a flat band that looks meant.
+   */
+  #paintGroundDressing(): void {
+    const { level, designWidth } = this.#options;
+    const dressing = level.groundDressing;
+    if (!this.textures.exists(dressing.key)) {
+      console.error(
+        `[level] the ground dressing "${dressing.key}" has no texture, so the band below the ` +
+          'walking line is flat fill (ADR-0042).',
+      );
+      return;
+    }
+    const source = this.textures.get(dressing.key).getSourceImage();
+    this.#groundDressing = this.add
+      .tileSprite(0, dressing.topY, designWidth, source.height, dressing.key)
+      .setOrigin(0, 0)
+      .setScrollFactor(0, 1)
+      .setDepth(this.#depths.groundDressing);
+  }
+
+  /**
+   * How far down the ground fill and its sheen are painted: to the strip's first
+   * row when the strip's art loaded and reaches the bottom of the world, and to
+   * the bottom of the world otherwise (`groundFillFloor`). Asked of the texture
+   * manager rather than of `#groundDressing`, because the fill is painted before
+   * the strip is built.
+   */
+  #groundFloor(): number {
+    const { level } = this.#options;
+    const { key } = level.groundDressing;
+    const stripHeight = this.textures.exists(key) ? this.textures.get(key).getSourceImage().height : null;
+    return groundFillFloor({ dressing: level.groundDressing, stripHeight, worldHeight: level.size.y });
+  }
+
+  /** Move the strip's contents with the world, once per frame. It has no parallax rate of its own. */
+  #scrollGroundDressing(): void {
+    if (this.#groundDressing === null) return;
+    this.#groundDressing.tilePositionX = this.#camera.x;
   }
 
   /**
@@ -1877,7 +1940,8 @@ export class LevelScene extends Phaser.Scene {
     this.#repaint(() => {
       sheen.clear();
       sheen.fillStyle(toPhaserColor(this.#palette.horizon), 1);
-      this.#fillUnder(sheen, level.ground, (point) => point.y + SHEEN_DEPTH);
+      const floor = this.#groundFloor();
+      this.#fillUnder(sheen, level.ground, (point) => Math.min(point.y + SHEEN_DEPTH, floor));
     });
     this.#sheen = sheen;
 

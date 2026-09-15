@@ -41,6 +41,7 @@ export type {
   GameConfigDocument,
   GraphicsPreset,
   GraphicsPresets,
+  GroundDressing,
   LevelAssetKind,
   LevelAssetRef,
   LevelCharacter,

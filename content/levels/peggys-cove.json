@@ -153,6 +153,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "peggys-cove-ground-granite-ledge", "topY": 1280 },
   "locomotion": [
     {
       "mode": "walk",

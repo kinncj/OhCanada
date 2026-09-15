@@ -51,11 +51,18 @@ export const DEPTH_SKY = 0;
 export const DEPTH_LAYERS = 100;
 export const DEPTH_GROUND = 400;
 /**
+ * The level's ground dressing (ADR-0042): over the ground fill and its sheen,
+ * under a ride's track and every actor. Over the sheen because the sheen is a
+ * tier-gated wash, and the strip's colours are the art sheet's at every tier;
+ * under the track because a train's rails run across the strip, not under it.
+ */
+export const DEPTH_GROUND_DRESSING = DEPTH_GROUND + 2;
+/**
  * A ride's track (ADR-0031): on the ground and under every actor. Not a parallax
  * layer, because layers sit below the ground fill and the tier drops them, and a
  * train whose rails the low tier removed is floating.
  */
-export const DEPTH_RIDE_TRACK = DEPTH_GROUND + 2;
+export const DEPTH_RIDE_TRACK = DEPTH_GROUND + 3;
 /** Where the character slots begin. Landmarks draw one below it. */
 export const DEPTH_ACTORS = 500;
 
@@ -80,6 +87,8 @@ export interface DepthPlan {
   readonly ground: number;
   /** The surface sheen, just over the ground fill. */
   readonly sheen: number;
+  /** The ground dressing strip (ADR-0042), over the sheen and under the ride track. */
+  readonly groundDressing: number;
   readonly rideTrack: number;
   /** A landmark's art, or its placeholder: under every character. */
   readonly poi: number;
@@ -125,6 +134,7 @@ export function depthPlan(input: DepthPlanInput): DepthPlan {
     layer: (index) => DEPTH_LAYERS + index,
     ground: DEPTH_GROUND,
     sheen: DEPTH_GROUND + 1,
+    groundDressing: DEPTH_GROUND_DRESSING,
     rideTrack: DEPTH_RIDE_TRACK,
     poi: DEPTH_ACTORS - 1,
     characters: bands,

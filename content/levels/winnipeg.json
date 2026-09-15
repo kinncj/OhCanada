@@ -159,6 +159,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "winnipeg-ground-promenade-paving", "topY": 1280 },
   "locomotion": [
     {
       "mode": "walk",

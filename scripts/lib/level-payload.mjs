@@ -136,6 +136,9 @@ export function readLevelDocuments(root, fail) {
         // A ride's layers and its track are level art like a POI's (ADR-0031):
         // named by key, charged to this level, and a key nothing produces is a
         // ride that draws nothing under a seated rider.
+        // The strip over the ground fill (ADR-0042): level art named by key, and a
+        // key nothing produces is a flat band under a level that reached ready.
+        { key: doc.groundDressing?.key, where: 'groundDressing.key' },
         ...(Array.isArray(doc.rides) ? doc.rides : []).flatMap((r) => [
           ...(Array.isArray(r?.art) ? r.art : []).map((a) => ({ key: a?.key, where: 'rides[].art[].key' })),
           { key: r?.track?.artKey, where: 'rides[].track.artKey' },

@@ -167,6 +167,7 @@
       "repeatX": true
     }
   ],
+  "groundDressing": { "key": "quebec-city-ground-snowbank", "topY": 1280 },
   "locomotion": [
     {
       "mode": "toboggan",

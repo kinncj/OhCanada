@@ -153,6 +153,12 @@ describe('snapshotToAttributes', () => {
            compared with something. */
         'data-player-drawn',
         'data-placeholders',
+        /* The band below the walking line was one flat colour on every level,
+           because every layer draws under the ground polygon. The strip that
+           dresses it is required, so there is no count to compare with: this is
+           `false` when its art did not load and the band went flat again
+           (ADR-0042). */
+        'data-ground-dressing-drawn',
         /* Nothing missing, and still wrong: the guide's parts drew between the
            player's, so the rider on Toronto was two puppets shuffled together
            while every counter above read full marks. This counts what sits, by

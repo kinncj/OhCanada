@@ -241,6 +241,16 @@ export interface SceneSnapshot {
    */
   readonly playerDrawn?: boolean;
   /**
+   * Did the level's ground dressing draw from its texture (ADR-0042)?
+   *
+   * Every level declares one, so there is no count to pair it with, only this.
+   * A strip whose art never loaded leaves the band below the walking line as one
+   * flat colour — the exact picture the audit reported — and a level reaches
+   * `ready` that way looking like a decision. `false` is that, and a test can
+   * fail on it.
+   */
+  readonly groundDressingDrawn?: boolean;
+  /**
    * How many characters — the player included — fell back to a placeholder.
    *
    * The complement of the two `*Drawn` counters, and it exists so that a healthy
@@ -491,6 +501,7 @@ const DISCRETE_FIELDS: readonly (keyof SceneSnapshot)[] = [
   'layersVisible',
   'actorsVisible',
   'playerDrawn',
+  'groundDressingDrawn',
   'placeholders',
   'partsInterleaved',
   'affordances',
@@ -555,6 +566,7 @@ export function snapshotToAttributes(snapshot: SceneSnapshot): Readonly<Record<s
     'data-layers-visible': num(snapshot.layersVisible),
     'data-actors-visible': num(snapshot.actorsVisible),
     'data-player-drawn': bool(snapshot.playerDrawn),
+    'data-ground-dressing-drawn': bool(snapshot.groundDressingDrawn),
     'data-placeholders': num(snapshot.placeholders),
     /* Nothing missing and still wrong: parts of two characters shuffled
        together by depth. 0 on a healthy level. */
