@@ -134,6 +134,7 @@ export interface SceneLevel
       | 'size'
       | 'spawn'
       | 'weather'
+      | 'playerCostume'
       | 'camera'
       | 'ground'
       | 'layers'
@@ -311,6 +312,32 @@ function readWeather(source: Record<string, unknown>): Result<LevelDocument['wea
     );
   }
   return ok(weather);
+}
+
+/** Every costume `level.schema.json#/properties/playerCostume` offers, in its order. */
+const PLAYER_COSTUMES: readonly LevelDocument['playerCostume'][] = ['parka', 'jacket'];
+
+/**
+ * What the player wears on this level, required and refused when absent.
+ *
+ * No default, for the reason `weather` has none: the scene dressed the player in
+ * the rig artboard's own costume on every level, because no document could say
+ * otherwise, and eight summer and autumn levels drew a winter parka. A level that
+ * does not say is an authoring error, and the loader reports it.
+ */
+function readPlayerCostume(
+  source: Record<string, unknown>,
+): Result<LevelDocument['playerCostume']> {
+  const value = source['playerCostume'];
+  const costume = PLAYER_COSTUMES.find((candidate) => candidate === value);
+  if (costume === undefined) {
+    return invalid(
+      'playerCostume',
+      `"playerCostume" must be one of ${PLAYER_COSTUMES.join(', ')}. It has no default: a ` +
+        'level says what the player wears on it, from the season its art sheet states.',
+    );
+  }
+  return ok(costume);
 }
 
 /** The level's optional `theme`, merged per key over the renderer's fallback. */
@@ -968,6 +995,8 @@ export function parseLevelDocument(
   if (!spawn.ok) return spawn;
   const weather = readWeather(raw);
   if (!weather.ok) return weather;
+  const playerCostume = readPlayerCostume(raw);
+  if (!playerCostume.ok) return playerCostume;
   const palette = readPalette(raw);
   if (!palette.ok) return palette;
   const camera = readCamera(raw);
@@ -1012,6 +1041,7 @@ export function parseLevelDocument(
     size: size.value,
     spawn: spawn.value,
     weather: weather.value,
+    playerCostume: playerCostume.value,
     camera: camera.value,
     ground: ground.value,
     layers: layers.value,

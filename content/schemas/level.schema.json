@@ -33,6 +33,11 @@
       "type": "string",
       "enum": ["snow", "none"]
     },
+    "playerCostume": {
+      "description": "What the player wears on this level: a `costume` option of the character rig (content/characters/rig.json), decided per level from the season its art sheet states (assets/style/<id>-level.md names it beside its weather). `parka` is the winter kit; `jacket` is the warm-weather clothes. It dresses the player only: the officer and the guide wear what their artboards pin. Required, with no default: the rig's parka dressed the player for January on eight summer and autumn levels because no level could say otherwise, and a `jacket` default would take the coat off the two winter ones the first time a level forgot. tests/unit/contracts/a-level-dresses-the-player-for-its-season.test.ts holds every level to its sheet and every option to the rig.",
+      "type": "string",
+      "enum": ["parka", "jacket"]
+    },
     "theme": {
       "description": "Palette override for this level. Absent means the renderer keeps game.config's theme.",
       "$ref": "https://truenorth.app/schemas/game.config.schema.json#/$defs/theme"
@@ -107,7 +112,7 @@
     "pois",
     "characters",
     "assets",
-    "textureBudgetBytes", "weather"
+    "textureBudgetBytes", "weather", "playerCostume"
   ],
   "additionalProperties": false,
 

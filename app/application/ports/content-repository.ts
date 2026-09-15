@@ -580,6 +580,12 @@ export interface LevelDocument {
    * summer level in the game.
    */
   readonly weather: 'snow' | 'none';
+  /**
+   * What the player wears here, a rig `costume` option, decided per level from
+   * the season its art sheet states. Required: with no say, the player wore the
+   * rig artboard's parka on every summer level.
+   */
+  readonly playerCostume: 'parka' | 'jacket';
   /** Palette override; absent keeps `game.config`'s theme. */
   readonly theme?: ThemeColours;
   /** Whose land this level is set on, stated as a citable fact. */

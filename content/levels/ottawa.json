@@ -16,6 +16,7 @@
     "y": 1237
   },
   "weather": "snow",
+  "playerCostume": "parka",
   "theme": {
     "sky": "#1f5fa8",
     "ground": "#e6eff7",

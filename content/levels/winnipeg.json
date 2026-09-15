@@ -16,6 +16,7 @@
     "y": 1280
   },
   "weather": "none",
+  "playerCostume": "jacket",
   "theme": {
     "sky": "#1f5fa8",
     "ground": "#8a6256",

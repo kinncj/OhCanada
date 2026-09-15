@@ -2025,7 +2025,10 @@ export class LevelScene extends Phaser.Scene {
     const renderer = this.#composeCharacter(
       PLAYER_SUBJECT,
       artboard,
-      this.#options.playerSkins ?? {},
+      /* The level dresses the player (`playerCostume`, from its art sheet's
+         season) and the creator chooses everything else. `costume` is not a
+         slot the creator offers, so the two never compete for one key. */
+      { ...(this.#options.playerSkins ?? {}), costume: level.playerCostume },
       /* The slot above every other character's, so the player is drawn whole
          and in front of anybody they stop on. */
       this.#depths.player.baseDepth,

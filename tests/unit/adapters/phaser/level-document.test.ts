@@ -56,6 +56,7 @@ const minimal = (): Record<string, unknown> => ({
   size: { x: 4000, y: 1920 },
   spawn: { x: 100, y: 1000 },
   weather: 'none',
+  playerCostume: 'jacket',
   /* Required by `level.schema.json` and, since ADR-0003's filter moved into the
      parser, required at run time too: the "About this place" panel is always
      reachable (docs/content-review.md §10.2), so a level with no territory block
@@ -412,6 +413,55 @@ describe('a level says what falls on it, and nothing is assumed', () => {
     const result = parseLevelDocument(readLevel(file), MODES);
     if (!result.ok) throw new Error(result.error.message);
     expect(offered).toContain(result.value.weather);
+  });
+});
+
+describe('a level says what the player wears, and nothing is assumed', () => {
+  /* Read from the schema, as the weather is, so a costume added there is parsed
+     here or this fails. */
+  const offered = (
+    JSON.parse(readFileSync(`${REPO_ROOT}content/schemas/level.schema.json`, 'utf8')) as {
+      readonly properties: { readonly playerCostume: { readonly enum: readonly string[] } };
+    }
+  ).properties.playerCostume.enum;
+
+  it('the schema offers more than one costume, so there is a decision to carry', () => {
+    expect(offered).toEqual(expect.arrayContaining(['parka', 'jacket']));
+  });
+
+  it.each(offered)('carries "%s" through to the scene', (playerCostume) => {
+    const result = parsed({ playerCostume });
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.playerCostume).toBe(playerCostume);
+  });
+
+  it('refuses a document that does not say, rather than defaulting to the parka', () => {
+    const silent = Object.fromEntries(Object.entries(minimal()).filter(([key]) => key !== 'playerCostume'));
+    expect('playerCostume' in silent).toBe(false);
+    const result = parseLevelDocument(silent, MODES);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.kind).toBe('invalid');
+      expect(result.error.code).toBe('content.level.playerCostume');
+    }
+  });
+
+  it.each([
+    ["another character's costume", 'serge'],
+    ['a costume in the wrong case', 'Parka'],
+    ['an empty string', ''],
+    ['a null', null],
+    ['a number', 1],
+  ])('refuses %s', (_label, playerCostume) => {
+    const result = parsed({ playerCostume });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.code).toBe('content.level.playerCostume');
+  });
+
+  it.each(levelFiles)('%s: dresses the player in a costume the schema offers', (file) => {
+    const result = parseLevelDocument(readLevel(file), MODES);
+    if (!result.ok) throw new Error(result.error.message);
+    expect(offered).toContain(result.value.playerCostume);
   });
 });
 
