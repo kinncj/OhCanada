@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="71" height="47" viewBox="106 419 71 47" shape-rendering="geometricPrecision">
-  <title>The guide webbed hind foot, bare hide a tone lighter than the tail, with three toe notches, the wearer left - the FAR side, drawn shorter. Feet are not mirrored: both point the way the character travels. The ankle is a circle on the ankle pivot with no line across its top.</title>
-  <path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z" fill="#44555f"/>
-  <defs><clipPath id="ft"><path d="M 116,436 A 16 16 0 0 1 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="71" height="48" viewBox="106 418 71 48" shape-rendering="geometricPrecision">
+  <title>The guide webbed hind foot, warm dark brown with three toe notches, the wearer left - the FAR side, drawn shorter. Feet are not mirrored: both point the way the character travels. The ankle is a circle on the ankle pivot with no line across its top.</title>
+  <path d="M 115,436 A 17 17 0 0 1 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436 Z" fill="#7c4327"/>
+  <defs><clipPath id="ft"><path d="M 115,436 A 17 17 0 0 1 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436 Z"/></clipPath></defs>
   <g clip-path="url(#ft)">
-    <ellipse cx="158" cy="447" rx="11" ry="5" fill="#c2d6e8"/>
-    <ellipse cx="114" cy="452" rx="8" ry="10" fill="#242b33"/>
-    <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#44555f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="158" cy="447" rx="11" ry="5" fill="#b4733b"/>
+    <ellipse cx="114" cy="452" rx="8" ry="10" fill="#401812"/>
+    <path d="M 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 148,436 C 150,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 114,438 116,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M 154,455 L 157,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M 161,455 L 164,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M 168,455 L 171,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>

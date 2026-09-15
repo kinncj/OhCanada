@@ -1,20 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="89" height="145" viewBox="20 280 89 145" shape-rendering="geometricPrecision">
-  <title>The guide paddle tail: a broad flat paddle on a stub that leaves the body at the hip and streams out behind on the trailing side, with a large lit upper face and three cross bands carrying the scale as a rhythm, never a texture fill.</title>
-  <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="#7c4327"/>
-  <defs><clipPath id="stub"><path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="87" height="145" viewBox="24 282 87 145" shape-rendering="geometricPrecision">
+  <title>The guide paddle tail: a flat spatula-shaped paddle on a furred stub that leaves the body at the hip and hangs out behind on the trailing side, with a lit upper face and a sparse crosshatch of scale lines drawn as shapes, never a texture fill.</title>
+  <path d="M 104,286 C 92,292 80,302 72,316 C 82,328 94,324 100,314 C 106,306 108,294 104,286 Z" fill="#96632f"/>
+  <defs><clipPath id="stub"><path d="M 104,286 C 92,292 80,302 72,316 C 82,328 94,324 100,314 C 106,306 108,294 104,286 Z"/></clipPath></defs>
   <g clip-path="url(#stub)">
-    <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 104,286 C 92,292 80,302 72,316 C 82,328 94,324 100,314 C 106,306 108,294 104,286 Z" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 102,284 C 88,290 76,300 68,314 C 80,326 90,322 98,312 C 104,304 106,292 102,284 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="#242b33"/>
-  <defs><clipPath id="tl"><path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z"/></clipPath></defs>
+  <path d="M 104,286 C 92,292 80,302 72,316 C 82,328 94,324 100,314 C 106,306 108,294 104,286 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 86,310 C 70,316 56,330 44,346 C 28,368 22,396 36,414 C 50,428 80,424 94,402 C 106,382 104,352 98,332 C 96,322 92,312 86,310 Z" fill="#242b33"/>
+  <defs><clipPath id="tl"><path d="M 86,310 C 70,316 56,330 44,346 C 28,368 22,396 36,414 C 50,428 80,424 94,402 C 106,382 104,352 98,332 C 96,322 92,312 86,310 Z"/></clipPath></defs>
   <g clip-path="url(#tl)">
-    <path d="M 76,300 C 52,316 30,338 24,366 C 46,378 84,372 106,358 C 102,334 92,314 76,300 Z" fill="#44555f"/>
-    <ellipse cx="60" cy="418" rx="30" ry="12" fill="#0f121a"/>
-    <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="none" stroke="#242b33" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 36,338 C 52,348 78,348 94,338" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 28,366 C 47,378 78,378 100,366" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 32,394 C 50,404 76,404 95,392" fill="none" stroke="#0f121a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 90,300 C 60,316 34,340 24,372 C 46,380 80,368 106,348 C 102,330 96,312 90,300 Z" fill="#44555f"/>
+  <path d="M 20,360 L 80,300" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 20,390 L 100,310" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 30,410 L 110,330" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 56,420 L 110,366" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 30,330 L 100,420" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 50,318 L 110,396" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 20,352 L 76,424" fill="none" stroke="#0f121a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="66" cy="420" rx="30" ry="10" fill="#0f121a"/>
+    <path d="M 86,310 C 70,316 56,330 44,346 C 28,368 22,396 36,414 C 50,428 80,424 94,402 C 106,382 104,352 98,332 C 96,322 92,312 86,310 Z" fill="none" stroke="#242b33" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 80,306 C 56,311 32,334 26,362 C 20,392 36,418 62,420 C 88,422 102,402 102,374 C 103,344 94,318 80,306 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 86,310 C 70,316 56,330 44,346 C 28,368 22,396 36,414 C 50,428 80,424 94,402 C 106,382 104,352 98,332 C 96,322 92,312 86,310 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

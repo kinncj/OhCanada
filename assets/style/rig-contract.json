@@ -17918,10 +17918,10 @@
   "frames": {
     "character-arm-lower-beaver": {
       "source": "src/svg/shared/character/arm-lower-beaver.svg",
-      "x": 116,
+      "x": 113,
       "y": 210,
-      "w": 42,
-      "h": 90
+      "w": 48,
+      "h": 91
     },
     "character-arm-lower-jacket": {
       "source": "src/svg/shared/character/arm-lower-jacket.svg",
@@ -17946,10 +17946,10 @@
     },
     "character-arm-upper-beaver": {
       "source": "src/svg/shared/character/arm-upper-beaver.svg",
-      "x": 114,
-      "y": 125,
-      "w": 46,
-      "h": 109
+      "x": 111,
+      "y": 121,
+      "w": 52,
+      "h": 116
     },
     "character-arm-upper-jacket": {
       "source": "src/svg/shared/character/arm-upper-jacket.svg",
@@ -18122,9 +18122,9 @@
     "character-foot-l-beaver": {
       "source": "src/svg/shared/character/foot-l-beaver.svg",
       "x": 106,
-      "y": 419,
+      "y": 418,
       "w": 71,
-      "h": 47
+      "h": 48
     },
     "character-foot-l-jacket": {
       "source": "src/svg/shared/character/foot-l-jacket.svg",
@@ -18150,9 +18150,9 @@
     "character-foot-r-beaver": {
       "source": "src/svg/shared/character/foot-r-beaver.svg",
       "x": 82,
-      "y": 419,
+      "y": 418,
       "w": 77,
-      "h": 47
+      "h": 48
     },
     "character-foot-r-jacket": {
       "source": "src/svg/shared/character/foot-r-jacket.svg",
@@ -18325,9 +18325,9 @@
     "character-hand-beaver": {
       "source": "src/svg/shared/character/hand-beaver.svg",
       "x": 103,
-      "y": 271,
+      "y": 280,
       "w": 59,
-      "h": 62
+      "h": 53
     },
     "character-hand-jacket": {
       "source": "src/svg/shared/character/hand-jacket.svg",
@@ -18366,10 +18366,10 @@
     },
     "character-head-shell-beaver": {
       "source": "src/svg/shared/character/head-shell-beaver.svg",
-      "x": 66,
-      "y": 24,
-      "w": 116,
-      "h": 130
+      "x": 68,
+      "y": 26,
+      "w": 113,
+      "h": 127
     },
     "character-head-skin-1": {
       "source": "src/svg/shared/character/head-skin-1.svg",
@@ -18415,9 +18415,9 @@
     },
     "character-leg-lower-beaver": {
       "source": "src/svg/shared/character/leg-lower-beaver.svg",
-      "x": 108,
+      "x": 106,
       "y": 358,
-      "w": 48,
+      "w": 52,
       "h": 99
     },
     "character-leg-lower-jacket": {
@@ -18443,10 +18443,10 @@
     },
     "character-leg-upper-beaver": {
       "source": "src/svg/shared/character/leg-upper-beaver.svg",
-      "x": 104,
-      "y": 239,
-      "w": 56,
-      "h": 147
+      "x": 102,
+      "y": 237,
+      "w": 60,
+      "h": 151
     },
     "character-leg-upper-jacket": {
       "source": "src/svg/shared/character/leg-upper-jacket.svg",
@@ -18541,17 +18541,17 @@
     },
     "character-tail-beaver": {
       "source": "src/svg/shared/character/tail-beaver.svg",
-      "x": 20,
-      "y": 280,
-      "w": 89,
+      "x": 24,
+      "y": 282,
+      "w": 87,
       "h": 145
     },
     "character-torso-beaver": {
       "source": "src/svg/shared/character/torso-beaver.svg",
-      "x": 62,
+      "x": 61,
       "y": 126,
-      "w": 116,
-      "h": 208
+      "w": 118,
+      "h": 250
     },
     "character-torso-jacket": {
       "source": "src/svg/shared/character/torso-jacket.svg",

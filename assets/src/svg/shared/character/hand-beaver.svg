@@ -1,22 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="59" height="62" viewBox="103 271 59 62" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides. The guide forepaw, bare dark hide, with a fur wrist: one mass and a thumb, no separated fingers. Identical size for every character.</title>
-  <path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z" fill="#242b33"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="53" viewBox="103 280 59 53" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. The guide forepaw, warm dark brown, one mass and a thumb, no separated fingers and no cuff, because the guide wears no sleeve. Identical size for every character.</title>
+  <path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z" fill="#7c4327"/>
   <defs><clipPath id="th"><path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z"/></clipPath></defs>
   <g clip-path="url(#th)">
-    <path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z" fill="none" stroke="#242b33" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <path d="M 124,297 C 111,293 105,303 109,311 C 112,318 122,319 127,313 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z" fill="#242b33"/>
+  <path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z" fill="#7c4327"/>
   <defs><clipPath id="mt"><path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z"/></clipPath></defs>
   <g clip-path="url(#mt)">
-    <ellipse cx="127" cy="298" rx="6" ry="9" fill="#44555f"/>
-    <ellipse cx="154" cy="322" rx="12" ry="14" fill="#0f121a"/>
-    <path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z" fill="none" stroke="#242b33" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="127" cy="298" rx="6" ry="9" fill="#b4733b"/>
+    <ellipse cx="154" cy="322" rx="10" ry="12" fill="#401812"/>
+    <path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <path d="M 137,284 C 150,284 158,294 158,307 C 158,321 149,329 137,329 C 125,329 116,321 116,307 C 116,294 124,284 137,284 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 124,274 L 150,274 C 157,274 157,290 150,290 L 124,290 C 117,290 117,274 124,274 Z" fill="#7c4327"/>
-  <defs><clipPath id="cf"><path d="M 124,274 L 150,274 C 157,274 157,290 150,290 L 124,290 C 117,290 117,274 124,274 Z"/></clipPath></defs>
-  <g clip-path="url(#cf)">
-  </g>
-  <path d="M 124,274 L 150,274 C 157,274 157,290 150,290 L 124,290 C 117,290 117,274 124,274 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

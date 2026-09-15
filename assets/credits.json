@@ -1381,7 +1381,7 @@
     {
       "path": "src/svg/shared/character/tail-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"tail-beaver\" — The guide's paddle tail: a broad flat scaly oval carried out to the wearer's right, leaning down and away on a scaly stub that leaves the body at the hip and tucks behind the leg, so the tail reads as attached rather than as a rock beside the feet. The tail is one of the two features that make a beaver identifiable at phone size, so it is drawn at full weight and never tucked behind the figure where a front-facing character would hide it. Scale is three cross bands - a rhythm, not a texture fill (art bible 1); an inner ring was tried and removed because it made the paddle read as a shell. Drawn from assets/refs/beaver/beaver-paddle-tail.jpg and beaver-ontario-full-body.jpg.",
+      "title": "TrueNorth character rig part \"tail-beaver\" — The guide paddle tail: a flat spatula-shaped paddle on a furred stub that leaves the body at the hip and…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/tail-beaver.svg",
@@ -1390,7 +1390,7 @@
     {
       "path": "src/svg/shared/character/head-shell-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"head-shell-beaver\" — The guide’s head, three-quarter view facing right: the same neck part as every other character - the shared…",
+      "title": "TrueNorth character rig part \"head-shell-beaver\" — The guide head, three-quarter facing right: one round mass of warm brown pelt that covers the shared head,…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/head-shell-beaver.svg",
@@ -1399,7 +1399,7 @@
     {
       "path": "src/svg/shared/character/torso-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"torso-beaver\" — The guide's body: a barrel of pelt over a pale belly, narrow at the shoulder and full at the waist - the opposite taper to a coat, which is what makes the silhouette read as an animal rather than a person in a suit. Same shoulder and hip envelope as every other character.",
+      "title": "TrueNorth character rig part \"torso-beaver\" — The guide body, three-quarter facing right: a pear of warm brown pelt, narrow at the chest and full and low…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/torso-beaver.svg",
@@ -1408,7 +1408,7 @@
     {
       "path": "src/svg/shared/character/arm-upper-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-upper-beaver\" — One frame serves both sides: the rig reflects it about the character centre line, which is why it hangs…",
+      "title": "TrueNorth character rig part \"arm-upper-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide foreleg, upper: a…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/arm-upper-beaver.svg",
@@ -1417,7 +1417,7 @@
     {
       "path": "src/svg/shared/character/arm-lower-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"arm-lower-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide’s foreleg, lower,…",
+      "title": "TrueNorth character rig part \"arm-lower-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide foreleg, lower: a…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/arm-lower-beaver.svg",
@@ -1426,7 +1426,7 @@
     {
       "path": "src/svg/shared/character/hand-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"hand-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide’s forepaw: one…",
+      "title": "TrueNorth character rig part \"hand-beaver\" — One frame serves both sides. The guide forepaw, warm dark brown, one mass and a thumb, no separated fingers…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/hand-beaver.svg",
@@ -1435,7 +1435,7 @@
     {
       "path": "src/svg/shared/character/leg-upper-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-upper-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, hip…",
+      "title": "TrueNorth character rig part \"leg-upper-beaver\" — One frame serves both sides. The guide hind leg, hip to knee, furred; the body hem covers it at rest. The…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/leg-upper-beaver.svg",
@@ -1444,7 +1444,7 @@
     {
       "path": "src/svg/shared/character/leg-lower-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"leg-lower-beaver\" — One frame serves both sides: the rig reflects it about the character centre line. The guide’s hind leg, knee…",
+      "title": "TrueNorth character rig part \"leg-lower-beaver\" — One frame serves both sides. The guide hind leg, knee to ankle, furred. A flat top on the knee pivot, and it…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/leg-lower-beaver.svg",
@@ -1453,7 +1453,7 @@
     {
       "path": "src/svg/shared/character/foot-l-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-l-beaver\" — The guide's webbed hind foot, the wearer's left, the near side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.",
+      "title": "TrueNorth character rig part \"foot-l-beaver\" — The guide webbed hind foot, warm dark brown with three toe notches, the wearer left - the FAR side, drawn…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/foot-l-beaver.svg",
@@ -1462,7 +1462,7 @@
     {
       "path": "src/svg/shared/character/foot-r-beaver.svg",
       "kind": "shipped",
-      "title": "TrueNorth character rig part \"foot-r-beaver\" — The guide's webbed hind foot, the wearer's right, the far side of the canonical pose. Bare dark hide, a single rounded wedge with three toe notches and the web between them. Feet are the one pair that is NOT mirrored: a mirrored foot points backwards.",
+      "title": "TrueNorth character rig part \"foot-r-beaver\" — The guide webbed hind foot, warm dark brown with three toe notches, the wearer right - the NEAR side. Feet…",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/shared/character/foot-r-beaver.svg",

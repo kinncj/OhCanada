@@ -1,37 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="116" height="130" viewBox="66 24 116 130" shape-rendering="geometricPrecision">
-  <title>The guide head, three-quarter facing right: one mass of pelt that covers the shared head, the shared short crop and the shared neck with its outline outside all three (checked by the generator), a pale cheek and throat, one small dark ear set high and well back, a broad blunt muzzle with a wide flat nose, and two white incisors hanging just below the shared mouth line - not past the chin. Drawn above hair and below face, so the guide plays the shared expressions.</title>
-  <path d="M 94,33 C 100,33 105,38 105,44 C 105,50 100,54 94,54 C 88,54 83,50 83,44 C 83,38 88,33 94,33 Z" fill="#401812"/>
-  <defs><clipPath id="ear"><path d="M 94,33 C 100,33 105,38 105,44 C 105,50 100,54 94,54 C 88,54 83,50 83,44 C 83,38 88,33 94,33 Z"/></clipPath></defs>
-  <g clip-path="url(#ear)">
-  </g>
-  <path d="M 94,33 C 100,33 105,38 105,44 C 105,50 100,54 94,54 C 88,54 83,50 83,44 C 83,38 88,33 94,33 Z" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 71,100 C 65,58 88,28 121,28 C 150,28 166,46 168,66 C 172,72 178,82 177,94 C 176,108 168,117 158,118 C 154,133 146,144 130,148 C 118,151 104,150 96,144 C 84,137 73,122 71,100 Z" fill="#7c4327"/>
-  <defs><clipPath id="bsh"><path d="M 71,100 C 65,58 88,28 121,28 C 150,28 166,46 168,66 C 172,72 178,82 177,94 C 176,108 168,117 158,118 C 154,133 146,144 130,148 C 118,151 104,150 96,144 C 84,137 73,122 71,100 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="113" height="127" viewBox="68 26 113 127" shape-rendering="geometricPrecision">
+  <title>The guide head, three-quarter facing right: one round mass of warm brown pelt that covers the shared head, the shared short crop and the shared neck (checked pixel by pixel by the generator), a lit crown, one small round ear set high and back on the silhouette, a soft cream bean-shaped muzzle under the shared eyes with a dark nose on its leading edge and a short line down to the shared smile, two small white incisors tucked under that smile and stopping well above the chin, and a pale throat column above the chest fur. Drawn above hair and below face, so the guide plays the shared expressions.</title>
+  <path d="M 73,98 C 70,60 92,30 122,30 C 150,30 166,46 167,66 C 168,76 175,82 176,94 C 177,106 173,113 166,116 C 170,126 160,134 148,132 C 142,138 140,142 139,149 L 101,149 C 90,142 76,124 73,98 Z" fill="#96632f"/>
+  <defs><clipPath id="bsh"><path d="M 73,98 C 70,60 92,30 122,30 C 150,30 166,46 167,66 C 168,76 175,82 176,94 C 177,106 173,113 166,116 C 170,126 160,134 148,132 C 142,138 140,142 139,149 L 101,149 C 90,142 76,124 73,98 Z"/></clipPath></defs>
   <g clip-path="url(#bsh)">
-    <ellipse cx="98" cy="56" rx="26" ry="20" fill="#b4733b"/>
-    <ellipse cx="84" cy="132" rx="26" ry="22" fill="#401812"/>
-    <ellipse cx="132" cy="132" rx="30" ry="17" fill="#c29455"/>
-    <ellipse cx="130" cy="148" rx="26" ry="6" fill="#16203a" opacity="0.18"/>
-    <path d="M 71,100 C 65,58 88,28 121,28 C 150,28 166,46 168,66 C 172,72 178,82 177,94 C 176,108 168,117 158,118 C 154,133 146,144 130,148 C 118,151 104,150 96,144 C 84,137 73,122 71,100 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="102" cy="54" rx="28" ry="18" fill="#c5994d"/>
+    <ellipse cx="76" cy="128" rx="10" ry="16" fill="#5a2d19"/>
+    <path d="M 73,98 C 70,60 92,30 122,30 C 150,30 166,46 167,66 C 168,76 175,82 176,94 C 177,106 173,113 166,116 C 170,126 160,134 148,132 C 142,138 140,142 139,149 L 101,149 C 90,142 76,124 73,98 Z" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 101,136 C 103,128 110,123 120,123 L 142,123 L 142,156 L 101,156 Z" fill="#c29455"/>
+    <ellipse cx="122" cy="131" rx="24" ry="5" fill="#16203a" opacity="0.18"/>
   </g>
-  <path d="M 71,100 C 65,58 88,28 121,28 C 150,28 166,46 168,66 C 172,72 178,82 177,94 C 176,108 168,117 158,118 C 154,133 146,144 130,148 C 118,151 104,150 96,144 C 84,137 73,122 71,100 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 150,90 C 165,88 177,94 177,106 C 177,120 165,124 151,124 C 139,124 131,116 131,106 C 131,96 139,90 150,90 Z" fill="#c29455"/>
-  <defs><clipPath id="mz"><path d="M 150,90 C 165,88 177,94 177,106 C 177,120 165,124 151,124 C 139,124 131,116 131,106 C 131,96 139,90 150,90 Z"/></clipPath></defs>
+  <path d="M 73,98 C 70,60 92,30 122,30 C 150,30 166,46 167,66 C 168,76 175,82 176,94 C 177,106 173,113 166,116 C 170,126 160,134 148,132 C 142,138 140,142 139,149 L 101,149 C 90,142 76,124 73,98 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 79.5,47 A 9.5 9.5 0 1 1 98.5,47 A 9.5 9.5 0 1 1 79.5,47 Z" fill="#5a2d19"/>
+  <defs><clipPath id="ear"><path d="M 79.5,47 A 9.5 9.5 0 1 1 98.5,47 A 9.5 9.5 0 1 1 79.5,47 Z"/></clipPath></defs>
+  <g clip-path="url(#ear)">
+    <ellipse cx="92" cy="50" rx="4.5" ry="4.5" fill="#96632f"/>
+  </g>
+  <path d="M 79.5,47 A 9.5 9.5 0 1 1 98.5,47 A 9.5 9.5 0 1 1 79.5,47 Z" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 111,113 C 110,101 118,95 127,95 C 134,95 138,99 141,100 C 145,97 150,93 158,93 C 168,93 175,99 175,108 C 175,120 165,128 150,129 C 140,130 130,130 122,128 C 114,126 111,120 111,113 Z" fill="#d5c18e"/>
+  <defs><clipPath id="mz"><path d="M 111,113 C 110,101 118,95 127,95 C 134,95 138,99 141,100 C 145,97 150,93 158,93 C 168,93 175,99 175,108 C 175,120 165,128 150,129 C 140,130 130,130 122,128 C 114,126 111,120 111,113 Z"/></clipPath></defs>
   <g clip-path="url(#mz)">
-    <ellipse cx="150" cy="96" rx="16" ry="6" fill="#d5c18e"/>
-    <ellipse cx="172" cy="124" rx="16" ry="8" fill="#965630"/>
-    <path d="M 150,90 C 165,88 177,94 177,106 C 177,120 165,124 151,124 C 139,124 131,116 131,106 C 131,96 139,90 150,90 Z" fill="none" stroke="#c29455" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="150" cy="128" rx="30" ry="7" fill="#c29455"/>
+    <path d="M 111,113 C 110,101 118,95 127,95 C 134,95 138,99 141,100 C 145,97 150,93 158,93 C 168,93 175,99 175,108 C 175,120 165,128 150,129 C 140,130 130,130 122,128 C 114,126 111,120 111,113 Z" fill="none" stroke="#d5c18e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 150,90 C 165,88 177,94 177,106 C 177,120 165,124 151,124 C 139,124 131,116 131,106 C 131,96 139,90 150,90 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <ellipse cx="171" cy="97" rx="7" ry="6" fill="#242b33" stroke="#3a2018" stroke-width="3"/>
-  <path d="M 137,116 L 146,116 L 146,130 C 146,134 137,134 137,130 Z" fill="#f0f2f5"/>
-  <defs><clipPath id="t1"><path d="M 137,116 L 146,116 L 146,130 C 146,134 137,134 137,130 Z"/></clipPath></defs>
+  <path d="M 111,113 C 110,101 118,95 127,95 C 134,95 138,99 141,100 C 145,97 150,93 158,93 C 168,93 175,99 175,108 C 175,120 165,128 150,129 C 140,130 130,130 122,128 C 114,126 111,120 111,113 Z" fill="none" stroke="#3a2018" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 135.2,109 L 141.7,109 L 141.7,117.5 C 141.7,120.8 135.2,120.8 135.2,117.5 Z" fill="#f0f2f5"/>
+  <defs><clipPath id="t1"><path d="M 135.2,109 L 141.7,109 L 141.7,117.5 C 141.7,120.8 135.2,120.8 135.2,117.5 Z"/></clipPath></defs>
   <g clip-path="url(#t1)">
   </g>
-  <path d="M 137,116 L 146,116 L 146,130 C 146,134 137,134 137,130 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 147,116 L 156,116 L 156,129 C 156,133 147,133 147,129 Z" fill="#f0f2f5"/>
-  <defs><clipPath id="t2"><path d="M 147,116 L 156,116 L 156,129 C 156,133 147,133 147,129 Z"/></clipPath></defs>
+  <path d="M 135.2,109 L 141.7,109 L 141.7,117.5 C 141.7,120.8 135.2,120.8 135.2,117.5 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 142.3,109 L 148.8,109 L 148.8,117.5 C 148.8,120.8 142.3,120.8 142.3,117.5 Z" fill="#f0f2f5"/>
+  <defs><clipPath id="t2"><path d="M 142.3,109 L 148.8,109 L 148.8,117.5 C 148.8,120.8 142.3,120.8 142.3,117.5 Z"/></clipPath></defs>
   <g clip-path="url(#t2)">
   </g>
-  <path d="M 147,116 L 156,116 L 156,129 C 156,133 147,133 147,129 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 142.3,109 L 148.8,109 L 148.8,117.5 C 148.8,120.8 142.3,120.8 142.3,117.5 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 157,95 A 9 7 0 1 1 175,95 A 9 7 0 1 1 157,95 Z" fill="#242b33"/>
+  <defs><clipPath id="ns"><path d="M 157,95 A 9 7 0 1 1 175,95 A 9 7 0 1 1 157,95 Z"/></clipPath></defs>
+  <g clip-path="url(#ns)">
+    <ellipse cx="162" cy="91" rx="5" ry="3" fill="#44555f"/>
+  </g>
+  <path d="M 157,95 A 9 7 0 1 1 175,95 A 9 7 0 1 1 157,95 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 164,102 C 162,106 156,107.5 150,106.5" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

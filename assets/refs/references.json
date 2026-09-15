@@ -653,7 +653,7 @@
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
           "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 115 px, at the skirt with the gloves hanging beside it, on a 430 px figure, which is 0.267 of its own height; the hat brim is 106 px and is headgear above the crown, measured beside the body and not as part of it, exactly as the player toque is. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
-          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the serge 115, the parka 115 and the beaver 115 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the serge 115, the parka 115 and the beaver 116 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the officer and the player and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }
@@ -762,7 +762,7 @@
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
           "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 115 px, at the hem with the mitts hanging beside it, on a 430 px figure, which is 0.267 of its own height. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
-          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the parka 115, the serge 115 and the beaver 115 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the parka 115, the serge 115 and the beaver 116 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the player and the officer and the guide, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }
@@ -2115,50 +2115,50 @@
         {
           "feature": "the paddle tail, visible and out to one side",
           "why": "One of the two features that carry the identification, and one that is carried out to the side rather than behind, because anything drawn behind a torso is not drawn at all. Since the guide turned to face its direction of travel, the wearer right side is the TRAILING side, so the paddle streams out behind a moving animal. If it disappears first at small size, it is drawn too small or too dark.",
-          "detail": "A broad flat oval leaning down and away from the wearer's right hip, on a stub that leaves the body at the hip and tucks behind the leg, with three cross bands for scale and a large lit upper face. About 80 x 115 px in character space.",
+          "detail": "A flat spatula-shaped paddle hanging down and away behind the wearer's right hip, on a furred stub that leaves the body at the hip, with a lit upper face and a sparse crosshatch of scale lines drawn as shapes. About 80 x 115 px in character space.",
           "palette": "hide",
           "maskRegion": {
-            "x": 22,
-            "y": 281,
-            "w": 84,
-            "h": 141
+            "x": 24,
+            "y": 282,
+            "w": 87,
+            "h": 145
           },
-          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle covers the whole tail, stub and paddle, and leaves the head, body, forelimbs and the near hind leg untouched. It exists so the claim that the tail is load-bearing has a test - mask it and the identification should degrade.",
+          "whyMasked": "MEASURED against the 240x470 composite the renderRecipe builds: this rectangle is the tail's own frame window since the 2026-09-14 friendly redraw, so it covers the whole tail, stub and paddle and leaves the head and body untouched; at rest the near forepaw overlaps its top-right corner. It exists so the claim that the tail is load-bearing has a test - mask it and the identification should degrade.",
           "maskRegionNote": "The tail window in character space. DIAGNOSTIC, never gating. guide.md 3 calls the paddle one of the two features that make a beaver identifiable at phone size; with it painted out, what is left is the muzzle and the incisors, and the answer says which of the two is doing the work."
         },
         {
-          "feature": "two large incisors below the mouth",
-          "why": "The other load-bearing feature, and the one that reads at the smallest sizes.",
-          "detail": "Two white teeth, together about 20 px wide and 18 tall, below the snout pad and never past the chin in character space, hanging below the shared mouth line on a pale snout pad.",
+          "feature": "two small incisors under the smile",
+          "why": "The other load-bearing feature. Drawn small and tucked under the smile since 2026-09-14: the large pair that hung below the snout pad read as buck teeth in a gape, and the product owner reported the guide as manic.",
+          "detail": "Two white teeth, together about 17 px wide and 14 tall with their ink, tucked under the shared mouth line on the cream muzzle and ending well above the chin in character space.",
           "palette": "white, felt",
           "maskRegion": {
-            "x": 132,
-            "y": 112,
-            "w": 30,
-            "h": 26
+            "x": 130,
+            "y": 106,
+            "w": 24,
+            "h": 24
           },
-          "whyMasked": "MEASURED against the same composite: covers both incisors and the lower snout pad and leaves the eyes, brows, ears and body alone."
+          "whyMasked": "MEASURED against the same composite from the part geometry: covers both incisors, the shared mouth and the lower muzzle, and leaves the eyes, brows, nose, ear and body alone."
         },
         {
           "feature": "ONE small ear, set high and well BACK on the skull",
           "why": "This is the difference between a beaver and a bear, and the first version of this head got it wrong: high, large, rounded ears read as a bear in the render even though the teeth and tail were already right.",
-          "detail": "Small, dark, rounded, mostly inside the head silhouette, high and well back - which is where beaver-head-and-forepaws.jpg and beaver-alberta-profile.jpg put it. ONE, not two: the head is turned and a turned head shows one ear, and two is the loudest front-view signal there is. Ears that stand clear of the skull read as a bear; that has been drawn wrong twice now, high and round the first time and large and paired the second.",
+          "detail": "Small, dark, rounded, high and well back on the edge of the skull, about a third of it outside the head outline so it reads as an ear and not as a dark spot on the head - which is where beaver-head-and-forepaws.jpg and beaver-alberta-profile.jpg put it. ONE, not two: the head is turned and a turned head shows one ear, and two is the loudest front-view signal there is. Ears that stand clear of the skull read as a bear; that has been drawn wrong twice now, high and round the first time and large and paired the second.",
           "palette": "leather, felt"
         },
         {
-          "feature": "a broad blunt muzzle with a wide flat nose",
-          "detail": "A pale snout pad filling the lower half of the face with a wide dark nose across its top.",
+          "feature": "a soft pale muzzle with a dark nose",
+          "detail": "A cream bean-shaped muzzle under the eyes carrying the shared smile, with a rounded dark nose on its leading edge and a short line from the nose down to the smile.",
           "palette": "felt, hide"
         },
         {
           "feature": "a pale belly against a darker pelt",
-          "detail": "Ventral fur a full ramp lighter than the flank.",
-          "palette": "felt, leather"
+          "detail": "A cream front from the throat that swells into a round, low belly on the leading edge, against a warm brown pelt.",
+          "palette": "felt, wood"
         },
         {
           "feature": "webbed hind feet",
-          "detail": "Bare dark hide, a single rounded wedge with three toe notches, a tone lighter than the tail so the two dark masses do not merge at phone size.",
-          "palette": "hide"
+          "detail": "Warm dark brown, a single rounded wedge with three toe notches, a warm hue against the cool dark tail so the two dark masses do not merge at phone size.",
+          "palette": "leather"
         },
         {
           "feature": "the figure is TURNED TOWARD THE DIRECTION IT TRAVELS",
@@ -2169,8 +2169,8 @@
         {
           "feature": "cartoon proportions identical to every other character",
           "why": "CLAUDE.md requires it and docs/content-review.md 6.2 gives the reason: comparison only works if everyone is compared. A verifier shown ONE figure cannot check this and must not be asked to, so the hand-off carries a second figure on the same rig in a different costume. TIGHTENED 2026-09-09 after the repository owner reported the player shoulders as out of proportion and THIS ENTRY HAD SCORED PRESENT ANYWAY. It scored present because it asked only whether two figures matched, and they did - they were equally wrong, both built to a canon whose shoulder row was 54 percent over a measured photograph. An entry that cannot see the widest part of a figure is not measuring proportions, so it now names that measurement, gives the number, gives the reference the number came from, and says which quantity is allowed to differ.",
-          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 115 px at the haunch on a 440 px figure, which is 0.261 of its own height, with the paddle tail excluded because it is held out to one side and is not part of the body. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
-          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the beaver 115, the parka 115 and the serge 115 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
+          "detail": "6 heads tall, 420 px crown to sole at design resolution, head 70 px. MEASURE THE WIDEST POINT OF EACH FIGURE - not the shoulder line by eye, the widest point, wherever it falls - as a fraction of that figure own crown-to-sole height. AND CHECK THE NECK: every figure must show a column of its own surface between the jaw and the collar, 12 to 13 px at design resolution, about 4 px at 390 px, with the collar DARKER than the column beneath it. A figure whose head sits straight on the shoulders FAILS this entry however well its width measures - that was reported from the live site as \"the head is on the torso\" and it is most of why the shoulders still looked wrong after their width was corrected. It is derived, not chosen: 0.149 of head height, measured on officer/red-serge-full-figure.jpg, see art-bible.md 7.3. The guide is held to the same column in pelt rather than skin, which is a surface exemption for one non-human artboard and not a licence to draw it neckless. On the shipped art that is 116 px at the belly on a 437 px figure, which is 0.265 of its own height, with the paddle tail excluded because it is held out to one side and is not part of the body. The cap for every character is 116 px, which is 0.276 of height. It is derived, not chosen: an adult in a winter parka in assets/refs/ottawa/rideau-canal-skateway-ice.jpg measures 0.238 of their own height across the shoulders with the arms hanging in, and 0.276 is that plus a deliberate cartoon broadening of about a tenth. A figure at or over 0.30 FAILS this entry however well it matches the figure beside it.",
+          "whatMayDiffer": "THE GARMENT, WITHIN THE CAP. A parka genuinely broadens the shoulders and a fitted tunic barely does, so the three costumes measure the beaver 116, the parka 115 and the serge 115 px at rest, arms included. A verifier should NOT fail the pair over a few pixels of coat.",
           "whatMayNotDiffer": "THE FIGURE. Crown line, sole line, eye line, the heights of the shoulder, hip, knee and ankle, the size of the hands and of the feet, the head size and the three stroke weights are IDENTICAL between the guide and the player and the officer, because they are the same rig and, for the limbs and hands, literally the same atlas frames. If a verifier can see that one figure head is bigger, its eye line higher or its hands larger, that is the failure this entry is for.",
           "requiresComparisonFigure": true
         }

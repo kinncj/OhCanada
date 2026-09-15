@@ -1,11 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="99" viewBox="108 358 48 99" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides. The guide hind leg, knee to ankle. A flat top on the knee pivot, and it ENDS in a circle on the ankle pivot so the foot, drawn next, covers it at every ankle angle (art-bible.md 7.5).</title>
-  <path d="M 112,362 L 152,362 L 151.97,363.08 L 147.98,436.86 A 16 16 0 0 1 116.02,436.86 L 112.03,363.08 Z" fill="#7c4327"/>
-  <defs><clipPath id="ll"><path d="M 112,362 L 152,362 L 151.97,363.08 L 147.98,436.86 A 16 16 0 0 1 116.02,436.86 L 112.03,363.08 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="99" viewBox="106 358 52 99" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides. The guide hind leg, knee to ankle, furred. A flat top on the knee pivot, and it ENDS in a circle on the ankle pivot so the foot, drawn next, covers it at every ankle angle (art-bible.md 7.5).</title>
+  <path d="M 110,362 L 154,362 L 153.95,363.49 L 148.96,437.15 A 17 17 0 0 1 115.04,437.15 L 110.05,363.49 Z" fill="#96632f"/>
+  <defs><clipPath id="ll"><path d="M 110,362 L 154,362 L 153.95,363.49 L 148.96,437.15 A 17 17 0 0 1 115.04,437.15 L 110.05,363.49 Z"/></clipPath></defs>
   <g clip-path="url(#ll)">
-    <path d="M 138.4,332 L 176,332 L 176,466 L 138.4,466 Z" fill="#401812"/>
-    <ellipse cx="122" cy="385.68" rx="4.4" ry="14.8" fill="#b4733b"/>
-    <path d="M 152,362 L 151.97,363.08 L 147.98,436.86 A 16 16 0 0 1 116.02,436.86 L 112.03,363.08 L 112,362" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 143,332 L 176,332 L 176,466 L 143,466 Z" fill="#5a2d19"/>
+    <ellipse cx="122.1" cy="387.9" rx="5.28" ry="16.28" fill="#c5994d"/>
+    <ellipse cx="132" cy="366" rx="26" ry="7" fill="#16203a" opacity="0.18"/>
+    <path d="M 154,362 L 153.95,363.49 L 148.96,437.15 A 17 17 0 0 1 115.04,437.15 L 110.05,363.49 L 110,362" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 152,362 L 151.97,363.08 L 147.98,436.86 A 16 16 0 0 1 116.02,436.86 L 112.03,363.08 L 112,362" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 154,362 L 153.95,363.49 L 148.96,437.15 A 17 17 0 0 1 115.04,437.15 L 110.05,363.49 L 110,362" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

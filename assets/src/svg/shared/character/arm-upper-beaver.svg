@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="109" viewBox="114 125 46 109" shape-rendering="geometricPrecision">
-  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide foreleg, upper. Its shoulder cap and its elbow cap are circles centred ON the shoulder and elbow pivots, so rotation never swings a cap out from under the next part; open over the shoulder so it grows out of the torso.</title>
-  <path d="M 120,146 A 17 17 0 0 1 154,146 C 156.5,170 155.5,196 153,214 A 16 16 0 0 1 121,214 C 118.5,196 117.5,170 120,146 Z" fill="#7c4327"/>
-  <defs><clipPath id="au"><path d="M 120,146 A 17 17 0 0 1 154,146 C 156.5,170 155.5,196 153,214 A 16 16 0 0 1 121,214 C 118.5,196 117.5,170 120,146 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="116" viewBox="111 121 52 116" shape-rendering="geometricPrecision">
+  <title>One frame serves both sides: the rig reflects it about the character centre line. The guide foreleg, upper: a soft furred limb. Its shoulder cap and its elbow cap are circles centred ON the shoulder and elbow pivots, so rotation never swings a cap out from under the next part.</title>
+  <path d="M 116,146 A 21 21 0 0 1 158,146 C 160,170 158,196 156,214 A 19 19 0 0 1 118,214 C 116,196 114,170 116,146 Z" fill="#96632f"/>
+  <defs><clipPath id="au"><path d="M 116,146 A 21 21 0 0 1 158,146 C 160,170 158,196 156,214 A 19 19 0 0 1 118,214 C 116,196 114,170 116,146 Z"/></clipPath></defs>
   <g clip-path="url(#au)">
-    <path d="M 142.44,116 L 181,116 L 181,244 L 142.44,244 Z" fill="#401812"/>
-    <ellipse cx="128.5" cy="167.76" rx="3.74" ry="13.6" fill="#b4733b"/>
-    <path d="M 120,146 A 17 17 0 0 1 154,146 C 156.5,170 155.5,196 153,214 A 16 16 0 0 1 121,214 C 118.5,196 117.5,170 120,146 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 147.5,116 L 181,116 L 181,244 L 147.5,244 Z" fill="#5a2d19"/>
+    <ellipse cx="127.55" cy="169.8" rx="5.04" ry="14.96" fill="#c5994d"/>
+    <path d="M 116,146 A 21 21 0 0 1 158,146 C 160,170 158,196 156,214 A 19 19 0 0 1 118,214 C 116,196 114,170 116,146 Z" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 120,146 A 17 17 0 0 1 154,146 C 156.5,170 155.5,196 153,214 A 16 16 0 0 1 121,214 C 118.5,196 117.5,170 120,146 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 116,146 A 21 21 0 0 1 158,146 C 160,170 158,196 156,214 A 19 19 0 0 1 118,214 C 116,196 114,170 116,146 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

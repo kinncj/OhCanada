@@ -1,14 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="116" height="208" viewBox="62 126 116 208" shape-rendering="geometricPrecision">
-  <title>The guide body, three-quarter facing right: a pear-shaped barrel of pelt, full at the belly, with the pale belly on the leading edge. No clothing of any kind. Same shoulder line, hips and envelope as every other character.</title>
-  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 165,136 171,152 172,180 C 174,214 175,254 171,286 C 167,316 152,330 120,330 C 88,330 73,316 69,286 C 65,254 66,214 68,180 C 69,152 75,134 84,131 C 92,129 100,131 106,137 Z" fill="#7c4327"/>
-  <defs><clipPath id="tb"><path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 165,136 171,152 172,180 C 174,214 175,254 171,286 C 167,316 152,330 120,330 C 88,330 73,316 69,286 C 65,254 66,214 68,180 C 69,152 75,134 84,131 C 92,129 100,131 106,137 Z"/></clipPath></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="118" height="250" viewBox="61 126 118 250" shape-rendering="geometricPrecision">
+  <title>The guide body, three-quarter facing right: a pear of warm brown pelt, narrow at the chest and full and low at the belly and rump, with its hem below the knee so only the shins show. A cream front runs from the throat and swells into a round belly on the leading edge. No clothing of any kind. Same shoulder line, pivots and 116 px rest cap as every other character.</title>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 160,134 160,148 159,168 C 158,196 172,236 174,284 C 176,346 160,372 120,372 C 82,372 64,340 65,316 C 66,268 78,228 78,196 C 78,164 77,138 84,131 C 92,129 100,131 106,137 Z" fill="#96632f"/>
+  <defs><clipPath id="tb"><path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 160,134 160,148 159,168 C 158,196 172,236 174,284 C 176,346 160,372 120,372 C 82,372 64,340 65,316 C 66,268 78,228 78,196 C 78,164 77,138 84,131 C 92,129 100,131 106,137 Z"/></clipPath></defs>
   <g clip-path="url(#tb)">
-    <path d="M 50,110 L 92,110 C 84,160 84,230 90,300 L 50,350 Z" fill="#b4733b"/>
-    <path d="M 190,110 L 158,110 C 164,160 166,230 160,300 L 190,350 Z" fill="#401812"/>
-    <ellipse cx="144" cy="254" rx="34" ry="78" fill="#c29455"/>
-    <ellipse cx="140" cy="222" rx="18" ry="32" fill="#d5c18e"/>
-    <ellipse cx="122" cy="154" rx="34" ry="10" fill="#16203a" opacity="0.18"/>
-    <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 165,136 171,152 172,180 C 174,214 175,254 171,286 C 167,316 152,330 120,330 C 88,330 73,316 69,286 C 65,254 66,214 68,180 C 69,152 75,134 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 40,110 L 88,110 C 80,160 78,230 84,300 C 86,330 94,350 102,390 L 40,390 Z" fill="#c5994d"/>
+    <path d="M 200,110 L 166,110 C 172,170 176,250 170,300 C 166,340 152,368 120,376 L 200,400 Z" fill="#5a2d19"/>
+    <path d="M 124,140 C 140,140 150,154 152,184 C 162,222 172,262 170,312 C 168,352 152,368 132,368 C 110,368 100,342 101,308 C 103,262 108,222 110,186 C 111,158 110,140 124,140 Z" fill="#d5c18e"/>
+    <defs><clipPath id="bib"><path d="M 124,140 C 140,140 150,154 152,184 C 162,222 172,262 170,312 C 168,352 152,368 132,368 C 110,368 100,342 101,308 C 103,262 108,222 110,186 C 111,158 110,140 124,140 Z"/></clipPath></defs>
+    <g clip-path="url(#bib)">
+    <ellipse cx="156" cy="310" rx="26" ry="60" fill="#c29455"/>
+    </g>
+    <ellipse cx="122" cy="152" rx="34" ry="9" fill="#16203a" opacity="0.18"/>
+    <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 160,134 160,148 159,168 C 158,196 172,236 174,284 C 176,346 160,372 120,372 C 82,372 64,340 65,316 C 66,268 78,228 78,196 C 78,164 77,138 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 165,136 171,152 172,180 C 174,214 175,254 171,286 C 167,316 152,330 120,330 C 88,330 73,316 69,286 C 65,254 66,214 68,180 C 69,152 75,134 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 106,137 C 114,144 126,144 134,137 C 140,131 148,129 156,131 C 160,134 160,148 159,168 C 158,196 172,236 174,284 C 176,346 160,372 120,372 C 82,372 64,340 65,316 C 66,268 78,228 78,196 C 78,164 77,138 84,131 C 92,129 100,131 106,137 Z" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
