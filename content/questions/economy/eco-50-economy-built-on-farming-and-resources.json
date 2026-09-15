@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "eco-50-economy-built-on-farming-and-resources",
+  "subject": "economy",
+  "prompt": {
+    "en": "For hundreds of years, what was Canada's economy mostly based on?",
+    "fr": "Pendant des siècles, sur quoi l'économie du Canada reposait-elle surtout?"
+  },
+  "options": [
+    {
+      "en": "Factories that made cars and airplanes.",
+      "fr": "Des usines qui fabriquaient des voitures et des avions."
+    },
+    {
+      "en": "Farming, and selling natural resources such as fur, fish and timber to other countries.",
+      "fr": "L'agriculture, et la vente à d'autres pays de ressources naturelles comme la fourrure, le poisson et le bois."
+    },
+    {
+      "en": "Banks and insurance companies.",
+      "fr": "Les banques et les compagnies d'assurance."
+    },
+    {
+      "en": "Tourism in the national parks.",
+      "fr": "Le tourisme dans les parcs nationaux."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "For a very long time, Canada's economy rested mainly on farming and on sending natural resources like fur, fish and timber to other countries. Those goods travelled by road and by water, on lakes, rivers and canals.",
+    "fr": "Pendant très longtemps, l'économie du Canada reposait surtout sur l'agriculture et sur l'envoi de ressources naturelles comme la fourrure, le poisson et le bois vers d'autres pays. Ces marchandises voyageaient par la route et par l'eau, sur les lacs, les rivières et les canaux."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 29,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "For centuries Canada’s economy was based mainly on farming and on exporting natural resources such as fur, fish and timber, transported by roads, lakes, rivers and canals."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

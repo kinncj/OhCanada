@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-48-non-official-languages-at-home",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the guide say about languages other than English and French in Canada?",
+    "fr": "Que dit le guide des langues autres que l'anglais et le français au Canada?"
+  },
+  "options": [
+    {
+      "en": "It is against the law to speak them in public.",
+      "fr": "La loi interdit de les parler en public."
+    },
+    {
+      "en": "Hardly anyone in Canada speaks them any more.",
+      "fr": "Presque plus personne ne les parle au Canada."
+    },
+    {
+      "en": "They are official languages in every province.",
+      "fr": "Elles sont langues officielles dans toutes les provinces."
+    },
+    {
+      "en": "Many Canadians speak them at home.",
+      "fr": "Beaucoup de Canadiens les parlent à la maison."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "English and French are Canada's two official languages. Many other languages are also spoken in Canadian homes.",
+    "fr": "L'anglais et le français sont les deux langues officielles du Canada. Beaucoup d'autres langues se parlent aussi dans les foyers canadiens."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 21,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Non-official languages are widely spoken in Canadian homes."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

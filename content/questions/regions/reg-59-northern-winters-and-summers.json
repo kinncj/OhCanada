@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "reg-59-northern-winters-and-summers",
+  "subject": "regions",
+  "prompt": {
+    "en": "What are winters and summers like in Canada's northern territories?",
+    "fr": "Comment sont les hivers et les étés dans les territoires du Nord canadien?"
+  },
+  "options": [
+    {
+      "en": "Short, mild winters and long, hot summers.",
+      "fr": "Des hivers courts et doux, et des étés longs et chauds."
+    },
+    {
+      "en": "Long, cold winters and short, cool summers.",
+      "fr": "Des hivers longs et froids, et des étés courts et frais."
+    },
+    {
+      "en": "Mild weather all year, with little snow.",
+      "fr": "Un temps doux toute l'année, avec peu de neige."
+    },
+    {
+      "en": "Wet, rainy winters and dry, warm summers.",
+      "fr": "Des hivers pluvieux et des étés secs et chauds."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "In the Northwest Territories, Nunavut and Yukon, winter lasts a long time and is cold. Summer is short and cool.",
+    "fr": "Au Yukon, dans les Territoires du Nord-Ouest et au Nunavut, l'hiver est long et froid. L'été est court et frais."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's Regions",
+    "page": 103,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Northern territories have long cold winters and short cool summers."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

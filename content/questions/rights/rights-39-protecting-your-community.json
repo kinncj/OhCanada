@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "rights-39-protecting-your-community",
+  "subject": "rights",
+  "prompt": {
+    "en": "When you help to protect your community, whose example does the guide say you are following?",
+    "fr": "Selon le guide, quand vous aidez à protéger votre collectivité, l'exemple de qui suivez-vous?"
+  },
+  "options": [
+    {
+      "en": "Leaders of other countries who visit Canada.",
+      "fr": "Celui des dirigeants d'autres pays qui visitent le Canada."
+    },
+    {
+      "en": "Only the members of your own family.",
+      "fr": "Seulement celui des membres de votre famille."
+    },
+    {
+      "en": "The Canadians who came before you and made sacrifices to serve the country.",
+      "fr": "Celui des Canadiens venus avant vous, qui ont fait des sacrifices pour servir le pays."
+    },
+    {
+      "en": "The owners of the biggest companies in your town.",
+      "fr": "Celui des propriétaires des plus grandes entreprises de votre ville."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "The Coast Guard, the police and the fire department are ways to serve your community. When you protect the place where you live, you walk the same path as the Canadians who gave something up in the past to serve this country.",
+    "fr": "La Garde côtière, la police et le service d'incendie sont des façons de servir votre collectivité. Quand vous protégez l'endroit où vous vivez, vous suivez le même chemin que les Canadiens qui, avant vous, ont fait des sacrifices pour servir le pays."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Rights and Responsibilities of Citizenship",
+    "page": 15,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "By helping to protect your community, you follow in the footsteps of Canadians before you who made sacrifices in the service of our country."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

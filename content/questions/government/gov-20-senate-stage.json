@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-20-senate-stage",
+  "subject": "government",
+  "prompt": {
+    "en": "After the House of Commons passes a bill at third reading, what happens to it next?",
+    "fr": "Une fois qu'un projet de loi est adopté en troisième lecture à la Chambre des communes, que se passe-t-il ensuite?"
+  },
+  "options": [
+    {
+      "en": "It becomes law the same day, without going to the Senate.",
+      "fr": "Il devient loi le jour même, sans passer par le Sénat."
+    },
+    {
+      "en": "The Prime Minister signs it, and it becomes law.",
+      "fr": "Le premier ministre le signe, et il devient loi."
+    },
+    {
+      "en": "It goes through much the same steps in the Senate.",
+      "fr": "Il passe par des étapes semblables au Sénat."
+    },
+    {
+      "en": "Each province holds its own vote on it.",
+      "fr": "Chaque province tient son propre vote sur ce projet de loi."
+    }
+  ],
+  "correctIndex": 2,
+  "explanation": {
+    "en": "A bill has to pass both the House of Commons and the Senate. In the Senate it follows a process like the one it followed in the House. Royal assent comes only after both have passed it.",
+    "fr": "Un projet de loi doit être adopté par la Chambre des communes et par le Sénat. Au Sénat, il suit un processus semblable à celui de la Chambre. La sanction royale vient seulement après l'adoption par les deux chambres."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 56,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Senate – The bill follows a similar process in the Senate."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

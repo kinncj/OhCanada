@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "elec-21-where-to-see-results",
+  "subject": "elections",
+  "prompt": {
+    "en": "After the polls close on election day, where does the guide say you can see the results?",
+    "fr": "Après la fermeture des bureaux de scrutin, où le guide dit-il qu'on peut voir les résultats?"
+  },
+  "options": [
+    {
+      "en": "Only in a letter mailed to each voter.",
+      "fr": "Seulement dans une lettre envoyée par la poste à chaque électeur."
+    },
+    {
+      "en": "On television or on the Elections Canada website.",
+      "fr": "À la télévision ou sur le site Web d'Élections Canada."
+    },
+    {
+      "en": "Only at your polling station, one week later.",
+      "fr": "Seulement à votre bureau de scrutin, une semaine plus tard."
+    },
+    {
+      "en": "Only by calling the office of a political party.",
+      "fr": "Seulement en appelant le bureau d'un parti politique."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "When voting ends, all the ballots are counted and the results are shared with everyone. You can follow them on TV, or online at www.elections.ca.",
+    "fr": "À la fin du vote, tous les bulletins sont comptés et les résultats sont communiqués à tout le monde. Vous pouvez les suivre à la télévision, ou en ligne à l'adresse www.elections.ca."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Federal Elections",
+    "page": 65,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "You can see the results on television or on the Elections Canada website (www.elections.ca)."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

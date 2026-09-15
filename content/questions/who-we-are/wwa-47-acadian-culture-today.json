@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "wwa-47-acadian-culture-today",
+  "subject": "who-we-are",
+  "prompt": {
+    "en": "What does the guide say about Acadian culture today?",
+    "fr": "Que dit le guide de la culture acadienne aujourd'hui?"
+  },
+  "options": [
+    {
+      "en": "It disappeared after the Acadians were deported.",
+      "fr": "Elle a disparu après la déportation des Acadiens."
+    },
+    {
+      "en": "It is thriving and is a lively part of French-speaking Canada.",
+      "fr": "Elle est florissante et occupe une place bien vivante dans le Canada francophone."
+    },
+    {
+      "en": "It is found only in museums and history books.",
+      "fr": "On ne la trouve plus que dans les musées et les livres d'histoire."
+    },
+    {
+      "en": "It has become part of English-speaking Canada.",
+      "fr": "Elle fait maintenant partie du Canada anglophone."
+    }
+  ],
+  "correctIndex": 1,
+  "explanation": {
+    "en": "More than two-thirds of the Acadians were forced from their homeland in the 1700s, but they kept their identity. Today their culture is doing well, and it is an active part of French-speaking Canada.",
+    "fr": "Au XVIIIe siècle, plus des deux tiers des Acadiens ont été chassés de leur terre, mais ils ont gardé leur identité. Aujourd'hui, leur culture se porte bien et fait partie de la vie du Canada francophone."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Who We Are",
+    "page": 19,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Today, Acadian culture is flourishing and is a lively part of French-speaking Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

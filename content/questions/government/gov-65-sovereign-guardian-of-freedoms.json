@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "gov-65-sovereign-guardian-of-freedoms",
+  "subject": "government",
+  "prompt": {
+    "en": "In Canada's constitutional monarchy, what does the guide say the Sovereign guards?",
+    "fr": "Dans la monarchie constitutionnelle du Canada, qu'est-ce que le souverain ou la souveraine protège, selon le guide?"
+  },
+  "options": [
+    {
+      "en": "The platform of the party in power.",
+      "fr": "Le programme du parti au pouvoir."
+    },
+    {
+      "en": "The borders between the provinces.",
+      "fr": "Les frontières entre les provinces."
+    },
+    {
+      "en": "The federal budget.",
+      "fr": "Le budget fédéral."
+    },
+    {
+      "en": "The freedoms set out in the Constitution.",
+      "fr": "Les libertés prévues par la Constitution."
+    }
+  ],
+  "correctIndex": 3,
+  "explanation": {
+    "en": "The guide calls the Sovereign a guardian of constitutional freedoms, as well as a symbol of Canada's sovereignty and a reflection of its history. The Sovereign stays out of party politics.",
+    "fr": "Le guide présente le souverain ou la souveraine comme le gardien des libertés constitutionnelles, ainsi qu'un symbole de la souveraineté du Canada et un reflet de son histoire. Ce rôle se tient à l'écart de la politique partisane."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "How Canadians Govern Themselves",
+    "page": 57,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": true,
+    "quote": "Her Majesty is a symbol of Canadian sovereignty, a guardian of constitutional freedoms, and a reflection of our history."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
