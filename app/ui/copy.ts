@@ -1787,12 +1787,20 @@ export function percent(locale: UiLocale, value: number): string {
  * The browser's preferred language, narrowed (`OQ-SET-2`: start in French when
  * the browser asks for French, otherwise English; the player's own choice wins
  * from then on and is applied by the caller, not here).
+ *
+ * The browser's own order is kept: the first tag that is French or English
+ * decides, so `['de-DE', 'fr-CA']` is French and `['en-US', 'fr-CA']` is
+ * English. A browser that asks for neither gets `fallback`, which the
+ * composition root takes from `game.config.json#/defaultLocale`.
  */
-export function preferredLocale(languages: readonly string[]): UiLocale {
+export function preferredLocale(
+  languages: readonly string[],
+  fallback: UiLocale = 'en',
+): UiLocale {
   for (const tag of languages) {
-    const base = tag.toLowerCase().split('-')[0];
+    const base = tag.trim().toLowerCase().split(/[-_]/)[0];
     if (base === 'fr') return 'fr';
     if (base === 'en') return 'en';
   }
-  return 'en';
+  return fallback;
 }

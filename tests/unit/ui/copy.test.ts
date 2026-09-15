@@ -1128,6 +1128,18 @@ describe('the copy table', () => {
     expect(preferredLocale(['en-GB'])).toBe('en');
     expect(preferredLocale(['de-DE'])).toBe('en');
     expect(preferredLocale([])).toBe('en');
+    /* Any French or English tag, in the browser's own order. */
+    expect(preferredLocale(['fr'])).toBe('fr');
+    expect(preferredLocale(['FR-ca'])).toBe('fr');
+    expect(preferredLocale(['fr_BE'])).toBe('fr');
+    expect(preferredLocale(['de-DE', 'fr-CH'])).toBe('fr');
+    expect(preferredLocale(['en-US', 'fr-CA'])).toBe('en');
+    /* A browser that asks for neither gets the fallback it is handed. */
+    expect(preferredLocale(['de-DE', 'es'], 'fr')).toBe('fr');
+    expect(preferredLocale([], 'fr')).toBe('fr');
+    expect(preferredLocale(['en-CA'], 'fr')).toBe('en');
+    /* Only a language subtag of exactly `fr` or `en` counts. */
+    expect(preferredLocale(['frr', 'fra'])).toBe('en');
   });
 
   it('keeps the language names untranslated', () => {

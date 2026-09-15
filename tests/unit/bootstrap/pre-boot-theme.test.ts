@@ -111,6 +111,20 @@ describe('index.html pre-boot theme', () => {
     expect(readThemeColorMeta()).toBe(theme?.sky.toLowerCase());
   });
 
+  it('declares the page language the config defaults to, which boot keeps until a save is read', () => {
+    /*
+     * `main.ts` writes `config.defaultLocale` on `<html>` before the save is
+     * read, and only then applies the save's locale or, for a brand-new save,
+     * the browser's (`app/bootstrap/browser-locale.ts`). The literal here is the
+     * frame before that, so it has to be the same answer, or a French build
+     * would open with an English `lang` for a frame and the reverse.
+     */
+    const declared = /<html\s[^>]*\blang="([^"]+)"/u.exec(INDEX_HTML)?.[1] ?? null;
+    const configured = (gameConfigJson as { defaultLocale?: string }).defaultLocale;
+    expect(configured, 'content/game.config.json has no defaultLocale').toBeDefined();
+    expect(declared, 'index.html declares no lang on <html>').toBe(configured);
+  });
+
   it.each(CANVAS_ONLY_KEYS)('does not copy %s into the page', (key) => {
     expect(readCustomProperty(key)).toBeNull();
   });

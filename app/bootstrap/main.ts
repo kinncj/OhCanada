@@ -116,6 +116,7 @@ import {
   toPlayerCharacter,
   toSelection,
 } from './character-slots';
+import { newSaveLocale } from './browser-locale';
 import { creatorArt } from './creator-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { readGameRules, type GameRules } from './game-rules';
@@ -497,10 +498,22 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     console.error(`[bootstrap] the save could not be read. ${loaded.error.code}: ${loaded.error.message}`);
   }
 
+  /*
+   * A brand-new save starts in the browser's language (`OQ-SET-2`,
+   * `./browser-locale.ts`): French for any `fr*` tag, English for `en*`, the
+   * config's default otherwise. A save that loaded keeps its own locale, and
+   * nothing drawn before this line was put in the browser's language, so a
+   * returning player never sees a screen in a language they did not choose.
+   */
   let progress: Progress =
     loaded.ok && loaded.value !== null
       ? loaded.value
-      : newProgress(defaultSettings(config.defaultLocale), rules.unlockRules.initialLevels);
+      : newProgress(
+          defaultSettings(
+            newSaveLocale(window, toUiLocale(config.defaultLocale)) as unknown as LocaleCode,
+          ),
+          rules.unlockRules.initialLevels,
+        );
 
   /* `TN-ATTEMPT-02`: "the event `progress/loaded` is emitted" when the game
      comes back to an exam it did not finish. Emitted for every load, because the

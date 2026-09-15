@@ -105,11 +105,13 @@ const clampVolumes = (volumes: VolumeSettings): VolumeSettings => ({
 });
 
 /**
- * Settings a new player starts with, in the language the build defaults to.
+ * Settings a new player starts with, in the language they are given.
  *
- * The locale is a parameter rather than a constant because `game.config.json`
- * owns `defaultLocale`; a default hardcoded here would be a second answer to a
- * question the config already answers.
+ * The locale is a parameter rather than a constant because the answer is not
+ * the domain's: the composition root passes the browser's language, narrowed,
+ * and `game.config.json#/defaultLocale` when the browser asks for neither
+ * (`app/bootstrap/browser-locale.ts`). A default hardcoded here would be a
+ * second answer to a question already answered there.
  *
  * Subtitles start on. TN-QUEST-01 asserts a player who has never opened Settings
  * still sees the officer's words as text, so "on" is the default, not a
