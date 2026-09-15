@@ -36,7 +36,7 @@
     "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "asOf": "2026-09-08T00:00:00Z",
-    "volatile": false,
+    "volatile": true,
     "quote": "Lieutenant Robert Hampton Gray, a navy pilot born in Trail, B.C., was killed while bombing and sinking a Japanese warship in August 1945, a few days before the end of the Second World War, and was the last Canadian to receive the V.C. to date."
   },
   "verification": {
