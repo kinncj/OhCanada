@@ -1,7 +1,7 @@
 # ADR-0044: The band above the canvas is the canvas's first row, and it dims with the level
 
 - Status: Accepted (2026-09-15)
-- Slice: A5 (sky letterbox, second live-site audit).
+- Slice: A6 (sky letterbox, second live-site audit).
 - Builds on: ADR-0002 (portrait, `Scale.FIT`, side panels), ADR-0041 (a card dims the level with a filter on
   `#game`). Leaves ADR-0042 unchanged.
 
@@ -91,7 +91,7 @@ panels together with the level, and `app/ui` did not change. `body` keeps a flat
 
 ## Consequences
 
-- Measured after, with the same method and clock (see `docs/plan/slices.md`, A5).
+- Measured after, with the same method and clock (see `docs/plan/slices.md`, A6).
 - The band below the canvas still ends on the tinted `--tn-ground`, while the canvas's bottom rows are ground
   dressing. The HUD covers that band on a phone, so it was not changed here. It now dims with the level.
 - A layer whose first row is not one colour, or that does not span the width, gets one flat colour: the one whose

@@ -1,7 +1,7 @@
 # ADR-0045: The strip keeps the task, words wrap whole, and a sheet hugs what it says
 
 - Status: Accepted (2026-09-15)
-- Slice: F2c (readability pass), from the second live-site audit of 2026-09-15.
+- Slice: F2d (readability pass), from the second live-site audit of 2026-09-15.
 - Amends: ADR-0039 §1 (the strip's order); ADR-0041 §3 ("the question card stays a full screen", and the
   menus); `TN-HUD-hud-and-menu.md` (`TN-HUD-08`, the strip's order at 200 %); `TN-CARD-question-card.md` (the
   place line, and where "Next" is after answering); `TN-TIMER-the-exam-clock.md` (`TN-TIMER-01`, where the limit
