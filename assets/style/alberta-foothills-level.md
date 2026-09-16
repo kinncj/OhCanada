@@ -381,6 +381,16 @@ arithmetic rather than a render**: at 150 px below the walking line the horse's 
 across the bodies of the nearest two animals, which span about 130 to 270 px above the line in a hero centred on
 the stop.
 
+**Where the stop actually rests the rider, re-measured 2026-09-16 (ADR-0049), because the sentence above had gone
+half-stale.** It is still exactly true of every **point of interest**: the drive rests the rider **level** with the
+gate, the barn, the pump jack and the herd, at each one's own x, which is why the horse sits on the nearer line at
+all four. It is **no longer true of the guide**, and that is the markers slice's fix rather than a drift — a stop
+now reads the ride's art at rest and keeps a character's feet clear of it, so the horse rests **past** him:
+travelling right the rider comes to rest at **x 1 408**, 208 px beyond the guide at 1 200, and travelling left at
+**x 1 027**. Measured with the real `stand-off`, `ride` and `auto-stop` modules against this level document and the
+horse's own art; **nothing in `content/levels/alberta-foothills.json` changed to get it**, and the horse's own
+placement, anchor and track are untouched.
+
 **The cost, stated.** Until the player first engages something, the HUD carries the hint *"A mark shows something to
 see"* and is taller; at the guide and gate stops it covers the horse below the belly. Clearing it would need the
 horse above about 150 px below the line, which is what the cattle rule out. The panel is UI and goes after the

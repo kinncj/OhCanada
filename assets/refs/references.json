@@ -4690,7 +4690,7 @@
       "renders": [
         "src/svg/the-north/landmark-sternwheeler@1x.svg"
       ],
-      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`. The file is 920 x 280 and the vessel's keel is its bottom edge, so there is no empty band: it stands on the ground rather than floating like five-sails' pier.",
+      "renderRecipe": "Rasterise the file on its own at 1x. It is the POI hero and this is the subject it answers. `singleSource()`. The file is 2300 x 700 since 2026-09-16 — the authored 920 x 280 geometry under one uniform scale(2.5) group, so every ratio measured below is unchanged and this recipe is unaffected — and the vessel's keel is its bottom edge, so there is no empty band: it stands on the ground rather than floating like five-sails' pier. THE FILE IS NOW WIDER THAN THE GAME'S CAMERA (1080 px), so the level shows about half of it at the point a player stops, and the paddlewheel is passed on the walk in rather than framed at the stop. That is stated because it changes NOTHING about this contract, which is judged on the whole rasterised file: a blind verifier still sees the entire vessel. assets/style/the-north-level.md section 13 records why the vessel was rescaled and why a larger scale was refused.",
       "expectedBlindAnswer": [
         "a sternwheeler",
         "a stern-wheeler",

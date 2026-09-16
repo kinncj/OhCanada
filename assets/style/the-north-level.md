@@ -98,7 +98,7 @@ draws four. **This level draws none, anywhere, at any scale**, for the reason
 | `the-north-layer-20-range` | `layer-20-range.svg` | 1760 × 250 | 72 | a snow-capped saw-tooth range, a rounded ridge, a spruce foot |
 | `the-north-layer-30-far-bank` | `layer-30-far-bank.svg` | 1760 × 150 | 282 | black spruce cropped at the tile's top edge, gold aspen among them, a tan cut bank, the far shoreline |
 | `the-north-layer-40-river-and-bar` | `layer-40-river-and-bar.svg` | 1920 × 320 | 759 | the glacier-fed river in three tones, then a cobble bar with driftwood, willow and sedge |
-| `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 920 × 280 | 228 | **POI hero, and the level's place-anchor** |
+| `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 2300 × 700 | 228 | **POI hero, and the level's place-anchor.** The authored 920 × 280 geometry under one uniform `scale(2.5)` group since 2026-09-16; §13 |
 | `the-north-prop-spruce-stand` | `prop-spruce-stand@1x.svg` | 620 × 760 | 46 | **POI hero, added 2026-09-13**: five spire-topped spruce of uneven height on a boulder bank |
 | `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 44 | **POI hero, added 2026-09-13**: seven bleached logs lying across one another on the cobble bar |
 
@@ -172,8 +172,11 @@ subject.
 - **`spawn`** `(440, 1280)`.
 - **Layer offsets** are `y` 0 / 620 / 820 / 960, in depth order.
 - **`poi.yukon-river-sternwheeler.position.x` 3840**, the middle of the level, `radiusPx` 340. The hero is
-  920 × 280, so it occupies world x 3380 … 4300 and world y 1000 … 1280. The vessel's keel IS the frame's
-  bottom edge; there is no empty band under it, because it stands on a gravel bar rather than on piles.
+  **2300 × 700** since 2026-09-16 (§13), so it occupies world x 2690 … 4990 and world y 580 … 1280, against
+  3380 … 4300 and 1000 … 1280 before. The vessel's keel IS the frame's bottom edge; there is no empty band
+  under it, because it stands on a gravel bar rather than on piles. **It still clears both neighbours' art**:
+  the spruce stand ends at world x 2110 and the driftwood pile begins at 5650. **It no longer fits inside one
+  camera frame**, which is the art-bible §6 departure §13 records and defends.
 - **`camera`** `followLerp` 0.12, `deadZone` (60, 120), `offset` (150, −260), `zoom` 1. With the player on
   the ground the camera top sits at world y 60, so the visible band is world 60 … 1980.
 - **`theme`**: `sky` `#1f5fa8` (`sky-shade`), `ground` `#8b857c` (`path-base`), `horizon` `#c2d6e8`
@@ -209,9 +212,11 @@ the ten levels**, and its honest worst case on ADR-0013's baseline is 9.72 + 11.
 
 1. **Every tile is cropped to its world band.** The four layers cost **8.74 MiB**; authored 1920 tall at the
    same widths they would cost **47.0 MiB**.
-2. **The hero is pinned to 1× and is the smallest hero in the game at 920 × 280.** A sternwheeler is a wide,
-   low subject: 0.98 MiB buys a vessel 85 % of the screen wide, where the same texture budget spent on a
+2. **The hero is pinned to 1× and WAS the smallest hero in the game at 920 × 280.** A sternwheeler is a wide,
+   low subject: 0.98 MiB bought a vessel 85 % of the screen wide, where the same texture budget spent on a
    tower would buy one a third of the screen tall. The two-size test in §6.4 is what allowed the pin.
+   **That size is the defect §13 fixes**, because the same 0.98 MiB also bought a vessel shorter than the
+   player standing beside it. The hero is now **2300 × 700 and 6.14 MiB**, and is still pinned to 1×.
 3. **The far-bank tile is 150 rows.** Only 140 of them are ever seen, and it was authored to that rather
    than to the 210 the first layout gave it, which is 0.46 MiB of forest nobody would have looked at.
 
@@ -431,7 +436,7 @@ still **no characters**, and the sternwheeler keeps the `questId` ADR-0029 gave 
 | world x | POI | art | what it teaches | source |
 |---|---|---|---|---|
 | 1 800 | `spruce-stand` | `the-north-prop-spruce-stand`, 620 × 760 | the three northern territories hold a third of Canada's land and about 100,000 people | *Discover Canada* p. 103 |
-| 3 840 | `yukon-river-sternwheeler` | `the-north-landmark-sternwheeler`, 920 × 280 | the Land of the Midnight Sun, the winter dark, and the treeless frozen tundra | *Discover Canada* p. 103 |
+| 3 840 | `yukon-river-sternwheeler` | `the-north-landmark-sternwheeler`, 2 300 × 700 since 2026-09-16 (§13) | the Land of the Midnight Sun, the winter dark, and the treeless frozen tundra | *Discover Canada* p. 103 |
 | 6 000 | `driftwood` | `the-north-prop-driftwood-pile`, 700 × 340 | thousands of miners came in the Gold Rush of the 1890s and mining is still a big part of the economy | *Discover Canada* p. 103 |
 
 **Gaps of 2 040 and 2 160 px**, inside the 1 500–2 500 band.
@@ -476,6 +481,112 @@ to look at.
   'spruce-stand': singleSource(),
   'driftwood-pile': singleSource(),
 ```
+
+---
+
+## 13. The vessel was drawn smaller than the player, and is now drawn 2.5 times bigger
+
+**2026-09-16, branch `sternwheeler-scale`, after the second live-site audit's P2 #17 (ADR-0049, slice A7).**
+The audit photographed the sternwheeler stop and the boat was **shorter than the person standing at it**.
+Measured on the shipped art: the hero was 920 × 280 against a player 420 px from sole to crown, so the whole
+vessel — hull, three decks, funnel, hog posts and all — stood **0.67 player heights** tall and 2.19 long, and
+its main-deck line sat 86 px above the bar, **below the player's knee**. *Discover Canada*'s North is a place
+of big rivers and the vessel is a 64 m freighter; a landmark a player could pick up is the "simplified, never
+invented" rule broken in the one direction that reads as a mistake rather than a style.
+
+### 13.1 What the references actually say, and why no drawing can obey them
+
+The vessel is about **64 m long and about 12 m to the top of the wheelhouse**, against a person of about
+**1.7 m**. This level's scale is fixed by the rig: the player is 420 px sole to crown, so **1 m ≈ 247 px**. A
+true-size vessel beside this player is therefore about **15 800 px long and 2 960 px tall** — twice the whole
+world's height, and 2.06 times the level's entire 7 680 px length. **There is no scale at which this subject
+is both accurate and drawable**, so the only honest question is how much of the error to buy back, and the
+sheet must say which error is left. In hull depths, the reference's own denominator: the real main-deck line
+stands about 6.6 m above the keel, which is about 3.9 player heights; it is drawn at 0.51.
+
+### 13.2 What was done
+
+**One uniform `scale(2.5)` group wrapping the whole drawing.** Not a redraw: every authored coordinate is
+untouched inside the group, so **every ratio in §6.1 holds exactly** — the paddlewheel at 1.79 hull depths,
+the hog posts at 1.93, the funnel at 1.81, the vessel at 10.07 — and §6.3's stated departure on the wheel's
+axle is unchanged too. The file is **2300 × 700**; the `<title>` carries the scale and says that every px in
+it is an authored px. A redraw was considered and refused for a reason that is measurable rather than
+aesthetic: this drawing is flat fills with no strokes (art-bible §3 puts no outline on level art), so a
+uniform scale changes no line weight, and every feature keeps its proportion to the hull. Enlarging it makes
+the 12 px minimum-shape rule *easier*, not harder.
+
+| | before | after |
+|---|---|---|
+| authored px | 920 × 280 | **2300 × 700** |
+| vessel height ÷ player height | 0.67 | **1.67** |
+| vessel length ÷ player height | 2.19 | **5.48** |
+| main-deck line above the bar | 86 px, below the knee | **215 px, at the hip** |
+
+### 13.3 A 3.25 scale was drawn, rendered and REFUSED, and this is the number that refused it
+
+The first build of this change was **3.25** (2990 × 910), which puts the main-deck line at the player's upper
+chest and the vessel at 2.17 player heights — closer to what the audit asked for. **It was rendered at 390 px
+and thrown away.** At a stop the camera holds 1 080 design px with the player standing **464 px right of its
+left edge**, and the paddlewheel's centre lies **365 authored px left of the drawing's centre**, so the wheel
+is inside a stop's frame only while `460 − 464 ÷ k ≤ 172`, that is **k ≤ 1.61**. Above that no scale keeps
+it, and the bigger the drawing the less of it is ever in one frame:
+
+| scale | in the stop's frame | what the stop shows |
+|---|---|---|
+| 1.0 | 100 % | the whole vessel — and a boat shorter than the player |
+| **2.5** | **47 %** | the top edge against the sky, the funnel, four hog posts, three decks, the hull's foot on the bar |
+| 3.25 | 36 % | **a wall of white deck and windows**: no wheel, no bow, no pilot house, no top edge |
+
+3.25 also cost **10.38 MiB** of decoded texture and took the level to 34.58 of 36 MiB (96 %), which would have
+needed `textureBudgetBytes` raised to 40 MiB. Two reasons, either sufficient. The rejected renders are kept
+beside the shipped ones in the session scratchpad as `rejected-scale-3.25-*`.
+
+### 13.4 The departure from art-bible §6, stated rather than discovered
+
+**The hero is 2 300 px wide against a 1 080 px camera, and is the first hero in this game wider than the
+canvas.** It is therefore not "hero-framed inside the playfield", and its single most identifying feature —
+the stern wheel — is **not in the frame at the point the player stops**. Three things make that the right
+trade rather than a hidden breach:
+
+- **The blind contract is untouched.** `make verify-art` builds this subject with `singleSource()`, which
+  rasterises the whole file; a verifier still sees the entire vessel, at every ratio, and
+  `references.json`'s recipe now says so in terms.
+- **The wheel is not lost, it is passed.** It stands at world x 2 735 … 3 120, so a player walking in from
+  the spruce stand crosses it before the stop. A 64 m riverboat seen from its own gravel bar does not fit in
+  one glance either.
+- **The alternative is the defect.** The only way to frame the wheel at the stop is to draw the vessel at
+  about its old size, which is what the audit filed.
+
+### 13.5 Budgets, measured by `make assets`
+
+```
+before: level-payload  the-north 0.85 MiB of 8.00 MiB over 12 file(s) [1x 0.64 / 2x 0.85]
+        texture-memory the-north 25.18 MiB of 36.00 MiB (70%, 11 341 624 B spare) over 12 file(s)
+after:  level-payload  the-north 0.87 MiB of 8.00 MiB over 12 file(s) [1x 0.66 / 2x 0.87]
+        texture-memory the-north 30.34 MiB of 36.00 MiB (84%, 5 932 024 B spare) over 12 file(s)
+```
+
+The hero itself goes from **1 030 400 B (0.98 MiB) to 6 440 000 B (6.14 MiB)**, and the level's heaviest
+texture is still `atlas/shared@2x` at 10.02 MiB = 28 % of budget; the vessel is 17 %. **`textureBudgetBytes`
+is unchanged at 36 MiB** and 84 % is the band Halifax, Toronto and Québec City already sit in. On ADR-0013's
+baseline the honest worst case is 30.34 + ~8 of character surfaces = **about 38 of 64 MiB**. **Overdraw, by
+area arithmetic and not by the perf lane** (CI owns that): the hero's on-screen rectangle at that one stop
+goes from 920 × 280 = 0.12 of a screen to 1080 × 700 clipped = 0.36, so **at most +0.24 of a screen**, against
+CI's measured 2.21× at `low` and 2.66× at `medium` of a 4× budget. No other level's numbers moved.
+
+### 13.6 Placement stayed honest, and the mark was re-measured
+
+`position.x` 3 840, `radiusPx` 340, the ground polyline at 1 280 and the level's `size` are all unchanged, and
+the keel is still the frame's bottom edge, so **the hull still sits on the bar it stands on**. The art now
+spans world x 2 690 … 4 990 (§3), clear of both neighbours. Measured with the real
+`interaction-affordance`, `mark-clearance` and `art-silhouette` modules over the rasterised art, at the three
+mark sizes the contract uses (64, 95, 122): the mark now sits at **x 3 840, 12 px above the hog-post cap**
+(world y 603 / 588 / 575, against 984 / 961 / 948 before), on its own art, and **clear of the player's head in
+both headings at the stop**. Before the rescale the mark had to step sideways to x 3 728 … 3 993 to stay off
+the player; the taller vessel means it no longer has to move at all.
+
+**Renders**, 390 × 844 at DPR 3, spawn and the sternwheeler stop, before and after, plus a zoomed crop of the
+player beside the hull: `scratchpad/renders/sternwheeler/`.
 
 ---
 
