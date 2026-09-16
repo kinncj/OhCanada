@@ -35,6 +35,7 @@
 
 import { text, type UiLocale } from './copy';
 import { button, element, mark, replaceChildren } from './dom';
+import { motionIsReduced } from './focus-scroll';
 import { createScreen, type Screen } from './screen';
 
 export interface QuestionView {
@@ -410,11 +411,9 @@ export function createQuestionCard(
 
   /** Less movement, from the setting (`applySettings`) or from the device. */
   function motionReduced(): boolean {
-    const root = doc.documentElement as HTMLElement | null | undefined;
-    if (root?.getAttribute('data-tn-motion') === 'reduced') return true;
-    const view = doc.defaultView as (Window & typeof globalThis) | null | undefined;
-    const query = view?.matchMedia as Window['matchMedia'] | undefined;
-    return query?.call(view, '(prefers-reduced-motion: reduce)').matches === true;
+    /* One reading of the motion axis for the whole of `app/ui` — this card asked
+       the same two questions in its own words until `./focus-scroll.ts` existed. */
+    return motionIsReduced(doc);
   }
 
   function repaintOptionMarks(): void {

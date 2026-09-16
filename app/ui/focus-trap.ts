@@ -40,9 +40,17 @@
  * `app/ui/single-switch.ts` builds its ring from its own selector and never
  * reads `tabindex`, so one switch still reaches every option.
  *
+ * **Where Tab lands is scrolled into view**, by `./focus-scroll.ts`. Focus still
+ * moves with `preventScroll`, because the browser's own behaviour is to centre
+ * the element and that reads as the sheet lurching; the scroll that follows is
+ * `block: 'nearest'`, which moves nothing when the control is already on screen
+ * and is instant for a player who asked for less movement.
+ *
  * DOM only, no adapters, no scenes (ADR-0005). Nothing here is Phaser-aware; the
  * caller decides when a surface becomes modal.
  */
+
+import { focusAndReveal } from './focus-scroll';
 
 /**
  * What can take focus inside a trap. Deliberately conservative, and **not on
@@ -273,7 +281,13 @@ export function createFocusTrap(
      * correctly but the browser has already moved on to its own chrome.
      */
     event.preventDefault();
-    (next === -1 ? container : (elements[next] ?? container)).focus({ preventScroll: true });
+    /*
+     * Focused without the browser's centring jump, and then scrolled just far
+     * enough to be seen (`./focus-scroll.ts`). `preventScroll` alone was the
+     * defect: Tab reached a control below the fold and the page never moved, so
+     * the focus ring was real and off screen.
+     */
+    focusAndReveal(next === -1 ? container : (elements[next] ?? container));
   };
 
   const applyInert = (): void => {
@@ -345,7 +359,9 @@ export function createFocusTrap(
        */
       const target = restoreTo;
       restoreTo = null;
-      if (target !== null && target.isConnected) target.focus({ preventScroll: true });
+      /* Brought back into view as well as into focus: the control that opened a
+         screen may be far down the page the screen was covering. */
+      if (target !== null && target.isConnected) focusAndReveal(target);
     },
   };
 }

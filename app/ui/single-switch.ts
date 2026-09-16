@@ -22,6 +22,8 @@
  * function {@link classifyPress}.
  */
 
+import { focusAndReveal } from './focus-scroll';
+
 /** What a completed press means. */
 export type SwitchPress = 'advance' | 'choose';
 
@@ -164,7 +166,10 @@ export function createSwitchRing(
     }
     const current = index === -1 ? undefined : items[index];
     if (current === undefined) return;
-    current.focus({ preventScroll: true });
+    /* The highlight is only an affordance if it is on screen: focus without the
+       browser's centring jump, then scroll as little as it takes to see it
+       (`./focus-scroll.ts`). A switch user cannot scroll a page themselves. */
+    focusAndReveal(current);
     if (announceIt) options.announce?.(labelOf(current));
   };
 
