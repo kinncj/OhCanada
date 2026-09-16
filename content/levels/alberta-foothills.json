@@ -25,29 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Bearspaw",
-      "Chiniki",
-      "Wesley",
-      "Blood Tribe",
-      "Piikani Nation",
-      "Siksika Nation",
-      "Tsuut'ina Nation"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set in the foothills of south-western Alberta, where the plains meet the Rocky Mountains. These are the lands of Treaty No. 7, made on 22 September 1877. The treaty marks out its own boundary. The land starts at the United States border and runs north. Its western edge is “the central range of the Rocky Mountains”, and the treaty lands sit east of that range. The treaty places them “south and west of Treaties numbers six and four”. Its seven First Nations are the Bearspaw, the Chiniki, the Wesley, the Blood Tribe, the Piikani Nation, the Siksika Nation and the Tsuut'ina Nation.",
-      "fr": "Ce niveau se déroule dans les contreforts du sud-ouest de l'Alberta, là où les plaines rencontrent les Rocheuses. Ces terres sont visées par le Traité no 7, conclu le 22 septembre 1877. Le traité trace lui-même sa frontière. Le territoire part de la frontière des États-Unis et s'étend vers le nord. Sa limite ouest est « la chaîne centrale des montagnes Rocheuses », et les terres du traité se trouvent à l'est de cette chaîne. Le traité les situe « au sud et à l'ouest des Traités numéros six et quatre ». Ses sept Premières Nations sont les Bearspaw, les Chiniki, les Wesley, la Tribu des Blood, la Nation Piikani, la Nation Siksika et la Nation Tsuut'ina."
+      "en": "This level is set in the Alberta foothills, where the plains meet the Rocky Mountains. Discover Canada says Alberta is the country's largest producer of oil and gas, and that its northern oil sands are being developed into a major energy source. It also says the province is renowned for agriculture, and above all for the vast cattle ranches that help make Canada a major beef producer.",
+      "fr": "Ce niveau se déroule dans les contreforts de l'Alberta, là où les plaines rencontrent les Rocheuses. Discover Canada dit que l'Alberta est le plus grand producteur de pétrole et de gaz du pays, et que ses sables bitumineux du nord deviennent une grande source d'énergie. Le guide dit aussi que la province est réputée pour son agriculture, et surtout pour les vastes ranchs de bovins qui font du Canada un grand producteur de bœuf."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "cirnac-treaty-7",
-        "chapter": "Treaty No. 7",
-        "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
-        "sourceHash": "93a61bc461fa0bff50e6d270270ec756964693e6ab188c3e7cf0bc8d51fb53e2",
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 101,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": true,
-        "quote": "the Territory north of the United States Boundary Line, east of the central range of the Rocky Mountains, and south and west of Treaties numbers six and four"
+        "volatile": false,
+        "quote": "Alberta is the largest producer of oil and gas, and the oil sands in the north are being developed as a major energy source."
       },
       "verification": {
         "status": "verified",
@@ -57,7 +51,7 @@
         "evidence": "the Treaty made and concluded at the Blackfoot Crossing of the Bow River, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and seventy-seven … all their rights, titles, and privileges whatsoever to the lands included within the following limits, that is to say: Commencing at a point on the International Boundary due south of the western extremity of the Cypress Hills, thence west along the said boundary to the central range of the Rocky Mountains, or to the boundary of the Province of British Columbia, thence north-westerly along the said boundary to a point due west of the source of the main branch of the Red Deer River, thence south-westerly and southerly following on the boundaries of the Tracts ceded by the Treaties numbered six and four to the place of commencement"
       }
     },
-    "sourcePublisher": "Crown-Indigenous Relations and Northern Affairs Canada"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.11,

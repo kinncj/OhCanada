@@ -25,29 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Anishinaabeg",
-      "Nehiyawak",
-      "Ininiwak",
-      "Anisininewuk",
-      "Dakota Oyate",
-      "Denesuline",
-      "Red River Métis"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set at The Forks, in Winnipeg. The Forks is on Treaty No. 1 territory. It is the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate and Denesuline, and the homeland of the Red River Métis.",
-      "fr": "Ce niveau se déroule à La Fourche, à Winnipeg. La Fourche se trouve sur le territoire visé par le Traité no 1. C'est le territoire traditionnel des Anishinaabeg, des Nehiyawak, des Ininiwak, des Anisininewuk, du Dakota Oyate et des Denesuline, et la patrie des Métis de la rivière Rouge."
+      "en": "This level is set at The Forks in Winnipeg. In 1869 Canada took the vast northwest region over from the Hudson's Bay Company. The people living along the Red River were not consulted; Discover Canada calls them the 12,000 Métis of the Red River. Louis Riel answered with an armed uprising and took Fort Garry, the territorial capital.",
+      "fr": "Ce niveau se déroule à La Fourche, à Winnipeg. En 1869, le Canada a repris à la Compagnie de la Baie d'Hudson la vaste région du Nord-Ouest. Les gens qui vivaient le long de la rivière Rouge n'ont pas été consultés; Discover Canada les appelle les 12 000 Métis de la rivière Rouge. Louis Riel a répondu par un soulèvement armé et a pris Fort Garry, la capitale du territoire."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "parks-canada-the-forks-nhs",
-        "chapter": "The Forks National Historic Site",
-        "url": "https://parks.canada.ca/lhn-nhs/mb/forks",
-        "sourceHash": "f1e1749ea9bef82ec40b12391715afcbfc90799c252814acead0a8ff9b112ba2",
+        "sourceId": "discover-canada",
+        "chapter": "Canada's History",
+        "page": 35,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": true,
-        "quote": "The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
+        "volatile": false,
+        "quote": "the 12,000 Métis of the Red River were not consulted. In response, Louis Riel led an armed uprising and seized Fort Garry, the territorial capital."
       },
       "verification": {
         "status": "rejected",
@@ -57,7 +51,7 @@
         "evidence": "Delve 6,000 years into the past at Winnipeg’s “Meeting Place” … The Forks National Historic Site is on Treaty No. 1 territory: the traditional territory of the Anishinaabeg, Nehiyawak, Ininiwak, Anisininewuk, Dakota Oyate, Denesuline, and the homeland of the Red River Métis."
       }
     },
-    "sourcePublisher": "Parks Canada"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.12,

@@ -25,24 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Cree",
-      "Saulteaux"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set on the plains of southern Saskatchewan. These are the lands of Treaty No. 4. The Crown met the Cree and the Saulteaux at Fort Qu'Appelle in September 1874, and the treaty covers most of southern Saskatchewan, the southeast corner of Alberta and part of western Manitoba.",
-      "fr": "Ce niveau se déroule dans les plaines du sud de la Saskatchewan. Ces terres sont visées par le Traité no 4. La Couronne a rencontré les Cris et les Saulteaux à Fort Qu'Appelle en septembre 1874, et le traité couvre la majeure partie du sud de la Saskatchewan, le sud-est de l'Alberta et une partie de l'ouest du Manitoba."
+      "en": "This level is set on the plains of Saskatchewan. Discover Canada says the province was once called the breadbasket of the world, and the wheat province. It is Canada's largest grower of grains and oilseeds, and it has the world's richest deposits of uranium and potash. Regina, the capital, is where the Royal Canadian Mounted Police train.",
+      "fr": "Ce niveau se déroule dans les plaines de la Saskatchewan. Discover Canada rappelle qu'on appelait autrefois la province le grenier du monde et la province du blé. Elle est la plus grande productrice de céréales et d'oléagineux au Canada, et elle possède les gisements d'uranium et de potasse les plus riches du monde. C'est à Regina, la capitale, que s'entraîne la Gendarmerie royale du Canada."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "usask-indigenous-sk-treaty-4",
-        "chapter": "Treaty 4",
-        "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
-        "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 100,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": true,
-        "quote": "The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba."
+        "volatile": false,
+        "quote": "is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash"
       },
       "verification": {
         "status": "rejected",
@@ -52,7 +51,7 @@
         "evidence": "the strategy of the Cree and Saulteaux was to gain full compensation for their lands. … The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory, David Laird, Minister of the Interior, and William Christie, retired HBC factor, with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown. … Loud Voice called for the unity of the Cree and Saulteaux as the leader of the Saulteaux, Chief Cote, threatened to leave."
       }
     },
-    "sourcePublisher": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.1,

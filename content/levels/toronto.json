@@ -25,23 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Mississaugas of the Credit First Nation"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "Toronto stands inside the boundaries of the Toronto Purchase, Treaty No. 13, made in 1805. These are the treaty lands of the Mississaugas of the Credit First Nation.",
-      "fr": "Toronto se trouve à l'intérieur des limites de l'achat de Toronto, le traité no 13, conclu en 1805. Ce sont les terres visées par ce traité de la Première Nation des Mississaugas of the Credit."
+      "en": "This level is set in Toronto, in Ontario. Discover Canada calls Toronto the largest city in the country and its main financial centre. Many people there work in service or manufacturing industries, and those industries make a large part of Canada's exports.",
+      "fr": "Ce niveau se déroule à Toronto, en Ontario. Discover Canada présente Toronto comme la plus grande ville du pays et son principal centre financier. Beaucoup de gens y travaillent dans les services ou la fabrication, et ces industries produisent une grande part des exportations du Canada."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "mncfn-toronto-purchase-treaty-13",
-        "chapter": "The Toronto Purchase Treaty, No. 13 (1805)",
-        "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
-        "sourceHash": "58c92c469fc9031015911338a5c92c3b79cd12fce00be049520fd09c81d73933",
-        "asOf": "2026-09-08T00:00:00Z",
-        "volatile": true,
-        "quote": "The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands."
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 99,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "Toronto is the largest city in Canada and the country’s main financial centre. Many people work in the service or manufacturing industries, which produce a large percentage of Canada’s exports."
       },
       "verification": {
         "status": "verified",
@@ -51,7 +51,7 @@
         "evidence": "The Toronto Purchase Treaty, No. 13 (1805) – Mississaugas of the Credit First Nation … a new agreement was negotiated with the Mississaugas of the Credit. On August 1, 1805, the Crown purchased 250 830 acres of land … The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands."
       }
     },
-    "sourcePublisher": "Mississaugas of the Credit First Nation"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.16,

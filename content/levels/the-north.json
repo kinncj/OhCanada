@@ -25,23 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Kwanlin Dün First Nation"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set on the Yukon River at Whitehorse. Kwanlin Dün First Nation says its traditional territory takes in the City of Whitehorse, and that its people have been here for millennia. It acknowledges the Tagish Kwan as the original people who live on the lands that define that territory, alongside the headwaters of Chu Níikwän — the Yukon River.",
-      "fr": "Ce niveau se déroule au bord du fleuve Yukon, à Whitehorse. Kwanlin Dün First Nation affirme que son territoire traditionnel comprend la ville de Whitehorse, et que son peuple est ici depuis des millénaires. Elle reconnaît les Tagish Kwan comme le peuple d'origine qui vit sur les terres qui définissent ce territoire, le long des sources du Chu Níikwän — le fleuve Yukon."
+      "en": "This level is set on the Yukon River at Whitehorse, the capital of Yukon. Discover Canada says the Gold Rush of the 1890s brought thousands of miners to the Yukon, and that mining is still a big part of the economy. The White Pass and Yukon Railway reached Whitehorse from Skagway, in neighbouring Alaska, in 1900.",
+      "fr": "Ce niveau se déroule au bord du fleuve Yukon, à Whitehorse, la capitale du Yukon. Discover Canada dit que la ruée vers l'or des années 1890 a amené des milliers de mineurs au Yukon, et que l'exploitation minière compte encore beaucoup dans l'économie. Le chemin de fer White Pass and Yukon a atteint Whitehorse depuis Skagway, en Alaska voisine, en 1900."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "kdfn-about-us",
-        "chapter": "About us",
-        "url": "https://www.kwanlindun.com/about/",
-        "sourceHash": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
-        "asOf": "2026-09-13T00:00:00Z",
-        "volatile": true,
-        "quote": "We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia."
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 103,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "The White Pass and Yukon Railway opened from Skagway in neighbouring Alaska to the territorial capital, Whitehorse in 1900"
       },
       "verification": {
         "status": "verified",
@@ -51,7 +51,7 @@
         "evidence": "KDFN’s Traditional Territory encompasses the Yukon’s capital and economic heartland, the City of Whitehorse. Approximately 75 per cent of Yukon’s population lives on KDFN Traditional Territory. … We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia."
       }
     },
-    "sourcePublisher": "Kwanlin Dün First Nation"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.12,

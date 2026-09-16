@@ -25,23 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Mi'kmaq"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set in Halifax. Kwilmu'kw Maw-klusuaqn works under the direction of the Assembly of Nova Scotia Mi'kmaw Chiefs. It says the Mi'kmaq have never given up, handed over or sold title to any of their lands, and that their title claim covers all the land in Nova Scotia. It hopes the Mi'kmaq of Nova Scotia can at last put into practice the rights from the treaties their ancestors signed in the 1700s.",
-      "fr": "Ce niveau se déroule à Halifax. Kwilmu'kw Maw-klusuaqn travaille sous la direction de l'Assembly of Nova Scotia Mi'kmaw Chiefs. L'organisme affirme que les Mi'kmaq n'ont jamais abandonné, cédé ni vendu le titre sur aucune de leurs terres, et que leur revendication de titre couvre toutes les terres de la Nouvelle-Écosse. Il espère que les Mi'kmaq de la Nouvelle-Écosse pourront enfin mettre en œuvre les droits issus des traités que leurs ancêtres ont signés dans les années 1700."
+      "en": "This level is set in Halifax, the capital of Nova Scotia. Discover Canada calls it the largest east coast port in the country, deep-water and ice-free. The city has long mattered to Atlantic trade and defence, and Canada's largest naval base is here.",
+      "fr": "Ce niveau se déroule à Halifax, la capitale de la Nouvelle-Écosse. Discover Canada en fait le plus grand port de la côte est du pays, en eau profonde et libre de glace. La ville compte depuis longtemps pour le commerce et la défense de l'Atlantique, et la plus grande base navale du Canada s'y trouve."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "kmk-about-consultation",
-        "chapter": "About Consultation",
-        "url": "https://mikmaqrights.com/?page_id=53",
-        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
-        "asOf": "2026-09-13T00:00:00Z",
-        "volatile": true,
-        "quote": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia."
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 97,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "As Canada’s largest east coast port, deep-water and ice-free, the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base."
       },
       "verification": {
         "status": "verified",
@@ -51,7 +51,7 @@
         "evidence": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia. … Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia … KMK was developed by the Mi’kmaq, for the Mi’kmaq. Through these discussions, we hope that the Mi’kmaq of Nova Scotia can finally implement our Rights from the Treaties signed by our ancestors in the 1700’s."
       }
     },
-    "sourcePublisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.12,

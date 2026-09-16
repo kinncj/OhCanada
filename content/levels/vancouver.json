@@ -25,25 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Musqueam Indian Band",
-      "Squamish Nation",
-      "Tsleil-Waututh Nation"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "This level is set on the Vancouver waterfront, on the shore of Burrard Inlet. These lands and waters are the traditional territories of the Musqueam, the Squamish and the Tsleil-Waututh. The Tsleil-Waututh are the People of the Inlet, and their territory takes in Burrard Inlet — səlilwət — and the waters that drain into it.",
-      "fr": "Ce niveau se déroule sur le front de mer de Vancouver, au bord de la baie Burrard. Ces terres et ces eaux sont les territoires traditionnels des Musqueam, des Squamish et des Tsleil-Waututh. Les Tsleil-Waututh sont le peuple de la baie, et leur territoire comprend la baie Burrard — səlilwət — et les eaux qui s'y déversent."
+      "en": "This level is set on the Vancouver waterfront. Discover Canada calls British Columbia the country's Pacific gateway. The Port of Vancouver is the largest and busiest in Canada, and it handles billions of dollars of goods traded around the world. It calls the port Canada's gateway to the Asia-Pacific.",
+      "fr": "Ce niveau se déroule sur le front de mer de Vancouver. Discover Canada présente la Colombie-Britannique comme la porte du Pacifique du pays. Le port de Vancouver est le plus grand et le plus achalandé du Canada, et il traite des milliards de dollars de marchandises échangées dans le monde entier. Le guide en fait la porte d'entrée du Canada vers l'Asie-Pacifique."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "twnation-our-story",
-        "chapter": "Our Story",
-        "url": "https://twnation.ca/our-story/",
-        "sourceHash": "3b401ed259aa6b5cbf94cf01c0bf69fdca7ec65eb8206b6db433365c999107a7",
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 102,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
         "asOf": "2026-09-09T00:00:00Z",
-        "volatile": true,
-        "quote": "a distinct Coast Salish Nation whose territory includes səlilwət (Burrard Inlet) and the waters draining into it"
+        "volatile": false,
+        "quote": "The Port of Vancouver, Canada’s largest and busiest, handles billions of dollars in goods traded around the world."
       },
       "verification": {
         "status": "rejected",
@@ -53,7 +51,7 @@
         "evidence": "Tsleil-Waututh Nation – People of the Inlet […] Originally, our great nation was about 10,000 strong, a distinct Coast Salish Nation whose territory includes səlilwət (Burrard Inlet) and the waters draining into it. […] We have partnered with the Squamish and Musqueam Nations to acquire multiple properties in our Nations’ traditional territories—through the MST Corporation"
       }
     },
-    "sourcePublisher": "Tsleil-Waututh Nation"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.13,

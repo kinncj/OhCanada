@@ -25,23 +25,23 @@
     "inkMuted": "#57647a"
   },
   "territory": {
-    "nations": [
-      "Mi'kmaq"
-    ],
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
     "statement": {
-      "en": "Peggy's Cove is on the Atlantic coast of Nova Scotia. The Mi'kmaq are the people of this coast. The Assembly of Nova Scotia Mi'kmaw Chiefs says the Mi'kmaq have never surrendered, ceded or sold title to any of their lands. They never gave the land up, and they claim title to all the lands in Nova Scotia.",
-      "fr": "Peggy's Cove se trouve sur la côte atlantique de la Nouvelle-Écosse. Les Mi'kmaq sont le peuple de cette côte. Selon l'Assembly of Nova Scotia Mi'kmaw Chiefs, les Mi'kmaq n'ont jamais abandonné, cédé ni vendu le titre sur aucune de leurs terres. Ils n'y ont jamais renoncé, et ils revendiquent le titre sur toutes les terres de la Nouvelle-Écosse."
+      "en": "This level is set at Peggy's Cove, on the Atlantic coast of Nova Scotia. Discover Canada says the Bay of Fundy has the world's highest tides. It says the province's identity is tied to shipbuilding, fisheries and shipping.",
+      "fr": "Ce niveau se déroule à Peggy's Cove, sur la côte atlantique de la Nouvelle-Écosse. Discover Canada dit que la baie de Fundy a les plus hautes marées du monde. Le guide dit aussi que l'identité de la province tient à la construction navale, à la pêche et au transport maritime."
     },
     "fact": {
       "factual": true,
       "source": {
-        "sourceId": "kmk-about-consultation",
-        "chapter": "About Consultation",
-        "url": "https://mikmaqrights.com/?page_id=53",
-        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
-        "asOf": "2026-09-13T00:00:00Z",
-        "volatile": true,
-        "quote": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia."
+        "sourceId": "discover-canada",
+        "chapter": "Canada's Regions",
+        "page": 97,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-09T00:00:00Z",
+        "volatile": false,
+        "quote": "Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping."
       },
       "verification": {
         "status": "verified",
@@ -51,7 +51,7 @@
         "evidence": "Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia … Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia. As keepers of the lands and resources, we expect that any potential impacts to Rights and Title shall be addressed."
       }
     },
-    "sourcePublisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs"
+    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
   },
   "camera": {
     "followLerp": 0.12,
