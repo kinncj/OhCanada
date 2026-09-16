@@ -359,11 +359,15 @@ export function createLevelMap(doc: Document, anchors: MapAnchorsDocument): Leve
         'data-journey-reached': String(placed.reached),
         'data-journey-current': String(placed.current),
       },
-      /* The numeral its card shows, and nothing else: the map stays wordless. */
+      /* The numeral its card shows, carried as data and drawn by the sheet: text
+         here would be words in a map that must carry none (`TN-MAP`), and the
+         cards already say "Level N" where a reader can hear it. */
       children: [
         element(doc, 'span', {
           className: 'tn-journey__pin',
-          ...(placed.number === undefined ? {} : { text: String(placed.number) }),
+          ...(placed.number === undefined
+            ? {}
+            : { attrs: { 'data-map-number': String(placed.number) } }),
         }),
       ],
     });

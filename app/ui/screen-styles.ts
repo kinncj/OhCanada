@@ -1547,6 +1547,12 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   letter-spacing: -0.04em;
   color: var(--tn-ink);
 }
+/* The numeral is drawn from the pin's own data, never written into the map's
+   markup: TN-MAP fixes that the map carries no words, and generated content is
+   not in the document's text. The cards say "Level N" where a reader hears it. */
+.tn-map .tn-map__stop .tn-journey__pin[data-map-number]::before {
+  content: attr(data-map-number);
+}
 .tn-map .tn-map__stop[data-journey-reached="true"] .tn-journey__pin { color: var(--tn-accent-ink); }
 
 /* Where the route has got to: bigger and ringed, as on the rail, in the same

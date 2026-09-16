@@ -1116,9 +1116,9 @@ test.describe('the level completion card', () => {
        level because French takes « dans la » here and « à » for the other
        three (`TN-DONE-04`). */
     await expect(play).toHaveText('Play Québec City');
-    /* Named by the place, described by what the map says about it: the reason is
-       read after the name, never as part of it (`TN-MAP-09`). */
-    await expect(play).toHaveAccessibleDescription('Québec City. Open. You can play this now.');
+    /* Named by the place in the label; described by one sentence a person would
+       say, not the map's rows read aloud (`TN-MAP-09`, `level.complete.nextOpen`). */
+    await expect(play).toHaveAccessibleDescription('A new level is open. You can play it now.');
 
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);

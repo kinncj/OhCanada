@@ -2222,10 +2222,10 @@ describe('the card at the end of a finished level leads on', () => {
     expect(resolve('fr').next?.label).toBe(
       text('fr', `level.${String(EARNED_LEVEL)}.play` as never),
     );
-    /* Three rows the map already draws, joined — never a fourth sentence. */
-    expect(next?.description).toContain(text('en', 'map.state.open'));
-    expect(next?.description).toContain(text('en', 'map.open.help'));
-    expect(resolve('fr').next?.description).toContain(text('fr', 'map.open.help'));
+    /* One sentence a person would say, rather than the map's three rows joined
+       and read aloud (`level.complete.nextOpen`). */
+    expect(next?.description).toBe(text('en', 'level.complete.nextOpen'));
+    expect(resolve('fr').next?.description).toBe(text('fr', 'level.complete.nextOpen'));
   });
 
   it('goes straight into the level that just opened when the player asks for it', async () => {

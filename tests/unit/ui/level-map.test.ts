@@ -259,8 +259,11 @@ describe('the map, drawn', () => {
     ]);
     const numerals = root
       .querySelectorAll('.tn-map__stop')
-      .map((pin) => pin.querySelector('.tn-journey__pin')?.textContent ?? null);
-    expect(numerals).toEqual(['3', '10', '']);
+      .map((pin) => pin.querySelector('.tn-journey__pin')?.getAttribute('data-map-number') ?? null);
+    expect(numerals).toEqual(['3', '10', null]);
+    /* Carried as data and drawn by the sheet, so the map itself still says
+       nothing: `TN-MAP` fixes that, and `shell.spec.ts` reads it from a browser. */
+    expect((root.textContent ?? '').trim()).toBe('');
     /* Still hidden, still unfocusable: a numeral is not a control or a name. */
     expect(root.getAttribute('aria-hidden')).toBe('true');
     expect(root.querySelectorAll('[tabindex]')).toHaveLength(0);
