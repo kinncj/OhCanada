@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-13T04:05:00Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-16T11:30:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Canada includes many different geographical areas and five distinct regions. • The Atlantic Provinces • Central Canada • The Prairie Provinces • The West Coast • The Northern Territories"
   }
