@@ -480,6 +480,11 @@ vi.mock('@ui/hud', () => ({
         hoisted.state.tasks.push(step);
         hoisted.state.taskAnnounced.push(options?.announce !== false);
       },
+      /* "Behind you", after the task. The composition root refreshes the cue
+         whenever the task or what the player has reached changes — including
+         once while the level is being built — so a HUD double without it throws
+         on every level this suite opens. */
+      setTaskCue: () => undefined,
       setPrompt: (label: string | null): void => {
         hoisted.state.prompts.push(label);
       },

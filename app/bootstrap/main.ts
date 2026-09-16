@@ -3251,7 +3251,19 @@ function openLevel(wiring: LevelWiring): LevelSession {
      * value it already holds. With no quest being played nothing is drawn.
      */
     const task = quests.task;
-    if (task !== null) hud.setTask(task, { announce: false });
+    if (task !== null) {
+      hud.setTask(task, { announce: false });
+      /*
+       * And the cue that belongs with it. The resume draw goes straight to the
+       * HUD rather than through the controller's `setTask`, which is what
+       * refreshes the cue on every other path — so without this line a save left
+       * on a stop the player had already walked past would open with "Find the
+       * Town Clock" and nothing saying the clock is behind them. Drawn again
+       * from `level/ready`, which is where the player's position arrives, so
+       * whichever of the two runs first the strip ends up right.
+       */
+      refreshTaskCue();
+    }
   }
 
   const offPlayable = wiring.onLevelPlayable(() => {
