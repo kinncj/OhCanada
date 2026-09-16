@@ -48,7 +48,7 @@ interface Recorder {
   store: ProgressSnapshot | null;
 }
 
-const wire = (behaviour: { failSave?: boolean } = {}) => {
+const wire = (behaviour: { failSave?: boolean; failClear?: boolean } = {}) => {
   const recorder: Recorder = { events: [], downloads: [], reports: [], store: null };
   const repository: ProgressRepository = {
     load(): Promise<Result<ProgressSnapshot | null>> {
@@ -63,6 +63,10 @@ const wire = (behaviour: { failSave?: boolean } = {}) => {
       return Promise.resolve(ok());
     },
     clear(): Promise<Result<void>> {
+      recorder.events.push('clear');
+      if (behaviour.failClear === true) {
+        return Promise.resolve(appErr('io', 'save.storage.clearFailed', 'refused', {}));
+      }
       recorder.store = null;
       return Promise.resolve(ok());
     },
@@ -169,6 +173,54 @@ describe('opening a file, wired', () => {
     expect(await check.replace()).toBe(false);
     expect(recorder.events).toEqual(['hold', 'write', 'release']);
     expect(recorder.store).toBeNull();
+    expect(recorder.reports).toHaveLength(1);
+  });
+});
+
+/**
+ * Deleting what this device kept, wired (ADR-0026).
+ *
+ * The same ordering this seam owns for an import, for the same reason and with
+ * one more consequence: the game in memory is the one the player has just
+ * deleted, so a single write after the clear — an answer, a setting, the tab
+ * being hidden — would put it straight back into the store they cleared. The
+ * writes are therefore held before the clear and released only if it fails.
+ *
+ * It goes through the port's `clear`, never through a write of an empty save:
+ * an empty document is still a save, and one store cleared while the other keeps
+ * a copy is a game that comes back on the next boot.
+ */
+describe('deleting the game on this device, wired', () => {
+  const deleteFrom = (options: { onDelete?: () => Promise<boolean> }): (() => Promise<boolean>) => {
+    const erase = options.onDelete;
+    if (erase === undefined) throw new Error('the composition root offered no delete');
+    return erase;
+  };
+
+  it('holds the game’s own saves, clears the store, and goes on holding them', async () => {
+    const { recorder, options } = wire();
+    recorder.store = { version: 4 } as unknown as ProgressSnapshot;
+
+    expect(await deleteFrom(options)()).toBe(true);
+
+    expect(recorder.events).toEqual(['hold', 'clear']);
+    expect(recorder.store).toBeNull();
+    expect(recorder.reports).toEqual([]);
+
+    /* The restart is the player's "Continue", not the clear's. */
+    options.onRestart();
+    expect(recorder.events).toEqual(['hold', 'clear', 'restart']);
+  });
+
+  it('lets the game save again when the store refused to clear, and keeps the save', async () => {
+    const kept = { version: 4 } as unknown as ProgressSnapshot;
+    const { recorder, options } = wire({ failClear: true });
+    recorder.store = kept;
+
+    expect(await deleteFrom(options)()).toBe(false);
+
+    expect(recorder.events).toEqual(['hold', 'clear', 'release']);
+    expect(recorder.store, 'a refused delete took the save anyway').toBe(kept);
     expect(recorder.reports).toHaveLength(1);
   });
 });

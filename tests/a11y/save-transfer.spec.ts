@@ -44,6 +44,8 @@ interface Options {
   readonly singleSwitch?: boolean;
   /** `false` makes the replacement fail, as a store that refuses the write would. */
   readonly saved?: boolean;
+  /** `false` makes the delete fail, as a store that refuses to clear would. */
+  readonly deleted?: boolean;
 }
 
 const A_SAVE = JSON.stringify({ version: 4, note: 'a save, as far as the harness is concerned' });
@@ -56,6 +58,7 @@ async function open(page: Page, options: Options = {}): Promise<Locator> {
   if (options.textScale !== undefined) params.set('textScale', String(options.textScale));
   if (options.singleSwitch === true) params.set('switch', '1');
   if (options.saved === false) params.set('saved', '0');
+  if (options.deleted === false) params.set('deleted', '0');
 
   const response = await page.goto(`${HARNESS_URL}?${params.toString()}`);
   expect(response, 'no response from the harness server').not.toBeNull();
@@ -295,6 +298,154 @@ test.describe('"Your progress" in Settings', () => {
             ?.closest('[data-testid="save-import-confirm"]') !== null,
       );
       expect(inside, 'the switch highlight left the confirmation for Settings behind it').toBe(true);
+    }
+  });
+});
+
+/**
+ * "Delete my progress" (ADR-0026), in a real browser.
+ *
+ * It is the only control in this game that destroys something a player cannot
+ * get back, and a second live-site audit found it absent altogether: every save
+ * is on the device and nothing offered to clear one.
+ *
+ * What only a browser proves: the control is 44 px and nothing clips at 200 %
+ * in either language; the question and its cost are the dialog's real accessible
+ * name and description; focus lands in the dialog and comes back to the control;
+ * Escape keeps the game; and the dialog after it cannot be escaped into a game
+ * that is gone. The destructive control is also checked to be distinguishable
+ * without colour — a heavier double edge — which is what `data-tn-action` buys.
+ */
+test.describe('"Delete my progress" in Settings', () => {
+  for (const locale of ['en', 'fr'] as const) {
+    for (const textScale of [100, 200]) {
+      test(`in ${locale} at ${String(textScale)} %: the control is named, 44 px, unclipped and clean`, async ({
+        page,
+      }) => {
+        const section = await open(page, { locale, textScale });
+        const control = section.getByTestId('save-delete');
+
+        await expect(control).toHaveText(text(locale, 'save.delete'));
+        await expect(control).toHaveAttribute('data-tn-action', 'destructive');
+        /* Not colour alone: the destructive slab carries its own edge weight. */
+        const edge = await control.evaluate((node) => {
+          const style = getComputedStyle(node);
+          return { style: style.borderTopStyle, width: style.borderTopWidth };
+        });
+        expect(edge.style, `${locale}: the destructive control has no edge of its own`).toBe(
+          'double',
+        );
+
+        await expectReadableControls(section, `delete control, ${locale}, ${String(textScale)} %`);
+        await expectNoSidewaysScroll(page, `delete control, ${locale}`);
+        await expectClean(page, `delete control, ${locale}, ${String(textScale)} %`);
+      });
+    }
+
+    test(`in ${locale} at 200 %: the question is named, described, focused and clean, and Escape keeps my progress`, async ({
+      page,
+    }) => {
+      await open(page, { locale, textScale: 200 });
+      await page.getByTestId('save-delete').click();
+      const label = `delete confirmation, ${locale}, 200 %`;
+
+      const dialog = page.getByTestId('save-delete-confirm');
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toHaveAttribute('role', 'alertdialog');
+      await expect(dialog).toHaveAttribute('lang', locale);
+      await expect(dialog).toHaveAccessibleName(text(locale, 'save.delete.confirm'));
+      await expect(dialog).toHaveAccessibleDescription(text(locale, 'save.delete.confirm.body'));
+      await expect.poll(() => focusIsInside(page, 'save-delete-confirm')).toBe(true);
+      await expect(dialog.getByTestId('save-delete-yes')).toHaveText(text(locale, 'save.delete.yes'));
+      await expect(dialog.getByTestId('save-delete-keep')).toHaveText(
+        text(locale, 'save.delete.keep'),
+      );
+
+      await expectReadableControls(dialog, label);
+      await expectNoSidewaysScroll(page, label);
+      await expectClean(page, label);
+
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeHidden();
+      await expect(page.getByTestId('settings-screen'), 'Escape closed Settings too').toBeVisible();
+      await expect.poll(() => focusedTestId(page)).toBe('save-delete');
+      await expect(page.getByTestId('save-delete-done')).toHaveCount(0);
+    });
+
+    test(`in ${locale}: after deleting, one control starts the game again and it cannot be escaped`, async ({
+      page,
+    }) => {
+      await open(page, { locale });
+      await page.getByTestId('save-delete').click();
+      await page.getByTestId('save-delete-yes').click();
+      const label = `delete done, ${locale}`;
+
+      const done = page.getByTestId('save-delete-done');
+      await expect(done).toBeVisible();
+      await expect(done).toHaveAttribute('role', 'alertdialog');
+      await expect(done).toHaveAccessibleName(text(locale, 'save.delete.done'));
+      await expect(done).toHaveAccessibleDescription(text(locale, 'save.delete.done.help'));
+      await expect.poll(() => focusIsInside(page, 'save-delete-done')).toBe(true);
+      await expect(done.locator('button')).toHaveCount(1);
+      await expect(page.locator('#tn-live-region')).toContainText(text(locale, 'save.delete.done'));
+
+      await expectReadableControls(done, label);
+      await expectClean(page, label);
+
+      await page.keyboard.press('Escape');
+      await expect(done, 'the dialog after a delete was escaped into a game that is gone').toBeVisible();
+
+      await done.getByTestId('save-delete-continue').click();
+      await expect(page.locator('html')).toHaveAttribute('data-tn-harness-restarted', 'true');
+    });
+  }
+
+  test('a delete the store refused says so under the control, and leaves no dialog open', async ({
+    page,
+  }) => {
+    await open(page, { deleted: false });
+    await page.getByTestId('save-delete').click();
+    await page.getByTestId('save-delete-yes').click();
+
+    const sentence = `${text('en', 'save.delete.failed')} ${text('en', 'save.import.notSaved.help')}`;
+    await expect(page.getByTestId('save-import-error')).toHaveText(sentence);
+    await expect(page.getByTestId('save-delete')).toHaveAccessibleDescription(sentence);
+    await expect(page.getByTestId('save-delete-confirm')).toBeHidden();
+    await expect(page.getByTestId('save-delete-done')).toHaveCount(0);
+    await expect.poll(() => focusedTestId(page)).toBe('save-delete');
+    await expectClean(page, 'delete refused');
+  });
+
+  test('a keyboard reaches it with Tab', async ({ page }) => {
+    await open(page);
+    let reached = false;
+    for (let press = 0; press < 60 && !reached; press += 1) {
+      await page.keyboard.press('Tab');
+      reached = (await focusedTestId(page)) === 'save-delete';
+    }
+    expect(reached, 'Tab never reached "Delete my progress"').toBe(true);
+  });
+
+  test('one switch reaches it, and inside the question only its two answers', async ({ page }) => {
+    await open(page, { singleSwitch: true });
+    const control = page.getByTestId('save-delete');
+    for (let press = 0; press < 60; press += 1) {
+      if ((await control.getAttribute('data-switch-highlight')) === 'true') break;
+      await page.keyboard.press('Space');
+    }
+    await expect(control).toHaveAttribute('data-switch-highlight', 'true');
+
+    await control.click();
+    await expect(page.getByTestId('save-delete-confirm')).toBeVisible();
+    for (let press = 0; press < 4; press += 1) {
+      await page.keyboard.press('Space');
+      const inside = await page.evaluate(
+        () =>
+          document
+            .querySelector('[data-switch-highlight="true"]')
+            ?.closest('[data-testid="save-delete-confirm"]') !== null,
+      );
+      expect(inside, 'the switch highlight left the question for Settings behind it').toBe(true);
     }
   });
 });

@@ -21,6 +21,7 @@
 
 import type { Progress } from '@domain/entities/progress';
 import {
+  deleteProgress,
   exportSaveFile,
   readSaveFile,
   replaceProgress,
@@ -86,6 +87,30 @@ export function saveTransferOptions(wiring: SaveTransferWiring): SaveTransferOpt
           return false;
         },
       };
+    },
+
+    /*
+     * "Delete my progress" (ADR-0026, and CLAUDE.md's local-only storage): the
+     * player's own way to clear what this device kept, which the game offered
+     * nowhere until now.
+     *
+     * The writes are held **before** anything is cleared and are never released
+     * on success, exactly as a replacement holds them: the game in memory is the
+     * one the player has just deleted, and a single write after this — an
+     * answer, a setting, the tab being hidden — would put it straight back into
+     * the store they cleared. `restart` is what happens next, and it starts the
+     * game again from a store that is now empty.
+     *
+     * Nothing here asks. The question, its cost and its two answers are
+     * `app/ui/save-transfer.ts`'s, and this runs only after a yes.
+     */
+    onDelete: async (): Promise<boolean> => {
+      wiring.writes.hold();
+      const cleared = await deleteProgress(wiring.deps);
+      if (cleared.ok) return true;
+      wiring.writes.release();
+      report(`[bootstrap] the progress was not deleted. ${cleared.error.code}`);
+      return false;
     },
 
     onRestart: () => {

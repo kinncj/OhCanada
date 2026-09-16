@@ -365,6 +365,26 @@ const CSS = `
   box-shadow: 0 0 0 var(--tn-primary-edge);
 }
 
+/*
+  "Delete my progress": the one control in this game that destroys something.
+
+  A shape and a word, never a colour (CLAUDE.md: colour is never the only
+  signal). It keeps the paper fill and takes the heavier double edge the focus
+  ring also uses, so it reads as different in greyscale, under a colour-vision
+  difference and in forced colours. Deliberately NOT red: red is the primary
+  action, the one that carries a player forward, and a destructive control
+  dressed as the primary one is the control somebody presses out of habit.
+*/
+.tn-screen button[data-tn-action="destructive"] {
+  background: var(--tn-paper);
+  color: var(--tn-ink);
+  border-color: var(--tn-ink);
+  border-style: double;
+  border-width: 0.25rem;
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-edge-soft);
+}
+.tn-screen button[data-tn-action="destructive"]:active { box-shadow: 0 0 0 var(--tn-edge-soft); }
+
 /* Close, Back, Leave: present, reachable, and not competing for the eye. */
 .tn-screen button[data-tn-action="quiet"] {
   background: var(--tn-paper);

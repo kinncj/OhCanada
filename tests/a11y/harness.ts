@@ -499,6 +499,10 @@ switch (screen) {
      * from a newer build, one containing `"version"` is a save, and anything
      * else is refused as unreadable. `?saved=0` makes the replacement fail, and
      * "Continue" marks `<html>` rather than reloading the harness.
+     *
+     * The section also draws "Delete my progress", because the shipped game
+     * always can (ADR-0026 gives the port a `clear`). `?deleted=0` makes the
+     * delete fail, which is how the "nothing was changed" sentence is scanned.
      */
     const saveTransfer: Parameters<typeof createSettingsScreen>[1]['saveTransfer'] =
       params.get('save') === '1'
@@ -510,6 +514,7 @@ switch (screen) {
               if (!contents.includes('"version"')) return { kind: 'refused', reason: 'unreadable' };
               return { kind: 'ready', replace: () => Promise.resolve(params.get('saved') !== '0') };
             },
+            onDelete: () => Promise.resolve(params.get('deleted') !== '0'),
             onRestart: () => {
               document.documentElement.setAttribute('data-tn-harness-restarted', 'true');
             },

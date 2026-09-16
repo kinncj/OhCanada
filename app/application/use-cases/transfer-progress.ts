@@ -172,3 +172,22 @@ export const replaceProgress = async (
   if (!written.ok) return written;
   return ok();
 };
+
+/**
+ * Delete what this device is keeping, at the player's request.
+ *
+ * Storage is local only and there are two stores under one port — IndexedDB and
+ * the `localStorage` a save was carried out of (ADR-0026) — so "delete my
+ * progress" is `ProgressRepository.clear()` and **not** a write of an empty
+ * save: an empty document in one store would still be a save, and a copy left
+ * in the other would come back on the next boot. The port's own adapter clears
+ * both, and it is the port's job precisely so that no screen has to know there
+ * are two.
+ *
+ * It writes nothing first and keeps nothing back. What the caller does after —
+ * ADR-0046 starts the game again from the store, which is now empty — is not
+ * this function's, and neither is asking: `app/ui/save-transfer.ts` has already
+ * put the question and the cost in front of the player by the time this runs.
+ */
+export const deleteProgress = async (deps: SaveProgressDeps): Promise<Result<void>> =>
+  deps.repository.clear();

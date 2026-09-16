@@ -721,6 +721,32 @@ const EN = {
   'save.import.notSaved.help': 'Nothing was changed.',
   'save.import.done.help': 'The game will start again with the progress from your file.',
   'save.import.continue': 'Continue',
+  /* "Delete my progress", the one control in this game that destroys something,
+     and **written by app/ui and listed in {@link COPY_GAPS}**: CLAUDE.md keeps
+     every save on the device (ADR-0026) and no story table carries the words for
+     taking one off it. A second live-site audit found the control missing
+     altogether, so a player had no way to clear what this game had kept.
+
+     The question names the device, because that is all this deletes and a player
+     with a file still has their game. The cost is listed in the player's own
+     nouns — stamps, answers, settings — and then says the way to keep them,
+     which is the control directly above it. "You cannot get them back" rather
+     than "irreversible": the plain sentence is the honest one, and it is the
+     sentence somebody reads when they are already unsure.
+
+     `save.delete.keep` is "Keep my progress" — the same words as
+     `save.import.keep` and a separate row, for the reason `card.next` and
+     `exam.next` are separate: two dialogs that may be reworded apart. The safe
+     answer names what it keeps, never "Cancel". */
+  'save.delete': 'Delete my progress',
+  'save.delete.confirm': 'Delete your progress on this device?',
+  'save.delete.confirm.body':
+    'Your stamps, your answers and your settings on this device will be gone. You cannot get them back. Save to a file first if you want to keep them.',
+  'save.delete.yes': 'Delete',
+  'save.delete.keep': 'Keep my progress',
+  'save.delete.done': 'Your progress is deleted.',
+  'save.delete.done.help': 'The game will start again as a new game.',
+  'save.delete.failed': 'We could not delete your progress.',
 
   /* docs/stories/TN-MOVE-locomotion-labels.md */
   /* A mode label belongs to the **mode**, not to the level that uses it: `walk`
@@ -1427,6 +1453,18 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'save.import.notSaved.help': "Rien n'a été modifié.",
   'save.import.done.help': 'Le jeu va recommencer avec la progression de votre fichier.',
   'save.import.continue': 'Continuer',
+  /* Listed in COPY_GAPS with the English. « supprimés » agrees with « vos
+     tampons, vos réponses et vos réglages », never with the player; no space
+     before the question mark, which is Canadian French. */
+  'save.delete': 'Supprimer ma progression',
+  'save.delete.confirm': 'Supprimer votre progression sur cet appareil?',
+  'save.delete.confirm.body':
+    "Vos tampons, vos réponses et vos réglages sur cet appareil seront supprimés. Vous ne pourrez pas les récupérer. Enregistrez d'abord un fichier si vous voulez les garder.",
+  'save.delete.yes': 'Supprimer',
+  'save.delete.keep': 'Garder ma progression',
+  'save.delete.done': 'Votre progression est supprimée.',
+  'save.delete.done.help': 'Le jeu va recommencer avec une nouvelle partie.',
+  'save.delete.failed': "Nous n'avons pas pu supprimer votre progression.",
 
   'locomotion.walk.label': 'Marche',
   /* « Glissade » is the activity — « faire de la glissade » — and « Toboggan »
@@ -1732,6 +1770,19 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'save.import.notSaved.help',
   'save.import.done.help',
   'save.import.continue',
+  /* "Delete my progress" and everything it says: the control, the question, the
+     cost, both answers, the dialog after it and the sentence for a store that
+     refused. No story table owns them — `TN-SAVE` carries the file half only —
+     and this is the one control in the game that destroys something, so the
+     words are proposed here rather than written and left looking reviewed. */
+  'save.delete',
+  'save.delete.confirm',
+  'save.delete.confirm.body',
+  'save.delete.yes',
+  'save.delete.keep',
+  'save.delete.done',
+  'save.delete.done.help',
+  'save.delete.failed',
   /* ADR-0034's amendment: the sentence on the card a level shows instead of
      opening, offline, when its art was never kept. */
   'level.needsConnection.body',

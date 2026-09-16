@@ -231,6 +231,18 @@ describe('the copy table', () => {
       'save.import.notSaved.help',
       'save.import.done.help',
       'save.import.continue',
+      /* "Delete my progress": the control, the question it asks, what it costs,
+         both answers, the dialog after it and the sentence for a store that
+         refused. `TN-SAVE`'s table carries the file half only, and this is the
+         one control in the game that destroys something. */
+      'save.delete',
+      'save.delete.confirm',
+      'save.delete.confirm.body',
+      'save.delete.yes',
+      'save.delete.keep',
+      'save.delete.done',
+      'save.delete.done.help',
+      'save.delete.failed',
       /* ADR-0034's amendment: the card a level shows offline when its art was
          never kept. */
       'level.needsConnection.body',
@@ -243,7 +255,7 @@ describe('the copy table', () => {
       'level.complete.nextOpen',
       'hud.task.behind',
     ]);
-    expect(COPY_GAPS).toHaveLength(75);
+    expect(COPY_GAPS).toHaveLength(83);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
