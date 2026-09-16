@@ -52,19 +52,7 @@
         "evidence": "Almost all of the Huron-Wendat members reside in Wendake, the only Huron-Wendat reserve in Canada. … the customary territory of the Huron-Wendat Nation, the Nionwentsïo, which means “our magnificent land” in the Huron-Wendat language, lies along the north and south shores of the St. Lawrence River, between the Saint-Maurice River and the Saguenay River … The Wendake reserve is located in the administrative region of the Quebec national capital and is within the boundaries of the City of Quebec"
       }
     },
-    "nationSource": {
-      "publisher": "Conseil de la Nation huronne-wendat (Nation Wendat)",
-      "url": "https://www.wendake.ca/histoire-et-culture",
-      "sourceHash": "e0f648dfa4ae6109f6df93dbbb97e906cbe2c4597f59cfaa642346a27dfbe224",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Huron-Wendat Nation, Office of the Nionwentsïo"
   },
   "camera": {
     "followLerp": 0.12,

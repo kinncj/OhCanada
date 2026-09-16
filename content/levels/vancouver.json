@@ -53,19 +53,7 @@
         "evidence": "Tsleil-Waututh Nation – People of the Inlet […] Originally, our great nation was about 10,000 strong, a distinct Coast Salish Nation whose territory includes səlilwət (Burrard Inlet) and the waters draining into it. […] We have partnered with the Squamish and Musqueam Nations to acquire multiple properties in our Nations’ traditional territories—through the MST Corporation"
       }
     },
-    "nationSource": {
-      "publisher": "MST Development Corporation, The Partners (the development corporation the Musqueam Indian Band, Squamish Nation and Tsleil-Waututh Nation own jointly, whose page names all three and speaks in all three voices)",
-      "url": "https://mstdevelopment.ca/the-partners/",
-      "sourceHash": "2fe891ceec60579cd5b1567bfef843805f16d63b67b9877359139a5395f5167a",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Tsleil-Waututh Nation"
   },
   "camera": {
     "followLerp": 0.13,

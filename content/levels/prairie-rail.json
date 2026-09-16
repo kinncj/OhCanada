@@ -52,19 +52,7 @@
         "evidence": "the strategy of the Cree and Saulteaux was to gain full compensation for their lands. … The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory, David Laird, Minister of the Interior, and William Christie, retired HBC factor, with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown. … Loud Voice called for the unity of the Cree and Saulteaux as the leader of the Saulteaux, Chief Cote, threatened to leave."
       }
     },
-    "nationSource": {
-      "publisher": "File Hills Qu'Appelle Tribal Council (eleven Treaty Four First Nations, among them Peepeekisis Cree Nation, Star Blanket Cree Nation and Muscowpetung Saulteaux Nation)",
-      "url": "https://www.fhqtc.com/member-first-nations",
-      "sourceHash": "b728ac28bf985859dd8b75c0133aab948d54dbb4cac34e10eaf891f54ddbe6fa",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)"
   },
   "camera": {
     "followLerp": 0.1,

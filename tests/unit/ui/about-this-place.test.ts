@@ -334,10 +334,16 @@ describe('the "About this place" panel', () => {
   });
 
   it('draws no "named here" heading over an empty list', () => {
-    /* A verified territorial claim names somebody, so this is a state the game
-       should never reach — and a label promising names above nothing is worse
-       than no label, so the heading goes with the list rather than standing
-       over an empty one. */
+    /* A statement may legitimately name nobody (ADR-0051): where the source it
+       cites names no people for that place, `nations` is empty and the level
+       document records why. A label promising names above nothing is worse than
+       no label, so the heading goes with the list rather than standing over an
+       empty one.
+
+       This was written as a defence against a state "the game should never
+       reach". It is now the state several levels are heading for, and the panel
+       needed no change to draw it — which is the only reason this ADR touched no
+       file in `app/ui` and added no copy row. */
     const { panel, at } = open();
     panel.show({ ...STATEMENT_EN, nations: [] });
 

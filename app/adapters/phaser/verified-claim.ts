@@ -404,10 +404,26 @@ export function describeCensus(levelId: string, census: ClaimCensus): string {
 export type AboutThisPlace =
   | {
       readonly kind: 'statement';
-      /** Each named as that nation names itself. Drawn only with the statement. */
+      /**
+       * Each named as that nation names itself, and as the cited source names
+       * them. Drawn only with the statement.
+       *
+       * **May be empty** (ADR-0051): where the source a statement cites names no
+       * people for that place, the statement names none, and the panel draws no
+       * list and no heading over one. That is a legitimate state, not a defect —
+       * the level document records why the list is empty, and the panel's job is
+       * to show what the statement says and where it came from.
+       */
       readonly nations: readonly string[];
       readonly statement: LocalizedText;
-      /** §10.2: "the panel names where the territorial statement comes from". */
+      /**
+       * §10.2: "the panel names where the territorial statement comes from".
+       *
+       * Who published the source the *statement* cites — `sourcePublisher` over
+       * `fact.source.url`. Before ADR-0051 both came from `nationSource`, where
+       * the names came from — a different page from the one the sentence was
+       * quoted from on seven of the ten levels, and a different body on five.
+       */
       readonly publisher: string;
       readonly sourceUrl: string;
     }

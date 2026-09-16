@@ -1309,17 +1309,19 @@ test.describe('"About this place"', () => {
     page,
   }) => {
     /*
-     * Not a hypothetical. §10.2 asks the panel to name the publisher, the panel
-     * draws `nationSource.publisher` as the source link's text, and that field
-     * on four shipped levels is a paragraph rather than a name —
-     * `content/levels/the-north.json`'s is 321 characters. So a link 300
-     * characters long is a state the shipped game reaches, and the two ways it
-     * breaks are a page that scrolls sideways and a target that has stopped
-     * being one.
+     * §10.2 asks the panel to name the publisher, and the panel draws it as the
+     * source link's text. It was not a hypothetical: `nationSource.publisher` on
+     * four shipped levels was a paragraph rather than a name —
+     * `content/levels/the-north.json`'s was 321 characters — because that field
+     * explained why a page was the authority for a name.
      *
-     * Reported upward as a content finding as well: a link whose accessible name
-     * is four clauses is a worse link than one named after a body, and the fix
-     * is a field the panel does not draw, not a shorter panel.
+     * ADR-0051 removed the field and the panel now draws `sourcePublisher`, the
+     * publisher of the page the statement itself cites, the longest of which is
+     * 104 characters today. This scan keeps the 300-character link on purpose: a
+     * publisher is content, it can grow again without anybody remembering this
+     * test, and the two ways a long link breaks — a page that scrolls sideways
+     * and a target that has stopped being one — do not depend on which field it
+     * came from.
      */
     for (const options of [{}, { textScale: 200 }, { locale: 'fr' as const, textScale: 200 }]) {
       await open(page, 'level', { over: 'about', about: 'long-source', ...options });

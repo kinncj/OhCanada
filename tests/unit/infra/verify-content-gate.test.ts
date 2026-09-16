@@ -50,6 +50,12 @@ const SOURCE_TEXT = [
   'Parliament has three parts: the Sovereign, the Senate and the House of Commons.',
   'A bill must pass both Houses before it receives royal assent and becomes law.',
   'The Governor General is appointed by the Sovereign on the advice of the Prime Minister.',
+  // The one sentence here that names a people, so ADR-0051's name check has both
+  // directions to be proved in: a name this source prints, and one it does not.
+  // Until it was added, the A4 fixture's territorial statement named "A fixture
+  // nation" that appeared nowhere in the source it cited - which is exactly the
+  // defect the check exists for, sitting unnoticed in the gate's own fixtures.
+  'The Fixture Nation has lived along this river since long before the Crown arrived.',
 ].join('\n');
 
 const SOURCE_SHA = createHash('sha256').update(SOURCE_TEXT).digest('hex');
@@ -1940,7 +1946,10 @@ const a4Level = (): Json => ({
   order: 1,
   textureBudgetBytes: 8_000_000,
   territory: {
-    nations: ['A fixture nation'],
+    // A name the fixture source really prints. It was 'A fixture nation', which
+    // appears nowhere in the four sentences this level cites - a fabricated name
+    // in the gate's own fixtures, which is what ADR-0051's B9 exists to catch.
+    nations: ['Fixture Nation'],
     statement: {
       en: "The Crown's representative here is chosen on the advice of the head of government.",
       fr: "Le representant de la Couronne ici est choisi sur l'avis du chef du gouvernement.",
@@ -1956,15 +1965,13 @@ const a4Level = (): Json => ({
         evidence: 'The Governor General is appointed by the Sovereign',
       },
     }),
-    // Not a claim - no `factual` - but it carries a verification block of its
-    // own, and it is the field whose two added lines started all this.
-    nationSource: {
-      publisher: 'A fixture nation',
-      url: 'https://example.invalid/nation',
-      sourceHash: '',
-      asOf: null,
-      verification: NULL_FORM,
-    },
+    // Who published the page this statement cites. It replaced a `nationSource`
+    // block - a second citation, carrying a verification block of its own -
+    // which ADR-0051 took off a level document: one statement, one source, and
+    // the names come out of it. This field sits in the same position, inside the
+    // claim's unit, which is what the A4 case below is about: the two lines that
+    // cost two verifier passes were written exactly here.
+    sourcePublisher: 'Nobody',
   },
   pois: [
     {
@@ -2157,21 +2164,20 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
     },
     {
       // THE EDIT THAT COST TWO VERIFIER PASSES, at the grain it should always
-      // have had. `nationSource` names the nation whose page is the authority
-      // for the territorial statement, so the statement's grant SHOULD come
-      // unbound - and the two blurbs' grants should not, which is what the
-      // empty rest of `voids` asserts.
-      what: "the nation source beside a territorial statement, the two lines that started this",
+      // have had, and at the field that stands where it landed. It was two lines
+      // written into `territory.nationSource`; since ADR-0051 a level carries no
+      // second citation, and the sibling in that position is the publisher the
+      // panel names as the source of the sentence. Either way the statement's
+      // grant SHOULD come unbound - a reader is being told a different body
+      // published the words a verifier checked - and the two blurbs' grants
+      // should not, which is what the empty rest of `voids` asserts.
+      what: "the publisher beside a territorial statement, where the two lines that started this were written",
       edit: (level_, quest_) => [
-        patched(
-          patched(level_, ['territory', 'nationSource', 'sourceHash'], SOURCE_SHA),
-          ['territory', 'nationSource', 'asOf'],
-          dateAgo(1),
-        ),
+        patched(level_, ['territory', 'sourcePublisher'], 'Somebody else entirely'),
         quest_,
       ],
       voids: [TERRITORY],
-      names: 'nationSource.sourceHash',
+      names: 'sourcePublisher',
     },
     {
       what: 'a territorial statement',
@@ -2278,15 +2284,17 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
     // that can go dead silently - renamed in a schema, dropped from the
     // documents - and bind nothing for ever.
     //
-    // Six grants: the question, the territorial statement, the two blurbs, the
-    // `nationSource` block's own grant, and the quest's one factual line. One
-    // binds `levelId`, the quest's line. The level's four bind no root field
-    // at all since ADR-0030 took `subject` off the list, and a question's grant
-    // binds none because for a question the unit IS the document. The trailing
-    // full stop is the assertion that no other field is named.
+    // Five grants: the question, the territorial statement, the two blurbs, and
+    // the quest's one factual line. It was six until ADR-0051 took `nationSource`
+    // off a level document - a statement cites one source, so there is no second
+    // citation carrying a verification block of its own. One binds `levelId`,
+    // the quest's line. The level's three bind no root field at all since
+    // ADR-0030 took `subject` off the list, and a question's grant binds none
+    // because for a question the unit IS the document. The trailing full stop is
+    // the assertion that no other field is named.
     const result = a4Repo('a4-scope-counts', reorderAndRebudget);
     expect(result.out).toContain('A4 binds each grant to its own claim');
-    expect(result.out).toContain('6 grant(s) bound at HEAD');
+    expect(result.out).toContain('5 grant(s) bound at HEAD');
     expect(result.out).toContain('document-scope bindings levelId 1.');
   });
 
@@ -2330,6 +2338,111 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
       expect(unbound(result.out)).toEqual([]);
     });
   }
+});
+
+/* -------------------------------------------------------------------------- */
+/* B9 - a name a claim prints is a name its source prints (ADR-0051)          */
+/* -------------------------------------------------------------------------- */
+/*
+ * The prose beside a claim is checked in both directions: it must not be LIFTED
+ * from the source, and the evidence quoted for it must be FOUND in the source. A
+ * NAME is neither case - it is correct only when copied exactly, so the verbatim
+ * rule exempts it by construction - and until this check existed nothing
+ * compared it with anything. `verify-content` never read `nations`;
+ * `make validate-content` can refuse a category word off a deny-list and cannot
+ * open a page. The one field that tells a player whose land they are standing on
+ * was the one field no gate looked at.
+ *
+ * Every case below is proved against the fixture source's own sentences, and the
+ * pass case matters as much as the failure: a check that refused every name
+ * would satisfy the failure case and take the corpus with it.
+ */
+describe('a name a claim prints is a name its source prints', () => {
+  /** A level whose whole content is one territorial statement. */
+  const territoryLevel = (territory: Json = {}): Json => ({
+    $schema: '../schemas/level.schema.json',
+    id: 'fix-level',
+    territory: {
+      nations: ['Fixture Nation'],
+      statement: {
+        en: 'The people of the Fixture Nation have lived along this river for a very long time.',
+        fr: 'Le peuple de la Fixture Nation vit le long de cette riviere depuis tres longtemps.',
+      },
+      fact: factOf({
+        source: {
+          ...(factOf().source as Json),
+          quote: 'The Fixture Nation has lived along this river since long before the Crown arrived.',
+        },
+        verification: {
+          ...(factOf().verification as Json),
+          evidence: 'The Fixture Nation has lived along this river',
+        },
+      }),
+      sourcePublisher: 'Nobody',
+      ...territory,
+    },
+    pois: [],
+  });
+
+  it('passes a statement whose names the source it cites really prints', () => {
+    const result = runClaims(treeWithClaims('b9-name-found', { levels: [territoryLevel()] }));
+    expect(result.out).toContain('1 name(s) in nations');
+    expect(result.out).toContain('1 checked against the cited extraction');
+    expect(result.out).toContain('0 not found in the source they cite');
+    expect(result.status).toBe(0);
+  });
+
+  it('fails a statement that names a people its cited source never names', () => {
+    // The shape the ruling makes common: a name that is true of the place and
+    // absent from the document this game teaches. It comes from somewhere - a
+    // Nation's own page, an encyclopedia, a memory - and "somewhere" is exactly
+    // what a citation is supposed to rule out.
+    const result = runClaims(
+      treeWithClaims('b9-name-absent', {
+        levels: [territoryLevel({ nations: ['Somewhere Else First Nation'] })],
+      }),
+    );
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('nations names "Somewhere Else First Nation"');
+    expect(result.out).toContain('ADR-0051');
+    expect(result.out).toContain('1 not found in the source they cite');
+  });
+
+  it('searches for nothing when a statement names nobody, and says that is what happened', () => {
+    // The state the ruling creates and the schema records: the cited source
+    // names no people for this place, so the statement names none. A gate that
+    // printed a tick here would report the same thing as a gate that had stopped
+    // reading the field (ADR-0024), so it prints the size of what it searched.
+    const result = runClaims(
+      treeWithClaims('b9-names-none', {
+        levels: [territoryLevel({ nations: [], nationsAbsentBecause: 'source-names-none' })],
+      }),
+    );
+    expect(result.out).toContain('0 name(s) in nations');
+    expect(result.out).toContain('NOTHING WAS SEARCHED FOR');
+    expect(result.status).toBe(0);
+  });
+
+  it('reports names as unchecked, not as passing, when the extraction is absent', () => {
+    // The CI case, and the honest limit of this check: every source register in
+    // this repository is `committed: false`, so no cached text exists in CI and
+    // no name can be checked there. A run that said nothing would read as a
+    // pass.
+    const root = nextRoot('b9-no-extraction');
+    write(root, 'content/sources/fixture-source.json', manifest());
+    write(root, 'content/questions/government/fix-0.json', question());
+    write(root, 'content/levels/fix-level.json', territoryLevel());
+
+    const reported = spawnSync(
+      process.execPath,
+      [SCRIPT, '--root', root, '--now', TODAY, '--no-history', '--collections', 'questions,levels'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: GIT_ENV },
+    );
+    expect(reported.status).toBe(0);
+    expect(reported.stdout).toContain('1 name(s) in nations');
+    expect(reported.stdout).toContain('0 checked against the cited extraction');
+    expect(reported.stdout).toContain('those names are unchecked, not passing');
+  });
 });
 
 /* -------------------------------------------------------------------------- */

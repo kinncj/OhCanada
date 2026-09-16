@@ -122,7 +122,7 @@ describe('interpreting what came back', () => {
       },
       fact: {
         factual: true,
-        source: { sourceHash: 'a'.repeat(64) },
+        source: { sourceHash: 'a'.repeat(64), url: 'https://example.invalid/testville' },
         verification: {
           status: 'verified',
           model: 'test',
@@ -131,19 +131,9 @@ describe('interpreting what came back', () => {
           evidence: 'Testville is on the territory of the Testville First Nation.',
         },
       },
-      nationSource: {
-        publisher: 'Testville First Nation',
-        url: 'https://example.invalid/testville',
-        sourceHash: '',
-        asOf: null,
-        verification: {
-          status: 'unverified',
-          model: '',
-          checkedAt: null,
-          sourceHash: '',
-          evidence: '',
-        },
-      },
+      /* One citation, one publisher (ADR-0051): the panel's source link names
+         who published the page the statement came from. */
+      sourcePublisher: 'The Testville Register',
     },
     camera: { followLerp: 0.2, deadZone: { x: 1, y: 1 }, offset: { x: 0, y: 0 }, zoom: 1 },
     ground: [

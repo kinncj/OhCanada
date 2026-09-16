@@ -180,6 +180,7 @@ import {
   indexText,
   isSchemaDocument,
   longestSharedRun,
+  NAME_FIELDS,
   recogniserFaults,
   schemaRegistry,
   unknownWords,
@@ -698,7 +699,7 @@ const canonical = (value) => JSON.stringify(value);
  *
  *    A verification block sits at `<unit>/<apparatus>/verification`:
  *    `/pois/3/fact/verification`, `/territory/fact/verification`,
- *    `/territory/nationSource/verification`,
+ *    `/nationSource/verification` on a character,
  *    `/steps/1/dialogue/0/fact/verification`. Two segments up from the block is
  *    the thing an author wrote as one piece — the point of interest, the
  *    territory acknowledgement, the dialogue line. A question has no such
@@ -768,11 +769,13 @@ const canonical = (value) => JSON.stringify(value);
  *    which a verifier checks a citation against); a level's `quests` array
  *    (those claims live in `content/quests/` and bind there).
  *
- *    NOT NAMED BECAUSE IT DOES NOT NEED TO BE: `territory.nationSource`. It is
- *    the field that started this, and it binds to the territorial statement for
- *    free, because it is a SIBLING of `/territory/fact` and therefore inside
- *    that claim's unit. It binds to nothing else in the level, which is the
- *    whole point: the territory claims come unbound and the blurbs do not.
+ *    NOT NAMED BECAUSE IT DOES NOT NEED TO BE: `territory.sourcePublisher`, and
+ *    `territory.nationSource` before it (ADR-0051 replaced the one with the
+ *    other). That position is the field that started all this, and whatever sits
+ *    in it binds to the territorial statement for free, because it is a SIBLING
+ *    of `/territory/fact` and therefore inside that claim's unit. It binds to
+ *    nothing else in the level, which is the whole point: the territory claims
+ *    come unbound and the blurbs do not.
  *
  * ANTI-VACUITY (ADR-0024). The failure mode of a NARROWING gate is a field set
  * that is empty: a grant bound to nothing can never be voided and reports green
@@ -1069,6 +1072,10 @@ const tally = {
   banTermChecks: 0,
   unknownEvidenceWords: 0,
   quoteChecked: 0,
+  namesPrinted: 0,
+  namesChecked: 0,
+  namesUnchecked: 0,
+  nameFaults: 0,
 };
 
 const claims = [];
@@ -1313,12 +1320,49 @@ for (const claim of claims) {
 
   /* --- B6/B7: the text checks, when the extraction is available ---------- */
   const extraction = sourceId === null ? undefined : extractions.get(sourceId);
+  // Counted before the branch, so "how many names does the corpus print" is a
+  // number this run knows whether or not it could check any of them.
+  tally.namesPrinted += claim.names.length;
   if (extraction === undefined) {
     tally.verbatimUnchecked += 1;
     collection.unchecked += 1;
+    tally.namesUnchecked += claim.names.length;
   } else {
     tally.verbatimChecked += 1;
     collection.checked += 1;
+
+    /* --- B9: a name a claim prints is a name its source prints ------------ */
+    //
+    // ADR-0051. The prose beside a claim is checked in both directions — it must
+    // not be LIFTED from the source (B8) and its evidence must be FOUND in it —
+    // and a name is neither case. A name is correct only when it is copied
+    // exactly, so the verbatim rule exempts it by construction, and until this
+    // check existed nothing compared it with anything: `verify-content` never
+    // read `nations`, and `make validate-content` can refuse a category word
+    // from a deny-list but cannot open a page. The one field in a level document
+    // that tells a player whose land they are standing on was the one field no
+    // gate looked at.
+    //
+    // Document grain, not page grain, and said out loud: the extraction is not
+    // page-indexed, so this asks whether the cited DOCUMENT prints the name
+    // anywhere — not whether it prints it about this place. "The guide names the
+    // Cree of the Northwest" and "the guide puts the Cree at Fort Qu'Appelle"
+    // are different claims and only a reader can tell them apart. This catches
+    // the coarser and commoner defect: a name that came from somewhere else.
+    for (const { field, name } of claim.names) {
+      tally.namesChecked += 1;
+      if (containsRun(extraction, name)) continue;
+      tally.nameFaults += 1;
+      fail(
+        `${where}: ${field} names "${name}", and ${String(sourceId)}'s cached extraction does not ` +
+          `contain it. ADR-0051: a statement cites ONE source and every name it prints must be a ` +
+          `name that source prints — there is no second citation to carry a name this one does ` +
+          `not. Either the name came from somewhere else, or this claim cites the wrong source. ` +
+          `Where the source names no people for this place, the statement names none: an empty ` +
+          `"nations" with "nationsAbsentBecause": "source-names-none" is the shape for that, and ` +
+          `it is a decision to record rather than a name to borrow.`,
+      );
+    }
 
     const quote = str(source.quote);
     if (quote !== null) {
@@ -2343,6 +2387,36 @@ if (tally.verbatimChecked > 0) {
       `${String(tally.unknownEvidenceWords)} evidence word(s) absent from the source.`,
   );
 }
+/*
+ * THE NAMES, on every run, with the size of what was searched. ADR-0024,
+ * ADR-0051.
+ *
+ * Three numbers rather than a tick, because they fail in three different ways.
+ * `printed` going to zero means either that no statement names anybody — which
+ * is now a legal and recorded state — or that the field this gate reads has been
+ * renamed and `NAME_FIELDS` has gone dead; those look identical here and are
+ * told apart by
+ * tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts, which
+ * compares what the walk finds with what the documents print. `unchecked` is the
+ * CI case: no register in this repository is committed, so on a machine without
+ * the cached extractions this check cannot run at all, and saying so is the only
+ * honest report of a check that did not happen.
+ */
+console.log(
+  `verify-content: names printed by a claim — ${String(tally.namesPrinted)} name(s) in ` +
+    `${NAME_FIELDS.map(({ key }) => key).join(', ')}; ${String(tally.namesChecked)} checked ` +
+    `against the cited extraction, ${String(tally.namesUnchecked)} could NOT be checked because ` +
+    `the extraction is absent, ${String(tally.nameFaults)} not found in the source they cite` +
+    `${
+      tally.namesPrinted === 0
+        ? '. NOTHING WAS SEARCHED FOR: no claim printed a name, which is either a corpus whose ' +
+          'statements name nobody or a field this gate has stopped reading, and this line cannot ' +
+          'tell you which'
+        : tally.namesChecked === 0
+          ? ' (this is the CI case — those names are unchecked, not passing)'
+          : ''
+    }.`,
+);
 if (history.ran) {
   console.log(
     `verify-content: separation of duties — ${String(history.commits)} commit(s) touching content/, ` +

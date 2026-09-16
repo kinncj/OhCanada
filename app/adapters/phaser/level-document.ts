@@ -867,6 +867,25 @@ function readPois(source: Record<string, unknown>, ledger: ClaimLedger): Result<
  * What comes back in the refused case carries no `nations` and no publisher: see
  * {@link AboutThisPlace} for why a list of nations is the same attribution as
  * the sentence.
+ *
+ * ## The three rules ADR-0051 puts here rather than in the schema
+ *
+ *  1. **An empty `nations` says why it is empty.** A statement may name nobody,
+ *     and only when the source it cites names nobody for this place. The schema
+ *     states that as a conditional; it is restated here because an empty list
+ *     with no recorded reason and an empty list with one draw the *same panel*,
+ *     so nothing downstream could ever tell them apart.
+ *  2. **The panel's source link is the statement's own citation.** The link's
+ *     text is `sourcePublisher` and its target is `fact.source.url`. Before
+ *     ADR-0051 both came from `nationSource` — where the *names* came from —
+ *     and on seven of the ten levels that was a different page from the one the
+ *     sentence was quoted from, on five of them a different body — so the panel
+ *     attributed a sentence to a page it was never quoted from.
+ *  3. **A territorial statement states a fact.** `adjudicateClaim` treats a
+ *     `factual: false` block as drawable, correctly, because a greeting needs no
+ *     verifier — so a territory declaring itself non-factual would put an
+ *     unsourced sentence about whose land this is in front of a player with
+ *     every gate green. Refused here.
  */
 function readTerritory(
   source: Record<string, unknown>,
@@ -882,7 +901,7 @@ function readTerritory(
     );
   }
 
-  const rawNations = readArray(territory, 'nations', 1);
+  const rawNations = readArray(territory, 'nations', 0);
   if (!rawNations.ok) return invalid('territory.nations', rawNations.error.message);
   const nations: string[] = [];
   for (const [index, nation] of rawNations.value.entries()) {
@@ -895,24 +914,59 @@ function readTerritory(
     nations.push(nation);
   }
 
+  const absentBecause = territory['nationsAbsentBecause'];
+  if (nations.length === 0 && absentBecause !== 'source-names-none') {
+    return invalid(
+      'territory.nationsAbsentBecause',
+      '"territory.nations" is empty, so "territory.nationsAbsentBecause" must be ' +
+        '"source-names-none" (ADR-0051). A statement may name nobody only where the source it ' +
+        'cites names nobody, and an empty list with no reason spells three states one way: not ' +
+        'got round to it, could not find one, and the source names none.',
+    );
+  }
+  if (nations.length > 0 && absentBecause !== undefined) {
+    return invalid(
+      'territory.nationsAbsentBecause',
+      '"territory.nationsAbsentBecause" says this statement names nobody, and ' +
+        '"territory.nations" names somebody. One of the two is wrong and neither may be guessed.',
+    );
+  }
+
   const statement = readLocalizedText(territory, 'statement');
   if (!statement.ok) return invalid('territory.statement', statement.error.message);
 
-  const nationSource = territory['nationSource'];
-  if (
-    !isRecord(nationSource) ||
-    typeof nationSource['publisher'] !== 'string' ||
-    typeof nationSource['url'] !== 'string'
-  ) {
+  const publisher = territory['sourcePublisher'];
+  if (typeof publisher !== 'string' || publisher.trim().length === 0) {
     return invalid(
-      'territory.nationSource',
-      '"territory.nationSource" must name a publisher and a url: §10.2 requires the panel to ' +
-        'name where the statement comes from, and a panel that cannot cite it may not draw it.',
+      'territory.sourcePublisher',
+      '"territory.sourcePublisher" must name who published the source this statement cites: ' +
+        '§10.2 requires the panel to name where the statement comes from, and a panel that ' +
+        'cannot cite it may not draw it.',
     );
   }
 
   const claim = readFactClaim(territory['fact'], 'territory.fact');
   if (!claim.ok) return claim;
+  if (!claim.value.factual) {
+    return invalid(
+      'territory.fact.factual',
+      '"territory.fact.factual" must be true. A territory statement that claimed nothing would ' +
+        'not be one, and a false one is drawn without a source or a verifier — the exemption ' +
+        'ADR-0003 grants a greeting, spent on a sentence about whose land this is.',
+    );
+  }
+
+  const fact = territory['fact'];
+  const factSource = isRecord(fact) ? fact['source'] : undefined;
+  const sourceUrl = isRecord(factSource) ? factSource['url'] : undefined;
+  if (typeof sourceUrl !== 'string' || sourceUrl.length === 0) {
+    return invalid(
+      'territory.fact.source.url',
+      '"territory.fact.source.url" is what the panel\'s source link points at (ADR-0051), so a ' +
+        'statement without one cannot be shown with the citation §10.2 requires beside it.',
+    );
+  }
+
   const refusal = ledger.admit('/territory', claim.value);
   if (refusal !== null) {
     return ok({
@@ -927,8 +981,8 @@ function readTerritory(
     kind: 'statement',
     nations,
     statement: statement.value,
-    publisher: nationSource['publisher'],
-    sourceUrl: nationSource['url'],
+    publisher,
+    sourceUrl,
   });
 }
 

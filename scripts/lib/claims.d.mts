@@ -20,6 +20,19 @@ export interface ClaimProse {
 }
 
 /**
+ * One of `names`: a name the claim's unit prints, and the field it came out of.
+ *
+ * Held to a different rule from `prose`. Prose must NOT be lifted from its
+ * source; a name is correct only when it is copied exactly, so the verbatim rule
+ * exempts it and ADR-0051's B9 asks the opposite question — does the cited
+ * source print this name at all.
+ */
+export interface ClaimName {
+  readonly field: string;
+  readonly name: string;
+}
+
+/**
  * A question and a `factClaim` normalised to one record. See the module header
  * for what each field means and why the normalisation happens once.
  */
@@ -33,6 +46,8 @@ export interface Claim {
   readonly source: { readonly [key: string]: unknown } | null;
   readonly verification: { readonly [key: string]: unknown } | null;
   readonly prose: readonly ClaimProse[];
+  /** Names the unit prints, empty for every claim whose unit prints none. */
+  readonly names: readonly ClaimName[];
   readonly asserted: readonly string[];
   readonly surface: string;
   /** The node the claim is made of: the question document, or the block. */
@@ -55,6 +70,18 @@ export interface DocumentScopeField {
 }
 
 export declare const DOCUMENT_SCOPE_FIELDS: readonly DocumentScopeField[];
+
+/**
+ * One field that carries a NAME rather than prose, and why it is named here
+ * instead of found by shape: an array of strings beside a claim is an array of
+ * strings, and nothing in its shape says the strings are names of peoples.
+ */
+export interface NameField {
+  readonly key: string;
+  readonly why: string;
+}
+
+export declare const NAME_FIELDS: readonly NameField[];
 
 export declare const isSchemaDocument: (where: string) => boolean;
 

@@ -51,19 +51,7 @@
         "evidence": "June 5, 2024 \u2014 Ottawa, unceded, unsurrendered territory of the Anishinabe Algonquin Nation, Ontario [\u2026] This space will be an important sign of recognition that the Parliamentary Precinct is on the traditional and unceded territory of the Algonquin [\u2026] Grand Chief Savanna McGregor, Algonquin Anishinabeg Nation Tribal Council"
       }
     },
-    "nationSource": {
-      "publisher": "Algonquin Anishinabeg Nation Tribal Council",
-      "url": "https://anishinabemowin.ca/en_CA/",
-      "sourceHash": "b3501b65d656d9c03644bbcac7778bd38d3ed7848fddabacd1187cf374e1d136",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Crown-Indigenous Relations and Northern Affairs Canada"
   },
   "camera": {
     "followLerp": 0.14,

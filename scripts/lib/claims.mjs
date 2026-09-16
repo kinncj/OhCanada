@@ -136,6 +136,59 @@ export const DOCUMENT_SCOPE_FIELDS = [
 ];
 
 /**
+ * THE FIELDS THAT CARRY A NAME RATHER THAN PROSE, and why a name needs a rule
+ * of its own.
+ *
+ * Every other text a claim governs is found by SHAPE — a `localizedText`-shaped
+ * sibling — and is held to the verbatim rule: prose that shares a long run with
+ * its source is lifted rather than paraphrased. A NAME is the opposite case. It
+ * is correct only when it is copied exactly, so the verbatim rule exempts it by
+ * construction and nothing else looked at it: `verify-content` never read
+ * `nations`, and `make validate-content` can check a deny-list but cannot open a
+ * page. A name a player reads as a fact about whose land they are standing on
+ * was the one thing in a level document that no gate compared with a source
+ * (ADR-0051).
+ *
+ * A NAME CANNOT BE FOUND BY SHAPE. An array of strings beside a claim is an
+ * array of strings; nothing in its shape says the strings are names of peoples
+ * rather than texture keys. So this list names the field, with a reason, in the
+ * manner of {@link DOCUMENT_SCOPE_FIELDS} — and, like that list, it can go dead
+ * silently if the schema renames the field, which is why the gate prints how
+ * many names it searched for and
+ * tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts asserts
+ * that what this finds is exactly what the level documents print.
+ */
+export const NAME_FIELDS = [
+  {
+    key: 'nations',
+    why:
+      'the peoples a territory statement names. ADR-0051: a statement cites one source and every ' +
+      'name in it must be a name that source prints, so the check is "does the cited extraction ' +
+      'contain this name" — the one comparison that catches a name copied out of somewhere else.',
+  },
+];
+
+/**
+ * The names the unit around a claim prints, as `{ field, name }`.
+ *
+ * Empty for every claim whose unit carries none, which is every claim in the
+ * corpus except a territory statement's. Strings only, and non-empty ones: a
+ * malformed entry is `make validate-content`'s to refuse, and a gate that
+ * searched a source for `""` would find it in every document ever written.
+ */
+const namesIn = (parent) => {
+  if (!isObject(parent)) return [];
+  return NAME_FIELDS.flatMap(({ key }) => {
+    const value = parent[key];
+    if (!Array.isArray(value)) return [];
+    return value.flatMap((item) => {
+      const name = str(item);
+      return name === null || name.trim() === '' ? [] : [{ field: key, name }];
+    });
+  });
+};
+
+/**
  * Documents whose CONTENT is a definition of these shapes rather than an
  * instance of one. `content/schemas/question.schema.json` has a `properties`
  * object carrying `prompt`, `options` and `correctIndex`; `common.schema.json`
@@ -319,6 +372,11 @@ export const questionClaim = (document, where) =>
     ),
     asserted: answerText(document),
     surface: 'an option or explanation',
+    /* A question names no people in a field of its own: a name it uses is inside
+       its prompt, its options or its explanation, which are already checked as
+       prose. Present and empty rather than absent, so every consumer reads one
+       shape (ADR-0051). */
+    names: [],
   });
 
 /**
@@ -354,6 +412,9 @@ export const factClaim = (block, parent, where, pointer) => {
       siblings.length === 0
         ? 'the text this claim is attached to'
         : `the ${siblings.map(([key]) => key).join(' and ')} this claim is attached to`,
+    /* The names the unit prints, which are held to a different rule from the
+       prose beside them — see {@link NAME_FIELDS}. */
+    names: namesIn(parent),
   });
 };
 
@@ -433,7 +494,7 @@ export const claimsIn = (document, where) => {
  *
  *   - A question is its document. Pointer `''`, block `/verification`. A file
  *     path is already an identity.
- *   - A territory statement (`/territory/fact`), its `nationSource` block and a
+ *   - A territory statement (`/territory/fact`) and a
  *     quest moment line (`/afterLine/fact`, `/declinedLine/fact`, …) are
  *     singletons at a fixed path. No array is crossed, so the pointer is stable.
  *   - A point of interest requires `id`: `/pois[id=cn-tower]`.

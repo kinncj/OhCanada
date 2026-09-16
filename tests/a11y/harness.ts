@@ -443,12 +443,18 @@ const PASSPORT_STAMP_ART: { readonly stampArt?: () => string } =
  * neither is reachable by clicking, and a branch axe never renders is a branch
  * nothing has measured.
  *
- * `?about=long-source` is the fourth, and it is measuring a real shape rather
- * than an imagined worst case. `nationSource.publisher` on four shipped levels
- * is a **paragraph** — `the-north`'s is 321 characters — so the source link's
- * text really is that long, and a link that cannot wrap is how a page scrolls
- * sideways at 200 %. The fixture is the same *length* as the longest real one
- * and none of its words.
+ * `?about=long-source` is the fourth, and it measures headroom rather than
+ * today's worst case. It was today's worst case: `nationSource.publisher` on
+ * four shipped levels was a **paragraph** — `the-north`'s was 321 characters —
+ * because that field carried an explanation of why a page was the authority for
+ * a name. ADR-0051 took the field off a level document, and the publisher the
+ * panel draws is now the register's own, the longest of which is
+ * `prairie-rail`'s at 104 characters. The fixture keeps the longer string
+ * deliberately: a link that cannot wrap is how a page scrolls sideways at 200 %,
+ * a publisher is content and can grow again without anybody thinking about this
+ * scan, and a fixture that shrank to match the corpus would stop measuring the
+ * thing it was written for. It is the *length* of the old worst case and none of
+ * its words.
  */
 const ABOUT_STATEMENT: Readonly<Record<UiLocale, string>> = {
   en:

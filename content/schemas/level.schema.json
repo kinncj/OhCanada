@@ -124,33 +124,58 @@
   "$defs": {
     "territoryStatement": {
       "title": "Territory statement",
-      "description": "The first line of the level's \"About this place\" panel (docs/content-review.md 10.2): a territorial FACT, sourced and verifiable, not an acknowledgement. The distinction is the whole of 10.1 and it is load-bearing. \"Ottawa is on the unceded traditional territory of the Algonquin Anishinaabe Nation\" is a citable statement an agent may write and a verifier may check. \"We acknowledge that we live and work on...\" is a statement of relationship in the project's own voice, and no agent may write it: a model has no relationship to acknowledge, and a generated acknowledgement is words asserting something that was never true. There is deliberately no field for one here. If the project owner writes one, it is signed and it lives in README.md, where the project speaks for itself.",
+      "description": "The first line of the level's \"About this place\" panel (docs/content-review.md 10.2): a territorial FACT, sourced and verifiable, not an acknowledgement. The distinction is the whole of 10.1 and it is load-bearing. \"Ottawa is on the unceded traditional territory of the Algonquin Anishinaabe Nation\" is a citable statement an agent may write and a verifier may check. \"We acknowledge that we live and work on...\" is a statement of relationship in the project's own voice, and no agent may write it: a model has no relationship to acknowledge, and a generated acknowledgement is words asserting something that was never true. There is deliberately no field for one here. If the project owner writes one, it is signed and it lives in README.md, where the project speaks for itself. ONE CITATION, AND THE NAMES COME OUT OF IT (ADR-0051): the statement cites exactly one source, in `fact.source`, and every name in `nations` must be a name that source prints for a people. There is no second citation to write, which is what makes a statement whose names come from one page and whose sentence comes from another unrepresentable rather than merely discouraged - it was the shipped state on seven of the ten levels.",
       "type": "object",
       "properties": {
         "nations": {
-          "description": "The nations whose territory this is, each named as that nation names itself. The same deny-list as a character's nation: a category word is a build failure.",
+          "description": "The nations whose territory this is, each named as the cited source names them, and each named as that nation names itself. The same deny-list as a character's nation: a category word is a build failure, because a list the panel heads \"Named in this statement\" carrying the single word \"Inuit\" is the generic-person failure 3.1 exists to prevent. MAY BE EMPTY (ADR-0051), and only when the cited source names no people for this place - in which case `nationsAbsentBecause` is required and records that judgement. The deny-list is anchored to the whole value, so a longer name a source really prints (\"Metis of the Red River\") is legal and a bare category word is not; which of those a phrase is, is the author's proposal and the verifier's judgement, not a regex's.",
           "type": "array",
           "items": {
             "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationName"
           },
-          "minItems": 1,
+          "minItems": 0,
           "uniqueItems": true
         },
+        "nationsAbsentBecause": {
+          "description": "Why this statement names no people. Required if and only if `nations` is empty, and forbidden otherwise (see the conditional below). An empty list on its own would spell three different states one way: an author who had not got round to it, an author who could not find a name, and an author recording that the cited source names nobody. This is the third, recorded rather than defaulted - the shape factClaim.factual and characterDocument.indigenous already use. One value today: a second reason is a schema change and an ADR, because any other reason for printing no name is a decision somebody should have to argue.",
+          "type": "string",
+          "enum": ["source-names-none"]
+        },
         "statement": {
-          "description": "The fact, in plain language, in both languages. Shown in the panel, never as a modal on level entry and never as anything a player taps past to reach gameplay - which is what teaches that it is a thing you tap past.",
+          "description": "The fact, in plain language, in both languages. Shown in the panel, never as a modal on level entry and never as anything a player taps past to reach gameplay - which is what teaches that it is a thing you tap past. It may use the cited source's own term where that source uses it, marked as the source's (docs/content-review.md 9.2) - that is prose a reader can weigh, and it is a different object from `nations`, which is a list of names.",
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
         },
         "fact": {
-          "description": "Source and verification for the statement, checked under ADR-0003 like any other claim. `factual` is true here by construction; a territory statement that claimed nothing would not be one.",
+          "description": "Source and verification for the statement, checked under ADR-0003 like any other claim, and the ONE citation this statement carries: the names in `nations` come from this source too (ADR-0051). `factual` must be true - a territory statement that claimed nothing would not be one, and a false one would draw an unsourced sentence about whose land this is past every gate, because adjudicateClaim correctly treats a non-factual block as drawable. That rule is held by parseLevelDocument and by tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts rather than here, for the reason ADR-0051 section 4 records.",
           "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
         },
-        "nationSource": {
-          "description": "Where the nation names came from. The nation's own material where one exists (docs/content-review.md 10.2).",
-          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/nationSource"
+        "sourcePublisher": {
+          "description": "Who published the source cited in `fact.source`. The \"About this place\" panel draws this as the text of its source link and `fact.source.url` as the link's target, so the panel names where the STATEMENT comes from - which is what 10.2 asks for and what the panel did not do before ADR-0051: it drew `nationSource`, where the NAMES came from, which on seven of the ten levels was a different page from the one the sentence was quoted from, and on five of those a different body. It is a copy of the `publisher` of the register named by `fact.source.sourceId`, and a checked copy: the runtime cannot read a source register (there is no port for one), so the string is carried here and pinned to the register by tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts.",
+          "type": "string",
+          "minLength": 1
         }
       },
-      "required": ["nations", "statement", "fact", "nationSource"],
-      "additionalProperties": false
+      "required": ["nations", "statement", "fact", "sourcePublisher"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "$comment": "ADR-0051: an empty `nations` carries the judgement that made it empty, and a non-empty one cannot carry that judgement as well. Only property names this object already declares appear here (ADR-0007), and the `else` follows character.schema.json's shape for the same rule about `nation`.",
+          "if": {
+            "properties": { "nations": { "type": "array", "maxItems": 0 } },
+            "required": ["nations"]
+          },
+          "then": {
+            "required": ["nationsAbsentBecause"],
+            "properties": { "nationsAbsentBecause": {} }
+          },
+          "else": {
+            "not": {
+              "required": ["nationsAbsentBecause"],
+              "properties": { "nationsAbsentBecause": {} }
+            }
+          }
+        }
+      ]
     },
 
     "cameraTuning": {

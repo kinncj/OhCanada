@@ -51,19 +51,7 @@
         "evidence": "The Toronto Purchase Treaty, No. 13 (1805) – Mississaugas of the Credit First Nation … a new agreement was negotiated with the Mississaugas of the Credit. On August 1, 1805, the Crown purchased 250 830 acres of land … The cities of Etobicoke, Toronto, North York, York and Vaughan are located within the boundaries of the Toronto Purchase Treaty lands."
       }
     },
-    "nationSource": {
-      "publisher": "Mississaugas of the Credit First Nation",
-      "url": "https://mncfn.ca/treaty-lands-and-territory/",
-      "sourceHash": "148556d2ec2bec761e1e2197944b4550b549e9d939881194a7fecceeccd5ec16",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Mississaugas of the Credit First Nation"
   },
   "camera": {
     "followLerp": 0.16,

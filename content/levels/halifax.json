@@ -51,19 +51,7 @@
         "evidence": "Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia. … Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia … KMK was developed by the Mi’kmaq, for the Mi’kmaq. Through these discussions, we hope that the Mi’kmaq of Nova Scotia can finally implement our Rights from the Treaties signed by our ancestors in the 1700’s."
       }
     },
-    "nationSource": {
-      "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
-      "url": "https://mikmaqrights.com/?page_id=53",
-      "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs"
   },
   "camera": {
     "followLerp": 0.12,

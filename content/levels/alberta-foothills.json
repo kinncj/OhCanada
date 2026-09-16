@@ -57,19 +57,7 @@
         "evidence": "the Treaty made and concluded at the Blackfoot Crossing of the Bow River, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and seventy-seven … all their rights, titles, and privileges whatsoever to the lands included within the following limits, that is to say: Commencing at a point on the International Boundary due south of the western extremity of the Cypress Hills, thence west along the said boundary to the central range of the Rocky Mountains, or to the boundary of the Province of British Columbia, thence north-westerly along the said boundary to a point due west of the source of the main branch of the Red Deer River, thence south-westerly and southerly following on the boundaries of the Tracts ceded by the Treaties numbered six and four to the place of commencement"
       }
     },
-    "nationSource": {
-      "publisher": "Treaty 7 First Nations Chiefs' Association (the political body for the seven Treaty 7 First Nations, which its own About page names as the Bearspaw, Chiniki, Wesley, Blood Tribe, Piikani Nation, Siksika Nation and Tsuut'ina Nation)",
-      "url": "https://www.treaty7.org/about",
-      "sourceHash": "75cc747158d102530b7161bf281a2352797f54c434180ce589fd424e9c7f8af3",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Crown-Indigenous Relations and Northern Affairs Canada"
   },
   "camera": {
     "followLerp": 0.11,

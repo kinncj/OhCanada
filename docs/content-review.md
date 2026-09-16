@@ -61,7 +61,11 @@ These are real, they are worth having, and they are all this project has:
 
 - a `nation` value is present wherever it is required (§3);
 - that value is specific, not one of the banned vague values (§3.1);
-- the value resolves to a cited source that contains the name (§3.2);
+- the value resolves to a cited source that contains the name (§3.2) — **for a level's territory
+  statement only, and only where the cached source text is present**: `verify-content` checks every name in
+  `territory.nations` against the extraction the statement cites (ADR-0051), and every register in this
+  repository is `committed: false`, so in CI it reports those names as *unchecked* rather than passing. For a
+  character's `nation` this is still held by review and by nothing else;
 - every visible design element has a cited reference, or is absent (§4);
 - no item on the presumed-restricted list appears in the asset (§5);
 - every character measures to the proportion canon, within tolerance (§6);
@@ -162,6 +166,20 @@ holds a literal deny-list of these strings, case-insensitively, and a value that
 Two nations may be named only when the character is explicitly of two nations and that fact is part of the
 depiction. Two names as hedging — "somewhere in this region" — is the vague value again, spelled longer.
 
+**The deny-list matches a whole value, and that is deliberate.** Measured on
+`common.schema.json#/$defs/nationName`: the pattern is anchored, so `Métis` fails and `Métis of the Red
+River` passes. A category word is refused as *the name*; a longer name that a source really prints, and that
+happens to contain one, is not. Which of those a phrase is cannot be decided by a regex — it is the author's
+proposal and the verifier's judgement — and the deny-list's job is only to stop the case where a category
+word is all that was written.
+
+**A level's territory statement is held to the same list, with one addition (ADR-0051).** An entry in
+`territory.nations` must be a name that the source the statement cites prints for a people. The *sentence*
+may use that source's own term where the source uses it, marked as the source's, under §9.2 — so a statement
+may say what *Discover Canada* says about "the Métis of the Red River" whether or not `nations` carries an
+entry. The two are different objects: a sentence is prose a reader can weigh, and `nations` is a list the
+panel prints under a heading saying these are names.
+
 ### 3.2 Where it is recorded, and how it is verified
 
 `CharacterDocument.nation` already exists in `content/schemas/character.schema.json` and points here. It is
@@ -182,8 +200,26 @@ For **art assets**, the record is the subject entry in `assets/refs/references.j
 `nationSource` and `communityReview` with the same meanings. That file is art's, and this document states
 the requirement rather than editing it.
 
-For **levels and POIs**, there is no field at all today. A level set on named territory needs one
-(`OQ-REVIEW-5`), and until it exists no such level may ship — which is the rule in §1 anyway.
+For **levels and POIs**, the field exists and it is **not** a `nationSource` (ADR-0051, 2026-09-16).
+`level.schema.json#/$defs/territoryStatement` carries `nations`, the sentence, one `fact` — the single
+citation — and `sourcePublisher`, which is who published the page that citation names. There is no second
+citation: **every name a statement prints must be a name the source it cites prints**, and where that source
+names no people for the place, `nations` is empty and `nationsAbsentBecause: "source-names-none"` records
+that it is empty because the source is silent rather than because nobody looked.
+
+**This section and the product owner's ruling disagree, and only the product owner can settle it.** The
+ruling is that every fact and every name a level prints comes from *Discover Canada*:
+
+> literally use the names from the official guide. that's all… all the study materials should be from the
+> official guide.
+
+*Discover Canada* is the Crown's study guide. It is not "the nation's own published material", and it is not
+a registry a nation is listed in — and this project has already moved a name source **away** from the Crown
+once for exactly that reason (`content/sources/kmk-about-consultation.json` records Halifax's Mi'kmaq name
+source moving off `cirnac-peace-and-friendship-treaties`). No agent may reconcile that quietly: this document
+is what content is reviewed against, and content that contradicts it is content that fails its own review.
+ADR-0051 carries the obligation to settle it in writing, and until it is settled a reader of both will find
+them saying different things.
 
 **How it is verified.** The `content-verifier` fetches `nationSource`, confirms the page contains the name
 in `nation`, and records the hash exactly as it does for a `FactSource`. That is a check that the name was
@@ -624,8 +660,18 @@ answered before the level, not after it.
   gameplay teaches that this is a thing you tap past.
 - **Always available, never blocking.** A player who wants it can always reach it; a player mid-level is not
   interrupted by it.
-- **Sourced.** The panel names where the territorial statement comes from, and the source is the nation's own
-  material where one exists.
+- **Sourced.** The panel names where the territorial statement comes from: since ADR-0051 it draws
+  `territory.sourcePublisher` as the link's text over `territory.fact.source.url` as its target — the page
+  the **sentence** came from. Until then it drew `nationSource`, the page the **names** came from, which on
+  seven of the ten shipped levels was a different page from the one the sentence was quoted from, and on five
+  of those a different body. "The source is
+  the nation's own material where one exists" no longer describes a level: under the product owner's ruling
+  the source is the study guide, so the link will read *Immigration, Refugees and Citizenship Canada*. That
+  is the obligation in ADR-0051, not a detail.
+- **A statement may name nobody.** Where the cited source names no people for the place, `nations` is empty,
+  the document records why, and the panel draws the statement and its source link with no list and no
+  heading over one. That is less than this section asked for when it was written, it is what the ruling
+  leaves, and §10.3's warning applies to it twice over.
 - **The project's own acknowledgement**, if there is to be one, is written by the project owner in their own
   words and signed. It stays absent until then — an empty section is honest; a generated one is not.
 - `OQ-REVIEW-4` is the decision. Until it is answered, the "About this place" panel ships with the sourced
@@ -654,7 +700,11 @@ Every box, in order. A "no" stops the asset; it does not lower the bar.
 - [ ] Blind identification names the intended subject (`verify-art` protocol).
 - [ ] Grey-face test: the verifier cannot name an ethnicity from the geometry (§6.3).
 - [ ] If Indigenous: `nation` is present, specific, and not on the deny-list (§3.1).
-- [ ] `nationSource` resolves and contains that name (§3.2).
+- [ ] For a character: `nationSource` resolves and contains that name (§3.2). **Held by review only** — no
+      gate fetches it.
+- [ ] For a level: every name in `territory.nations` appears in the cached text of the source the statement
+      cites, and `sourcePublisher` is that source's own publisher (ADR-0051). The second is a gate on every
+      run; the first is a gate **only where the cached text is present**, which is never in CI.
 - [ ] Every visible design element traces to a cited reference; nothing is "inspired by" (§4.2).
 - [ ] Nothing on the presumed-restricted list appears, in any form (§5.2).
 - [ ] No item in §5.2 is a prop, pick-up, reward or physics object (§5.3).

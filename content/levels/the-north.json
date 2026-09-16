@@ -51,19 +51,7 @@
         "evidence": "KDFN’s Traditional Territory encompasses the Yukon’s capital and economic heartland, the City of Whitehorse. Approximately 75 per cent of Yukon’s population lives on KDFN Traditional Territory. … We acknowledge the Tagish Kwan as the original people who live and occupy the lands that define our Traditional Territory, alongside the headwaters of Chu Níikwän (today, the Yukon River). Our people have been here for millennia."
       }
     },
-    "nationSource": {
-      "publisher": "Kwanlin Dün First Nation — the same body whose own words the statement quotes, on the same page. The clause about the City of Whitehorse and the meaning of Kwanlin are two further passages of that one page; content/sources/kdfn-about-us.json records which, and records the one nation this statement does not name and why.",
-      "url": "https://www.kwanlindun.com/about/",
-      "sourceHash": "d4d43d845d97752fa058e658598d7a2ccfd9dc3d4e4deb0a8992a334e3d91415",
-      "asOf": "2026-09-13T00:00:00Z",
-      "verification": {
-        "status": "unverified",
-        "model": "",
-        "checkedAt": null,
-        "sourceHash": "",
-        "evidence": ""
-      }
-    }
+    "sourcePublisher": "Kwanlin Dün First Nation"
   },
   "camera": {
     "followLerp": 0.12,

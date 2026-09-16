@@ -384,12 +384,43 @@ export interface GameConfigDocument {
  * may write it. There is deliberately no field for one here.
  */
 export interface TerritoryStatement {
-  /** Each named as that nation names itself; the same deny-list as `CharacterDocument.nation`. */
+  /**
+   * The peoples this statement names, each as the cited source names them and
+   * each as that nation names itself; the same deny-list as
+   * `CharacterDocument.nation`.
+   *
+   * **May be empty** (ADR-0051), and only when the source cited in {@link fact}
+   * names no people for this place — in which case
+   * {@link nationsAbsentBecause} records that judgement. Every name here must be
+   * a name that one source prints: there is no second citation.
+   */
   readonly nations: readonly string[];
+  /**
+   * Why this statement names no people. Present if and only if {@link nations}
+   * is empty.
+   *
+   * An empty list on its own spells three states one way — not got round to it,
+   * could not find one, and the source names nobody. This is the third,
+   * recorded rather than defaulted, on the same principle as `FactClaim.factual`
+   * and `CharacterDocument.indigenous`.
+   */
+  readonly nationsAbsentBecause?: 'source-names-none';
   readonly statement: LocalizedText;
   /** Source and verification, checked under ADR-0003 like any other claim. */
   readonly fact: FactClaim;
-  readonly nationSource: NationSource;
+  /**
+   * Who published the source cited in `fact.source`. The "About this place"
+   * panel draws it as the text of its source link, over `fact.source.url`, so
+   * the panel names where the *statement* came from (`docs/content-review.md`
+   * §10.2) rather than where its names came from — which is what it drew, and
+   * on seven of the ten those were different pages, and on five different
+   * bodies (ADR-0051).
+   *
+   * A copy of the register's own `publisher`, pinned to it by
+   * `tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts`: the
+   * runtime cannot read a source register, and an unpinned copy would drift.
+   */
+  readonly sourcePublisher: string;
 }
 
 /** How the camera follows the player. Portrait only, so the vertical numbers matter. */

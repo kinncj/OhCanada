@@ -70,7 +70,9 @@ const minimal = (): Record<string, unknown> => ({
     },
     fact: {
       factual: true,
-      source: { sourceHash: 'a'.repeat(64) },
+      /* The url is the panel's source link since ADR-0051: the link points at
+         the page the STATEMENT came from, not at the page its names came from. */
+      source: { sourceHash: 'a'.repeat(64), url: 'https://example.invalid/testville' },
       verification: {
         status: 'verified',
         model: 'test',
@@ -79,13 +81,10 @@ const minimal = (): Record<string, unknown> => ({
         evidence: 'Testville is on the territory of the Testville First Nation.',
       },
     },
-    nationSource: {
-      publisher: 'Testville First Nation',
-      url: 'https://example.invalid/testville',
-      sourceHash: '',
-      asOf: null,
-      verification: { status: 'unverified', model: '', checkedAt: null, sourceHash: '', evidence: '' },
-    },
+    /* Who published that page. One citation, one publisher (ADR-0051): the
+       `nationSource` block that used to sit here named where the NAMES came
+       from, and the panel drew it as though it named where the sentence did. */
+    sourcePublisher: 'The Testville Register',
   },
   camera: {
     followLerp: 0.2,
@@ -677,6 +676,93 @@ describe('a ride is read strictly, because the schema cannot compare it with its
     ['a track with no top row', { rides: [ride({ track: { artKey: 'car-track' } })] }],
   ])('rejects %s', (_label, patch) => {
     const result = parsed(patch as Record<string, unknown>);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.kind).toBe('invalid');
+  });
+});
+
+/**
+ * ADR-0051: a statement cites one source, names only what that source names, and
+ * the panel cites *that* source.
+ *
+ * Three of the four cases below are about a state that had no spelling before:
+ * a statement that names nobody. The guide this game teaches names no people for
+ * most of the places these levels are set in, so "names nobody" stopped being an
+ * authoring failure and became a finding about a document — and a finding has to
+ * be told apart from an omission, which is what `nationsAbsentBecause` is for.
+ */
+describe('a territory statement names only what its source names (ADR-0051)', () => {
+  const territory = (patch: Record<string, unknown> = {}): Record<string, unknown> => ({
+    ...(minimal()['territory'] as Record<string, unknown>),
+    ...patch,
+  });
+
+  const withTerritory = (patch: Record<string, unknown> = {}): ReturnType<typeof parsed> =>
+    parsed({ territory: territory(patch) });
+
+  it('draws the statement, its names, and the publisher of the page it came from', () => {
+    /* The link's text is `sourcePublisher` and its target is the citation's own
+       url. Before this ADR both came from `nationSource` — where the NAMES came
+       from — so on seven of the ten shipped levels the panel attributed the
+       sentence to a page it was never quoted from, and on five of those to a
+       body that never published it. */
+    const result = withTerritory();
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.about).toMatchObject({
+      kind: 'statement',
+      nations: ['Testville First Nation'],
+      publisher: 'The Testville Register',
+      sourceUrl: 'https://example.invalid/testville',
+    });
+  });
+
+  it('names nobody where the cited source names nobody, and still cites the source', () => {
+    const result = withTerritory({ nations: [], nationsAbsentBecause: 'source-names-none' });
+    if (!result.ok) throw new Error(result.error.message);
+    expect(result.value.about.kind).toBe('statement');
+    if (result.value.about.kind !== 'statement') return;
+
+    expect(result.value.about.nations).toEqual([]);
+    /* The sentence and its citation still draw. An empty list is a finding about
+       a source, not a reason to withhold a claim a verifier granted — and the
+       panel draws no heading over an empty list already
+       (tests/unit/ui/about-this-place.test.ts). */
+    expect(result.value.about.statement.en.length).toBeGreaterThan(0);
+    expect(result.value.about.publisher).toBe('The Testville Register');
+    expect(result.value.about.sourceUrl).toBe('https://example.invalid/testville');
+  });
+
+  it('refuses a statement that declares itself no claim at all', () => {
+    /* `adjudicateClaim` treats a `factual: false` block as drawable, correctly,
+       because a greeting needs no verifier. Spent on a territorial statement
+       that exemption would put an unsourced, unchecked sentence about whose land
+       this is in front of a player with every gate green. */
+    const result = withTerritory({ fact: { factual: false, source: null, verification: null } });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.message).toContain('factual');
+  });
+
+  it('refuses a statement whose citation has no page for the panel to link', () => {
+    const base = minimal()['territory'] as Record<string, unknown>;
+    const fact = { ...(base['fact'] as Record<string, unknown>) };
+    fact['source'] = { sourceHash: 'a'.repeat(64) };
+    const result = withTerritory({ fact });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error.message).toContain('source.url');
+  });
+
+  it.each([
+    ['an empty list with no reason recorded', { nations: [] }],
+    ['a reason recorded beside names', { nationsAbsentBecause: 'source-names-none' }],
+    [
+      'a reason this build does not know',
+      { nations: [], nationsAbsentBecause: 'nobody-went-looking' },
+    ],
+    ['a name that is not a name', { nations: [42] }],
+    ['no publisher for the page it cites', { sourcePublisher: undefined }],
+    ['a publisher that is only spaces', { sourcePublisher: '   ' }],
+  ])('refuses %s', (_label, patch) => {
+    const result = withTerritory(patch as Record<string, unknown>);
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.error.kind).toBe('invalid');
   });
