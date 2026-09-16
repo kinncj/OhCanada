@@ -120,6 +120,8 @@ const hoisted = vi.hoisted(() => {
     search: string;
     /** Which level ids this build has a document for. */
     built: string[];
+    /** Every language the rotate overlay was told, in order. */
+    rotateLocales: string[];
     hudOptions: Record<string, unknown> | null;
     hudHost: unknown;
     hudDestroyed: number;
@@ -243,6 +245,7 @@ const hoisted = vi.hoisted(() => {
     /* Filled in `beforeEach` from the shipped rules: the level a cold load opens
        and the first one it makes the player earn. */
     built: [] as string[],
+    rotateLocales: [],
     hudOptions: null,
     hudHost: null,
     hudDestroyed: 0,
@@ -806,6 +809,9 @@ vi.mock('@ui/rotate-overlay', () => ({
     visible: false,
     sync: () => 'portrait',
     setVisible: () => undefined,
+    /* Recorded: the overlay is built before the save is read, so *when* it is
+       told the language is the whole of what this seam decides. */
+    setLocale: (locale: string) => hoisted.state.rotateLocales.push(locale),
     destroy: () => undefined,
   }),
 }));
@@ -948,6 +954,7 @@ beforeEach(() => {
   hoisted.state.loadCalls = [];
   hoisted.state.loadResult = { ok: true, value: undefined };
   hoisted.state.built = [`${START_LEVEL}`, `${EARNED_LEVEL}`];
+  hoisted.state.rotateLocales = [];
   hoisted.state.hudOptions = null;
   hoisted.state.hudHost = null;
   hoisted.state.hudDestroyed = 0;
@@ -3080,6 +3087,31 @@ describe('a level opens with the task the save was left on', () => {
 
     expect(hoisted.state.tasks.at(-1)).toBe(lineFor('fr'));
     expect(hoisted.state.taskAnnounced.at(-1)).toBe(true);
+  });
+
+  /*
+   * The rotate overlay is the one screen that exists before the save has been
+   * read — a phone can be sideways on the first frame — so it is built in
+   * `game.config.json#/defaultLocale` and has to be told the player's language
+   * afterwards. It was not: a French save turned the whole game French except
+   * the screen that asks the player to turn their phone upright, which kept
+   * saying it in English for the rest of the sitting.
+   */
+  it('tells the rotate overlay the language the save is in', async () => {
+    seedSave('fr', 'active');
+    await boot(`?level=${START_LEVEL}`);
+
+    expect(hoisted.state.rotateLocales.at(-1)).toBe('fr');
+  });
+
+  it('keeps the rotate overlay in step with a language change', async () => {
+    seedSave('en', 'active');
+    await boot(`?level=${START_LEVEL}`);
+    expect(hoisted.state.rotateLocales.at(-1)).toBe('en');
+
+    shellOption<{ set: (key: string, value: unknown) => void }>('store').set('locale', 'fr');
+
+    expect(hoisted.state.rotateLocales.at(-1)).toBe('fr');
   });
 
   it('draws nothing for a quest that is already finished', async () => {

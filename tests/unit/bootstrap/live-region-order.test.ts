@@ -124,6 +124,7 @@ vi.mock('@ui/rotate-overlay', () => ({
     visible: false,
     sync: () => 'portrait',
     setVisible: () => undefined,
+    setLocale: () => undefined,
     destroy: () => undefined,
   }),
 }));

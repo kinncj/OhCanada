@@ -105,6 +105,61 @@ describe('createRotateOverlay', () => {
     });
   });
 
+  describe('setLocale', () => {
+    /*
+     * The overlay is built in `main()` before the save has been read — it has to
+     * be, because a phone can already be sideways at the first frame — so it
+     * opens in the config's default language. Until this existed there was no
+     * way to tell it what the player chose, and a French player who turned their
+     * phone read English (`docs/plan/slices.md`, slice F2b, "Not changed").
+     */
+    it('takes the saved language after the overlay was built', () => {
+      const overlay = createRotateOverlay(page.uiHost);
+      const english = text(overlay.element);
+
+      overlay.setLocale('fr');
+
+      const element = fake(overlay.element);
+      expect(element.getAttribute('lang')).toBe('fr');
+      expect(text(overlay.element).title).not.toBe(english.title);
+      expect(text(overlay.element).body).not.toBe(english.body);
+    });
+
+    it('changes the words while it is up, without dropping focus or hiding it', () => {
+      const overlay = createRotateOverlay(page.uiHost);
+      overlay.setVisible(true);
+      const before = text(overlay.element).title;
+
+      overlay.setLocale('fr');
+
+      expect(text(overlay.element).title).not.toBe(before);
+      expect(overlay.visible).toBe(true);
+      expect(fake(overlay.element).hidden).toBe(false);
+      expect(page.doc.activeElement).toBe(overlay.element);
+    });
+
+    it('goes back when the player changes their mind', () => {
+      const overlay = createRotateOverlay(page.uiHost);
+      const english = text(overlay.element);
+
+      overlay.setLocale('fr');
+      overlay.setLocale('en');
+
+      expect(fake(overlay.element).getAttribute('lang')).toBe('en');
+      expect(text(overlay.element)).toEqual(english);
+    });
+
+    it('does nothing for the language it is already in', () => {
+      const overlay = createRotateOverlay(page.uiHost, { locale: 'fr' });
+      const french = text(overlay.element);
+
+      overlay.setLocale('fr');
+
+      expect(text(overlay.element)).toEqual(french);
+      expect(fake(overlay.element).getAttribute('lang')).toBe('fr');
+    });
+  });
+
   describe('its stylesheet', () => {
     it('carries its own CSS instead of relying on index.html', () => {
       createRotateOverlay(page.uiHost);

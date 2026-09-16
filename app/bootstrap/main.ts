@@ -103,7 +103,7 @@ import { describeEntry, type MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
 import { createPassport, type Passport, type PassportExam } from '@ui/passport';
 import { createPoiCard } from '@ui/poi-card';
-import { createRotateOverlay } from '@ui/rotate-overlay';
+import { createRotateOverlay, type RotateOverlay } from '@ui/rotate-overlay';
 import {
   applySettings,
   createSettingsStore,
@@ -371,6 +371,9 @@ function main(): void {
     },
     renderer,
     pause,
+    /* Built above in the config's default language, because the save has not
+       been read yet; `openFrontDoor` tells it the player's own. */
+    rotate: overlay,
     config,
     rules: rules.value,
     onMounted: syncOrientation,
@@ -410,6 +413,15 @@ interface FrontDoor {
   readonly onLevelPlayable: (listen: (levelId: string) => void) => () => void;
   readonly renderer: GameRenderer;
   readonly pause: PauseControl;
+  /**
+   * The rotate overlay, mounted before this function runs.
+   *
+   * It is handed over for one reason: it is the only screen that exists before
+   * the save has been read, so it is the only one that cannot be built in the
+   * player's language. `openFrontDoor` reads the save and owns the settings
+   * store, so it is where the overlay is told which language that is.
+   */
+  readonly rotate: RotateOverlay;
   readonly config: BootConfig;
   readonly rules: GameRules;
   /** Called once the DOM layer is on the page. See the note at the call site. */
@@ -626,6 +638,19 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     applySettings(document, store.current, prefersReducedMotion(window));
   };
   applyToPage();
+
+  /*
+   * The rotate overlay, in the language of the save that has just been read.
+   *
+   * It is mounted in `main()`, before this function, and it has to be: a phone
+   * can already be sideways on the first frame, and an overlay built after the
+   * save would leave that player looking at a landscape game. So it is built in
+   * `game.config.json#/defaultLocale` and corrected here — which is the whole of
+   * the defect it fixes. A French save used to turn the whole game French except
+   * this one screen, which kept telling the player to turn their phone upright in
+   * English. `applyToPage` has just written the same language on `<html>`.
+   */
+  deps.rotate.setLocale(store.current.locale);
 
   /*
    * Auto-move (CLAUDE.md, Traversal and Accessibility): the player never has to
@@ -1175,6 +1200,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     /* `applySettings` has already written `lang` on `<html>`; what is left is
        every screen this file owns, which follows no store of its own. */
     if (changed === 'locale') {
+      /* Including the one screen that was on the page before the save was read:
+         it follows no store of its own and would otherwise keep the language it
+         was built with for the rest of the sitting. */
+      deps.rotate.setLocale(next.locale);
       session?.setLocale(next.locale);
       shellPassport?.setLocale(next.locale);
     }

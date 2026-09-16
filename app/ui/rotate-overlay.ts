@@ -108,7 +108,14 @@ const CSS = `
 `;
 
 export interface RotateOverlayOptions {
-  /** Which of the two hardcoded strings to show. Defaults to `en`. */
+  /**
+   * Which of the two hardcoded strings to show first. Defaults to `en`.
+   *
+   * It is a *first* language and not the language: this overlay is built before
+   * the save has been read, so the composition root passes the config's default
+   * here and the player's own choice through {@link RotateOverlay.setLocale} as
+   * soon as it knows it.
+   */
   readonly locale?: OverlayLocale;
   /** Called when the overlay becomes visible. The composition root pauses the game here. */
   readonly onShow?: () => void;
@@ -125,6 +132,22 @@ export interface RotateOverlay {
   sync(width: number, height: number): ViewportMode;
   /** Show or hide directly. `sync` is the normal entry point. */
   setVisible(visible: boolean): void;
+  /**
+   * Say it in the player's language.
+   *
+   * **This overlay outlives the language it was built with.** It is mounted in
+   * `main()` before the save is read — it has to be, because a phone can be
+   * sideways at the first frame — so it opens in `game.config.json`'s
+   * `defaultLocale`, and a French player turning their phone read English until
+   * this existed. The composition root calls it once the save is applied and on
+   * every language change, which is the same subscription every other screen
+   * follows.
+   *
+   * Safe while the overlay is up: the title, the body and `lang` are all
+   * rewritten, so a screen reader reading the dialog gets the new language and
+   * the right voice.
+   */
+  setLocale(locale: OverlayLocale): void;
   destroy(): void;
 }
 
@@ -135,7 +158,13 @@ export function createRotateOverlay(
   const doc = host.ownerDocument;
   injectStyle(doc);
 
-  const copy = COPY[options.locale ?? 'en'];
+  /**
+   * Mutable, because the language this overlay speaks is decided twice: the
+   * config's default while the page boots, and the player's own the moment the
+   * save has been read (`setLocale`).
+   */
+  let locale: OverlayLocale = options.locale ?? 'en';
+  const copy = (): Copy => COPY[locale];
 
   const element = doc.createElement('div');
   element.id = 'tn-rotate-overlay';
@@ -149,7 +178,7 @@ export function createRotateOverlay(
   element.setAttribute('aria-modal', 'true');
   element.setAttribute('aria-labelledby', 'tn-rotate-title');
   element.setAttribute('aria-describedby', 'tn-rotate-body');
-  element.setAttribute('lang', copy.lang);
+  element.setAttribute('lang', copy().lang);
   element.tabIndex = -1;
   element.hidden = true;
 
@@ -163,11 +192,11 @@ export function createRotateOverlay(
 
   const title = doc.createElement('h1');
   title.id = 'tn-rotate-title';
-  title.textContent = copy.title;
+  title.textContent = copy().title;
 
   const body = doc.createElement('p');
   body.id = 'tn-rotate-body';
-  body.textContent = copy.body;
+  body.textContent = copy().body;
 
   card.append(glyph, title, body);
   element.append(card);
@@ -210,6 +239,15 @@ export function createRotateOverlay(
       return mode;
     },
     setVisible,
+    setLocale(next: OverlayLocale): void {
+      if (next === locale) return;
+      locale = next;
+      /* All three together: the words a sighted player reads, and the `lang` a
+         screen reader picks its voice from. */
+      element.setAttribute('lang', copy().lang);
+      title.textContent = copy().title;
+      body.textContent = copy().body;
+    },
     destroy(): void {
       /* Release first: a removed element cannot un-inert its former siblings. */
       trap.release();
