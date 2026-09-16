@@ -65,8 +65,8 @@
   "doneLine": {
     "speaker": "yukon-river-sternwheeler",
     "text": {
-      "en": "You walked the gravel bar from the vessel to the driftwood and answered every question left here about Canada's regions.",
-      "fr": "Vous avez parcouru la plage de galets, du bateau jusqu'au bois flotté, et répondu à toutes les questions laissées ici sur les régions du Canada."
+      "en": "You walked the gravel bar from the vessel to the driftwood and answered the questions each stop asked you about Canada's regions.",
+      "fr": "Vous avez parcouru la plage de galets, du bateau jusqu'au bois flotté, et répondu aux questions que chaque halte vous a posées sur les régions du Canada."
     },
     "fact": {
       "factual": false,
