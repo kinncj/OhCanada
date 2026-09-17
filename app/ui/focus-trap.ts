@@ -46,6 +46,34 @@
  * `block: 'nearest'`, which moves nothing when the control is already on screen
  * and is instant for a player who asked for less movement.
  *
+ * ## The third mechanism: focus that arrives from outside
+ *
+ * The two above both assume the *player* moved focus, through this file. A third
+ * live-site audit found a case where nobody did.
+ *
+ * Engaging a character with the **Enter key** opens the dialogue from the game's
+ * own frame rather than from a DOM handler, and intermittently left focus outside
+ * it: Tab then reached the Settings button behind the modal, Enter opened
+ * Settings on top of the open dialogue, and Space flipped a radio underneath it.
+ * Opening the same dialogue with a pointer was correct every time, because a
+ * click leaves focus on the control that was clicked — inside the subtree this
+ * trap is about to inert — and the browser's own fix-up then lands inside the
+ * dialog.
+ *
+ * Whatever moved focus (a canvas taking it back a frame later, an element removed
+ * from under it, a `Tab` whose default something else had already prevented),
+ * `activate()` had no way to find out: it moves focus once, at open, and never
+ * looks again. So a modal's containment now **re-asserts itself**: while the trap
+ * is active and not suspended, focus landing outside the container is moved back
+ * to the last control inside it that had focus, or to the container. That is the
+ * whole of the promise `aria-modal="true"` makes, held against anything that
+ * breaks it rather than against the one cause somebody thought of.
+ *
+ * Deliberately *not* a repair of whatever stole the focus — `app/ui` cannot see
+ * the engine and must not guess at it. `suspend()` still stands the guard down
+ * with the rest of the trap, so a surface that opens another one over itself is
+ * unaffected, which is the case the exam's review and Settings' confirmation are.
+ *
  * DOM only, no adapters, no scenes (ADR-0005). Nothing here is Phaser-aware; the
  * caller decides when a surface becomes modal.
  */
@@ -259,6 +287,15 @@ export function createFocusTrap(
   /** Active, but standing aside for a surface above. Focus is somebody else's. */
   let suspended = false;
   let restoreTo: HTMLElement | null = null;
+  /**
+   * The last element *inside* the trap that held focus.
+   *
+   * Where focus goes back to when something outside takes it: a player who had
+   * tabbed to "Not now" and had focus stolen by the game's own frame is put back
+   * on "Not now", not at the top of the dialog. `null` until something inside is
+   * focused, which is the state an open dialog with no controls stays in.
+   */
+  let lastInside: HTMLElement | null = null;
   /* Only what *we* set, so releasing never clears someone else's `inert`. */
   const inerted: HTMLElement[] = [];
 
@@ -288,6 +325,38 @@ export function createFocusTrap(
      * the focus ring was real and off screen.
      */
     focusAndReveal(next === -1 ? container : (elements[next] ?? container));
+  };
+
+  /**
+   * Focus arrived somewhere. If it is inside, remember where; if it is outside,
+   * bring it back.
+   *
+   * Registered at capture on the document, so it sees focus land wherever it
+   * lands — including on `<body>`, which is where focus falls when the element
+   * holding it is removed or made inert by somebody else.
+   *
+   * The live region is exempt from `inert` so that announcements survive a modal
+   * (see {@link PERCEIVABLE_WHILE_MODAL_SELECTOR}); that exemption is about being
+   * *read*, never about holding focus, so it is pulled back like anything else.
+   */
+  const onFocusIn = (event: Event): void => {
+    if (!active || suspended) return;
+    const landed = event.target as Element | null;
+    const target = landed === null ? null : asHtmlElement(landed);
+    if (target !== null && isInside(container, target)) {
+      lastInside = target;
+      return;
+    }
+    /*
+     * Back to where the player was, or to the dialog itself. `isReachable` is
+     * asked again because the control they were on may be exactly what went
+     * away — a re-rendered row, a choice that has just been taken.
+     */
+    const home =
+      lastInside !== null && lastInside.isConnected && isReachable(lastInside)
+        ? lastInside
+        : container;
+    focusAndReveal(home);
   };
 
   const applyInert = (): void => {
@@ -324,8 +393,12 @@ export function createFocusTrap(
       suspended = false;
 
       restoreTo = activeElementOf(doc);
+      lastInside = null;
       applyInert();
       doc.addEventListener('keydown', onKeydown, true);
+      /* The containment guard, for focus this file did not move. See the note at
+         the top: it is what makes `aria-modal` true a frame after the open. */
+      doc.addEventListener('focusin', onFocusIn, true);
       container.focus({ preventScroll: true });
     },
 
@@ -333,6 +406,8 @@ export function createFocusTrap(
       if (!active || suspended) return;
       suspended = true;
       doc.removeEventListener('keydown', onKeydown, true);
+      /* The surface above owns focus now, so the guard would be fighting it. */
+      doc.removeEventListener('focusin', onFocusIn, true);
       clearInert();
     },
 
@@ -341,14 +416,17 @@ export function createFocusTrap(
       suspended = false;
       applyInert();
       doc.addEventListener('keydown', onKeydown, true);
+      doc.addEventListener('focusin', onFocusIn, true);
     },
 
     release(): void {
       if (!active) return;
       active = false;
       suspended = false;
+      lastInside = null;
 
       doc.removeEventListener('keydown', onKeydown, true);
+      doc.removeEventListener('focusin', onFocusIn, true);
       clearInert();
 
       /*
@@ -375,6 +453,23 @@ function asHtmlElement(node: Element): HTMLElement | null {
   return typeof candidate.inert === 'boolean' && typeof candidate.matches === 'function'
     ? candidate
     : null;
+}
+
+/**
+ * Is `node` the container or inside it?
+ *
+ * Walks `parentElement` rather than calling `Node.contains`, because this file is
+ * exercised against more than one document double and only the tree is common to
+ * all of them. A detached node answers `false`, which is the right answer: focus
+ * on something that is no longer in the page is focus that has left.
+ */
+function isInside(container: HTMLElement, node: HTMLElement): boolean {
+  let walk: HTMLElement | null = node;
+  while (walk !== null) {
+    if (walk === container) return true;
+    walk = walk.parentElement;
+  }
+  return false;
 }
 
 /** Matching the selector is not enough: a hidden or inert element cannot take focus. */

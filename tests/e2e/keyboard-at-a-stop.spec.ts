@@ -229,6 +229,73 @@ test.describe('a keyboard player at a stop (ADR-0043, TN-REACH-12)', () => {
     await expect(page.getByTestId(FIRST.npc ? 'dialogue' : 'poi-card')).toBeVisible();
   });
 
+  /**
+   * The third live-site audit: engaging with Enter left focus **outside** the
+   * dialogue it opened, intermittently. From there Tab reached the Settings
+   * button behind the modal, Enter opened Settings on top of the open dialogue,
+   * and Space flipped the language radio underneath it. Opening the same
+   * dialogue with a pointer was correct every time, because a click leaves focus
+   * on the control it hit — inside the subtree the trap then inerts.
+   *
+   * The engine opens this modal from a game frame rather than from a DOM
+   * handler, so `app/ui` cannot assume the focus it moved at open is still
+   * there: `app/ui/focus-trap.ts` re-asserts containment when focus lands
+   * outside. This walks the real key, on the real level, and holds all three
+   * halves of the promise — focus inside, the page behind inert, Tab staying in.
+   */
+  test('engaging with the interact key leaves focus inside what it opened', async ({ page }) => {
+    await openLevel(page);
+    const modal = FIRST.npc ? 'dialogue' : 'poi-card';
+    const inModal = (id: string): Promise<boolean> =>
+      page.evaluate(
+        (testId) => document.activeElement?.closest(`[data-testid="${testId}"]`) !== null,
+        id,
+      );
+
+    await page.keyboard.down('ArrowRight');
+    try {
+      await waitForIntent(page, 1);
+      await waitForHeldAtRest(page);
+    } finally {
+      await page.keyboard.up('ArrowRight');
+    }
+    await waitForIntent(page, 0);
+    await expect(page.getByTestId('interact-prompt')).toBeVisible();
+
+    /* The audit's own path: the key goes to the level, not to a focused control.
+       A focused prompt takes Enter itself, and that route always worked. */
+    await page.evaluate(() => {
+      (document.activeElement as HTMLElement | null)?.blur();
+    });
+    await inOneTask(page, 'Enter', ['keydown', 'keyup']);
+    await expect(page.getByTestId(modal)).toBeVisible();
+
+    /* Whichever frame it opened on, focus is inside it. */
+    await expect
+      .poll(() => inModal(modal), { timeout: 10_000 })
+      .toBe(true);
+
+    /* And the page behind it is really inert, which is what makes `aria-modal`
+       true rather than a claim. */
+    expect(
+      await page.getByTestId('hud').evaluate((node) => (node as HTMLElement).inert),
+      'the HUD behind the modal was reachable',
+    ).toBe(true);
+
+    /* Six presses: more than the dialogue has controls, so this wraps rather
+       than merely running out of stops before it could leak. */
+    for (let pressed = 0; pressed < 6; pressed += 1) {
+      await page.keyboard.press('Tab');
+      expect(await inModal(modal), `Tab left the modal on press ${String(pressed + 1)}`).toBe(true);
+    }
+
+    /* The two things the audit could do from outside it. */
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('settings-screen')).toHaveCount(0);
+    await page.keyboard.press('Space');
+    await expect(page.getByTestId(modal), 'the modal was closed from behind it').toBeVisible();
+  });
+
   test('at a stop the strip says how to go on, says it once, and takes it away on moving', async ({ page }) => {
     await openLevel(page);
     const words = text('en', 'hud.stop.hint');
