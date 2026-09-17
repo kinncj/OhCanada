@@ -541,7 +541,15 @@ const CSS = `
   line below. A basis that held still squeezed the label beside the track until
   "mouvement" and "Déplacement" split inside the word.
 */
-.tn-screen [role="switch"] > span:not(.tn-switch):not(.tn-screen__state) {
+/*
+  A plain label -- Settings' switches -- and NOT the two-line column below.
+
+  :not(.tn-switch__words) is the difference between a rule and a dead letter:
+  this selector carries four classes and that one carries one, so it won the
+  cascade over .tn-switch__words wherever both matched, and the smaller basis
+  written there did nothing at all.
+*/
+.tn-screen [role="switch"] > span:not(.tn-switch):not(.tn-screen__state):not(.tn-switch__words) {
   flex: 1 1 10em;
   min-inline-size: 0;
 }

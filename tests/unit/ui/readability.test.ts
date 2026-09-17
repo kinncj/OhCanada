@@ -46,12 +46,17 @@ describe('a switch that carries a value under its label', () => {
     const words = /\.tn-switch__words \{([^}]*)\}/.exec(sheet)?.[1] ?? '';
     expect(words).toContain('flex: 1 1 6em');
     expect(words, 'the column cannot shrink below its content').toContain('min-inline-size: 0');
-    /* A plain label — Settings' switches — is unchanged at 10em. */
+    /* A plain label — Settings' switches — is unchanged at 10em, and says so
+       about itself: without `:not(.tn-switch__words)` its four classes beat the
+       one class above and the rule for the column was a dead letter. */
     const label =
-      /\.tn-screen \[role="switch"\] > span:not\(\.tn-switch\):not\(\.tn-screen__state\) \{([^}]*)\}/.exec(
+      /\.tn-screen \[role="switch"\] > span:not\(\.tn-switch\):not\(\.tn-screen__state\):not\(\.tn-switch__words\) \{([^}]*)\}/.exec(
         sheet,
       )?.[1] ?? '';
     expect(label).toContain('flex: 1 1 10em');
+    expect(sheet, 'the column is still overridden by the plain-label rule').not.toMatch(
+      /> span:not\(\.tn-switch\):not\(\.tn-screen__state\) \{/,
+    );
   });
 });
 
