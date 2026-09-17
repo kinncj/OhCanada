@@ -516,6 +516,43 @@ test.describe('the exam', () => {
    * actions are pinned to its foot, so the words ended halfway up the screen.
    */
   test.describe('the intro hugs what it says', () => {
+    /**
+     * The blank sheet between the LAST THING THIS SCREEN SAYS and its first
+     * button — which is not the same as the space under the timer.
+     *
+     * This test used to measure `exam-begin` against `exam-timer` and failed on
+     * CI at 139 px, with nothing wrong: the harness opens the ready state with
+     * one subject of ten, so the screen legitimately draws three more lines
+     * after the timer — "Subjects ready: 1 of 10", "More are coming." and "This
+     * exam only asks about the subjects that are ready." Measured locally in
+     * that state: 141 px from the timer and 24 px from the last of those lines.
+     * The pair that answers "is there a column of white above the buttons" is
+     * the last drawn words and the actions, whichever optional lines a state
+     * draws, so that is the pair measured here.
+     */
+    const gapAboveTheButtons = async (
+      page: Page,
+    ): Promise<{ readonly gap: number; readonly last: string } | null> =>
+      page.evaluate(() => {
+        const card = document.querySelector<HTMLElement>('[data-testid="exam-start"] .tn-screen__card');
+        const actions = card?.querySelector<HTMLElement>('.tn-screen__actions') ?? null;
+        if (card === null || actions === null) return null;
+
+        const said = [...card.children]
+          .filter((child) => child !== actions)
+          .flatMap((child) => [child, ...child.querySelectorAll('p, h1, h2, li, [role="switch"]')])
+          .map((node) => ({
+            box: node.getBoundingClientRect(),
+            text: (node.textContent ?? '').replace(/\s+/g, ' ').trim(),
+          }))
+          .filter((entry) => entry.box.height > 0);
+
+        let last = said[0];
+        if (last === undefined) return null;
+        for (const entry of said) if (entry.box.bottom > last.box.bottom) last = entry;
+        return { gap: actions.getBoundingClientRect().top - last.box.bottom, last: last.text.slice(0, 60) };
+      });
+
     for (const [label, params] of [
       ['in English', {}],
       ['in French', { locale: 'fr' }],
@@ -524,25 +561,47 @@ test.describe('the exam', () => {
     ] as const) {
       test(`puts the buttons under the words ${label}`, async ({ page }) => {
         await open(page, { screen: 'exam-start', ...params });
-        const timer = await page.getByTestId('exam-timer').boundingBox();
-        const begin = await page.getByTestId('exam-begin').boundingBox();
-        expect(timer, 'the timer group is not drawn').not.toBeNull();
-        expect(begin, 'the primary action is not drawn').not.toBeNull();
-
-        const gap = (begin?.y ?? 0) - ((timer?.y ?? 0) + (timer?.height ?? 0));
-        expect(gap, `there is ${String(Math.round(gap))} px of blank sheet above the buttons`).toBeLessThanOrEqual(64);
-        expect(gap, 'the buttons are drawn over the words').toBeGreaterThanOrEqual(0);
+        const measured = await gapAboveTheButtons(page);
+        expect(measured, 'the exam intro drew no words, or no actions').not.toBeNull();
+        expect(
+          measured?.gap ?? 0,
+          `${String(Math.round(measured?.gap ?? 0))} px of blank sheet under "${measured?.last ?? ''}"`,
+        ).toBeLessThanOrEqual(64);
+        expect(measured?.gap ?? -1, 'the buttons are drawn over the words').toBeGreaterThanOrEqual(0);
       });
     }
 
-    test('still reaches the bottom of the window, so the actions are under a thumb', async ({ page }) => {
+    test('follows the timer directly where the timer is the last thing said', async ({ page }) => {
+      /* `?subjects=0` is the build that draws no subjects line at all, so the
+         timer group is the foot of the screen's words: 24 px, measured, where
+         the audit found 232. */
+      await open(page, { screen: 'exam-start', subjects: '0' });
+      const timer = await page.getByTestId('exam-timer').boundingBox();
+      const begin = await page.getByTestId('exam-begin').boundingBox();
+      expect(timer, 'the timer group is not drawn').not.toBeNull();
+      expect(begin, 'the primary action is not drawn').not.toBeNull();
+      const gap = (begin?.y ?? 0) - ((timer?.y ?? 0) + (timer?.height ?? 0));
+      expect(gap, `${String(Math.round(gap))} px of blank sheet above the buttons`).toBeLessThanOrEqual(64);
+      expect(gap, 'the buttons are drawn over the words').toBeGreaterThanOrEqual(0);
+    });
+
+    test('rises from the bottom edge and never floats above it', async ({ page }) => {
+      /*
+       * A floor, not an equality. A hugging sheet that says more than a window
+       * holds — French, and either language at 200 % text — is taller than the
+       * window and scrolls, exactly as a question card does; measured here at
+       * 888 px in French and 2 217 px at 200 % against an 844 px window. What
+       * must never happen is the other way round: a short sheet floating with
+       * white beneath it, which is where the actions leave a thumb's reach.
+       */
       await open(page, { screen: 'exam-start' });
       const card = await page.locator('[data-testid="exam-start"] .tn-screen__card').boundingBox();
       const viewport = page.viewportSize();
+      expect(card, 'the sheet is not drawn').not.toBeNull();
       expect(
-        Math.abs((card?.y ?? 0) + (card?.height ?? 0) - (viewport?.height ?? 0)),
-        'the sheet left the bottom edge',
-      ).toBeLessThan(2);
+        (card?.y ?? 0) + (card?.height ?? 0),
+        'the sheet ends above the bottom of the window',
+      ).toBeGreaterThanOrEqual((viewport?.height ?? 0) - 2);
     });
   });
 
