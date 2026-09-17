@@ -364,6 +364,32 @@ contract. Three level-specific notes:
 - **`walk` resolves `mount-deck-walk`, which does not exist.** Wherever the level lets the player off the
   bicycle, the bicycle disappears with the mode, and no level document mentions it.
 
+### The toque reads as a cycling helmet on the bicycle, and that is a finding about the drawing (2026-09-17)
+
+The first genuinely blind `make verify-art` run recorded `player-on-a-bicycle` as breaching its
+`neverAdd: "a helmet: no level in this game asserts a safety rule it cannot source"`. Its unprompted words
+were **"a silver-grey cycling helmet"**, and it reached the right subject on the same breath — "a person
+riding a bicycle in profile".
+
+**There is no helmet in the art, and nothing here is to be removed.** Checked three ways: the rig offers
+exactly two `headCovering` options, `none` and `toque`; the only bicycle frame is `mount-deck-bike`, which
+swaps the deck and never the head; and the string `helmet` appears nowhere in `assets/src/svg/` or in
+`content/characters/rig.json`. What the verifier saw was **`head-covering-toque.svg`, read as a helmet at the
+size a player sees it**, on a figure folded forward over a bar.
+
+That is a real defect and it is the one kind a `neverAdd` cannot fix: **a hat the game gives the player by
+choice reads, on this level and in this pose, as safety equipment the game has no source for** — a claim the
+drawing makes and the project never made. It is worse here than anywhere else the toque is drawn, because a
+bicycle is the one mount that gives a rounded head covering a meaning.
+
+It is written down and **not acted on**: what to do about it is the art owner's and the contract owner's
+call, not the verifier's and not infra's. The options that exist, none of them taken here, are to draw the
+toque so its silhouette cannot be a shell at 390 px (ribbed brim, a bobble, a fold), to pin this subject's
+hand-off figure to `headCovering: none`, or for the contract to say that a toque read as a helmet is a
+finding against the drawing rather than a forbidden object in it. The blind verdict is recorded in
+`docs/art-verification.json` under `player-on-a-bicycle`, with what was actually on the canvas beside what
+was seen.
+
 ---
 
 ## 9. Three points of interest, and the one that is still not drawn
