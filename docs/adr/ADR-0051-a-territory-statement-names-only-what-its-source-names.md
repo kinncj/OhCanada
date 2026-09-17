@@ -276,8 +276,13 @@ verifier, who holds the bytes, can settle them; the entries say what is known an
 | `the-north` | **Not checked here.** The guide prints Dene at 23 and 104; Kwanlin Dün, the Tagish Kwan and Chu Níikwän are not in the guide. | Look up the regions chapter; either a name the guide places in the North, or `nations: []`. The present Kwanlin Dün quotation goes, and §13's North obligation stands. |
 
 Two rules the author is held to whatever the answer: the statement's `sourcePublisher` must equal the
-publisher of the register it cites (a gate), and the author never writes a `verification` block other than
-the null form (ADR-0003, gate A1/A2) — so the author's commit and the verifier's commit are separate commits.
+publisher of the register it cites (a gate), and the author edits the statement's text and fields and
+**leaves any existing `verification` block exactly as it stands**. A4 unbinds the grant by itself when the
+unit changes, and the verifier re-grants it in a separate commit. The null form is written only for a claim
+that has never been verified: rewriting an existing block to the null form *is* changing one that exists,
+which ADR-0003 forbids and gate A1/A2 refuses. So the author's commit and the verifier's commit stay
+separate commits — which is what the rest of this ADR's Consequences already assume, where the five granted
+statements "come unbound … until a verifier re-grants them".
 
 - **OBLIGATION due=2026-12-16 owner=po** — settle `docs/content-review.md` §3.2 against this ruling in
   writing: either amend §3.2 so a territorial statement's names may come from the study guide the game
