@@ -3263,11 +3263,22 @@ describe('a verdict is about a picture, and the picture moves', () => {
        * which is what a round of redraws produces. The scorer writes
        * `PASS <id> - identified on …`, so the separator is what ends the id.
        */
-      expect(gate.stdout, `${id} is unvouchable and was printed as a pass`).not.toContain(
-        `PASS ${id} -`,
+      /*
+       * The id must end where the match ends, and nothing here may assume which
+       * character ends it. `PASS player-on-a-toboggan` contains `PASS player`,
+       * so a bare substring check failed the moment one subject went stale while
+       * another whose id extends it still passed - which is what a round of
+       * redraws produces. Pinning the separator instead just moves the guess:
+       * the pass line writes ` - ` and the stale line writes `: `, and either
+       * could be reworded. A following character that cannot be part of an id
+       * is the thing that is actually true.
+       */
+      const ends = '(?![a-z0-9-])';
+      expect(gate.stdout, `${id} is unvouchable and was printed as a pass`).not.toMatch(
+        new RegExp(`PASS ${id}${ends}`, 'u'),
       );
-      expect(gate.output, `${id} is unvouchable and was not reported`).toContain(
-        `STALE ART - ${id} -`,
+      expect(gate.output, `${id} is unvouchable and was not reported`).toMatch(
+        new RegExp(`STALE ART - ${id}${ends}`, 'u'),
       );
     }
     expect(gate.status, gate.output).toBe(1);
