@@ -33,6 +33,28 @@ describe('words are never split by the browser', () => {
   });
 });
 
+describe('a switch that carries a value under its label', () => {
+  it('asks for less of the row than a plain label, so its state word stays on the line', () => {
+    /*
+     * Third live-site audit: on the French exam intro « Désactivé » fell to a
+     * third line under the switch while English kept "Off" beside the track.
+     * The label column asked for 10em of a 286 px row and left nothing for the
+     * two items after it. The geometry is measured in
+     * `tests/a11y/readability.spec.ts`; this is the rule it rests on.
+     */
+    const sheet = css();
+    const words = /\.tn-switch__words \{([^}]*)\}/.exec(sheet)?.[1] ?? '';
+    expect(words).toContain('flex: 1 1 6em');
+    expect(words, 'the column cannot shrink below its content').toContain('min-inline-size: 0');
+    /* A plain label — Settings' switches — is unchanged at 10em. */
+    const label =
+      /\.tn-screen \[role="switch"\] > span:not\(\.tn-switch\):not\(\.tn-screen__state\) \{([^}]*)\}/.exec(
+        sheet,
+      )?.[1] ?? '';
+    expect(label).toContain('flex: 1 1 10em');
+  });
+});
+
 describe('high contrast draws on as filled and off as an outline', () => {
   it('fills a chosen switch or option with ink, and leaves the others paper', () => {
     const sheet = css();

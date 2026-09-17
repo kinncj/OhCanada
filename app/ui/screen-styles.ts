@@ -548,11 +548,23 @@ const CSS = `
 .tn-screen [role="switch"] > .tn-switch { margin-inline-start: auto; }
 .tn-screen [role="switch"] > .tn-switch + .tn-screen__state { margin-inline-start: 0; }
 
-/* A switch's words: its label, and under it the value it would apply. */
+/*
+  A switch's words: its label, and under it the value it would apply.
+
+  Its basis is SMALLER than a plain switch label's 10em, and that is the third
+  live-site audit's French exam intro. « Utiliser le chronomètre » with
+  « 30 minutes » under it asked for 10em of a 286 px row, which left no room for
+  the track and « Désactivé » beside it, so the state word dropped to a third
+  line under the switch while English kept "Off" on the row. At 6em the label
+  wraps inside its own column -- where a long word has a whole line to itself --
+  and the track and the state word stay together at the end of the first line in
+  both languages. It still grows into whatever the row does not need, so English
+  is drawn exactly as it was.
+*/
 .tn-switch__words {
   display: flex;
   flex-direction: column;
-  flex: 1 1 10em;
+  flex: 1 1 6em;
   min-inline-size: 0;
 }
 .tn-switch__value { font-weight: 600; }

@@ -546,6 +546,35 @@ test.describe('the exam', () => {
     });
   });
 
+  /*
+   * The third live-site audit, P2: in French « Désactivé » fell to a third line
+   * under the switch, where English kept "Off" beside the track. The state word
+   * and the track are one signal read together — the word, the knob's place and
+   * the fill — so the word belongs on the track's line while there is room.
+   */
+  for (const locale of ['en', 'fr'] as const) {
+    test(`keeps the timer's state word beside its track in ${locale === 'fr' ? 'French' : 'English'}`, async ({
+      page,
+    }) => {
+      await open(page, { screen: 'exam-start', locale });
+      const placed = await page.evaluate(() => {
+        const toggle = document.querySelector('[data-testid="exam-timer-toggle"]');
+        const word = toggle?.querySelector('.tn-screen__state');
+        const track = toggle?.querySelector('.tn-switch');
+        if (word === undefined || word === null || track === undefined || track === null) return null;
+        const a = word.getBoundingClientRect();
+        const b = track.getBoundingClientRect();
+        return { word: a.top, track: b.top, height: a.height, text: word.textContent ?? '' };
+      });
+      expect(placed, 'the timer switch has no state word or no track').not.toBeNull();
+      expect(placed?.text.length ?? 0, 'the state is not said in a word').toBeGreaterThan(0);
+      expect(
+        Math.abs((placed?.word ?? 0) - (placed?.track ?? 0)),
+        `"${placed?.text ?? ''}" is drawn on a line of its own, under the switch`,
+      ).toBeLessThan(placed?.height ?? 0);
+    });
+  }
+
   test('draws the time limit inside the timer switch, under its label', async ({ page }) => {
     await open(page, { screen: 'exam-start' });
     const toggle = await page.getByTestId('exam-timer-toggle').boundingBox();
