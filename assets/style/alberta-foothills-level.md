@@ -44,7 +44,7 @@ flank view taken in evening light, which is why §6.1's plan width is a **deriva
 | `alberta-foothills-layer-20-front-range` | `layer-20-front-range.svg` | 1800 × 270 | three overlapping ranges, snow in the high notches |
 | `alberta-foothills-layer-30-foothills` | `layer-30-foothills.svg` | 1800 × 200 | three rolling grass ridges, aspen and spruce bluffs, coulees |
 | `alberta-foothills-layer-40-rangeland` | `layer-40-rangeland.svg` | 1920 × 410 | pasture plane, wire fence, three cattle, a two-track road |
-| `alberta-foothills-landmark-ranch-barn@1x` | `landmark-ranch-barn@1x.svg` | 880 × 636 | **POI hero** |
+| `alberta-foothills-landmark-ranch-barn@1x` | `landmark-ranch-barn@1x.svg` | 880 × 636 | **POI hero.** The horse was redrawn 2026-09-17: see §6.3 |
 | `alberta-foothills-prop-log-rail-gate` | `prop-log-rail-gate@1x.svg` | 680 × 460 | **POI hero, added 2026-09-13**: four log rails on squared posts, stopping at a braced timber gate |
 | `alberta-foothills-prop-beef-cattle` | `prop-beef-cattle@1x.svg` | 720 × 420 | **POI hero, added 2026-09-13**: three red-bodied white-faced cattle on dry pasture |
 
@@ -179,6 +179,19 @@ the Alberta foothills the same material as an Ottawa lawn.
    and the cattle completely**, and put identifying features on the screen edge, which `art-bible.md` §6
    forbids. It is now **880 × 636**, uniformly scaled, leaving 100 px of level each side. None of that was
    visible in the SVG and all of it was obvious in one composite.
+
+4. **Build four redrew the horse, 2026-09-17, and the barn was never the problem.** A blind pass scored
+   **8 of 8 features present** and still failed the subject, because it read *"a red farm barn with a white
+   horse"* — farm, not ranch — and said exactly why: the horse *"is built from stiff angular facets, the head
+   and muzzle are a hard wedge, the legs are rigid posts, and it appears to stand on or through the fence rail
+   rather than behind it."* The corral and the horse are what make this subject a ranch rather than a farm, so
+   an unreadable horse costs the whole identification even with every feature ticked. Three changes. It is
+   built from **rounded masses** now — an elliptical barrel, a tapering neck, a skull-and-muzzle head with
+   ears, a mane and a hanging tail — instead of flat facets. It is **grey**, from the `path` ramp, which is
+   what `references.json` asked for; it was drawn from the `white` ramp and read as a white horse. And its
+   **ground contact moved from y 712 to y 745**, onto the yard apron, so the three corral rails cross in front
+   of it: it was standing in the gap between the middle and bottom rails, which is what "on or through the
+   rail" was seeing. Its withers stay at **118 px**, the barn's own scale, per 6.3 item 2.
 
 ### 6.4 The two-size test, and the 1× pin
 
