@@ -148,7 +148,10 @@ describe('a quest’s closing line claims only what the quest asked', () => {
       ],
     };
 
-    expect(overclaimIn(asShipped)).toContain('ask 2 of 13');
+    /* Five of thirteen: 2 of a 10-question pool at the bar, 3 of a 3-question
+       pool at the driftwood. The arithmetic is summed over the quest, not read
+       per step, because the line is one claim about the whole walk. */
+    expect(overclaimIn(asShipped)).toContain('ask 5 of 13');
   });
 
   it('allows the same words where every stop really is asked out', () => {
