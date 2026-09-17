@@ -2867,8 +2867,8 @@
         {
           "feature": "tall narrow corrugated cylinders, ringed by horizontal seams",
           "why": "A bin is taller than it is wide, which is the opposite of the proportion two builds of this drawing used. The rings are what corrugated steel looks like at this scale, and they are the only surface marking allowed.",
-          "detail": "Body height about 1.4 times the diameter. Four to six horizontal ring seams, full width, evenly spaced - rhythm, not count - and three flat vertical tone bands for the cylinder, lit on the left. NO vertical corrugation lines: that is the surface pattern art-bible section 1 forbids.",
-          "palette": "path"
+          "detail": "Body height about 1.4 times the diameter. Four to six horizontal ring seams, full width, evenly spaced - rhythm, not count - and three flat vertical tone bands for the cylinder, lit on the left. NO vertical corrugation lines: that is the surface pattern art-bible section 1 forbids. THE STEEL IS `slate` AND NOT `path`, CHANGED 2026-09-17. `path` is the one ramp palette.json declares near-neutral and explicitly exempts from the saturation gain, so a bin, its cone, its hopper and its pad drawn from it were four neutral greys and the whole render breached CLAUDE.md's saturated palette - a blind pass called it desaturated and it was right. `slate` is a blue-grey of the same lightness family, it is what galvanised steel standing against a prairie sky actually looks like, and it keeps the three-tones-from-ONE-ramp rule of art-bible section 2, which mixing a warm light with a cool shade across ramps would have broken. The legs and the ladder move to `hide` so they stay darker than the cylinder they hang under, and the daylight-under-the-hopper silhouette that took four builds to find is unchanged.",
+          "palette": "slate, hide"
         },
         {
           "feature": "four bins of different heights in a row, one carrying a ladder",
@@ -2877,8 +2877,8 @@
         },
         {
           "feature": "a gravel pad under them",
-          "detail": "A flat band of `path` with a lit top edge and a few darker scatter marks. The file's bottom edge IS the level ground line.",
-          "palette": "path"
+          "detail": "A flat band of `stone` with a lit top edge and a few darker scatter marks, and a row of low weed clumps in `pasture` along its back edge. The file's bottom edge IS the level ground line. THE PAD IS `stone` AND NOT `path`, CHANGED 2026-09-17, for the reason given on the cylinder above and for one more: the bins moved to a cool blue-grey, and warm gravel under cool steel is what makes each read as its own material. Grey steel on grey gravel was one silhouette in one tone. The weeds are the same judgement `grain-elevator` already makes when it puts weeds at the back edge of its ballast apron, and they are the only green on the subject.",
+          "palette": "stone, pasture"
         }
       ],
       "simplifyAway": [

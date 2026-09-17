@@ -327,6 +327,17 @@ underneath, which is what the reference shows and what no building has. The read
 `references.json` carries that as the subject's first `mustBeRight` entry and as a named failure mode, because
 the same mistake is available on every cylindrical subject this game will ever draw.
 
+**Build five, 2026-09-17, and it was about colour rather than silhouette.** A genuinely blind pass called this
+render desaturated, and it was: bin, cone, hopper and gravel pad were all drawn from `path`, which
+`palette.json` declares the one near-neutral ramp and explicitly exempts from the saturation gain, so the
+whole picture was four greys and it breached the house rule that the palette is saturated. The steel is now
+`slate` — a blue-grey of the same lightness family, which is what galvanised steel against a prairie sky
+actually is — and the pad is `stone`, warm gravel under cool metal so each reads as its own material. **What
+was NOT done is the tempting thing:** a warm light tone against a cool shade tone, mixed across two ramps on
+one material, would have lifted the saturation further and broken art-bible section 2, which allows three
+flat tones from ONE ramp per material. The legs and ladder moved to `hide` to stay darker than the cylinder
+above them, and the legs-over-hoppers silhouette that took four builds to find was not touched.
+
 **Why a container and not a grain hopper**, which is the obvious prairie choice: the level already teaches
 grain at two other points, and Canada's government grain hoppers carry a livery and a maple-leaf device this
 project does not draw while `OQ-ART-04` is open. A plain container teaches *trade* and asserts nothing about

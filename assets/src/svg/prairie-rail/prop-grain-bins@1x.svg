@@ -1,91 +1,100 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="560" viewBox="0 0 640 560" shape-rendering="geometricPrecision">
-  <title>A row of four hopper-bottom steel grain bins: tall narrow corrugated cylinders ringed by horizontal seams, each under a STEEP conical roof with a small peak vent, each standing clear of the ground on a funnel-shaped hopper and three steel legs with a dark void beneath it, the tallest carrying a ladder, on a gravel pad. The legs and the hopper are what make these bins and not buildings. A TYPE, not a named farm: no company name, no wordmark, no number and no lettering of any kind. Drawn from the bins beside the elevator in assets/refs/prairie-rail/prairie-freight-train-at-dawn.jpg and grain-elevator-govan-and-track.jpg; see assets/refs/references.json, subject grain-bins. POI hero, present at every visual tier.</title>
+  <title>A row of four hopper-bottom steel grain bins: tall narrow corrugated cylinders ringed by horizontal seams, each under a STEEP conical roof with a small peak vent, each standing clear of the ground on a funnel-shaped hopper and three steel legs with a dark void beneath it, the tallest carrying a ladder, on a gravel pad with weeds along its back edge. The legs and the hopper are what make these bins and not buildings. THE STEEL IS THE `slate` RAMP AND THE PAD IS THE `stone` RAMP, and that is a correction: both were drawn from `path`, which palette.json declares the one near-neutral ramp and exempts from the saturation gain, so every shape in the render - bin, cone, hopper and gravel alike - was a flat neutral grey and the picture breached the house rule that the palette is saturated. Galvanised steel standing against a prairie sky is a cool blue-grey and the pad it stands on is warm gravel; drawn from two ramps rather than one, the cool cylinders now read against warm ground instead of dissolving into it. Each material still takes three flat tones from ONE ramp, as art-bible section 2 requires. A TYPE, not a named farm: no company name, no wordmark, no number and no lettering of any kind. Drawn from the bins beside the elevator in assets/refs/prairie-rail/prairie-freight-train-at-dawn.jpg and grain-elevator-govan-and-track.jpg; see assets/refs/references.json, subject grain-bins. POI hero, present at every visual tier.</title>
 
   <ellipse cx="320" cy="524" rx="310" ry="16" fill="#16203a" opacity="0.28"/>
 
-  <rect x="48" y="424" width="10" height="94" fill="#30384f"/>
-  <rect x="100" y="424" width="10" height="94" fill="#30384f"/>
-  <rect x="154" y="424" width="10" height="94" fill="#30384f"/>
-  <polygon points="40.0,424 172.0,424 122,473 90,473" fill="#605a55"/>
-  <polygon points="40.0,424 80,424 90,473" fill="#8b857c"/>
-  <rect x="86" y="473" width="40" height="16" fill="#30384f"/>
-  <polygon points="106,144 186.0,236 26.0,236" fill="#8b857c"/>
-  <polygon points="106,144 106,236 26.0,236" fill="#afaca5"/>
-  <polygon points="106,144 186.0,236 151,236" fill="#605a55"/>
-  <rect x="96" y="128" width="20" height="20" rx="6" fill="#605a55"/>
-  <rect x="40.0" y="236" width="132" height="188" fill="#8b857c"/>
-  <rect x="40.0" y="236" width="34" height="188" fill="#afaca5"/>
-  <rect x="143" y="236" width="29" height="188" fill="#605a55"/>
-  <rect x="40.0" y="274" width="132" height="6" fill="#605a55"/>
-  <rect x="40.0" y="311" width="132" height="6" fill="#605a55"/>
-  <rect x="40.0" y="349" width="132" height="6" fill="#605a55"/>
-  <rect x="40.0" y="386" width="132" height="6" fill="#605a55"/>
+  <rect x="48" y="424" width="10" height="94" fill="#242b33"/>
+  <rect x="100" y="424" width="10" height="94" fill="#242b33"/>
+  <rect x="154" y="424" width="10" height="94" fill="#242b33"/>
+  <polygon points="40.0,424 172.0,424 122,473 90,473" fill="#30384f"/>
+  <polygon points="40.0,424 80,424 90,473" fill="#57647a"/>
+  <rect x="86" y="473" width="40" height="16" fill="#242b33"/>
+  <polygon points="106,144 186.0,236 26.0,236" fill="#57647a"/>
+  <polygon points="106,144 106,236 26.0,236" fill="#7d8fa0"/>
+  <polygon points="106,144 186.0,236 151,236" fill="#30384f"/>
+  <rect x="96" y="128" width="20" height="20" rx="6" fill="#30384f"/>
+  <rect x="40.0" y="236" width="132" height="188" fill="#57647a"/>
+  <rect x="40.0" y="236" width="34" height="188" fill="#7d8fa0"/>
+  <rect x="143" y="236" width="29" height="188" fill="#30384f"/>
+  <rect x="40.0" y="274" width="132" height="6" fill="#30384f"/>
+  <rect x="40.0" y="311" width="132" height="6" fill="#30384f"/>
+  <rect x="40.0" y="349" width="132" height="6" fill="#30384f"/>
+  <rect x="40.0" y="386" width="132" height="6" fill="#30384f"/>
 
-  <rect x="369" y="430" width="10" height="88" fill="#30384f"/>
-  <rect x="424" y="430" width="10" height="88" fill="#30384f"/>
-  <rect x="481" y="430" width="10" height="88" fill="#30384f"/>
-  <polygon points="361.0,430 499.0,430 447,476 413,476" fill="#605a55"/>
-  <polygon points="361.0,430 402,430 413,476" fill="#8b857c"/>
-  <rect x="409" y="476" width="41" height="16" fill="#30384f"/>
-  <polygon points="430,128 513.0,224 347.0,224" fill="#8b857c"/>
-  <polygon points="430,128 430,224 347.0,224" fill="#afaca5"/>
-  <polygon points="430,128 513.0,224 477,224" fill="#605a55"/>
-  <rect x="420" y="112" width="20" height="20" rx="6" fill="#605a55"/>
-  <rect x="361.0" y="224" width="138" height="206" fill="#8b857c"/>
-  <rect x="361.0" y="224" width="36" height="206" fill="#afaca5"/>
-  <rect x="469" y="224" width="30" height="206" fill="#605a55"/>
-  <rect x="361.0" y="265" width="138" height="6" fill="#605a55"/>
-  <rect x="361.0" y="306" width="138" height="6" fill="#605a55"/>
-  <rect x="361.0" y="348" width="138" height="6" fill="#605a55"/>
-  <rect x="361.0" y="389" width="138" height="6" fill="#605a55"/>
+  <rect x="369" y="430" width="10" height="88" fill="#242b33"/>
+  <rect x="424" y="430" width="10" height="88" fill="#242b33"/>
+  <rect x="481" y="430" width="10" height="88" fill="#242b33"/>
+  <polygon points="361.0,430 499.0,430 447,476 413,476" fill="#30384f"/>
+  <polygon points="361.0,430 402,430 413,476" fill="#57647a"/>
+  <rect x="409" y="476" width="41" height="16" fill="#242b33"/>
+  <polygon points="430,128 513.0,224 347.0,224" fill="#57647a"/>
+  <polygon points="430,128 430,224 347.0,224" fill="#7d8fa0"/>
+  <polygon points="430,128 513.0,224 477,224" fill="#30384f"/>
+  <rect x="420" y="112" width="20" height="20" rx="6" fill="#30384f"/>
+  <rect x="361.0" y="224" width="138" height="206" fill="#57647a"/>
+  <rect x="361.0" y="224" width="36" height="206" fill="#7d8fa0"/>
+  <rect x="469" y="224" width="30" height="206" fill="#30384f"/>
+  <rect x="361.0" y="265" width="138" height="6" fill="#30384f"/>
+  <rect x="361.0" y="306" width="138" height="6" fill="#30384f"/>
+  <rect x="361.0" y="348" width="138" height="6" fill="#30384f"/>
+  <rect x="361.0" y="389" width="138" height="6" fill="#30384f"/>
 
-  <rect x="520" y="440" width="10" height="78" fill="#30384f"/>
-  <rect x="562" y="440" width="10" height="78" fill="#30384f"/>
-  <rect x="606" y="440" width="10" height="78" fill="#30384f"/>
-  <polygon points="512.0,440 624.0,440 581,481 555,481" fill="#605a55"/>
-  <polygon points="512.0,440 546,440 555,481" fill="#8b857c"/>
-  <rect x="551" y="481" width="35" height="16" fill="#30384f"/>
-  <polygon points="568,196 638.0,274 498.0,274" fill="#8b857c"/>
-  <polygon points="568,196 568,274 498.0,274" fill="#afaca5"/>
-  <polygon points="568,196 638.0,274 606,274" fill="#605a55"/>
-  <rect x="558" y="180" width="20" height="20" rx="6" fill="#605a55"/>
-  <rect x="512.0" y="274" width="112" height="166" fill="#8b857c"/>
-  <rect x="512.0" y="274" width="29" height="166" fill="#afaca5"/>
-  <rect x="599" y="274" width="25" height="166" fill="#605a55"/>
-  <rect x="512.0" y="316" width="112" height="6" fill="#605a55"/>
-  <rect x="512.0" y="357" width="112" height="6" fill="#605a55"/>
-  <rect x="512.0" y="398" width="112" height="6" fill="#605a55"/>
+  <rect x="520" y="440" width="10" height="78" fill="#242b33"/>
+  <rect x="562" y="440" width="10" height="78" fill="#242b33"/>
+  <rect x="606" y="440" width="10" height="78" fill="#242b33"/>
+  <polygon points="512.0,440 624.0,440 581,481 555,481" fill="#30384f"/>
+  <polygon points="512.0,440 546,440 555,481" fill="#57647a"/>
+  <rect x="551" y="481" width="35" height="16" fill="#242b33"/>
+  <polygon points="568,196 638.0,274 498.0,274" fill="#57647a"/>
+  <polygon points="568,196 568,274 498.0,274" fill="#7d8fa0"/>
+  <polygon points="568,196 638.0,274 606,274" fill="#30384f"/>
+  <rect x="558" y="180" width="20" height="20" rx="6" fill="#30384f"/>
+  <rect x="512.0" y="274" width="112" height="166" fill="#57647a"/>
+  <rect x="512.0" y="274" width="29" height="166" fill="#7d8fa0"/>
+  <rect x="599" y="274" width="25" height="166" fill="#30384f"/>
+  <rect x="512.0" y="316" width="112" height="6" fill="#30384f"/>
+  <rect x="512.0" y="357" width="112" height="6" fill="#30384f"/>
+  <rect x="512.0" y="398" width="112" height="6" fill="#30384f"/>
 
-  <rect x="198" y="420" width="10" height="98" fill="#30384f"/>
-  <rect x="262" y="420" width="10" height="98" fill="#30384f"/>
-  <rect x="328" y="420" width="10" height="98" fill="#30384f"/>
-  <polygon points="190.0,420 346.0,420 287,471 249,471" fill="#605a55"/>
-  <polygon points="190.0,420 237,420 249,471" fill="#8b857c"/>
-  <rect x="245" y="471" width="45" height="16" fill="#30384f"/>
-  <polygon points="268,66 360.0,176 176.0,176" fill="#8b857c"/>
-  <polygon points="268,66 268,176 176.0,176" fill="#afaca5"/>
-  <polygon points="268,66 360.0,176 321,176" fill="#605a55"/>
-  <rect x="258" y="50" width="20" height="20" rx="6" fill="#605a55"/>
-  <rect x="190.0" y="176" width="156" height="244" fill="#8b857c"/>
-  <rect x="190.0" y="176" width="41" height="244" fill="#afaca5"/>
-  <rect x="312" y="176" width="34" height="244" fill="#605a55"/>
-  <rect x="190.0" y="217" width="156" height="6" fill="#605a55"/>
-  <rect x="190.0" y="257" width="156" height="6" fill="#605a55"/>
-  <rect x="190.0" y="298" width="156" height="6" fill="#605a55"/>
-  <rect x="190.0" y="339" width="156" height="6" fill="#605a55"/>
-  <rect x="190.0" y="379" width="156" height="6" fill="#605a55"/>
-  <rect x="271" y="182" width="8" height="232" fill="#30384f"/>
-  <rect x="293" y="182" width="8" height="232" fill="#30384f"/>
-  <rect x="271" y="194" width="30" height="6" fill="#30384f"/>
-  <rect x="271" y="230" width="30" height="6" fill="#30384f"/>
-  <rect x="271" y="266" width="30" height="6" fill="#30384f"/>
-  <rect x="271" y="302" width="30" height="6" fill="#30384f"/>
-  <rect x="271" y="338" width="30" height="6" fill="#30384f"/>
-  <rect x="271" y="374" width="30" height="6" fill="#30384f"/>
+  <rect x="198" y="420" width="10" height="98" fill="#242b33"/>
+  <rect x="262" y="420" width="10" height="98" fill="#242b33"/>
+  <rect x="328" y="420" width="10" height="98" fill="#242b33"/>
+  <polygon points="190.0,420 346.0,420 287,471 249,471" fill="#30384f"/>
+  <polygon points="190.0,420 237,420 249,471" fill="#57647a"/>
+  <rect x="245" y="471" width="45" height="16" fill="#242b33"/>
+  <polygon points="268,66 360.0,176 176.0,176" fill="#57647a"/>
+  <polygon points="268,66 268,176 176.0,176" fill="#7d8fa0"/>
+  <polygon points="268,66 360.0,176 321,176" fill="#30384f"/>
+  <rect x="258" y="50" width="20" height="20" rx="6" fill="#30384f"/>
+  <rect x="190.0" y="176" width="156" height="244" fill="#57647a"/>
+  <rect x="190.0" y="176" width="41" height="244" fill="#7d8fa0"/>
+  <rect x="312" y="176" width="34" height="244" fill="#30384f"/>
+  <rect x="190.0" y="217" width="156" height="6" fill="#30384f"/>
+  <rect x="190.0" y="257" width="156" height="6" fill="#30384f"/>
+  <rect x="190.0" y="298" width="156" height="6" fill="#30384f"/>
+  <rect x="190.0" y="339" width="156" height="6" fill="#30384f"/>
+  <rect x="190.0" y="379" width="156" height="6" fill="#30384f"/>
+  <rect x="271" y="182" width="8" height="232" fill="#242b33"/>
+  <rect x="293" y="182" width="8" height="232" fill="#242b33"/>
+  <rect x="271" y="194" width="30" height="6" fill="#242b33"/>
+  <rect x="271" y="230" width="30" height="6" fill="#242b33"/>
+  <rect x="271" y="266" width="30" height="6" fill="#242b33"/>
+  <rect x="271" y="302" width="30" height="6" fill="#242b33"/>
+  <rect x="271" y="338" width="30" height="6" fill="#242b33"/>
+  <rect x="271" y="374" width="30" height="6" fill="#242b33"/>
 
-  <rect x="0" y="514" width="640" height="46" fill="#afaca5"/>
-  <rect x="0" y="514" width="640" height="10" fill="#c8c1b6"/>
-  <rect x="52" y="536" width="90" height="7" fill="#605a55"/>
-  <rect x="330" y="546" width="140" height="7" fill="#605a55"/>
-  <rect x="486" y="528" width="100" height="7" fill="#605a55"/>
+  <ellipse cx="72" cy="516" rx="30" ry="15" fill="#677b37"/>
+  <ellipse cx="68" cy="510" rx="21" ry="9" fill="#9dac53"/>
+  <ellipse cx="238" cy="514" rx="26" ry="13" fill="#677b37"/>
+  <ellipse cx="234" cy="509" rx="18" ry="8" fill="#9dac53"/>
+  <ellipse cx="404" cy="517" rx="31" ry="14" fill="#677b37"/>
+  <ellipse cx="400" cy="511" rx="22" ry="8" fill="#9dac53"/>
+  <ellipse cx="566" cy="515" rx="27" ry="13" fill="#677b37"/>
+  <ellipse cx="562" cy="510" rx="19" ry="8" fill="#9dac53"/>
+
+  <rect x="0" y="514" width="640" height="46" fill="#bc9c6d"/>
+  <rect x="0" y="514" width="640" height="10" fill="#d2c5a3"/>
+  <rect x="52" y="536" width="90" height="7" fill="#9a623e"/>
+  <rect x="330" y="546" width="140" height="7" fill="#9a623e"/>
+  <rect x="486" y="528" width="100" height="7" fill="#9a623e"/>
 </svg>
