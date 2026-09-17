@@ -212,6 +212,19 @@ second amendment made the subject the **claim**, not the screen. A landmark blur
 carry a `FactClaim` — `factual`, plus the same `source` and `verification` blocks — and travel the same
 path. A wrong fact in a Mountie's mouth is exactly as wrong as one on a question card.
 
+**A landmark may be any landmark; what it teaches is the guide's (ADR-0056).** A point of interest earns its
+place by being the thing a player standing there expects to see, so *Discover Canada*'s silence about it is
+no objection: measured on the tree, 3 of 35 display names appear in the guide at all, and two of those three
+are picture captions. What the landmark **teaches** is guide material on exactly the terms a question is held
+to — a cached source, a contiguous quote, a verifier's grant, ADR-0016's staleness clock — and there is no
+second class of citable source. The seam between those two halves is the name: a blurb **may** name its own
+landmark in prose even where the guide never prints that name, because a name points at an object the player
+can see rather than asserting anything about Canada. The test is to strike the name out — if what remains is
+still exactly what the cited passage says, it was a label; if striking it changes the claim, the guide has to
+make that claim. A date, a height, a superlative or a founding attached to a landmark is a claim, however
+iconic the landmark. None of this reaches a level's `territory` block, where ADR-0051's rule that a statement
+names only what its source names stands untouched.
+
 **Verification follows the claim; ownership follows the grade.** These are two rules, and they are easy to
 merge by accident. Every claim, graded or told, is verified to the same standard (ADR-0003). Only a
 *graded* proposition — the one a question's prompt asks and its `correctIndex` keys — belongs to a subject,

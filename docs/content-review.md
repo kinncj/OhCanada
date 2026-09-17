@@ -144,6 +144,16 @@ place or a territory. That includes:
 It does not govern factual correctness — ADR-0003 does that — and it does not replace it. A depiction can be
 factually correct and still fail here.
 
+**A point of interest's `name` is a label, not a claim (ADR-0056).** A landmark may be any landmark, whether
+or not *Discover Canada* mentions it, and its blurb may name it in prose even where the guide never prints
+that name: a name points at an object drawn on the screen in front of the player. What the blurb **teaches**
+is still guide material, cited and verified like every other claim, and a date, a height, a superlative or a
+role in Canadian history attached to a landmark is a claim the guide must make. This changes nothing in this
+document: a landmark's name and picture are still a **depiction** under the table above, and a landmark that
+carries cultural meaning, or stands on a named territory, is governed by §3–§5 and §10 whatever the guide
+says. In particular, a level's `territory.nations` is not a label and this permission does not reach it —
+§3.1's rule that an entry must be a name the cited source prints stands exactly as written.
+
 ---
 
 ## 3. Rule 1 — Name the nation depicted
