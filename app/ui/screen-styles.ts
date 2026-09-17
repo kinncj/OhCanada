@@ -2105,10 +2105,21 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
      the offer, Settings and Menu and the task only if the space between them
      holds still and stays small. The words keep growing to 200 %. */
   gap: calc(0.25rem / var(--tn-text-scale, 1));
+  /*
+    The foot of the strip is as deep as its sides (third live-site audit).
+
+    It was 6 px at every text size, and the mode label is the last line in the
+    strip: "Walking" ended 6 px from the bottom of the window, which reads as a
+    word cut off by the edge rather than as the foot of a panel — and on a phone
+    with a home indicator the line sat under the hardware. 14 px is the gutter
+    the sides already use, so the strip has one margin all the way round. It
+    holds still at large text like the rest of the chrome (ADR-0039), so the
+    words still grow to 200 % and the eight pixels are not taken from them.
+  */
   padding:
     calc(0.375rem / var(--tn-text-scale, 1))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
-    max(calc(0.375rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
+    max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 1rem;

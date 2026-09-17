@@ -195,6 +195,41 @@ test.describe('the task stays on screen at 200 % text', () => {
   });
 });
 
+/*
+ * The third live-site audit, P1: the strip crowded the bottom edge.
+ *
+ * The mode label is the last line in the strip, and it ended 6 px from the
+ * bottom of the window at every text size — "Walking" read as a word cut off by
+ * the edge rather than as the foot of a panel, and on a phone with a home
+ * indicator it sat under the hardware. The strip is still anchored to the bottom
+ * of the window: what changed is that it has a foot.
+ */
+test.describe('the strip has a foot under its last line', () => {
+  for (const [label, params] of [
+    ['in English', {}],
+    ['in French', { locale: 'fr' }],
+    ['at 200 % text', { textScale: '200' }],
+    ['in French at 200 % text', { locale: 'fr', textScale: '200' }],
+  ] as const) {
+    test(`leaves clear space under the mode label ${label}`, async ({ page }) => {
+      await open(page, { screen: 'level', ...params });
+      const strip = await page.getByTestId('hud').boundingBox();
+      const mode = await page.getByTestId('hud-mode-label').boundingBox();
+      expect(strip, 'the strip is not drawn').not.toBeNull();
+      expect(mode, 'the mode label is not drawn').not.toBeNull();
+
+      const stripBottom = (strip?.y ?? 0) + (strip?.height ?? 0);
+      const modeBottom = (mode?.y ?? 0) + (mode?.height ?? 0);
+      const viewport = page.viewportSize();
+      expect(Math.abs(stripBottom - (viewport?.height ?? 0)), 'the strip left the bottom edge').toBeLessThan(2);
+      expect(
+        stripBottom - modeBottom,
+        'the mode label ends against the bottom edge, where it reads as clipped',
+      ).toBeGreaterThanOrEqual(8);
+    });
+  }
+});
+
 /* ------------------------------------------------------------ the question */
 
 test.describe('the question card', () => {
