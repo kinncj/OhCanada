@@ -153,9 +153,23 @@ test.describe('the desktop side panels extend the level sky', () => {
     /* The band above a letterboxed canvas and the panels share the first row,
        and they take it from the same list, so they cannot drift (ADR-0044). */
     expect(variables.stops.startsWith(variables.top)).toBe(true);
-    /* Positioned against the canvas box, or a phone's flat bands would move. */
-    expect(variables.stops).toContain('var(--tn-canvas-top)');
-    expect(variables.stops).toContain('var(--tn-canvas-height)');
+    /*
+     * Positioned against the canvas box, or a phone's flat bands would move.
+     *
+     * Read as the resolved expression, not as the `var()`s that built it:
+     * `--tn-canvas-top` and `--tn-canvas-height` are declared on `:root`, and a
+     * custom property's own `var()`s are substituted on the element that
+     * declares it - so by the time this reads `--tn-sky-stops`, the names are
+     * gone and the arithmetic is there instead. Asserting the names passed only
+     * while they were declared somewhere else, which is the bug that moving them
+     * to `:root` fixed.
+     *
+     * The canvas aspect is what makes this a real guard: `16 / 9` enters only
+     * through the canvas-box formula, so a stop list positioned against the
+     * viewport alone cannot satisfy it.
+     */
+    expect(variables.stops).toContain('16 / 9');
+    expect(variables.stops).toContain('100dvh');
   });
 
   test('a portrait phone has no side panels to extend, and is unchanged', async ({ page }) => {
