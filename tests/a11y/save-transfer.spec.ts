@@ -430,6 +430,18 @@ test.describe('"Delete my progress" in Settings', () => {
 
     await control.click();
     await expect(page.getByTestId('save-clear-confirm')).toBeVisible();
+    /* `TN-SAVE-08`: "the highlight starts on 'Keep my progress'". The answers
+       are drawn destructive-first, so this is the one place the switch does not
+       open on the first item — a first press a fraction too long must not be
+       the one that deletes everything. */
+    await expect(page.getByTestId('save-clear-keep')).toHaveAttribute(
+      'data-switch-highlight',
+      'true',
+    );
+    await expect(page.getByTestId('save-clear-yes')).not.toHaveAttribute(
+      'data-switch-highlight',
+      'true',
+    );
     for (let press = 0; press < 4; press += 1) {
       await page.keyboard.press('Space');
       const inside = await page.evaluate(

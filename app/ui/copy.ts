@@ -206,13 +206,16 @@ const EN = {
   /* docs/stories/TN-STUDY-study-mode.md */
   'study.open': 'Study',
   'study.title': 'Study',
-  /* Reworded 2026-09-17 and listed in {@link COPY_GAPS} until `TN-STUDY`'s owner
-     takes the new words. The ratified row — "Practise the questions you have
-     seen." — was untrue for the player most likely to read it: on a brand-new
-     profile Study draws from the whole bank, so the third live-site audit found
-     the sentence above five cards every one of which was tagged "New question".
+  /* **Ratified 2026-09-17 and transcribed from `TN-STUDY-study-mode.md`**, whose
+     table carries it as a row like any other — so it is no longer a
+     {@link COPY_GAPS} entry. The English is taken exactly as this module
+     proposed it. What it replaced — "Practise the questions you have seen." —
+     was untrue for the player most likely to read it: on a brand-new profile
+     Study draws from the whole bank, so the third live-site audit found the
+     sentence above five cards every one of which was tagged "New question".
      This one is true on the first drill and on the hundredth, and the card still
-     says of each question whether it is new or seen. */
+     says of each question whether it is new or seen. `TN-STUDY-01`,
+     `TN-STUDY-08` and `TN-STUDY-10` quote it. */
   'study.intro': 'Practise questions for the citizenship test. There is no time limit.',
   'study.count.one': '{{n}} question',
   'study.count.other': '{{n}} questions',
@@ -742,10 +745,11 @@ const EN = {
      question exactly as the story writes it. */
   'save.clear': 'Delete my progress',
   'save.clear.confirm': 'This cannot be undone. Delete everything?',
-  /* The two answers and the two refusal sentences, which `TN-SAVE` does not
-     carry: **written by app/ui and listed in {@link COPY_GAPS}**. "Delete
-     everything" answers the question in its own words; the safe answer names
-     what it keeps, never "Cancel".
+  /* The two answers and the two refusal sentences. **Ratified 2026-09-17 and
+     transcribed from `TN-SAVE-save-and-reload.md`**, which carries all four in
+     its table now and holds them in `TN-SAVE-06` through `TN-SAVE-12`: they are
+     no longer {@link COPY_GAPS} rows. "Delete everything" answers the question
+     in its own words; the safe answer names what it keeps, never "Cancel".
 
      The refusal is deliberately *not* "Nothing was changed". `clearBoth`
      (ADR-0026) attempts IndexedDB **and** the `localStorage` a save was carried
@@ -1183,8 +1187,21 @@ const FR: Readonly<Record<CopyRow, string>> = {
 
   'study.open': 'Réviser',
   'study.title': 'Révision',
+  /* Amended by `TN-STUDY` at ratification: « des questions **pour le** test »,
+     never « des questions **du** test ». « du test » reads in French as
+     *questions from the citizenship test* — the real test's own questions —
+     where the English states a purpose. This game's questions are non-verbatim
+     paraphrases of *Discover Canada* (CLAUDE.md, content rules), the real
+     test's are not published, and `title.notOfficial` says on the first screen
+     that this game is not the government's; claiming otherwise here would be
+     the replaced sentence's defect arriving in the other language.
+
+     « test » and not « examen », deliberately: « examen » is this game's word
+     for the *feature* — « Examen pratique » (`exam.title`) — so « examen de
+     citoyenneté » on this screen would read as the exam the player can start
+     from the menu. `TN-STUDY-11` asserts both halves. */
   'study.intro':
-    "Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps.",
+    "Exercez-vous avec des questions pour le test de citoyenneté. Il n'y a aucune limite de temps.",
   'study.count.one': '{{n}} question',
   'study.count.other': '{{n}} questions',
   'study.start': 'Commencer',
@@ -1470,12 +1487,24 @@ const FR: Readonly<Record<CopyRow, string>> = {
      of these strings by name. */
   'save.clear': 'Supprimer ma progression',
   'save.clear.confirm': 'Cette action est définitive. Tout supprimer?',
-  /* Listed in COPY_GAPS with the English. « Une partie » is "some of it", not
-     "a game": the sentence is about what is left on the device. */
+  /* Transcribed from `TN-SAVE` with the English, and the help line is the one
+     row that story **amended** rather than taking as proposed.
+
+     It used to read « Une partie est peut-être encore sur cet appareil. », on
+     the reading that « une partie » is "some of it". True in a vacuum, false in
+     this product's vocabulary: in this game's French « partie » is the word for
+     *a saved game* — « votre partie sauvegardée » (`save.error.title`), « Votre
+     partie est restaurée » (`save.import.done`) — so the sentence read first as
+     *a saved game may still be on this device*, which is a different claim, on
+     the one screen where a player needs certainty about what was destroyed.
+     « Une partie **de votre progression** » can only be read as a portion, and
+     names the same thing the first sentence names. `TN-SAVE-11` asserts the new
+     wording and refuses the old by name; `TN-SAVE-10` measures it at 200 %. */
   'save.clear.yes': 'Tout supprimer',
   'save.clear.keep': 'Garder ma progression',
   'save.clear.failed': "Nous n'avons pas pu terminer la suppression de votre progression.",
-  'save.clear.failed.help': 'Une partie est peut-être encore sur cet appareil. Réessayez.',
+  'save.clear.failed.help':
+    'Une partie de votre progression est peut-être encore sur cet appareil. Réessayez.',
 
   'locomotion.walk.label': 'Marche',
   /* « Glissade » is the activity — « faire de la glissade » — and « Toboggan »
@@ -1767,9 +1796,13 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'hud.stop.hint',
   /* ADR-0046's eleven, Settings' "Your progress" section: its heading and
      reading line, the confirmation before a file replaces the save (question,
-     cost, both answers), the sentence under each refusal, and the dialog that
-     starts the game again from the file. `TN-SAVE`'s table carries the controls
-     and the refusals' first sentences, and those are transcribed, not listed. */
+     cost, both answers), the sentence under an **import's** refusal, and the
+     dialog that starts the game again from the file.
+
+     Everything "Delete my progress" draws left this list on 2026-09-17:
+     `TN-SAVE`'s table carries the control, the question, both answers and both
+     halves of the refusal now, and all six are transcribed rather than
+     listed. */
   'save.section',
   'save.section.help',
   'save.import.confirm',
@@ -1781,14 +1814,6 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'save.import.notSaved.help',
   'save.import.done.help',
   'save.import.continue',
-  /* The four rows "Delete my progress" needs that `TN-SAVE` does not carry: the
-     confirmation's two answers, and the two halves of the sentence for a clear
-     that did not finish. **`save.clear` and `save.clear.confirm` are not here**,
-     because that story owns them and this screen draws its words. */
-  'save.clear.yes',
-  'save.clear.keep',
-  'save.clear.failed',
-  'save.clear.failed.help',
   /* ADR-0034's amendment: the sentence on the card a level shows instead of
      opening, offline, when its art was never kept. */
   'level.needsConnection.body',
@@ -1801,12 +1826,6 @@ export const COPY_GAPS: readonly CopyKey[] = [
      Proposed rows in `TN-DONE` and `TN-HUD`. */
   'level.complete.nextOpen',
   'hud.task.behind',
-  /* The third live-site audit: Study's opening sentence, reworded. `TN-STUDY`
-     ratifies "Practise the questions you have seen.", which a brand-new profile
-     reads over five cards tagged "New question". Unratified again until that
-     story's owner takes the new words, which are written down there as a
-     proposed row. */
-  'study.intro',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {
