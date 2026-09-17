@@ -108,6 +108,26 @@ describe('the exam start screen', () => {
   });
 });
 
+describe('the sheet hugs what it says', () => {
+  it('is a hugging sheet, so the buttons sit under the words and not at the foot of the window', () => {
+    /*
+     * The third live-site audit measured 232 px of blank paper between the
+     * timer and "Start the exam" on a 400 x 900 phone. `tn-screen--hug` is
+     * ADR-0045's answer, already used by the exam's menu and a Study question;
+     * the geometry is measured in `tests/a11y/readability.spec.ts`.
+     */
+    const root = open().at('exam-start');
+    expect(root?.className.split(/\s+/)).toContain('tn-screen--hug');
+  });
+
+  it('is still the screen it was: a named modal dialog', () => {
+    const root = open().at('exam-start');
+    expect(root?.getAttribute('role')).toBe('dialog');
+    expect(root?.getAttribute('aria-modal')).toBe('true');
+    expect(root?.className.split(/\s+/)).toContain('tn-screen');
+  });
+});
+
 describe('the timer switch', () => {
   it('is a switch with its state as a word, and starts off', () => {
     /* `TN-TIMER-01`: "it shows its state as On or Off as text … its state is not

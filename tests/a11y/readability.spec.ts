@@ -510,6 +510,42 @@ test.describe('the exam', () => {
     expect(styles.next).toBe('solid');
   });
 
+  /*
+   * The third live-site audit, P2: 232 px of blank paper between the timer and
+   * the buttons on a 400 x 900 phone. The sheet filled the window and the
+   * actions are pinned to its foot, so the words ended halfway up the screen.
+   */
+  test.describe('the intro hugs what it says', () => {
+    for (const [label, params] of [
+      ['in English', {}],
+      ['in French', { locale: 'fr' }],
+      ['at 200 % text', { textScale: '200' }],
+      ['in French at 200 % text', { locale: 'fr', textScale: '200' }],
+    ] as const) {
+      test(`puts the buttons under the words ${label}`, async ({ page }) => {
+        await open(page, { screen: 'exam-start', ...params });
+        const timer = await page.getByTestId('exam-timer').boundingBox();
+        const begin = await page.getByTestId('exam-begin').boundingBox();
+        expect(timer, 'the timer group is not drawn').not.toBeNull();
+        expect(begin, 'the primary action is not drawn').not.toBeNull();
+
+        const gap = (begin?.y ?? 0) - ((timer?.y ?? 0) + (timer?.height ?? 0));
+        expect(gap, `there is ${String(Math.round(gap))} px of blank sheet above the buttons`).toBeLessThanOrEqual(64);
+        expect(gap, 'the buttons are drawn over the words').toBeGreaterThanOrEqual(0);
+      });
+    }
+
+    test('still reaches the bottom of the window, so the actions are under a thumb', async ({ page }) => {
+      await open(page, { screen: 'exam-start' });
+      const card = await page.locator('[data-testid="exam-start"] .tn-screen__card').boundingBox();
+      const viewport = page.viewportSize();
+      expect(
+        Math.abs((card?.y ?? 0) + (card?.height ?? 0) - (viewport?.height ?? 0)),
+        'the sheet left the bottom edge',
+      ).toBeLessThan(2);
+    });
+  });
+
   test('draws the time limit inside the timer switch, under its label', async ({ page }) => {
     await open(page, { screen: 'exam-start' });
     const toggle = await page.getByTestId('exam-timer-toggle').boundingBox();

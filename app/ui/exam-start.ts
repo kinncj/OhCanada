@@ -142,6 +142,18 @@ export function createExamStartScreen(
   const screen: Screen = createScreen(host, {
     id: 'tn-exam-start',
     testId: 'exam-start',
+    /*
+     * The sheet hugs what it says (ADR-0045), like the exam's menu and a Study
+     * question.
+     *
+     * The third live-site audit measured 232 px of blank paper between the timer
+     * and "Start the exam" on a 400 x 900 phone: the sheet filled the window and
+     * the actions are pinned to its foot, so everything this screen says ended
+     * halfway up and the two controls sat alone at the bottom. Hugging puts the
+     * buttons directly under the words at every text size, and at 200 % the
+     * sheet still grows and scrolls exactly as it did.
+     */
+    className: 'tn-screen--hug',
     locale,
     ...(options.onBack === undefined ? {} : { onEscape: options.onBack }),
     ...(options.announce === undefined
