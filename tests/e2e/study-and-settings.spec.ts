@@ -7,6 +7,7 @@ import { sharesProposition } from '@application/content/proposition';
 import { hasCopyRow, text } from '@ui/copy';
 
 import { START_LEVEL } from './start-level';
+import { holdToMove } from './held-drive';
 import { letGo } from './walk';
 
 /**
@@ -99,6 +100,15 @@ async function frontDoor(page: Page): Promise<void> {
   await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
   await expect(page.locator('[data-testid="title-screen"]')).toBeVisible();
 }
+
+/*
+ * A player who holds a control to move (ADR-0058). The walk to a landmark below
+ * is made of short bursts that hold and let go, and this file's subject is what
+ * the landmark teaches and asks.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('Study, on the shipped build', () => {
   test('is offered on the title screen and opens on a real count', async ({ page }) => {

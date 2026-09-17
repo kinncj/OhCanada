@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { holdToMove } from './held-drive';
 import { walkWithProbe } from './walk';
 
 /**
@@ -319,6 +320,18 @@ const fromFirstHeld = (trace: readonly Frame[]): readonly Frame[] => {
   const start = trace.findIndex((frame) => frame.intentMove !== 0);
   return start === -1 ? [] : trace.slice(start);
 };
+
+/*
+ * A player who holds a control to move (ADR-0058).
+ *
+ * This file states the skate tuning in the player's own terms — the spawn it
+ * starts still at, the speed a hold builds, the coast a release leaves, that
+ * nothing speeds up with nothing held. Every one of those is a claim about a
+ * held drive, so the scenarios below are run by a player who holds one.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('TN-LEVEL-01 — the level becomes playable', () => {
   test('the marker appears and the scene reports the level it loaded', async ({ page }) => {

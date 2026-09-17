@@ -6,6 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { hasCopyRow, text } from '@ui/copy';
 
 import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
+import { holdToMove } from './held-drive';
 import { letGo, walkInLegs } from './walk';
 
 /**
@@ -258,6 +259,15 @@ const ALL_BLOCKS = [
 ];
 
 test.describe.configure({ mode: 'serial', timeout: 300_000 });
+
+/*
+ * A player who holds a control to move (ADR-0058). These walks are made of legs
+ * that hold and let go at each stop; the subject is the quest, and a second
+ * driver would make "walked to the landmark it was sent to" mean something else.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 async function openLevel(page: Page, query = '', level: string = START_LEVEL): Promise<void> {
   await page.goto(`./?level=${level}${query}`);

@@ -116,10 +116,25 @@ const clampVolumes = (volumes: VolumeSettings): VolumeSettings => ({
  * Subtitles start on. TN-QUEST-01 asserts a player who has never opened Settings
  * still sees the officer's words as text, so "on" is the default, not a
  * preference the player has to discover.
+ *
+ * **Auto-move starts on** (ADR-0058). Every other switch here is off because an
+ * accessibility feature turned on for somebody who did not ask is a change to
+ * their game rather than a service — and that argument is the reason this one is
+ * different. Holding a contact for the length of a level is the game's only
+ * *sustained* physical demand, and the option that removes it was reachable only
+ * by a player who could already play well enough to find Settings. The stop rule
+ * is what makes it safe to ship on: an automatic drive comes to rest at each
+ * thing it can engage and never starts again on its own (ADR-0032), so the
+ * player still chooses everything and only the holding goes away.
+ *
+ * This is a *default*, not a mode: `settings.autoMove` is one switch away in
+ * Settings, and a save that carries `false` keeps it. Nothing here is ever
+ * applied over a value a save already holds — see {@link clampSettings}, which
+ * is the only thing that touches settings on the way in from a file.
  */
 export const defaultSettings = (locale: LocaleCode): Settings => ({
   locale,
-  autoMove: false,
+  autoMove: true,
   singleSwitch: false,
   holdToChooseMs: DEFAULT_HOLD_TO_CHOOSE_MS,
   reducedMotion: false,

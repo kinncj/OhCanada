@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { text } from '@ui/copy';
 
+import { holdToMove } from './held-drive';
 import { START_LEVEL } from './start-level';
 
 /**
@@ -169,6 +170,15 @@ async function inOneTask(
 }
 
 /* --------------------------------------------------------------- scenarios -- */
+
+/*
+ * A player who holds a key to move (ADR-0058). The game walks by itself for
+ * anybody who has changed nothing, and this file is about what a *pressed* key
+ * does at a stop, so it states the precondition rather than inheriting it.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('a keyboard player at a stop (ADR-0043, TN-REACH-12)', () => {
   test('a key let go and pressed again between two frames carries them on past the stop', async ({ page }) => {

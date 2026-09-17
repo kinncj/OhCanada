@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type Page } from '@playwright/test';
 
+import { holdToMove } from './held-drive';
 import { START_LEVEL } from './start-level';
 
 /**
@@ -97,6 +98,14 @@ const reachable = (poi: LevelFile['pois'][number]): boolean =>
   teaches(poi) || typeof poi.questId === 'string';
 
 const ENGAGEABLE = LEVEL.pois.filter(reachable).length + LEVEL.characters.length;
+
+/*
+ * A player who holds a control to move (ADR-0058), so that "the player moved"
+ * below is this spec walking them and not the drive doing it.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('the player is a character, not a rectangle', () => {
   test('composes the player from the rig, and reports no placeholder at all', async ({ page }) => {

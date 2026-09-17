@@ -5,6 +5,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { hasCopyRow, text } from '@ui/copy';
 
+import { holdToMove } from './held-drive';
+
 /**
  * Let go when the prompt appears, then tap it: it is still there, and it opens
  * the thing it named. ADR-0037, `TN-REACH-10`.
@@ -215,6 +217,14 @@ const CASES = [
   { title: 'the toboggan level', levelId: 'quebec-city' },
   { title: 'the skating level, where the stop line is shorter than reach', levelId: 'ottawa' },
 ] as const;
+
+/*
+ * A player who holds a control to move (ADR-0058). This file is about the frame
+ * a held press *ends*, which a player who never presses one does not have.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('let go when the prompt appears, then tap it (ADR-0037, TN-REACH-10)', () => {
   for (const { title, levelId } of CASES) {

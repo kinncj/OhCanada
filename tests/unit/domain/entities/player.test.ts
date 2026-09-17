@@ -26,6 +26,35 @@ describe('a new player', () => {
     expect(defaultSettings(locale('fr')).subtitles).toBe(true);
   });
 
+  it('walks by itself, without having opened Settings (ADR-0058)', () => {
+    /* The one switch besides subtitles that ships on. A player who cannot hold
+       a contact should not have to hold one to reach the screen that says they
+       need not hold one. */
+    expect(defaultSettings(locale()).autoMove).toBe(true);
+  });
+
+  it('leaves every other switch off, so nothing else is changed for somebody who did not ask', () => {
+    const fresh = defaultSettings(locale());
+    expect(fresh.singleSwitch).toBe(false);
+    expect(fresh.reducedMotion).toBe(false);
+    expect(fresh.highContrast).toBe(false);
+    expect(fresh.dyslexiaFont).toBe(false);
+    expect(fresh.textScale).toBe(MIN_TEXT_SCALE);
+  });
+
+  it('keeps a saved "off" rather than putting the new default back (ADR-0058)', () => {
+    /*
+     * The migration question, answered where it can be answered without a
+     * browser: nothing folds `defaultSettings` over a save. `clampSettings` is
+     * the only thing that touches settings on the way in from a file, and it
+     * carries every value it is given that is in range — so a player who turned
+     * auto-move off finds it off, and the flipped default reaches new saves only.
+     */
+    const turnedItOff = { ...defaultSettings(locale()), autoMove: false };
+    expect(clampSettings(turnedItOff, locale()).autoMove).toBe(false);
+    expect(withSettings(newPlayer(locale()), { autoMove: false }).settings.autoMove).toBe(false);
+  });
+
   it('starts in the language the build defaults to, not one hardcoded here', () => {
     expect(defaultSettings(locale('fr')).locale).toBe('fr');
     expect(newPlayer(locale('en')).settings.locale).toBe('en');

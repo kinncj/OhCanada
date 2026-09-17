@@ -22,12 +22,15 @@ import { buildPage } from './support/fake-dom';
  */
 
 describe('the settings defaults', () => {
-  it('has subtitles on and everything else off', () => {
+  it('has subtitles and auto-move on, and everything else off', () => {
     /* CLAUDE.md: "Subtitles on by default". The rest are opt-in, because an
        accessibility feature turned on for somebody who did not ask is a change
-       to their game, not a service. */
+       to their game, not a service — with one exception, ADR-0058: holding a
+       contact for the length of a level is the game's only sustained physical
+       demand, and the stop rule (ADR-0032) means an automatic drive still
+       chooses nothing for the player. */
     expect(DEFAULT_SETTINGS.subtitles).toBe(true);
-    expect(DEFAULT_SETTINGS.autoMove).toBe(false);
+    expect(DEFAULT_SETTINGS.autoMove).toBe(true);
     expect(DEFAULT_SETTINGS.singleSwitch).toBe(false);
     expect(DEFAULT_SETTINGS.reducedMotion).toBe(false);
     expect(DEFAULT_SETTINGS.highContrast).toBe(false);

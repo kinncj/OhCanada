@@ -82,13 +82,22 @@ export function nearestHoldTimeChoice(ms: number): HoldTimeChoice {
 }
 
 /**
- * Subtitles are on and nothing else is (CLAUDE.md: "Subtitles on by default").
- * `locale` is a placeholder the caller replaces with `preferredLocale(...)` or
- * the saved choice; it is not a claim that English is the default language.
+ * Subtitles are on (CLAUDE.md: "Subtitles on by default"), auto-move is on
+ * (ADR-0058), and nothing else is. `locale` is a placeholder the caller replaces
+ * with `preferredLocale(...)` or the saved choice; it is not a claim that English
+ * is the default language.
+ *
+ * These have to be the same answers as `defaultSettings` in
+ * `@domain/entities/player`, and they are written twice for the reason the hold
+ * time is: a DOM screen may not import the domain's settings
+ * (`outer-layers-use-domain-vocabulary-only`). The composition root builds this
+ * store from the *save*, so the only player who ever sees this table is one
+ * whose save has not been read yet — but a default that disagreed with the
+ * domain's would make a switch flip under them a moment after boot.
  */
 export const DEFAULT_SETTINGS: Settings = {
   locale: 'en',
-  autoMove: false,
+  autoMove: true,
   singleSwitch: false,
   reducedMotion: false,
   highContrast: false,

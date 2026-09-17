@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { expect, test, type Page } from '@playwright/test';
 
 import { START_LEVEL } from './start-level';
+import { holdToMove } from './held-drive';
 import { walkWithProbe } from './walk';
 
 /**
@@ -65,6 +66,15 @@ const playerX = async (page: Page): Promise<number> =>
   Number(
     (await page.locator('[data-testid="scene-state"]').getAttribute('data-player-x')) ?? Number.NaN,
   );
+
+/*
+ * A player who holds a control to move (ADR-0058). The first scenario is about a
+ * keypress being dropped, which can only be seen on a player who would otherwise
+ * not be moving; the walk below holds a key the length of the level.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('the first thing a player does', () => {
   /**
