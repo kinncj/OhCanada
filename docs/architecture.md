@@ -427,6 +427,24 @@ the page never holds a second WebGL context. The atlas is the level's page, fetc
 released when it closes. The host reports `data-state` and `data-frames`, so a browser test reads what is drawn
 without comparing pixels.
 
+### Where an unaccepted character lives
+
+The character a first-run player is shown before they have chosen anything is a **uniform draw**, never the
+rig's `fallback` and never a house character (`docs/content-review.md` §8.1, §8.3). ADR-0053 decides where it
+lives: **in `app/ui/shell.ts`, for the length of the sitting, and in no store at all.** The shell is built once
+per boot and holds the draw across a language change, a Settings visit, Back and Play again, a level and an
+exam — `clearView` destroys views, not the draw — and "Surprise me" is the only thing that replaces it.
+Finishing the creator turns it into the save's `character`, which is the moment it becomes state; a reload
+before that draws again, because a save with a character is not a first run (`TN-FIRSTRUN`, ruling 1) and
+persisting a face nobody accepted would skip the creator. Nothing here is an exception to ADR-0026: there is
+no second store, because there is nothing to store.
+
+The composition root's half is the other side of the same line: `app/bootstrap` **repairs** a saved character
+(`repairSelection`, `TN-LOOK-05`) and supplies the seeded `RandomSource`; it does not draw a character for a
+save that has none, and the title screen's figure is painted from the save's character, so a face the player
+has not chosen never appears on the screen before the creator. ADR-0053 carries that as a dated obligation —
+today the draw is still made at boot, which is why the same responsibility can be read in two files.
+
 ### The screen art seam
 
 The landmark card, the dialogue, the completion card, the title screen and the Study home draw pictures
