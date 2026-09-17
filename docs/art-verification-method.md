@@ -64,6 +64,56 @@ directory; `verify-art record` copies the scored keymap, answers and audit into 
 On the last hand-written run two subjects were filed against each other's hashes, which voided a verdict that
 had been reached correctly — a transposition scores exactly like a failure to identify.
 
+### One document, one run
+
+Decided 2026-09-17, after a blind run had to hand-repair its own record.
+
+`verify-art record` used to rewrite **only** `runIntegrity` and `handoffRun` and merge everything else
+forward. Pointed at a file from an earlier run it left that run's `results` table in place — stating 35/17/2,
+with one subject `not-checked` and a `blindIdentification` of `"undefined"` — beside the *new* run's
+`handoffRun`, which scored 42/12/0. The verifier rebuilt the table, the scope and the narrative by hand
+rather than ship the contradiction.
+
+**That is worse than an outright failure**, and it is why the rule is now structural. A reader — or a gate —
+takes the verdict table at face value. A document that fails loudly gets fixed; a document asserting one
+run's verdicts under another run's proof of blindness *looks verified and is not*, and it reads in the output
+exactly like a record that was made properly. It is the same silent greenness this whole harness exists to
+refuse, arriving in the file the harness writes.
+
+So:
+
+- **The verdicts and the scope are no longer written by anyone.** `scope` and `results` are **derived** on
+  every `record`, by `scripts/lib/art-score.mjs`, from the `handoffRun` being recorded. They cannot describe
+  a different run than `handoffRun` does, because they are computed from it. This is also why `score
+  --record` and `record` agree: there is **one** comparison function and both commands call it, rather than
+  two implementations kept in step by hand.
+- **Prose is carried forward only when the file on disk is about the same run.** Findings, caveats and what
+  a run did and did not establish belong to whoever wrote them about the run they had read.
+- **Otherwise `record` refuses**, naming both run ids and every prose field that would have been orphaned.
+  Refusing was chosen over rewriting because both were open and a silent whole-file rewrite trades a record
+  that contradicts itself for one that has quietly lost another agent's reasoning — which is the very reason
+  `record` merged in the first place. A refusal destroys nothing and hides nothing. `--replace` performs the
+  whole rewrite once a human has read that sentence and decided; it says what it dropped, and git has it.
+- **The commitment is untouched.** `record` still refuses an uncommitted run and a run whose answers moved
+  after they were frozen, and it does so *before* anything is derived. A verdict stays bound to the artefact
+  that was shown.
+- **A `derivedFrom` stamp makes a mixed record detectable after the fact.** Every command that reads a record
+  refuses it outright when that stamp and `handoffRun.keymap.runId` disagree. A `results` table that
+  `record` did not derive is not thereby wrong, but a reader cannot tell one from the other by looking, so
+  the harness says which it is rather than leaving it assumed.
+
+**A record states its own blind spots.** Two gaps belong to other agents' files and neither is the harness's
+to fix, but a scope listing only what was checked reads as a scope that covers everything:
+
+- A composite built to an offset its **level document** disputes is a picture of an arrangement the game does
+  not draw, so a verdict about it is not a statement about what a player sees. The subject is recorded with
+  **no verdict** — `not-checked-against-the-level-the-game-draws`, beside both numbers — and counts as
+  passing nothing. Which of the two files moved is still not knowable from here.
+- A **locomotion mode** the rig poses and `references.json` names no subject for is listed in the scope.
+  Nothing is handed over for it and no verdict can cover it. It stays a note rather than a build failure:
+  the gap is in the contract, which is art's file, and a gate that fails on art's work in progress gets
+  routed around.
+
 ### How an answer is compared, and the one thing the comparison will not do
 
 Decided 2026-09-17, after the first genuinely blind run scored fourteen subjects as failures to identify

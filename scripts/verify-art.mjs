@@ -108,7 +108,10 @@ import { fileURLToPath } from 'node:url';
 
 import {
   buildHandoff,
+  isRendered,
+  levelOffsetDrift,
   loadContract,
+  posedModesWithoutSubject,
   readKeymap,
   sha256Of,
   sourceDigestReader,
@@ -128,6 +131,9 @@ Usage:
   node scripts/verify-art.mjs record   --keymap K --answers A --audit U --out FILE
 
 Options:
+  --replace                 in \`record\`: overwrite a record that is about a DIFFERENT
+                            run, discarding its prose. Without it, \`record\` refuses
+                            rather than leave one run's verdicts beside another's.
   --root DIR                repository root (default: this script's repository)
   --out DIR                 hand-off root; images go to DIR/handoff, keymap to DIR/keymap.json
   --keymap PATH             keymap path. Pass one OUTSIDE --out for a stronger hand-off.
@@ -514,6 +520,195 @@ function reportScore(result, { strict }) {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * ONE DOCUMENT, ONE RUN.
+ *
+ * THE DEFECT THIS EXISTS TO CLOSE. `record` used to rewrite only `runIntegrity`
+ * and `handoffRun` and to merge everything else forward, so a record pointed at
+ * an older file kept THAT RUN'S `results` table, scope and narrative beside the
+ * NEW run's integrity block. It happened: a file stating 35/17/2 with one
+ * subject `not-checked` and `blindIdentification: "undefined"` sat beside a
+ * hand-off run that scored 42/12/0, and the verifier had to rebuild the table by
+ * hand rather than ship the contradiction.
+ *
+ * THAT IS WORSE THAN AN OUTRIGHT FAILURE, which is why it is worth this much
+ * code. A reader -- or a gate -- takes the verdict table at face value. A
+ * document that fails loudly gets fixed; a document that asserts one run's
+ * verdicts under another run's proof of blindness looks verified and is not, and
+ * it reads in the output exactly like a record that was made properly. Same
+ * shape as every other thing this harness refuses: SILENT GREENNESS.
+ *
+ * SO THE VERDICTS ARE NO LONGER SOMETHING ANYONE WRITES. `scope` and `results`
+ * are DERIVED, on every `record`, from `scoreRun` over the run being recorded --
+ * the same function, over the same inputs, that `score --record` uses. They
+ * cannot describe a different run than `handoffRun` does because they are
+ * computed from it, which is also the whole of why `score --record` and `record`
+ * now agree: there is one comparison and both commands call it.
+ *
+ * WHAT IS NOT DERIVABLE IS THE PROSE -- findings, caveats, what the run did and
+ * did not establish -- and it belongs to whoever wrote it about the run they
+ * wrote it about. It is carried forward ONLY when the file on disk is
+ * demonstrably about this same run. Otherwise `record` REFUSES.
+ *
+ * REFUSES RATHER THAN REWRITES, and the choice is deliberate. Both were open,
+ * and a silent whole-file rewrite trades a record that contradicts itself for a
+ * record that has quietly lost another agent's reasoning -- the reason `record`
+ * merged in the first place. A refusal is the only option that destroys nothing
+ * and hides nothing: it names both run ids and every prose key that would have
+ * been orphaned, and `--replace` performs the whole rewrite once a human has
+ * read that sentence and decided. The wrong thing to be is convenient.
+ * ------------------------------------------------------------------ */
+
+/** What `record` writes from the run. Every other key in the file is prose. */
+const DERIVED_KEYS = ['derivedFrom', 'scope', 'results', 'runIntegrity', 'handoffRun'];
+
+/**
+ * Which run a document on disk is about, from the strongest evidence it carries.
+ * `derivedFrom` is this command's own stamp; the other two are what records
+ * written before the stamp existed have.
+ */
+const runIdOf = (record) =>
+  record?.derivedFrom?.handoffRunId ??
+  record?.runIntegrity?.handoffRunId ??
+  record?.handoffRun?.keymap?.runId ??
+  null;
+
+/**
+ * Does this document describe ONE run? Called by every command that reads a
+ * record, because the mixing is only cheap to catch at the moment of reading.
+ *
+ * FATAL ONLY ON A STAMP THAT DISAGREES. A record whose `derivedFrom` names one
+ * run while its `handoffRun` carries another has been edited into a state
+ * `record` cannot produce, and there is no reading of it that is safe: one of the
+ * two halves is a lie and nothing here can tell which.
+ *
+ * A NOTE, NOT A FAILURE, for a table nobody derived. Hand-written `results`
+ * predate this rule and are not thereby wrong -- but a reader cannot tell a
+ * hand-written table from a derived one by looking, so the difference is said
+ * out loud instead of assumed.
+ */
+function checkRecordCoherence(record, recordPath) {
+  const stamped = record?.derivedFrom?.handoffRunId;
+  const bundled = record?.handoffRun?.keymap?.runId;
+  if (stamped !== undefined && bundled !== undefined && stamped !== bundled) {
+    die(
+      `${recordPath} MIXES TWO RUNS: its derived verdicts are stamped from run ${stamped} and ` +
+        `the hand-off bundled in it is run ${bundled}. One of the two is not about this ` +
+        `document's art, and nothing here can tell which, so neither can be read. A record ` +
+        `states the verdicts of exactly one run. Re-make it with \`verify-art record\`.`,
+    );
+  }
+  if (Array.isArray(record?.results) && record.results.length > 0 && stamped === undefined) {
+    console.warn(
+      `verify-art: NOTE - ${recordPath} carries a \`results\` table that \`verify-art record\` ` +
+        `did not derive, so nothing ties those rows to the hand-off bundled beside them. What ` +
+        `is scored below is the \`handoffRun\` block; the table is read by people, and it is ` +
+        `on them. \`verify-art record\` derives it and stamps it.`,
+    );
+  }
+}
+
+/**
+ * The verdict table, computed from the run rather than written about it.
+ *
+ * FOUR VERDICTS, not two, for the reason the score table prints three states:
+ * "checked and it held", "checked and it did not", and "not checked" are
+ * different facts and a reader acts on each differently. The fourth is the
+ * offset drift below.
+ */
+function deriveResults({ result, keymap, answers, audit, driftBySubject }) {
+  const answerOf = new Map((answers?.identifications ?? []).map((item) => [item.render, item]));
+  const auditOf = new Map((audit?.audits ?? []).map((item) => [item.subjectId, item]));
+  // The scorer's own words, routed to the subject they name. Every line it emits
+  // is written `<id>: ...`, so no finding is re-phrased here -- a second copy of
+  // a finding is a second thing to drift.
+  const findingsFor = (id) =>
+    [...result.failures, ...result.staleArt, ...result.stale].filter((line) =>
+      line.startsWith(`${id}: `),
+    );
+
+  return result.scored.map((row) => {
+    const drift = driftBySubject.get(row.subjectId);
+    const gating = (keymap.entries ?? []).filter(
+      (entry) => entry.subjectId === row.subjectId && entry.gating,
+    );
+    const verdict = drift
+      ? 'not-checked-against-the-level-the-game-draws'
+      : row.state === 'pass'
+        ? 'pass'
+        : row.state === 'stale'
+          ? 'not-checked-against-current-art'
+          : 'fail';
+
+    const out = {
+      subjectId: row.subjectId,
+      verdict,
+      identificationMatched: row.identified,
+      // VERBATIM out of the frozen answers, and quoted rather than summarised.
+      // The answers themselves stay in `handoffRun` untouched; this is a copy for
+      // a reader, regenerated on every `record`, so it cannot drift from them.
+      blindIdentification: gating.map((entry) => ({
+        render: entry.render,
+        answer: String(answerOf.get(entry.render)?.answer ?? ''),
+      })),
+      featuresRequired: row.featuresRequired,
+      featuresPresent: row.featuresPresent,
+      featuresUncheckable: row.featuresUncheckable,
+      forbiddenPresent: auditOf.get(row.subjectId)?.forbiddenPresent ?? [],
+      diagnosticProbesMatched: `${row.diagnosticMatched}/${row.diagnosticRenders}`,
+      rendersNotCheckedAgainstCurrentArt: row.staleRenders,
+      findings: findingsFor(row.subjectId),
+    };
+    if (drift) {
+      out.whyThereIsNoVerdict =
+        `NOT CHECKED AGAINST THE ARRANGEMENT THE GAME DRAWS. The composite handed over was ` +
+        `built with its near tile ${drift.built} px from its far tile, and ` +
+        `content/levels puts them ${drift.level} px apart (${drift.detail}). The verifier was ` +
+        `shown a picture this level does not compose, so whatever it said is not a statement ` +
+        `about what a player sees. Which of the two files moved is not knowable from here. ` +
+        `Reconcile the level document with the renderRecipe, then re-run and re-record.`;
+    }
+    return out;
+  });
+}
+
+/** Counted off the derived rows, so no total can disagree with the table above it. */
+function deriveScope({ rows, result, keymap, references, rig, drift }) {
+  const totals = result.totals;
+  const count = (verdict) => rows.filter((row) => row.verdict === verdict).length;
+  return {
+    handoffRunId: keymap.runId,
+    subjectsInContract: (references.subjects ?? []).length,
+    subjectsWithRenders: (references.subjects ?? []).filter(isRendered).length,
+    subjectsUnrenderedByDecision: (keymap.unrendered ?? []).map((entry) => entry.subjectId),
+    renders: totals.renders,
+    gatingRenders: totals.gatingRenders,
+    diagnosticRenders: totals.diagnosticRenders,
+    subjectsScored: rows.length,
+    subjectsPassed: count('pass'),
+    subjectsFailed: count('fail'),
+    subjectsNotCheckedAgainstCurrentArt: count('not-checked-against-current-art'),
+    subjectsNotCheckedAgainstTheLevel: count('not-checked-against-the-level-the-game-draws'),
+    subjectsNeverChecked: totals.subjectsNotInRecord,
+    mustBeRightConfirmedPresent: totals.featuresChecked,
+    featuresUncheckable: totals.featuresUncheckable,
+    /*
+     * THE RECORD STATES ITS OWN BLIND SPOTS, because a scope that lists only what
+     * was checked reads as a scope that covers everything. Both of these are
+     * gaps in OTHER agents' files -- a level document and the contract -- and
+     * neither is this command's to fix. What it can refuse to do is stay quiet
+     * about them while filing verdicts next door.
+     */
+    compositesBuiltToAnOffsetTheLevelDisputes: drift.map((row) => row.subjectId),
+    locomotionModesWithNoSubjectInTheContract: posedModesWithoutSubject(rig, references),
+    countsAreDerived:
+      'Every number in this block is computed by scripts/lib/art-score.mjs from the ' +
+      '`handoffRun` beside it, by `verify-art record`, and is recomputed whole on every ' +
+      'record. Nobody types these, and they cannot describe a different run than `handoffRun` ' +
+      'does. `make verify-art` reports the same figures.',
+  };
+}
+
 /* ------------------------------------------------------------------ */
 
 if (command === 'handoff') {
@@ -671,6 +866,11 @@ if (command === 'score') {
     const record = readJson(recordPath);
     const run = record.handoffRun;
     if (!run) die(`${recordPath} carries no \`handoffRun\` block`);
+    // Before a single verdict is read: does this document describe one run? A
+    // record that states one run's verdicts beside another's hand-off cannot be
+    // scored into anything meaningful, and scoring it anyway would put this
+    // command's name on the result.
+    checkRecordCoherence(record, recordPath);
     ({ keymap, answers, audit } = run);
     // A bundled record carries its own keymap, so the commitment in it is
     // SELF-ATTESTED: whoever wrote the record could have written a matching hash.
@@ -733,20 +933,29 @@ if (command === 'score') {
  * run whose commitment does not hold, so what lands in the record is what was
  * scored rather than a retyping of it.
  *
- * It MERGES: the record carries prose fields - findings, caveats, what the run
- * did and did not establish - that belong to whoever wrote them, and a command
- * that flattened those into a fresh file would destroy the reasoning and keep
- * the numbers. Only `handoffRun` and the integrity block are written.
+ * IT NO LONGER MERGES BLINDLY, and the note that used to stand here -- "only
+ * `handoffRun` and the integrity block are written" -- WAS THE DEFECT stated as
+ * a feature. See "ONE DOCUMENT, ONE RUN" above for what replaced it: the
+ * verdicts and the scope are derived from this run, and the prose is carried
+ * only when the file on disk is about this run too.
  * ------------------------------------------------------------------ */
 if (command === 'record') {
   const keymapPath = option('--keymap');
   const answersPath = option('--answers');
   const auditPath = option('--audit');
   const out = option('--out', join(root, 'docs', 'art-verification.json'));
+  const replace = flag('--replace');
   if (!keymapPath || !answersPath || !auditPath) {
     die('record needs --keymap, --answers and --audit');
   }
   const keymap = readKeymap(keymapPath);
+  /*
+   * THE COMMITMENT IS UNCHANGED AND STAYS WHERE IT IS. Everything this command
+   * now derives is derived AFTER these two refusals, never instead of them: a
+   * verdict is bound to the artefact that was shown, and a run whose answers
+   * moved after they were frozen may not be recorded at all, whatever else
+   * about it is coherent.
+   */
   if (!keymap.committedAnswersSha256) {
     die(
       'this run was never committed, so nothing shows the answers predate the reveal. ' +
@@ -757,27 +966,116 @@ if (command === 'record') {
   if (now !== keymap.committedAnswersSha256) {
     die('the answers changed after they were committed; this run may not be recorded');
   }
+
   const outPath = resolve(out);
   const existing = existsSync(outPath) ? readJson(outPath) : {};
-  const merged = {
-    ...existing,
+  const onFile = runIdOf(existing);
+  const prose = Object.keys(existing).filter((key) => !DERIVED_KEYS.includes(key));
+  const sameRun = onFile !== null && onFile === keymap.runId;
+  // A document that carries verdicts or reasoning, and is not about this run.
+  const wouldMix =
+    !sameRun &&
+    (prose.length > 0 ||
+      existing.handoffRun !== undefined ||
+      (Array.isArray(existing.results) && existing.results.length > 0));
+
+  if (wouldMix && !replace) {
+    die(
+      `${outPath} is a record of ${onFile === null ? 'a run it does not name' : `run ${onFile}`} ` +
+        `and this is run ${keymap.runId}. REFUSING, because the two ways of going on are both ` +
+        `worse than stopping: merging leaves that run's verdicts standing beside this run's ` +
+        `proof of blindness, which is a document that looks verified and is not, and rewriting ` +
+        `silently discards ${prose.length} prose field(s) somebody wrote about a run they had ` +
+        `read${prose.length > 0 ? ` (${prose.join(', ')})` : ''}` +
+        `${Array.isArray(existing.results) ? `, and ${existing.results.length} verdict row(s)` : ''}. ` +
+        `A record states the verdicts of exactly one run. Either record to a fresh --out, or ` +
+        `pass --replace to write this run's record over that one once you have read what is ` +
+        `in it. Nothing is deleted for you.`,
+    );
+  }
+
+  const { assets, references, rig } = loadContract({ root });
+  const answers = readJson(answersPath);
+  const audit = readJson(auditPath);
+  // THE SAME COMPARISON `score --record` MAKES, over the same inputs. This is
+  // what makes the two commands agree: not two implementations kept in step, but
+  // one function with two callers. The verifier reported reconciling them by
+  // hand, which is the symptom of there having been two.
+  const result = scoreRun({
+    references,
+    keymap,
+    answers,
+    audit,
+    currentDigest: sourceDigestReader({ assets }),
+  });
+
+  const drift = levelOffsetDrift({ root, references });
+  const covered = new Set((keymap.entries ?? []).map((entry) => entry.subjectId));
+  const driftBySubject = new Map(
+    drift.filter((row) => covered.has(row.subjectId)).map((row) => [row.subjectId, row]),
+  );
+
+  const rows = deriveResults({ result, keymap, answers, audit, driftBySubject });
+  const scope = deriveScope({ rows, result, keymap, references, rig, drift });
+
+  const document = {
+    // Carried only when this file is already about this run. Where it is not,
+    // the refusal above has already run and `--replace` means "start clean".
+    ...(sameRun && !replace ? existing : {}),
+    derivedFrom: {
+      handoffRunId: keymap.runId,
+      committedAnswersSha256: keymap.committedAnswersSha256,
+      recordedAt: new Date().toISOString(),
+      by: 'verify-art record',
+      derives: ['scope', 'results', 'runIntegrity', 'handoffRun'],
+      note:
+        'The stamp that makes a mixed record detectable. `scope` and `results` are computed ' +
+        'from the `handoffRun` in this file and describe no other run; any command that reads ' +
+        'this record refuses it outright if this id and `handoffRun.keymap.runId` disagree.',
+    },
     runIntegrity: {
-      ...(existing.runIntegrity ?? {}),
+      ...(sameRun && !replace ? (existing.runIntegrity ?? {}) : {}),
       handoffRunId: keymap.runId,
       commitmentProven: true,
       committedAnswersSha256: keymap.committedAnswersSha256,
     },
-    handoffRun: {
-      keymap,
-      answers: readJson(answersPath),
-      audit: readJson(auditPath),
-    },
+    scope,
+    results: rows,
+    handoffRun: { keymap, answers, audit },
   };
-  writeFileSync(outPath, `${JSON.stringify(merged, null, 2)}\n`);
+
+  writeFileSync(outPath, `${JSON.stringify(document, null, 2)}\n`);
   console.log(
-    `verify-art: wrote run ${keymap.runId} into ${outPath} - ${keymap.entries.length} render(s), ` +
-      `copied verbatim from the files that were scored. Nothing was retyped.`,
+    `verify-art: wrote run ${keymap.runId} into ${outPath} - ${keymap.entries.length} render(s) ` +
+      `copied verbatim, and ${rows.length} verdict row(s) DERIVED from them. Nothing was ` +
+      `retyped and no number in this file was typed by anybody.`,
   );
+  if (replace && wouldMix) {
+    console.log(
+      `verify-art: --replace - the previous record${onFile === null ? '' : ` (run ${onFile})`} ` +
+        `was overwritten whole, including ${prose.length} prose field(s)` +
+        `${prose.length > 0 ? `: ${prose.join(', ')}` : ''}. It is in git, and it is not in ` +
+        `this file any more.`,
+    );
+  }
+  if (driftBySubject.size > 0) {
+    console.log(
+      `verify-art: ${driftBySubject.size} subject(s) in this run were composited to an offset ` +
+        `their LEVEL DOCUMENT DOES NOT AGREE WITH, so the verifier was shown an arrangement the ` +
+        `game does not draw. They are recorded with NO VERDICT rather than with the one that ` +
+        `was reached, and they are counted as passing nothing. Which of the two files moved is ` +
+        `not knowable here: reconcile content/levels/*.json with the renderRecipe, then re-run.`,
+    );
+  }
+  /*
+   * PRINTED, AND THEN OBEYED. The record is on disk before this runs -- a record
+   * of failures is exactly what a failing run is owed, and withholding it would
+   * be the quietest way to lose one. The exit code is then the VERDICT in the
+   * file, not a report on whether the file was written, and the line below says
+   * which it is so nobody reads a red exit as a failed write.
+   */
+  console.log(`verify-art: the record is written. What follows is what it says.`);
+  reportScore(result, { strict: flag('--require-identification') });
   process.exit(0);
 }
 
@@ -851,6 +1149,7 @@ if (!existsSync(recordPath)) {
     console.log(`verify-art: ${message}`);
   } else {
     const { assets, references } = loadContract({ root });
+    checkRecordCoherence(record, recordPath);
     const run = record.handoffRun;
     const result = scoreRun({
       references,
