@@ -75,7 +75,7 @@ Nine SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `quebec-city-layer-20-farbank` | `layer-20-farbank.svg` | 1800 × 150 | the far bank across the river: a generic winter river town |
 | `quebec-city-layer-30-river` | `layer-30-river.svg` | 1800 × 160 | the St Lawrence: three water bands and drifting ice pans |
 | `quebec-city-layer-50-terrace` | `layer-50-terrace.svg` | 2016 × 640 | Dufferin Terrace: parapet, cast-iron railing, lamps, a **plain open timber shelter** (it was a striped kiosk — see §7), benches, crowd, one timber footbridge, the chute's far wall |
-| `quebec-city-layer-60-slope` | `layer-60-slope.svg` | 1440 × 560 | the toboggan run: a **packed-snow** lane (it was `ice` — see §7), modelled divider ridges, runner streaks, two riders on toboggans, near bank |
+| `quebec-city-layer-60-slope` | `layer-60-slope.svg` | 1440 × 560 | the toboggan run: a **packed-snow** lane (it was `ice` — see §7), three sub-lanes between two divider ridges that each **cast a shadow onto the lane**, runner streaks, **three** riders on toboggans, near bank |
 | `quebec-city-landmark-chateau-frontenac` | `landmark-chateau-frontenac@1x.svg` | 1080 × 900 | **a POI hero**: the Château Frontenac |
 | `quebec-city-prop-city-wall` | `prop-city-wall@1x.svg` | 640 × 500 | **POI hero, added 2026-09-13**: two faces of the fortified wall meeting at a salient angle, snow on the coping |
 | `quebec-city-prop-terrace-kiosk` | `prop-terrace-kiosk@1x.svg` | 560 × 520 | **POI hero, added 2026-09-13**: the striped bandstand kiosk, drawn once, where a building that names its city belongs |
@@ -500,6 +500,31 @@ moved and no other shape changed colour.
 Note what the two runs of this subject are worth against each other: **the previous, primed reading recorded
 the built-chute feature PRESENT and this unprimed one recorded it absent.** That difference is the whole
 value of the anonymised hand-off.
+
+### 3. It read as a canal again, and the `ice` finding against it was wrong
+
+**2026-09-17.** A third blind pass read the composite as *"a frozen city canal in winter used for recreation —
+most likely the Rideau Canal Skateway in Ottawa"*, and its feature audit recorded **"the lane is PACKED SNOW,
+and never the `ice` ramp"** as the one missing feature. **That audit entry is false, and it was checked before
+anything was redrawn.** The three `ice` ramp colours — `#e4f2f6`, `#a9d0e5`, `#6799d6` — occur **zero** times
+in `layer-60-slope.svg` and **zero** times in `layer-50-terrace.svg`, which are the only two files the
+`twoParallaxTiles` recipe composites. They occur 36 times in `layer-30-river.svg`, which is a different tile
+and is not in this subject's render. The previous round's report that `ice` appears nowhere in this subject
+was **right**, and the correction of 2026-09-08 has held since the day it was made.
+
+**What the verifier SAW was nevertheless real, and the cause was value, not hue.** Every band in the lower
+half ran the full width of the tile at almost the same lightness: two ridges plus three lanes plus a top strip
+read as five long horizontal stripes, and long level stripes of near-equal value across a whole frame are what
+wind-scoured river ice looks like. Naming a ramp that was not there sent the last two rounds looking in the
+wrong place. Two changes:
+
+- **Each divider ridge now casts a shadow.** A pale band bounded by two slightly darker bands is a *change of
+  surface*; a band with a bright `snow-light` crest, a `snow-shade` flank and a 16 px `ao-shadow` band at 0.18
+  falling onto the lane below it is a thing *standing up off* the lane. In a side view, where the run's own
+  downhill is invisible by construction, that is the only cue that separates a built chute from a frozen
+  surface, and it is what feature 1 of the contract has been asking for in words since 2026-09-08.
+- **A third rider.** At play size one screen of this repeating tile showed a single sledder, and a sport has to
+  be visible more than once to be read as the subject. Three riders per 1440 px tile puts two on every screen.
 
 ### And one placement finding that is not art's to fix
 
