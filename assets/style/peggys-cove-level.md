@@ -102,7 +102,7 @@ scale**, and it is a decision rather than an omission:
 | `peggys-cove-layer-30-cove` | `layer-30-cove.svg` | 1760 × 270 | 480 | the far side of the cove: spruce, granite shore, seven fish stores on piles, a wharf, three boats, reflections |
 | `peggys-cove-layer-40-granite-barrens` | `layer-40-granite-barrens.svg` | 1920 × 280 | 193 | the barrens: jointed rock, grass in the joints, four erratics, two tide pools |
 | `peggys-cove-landmark-lighthouse@1x` | `landmark-lighthouse@1x.svg` | 480 × 900 | 63 | **POI hero, and the level's only place-anchor** |
-| `peggys-cove-prop-granite-erratic` | `prop-granite-erratic@1x.svg` | 560 × 380 | 22 | **POI hero, added 2026-09-13**: two rounded boulders on jointed pavement with a tide pool |
+| `peggys-cove-prop-granite-erratic` | `prop-granite-erratic@1x.svg` | 560 × 380 | 31 | **POI hero, added 2026-09-13, redrawn 2026-09-17**: two boulders in the warm `limestone` ramp standing on neutral `path` pavement, the large one lumpy with an off-centre crest, and a tide pool |
 | `peggys-cove-prop-fish-store` | `prop-fish-store@1x.svg` | 620 × 520 | 40 | **POI hero, added 2026-09-13**: a red store on timber cribbing over the water |
 | `peggys-cove-prop-fishermans-house` | `prop-fishermans-house@1x.svg` | 640 × 560 | 62 | **POI hero, added 2026-09-13**: a clapboard house behind a picket fence with wild roses |
 
