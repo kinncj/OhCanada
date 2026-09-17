@@ -42,7 +42,7 @@ Seven SVG sources. `scripts/assets.mjs` reads the level from the path, so everyt
 | `winnipeg-layer-40-plaza` | `layer-40-plaza.svg` | 1920 × 520 | the riverside promenade — limestone slabs, parapet, lamps, benches, planters, three trees, six people |
 | `winnipeg-landmark-human-rights-museum@1x` | `landmark-human-rights-museum@1x.svg` | 1000 × 1040 | **POI hero, and the level's only place-anchor** |
 | `winnipeg-prop-cable-stayed-bridge` | `prop-cable-stayed-bridge@1x.svg` | 700 × 760 | **POI hero, added 2026-09-13**: one leaning mast, a fan of straight stays, a deck and its rail, over the river |
-| `winnipeg-prop-autumn-maple` | `prop-autumn-maple@1x.svg` | 560 × 640 | **POI hero, added 2026-09-13**: a maple in full autumn colour in a kerbed tree pit, with five fallen leaves |
+| `winnipeg-prop-autumn-maple` | `prop-autumn-maple@1x.svg` | 560 × 640 | **POI hero, added 2026-09-13, redrawn 2026-09-17**: a maple in full autumn colour in a kerbed tree pit, three heavy branches showing in the open band under the crown, with five five-lobed fallen maple leaves |
 
 **There is no character source here.** Characters are `shared/` and already exist; this level places them.
 **There are no POI-marker or particle sources**, for the reason Halifax records: `level.schema.json` cannot
@@ -330,6 +330,15 @@ was the first — and it is the same shape both times: **the tiling was the prob
 forbids depicting a real, identifiable person, and a dedication would name one in lettering this project
 does not draw anyway. The POI is called *the footbridge*, and what it teaches is the neighbourhood on the
 other side of it.
+
+**Redrawn 2026-09-17, and the species was the thing that was missing.** A blind pass read the render as a
+broadleaf in autumn and **could not name it**, which on this subject is the whole failure: the fact it carries
+is about the maple leaf. Two causes, both measurable in the file. The five fallen leaves were sixteen-point
+rosettes — at play size a sixteen-point outline is an asterisk, not a species — and they are now five-lobed
+blades about 60 px across with deep sinuses and a stem. And the three branches `references.json` requires were
+**in the file and invisible**: every one was drawn inside a crown lobe, so the trunk ran straight into the
+canopy. The crown's underside now sits at about y 370 across the middle and the trunk head at y 432, which
+leaves a 60 px band the branches splay out into.
 
 **The maple is the only object in this game that can teach the maple-leaf fact without drawing the flag.**
 `OQ-ART-04` — which red is the National Flag — has been open since slice 1, and every level sheet since has
