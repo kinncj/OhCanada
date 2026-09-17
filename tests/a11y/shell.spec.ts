@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+import { focusedTestId } from './focus';
 import { HARNESS_URL } from './playwright.config';
 
 /**
@@ -163,15 +164,6 @@ const scrollsSideways = (page: Page): Promise<boolean> =>
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
   );
 
-const focusedTestId = (page: Page): Promise<string> =>
-  page.evaluate(() => {
-    const element = document.activeElement;
-    if (element === null) return 'none';
-    return (
-      element.getAttribute('data-testid') ??
-      (element.id !== '' ? `#${element.id}` : element.tagName.toLowerCase())
-    );
-  });
 
 /** Press and release the switch: one contact, `heldMs` long, anywhere on the page. */
 async function switchPress(page: Page, heldMs: number): Promise<void> {

@@ -6,6 +6,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 
 import { hasCopyRow, text, type CopyKey } from '@ui/copy';
 
+import { focusedTestId } from './focus';
 import { HARNESS_URL } from './playwright.config';
 
 /**
@@ -240,15 +241,6 @@ const scrollsSideways = (page: Page): Promise<boolean> =>
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
   );
 
-const focusedTestId = (page: Page): Promise<string> =>
-  page.evaluate(() => {
-    const element = document.activeElement;
-    if (element === null) return 'none';
-    return (
-      element.getAttribute('data-testid') ??
-      (element.id !== '' ? `#${element.id}` : element.tagName.toLowerCase())
-    );
-  });
 
 test.describe('the page the HUD builds', () => {
   test('has one main, a named hud region, and passes with region and landmark-one-main on', async ({

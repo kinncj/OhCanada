@@ -80,11 +80,30 @@ async function walk(page: Page, presses: number): Promise<Stop[]> {
   const stops: Stop[] = [];
   for (let press = 0; press < presses; press += 1) {
     await page.keyboard.press('Tab');
-    /* The scroll is smooth unless the player asked otherwise, so settle it. */
-    await page.waitForTimeout(400);
-    stops.push(await focusedStop(page));
+    stops.push(await settled(page));
   }
   return stops;
+}
+
+/**
+ * Where the focused control came to rest.
+ *
+ * **Polled, never waited out.** A smooth scroll of up to 2 500 px takes as long
+ * as the engine decides to take, and a fixed wait is a test that passes on the
+ * machine it was written on: too short and the rect is read mid-flight, too long
+ * and every press pays for the slowest case. This reads the rect until two
+ * consecutive samples agree, which is true immediately under reduced motion and
+ * after the animation under full motion.
+ */
+async function settled(page: Page): Promise<Stop> {
+  let last = await focusedStop(page);
+  for (let sample = 0; sample < 40; sample += 1) {
+    await page.waitForTimeout(50);
+    const now = await focusedStop(page);
+    if (now.id === last.id && now.top === last.top && now.bottom === last.bottom) return now;
+    last = now;
+  }
+  return last;
 }
 
 /** Nothing focused may sit outside the viewport, in either direction. */
@@ -148,7 +167,7 @@ test.describe('Tab scrolls the focused control into view', () => {
     );
 
     await page.keyboard.press('Tab');
-    await page.waitForTimeout(400);
+    await settled(page);
 
     const after = await page.evaluate(
       () => document.querySelector('[data-testid="settings-screen"]')?.scrollTop ?? 0,
