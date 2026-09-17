@@ -665,7 +665,7 @@ function deriveResults({ result, keymap, answers, audit, driftBySubject }) {
         `built with its near tile ${drift.built} px from its far tile, and ` +
         `content/levels puts them ${drift.level} px apart (${drift.detail}). The verifier was ` +
         `shown a picture this level does not compose, so whatever it said is not a statement ` +
-        `about what a player sees. Which of the two files moved is not knowable from here. ` +
+        `about what the game draws. Which of the two files moved is not knowable from here. ` +
         `Reconcile the level document with the renderRecipe, then re-run and re-record.`;
     }
     return out;

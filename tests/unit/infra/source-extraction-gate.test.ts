@@ -67,7 +67,11 @@ const manifest = (overrides: Json = {}): Json => ({
   $schema: '../schemas/source.schema.json',
   id: 'fixture-source',
   title: 'A fixture source',
-  publisher: 'Nobody',
+  /* Both languages, because `publisher` is localised text now: the "About this
+     place" panel prints a level's copy of it, and French was crediting the
+     source in English. A body's own name is not translated, so a fixture
+     publisher says the same thing twice. */
+  publisher: { en: 'Nobody', fr: 'Nobody' },
   edition: 'fixture',
   url: 'https://example.invalid/fixture',
   file: 'fixture-source.pdf',
