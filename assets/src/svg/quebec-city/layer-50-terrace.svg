@@ -1,42 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2016" height="640" viewBox="0 0 2016 640" shape-rendering="geometricPrecision">
-  <title>Dufferin Terrace: a masonry parapet with an ornate cast-iron railing along its head, a rhythm of green lamp standards with white globe lamps, one plain open timber shelter - GENERIC, and it is a correction: it was a striped bandstand kiosk with a green-and-white radial roof and a white finial, and an unprimed verifier named Terrasse Dufferin, Quebec City off it. This tile repeats every 2016 px, so a recognisable building on it breaks this subject own neverAdd. Street furniture that is really architecture, benches, people in winter coats, and one timber footbridge over the toboggan run. The chute wall runs along the foot. Survives the low preset. GENERIC by decision: this tile repeats, so it carries no landmark. World y 700..1340; ground line at local 580.</title>
-  <rect x="0" y="450" width="2016" height="30" fill="#afaca5"/>
-  <rect x="0" y="480" width="2016" height="120" fill="#8b857c"/>
-  <rect x="0" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="60" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="120" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="180" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="240" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="300" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="360" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="420" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="480" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="540" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="600" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="660" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="720" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="780" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="840" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="900" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="960" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1020" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1080" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1140" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1200" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1260" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1320" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1380" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1440" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1500" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1560" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1620" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1680" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1740" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1800" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1860" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1920" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="1980" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
-  <rect x="2040" y="480" width="26" height="120" fill="#605a55" opacity="0.35"/>
+  <title>Dufferin Terrace: a masonry parapet with an ornate cast-iron railing along its head, a rhythm of green lamp standards with white globe lamps, one plain open timber shelter - GENERIC, and it is a correction: it was a striped bandstand kiosk with a green-and-white radial roof and a white finial, and an unprimed verifier named Terrasse Dufferin, Quebec City off it. This tile repeats every 2016 px, so a recognisable building on it breaks this subject own neverAdd. Street furniture that is really architecture, benches, people in winter coats, and one timber footbridge over the toboggan run. The chute wall runs along the foot, and it is drawn in the `wood` ramp rather than in `path`, which is a correction. Drawn grey it was a second masonry band immediately under the grey masonry parapet; the two merged into one tall wall, and the containment that makes the lane below a built CHUTE rather than an open frozen surface stopped reading. That is half of why a blind pass called this composite a frozen canal and scored the built-chute feature absent. Warm timber with dark posts separates the chute wall from the parapet above it and from the snow below it, and it is the only saturated note between the railing and the lane. Survives the low preset. GENERIC by decision: this tile repeats, so it carries no landmark. World y 700..1340; ground line at local 580.</title>
+  <rect x="0" y="450" width="2016" height="30" fill="#c5994d"/>
+  <rect x="0" y="480" width="2016" height="120" fill="#96632f"/>
+  <rect x="0" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="60" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="120" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="180" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="240" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="300" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="360" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="420" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="480" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="540" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="600" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="660" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="720" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="780" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="840" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="900" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="960" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1020" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1080" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1140" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1200" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1260" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1320" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1380" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1440" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1500" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1560" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1620" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1680" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1740" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1800" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1860" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1920" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="1980" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
+  <rect x="2040" y="480" width="26" height="120" fill="#5a2d19" opacity="0.35"/>
   <rect x="0" y="442" width="2016" height="12" fill="#ffffff"/>
   <rect x="0" y="306" width="2016" height="12" fill="#154536"/>
   <rect x="0" y="438" width="2016" height="14" fill="#154536"/>

@@ -134,7 +134,11 @@ had 500 px of open mid-ground; a cliff-top promenade has 216.
 At `low` the player sees exactly two layers: the terrace and the run. Between them they carry the masonry
 parapet with its snow-capped coping, the ornate dark-green cast-iron railing with its scroll panels and urn
 finials, the rhythm of globe lamp standards, the striped bandstand kiosk, benches, six people in winter coats,
-a timber footbridge, the chute's far timber wall, and the iced lane with its divider ridges and runner streaks.
+a timber footbridge, the chute's far timber wall, and the packed-snow lane with its divider ridges and runner
+streaks. **The lane is never "iced" and this sentence used to call it that.** `references.json` forbids the
+`ice` ramp anywhere on the lane by name, because `ice` belongs to the Rideau Canal and the two subjects are
+judged in the same hand-off; a level document that describes the lane as iced is describing the defect that
+prohibition exists to prevent.
 
 **The landmark is not a layer.** `quebec-city-landmark-chateau-frontenac` is the POI's `artKey`, so the Château
 is present at every tier, on every device, with no dependence on the preset. That is the same structural

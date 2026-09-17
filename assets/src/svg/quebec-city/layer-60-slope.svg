@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" shape-rendering="geometricPrecision">
-  <title>The toboggan run: a packed-snow lane with two MODELLED divider ridges - a shaded far flank, a lit crest and a shaded near flank each - straight parallel runner streaks, two riders seated on flat wooden toboggans, and a near snow bank framing the bottom. THE LANE IS THE `snow` RAMP AND NOT THE `ice` RAMP, and that is a correction: drawn in `ice` it read to an unprimed verifier as a frozen ice-covered river, in the same hand-off as the Rideau Canal, and the built-chute feature was recorded absent. Survives the low preset. World y 1280..1840; local y 0 is the ground line.</title>
+  <title>The toboggan run: a packed-snow lane with two MODELLED divider ridges - a shaded far flank, a lit crest and a shaded near flank each - sparse straight runner streaks, two riders seated on flat wooden toboggans, and a near snow bank framing the bottom. THE LANE IS THE `snow` RAMP AND NOT THE `ice` RAMP, and that is an old correction that still holds: drawn in `ice` it read to an unprimed verifier as a frozen ice-covered river, in the same hand-off as the Rideau Canal. THE RUNNER STREAKS ARE THE SECOND CORRECTION, and they are why the river reading survived the first one. There were thirty-nine of them, most drawn in `snow-shade` at 0.42 opacity and several over four hundred pixels long, spread evenly across the whole lane: straight, level, parallel DARK lines from edge to edge are what wind-scoured river ice looks like, so the texture went on saying river after the colour had stopped. There are now twelve, all in `snow-light` at 0.35, none longer than three hundred pixels, and each one sits inside a single sub-lane rather than running the width of the tile - sparse marks a runner left, which is what the contract asked for and not what was drawn. The chute wall along the far side is on `layer-50-terrace.svg` and is drawn in the `wood` ramp for the same reason. Survives the low preset. World y 1280..1840; local y 0 is the ground line.</title>
   <rect x="0" y="0" width="1440" height="14" fill="#c2d6e8"/>
   <rect x="0" y="14" width="1440" height="326" fill="#e6eff7"/>
   <rect x="0" y="340" width="1440" height="60" fill="#ffffff"/>
@@ -10,45 +10,20 @@
   <rect x="0" y="232" width="1440" height="16" fill="#c2d6e8"/>
   <rect x="0" y="248" width="1440" height="20" fill="#ffffff"/>
   <rect x="0" y="268" width="1440" height="13" fill="#c2d6e8"/>
-  <rect x="350" y="52" width="310" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="348" y="38" width="380" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="678" y="80" width="284" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="339" y="22" width="343" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="993" y="36" width="274" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="848" y="74" width="442" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="416" y="46" width="413" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="814" y="74" width="288" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="127" y="72" width="230" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="114" y="74" width="401" height="4" rx="2" fill="#ffffff"/>
-  <rect x="315" y="84" width="517" height="4" rx="2" fill="#ffffff"/>
-  <rect x="67" y="54" width="301" height="4" rx="2" fill="#ffffff"/>
-  <rect x="351" y="36" width="446" height="4" rx="2" fill="#ffffff"/>
-  <rect x="707" y="186" width="281" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="682" y="160" width="412" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="660" y="216" width="415" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="669" y="192" width="225" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="364" y="164" width="261" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="519" y="178" width="296" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="910" y="154" width="301" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="903" y="216" width="296" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="1246" y="210" width="399" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="1131" y="196" width="470" height="4" rx="2" fill="#ffffff"/>
-  <rect x="225" y="174" width="426" height="4" rx="2" fill="#ffffff"/>
-  <rect x="839" y="154" width="354" height="4" rx="2" fill="#ffffff"/>
-  <rect x="952" y="154" width="365" height="4" rx="2" fill="#ffffff"/>
-  <rect x="1267" y="290" width="311" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="837" y="322" width="409" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="791" y="300" width="250" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="1117" y="324" width="364" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="571" y="328" width="252" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="1013" y="312" width="253" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="37" y="296" width="252" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="576" y="284" width="329" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="529" y="318" width="245" height="4" rx="2" fill="#c2d6e8" opacity="0.42"/>
-  <rect x="1204" y="320" width="272" height="4" rx="2" fill="#ffffff"/>
-  <rect x="388" y="318" width="451" height="4" rx="2" fill="#ffffff"/>
-  <rect x="1079" y="290" width="260" height="4" rx="2" fill="#ffffff"/>
-  <rect x="239" y="286" width="487" height="4" rx="2" fill="#ffffff"/>
+
+  <rect x="120" y="44" width="260" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="430" y="62" width="230" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="760" y="36" width="290" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="1040" y="78" width="210" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="180" y="176" width="240" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="520" y="200" width="280" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="880" y="168" width="220" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="1180" y="212" width="200" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="90" y="300" width="250" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="420" y="318" width="200" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="760" y="296" width="290" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+  <rect x="1120" y="324" width="230" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
+
   <ellipse cx="430" cy="222" rx="118" ry="12" fill="#16203a" opacity="0.28"/>
   <path d="M 334 218 L 508 218 L 526 192 L 522 184 L 504 206 L 334 206 Z" fill="#96632f"/>
   <rect x="334" y="206" width="174" height="5" fill="#c5994d"/>
