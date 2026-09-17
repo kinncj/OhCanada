@@ -203,12 +203,12 @@ change nobody would notice. Two independent slots make the product structural: 4
 The check is arithmetic and a test can run it: **the number of reachable part frames must equal what the
 slot product implies, and every declared frame must be reachable.** As shipped: 6 skin × 4 hair shapes ×
 5 hair colours × 2 head coverings × 2 features × 4 costumes × 4 expressions × 3 presentations =
-**23 040 combinations, 88 of the 94 frames declared, 88 reachable, 0 unreachable** — 32 costume frames
+**23 040 combinations, 88 of the 95 frames declared, 88 reachable, 0 unreachable** — 32 costume frames
 (8 templates × 4 costumes), 6 bare hands (`jacket` × 6 skin, on `{costume}` and `{skin}` together), 44 head-and-neck frames (6 skin + **6 neck**, both on `{skin}`, + **4 × 3
 face**, on `{expression}` and `{presentation}`, + 4 × 5 hair), 5 optional singletons (`toque`, `glasses`,
 `hat-serge`, `head-shell-beaver`, `tail-beaver`) and the ground shadow.
 
-**The remaining 6 frames are the `{mode}` equipment (§11) and they are outside this product on purpose.**
+**The remaining 7 frames are the `{mode}` equipment (§11) and they are outside this product on purpose.**
 They are reached by a level's locomotion mode, not by a slot combination, which is the arithmetic
 consequence of the previous paragraph: a level's decision is not in the product a player turns.
 
@@ -524,8 +524,10 @@ agree. Every check below is mechanical.
 
 12. For every one of the 5 760 slot combinations, each part's resolved template is either a key in `frames`
     or absent from it; nothing resolves to a name that is neither.
-13. Every key in `frames` is reachable from some combination, or from a declared locomotion mode — 72
-    declared, 66 from the slot product and 6 from the four `{mode}` templates.
+13. Every key in `frames` is reachable from some combination, or from a declared locomotion mode — 95
+    declared, 88 from the slot product and 7 from the four `{mode}` templates. (This row read "72, 66 and
+    6" until 2026-09-16; the first two numbers had been stale since the jacket and the bare hands landed,
+    and they are restated here against the shipped file rather than left to rot beside §3's own count.)
 13a. Every `<mode>/<state>` in `states` names a `<state>` the selector can select. `locomotion-pose.ts`'s
     `strandedPoses` is that check at runtime: a pose named for a state that does not exist is a timeline
     nobody ever sees, and it looks exactly like one that plays.
@@ -761,7 +763,7 @@ read by `modeArtGaps`, which looks for `{mode}`-templated parts and finds a slot
 | `skate` | `foot-gear-l/r-skate` | `skate/idle`, `skate/walk`, `skate/run` | **yes** |
 | `toboggan` | `mount-deck-toboggan`, `mount-fore-toboggan` | `toboggan/idle`, `/walk`, `/run` | **yes** |
 | `skateboard` | `mount-deck-skateboard` | `skateboard/idle`, `/walk`, `/run` | **yes** |
-| `bike` | `mount-deck-bike` | `bike/idle`, `/walk`, `/run` | **yes** |
+| `bike` | `mount-deck-bike`, `mount-fore-bike` | `bike/idle`, `/walk`, `/run` | **yes** |
 | `train` | none — the car is a ride (ADR-0031) | `train/idle`, `/walk`, `/run`, `/talk`, `/interact` | **yes, seated in a ride — §11.5** |
 | `horse` | none — the horse is a ride (ADR-0031) | `horse/idle`, `/walk`, `/run`, `/jump-rise`, `/jump-fall`, `/land`, `/talk`, `/interact` | **yes, astride a ride — §11.5** |
 | `canoe`, `dogsled` | none | none | no, and no level asks yet |
@@ -789,7 +791,7 @@ it does. Which parts a mode uses is a property of the mode, and most use one or 
 | `skate` | — | **the skates** | — |
 | `toboggan` | the deck | — | the curled prow |
 | `skateboard` | the board | — | — |
-| `bike` | the whole bicycle | — | — |
+| `bike` | the bicycle, and the bar between the grips | — | **the near grip** |
 | `walk` | — | — | — |
 
 `foot-gear-*` carries **its own boot's transform, component for component, in every key of every state** —

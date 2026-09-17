@@ -821,6 +821,15 @@
       "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
+      "path": "src/svg/shared/character/mount-fore-bike.svg",
+      "kind": "shipped",
+      "title": "TrueNorth character rig part \"mount-fore-bike\" — The bicycle's NEAR handlebar grip, and the reason the bar is two parts. The bar the rider's hands were solved to runs along y = 300, and it w…",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
+      "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
+    },
+    {
       "path": "src/svg/shared/character/mount-fore-toboggan.svg",
       "kind": "shipped",
       "title": "TrueNorth character rig part \"mount-fore-toboggan\" — The toboggan’s curled prow, and the reason the sled is two parts. It is the one shape that says toboggan rather than plank, it sits at the leading edg…",

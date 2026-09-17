@@ -18490,6 +18490,13 @@
       "w": 196,
       "h": 36
     },
+    "character-mount-fore-bike": {
+      "source": "src/svg/shared/character/mount-fore-bike.svg",
+      "x": 118,
+      "y": 303,
+      "w": 61,
+      "h": 34
+    },
     "character-mount-fore-toboggan": {
       "source": "src/svg/shared/character/mount-fore-toboggan.svg",
       "x": 171,

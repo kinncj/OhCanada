@@ -4194,7 +4194,7 @@
       "openQuestions": null,
       "notes": [
         "assets/style/rig-contract.md section 11 is the contract.",
-        "RENDER SOURCES, as documentation - the builder composes the picture from the rig contract, and these are the files it draws on: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-bike.svg."
+        "RENDER SOURCES, as documentation - the builder composes the picture from the rig contract, and these are the files it draws on: src/svg/shared/character/torso-parka.svg, src/svg/shared/character/arm-upper-parka.svg, src/svg/shared/character/arm-lower-parka.svg, src/svg/shared/character/hand-parka.svg, src/svg/shared/character/leg-upper-parka.svg, src/svg/shared/character/leg-lower-parka.svg, src/svg/shared/character/foot-r-parka.svg, src/svg/shared/character/foot-l-parka.svg, src/svg/shared/character/head-covering-toque.svg, src/svg/shared/character/head-skin-2.svg, src/svg/shared/character/face-neutral-neutral.svg, src/svg/shared/character/hair-crop-brown.svg, src/svg/shared/character/ground-shadow.svg, src/svg/shared/character/mount-deck-bike.svg, src/svg/shared/character/mount-fore-bike.svg."
       ]
     },
     {
