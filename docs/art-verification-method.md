@@ -64,6 +64,50 @@ directory; `verify-art record` copies the scored keymap, answers and audit into 
 On the last hand-written run two subjects were filed against each other's hashes, which voided a verdict that
 had been reached correctly — a transposition scores exactly like a failure to identify.
 
+### How an answer is compared, and the one thing the comparison will not do
+
+Decided 2026-09-17, after the first genuinely blind run scored fourteen subjects as failures to identify
+while their feature audits passed.
+
+**The comparison normalises how an answer is worded. It never normalises what an answer means.**
+
+A blind check asks *what is this*. An article, an adjective, a different word order and a different distance
+between two words are all ways of saying the same thing, and the phrase comparison that shipped scored every
+one of them as a wrong answer — including the verifier's own example, *"An oil pumpjack"* against an accepted
+*"a pumpjack"*. A verifier obeying the contract exactly was marked wrong, which is the matcher deciding art
+questions it has no standing to decide.
+
+So an accepted answer matches when **every one of its content words appears in the verdict and no occurrence
+it relies on is negated**. Function words — articles, prepositions, conjunctions, copulas, degree words —
+are set aside: they carry no identification and two people naming the same thing choose them freely. Order
+and distance are **not** required, deliberately: a blind verdict is a paragraph about one picture, written as
+"a thing, and then everything the thing is made of", so the elaboration lands *between* the words the
+contract cares about and every rule that kept them near each other refused honest answers.
+
+Three things keep that from becoming a bag of words that matches anything:
+
+- **Every content word, not most of them.** A verdict missing one is not a match, however close it reads.
+- **A negation refuses the words it governs.** Dropping order costs the accidental protection a gap bound
+  gave against *"X is not a Y"* — and the phrase match never really had it either, since it accepted a
+  negated verbatim phrase. It is now explicit and it is the guard the harness's own test fires on.
+- **One equivalence class, and only one.** Words meaning "an unspecified human being" — person, figure,
+  someone — are one word. That is a fact about English, not about any picture here, which is why it may live
+  in the scorer.
+
+**A synonym for a depicted thing may not.** Two different words for the same object — one the contract's, one
+a perfectly correct alternative — is a judgement about what the art depicts. A table of them in
+`scripts/lib/art-score.mjs` would be a dictionary of answers: unbounded, grown one entry per disappointed
+run, reviewed by nobody, and written by whoever was closest to the failing gate rather than by the contract's
+owner. Verdicts that fail that way are **reported to the contract's owner as what they are** and not absorbed
+in the scorer. On the run this was written for, exactly one subject failed that way.
+
+Measured in both directions over that run, because "looser" is only defensible with the second number beside
+the first: accepted gating verdicts **41/57 → 51/57**, with **nothing** the phrase comparison accepted now
+refused; and verdicts the new rule would accept for some *other* subject's contract — the looseness proxy,
+since a verdict is only ever scored against its own subject — **24 → 38** across 57 × 54 pairs. The refusal
+that had to survive does: a one-word answer naming a different kind of building shares no content word with
+any answer accepted for the subject whose own note warns about exactly that misreading.
+
 ## Blindness is fragile, and it broke on the first run
 
 The 2026-09-08 pass could not be run blind. The identifier had to locate the renders before it could

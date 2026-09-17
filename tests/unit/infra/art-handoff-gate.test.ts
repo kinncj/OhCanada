@@ -944,6 +944,178 @@ describe('the answer matcher accepts a correct answer worded differently', () =>
     const result = scoreAnswer(SUBJECT, 'a photograph of a mountain range at sunset');
     expect(result.output).toContain('the unprompted answer did not name the subject');
   });
+
+  /* ---- wording, over a subject this file owns ---- */
+
+  /**
+   * THE SAME QUESTION, ASKED WITHOUT PINNING IT TO SOMEBODY ELSE'S WORDS.
+   *
+   * `scoreAnswer` above reads the real contract, which is right for the cases
+   * that are ABOUT the real contract - the refusal its owner wrote in capitals
+   * has to be asserted against the real one or it asserts nothing. It is wrong
+   * for the cases that are about the MATCHER: the contract owner may rephrase
+   * any `expectedBlindAnswer` at any time, legitimately, and a wording case
+   * pinned to today's phrasing would then either fail for no reason or, worse,
+   * quietly stop exercising the shape it was written for.
+   *
+   * So these build a one-subject tree and score a record over it. No hand-off
+   * is built: `score` is the stage that compares, and the comparison is the
+   * whole of what is under test here.
+   */
+  const INVENTED_SOURCE = 'src/svg/ottawa/landmark-parliament-hill.svg';
+  const scoreWording = (
+    expectedBlindAnswer: readonly string[],
+    answer: string,
+  ): { status: number; output: string } => {
+    const root = fixture('matcher-wording', {
+      subjects: [
+        {
+          id: 'peace-tower',
+          subject: 'Whatever this case says it is',
+          renders: [INVENTED_SOURCE],
+          renderRecipe: 'Rasterise the file on its own at 1x.',
+          expectedBlindAnswer: [...expectedBlindAnswer],
+          mustBeRight: [{ feature: 'green copper spire' }],
+          neverAdd: [],
+        },
+        UNRENDERED,
+      ],
+    });
+    const record = {
+      runIntegrity: { blindnessHeld: true },
+      results: [],
+      handoffRun: {
+        keymap: {
+          id: 'truenorth-art-handoff-keymap',
+          version: 1,
+          runId: 'matcherwording01',
+          entries: [
+            withArtDigest(root, {
+              render: 'fedcba9876543210.png',
+              subjectId: 'peace-tower',
+              probe: 'full',
+              gating: true,
+              sources: [INVENTED_SOURCE],
+            }),
+          ],
+          unrendered: [],
+        },
+        answers: {
+          runId: 'matcherwording01',
+          identifications: [{ render: 'fedcba9876543210.png', answer }],
+        },
+        audit: {
+          runId: 'matcherwording01',
+          audits: [
+            {
+              subjectId: 'peace-tower',
+              featuresPresent: ['green copper spire'],
+              featuresAbsent: [],
+              featuresUncheckable: [],
+              forbiddenPresent: [],
+            },
+          ],
+        },
+      },
+    };
+    const path = join(scratch('matcher-wording'), 'art-verification.json');
+    writeFileSync(path, JSON.stringify(record, null, 2));
+    return run(['score', '--root', root, '--record', path]);
+  };
+
+  it('accepts an article and an adjective the contract did not write', () => {
+    // The verifier's own example from the first genuinely blind run. It was
+    // shown a machine, named it, and was scored as having failed to name it,
+    // because "An oil pumpjack" is not the string "a pumpjack".
+    const result = scoreWording(
+      ['a pump jack', 'a pumpjack'],
+      'An oil pumpjack on a wellsite, drawn large: red horsehead on a walking beam pivoted on a ' +
+        'white A-frame Samson post.',
+    );
+    expect(result.output).not.toContain('the unprompted answer did not name the subject');
+    expect(result.output).toContain('PASS peace-tower');
+  });
+
+  it('accepts the words the contract wrote, far apart and in the other order', () => {
+    // A blind verdict is a paragraph about one picture, and the elaboration
+    // lands BETWEEN the words the contract cares about. Any rule that kept them
+    // near each other refused honest answers of exactly this shape.
+    const result = scoreWording(
+      ['a stone wall'],
+      'A snow-capped masonry wall corner drawn large: tan and beige dressed stone blocks laid in ' +
+        'courses with darker brown bands.',
+    );
+    expect(result.output).toContain('PASS peace-tower');
+  });
+
+  it('accepts a word for a person that the contract did not choose', () => {
+    // The one equivalence class in the matcher, and the reason it is allowed to
+    // be there: which word a verifier reaches for to mean "an unspecified human
+    // being" says nothing about whether it recognised the drawing.
+    const result = scoreWording(
+      ['a person sitting on a wooden sled'],
+      'A winter-dressed figure - blue coat, red scarf - sitting on a wooden sled with an upcurved ' +
+        'front runner.',
+    );
+    expect(result.output).toContain('PASS peace-tower');
+  });
+
+  /* ---- and what it must still refuse ---- */
+
+  it('refuses a different KIND of thing, which is the guard the contract owner wrote', () => {
+    // PINNED TO THE REAL CONTRACT ON PURPOSE, unlike the wording cases above.
+    // This subject's own `expectedBlindAnswerNote` names the misreading to watch
+    // for in capitals, and accepts one architectural description while refusing
+    // another that differs from it by a single word of ordinary English. It is
+    // the exact failure a looser matcher would launder, and it is the line: the
+    // matcher may normalise how an answer is worded and may not decide what it
+    // means.
+    for (const answer of ['a church', 'A stone church or basilica tower in snow.', 'a chapel']) {
+      const result = scoreAnswer('library-of-parliament', answer);
+      expect(result.output, `"${answer}" was accepted`).toContain(
+        'the unprompted answer did not name the subject',
+      );
+    }
+    // and the reading the note explicitly accepts is still accepted
+    expect(scoreAnswer('library-of-parliament', 'a cathedral chapter house').output).not.toContain(
+      'the unprompted answer did not name the subject',
+    );
+  });
+
+  it('refuses a phrase the verdict only quotes in order to deny it', () => {
+    // A REGRESSION THE SHIPPED MATCHER HAD. Dropping word order costs the
+    // accidental protection a gap bound gave against negation, so the guard is
+    // now explicit - but the phrase match never had it either: it accepted a
+    // NEGATED VERBATIM PHRASE, because putting a negation in front of a phrase
+    // leaves the phrase intact. An identification is an assertion.
+    const result = scoreWording(
+      ['a frozen canal'],
+      'This is not a frozen canal; there is no ice anywhere in it.',
+    );
+    expect(result.output).toContain('the unprompted answer did not name the subject');
+  });
+
+  it('refuses a synonym it was never told, and says nothing about whether it is one', () => {
+    // WHERE THE LINE IS DRAWN. Two words for the same object is a judgement
+    // about what the art depicts, and a table of them in the scorer would be a
+    // dictionary of answers: unbounded, grown one entry per disappointed run,
+    // and owned by whoever was nearest the failing gate. A verdict that fails
+    // this way is reported to the contract's owner, who may accept the second
+    // word, and is not absorbed here.
+    const result = scoreWording(
+      ['a barn and a corral'],
+      'A red farm barn with a white-trimmed gable and a wooden post-and-rail paddock in front.',
+    );
+    expect(result.output).toContain('the unprompted answer did not name the subject');
+  });
+
+  it('refuses a candidate that asks for nothing at all', () => {
+    // The anti-vacuum floor at the level of one comparison: an accepted answer
+    // made only of words the matcher sets aside would otherwise match every
+    // verdict ever written, including an empty description of a blank canvas.
+    const result = scoreWording(['the'], 'A snow-capped masonry wall corner, drawn large.');
+    expect(result.output).toContain('the unprompted answer did not name the subject');
+  });
 });
 
 describe('an earlier run must not be reachable during a later run\'s blind phase', () => {

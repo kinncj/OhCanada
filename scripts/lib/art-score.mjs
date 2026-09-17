@@ -102,74 +102,144 @@
 
 import { isRendered, normalise } from './art-handoff.mjs';
 
-/** ` foo ` padding so "canal" does not match inside "canalisation". */
-const padded = (value) => ` ${normalise(value)} `;
-
-/**
- * HOW MANY WORDS AN ANSWER MAY INSERT INTO AN EXPECTED PHRASE AND STILL MATCH.
- *
- * A contiguous substring match cannot accept a correct answer phrased with an
- * extra adjective, and that is not hypothetical. One subject's contract was
- * amended to accept a GENERIC answer, and a genuinely blind run gave that answer
- * with one ordinary adjective inserted into each of two noun phrases. Every
- * generic phrase failed on the substring test, and the subject passed only
- * because the verifier ALSO volunteered the place name the amendment had just
- * made optional. A verifier obeying the contract exactly would have been marked
- * wrong. The contract was doing the right thing and the matcher was not.
- *
- * The answers are not quoted here, nor is the subject named: this file is part
- * of the leak surface for the same reason the hand-off is.
- *
- * So a candidate matches when its words appear IN ORDER, with at most this many
- * of the answer's own words between any two of them. Order is kept because it
- * is what distinguishes a phrase from a bag of words; the gap is bounded
- * because an unbounded one would let a candidate match words scattered across
- * an unrelated paragraph, which is a different and worse failure than the one
- * being fixed.
- *
- * Two, measured against the case that produced it - one insertion per gap
- * ("public" after "outdoor", "city" after "frozen") - with one word of headroom
- * for the same shape twice ("a large frozen city canal"). It is not a threshold
- * anyone should tune upward without a run that needed it: at three, "rideau" and
- * "canal" match across "the Rideau is definitely not a canal".
- */
-const MAX_INSERTED_WORDS = 2;
-
-/**
- * Does `candidate`'s word sequence occur in `answer` in order, with no gap
- * wider than MAX_INSERTED_WORDS? Greedy from each possible start, which is
- * correct here because a wider gap can only be MORE permissive: if a later
- * occurrence of a word would match, an earlier one inside the gap budget does
- * too, and the loop restarts at every candidate start position.
- */
-const containsInOrder = (answerWords, candidateWords) => {
-  if (candidateWords.length === 0) return false;
-  for (let start = 0; start <= answerWords.length - candidateWords.length; start += 1) {
-    if (answerWords[start] !== candidateWords[0]) continue;
-    let at = start + 1;
-    let matched = 1;
-    while (matched < candidateWords.length && at < answerWords.length) {
-      const found = answerWords.indexOf(candidateWords[matched], at);
-      if (found === -1 || found - at > MAX_INSERTED_WORDS) break;
-      at = found + 1;
-      matched += 1;
-    }
-    if (matched === candidateWords.length) return true;
-  }
-  return false;
-};
-
 const wordsOf = (value) => normalise(value).split(' ').filter((word) => word !== '');
 
+/* ------------------------------------------------------------------ *
+ * COMPARING A STATED VERDICT TO THE ACCEPTED ANSWERS
+ * ------------------------------------------------------------------ */
+
+/**
+ * THE LINE THIS DRAWS: IT NORMALISES HOW AN ANSWER IS WORDED. IT NEVER
+ * NORMALISES WHAT AN ANSWER MEANS.
+ *
+ * A blind check asks WHAT IS THIS. An article, an adjective, a different word
+ * order and a different distance between two words are all ways of saying the
+ * same thing, and a phrase comparison scores every one of them as a wrong
+ * answer. Measured on the first genuinely blind run: of 57 gating verdicts the
+ * phrase comparison accepted 41, and nine subjects among the sixteen it refused
+ * had described the right thing in ordinary English with an article or an
+ * adjective in the way. A verifier obeying the contract exactly was marked
+ * wrong, which is the matcher deciding art questions.
+ *
+ * So a candidate answer matches when EVERY ONE OF ITS CONTENT WORDS appears in
+ * the verdict, and no occurrence it relies on is negated. Content words are
+ * what is left once the function words are set aside - articles, prepositions,
+ * conjunctions, copulas, degree words - because those carry no identification
+ * and two people naming the same thing choose them freely.
+ *
+ * ORDER AND DISTANCE ARE DELIBERATELY NOT REQUIRED. A blind verdict is a
+ * paragraph about ONE picture, written as "a thing, and then everything the
+ * thing is made of". Every rule that kept the candidate's words near each other
+ * fought that shape and refused honest answers, because the elaboration lands
+ * BETWEEN the words the contract cares about and not around them. A word in a
+ * verdict is a word about the picture that verdict is about; where it sits in
+ * the sentence carries nothing this comparison can use.
+ *
+ * WHAT ORDER WAS SILENTLY BUYING WAS NEGATION, AND IT IS NOW BOUGHT ON PURPOSE.
+ * "X is not a Y" contains every content word of "a Y". The old gap bound
+ * refused that by accident and only by accident - and not even reliably: the
+ * exact-phrase path accepted a NEGATED VERBATIM PHRASE, because putting a
+ * negation in front of a phrase leaves the phrase intact, and that is a wrong
+ * answer the shipped matcher took. So an occurrence is refused when a negation
+ * stands within NEGATION_REACH tokens before it, which is the shape English
+ * uses: the negation, and at most an article. An identification is an
+ * assertion. A denial that the picture is the subject is not an identification
+ * of it.
+ *
+ * THE ONE EQUIVALENCE, AND WHY THERE IS NOT A SECOND. Words meaning "an
+ * unspecified human being" are treated as one word. A drawing of a person can
+ * honestly be called a person, a figure or someone, and which of the three a
+ * verifier reaches for says nothing whatever about whether it recognised the
+ * drawing. That is a fact about English, not a fact about any picture in this
+ * repository, which is exactly why it may live in this file.
+ *
+ * A SYNONYM FOR A DEPICTED THING MAY NOT. Two different words for the same
+ * OBJECT - where one is the word the contract chose and the other is a
+ * perfectly correct word for the same thing - is a judgement about what the art
+ * depicts. A table of those here would be a dictionary of answers: unbounded,
+ * grown one entry per disappointed run, reviewed by nobody, and written by
+ * whoever was closest to the failing gate rather than by the contract's owner.
+ * Those failures are reported as what they are and routed to that owner. On the
+ * run this was written for, exactly one subject failed that way and it is on
+ * the list the owner gets rather than quietly absorbed here.
+ *
+ * MEASURED IN BOTH DIRECTIONS over the real run, because "looser" is only
+ * defensible with the second number beside the first: accepted gating verdicts
+ * 41/57 -> 51/57, with NOTHING the phrase comparison accepted now refused; and
+ * verdicts this would accept for some OTHER subject's contract - the looseness
+ * proxy, since a verdict is only ever scored against its own subject - 24 -> 38
+ * across 57 x 54 pairs. The named refusal that had to survive does: a one-word
+ * answer naming a different KIND of building shares no content word with any
+ * answer the contract accepts for the subject whose own note warns, in
+ * capitals, about exactly that misreading.
+ *
+ * No answer is quoted here and no subject is named: this file is part of the
+ * leak surface for the same reason the hand-off is.
+ */
+const FUNCTION_WORDS = new Set(
+  (
+    'a an the of on in at to with and or is are was were be been being that this these those for as' +
+    ' it its their there has have had by from into onto about which who whose while also very quite' +
+    ' rather just still now then so but than when where'
+  ).split(' '),
+);
+
+/**
+ * Kept as narrow as it can be while still doing the job. Three lists were
+ * measured - this one, this one plus the spatial prepositions, and both plus
+ * the quantifiers - and all three scored identically on the real run, so the
+ * shortest was taken. A word that buys nothing is a word that can only cost
+ * something later: "two", set aside, would let a verdict that counted one of a
+ * thing match a contract that asked for two.
+ */
+const NEGATIONS = new Set(
+  (
+    'no not nor never none nothing neither cannot without lacks lacking lacked isnt arent dont' +
+    ' doesnt didnt'
+  ).split(' '),
+);
+
+const HUMAN_WORDS = new Set(
+  (
+    'person people someone somebody figure figures man woman boy girl kid child adult character' +
+    ' civilian human'
+  ).split(' '),
+);
+
+/**
+ * A key no normalised word can collide with: `normalise` leaves only
+ * `[a-z0-9 ]`, so anything with a space in it is unreachable as a single word.
+ */
+const HUMAN_KEY = 'a human being';
+const classOf = (word) => (HUMAN_WORDS.has(word) ? HUMAN_KEY : word);
+
+/** "not a canal": the negation, and at most an article, before the word. */
+const NEGATION_REACH = 2;
+
 const matchesExpected = (answer, expected) => {
-  const haystack = padded(answer);
-  const answerWords = wordsOf(answer);
-  return expected.some(
-    (candidate) =>
-      // The exact phrase first, so the common case costs one string search and
-      // reads the way the contract is written.
-      haystack.includes(padded(candidate)) || containsInOrder(answerWords, wordsOf(candidate)),
-  );
+  const spoken = wordsOf(answer);
+  const where = new Map();
+  spoken.forEach((word, index) => {
+    const key = classOf(word);
+    if (!where.has(key)) where.set(key, []);
+    where.get(key).push(index);
+  });
+  const negated = (index) => {
+    for (let back = Math.max(0, index - NEGATION_REACH); back < index; back += 1) {
+      if (NEGATIONS.has(spoken[back])) return true;
+    }
+    return false;
+  };
+  return expected.some((candidate) => {
+    const wanted = wordsOf(candidate)
+      .filter((word) => !FUNCTION_WORDS.has(word))
+      .map(classOf);
+    // A candidate made of nothing but function words asks for nothing and must
+    // not therefore match everything. `checkContract` refuses an empty
+    // `expectedBlindAnswer`; this is the same floor one level down.
+    if (wanted.length === 0) return false;
+    return wanted.every((word) => (where.get(word) ?? []).some((index) => !negated(index)));
+  });
 };
 
 /**
