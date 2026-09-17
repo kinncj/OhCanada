@@ -862,14 +862,27 @@ const CSS = `
 .tn-creator__preview[data-art] > h2 { grid-area: heading; }
 .tn-creator__preview[data-art] > p { grid-area: text; }
 
-/* The whole figure, crown to boots (ADR-0040, amended): tall and narrow like the
-   figure, so the head is drawn at about the size the old thigh crop drew it and
-   the words beside it keep their width. */
+/*
+  The whole figure, crown to boots (ADR-0040, amended twice): tall and narrow
+  like the figure, so the head is drawn at about the size the old thigh crop drew
+  it and the words beside it keep their width.
+
+  IT GROWS WITH THE TEXT, unlike every other picture in this sheet. The third
+  live-site audit found the creator at 200 % text with every word twice its size
+  and this picture still 100 x 240 px — a thumbnail for the player who asked for
+  large type, which is the player least able to read it. The rest of the game's
+  pictures are decoration beside words that say the same thing; this one is the
+  *answer* to "what will I look like", and nothing else on the screen shows it.
+  So it is 6.25rem — 100 px at 100 %, 200 px at 200 % — capped at two fifths of
+  the window so it can never take the screen from the options, with one length
+  and a ratio rather than two lengths, so the figure cannot be stretched.
+*/
 .tn-creator__art {
   grid-area: art;
   box-sizing: border-box;
-  inline-size: 100px;
-  block-size: 240px;
+  inline-size: min(6.25rem, 40vw);
+  aspect-ratio: 5 / 12;
+  block-size: auto;
   border: var(--tn-edge-width) solid var(--tn-edge-soft);
   border-radius: 0.75rem;
   background: var(--tn-paper);
@@ -2115,11 +2128,14 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
     the page, and the strip spanned the whole window: Settings and Menu sat
     400 px from the game they belong to, and the mode label ran the width of the
     screen. The canvas is FIT at the design resolution, 1080 x 1920, so its
-    width is its height times 9/16. `--tn-canvas-height` is the height the page
-    measured for it (index.html); without one -- a test harness, a page that
-    does not say -- the window's own height is the same arithmetic. On a
-    portrait phone that is wider than the window, so `min()` gives the whole
-    width back and nothing about a phone changes.
+    width is its height times 9/16. The custom property --tn-canvas-height is
+    the height the page measured for it (index.html); without one -- a test
+    harness, a page that does not say -- the window's own height is the same
+    arithmetic. On a portrait phone that is wider than the window, so min()
+    gives the whole width back and nothing about a phone changes.
+
+    (No backticks in this file's comments: the whole sheet is a template
+    literal, and two of them here ended it in the middle of a rule.)
 
     The side panels beside it are the level's own sky and ground, which the
     engine paints (CLAUDE.md); this half is only about where the chrome stops.

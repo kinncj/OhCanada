@@ -126,3 +126,27 @@ A second live-site audit found the picture cut off at the thighs and always in t
   where the journey starts, put on the player, and it shows the hands in the chosen skin tone. A preview-only
   toggle was rejected as a control for a choice the rig says nobody makes, and a labelled parka as a new sentence
   for the costume of two levels in ten. Without a costume the adapter still draws the artboard's own parka.
+
+## Amendment, 2026-09-17: the picture grows with the text
+
+A third live-site audit opened the creator at 200 % text: every word was twice its size and the picture was
+still 100 × 240 CSS px. The consequence above — "the picture is sized in px; text scaling grows words, not
+decoration" — is right for the rest of the game's art and wrong for this one, and the difference is what the
+picture *is*. A landmark's drawing and the title's landscape illustrate words that already say the same
+thing; this picture is the answer to "what will I look like", and no words on the screen carry it. Text
+scaling is the setting a player with low vision reaches for, so the one thing they could not read any other
+way was the one thing that did not grow.
+
+- **`inline-size: min(6.25rem, 40vw)`, with `aspect-ratio: 5 / 12`.** 6.25rem is the 100 px the box already
+  was, so nothing at 100 % text changes anywhere; 200 % text asks for 200 px and gets whatever the window
+  allows. The cap is two fifths of the window — 156 px on a 390 px phone, 160 px at 400 px — so the picture
+  can never take the screen from the options it exists to illustrate, and the page still does not scroll
+  sideways. One length and a ratio rather than two lengths, so the figure cannot be stretched by a cap that
+  bites on one axis only.
+- **Nothing else moves.** The sticky panel and `scroll-padding-block-start: 19.5rem` are scoped to 100 % text,
+  where the box is the size they were measured against. At larger text the panel already stacks and is not
+  sticky, which is what leaves room for a bigger picture.
+- **The drawing is drawn at the new size, not upscaled.** `app/adapters/phaser/character-preview.ts` sizes its
+  backing store from `host.clientWidth`/`clientHeight` and observes the host with a `ResizeObserver`, so a
+  larger box is re-rendered at device resolution and a text size changed in Settings while the creator is open
+  is picked up live. No adapter was changed for this.

@@ -225,6 +225,32 @@ test.describe("the creator's picture", () => {
     expect(small).toBe(0);
   });
 
+  /*
+   * The third live-site audit, P2: at 200 % text every word doubled and the
+   * picture stayed 100 x 240 px, so the player who asked for bigger text got a
+   * thumbnail beside letters twice its old size. The picture grows with the
+   * text now, capped by the window so it can never take the screen from the
+   * options (ADR-0040, amended).
+   */
+  test('grows the picture with the text, and keeps its shape', async ({ page }) => {
+    await open(page, { settle: 'ready' });
+    const small = await boxOf(page.getByTestId('character-preview-art'));
+
+    await open(page, { textScale: 200, settle: 'ready' });
+    const large = await boxOf(page.getByTestId('character-preview-art'));
+
+    expect(large.width, 'the picture did not grow with the text').toBeGreaterThan(small.width * 1.4);
+    expect(large.height, 'the picture did not grow with the text').toBeGreaterThan(small.height * 1.4);
+    /* The figure's own proportions, crown to soles: 100 x 240 (ADR-0040). */
+    expect(Math.abs(large.height / large.width - small.height / small.width)).toBeLessThan(0.05);
+    /* And it is still decoration that cannot crowd out the words. */
+    const viewport = page.viewportSize();
+    expect(large.width).toBeLessThanOrEqual((viewport?.width ?? 0) / 2);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1),
+    ).toBe(false);
+  });
+
   test('is clean in high contrast, and holds perfectly still under reduced motion', async ({ page }) => {
     await open(page, { contrast: 'high', motion: 'reduced', settle: 'ready' });
 
