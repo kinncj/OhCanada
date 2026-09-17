@@ -4022,3 +4022,394 @@ describe('--require-identification', () => {
     expect(result.stderr).toContain('blindnessHeld: false');
   });
 });
+
+/* ================================================================== *
+ * 9. A record describes exactly one run
+ * ================================================================== */
+
+/**
+ * THE DEFECT: A RECORD THAT STATES ONE RUN'S VERDICTS UNDER ANOTHER RUN'S PROOF
+ * OF BLINDNESS.
+ *
+ * `record` rewrote only `runIntegrity` and `handoffRun` and merged the rest
+ * forward, so pointing it at a file from an earlier run left THAT run's
+ * `results` table standing -- 35/17/2, one subject `not-checked`, one
+ * `blindIdentification` of the string `"undefined"` -- beside a `handoffRun`
+ * that scored 42/12/0. A real verifier hit this and rebuilt the table, the scope
+ * and the narrative by hand rather than ship the contradiction.
+ *
+ * IT IS WORSE THAN AN OUTRIGHT FAILURE, which is the reason these cases exist
+ * rather than a note in the runbook. A reader -- or a gate -- takes the verdict
+ * table at face value. A document that fails loudly gets fixed; a document that
+ * asserts A's verdicts under B's commitment LOOKS VERIFIED AND IS NOT, and reads
+ * in the output exactly like a record that was made properly. Same silent
+ * greenness as everything else this harness refuses, arriving in the file the
+ * harness itself writes.
+ *
+ * `record` HAD NO TEST AT ALL before these, which is the other half of how it
+ * shipped: every other stage of the pipeline is driven by the cases above.
+ */
+describe('a record describes exactly one run', () => {
+  const SOURCE = 'src/svg/ottawa/landmark-parliament-hill.svg';
+  const RENDER = '0011223344556677.png';
+  const RUN_A = 'aaaaaaaaaaaaaaaa';
+  const RUN_B = 'bbbbbbbbbbbbbbbb';
+
+  interface CommittedRun {
+    readonly keymapPath: string;
+    readonly answersPath: string;
+    readonly auditPath: string;
+  }
+
+  /**
+   * A run frozen the way `verify-art commit` freezes one: the keymap carries the
+   * sha256 OF THE ANSWERS FILE'S BYTES. Built by hand rather than by driving the
+   * whole pipeline because these cases are about what `record` does with two
+   * runs, and a real hand-off would rasterise art for a question that is not
+   * about art -- but the commitment is computed exactly as `commit` computes it,
+   * so the refusals that rest on it are exercised for real.
+   */
+  const committedRun = (runId: string, entries: unknown[], answer: string, subjectId: string, features: string[]): CommittedRun => {
+    const dir = scratch(`committed-${runId}`);
+    const answersPath = join(dir, 'answers.json');
+    writeFileSync(
+      answersPath,
+      `${JSON.stringify({ runId, identifications: [{ render: RENDER, answer }] }, null, 2)}\n`,
+    );
+    const keymapPath = join(dir, 'keymap.json');
+    writeFileSync(
+      keymapPath,
+      `${JSON.stringify(
+        {
+          id: 'truenorth-art-handoff-keymap',
+          version: 1,
+          runId,
+          entries,
+          unrendered: [],
+          committedAnswersSha256: createHash('sha256')
+            .update(readFileSync(answersPath))
+            .digest('hex'),
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    const auditPath = join(dir, 'audit.json');
+    writeFileSync(
+      auditPath,
+      JSON.stringify({
+        runId,
+        audits: [
+          {
+            subjectId,
+            featuresPresent: features,
+            featuresAbsent: [],
+            featuresUncheckable: [],
+            forbiddenPresent: [],
+          },
+        ],
+      }),
+    );
+    return { keymapPath, answersPath, auditPath };
+  };
+
+  const root = fixture('record-integrity');
+  const towerRun = (runId: string): CommittedRun =>
+    committedRun(
+      runId,
+      [withArtDigest(root, { render: RENDER, subjectId: 'peace-tower', probe: 'full', gating: true, sources: [SOURCE] })],
+      'The Peace Tower on Parliament Hill',
+      'peace-tower',
+      ['green copper spire', 'clock face'],
+    );
+
+  const recordCmd = (made: CommittedRun, out: string, extra: readonly string[] = [], at = root) =>
+    run([
+      'record', '--root', at,
+      '--keymap', made.keymapPath,
+      '--answers', made.answersPath,
+      '--audit', made.auditPath,
+      '--out', out,
+      ...extra,
+    ]);
+
+  interface Written {
+    derivedFrom?: { handoffRunId?: string };
+    runIntegrity?: { handoffRunId?: string; committedAnswersSha256?: string };
+    scope?: Record<string, unknown>;
+    results?: { subjectId: string; verdict: string; blindIdentification?: unknown[] }[];
+    handoffRun?: { keymap: { runId: string } };
+    findings?: unknown;
+  }
+  const readRecord = (path: string): Written => JSON.parse(readFileSync(path, 'utf8')) as Written;
+
+  const out = (name: string): string => join(scratch(name), 'art-verification.json');
+
+  it('derives the verdict table and the scope from the run it is recording', () => {
+    // The table is not copied and not typed: it is computed from `handoffRun` by
+    // the same scorer `score --record` uses, which is what makes it unable to
+    // describe a different run.
+    const path = out('derives');
+    const result = recordCmd(towerRun(RUN_A), path);
+    expect([0, 1], result.output).toContain(result.status);
+
+    const written = readRecord(path);
+    expect(written.derivedFrom?.handoffRunId).toBe(RUN_A);
+    expect(written.runIntegrity?.handoffRunId).toBe(RUN_A);
+    expect(written.handoffRun?.keymap.runId).toBe(RUN_A);
+    expect(written.scope?.handoffRunId).toBe(RUN_A);
+    expect(written.results?.map((row) => row.subjectId)).toContain('peace-tower');
+    expect(written.results?.find((row) => row.subjectId === 'peace-tower')?.verdict).toBe('pass');
+    expect(written.scope?.subjectsPassed).toBe(1);
+    // The frozen answer is quoted VERBATIM, and it is a copy of `handoffRun`
+    // rather than a second source of truth: it is regenerated on every record.
+    expect(JSON.stringify(written.results)).toContain('The Peace Tower on Parliament Hill');
+    expect(result.stdout).toContain('DERIVED');
+  });
+
+  /* ---- the mixed-run case, which is the whole point of this section ---- */
+
+  it('REFUSES a record made from another run, and does not touch the file', () => {
+    // RUN A IS ON DISK, WITH PROSE, AND `record` IS INVOKED WITH RUN B. Under the
+    // shipped command this produced the document the verifier had to repair by
+    // hand: A's `results` and A's narrative, beside B's `handoffRun` and B's
+    // commitment.
+    const path = out('mixed');
+    expect([0, 1]).toContain(recordCmd(towerRun(RUN_A), path).status);
+
+    // Prose, as every real record carries: reasoning somebody wrote about run A.
+    const planted = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
+    planted.findings = { whatRunAConcluded: 'a sentence about run A and no other run' };
+    writeFileSync(path, `${JSON.stringify(planted, null, 2)}\n`);
+    const before = readFileSync(path, 'utf8');
+
+    const mixed = recordCmd(towerRun(RUN_B), path);
+
+    expect(mixed.status, mixed.output).toBe(1);
+    expect(mixed.stderr).toContain(RUN_A);
+    expect(mixed.stderr).toContain(RUN_B);
+    // The refusal has to be actionable: it names the prose that would have been
+    // orphaned, because that is the thing a rewrite would have destroyed.
+    expect(mixed.stderr).toContain('findings');
+    expect(mixed.stderr).toContain('exactly one run');
+
+    // NOTHING WAS WRITTEN. A refusal that half-wrote the file would be the
+    // defect with an error message on top.
+    expect(readFileSync(path, 'utf8')).toBe(before);
+
+    // AND THE ASSERTION THIS SECTION EXISTS FOR, stated over the artefact rather
+    // than over the message: there is no document here claiming A's verdicts
+    // beside B's integrity block.
+    const after = readRecord(path);
+    expect(after.derivedFrom?.handoffRunId).toBe(after.handoffRun?.keymap.runId);
+    expect(after.scope?.handoffRunId).toBe(after.handoffRun?.keymap.runId);
+    expect(after.handoffRun?.keymap.runId).not.toBe(RUN_B);
+  });
+
+  it('rewrites wholly under --replace, and says what it dropped', () => {
+    // The way through, because a refusal with no way through is a gate people
+    // turn off. It drops the prose rather than carrying it, and SAYS SO: git has
+    // the old record, and this file no longer does.
+    const path = out('replace');
+    expect([0, 1]).toContain(recordCmd(towerRun(RUN_A), path).status);
+    const planted = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
+    planted.findings = { whatRunAConcluded: 'about run A' };
+    writeFileSync(path, `${JSON.stringify(planted, null, 2)}\n`);
+
+    const replaced = recordCmd(towerRun(RUN_B), path, ['--replace']);
+    expect([0, 1], replaced.output).toContain(replaced.status);
+    expect(replaced.stdout).toContain('overwritten whole');
+    expect(replaced.stdout).toContain('findings');
+
+    const written = readRecord(path);
+    expect(written.findings, "run A's prose survived a whole rewrite").toBeUndefined();
+    expect(written.derivedFrom?.handoffRunId).toBe(RUN_B);
+    expect(written.runIntegrity?.handoffRunId).toBe(RUN_B);
+    expect(written.scope?.handoffRunId).toBe(RUN_B);
+    expect(written.handoffRun?.keymap.runId).toBe(RUN_B);
+  });
+
+  it('re-records the SAME run, keeping its prose and re-deriving its table', () => {
+    // The case the merge was written for, and the only one where carrying prose
+    // forward is honest: the reasoning on disk is about the run being recorded.
+    // The TABLE is still recomputed, so a hand-edited verdict cannot survive a
+    // re-record -- which is the narrow version of the same defect.
+    const path = out('same-run');
+    expect([0, 1]).toContain(recordCmd(towerRun(RUN_A), path).status);
+
+    const edited = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
+    edited.findings = { aboutRunA: 'kept, because this is still run A' };
+    edited.results = [{ subjectId: 'A-ROW-SOMEBODY-TYPED', verdict: 'pass' }];
+    writeFileSync(path, `${JSON.stringify(edited, null, 2)}\n`);
+
+    const again = recordCmd(towerRun(RUN_A), path);
+    expect([0, 1], again.output).toContain(again.status);
+
+    const written = readRecord(path);
+    expect((written.findings as { aboutRunA?: string })?.aboutRunA).toBe(
+      'kept, because this is still run A',
+    );
+    expect(
+      JSON.stringify(written.results),
+      'a hand-typed verdict row survived a re-record',
+    ).not.toContain('A-ROW-SOMEBODY-TYPED');
+    expect(written.results?.find((row) => row.subjectId === 'peace-tower')?.verdict).toBe('pass');
+  });
+
+  it('agrees with `score --record` over the file it just wrote', () => {
+    // THE RECONCILIATION THE VERIFIER HAD TO DO BY HAND. The two commands now
+    // call one scorer, so this asserts the property rather than a pair of
+    // strings that happen to match today.
+    const path = out('agree');
+    const recorded = recordCmd(towerRun(RUN_A), path);
+    const scored = run(['score', '--root', root, '--record', path]);
+
+    expect(recorded.output).toContain('PASS peace-tower');
+    expect(scored.output).toContain('PASS peace-tower');
+    expect(scored.status, scored.output).toBe(recorded.status);
+
+    // And the written table says the same thing the scorer printed, which is the
+    // half a reader actually reads.
+    expect(readRecord(path).results?.find((r) => r.subjectId === 'peace-tower')?.verdict).toBe('pass');
+  });
+
+  it('refuses to score a document whose stamp and hand-off disagree', () => {
+    // The catch for a record assembled by something other than this command --
+    // a hand edit, a bad merge, a half-applied patch. One of the two halves is
+    // not about this document's art and nothing can tell which, so neither is
+    // readable and the gate says so instead of scoring one of them.
+    const path = out('franken');
+    expect([0, 1]).toContain(recordCmd(towerRun(RUN_B), path).status);
+    const doc = JSON.parse(readFileSync(path, 'utf8')) as { derivedFrom: { handoffRunId: string } };
+    doc.derivedFrom.handoffRunId = RUN_A;
+    writeFileSync(path, `${JSON.stringify(doc, null, 2)}\n`);
+
+    const scored = run(['score', '--root', root, '--record', path]);
+    expect(scored.status, scored.output).toBe(1);
+    expect(scored.stderr).toContain('MIXES TWO RUNS');
+    expect(scored.stderr).toContain(RUN_A);
+    expect(scored.stderr).toContain(RUN_B);
+  });
+
+  /* ---- and the commitment is exactly as strong as it was ---- */
+
+  it('still refuses a run that was never committed', () => {
+    const made = towerRun(RUN_A);
+    const keymap = JSON.parse(readFileSync(made.keymapPath, 'utf8')) as Record<string, unknown>;
+    delete keymap.committedAnswersSha256;
+    writeFileSync(made.keymapPath, `${JSON.stringify(keymap, null, 2)}\n`);
+
+    const result = recordCmd(made, out('uncommitted'));
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('never committed');
+  });
+
+  it('still refuses a run whose answers moved after they were frozen', () => {
+    // THE PROPERTY THE WHOLE HARNESS RESTS ON: a verdict is bound to the
+    // artefact that was shown, and an answer revised with the key open is not a
+    // blind answer. Deriving the table changed nothing about this, and it is
+    // asserted here so that it cannot be traded away for a tidier record later.
+    const made = towerRun(RUN_A);
+    const answers = JSON.parse(readFileSync(made.answersPath, 'utf8')) as {
+      identifications: { answer: string }[];
+    };
+    answers.identifications[0]!.answer = 'a second, better answer written after the reveal';
+    writeFileSync(made.answersPath, `${JSON.stringify(answers, null, 2)}\n`);
+
+    const result = recordCmd(made, out('revised'));
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('changed after they were committed');
+  });
+
+  /* ---- a render the game cannot produce carries no verdict ---- */
+
+  it('records NO VERDICT for a composite built to an offset its level disputes', () => {
+    // THE HARNESS ALREADY REPORTS THE DRIFT and correctly declines to guess which
+    // of the two files moved. What was missing is the consequence: a verdict was
+    // still recorded against a render of an arrangement the game does not draw,
+    // so the record asserted something about a picture no player sees. It is now
+    // a non-verdict that counts as passing nothing -- the same shape as the
+    // `not-checked-against-current-art` row a redraw produces.
+    //
+    // The two numbers are still both reported and neither file is called wrong.
+    const FAR = 'src/svg/prairie-rail/layer-30-fields.svg';
+    const NEAR = 'src/svg/prairie-rail/layer-40-railbed.svg';
+    const box = (w: number, h: number, fill: string): string =>
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+      `<rect x="0" y="0" width="${w}" height="${h}" fill="${fill}"/></svg>`;
+
+    const drifted = fixture('record-offset-drift', {
+      subjects: [
+        {
+          id: 'prairie-rail-line',
+          subject: 'A rail line',
+          renders: [FAR, NEAR],
+          renderRecipe: 'Composite the two.',
+          expectedBlindAnswer: ['a railway'],
+          mustBeRight: [{ feature: 'two rails' }],
+          neverAdd: [],
+        },
+        UNRENDERED,
+      ],
+      sources: { [FAR]: box(400, 500, '#c8a05a'), [NEAR]: box(400, 400, '#2a6ebb') },
+      // The level puts the tiles 110 px apart; the recipe builds them -210 apart.
+      levels: {
+        'prairie-rail': {
+          layers: [
+            { key: 'prairie-rail-layer-30-fields', offset: { x: 0, y: 1010 } },
+            { key: 'prairie-rail-layer-40-railbed', offset: { x: 0, y: 900 } },
+          ],
+        },
+      },
+    });
+
+    const made = committedRun(
+      RUN_A,
+      [{ render: RENDER, subjectId: 'prairie-rail-line', probe: 'full', gating: true, ...artOf(drifted, [FAR, NEAR]) }],
+      'a railway running across fields',
+      'prairie-rail-line',
+      ['two rails'],
+    );
+    const path = out('drift-record');
+    const result = recordCmd(made, path, [], drifted);
+
+    const written = readRecord(path);
+    const row = written.results?.find((r) => r.subjectId === 'prairie-rail-line');
+    expect(row?.verdict, JSON.stringify(row)).toBe('not-checked-against-the-level-the-game-draws');
+    // It identified the subject correctly and that is NOT enough: the picture it
+    // named is not the one the level composes.
+    expect(written.scope?.subjectsPassed).toBe(0);
+    expect(written.scope?.compositesBuiltToAnOffsetTheLevelDisputes).toEqual(['prairie-rail-line']);
+    expect(result.stdout).toContain('NO VERDICT');
+    expect(JSON.stringify(row)).toContain('not knowable');
+  });
+
+  it('lists the locomotion modes no subject in the contract claims', () => {
+    // NOT A FAILURE, AND WHOSE FILE IT IS: the rig poses modes that
+    // `references.json` names no subject for, so nothing is handed over for them
+    // and no verdict can cover them. The gap is in the contract, which is art's
+    // file, and a gate that failed on art's work in progress would get routed
+    // around -- the deadlock four mounted subjects already produced once.
+    //
+    // What the record must not do is stay quiet, because a scope listing only
+    // what was checked reads as a scope that covers everything.
+    const path = out('modes');
+    recordCmd(towerRun(RUN_A), path, [], REPO);
+    const modes = readRecord(path).scope?.locomotionModesWithNoSubjectInTheContract;
+    expect(Array.isArray(modes)).toBe(true);
+
+    // Derived from the rig and the contract, never listed here: the set changes
+    // the day art declares a subject for one of them, and an assertion pinned to
+    // today's members would fail on exactly that legitimate fix.
+    const rig = rigOf(REPO) as unknown as { states?: Record<string, unknown> };
+    const posed = new Set(
+      Object.keys(rig.states ?? {})
+        .filter((name) => name.includes('/'))
+        .map((name) => name.slice(0, name.indexOf('/'))),
+    );
+    expect(posed.size, 'the rig poses no locomotion mode; this case checks nothing').toBeGreaterThan(0);
+    for (const mode of modes as string[]) {
+      expect(posed.has(mode), `${mode} is recorded as posed and the rig does not pose it`).toBe(true);
+    }
+  });
+});
