@@ -100,11 +100,23 @@ draws four. **This level draws none, anywhere, at any scale**, for the reason
 | `the-north-layer-40-river-and-bar` | `layer-40-river-and-bar.svg` | 1920 × 320 | 759 | the glacier-fed river in three tones, then a cobble bar with driftwood, willow and sedge |
 | `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 2300 × 700 | 228 | **POI hero, and the level's place-anchor.** The authored 920 × 280 geometry under one uniform `scale(2.5)` group since 2026-09-16; §13 |
 | `the-north-prop-spruce-stand` | `prop-spruce-stand@1x.svg` | 620 × 760 | 46 | **POI hero, added 2026-09-13**: five spire-topped spruce of uneven height on a boulder bank |
-| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn 2026-09-17**: seven bleached logs lying across one another at seven angles on the cobble bar, warmed off the neutral `path` ramp |
+| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn twice on 2026-09-17**: seven bleached spars lying across one another at seven angles on the cobble bar, each tapering to a torn, slanted end — no elliptical end cap anywhere |
 
 Shape counts are reported, not gated (ADR-0025). The sky is **49 shapes**, the same count as the CN Tower and
 the lowest of any layer in the game; the river-and-bar tile is **759**, the highest, and every one of them is
 a cobble, a blade or a ripple bar.
+
+**The driftwood pile was redrawn a second time on 2026-09-17, and the cause was the END, not the angle.** The
+first redraw that day fixed the arrangement — seven angles instead of seven near-parallel tiers — and a blind
+pass still called the pile *a stack of cut logs or timber*, naming its reason exactly: *"each with a dark
+circular cap at its end that reads as cut end-grain"*. It was right. Every log was a straight, constant-width
+lozenge with a **shade-tone ellipse stuck on each end**, and a dark disc on the end of a cylinder is a sawn
+face — which is the one reading this subject exists to avoid, because a sawn log is something a person made.
+No ellipse survives. Each spar now tapers along its whole length to a blunt nose, and each end is a short
+**slanted, uneven wedge** broken at a different angle from the end opposite it. Two other claims routed with
+that verdict did not survive being looked at: the root wad is **not** an even radial fan — it is four roots of
+four lengths over seventy-six degrees on one side, which is what `neverAdd` asks for — and the cobble bar
+**is** drawn under it, full width. They are recorded here as checked rather than fixed.
 
 ## 2. The parallax stack
 
