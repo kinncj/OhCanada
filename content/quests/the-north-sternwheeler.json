@@ -14,8 +14,8 @@
   "declinedLine": {
     "speaker": "yukon-river-sternwheeler",
     "text": {
-      "en": "The vessel is staying put on the stones. Come back to it when you like.",
-      "fr": "Le bateau reste posé sur les galets. Revenez-y quand vous voudrez."
+      "en": "Nothing on this gravel bar is going anywhere. Come back to it when you like.",
+      "fr": "Rien ne bouge sur cette plage de galets. Revenez-y quand vous voudrez."
     },
     "fact": {
       "factual": false,
@@ -87,8 +87,8 @@
         {
           "speaker": "yukon-river-sternwheeler",
           "text": {
-            "en": "This vessel rests on the stones of the bar, above the water. Two things about this part of the country come first, then questions on them.",
-            "fr": "Ce bateau repose sur les galets, au-dessus de l'eau. D'abord deux choses sur cette partie du pays, puis des questions là-dessus."
+            "en": "You have reached the vessel on the stones, above the water. Two things about this part of the country come first, then questions on them.",
+            "fr": "Vous voici au bateau posé sur les galets, au-dessus de l'eau. D'abord deux choses sur cette partie du pays, puis des questions là-dessus."
           },
           "fact": {
             "factual": false,

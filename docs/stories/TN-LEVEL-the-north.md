@@ -227,8 +227,11 @@ finished!" (`TN-DONE-01`). **Both earn the same stamp and both draw the same two
 
 **The quest depicts nobody.** `characters` is still `[]`; the speaker on all four moment lines and on every
 step line is `yukon-river-sternwheeler`; ADR-0029 §4 forbids `expression` on a line whose speaker resolves to
-a POI, and §7's gate checks it. ADR-0029 §5 fixes the voice: **second person and impersonal** — "This vessel
-rests on the stones of the bar" — never "I have worked this river". That rule is held by review rather than
+a POI, and §7's gate checks it. ADR-0029 §5 fixes the voice: **second person and impersonal** — "You have
+reached the vessel on the stones, above the water" — never "I have worked this river", and never the vessel
+describing *itself* in the third person, which is what the opening line and the decline did until 2026-09-17:
+"This vessel rests on the stones of the bar" told a screen-reader user that the thing they had walked up to
+was narrating, which is the first person's failure wearing the third person's grammar. That rule is held by review rather than
 by a regex, and the ADR says why. **On this level it is the figure prohibition arriving through the copy
 instead of the picture**, which is the sentence from ADR-0029 §5 this file most needs to carry, and the ADR
 quotes this level's own art document for it.
