@@ -156,6 +156,37 @@ describe('the dialogue', () => {
     expect(at('dialogue-accept')).toBeNull();
   });
 
+  it('starts every line at its own top, however far the last one was scrolled', () => {
+    /*
+     * Fourth live audit: at 200 % text a line is taller than the screen, so a
+     * player scrolls down to reach the way on — and the next line opened where
+     * the last one had been left, with the portrait and the speaker's name
+     * above the top of the screen and nothing saying the card continued
+     * upward. Measured on the shipped build at Halifax's town clock: the
+     * second line opened at `scrollTop` 31, and 235 in French.
+     *
+     * The walk between two stops hides the surface and shows it again, which
+     * is what made the first attempt at this fix do nothing: a scroll set on a
+     * hidden box is discarded and the offset comes back when it is displayed.
+     * So the sequence here is the route's — shown, scrolled, hidden, shown —
+     * and `scrollTop` is read after the last show, which is where the browser
+     * would have put the old offset back.
+     */
+    const { dialogue, root } = open();
+    const box = root as unknown as { scrollTop: number };
+    const line = {
+      lines: ['Parliament Hill is that way. Keep going.'],
+      next: { label: 'Next', onSelect: vi.fn() },
+    };
+
+    box.scrollTop = 420;
+    dialogue.hide();
+    dialogue.show(line);
+
+    expect(box.scrollTop).toBe(0);
+    expect(root.hidden).toBe(false);
+  });
+
   it('changes speaker and language without being rebuilt', () => {
     const { dialogue, root } = open();
     dialogue.setSpeaker('Agent');

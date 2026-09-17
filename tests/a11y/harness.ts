@@ -560,13 +560,14 @@ switch (screen) {
 
   case 'dialogue': {
     const portrait = await portraitOf('officer');
-    createDialogue(ui, {
+    const dialogue = createDialogue(ui, {
       speakerName: locale === 'fr' ? 'Agent' : 'Officer',
       locale,
       announce,
       singleSwitch: store.current.singleSwitch,
       onClose: () => undefined,
-    }).show({
+    });
+    const said = {
       lines:
         locale === 'fr'
           ? [
@@ -584,7 +585,25 @@ switch (screen) {
       accept: { label: text(locale, 'quest.accept'), onSelect: () => undefined },
       decline: { label: text(locale, 'quest.decline'), onSelect: () => undefined },
       ...(portrait === undefined ? {} : { portrait }),
-    });
+    };
+    dialogue.show(said);
+    /*
+     * `?relines=1` is the audit's *second* line: the surface is one scroll box
+     * reused line after line, so a line opened after the player scrolled down to
+     * reach the way on used to open where the last one was left. Scrolled to the
+     * foot and shown again, which is what walking from the guide to the town
+     * clock does.
+     */
+    if (params.get('relines') === '1') {
+      dialogue.element.scrollTop = dialogue.element.scrollHeight;
+      /* Hidden in between, because that is the route: a stop closes its
+         dialogue and the next stop opens one. A surface that is never hidden
+         keeps its layout, and a fixture that skipped the hide could not
+         reproduce the defect at all — the offset is restored when a hidden box
+         is displayed again. */
+      dialogue.hide();
+      dialogue.show(said);
+    }
     break;
   }
 

@@ -708,3 +708,46 @@ test.describe('the delete question hugs its answers', () => {
   });
 });
 
+/*
+ * P1: at 200 % text the dialogue's top was cut off. The surface is one scroll
+ * box reused line after line, and a line opened after the player had scrolled
+ * down to reach the way on opened at the *last* line's offset: at Halifax's
+ * town clock the second line opened at `scrollTop` 31 — 235 in French — with
+ * the portrait and "The guide" above the top of the screen and nothing saying
+ * the card continued upward.
+ *
+ * `?relines=1` hides the surface between the two lines, because that is the
+ * route and because it is what makes the defect reproducible: a scroll set on a
+ * hidden box is discarded, and the browser puts the old offset back when the
+ * box is displayed again.
+ */
+test.describe('a second line of dialogue', () => {
+  for (const [label, params] of LARGE_AND_SMALL) {
+    test(`opens at its own top, with the speaker on screen, ${label}`, async ({ page }) => {
+      await open(page, { screen: 'dialogue', relines: '1', ...params });
+
+      const seen = await page.evaluate(() => {
+        const dialog = document.querySelector('[data-testid="dialogue"]');
+        const speaker = document.querySelector('[data-testid="dialogue-speaker"]');
+        const portrait = document.querySelector('[data-testid="dialogue-portrait"]');
+        if (dialog === null || speaker === null) return null;
+        return {
+          scrollTop: dialog.scrollTop,
+          speakerTop: speaker.getBoundingClientRect().top,
+          portraitTop: portrait?.getBoundingClientRect().top ?? null,
+        };
+      });
+
+      expect(seen, 'the dialogue drew no speaker').not.toBeNull();
+      expect(seen?.scrollTop ?? -1, 'the line opened where the last one was left').toBe(0);
+      expect(
+        seen?.speakerTop ?? -1,
+        'who is speaking is above the top of the screen',
+      ).toBeGreaterThanOrEqual(0);
+      if (seen?.portraitTop !== null && seen?.portraitTop !== undefined) {
+        expect(seen.portraitTop, 'the portrait is above the top of the screen').toBeGreaterThanOrEqual(0);
+      }
+    });
+  }
+});
+

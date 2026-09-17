@@ -158,6 +158,30 @@ export function createDialogue(host: HTMLElement, options: DialogueOptions): Dia
       replaceChildren(actions, choices);
 
       screen.show();
+      /*
+       * Every line starts at its own top — the same rule the question card keeps
+       * for every new question, and for the same reason.
+       *
+       * The surface is one scroll box reused for line after line. At 200 % text
+       * a line is taller than the screen, so a player scrolls down to reach the
+       * way on; nothing put the scroll back, so the *next* line opened at the
+       * previous one's offset. The fourth live audit landed mid-sentence at
+       * Halifax's town clock with the portrait and "The guide" above the top of
+       * the screen and nothing saying the card continued upward.
+       *
+       * **After `show`, and that is the whole fix.** Written before it, the
+       * assignment lands on an element that is still `hidden`: a box with no
+       * layout has no scroll to set, the browser keeps the offset it had, and
+       * restores it the moment the element is displayed again. Traced on the
+       * real route — the reset ran, from here, and the card still opened at
+       * `scrollTop` 31 (235 in French). `show` unhides first, so by this line
+       * the box has layout and 0 means 0.
+       *
+       * The question card gets away with the other order because Study leaves
+       * its card on screen between questions; a dialogue is hidden at every stop
+       * and shown again at the next one.
+       */
+      screen.element.scrollTop = 0;
       screen.refreshSwitch();
     },
 
