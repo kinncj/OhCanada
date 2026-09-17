@@ -5031,8 +5031,8 @@
         {
           "feature": "bleached pale wood with darker ends",
           "why": "Driftwood is grey-white, not brown. Brown logs with bark are freshly cut timber and that is a different object with a different meaning.",
-          "detail": "Bodies in the pale end of the `path` and `limestone` ramps, ends a tone darker so each log reads as a cylinder. NO bark, NO green wood, NO axe or saw cuts.",
-          "palette": "path, limestone"
+          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, each log taking all three tones of ONE of them - the light tone for the body, the base tone along the belly, the shade tone for the end face - so every log reads as a lit cylinder rather than a flat lozenge. NO bark, NO green wood, NO axe or saw cuts. `stone` WAS ADDED 2026-09-17, and it is a saturation fix rather than a change of subject. Drawn from `path` and `limestone` alone the pile was six neutral greys end to end: `path` is the one ramp palette.json declares near-neutral and exempts from the saturation gain, so the render breached CLAUDE.md's saturated palette, and it also said less than the truth - sun-bleached driftwood is silver AND warm tan, and `stone` is the warm tan this palette already carries. It is NOT brown: `wood` is the bark-and-fresh-timber ramp, it stays forbidden here, and the reason is this subject's whole point - a brown log with bark is cut timber. A blind pass read the previous build as a stack of cut timber, and the cause was the ARRANGEMENT as much as the colour: all seven logs lay within nine degrees of horizontal in tidy tiers, which is a woodpile. They now span nineteen degrees either side.",
+          "palette": "path, limestone, stone"
         },
         {
           "feature": "one short uneven root fan",
