@@ -1,44 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="640" height="500" viewBox="0 0 640 500" shape-rendering="geometricPrecision">
-  <title>A section of the city's fortified stone wall in winter: two mortared ashlar faces meeting at a salient angle, the near face lit and the returning face in shade, both battered so the wall leans back as it rises, a plain flat coping along the head with snow lying on it, corner quoins, sparse course marks rather than a drawn stone pattern, and a snow bank at the foot. NO CRENELLATION, no battlements, no arrow slits, no tower, no gate, no cannon: the wall in the reference has a plain coping and none of those. No lettering, no plaque, no flag. Drawn from assets/refs/quebec-city/quebec-ramparts-snow.jpg; see assets/refs/references.json, subject city-wall. POI hero, present at every visual tier.</title>
+  <title>A section of the city's fortified stone wall in winter: two mortared ashlar faces meeting at a salient angle, the near face lit in the limestone base tone and the returning face in its shade tone, BOTH BATTERED so the wall leans back as it rises and stands wider at the foot than at the head - the corner runs from a foot at x 252 to a head at x 230, twenty-two pixels inboard over a three hundred and forty-eight pixel rise, and the returning face's outer edge leans the opposite way by the same amount, so the whole mass splays toward the ground the way a rampart does and not the way a garden wall does. A plain flat coping runs unbroken round the corner and projects over both faces with a shadow line under it, snow lies along its head, corner quoins step down the angle, and the courses and the staggered vertical joints lean WITH the batter. NO CRENELLATION, no battlements, no merlons, no arrow slits, no tower, no turret, no gate, no cannon: the wall in the reference has a plain coping and none of those. No lettering, no plaque, no flag, no figure. No brick - that ramp belongs to the Chateau and is forbidden here. Drawn from assets/refs/quebec-city/quebec-ramparts-snow.jpg, a geometry and arrangement reference only; every colour is from palette.json. See assets/refs/references.json, subject city-wall. POI hero, present at every visual tier.</title>
 
-  <ellipse cx="330" cy="450" rx="304" ry="18" fill="#16203a" opacity="0.28"/>
+  <polygon points="52,96 230,122 252,470 30,430" fill="#8a6256"/>
+  <polygon points="46.5,179.5 235.5,209 235.5,216 46.5,186.5" fill="#a99789"/>
+  <polygon points="41,263 241,296 241,303 41,270" fill="#a99789"/>
+  <polygon points="35.5,346.5 246.5,383 246.5,390 35.5,353.5" fill="#a99789"/>
 
-  <polygon points="212,146 640,124 640,440 212,448" fill="#c8c1b6"/>
-  <polygon points="228,206 640,187 640,193 228,212" fill="#a99789"/>
-  <polygon points="228,267 640,250 640,256 228,273" fill="#a99789"/>
-  <polygon points="228,327 640,314 640,320 228,333" fill="#a99789"/>
-  <polygon points="228,388 640,377 640,383 228,394" fill="#a99789"/>
-  <rect x="300" y="141" width="7" height="60" fill="#a99789"/>
-  <rect x="470" y="133" width="7" height="59" fill="#a99789"/>
-  <rect x="380" y="197" width="7" height="60" fill="#a99789"/>
-  <rect x="560" y="187" width="7" height="59" fill="#a99789"/>
-  <rect x="320" y="260" width="7" height="60" fill="#a99789"/>
-  <rect x="500" y="250" width="7" height="59" fill="#a99789"/>
-  <rect x="420" y="314" width="7" height="60" fill="#a99789"/>
-  <rect x="600" y="303" width="7" height="59" fill="#a99789"/>
-  <rect x="350" y="378" width="7" height="60" fill="#a99789"/>
-  <rect x="540" y="366" width="7" height="59" fill="#a99789"/>
+  <polygon points="230,122 640,104 640,452 252,470" fill="#a99789"/>
 
-  <polygon points="44,112 212,146 212,448 44,386" fill="#a99789"/>
-  <polygon points="60,176 196,204 196,210 60,182" fill="#8a6256"/>
-  <polygon points="60,272 196,296 196,302 60,278" fill="#8a6256"/>
-  <polygon points="60,368 196,388 196,394 60,374" fill="#8a6256"/>
+  <polygon points="233.7,181.2 640,163.2 640,170.2 233.7,188.2" fill="#c8c1b6"/>
+  <polygon points="237.3,236.8 640,218.8 640,225.8 237.3,243.8" fill="#c8c1b6"/>
+  <polygon points="241,296 640,278 640,285 241,303" fill="#c8c1b6"/>
+  <polygon points="244.5,351.7 640,333.7 640,340.7 244.5,358.7" fill="#c8c1b6"/>
+  <polygon points="248.3,410.8 640,392.8 640,399.8 248.3,417.8" fill="#c8c1b6"/>
 
-  <rect x="200" y="144" width="28" height="66" fill="#8a6256"/>
-  <rect x="200" y="222" width="28" height="66" fill="#8a6256"/>
-  <rect x="200" y="300" width="28" height="66" fill="#8a6256"/>
-  <rect x="200" y="378" width="28" height="68" fill="#8a6256"/>
+  <polygon points="320,192 327,191.7 330,238 323,238.3" fill="#c8c1b6"/>
+  <polygon points="532,238.6 539,238.3 542,284.6 535,284.9" fill="#c8c1b6"/>
+  <polygon points="300,304.9 307,304.6 310,350.9 303,351.2" fill="#c8c1b6"/>
+  <polygon points="608,291.4 615,291.1 618,337.4 611,337.7" fill="#c8c1b6"/>
+  <polygon points="360,361.3 367,361 370,407.3 363,407.6" fill="#c8c1b6"/>
+  <polygon points="480,413 487,412.7 490,459 483,459.3" fill="#c8c1b6"/>
 
-  <polygon points="196,124 640,102 640,128 196,150" fill="#a99789"/>
-  <polygon points="196,150 640,128 640,136 196,158" fill="#8a6256"/>
-  <polygon points="36,92 196,124 196,150 36,120" fill="#8a6256"/>
+  <polygon points="231.3,142.9 265.3,141.4 269.3,201.4 235.3,202.9" fill="#c8c1b6"/>
+  <polygon points="235.1,202 205.1,197.6 209.1,257.6 239.1,262" fill="#a99789"/>
+  <polygon points="238.8,261.2 272.8,259.7 276.8,319.7 242.8,321.2" fill="#c8c1b6"/>
+  <polygon points="242.5,320.4 212.5,316 216.5,376 246.5,380.4" fill="#a99789"/>
+  <polygon points="246.3,379.5 280.3,378 284.3,438 250.3,439.5" fill="#c8c1b6"/>
 
-  <polygon points="190,106 640,84 640,104 190,126" fill="#e6eff7"/>
-  <polygon points="190,106 640,84 640,92 190,114" fill="#ffffff"/>
-  <polygon points="30,74 190,106 190,126 30,96" fill="#c2d6e8"/>
-  <polygon points="30,74 190,106 190,114 30,84" fill="#e6eff7"/>
+  <polygon points="40,74 218,100 218,126 40,100" fill="#8a6256"/>
+  <polygon points="218,100 640,82 640,108 218,126" fill="#a99789"/>
+  <polygon points="218,126 640,108 640,116 218,134" fill="#8a6256"/>
 
-  <path d="M 0 500 L 0 448 Q 130 410 268 438 Q 430 468 640 434 L 640 500 Z" fill="#e6eff7"/>
-  <path d="M 0 448 Q 130 410 268 438 Q 430 468 640 434 L 640 446 Q 430 480 268 450 Q 130 422 0 460 Z" fill="#ffffff"/>
-  <path d="M 0 500 L 0 484 Q 300 498 640 478 L 640 500 Z" fill="#c2d6e8"/>
+  <polygon points="40,54 218,80 218,102 40,76" fill="#c2d6e8"/>
+  <polygon points="40,54 218,80 218,88 40,62" fill="#e6eff7"/>
+  <polygon points="218,78 640,60 640,82 218,100" fill="#e6eff7"/>
+  <polygon points="218,78 640,60 640,68 218,86" fill="#ffffff"/>
+
+  <ellipse cx="340" cy="462" rx="300" ry="18" fill="#16203a" opacity="0.25"/>
+
+  <path d="M 0 500 L 0 424 Q 150 398 320 434 Q 480 468 640 438 L 640 500 Z" fill="#e6eff7"/>
+  <path d="M 0 424 Q 150 398 320 434 Q 480 468 640 438 L 640 450 Q 480 480 320 446 Q 150 410 0 436 Z" fill="#ffffff"/>
+  <path d="M 0 500 L 0 486 Q 300 500 640 480 L 640 500 Z" fill="#c2d6e8"/>
 </svg>
