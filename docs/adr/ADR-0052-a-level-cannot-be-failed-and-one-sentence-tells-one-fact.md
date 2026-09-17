@@ -8,9 +8,12 @@
   Rules 1–7 of that file's ruling are the product owner's; this ADR decides where each is held, by what, and
   what is left unheld.
 - Slice: A8 (third live-site audit, 2026-09-16).
-- Numbering: `main` holds ADR-0001…ADR-0049. ADR-0050 is a dropped draft on branch `multi-nation-source`
-  and ADR-0051 is on `territory-verified`; both exist in the history this repository can see, so both
-  numbers are spent whether or not their branches ever merge. **0052 is the first number above the
+- Numbering: `main` holds ADR-0001…ADR-0049, and 0050 and 0051 are spent as well — 0050 by a draft on
+  branch `multi-nation-source` that was dropped and never merged, 0051 by the territory ruling landing
+  beside this one. Both exist in the history this repository can see, so both numbers are spent whether
+  or not their branches ever merge. The bare numbers in this paragraph are deliberate: the contract gate
+  resolves every `ADR-NNNN` token to a file in `docs/adr`, and a citation of a record nobody can open is
+  the thing it exists to refuse. **0052 is the first number above the
   high-water mark**, and it is taken rather than the free hole at 0038 on purpose: a number is retired by
   having been used, not by its document being abandoned, and a new ADR filed *below* the ADRs it builds on
   reads as older than them for ever.
