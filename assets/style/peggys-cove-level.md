@@ -519,6 +519,53 @@ balanced stone arrangement, and any object a viewer could read as one**, with a 
 identifier who names one has found a defect and not a feature. The two boulders stand side by side on one
 plane with rock visible between them, and the 120 px silhouette was looked at for exactly this.
 
+### 12a. The erratic was redrawn because a landform read as something built (2026-09-17)
+
+A blind pass read this hero as **"large rounded dome structures beside a pond"**, confidence 0.4. A landform
+read as architecture is a miss.
+
+**The serious constraint held and still holds.** It was **not** read as a cairn, an inuksuk, stacked stones, a
+marker or a monument. `docs/content-review.md` forbids all of those outright, this subject carries the
+strongest `neverAdd` clause in this file, and nothing in the redraw moves a millimetre toward one: the two
+masses still stand side by side on one plane, neither on nor balanced on the other, with bare rock between
+them. That is the clause the redraw was checked against first and last.
+
+**Four things made a rock read as a building, and all four are in the markup rather than in the eye.**
+
+| what was drawn | what it read as |
+|---|---|
+| one 206 px smooth near-straight dark band sweeping across the big mass, meeting a second smooth boundary in a Y | a panel seam and a rib — the geometry of a clad dome |
+| both masses near-symmetric arches, the small one a scaled copy of the big one's silhouette | two of the same manufactured object |
+| `rect x=0 y=344 width=560` with a solid 8 px `path-shade` line across its whole width, both feet on it | a plinth, and two things standing on it |
+| the pool a hard `ellipse rx=146` inside a concentric rim, with two flat cyan `rect` bars in it | a swimming pool |
+
+**What replaced it.**
+
+- **Each mass is three glacially rounded PLANES, not a dome with cracks on it.** The big boulder is a broad top
+  plane rising to a crest right of centre, a long shallow lit left flank and a steep shaded right face with a
+  blunt shoulder; the tone boundaries between them are kinked polylines, not arcs. The first attempt kept the
+  dome and drew irregular joints *on* it, and rendered at 202 px those read as cartoon cracks — worse than the
+  seam they replaced. A rock's read comes from its planes; the joint only marks where two of them meet.
+- **The one remaining joint on each mass runs ALONG the plane break**, not across the middle of the form.
+- **The two masses are different shapes.** The small one is a low wedge with a flat top falling to the right
+  and a blunt left end — 142 × 94 = 1.51 wide to tall, against the big one's 328 × 204 = 1.61, both inside the
+  1.4–1.6 the subject measures off the reference. It is **0.46** of the big one's height: the contract's "about
+  half".
+- **The ground is jointed granite, not a plinth.** A `path-shade` field with four slabs of a back course and
+  three of a front course drawn over it, so the gaps between slabs **are** the joints, at angles and at
+  irregular pitch — the construction `ground-granite-ledge@1x.svg` already uses. The front course passes in
+  front of both feet and the two feet sit at different heights (y 344 and 350), so no straight line runs under
+  the pair. Grass grows only in the joints.
+- **The pool has a broken rim and rock in it.** A twenty-vertex irregular outline whose far edge alternates in
+  and out, a rockweed edge on two arcs of the rim rather than a ring, a lit granite tongue pushing into its
+  right end, and five ripple slivers of different lengths and angles instead of two parallel bars. A pool with
+  rock standing in it is a tide pool and cannot be a basin.
+- **No lichen, speckle or surface pattern anywhere**, which is this subject's own `simplifyAway` and the thing
+  it says the temptation is worst for.
+
+**Costs nothing.** The canvas is unchanged at 560 × 380, so the decoded texture is identical and this level
+stays at **27.13 MiB of 36.00 (75 %)** with its payload unchanged at **0.70 MiB of 8.00**.
+
 ### The builder patch `scripts/lib/art-handoff.mjs` needs
 
 ```js
