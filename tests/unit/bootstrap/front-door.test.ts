@@ -9,6 +9,7 @@ import guideDocument from '@content/characters/guide.json';
 import officerDocument from '@content/characters/officer.json';
 /* Relative, not aliased: there is no `@bootstrap` alias and adding one means
    editing three configs that have to agree (tsconfig, vite, vitest). */
+import { repairSelection, toPlayerCharacter } from '../../../app/bootstrap/character-slots';
 import { readGameRules } from '../../../app/bootstrap/game-rules';
 import { completionLine } from '../../../app/bootstrap/quest';
 import { readQuests } from '../../../app/bootstrap/quests';
@@ -18,7 +19,7 @@ import { toProgressSnapshot } from '@application/persistence/progress-document';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { unlockedLevelIds } from '@domain/entities/level';
 import { defaultSettings } from '@domain/entities/player';
-import { newProgress, withQuestState } from '@domain/entities/progress';
+import { newProgress, withCharacter, withQuestState } from '@domain/entities/progress';
 import { hasCopyRow, text } from '@ui/copy';
 import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
 
@@ -3288,5 +3289,139 @@ describe('the map is told where the player is', () => {
   it('tells it nothing for a level this build refuses to open', async () => {
     await boot('?level=atlantis');
     expect(hoisted.state.lastPlayedSet).toEqual([]);
+  });
+});
+
+/*
+ * One draw, one holder — and the holder is not this file (ADR-0053, rule 3).
+ *
+ * This file used to call `repairSelection(toSelection(progress.character), …)`
+ * for every save. `toSelection(null)` answers `undefined`, and `repairSelection`
+ * with `undefined` draws **every** slot, so the shipped first-run draw was the
+ * composition root's: `app/ui/shell.ts`'s own `randomSelection` never ran on a
+ * shipped page, and the sitting's character had two holders that could disagree.
+ * They did, visibly — Play, "Surprise me", Back put the face from *before* the
+ * re-roll on the title screen while the creator held the one after it.
+ *
+ * The rule these assertions hold is the boundary, not the symptom: a character
+ * nobody has chosen is produced in exactly one module, and this is not it. What
+ * stays here is repairing a **saved** character, which needs the save.
+ */
+describe('a save with no character is handed no character (ADR-0053, rule 3)', () => {
+  /**
+   * A complete, rig-true appearance for a save that has one. Drawn from the
+   * real slot list with a constant source rather than written out, so an option
+   * the art agent renames cannot leave this fixture naming something the rig
+   * has never had.
+   */
+  const SAVED_SKINS = repairSelection(undefined, () => 0).selection;
+
+  const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE_MIGRATIONS });
+
+  /** A returning player: a save that carries a character, in `localStorage`. */
+  function seedCharacter(): void {
+    const now = 1_700_000_000_000 as EpochMillis;
+    const progress = withCharacter(
+      newProgress(defaultSettings('en' as LocaleCode), [START_LEVEL]),
+      toPlayerCharacter(SAVED_SKINS),
+    );
+    const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });
+    if (!snapshot.ok) throw new Error(`the seeded save is not a save: ${snapshot.error.message}`);
+    const encoded = codec.encode(snapshot.value);
+    if (!encoded.ok) throw new Error(`the seeded save would not encode: ${encoded.error.message}`);
+    const items = new Map<string, string>([[PROGRESS_STORAGE_KEY, encoded.value]]);
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string): string | null => items.get(key) ?? null,
+      setItem: (key: string, value: string): void => {
+        items.set(key, value);
+      },
+      removeItem: (key: string): void => {
+        items.delete(key);
+      },
+    });
+  }
+
+  interface CreatorBlock {
+    readonly required: boolean;
+    readonly initialSelection?: Readonly<Record<string, string>>;
+    readonly optionRepaired?: boolean;
+  }
+
+  it('gives the shell a first run with no selection in it', async () => {
+    await boot('');
+
+    const creator = shellOption<CreatorBlock>('creator');
+    expect(creator.required, 'a save with no character is a first run').toBe(true);
+    expect(
+      creator.initialSelection,
+      'the composition root drew a character for a save that has none: two modules can now ' +
+        'produce a character nobody has chosen, and the shell opens on the wrong one',
+    ).toBeUndefined();
+    /* A first run is a draw and not a repair, so there is nothing to tell the
+       player about (`TN-LOOK-05`). */
+    expect(creator.optionRepaired).toBe(false);
+  });
+
+  it('dresses the level in nobody until a character is accepted', async () => {
+    await boot('');
+
+    expect(
+      hoisted.state.appearance,
+      'the renderer was dressed in a character nobody had chosen',
+    ).toEqual([]);
+
+    /* The one event that produces a character here, and the appearance the
+       renderer is given comes from the screen that was holding it. */
+    shellOption<(selection: Readonly<Record<string, string>>) => void>('onCreateCharacter')(
+      SAVED_SKINS,
+    );
+    expect(hoisted.state.appearance).toEqual([SAVED_SKINS]);
+  });
+
+  it("hands over the seeded stream, so the screen's draw is not an unseeded Math.random", async () => {
+    await boot('');
+
+    const random = shellOption<(() => number) | undefined>('random');
+    expect(
+      typeof random,
+      'the shell was given no source, so its draw falls back to Math.random and the one draw ' +
+        'that decides what a player looks like is the one draw no seed can replay',
+    ).toBe('function');
+    for (let draw = 0; draw < 8; draw += 1) {
+      const value = random?.() ?? -1;
+      expect(value).toBeGreaterThanOrEqual(0);
+      expect(value).toBeLessThan(1);
+    }
+  });
+
+  it('draws no title figure while the save has no character', async () => {
+    await boot('');
+
+    /*
+     * ADR-0053 rule 3: "a figure is painted from the save's character, and a
+     * first run draws the landscape alone." A face nobody has chosen does not
+     * belong on the screen *before* the one where choosing happens.
+     *
+     * This asserts the decision at the seam — the shell is handed a figure that
+     * answers "no picture" — because `node` has no page `fetch`, so no still is
+     * ever painted here either way. What a player sees is held on a real page by
+     * `tests/e2e/first-run.spec.ts` ("the title screen shows no face before the
+     * player has chosen one"), which is where the stale face was visible.
+     */
+    const titleFigure = shellOption<() => Promise<string | null>>('titleFigure');
+    await expect(titleFigure()).resolves.toBeNull();
+  });
+
+  it('still repairs and opens on the character a save already has', async () => {
+    seedCharacter();
+    await boot('');
+
+    const creator = shellOption<CreatorBlock>('creator');
+    expect(creator.required, 'a save with a character is not a first run').toBe(false);
+    expect(
+      creator.initialSelection,
+      'the returning player was re-randomised instead of being given their own character',
+    ).toEqual(SAVED_SKINS);
+    expect(hoisted.state.appearance).toEqual([SAVED_SKINS]);
   });
 });

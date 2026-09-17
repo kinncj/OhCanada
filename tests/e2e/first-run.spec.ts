@@ -39,6 +39,17 @@ async function events(page: Page): Promise<readonly string[]> {
   });
 }
 
+/** What the creator's picture is dressed in: the character the sitting holds. */
+async function appearance(page: Page): Promise<Record<string, string | null>> {
+  return page.getByTestId('character-preview').evaluate((node) => ({
+    skin: node.getAttribute('data-skin'),
+    hairShape: node.getAttribute('data-hair-shape'),
+    hairColour: node.getAttribute('data-hair-colour'),
+    headCovering: node.getAttribute('data-head-covering'),
+    feature: node.getAttribute('data-feature'),
+  }));
+}
+
 test.describe('a first run', () => {
   test('offers Play, which opens a creator that is already answered', async ({ page }) => {
     await coldLoad(page);
@@ -168,6 +179,52 @@ test.describe('a first run', () => {
     await expect(page.getByTestId('title-play')).toBeVisible();
     await expect(page.getByTestId('title-play')).toBeFocused();
     await expect(page.getByTestId('title-continue')).toHaveCount(0);
+  });
+
+  test('shows no face on the title screen until the player has chosen one', async ({ page }) => {
+    /*
+     * ADR-0053 rule 3: "a figure is painted from the save's character, and a
+     * first run draws the landscape alone." The defect it removes was visible
+     * on this exact route — Play, "Surprise me", Back — because the first-run
+     * draw was made in `app/bootstrap/main.ts` and kept there as well as in the
+     * shell: the title screen drew the face from *before* the re-roll while the
+     * creator held the one after it. Two screens, two characters, one player.
+     *
+     * The fix is that there is nothing to disagree with: the title figure is
+     * painted from the save's character, and on a first run there is none.
+     */
+    await coldLoad(page);
+
+    const figure = page.getByTestId('title-figure');
+    await expect(figure).toHaveAttribute('data-state', 'empty');
+    await expect(figure).toBeHidden();
+
+    await page.getByTestId('title-play').click();
+    await page.getByTestId('randomise-character').click();
+    const asked = await appearance(page);
+
+    await page.getByTestId('creator-back').click();
+    await expect(page.getByTestId('title-screen')).toBeVisible();
+    await expect(
+      page.getByTestId('title-figure'),
+      'the title screen drew a character the player has not accepted',
+    ).toHaveAttribute('data-state', 'empty');
+    await expect(page.getByTestId('title-figure')).toBeHidden();
+
+    /* And the character the player did ask for is still the one they are given
+       back, which is the other half of the same rule (`TN-LOOK-03`). */
+    await page.getByTestId('title-play').click();
+    expect(
+      await appearance(page),
+      'the creator opened on a character the player had replaced',
+    ).toEqual(asked);
+
+    /* Accepting one is what makes a figure: now the save has a character, so
+       the screen before the creator has something of the player's to draw. */
+    await page.getByTestId('start-playing').click();
+    await expect(page.getByTestId('level-select')).toBeVisible();
+    await page.getByTestId('level-select-back').click();
+    await expect(page.getByTestId('title-figure')).not.toHaveAttribute('data-state', 'empty');
   });
 
   test('goes from the keyboard alone, and never leaves focus on the body', async ({ page }) => {

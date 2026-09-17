@@ -295,6 +295,65 @@ describe('the character the creator opens on', () => {
     expect(at('slot-coat-anorak')?.getAttribute('aria-checked')).toBe('true');
     expect(random, 'a saved character was redrawn').not.toHaveBeenCalled();
   });
+
+  it('keeps the draw through a Settings visit and a language change (ADR-0053, rule 2)', () => {
+    /*
+     * The table in ADR-0053 §2, which is a decision and not an accident: the
+     * draw is held by the shell, and `clearView` destroys **views** — the title,
+     * the creator, the settings screen — while the thing holding the draw
+     * outlives all of them. Anyone who changes one row of that table is
+     * changing the decision.
+     */
+    const random = vi.fn(stream([0, 0.99]));
+    const { shell, store, at } = firstRun({ random });
+    shell.start();
+
+    at('title-play')?.click();
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('true');
+
+    /* Settings over the creator, then closed. */
+    at('creator-settings')?.click();
+    at('settings-close')?.click();
+    /* A language change made over the screen: re-labelled, not re-drawn. */
+    store.set('locale', 'fr');
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('true');
+
+    /* Back to the title, Settings from there, then Play again. */
+    at('creator-back')?.click();
+    at('title-settings')?.click();
+    at('settings-close')?.click();
+    at('title-play')?.click();
+
+    expect(
+      at('slot-coat-parka')?.getAttribute('aria-checked'),
+      'the character changed under the player on a route that asked nothing of them',
+    ).toBe('true');
+    expect(random, 'the draw was made more than once').toHaveBeenCalledTimes(1);
+  });
+
+  it('reports the character it is holding, not the one it opened on (ADR-0053, rule 3)', () => {
+    /*
+     * The shell is the holder, so the composition root learns the appearance
+     * from the shell's report rather than keeping a second copy. Before
+     * ADR-0053 there were two copies, and after a "Surprise me" they disagreed:
+     * the title screen drew the face from before the re-roll.
+     */
+    const onCreateCharacter = vi.fn();
+    const { shell, at } = firstRun({ random: stream([0, 0.99]), onCreateCharacter });
+    shell.start();
+
+    at('title-play')?.click();
+    at('randomise-character')?.click();
+    at('creator-back')?.click();
+    at('title-play')?.click();
+    at('start-playing')?.click();
+
+    expect(onCreateCharacter).toHaveBeenCalledTimes(1);
+    expect(
+      onCreateCharacter,
+      'the caller was told about a character the player had replaced',
+    ).toHaveBeenCalledWith({ coat: 'anorak' });
+  });
 });
 
 describe('the first run, end to end', () => {

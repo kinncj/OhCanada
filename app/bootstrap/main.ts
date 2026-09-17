@@ -847,14 +847,35 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * `Character` document, and the creator's slots come from the rig, so the
    * creator's repair is `repairSelection`.
    *
-   * A save with no character is not a repair — it is a first run — so it raises
-   * no message and the draw is simply the creator opening. Nor is a save that
-   * predates a slot, which is every save made before `presentation` opened:
-   * the slot it does not name takes the rig's fallback silently, because no
-   * choice the player made is gone.
+   * A save that predates a slot — every save made before `presentation` opened —
+   * is not a repair either: the slot it does not name takes the rig's fallback
+   * silently, because no choice the player made is gone.
+   *
+   * **A save with no character is not repaired here, and is not drawn for here.**
+   * ADR-0053 rule 3: one draw, one holder, and the holder is the screen. This
+   * file repairs a *saved* character, because repairing needs the save; a save
+   * with no character is handed to the shell as **no selection**, and
+   * `openingSelection()` in `app/ui/shell.ts` draws it and keeps it for the
+   * sitting. Until that ADR, `toSelection(null)` answered `undefined` and
+   * `repairSelection` drew every slot, so the shipped first-run draw was this
+   * file's, the screen's own draw was dead code on a shipped page, and the
+   * sitting's character had two holders that could disagree — which is what put
+   * the pre-re-roll face on the title screen while the creator held the one
+   * after "Surprise me".
    */
-  const repairedCharacter = repairSelection(toSelection(progress.character), creatorRandom.next);
-  let characterSelection = repairedCharacter.selection;
+  const savedCharacter = toSelection(progress.character);
+  const repairedCharacter =
+    savedCharacter === undefined ? null : repairSelection(savedCharacter, creatorRandom.next);
+  /**
+   * The character **the save has**, and `null` until the player accepts one.
+   *
+   * Never a draw. Everything downstream of this line — the renderer, the title
+   * figure, the creator's opening selection — is therefore about a character
+   * somebody chose, and a character nobody has chosen exists in exactly one
+   * place in the program (ADR-0053, rule 3).
+   */
+  let characterSelection: Readonly<Record<string, string>> | null =
+    repairedCharacter?.selection ?? null;
   /*
    * A repaired character is written back now, not when the player next finishes
    * the creator. `TN-LOOK-05` requires the level to be playable with the drawn
@@ -862,14 +883,17 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * middle of a ramp" — and requires the player to be told once rather than
    * every time.
    */
-  if (repairedCharacter.repaired) {
-    progress = withCharacter(progress, toPlayerCharacter(characterSelection));
+  if (repairedCharacter?.repaired === true) {
+    progress = withCharacter(progress, toPlayerCharacter(repairedCharacter.selection));
     persist();
   }
   /* The level draws what the player chose. Takes effect at the next level open,
      which is every open in this route: the creator is always upstream of a
-     level. */
-  renderer.setPlayerAppearance(characterSelection);
+     level. Nothing is said on a first run, because there is nothing the player
+     has chosen yet: the renderer's empty appearance dresses the puppet in the
+     rig artboard's own skins — "a complete character rather than a naked one" —
+     and the real one arrives with `character/created`. */
+  if (characterSelection !== null) renderer.setPlayerAppearance(characterSelection);
 
   /** Save the character, tell the level, and say which of the two events it was. */
   const keepCharacter = (
@@ -899,16 +923,36 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     creator: {
       slots: creatorSlots,
       required: progress.character === null,
-      initialSelection: characterSelection,
-      optionRepaired: repairedCharacter.repaired,
+      /* The saved character, repaired — and **nothing at all** on a first run,
+         which is the shell's cue to draw one and hold it for the sitting
+         (ADR-0053, rule 3). `initialSelection` has always been optional and
+         `openingSelection()` has always handled its absence; what changed is
+         that this file stopped filling it in. */
+      ...(characterSelection === null ? {} : { initialSelection: characterSelection }),
+      optionRepaired: repairedCharacter?.repaired === true,
       /* The picture beside the words (ADR-0040): the level's sprite puppet in a
          2D canvas, loaded when the creator opens and released when it closes. */
       art: creatorArt(createCharacterPreview),
     },
-    /* The player's character in front of the title's landscape (ADR-0041): the
-       appearance in the save, or the one the creator will open on. Read at the
-       call, so a character changed in Settings is the one drawn next time. */
-    titleFigure: () => screenArt.figure(characterSelection),
+    /*
+     * The stream the first-run draw is made from (ADR-0053, rule 3).
+     *
+     * The draw is the screen's, and it is still seeded from here: `app/ui` has
+     * no source of its own and would otherwise fall back to an unseeded
+     * `Math.random`, which would make the one draw in the game that decides what
+     * a player looks like the one draw that cannot be replayed from a seed.
+     * `random.fork('character')` is the same stream a saved character is
+     * repaired from, and "Surprise me" draws from it too.
+     */
+    random: creatorRandom.next,
+    /* The player's character in front of the title's landscape (ADR-0041), and
+       only ever **the save's** character. A first run draws the landscape alone:
+       a face nobody has chosen does not belong on the screen that comes before
+       the one where choosing happens (ADR-0053, rule 3; `docs/content-review.md`
+       §8.1 read one screen earlier). Read at the call, so a character changed in
+       Settings is the one drawn next time. */
+    titleFigure: () =>
+      characterSelection === null ? Promise.resolve(null) : screenArt.figure(characterSelection),
     /*
      * Two callbacks, not one with a flag (`TN-FIRSTRUN`, ruling 3). The first
      * is the first run and is what the route waits on; the second is Settings,
