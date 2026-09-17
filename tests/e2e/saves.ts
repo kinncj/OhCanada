@@ -4,9 +4,15 @@ import { PROGRESS_STORAGE_KEY } from '@adapters/persistence/record-progress-repo
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { toProgressSnapshot } from '@application/persistence/progress-document';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
+import type { PlayerCharacter } from '@domain/entities/character';
 import { defaultSettings } from '@domain/entities/player';
-import { newProgress, withQuestState, withStamp } from '@domain/entities/progress';
+import { newProgress, withCharacter, withQuestState, withStamp } from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
+
+/* Relative, like every other test that reads the composition root: there is no
+   `@bootstrap` alias, because `app/bootstrap` is the one layer nothing else is
+   allowed to import. A test may look at it; a module may not. */
+import { playerSlots, toPlayerCharacter } from '../../app/bootstrap/character-slots';
 
 /**
  * Saves a scenario starts from, written by the game's own functions.
@@ -34,11 +40,40 @@ export interface SeededQuest {
 
 const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE_MIGRATIONS });
 
+/**
+ * The character a seeded save carries: every player-selectable slot at the
+ * option the rig itself would fall back to.
+ *
+ * A seeded save used to carry none, and `ensureCharacter` only opens the
+ * creator when the title offers a first run — which a save suppresses. So a
+ * scenario that seeded a save and then asked for a character got one only when
+ * the title happened to render *before* the save was read out of
+ * `localStorage`, and none when the store won. `save-file.spec.ts` asserting
+ * "the character made in the creator is not in the file" therefore passed by
+ * winning a boot race the wrong way round, and failed on a loaded runner: it
+ * failed the deploy of `bc34e01` and passed on the same commit under review.
+ *
+ * The save carries the character outright instead, so nothing about it depends
+ * on which of two asynchronous things finishes first.
+ */
+function seededCharacter(): PlayerCharacter {
+  const selection = Object.fromEntries(
+    playerSlots().map(({ name, slot }) => [
+      name,
+      slot.fallback !== null && slot.options.includes(slot.fallback)
+        ? slot.fallback
+        : (slot.options[0] ?? ''),
+    ]),
+  );
+  return toPlayerCharacter(selection);
+}
+
 /** A save in which this level's quest is complete and its stamp earned, as the game writes one. */
 export function finishedSave(quest: SeededQuest): string {
   const now = Date.now() as EpochMillis;
   const level = quest.levelId as LevelId;
   let progress = newProgress(defaultSettings('en' as LocaleCode), [level]);
+  progress = withCharacter(progress, seededCharacter());
   progress = withQuestState(progress, level, {
     questId: quest.id as QuestId,
     status: 'completed',
