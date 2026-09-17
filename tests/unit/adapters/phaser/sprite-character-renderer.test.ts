@@ -194,11 +194,19 @@ describe('partTransformAt', () => {
 
   it('reads a keyframe exactly at its own t', () => {
     const at = partTransformAt(walk?.keys ?? [], 'arm-upper-r', 0.25);
-    /* The third slot is rotation: `arm-upper-r` swings -26 degrees at a quarter
-       of the walk cycle. See `partTransformAt`'s comment for how the tuple order
-       was settled — the two documents disagree and the data decides. */
+    /* Both numbers come straight off walk's own t 0.25 key, unblended with
+       either neighbour — which is the whole of what "exactly at its own t"
+       means. The third slot is rotation; see `partTransformAt`'s comment for how
+       the tuple order was settled, since the two documents disagree and the data
+       decides.
+
+       `dx` asserted 0 until 2026-09-17, and that 0 was the DEFECT rather than
+       the contract: the torso turns 3° about the hip through the whole walk, so
+       a shoulder 118 px above that hip travels 6.2 px with the chest — and it
+       was not travelling at all, which is why the product owner saw the chest
+       and the arm come apart as soon as the character moved. */
     expect(at.rotation).toBeCloseTo(4, 5);
-    expect(at.dx).toBe(0);
+    expect(at.dx).toBe(6.2);
   });
 
   it('interpolates between the surrounding keys', () => {
