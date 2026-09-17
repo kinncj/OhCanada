@@ -114,16 +114,34 @@ card's edge and nothing downstream learns that a shuffle occurred:
 cheap fix rather than the expensive one, and it is the reason the conversion is at the edge rather than
 somewhere convenient in the middle.
 
-### 3. A fresh order every time a card is presented
+### 3. An order lasts exactly as long as the thing the player is looking at
 
-Not once per question, not once per sitting. The same question met twice in one sitting is shuffled twice.
-A position must never become a memorable property of a card, which is the entire point — a per-question
-seed would simply move the defect from "the answer is always first" to "the answer is always where it was
-last time".
+A position must never become a *durable* property of a card — that is the whole point, and a single global
+per-question seed would simply move the defect from "the answer is always first" to "the answer is always
+where it was last time". But "never durable" is not the same as "changes under the player's hands", and the
+unit that must not change is the thing in front of them:
 
-Each consumer draws from a stream of its own — `random.fork('options')` — so shuffling a card can never
-shift which questions the scheduler brings up. `app/bootstrap/main.ts` already promised exactly this in a
-comment about a fork that did not yet exist.
+| Where | The order lasts | Why |
+|---|---|---|
+| A level, and Study | One presentation | A question is presented once per encounter. The same question met again in the same sitting is shuffled again. |
+| An exam | One attempt | `TN-EXAM-03` lets the player go back and change an answer, so the paper must not rewrite itself while it is being written. |
+
+The exam's orders are therefore **derived from the attempt**, seeded from `ExamInProgress.startedAt` — a
+number the save already carries — so `begin` and `carryOn` build the identical map and an exam picked back
+up after the tab was closed is the paper that was left. Nothing is written to the save to achieve it: the
+order is a pure function of a value already there, so there is no schema change and no migration. A
+different attempt has a different `startedAt`, and so a fresh set of orders.
+
+**This part was wrong when this ADR was first accepted**, and is corrected here rather than quietly: the
+first implementation re-drew the exam's orders on `carryOn`, so a resumed exam came back with its options
+rearranged. The original argument for a fresh order — "a per-question seed moves the defect" — is about
+repeat encounters *across* sittings and does not reach *within* one attempt, where the player's model is
+that the paper in front of them holds still. `tests/e2e/exam.spec.ts`'s abandon-and-resume scenario caught
+it, and was right to.
+
+Each consumer draws from a stream of its own — `random.fork('options')` for the level and Study, a stream
+seeded per attempt for the exam — so shuffling a card can never shift which questions the scheduler brings
+up. `app/bootstrap/main.ts` already promised exactly this in a comment about a fork that did not yet exist.
 
 ### 4. The exam and Study are the same decision
 

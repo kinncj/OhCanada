@@ -1653,15 +1653,29 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
 
     expect(hoisted.state.drillCalls, 'a landmark asks exactly one question').toEqual([1]);
     expect(hoisted.state.questionsAsked).toHaveLength(1);
-    expect(hoisted.state.questionsAsked[0]).toMatchObject({
+    const asked = hoisted.state.questionsAsked[0] as {
+      readonly options: readonly string[];
+      readonly correctIndex: number;
+    };
+    expect(asked).toMatchObject({
       index: 0,
       total: 1,
       kind: 'new',
       prompt: 'Prompt',
-      options: ['A', 'B', 'C', 'D'],
-      correctIndex: 0,
       explanation: 'Because.',
     });
+    /*
+     * The four options are shuffled for the card (ADR-0057), so this names the
+     * relationship rather than a literal order: all four wordings arrive, and
+     * `correctIndex` points at the one the fixture keyed. Asserting
+     * `['A', 'B', 'C', 'D']` and `correctIndex: 0` would now be asserting that
+     * the shuffle had *not* run.
+     */
+    expect([...asked.options].sort()).toEqual(['A', 'B', 'C', 'D']);
+    expect(
+      asked.options[asked.correctIndex],
+      'the card was told the wrong option is the right one',
+    ).toBe('A');
   });
 
   it('asks from the level’s own subject, and draws no counter over one question (ADR-0036)', async () => {
@@ -1713,8 +1727,17 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     modalOption<{ onClose: () => void }>('poi-card').onClose();
     await flush();
 
+    const view = hoisted.state.questionsAsked[0] as { readonly correctIndex: number };
     const card = hoisted.state.questionOptions as { onAnswer: (index: number, right: boolean) => void };
-    card.onAnswer(0, true);
+    /*
+     * Tap the option the card is *showing* as the right one. The runner converts
+     * a screen position back to the author's index before recording (ADR-0057),
+     * so this asserts the round trip: wherever the shuffle put the answer, what
+     * reaches `answerQuestion` is the authored 0. Tapping a fixed position would
+     * assert only that the shuffle had not run, and would miss a broken
+     * conversion — the failure that would silently re-grade every save.
+     */
+    card.onAnswer(view.correctIndex, true);
 
     expect(hoisted.state.recorded).toEqual([['q-0', 0]]);
   });

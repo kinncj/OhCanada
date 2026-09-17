@@ -1162,10 +1162,12 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       clock,
-      /* Option order only, on the sitting's one options stream — never the
-         exam's own draw, which is `random.fork('exam')` and must stay a pure
-         function of the seed (`TN-EXAM-02`, ADR-0057). */
-      random: optionsRandom,
+      /* Option order only, and seeded per *attempt* rather than per sitting, so
+         an exam picked back up is the paper the player left rather than the
+         same questions rearranged (ADR-0057 §3). Never the exam's own draw,
+         which is `random.fork('exam')` and must stay a pure function of the
+         seed (`TN-EXAM-02`). */
+      orderStream: (seed) => createSeededRandom(seed),
       progress: () => progress,
       /* Apply and save in one step, so an answer and the exam it belongs to are
          never written a tick apart (`TN-ATTEMPT-02`). */

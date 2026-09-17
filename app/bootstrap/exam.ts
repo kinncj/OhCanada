@@ -98,14 +98,21 @@ export interface ExamControllerDeps {
    */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => void;
   /**
-   * Where each question's option order comes from (ADR-0057).
+   * A reproducible stream, from a seed, for one attempt's option order
+   * (ADR-0057 §3).
+   *
+   * A factory and not a stream, because the exam's orders must be a pure
+   * function of the *attempt* rather than of the sitting: the same attempt has
+   * to order the same way after the tab is closed and reopened, and a stream
+   * handed in at boot cannot do that — the next boot has a different seed.
+   * {@link orderExam} seeds it from the attempt's own `startedAt`.
    *
    * The exam is the one screen in the game with a pass mark, so it is the one
    * place an answer-first bank has a consequence beyond a wasted learning
    * moment: tapping option 1 through a twenty-question exam scored about 12 or
    * 13 against a pass mark of 15 before this.
    */
-  readonly random: Randomness;
+  readonly orderStream: (seed: number) => Randomness;
   readonly events: ExamEventLog;
   /** `subject -> level`, so a result can name a subject the way the map does. */
   readonly subjects: () => Promise<SubjectIndex>;
@@ -155,16 +162,15 @@ interface Running {
   /**
    * Where each question's four options are drawn, by id (ADR-0057).
    *
-   * Drawn once for the whole exam rather than per question presented, because
+   * Built once for the whole exam rather than per question presented, because
    * `TN-EXAM-03` lets the player go back and change an answer, and options that
    * moved under them between two visits to the same question would be a
    * different card each time.
    *
-   * It is **not** saved. An exam picked back up after a reload is re-ordered,
-   * which is correct: the stored `chosenIndex` is the author's index, so the
-   * option the player pressed is still the option shown as pressed — it has just
-   * moved. Persisting this would mean a save-schema migration (ADR-0046) to
-   * record something no player can perceive.
+   * It is **derived, not saved** — see {@link orderExam}. Seeding it from the
+   * attempt's `startedAt` makes it identical on `begin` and on `carryOn`, so a
+   * player who closes the tab mid-exam and comes back finds the paper they
+   * left, without a save-schema migration (ADR-0046) to record it.
    */
   readonly shownAs: ReadonlyMap<QuestionId, OptionOrder>;
   /** Is the clock still running? A timer turned off mid-exam makes this false. */
@@ -454,8 +460,8 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     running = {
       exam: unfinished,
       byId: index.value,
-      /* A resumed exam is re-ordered. See {@link Running.shownAs}: the answers
-         already given are authored indices and still point at the same wording. */
+      /* The same orders this attempt had before it was left: `orderExam` is
+         seeded from `startedAt`, which the save carries (ADR-0057 §3). */
       shownAs: orderExam(unfinished),
       timed: unfinished.remainingMs !== null,
       timeUp: false,
@@ -566,16 +572,36 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
   }
 
   /**
-   * One option order per question, drawn when the exam is (ADR-0057).
+   * One option order per question, derived from the attempt itself (ADR-0057 §3).
    *
-   * Off `deps.random`, which the composition root forks for option order alone,
-   * so drawing twenty of these cannot move the exam's own seeded draw — that
-   * runs on `random.fork('exam')` and `TN-EXAM-02` requires it to be the same
-   * twenty for the same seed whatever else the player has done.
+   * Seeded from `exam.startedAt`, which the save already carries and which does
+   * not change when an exam is left and picked back up. So `begin` and
+   * `carryOn` build the identical map and **a resumed paper does not rewrite
+   * itself**. `TN-EXAM-03` lets a player go back and change an answer; a player
+   * who closed the tab mid-exam is doing the same thing more slowly, and the
+   * options they have already read must still be where they left them.
+   *
+   * Nothing is written to the save to achieve it. The order is a pure function
+   * of a number the save holds, so there is no schema change, no migration, and
+   * no second copy of anything to keep in step.
+   *
+   * A *different* attempt has a different `startedAt` and so a fresh set of
+   * orders, which is the property ADR-0057 exists for: no position is durably
+   * the answer's home. Stability is scoped to the one paper in front of the
+   * player, and no further.
+   *
+   * `exam.answers` is the draw in order, and `withChoice` replaces in place
+   * rather than appending (`TN-EXAM-03`), so walking it is stable across a
+   * reload too — which is what lets a positional walk key this map.
+   *
+   * It never touches the exam's own draw: that runs on `random.fork('exam')`,
+   * and `TN-EXAM-02` requires the same seed to draw the same twenty whatever
+   * else the player has done.
    */
   function orderExam(exam: ExamInProgress): ReadonlyMap<QuestionId, OptionOrder> {
+    const stream = deps.orderStream(exam.startedAt >>> 0);
     return new Map(
-      exam.answers.map((answer) => [answer.questionId, shuffledOptionOrder(deps.random)]),
+      exam.answers.map((answer) => [answer.questionId, shuffledOptionOrder(stream)]),
     );
   }
 
