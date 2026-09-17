@@ -43,6 +43,46 @@
  * `TN-SAVE-06` and `TN-SAVE-08`'s and are untouched: this is where the card
  * sits, not what it says.
  *
+ * ## What the scan meets between the two answers
+ *
+ * The highlight opens on the safe answer (`highlightSafeAnswer`, below), and for
+ * *one* press that is enough. It is not enough for two, and the reason is
+ * arithmetic rather than layout: a confirmation draws **two** answers and the
+ * ring wraps, so each answer is exactly one advance from the other. Drawing them
+ * the other way round moves nothing — from the safe answer the next advance
+ * would still be the destructive one — so `TN-SAVE-06`'s destructive-first order
+ * is not what makes this dangerous, and reversing it would not make it safe.
+ *
+ * What is dangerous is that a single unintended short press — a bounced contact,
+ * the commonest error there is with one contact — silently re-aims the *next*
+ * hold at the answer that cannot be undone. The player who meant "keep my
+ * progress" holds, and deletes it.
+ *
+ * So the **question** is a stop in the ring (`SWITCH_STOP_ATTRIBUTE`), and the
+ * ring is question, yes, no. One advance from the safe answer is the question,
+ * read out again; the answer that destroys something is two advances away and
+ * can never be taken by a hold aimed at the safe one. A long press on the
+ * question re-reads it and does nothing else — which is also the one thing a
+ * switch player could not do before, the question being announced once when the
+ * dialog opens with no way to ask for it again.
+ *
+ * It costs every confirmation one press per lap, and it belongs to the shared
+ * dialog rather than to a flag the delete question passes, for the reason
+ * `highlightSafeAnswer` gives: all four confirmations in this game ask something
+ * whose yes takes back something the player cannot get again.
+ *
+ * **It is not a hold the player has to beat twice.** A threshold above the one
+ * the player set in "Hold time" would invert `TN-SET-09`'s cap — which exists so
+ * that no control can demand a hold longer than the player can make — and
+ * `TN-SAVE-08` ratifies a single threshold ("only a hold past the hold-to-choose
+ * threshold takes the highlighted answer"). Nothing here waits, either: see
+ * below.
+ *
+ * `TN-SAVE-08` says "the highlight moves between 'Delete everything' and 'Keep
+ * my progress'". That is still true and is now less than the whole truth — the
+ * question is between them. The sentence is `TN-SAVE`'s to amend, and
+ * `docs/plan/slices.md` routes it there rather than this file deciding it.
+ *
  * ## Nothing here counts down
  *
  * `TN-ATTEMPT-07`: "when I do nothing for two minutes, nothing has been
@@ -56,6 +96,7 @@
 import { text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { createScreen, type Screen } from './screen';
+import { SWITCH_LABEL_ATTRIBUTE, SWITCH_STOP_ATTRIBUTE } from './single-switch';
 
 /** The question and its consequence, in the player's language. */
 export interface ConfirmText {
@@ -124,7 +165,23 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
     },
   });
 
-  const title = element(doc, 'h2', { id: `${options.id}-title` });
+  /*
+   * The question, and — for one switch only — a stop in the ring. See "What the
+   * scan meets between the two answers" at the top of this file.
+   *
+   * `tabindex="-1"` keeps it out of the Tab order (`focus-trap.ts` excludes a
+   * negative `tabindex`) while letting the highlight focus it, which is what
+   * scrolls it into view. It is not a button, has no role, and the only thing
+   * that can land on it is the switch.
+   */
+  const title = element(doc, 'h2', {
+    id: `${options.id}-title`,
+    className: 'tn-screen__question',
+    attrs: { tabindex: '-1', [SWITCH_STOP_ATTRIBUTE]: 'true' },
+  });
+  title.addEventListener('click', () => {
+    repeatQuestion();
+  });
   const body = element(doc, 'p', { id: `${options.id}-body`, className: 'tn-screen__help' });
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
   screen.card.append(title, body, actions);
@@ -135,6 +192,14 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
   function render(): void {
     const content = options.describe(locale);
     title.textContent = content.title;
+    /* What the switch reads when the highlight stops on the question: the whole
+       question, its cost included, exactly as `open` announces it. Re-set on
+       every render, so a language change cannot leave the old one behind. */
+    if (content.body === undefined || content.body === '') {
+      title.removeAttribute(SWITCH_LABEL_ATTRIBUTE);
+    } else {
+      title.setAttribute(SWITCH_LABEL_ATTRIBUTE, `${content.title} ${content.body}`);
+    }
     if (content.body === undefined || content.body === '') {
       body.hidden = true;
       body.textContent = '';
@@ -197,6 +262,28 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
     if (at >= 0) screen.ring.highlight(at);
   }
 
+  /** The question as it is spoken: the title, and the cost when there is one. */
+  function spokenQuestion(): string {
+    const content = options.describe(locale);
+    return content.body === undefined || content.body === ''
+      ? content.title
+      : `${content.title} ${content.body}`;
+  }
+
+  /**
+   * A long press on the question: read it again, and change nothing.
+   *
+   * The only thing that can land here is the switch — the heading is out of the
+   * Tab order and is no kind of control — so the guard is the switch being on
+   * rather than which kind of event arrived. Choosing it is deliberately not an
+   * answer: this is the stop that stands between the safe answer and the one
+   * that cannot be undone, and a stop that could confirm would be no stop.
+   */
+  function repeatQuestion(): void {
+    if (!switchEnabled || !screen.visible) return;
+    options.announce?.(spokenQuestion(), locale);
+  }
+
   function cancel(): void {
     if (!screen.visible) return;
     screen.hide();
@@ -219,11 +306,7 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
        * reader that reads the dialog on arrival hears it twice at worst and
        * never nothing — which is the failure that matters here.
        */
-      const spoken = options.describe(locale);
-      options.announce?.(
-        spoken.body === undefined ? spoken.title : `${spoken.title} ${spoken.body}`,
-        locale,
-      );
+      options.announce?.(spokenQuestion(), locale);
     },
 
     close(): void {

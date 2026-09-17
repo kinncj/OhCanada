@@ -583,6 +583,14 @@ describe('TN-SAVE-12: a delete that does not finish', () => {
  * two correct rules meet on this dialog as: a single-switch player's very first
  * press, if it runs a fraction past the hold threshold, deletes everything they
  * have. `app/ui/confirm.ts` therefore opens the highlight on the safe answer.
+ *
+ * That fixed the first press and left the second: a ring of two wraps, so the
+ * destructive answer was one advance from the safe one whichever order they
+ * were drawn in, and a single stray press re-aimed the next hold at it. The
+ * question is now a stop between them, and the tests below are about the
+ * *second* press as much as the first. The shared property, for every
+ * confirmation in the game, is
+ * `tests/unit/ui/a-confirmation-is-never-one-press-from-yes.test.ts`.
  */
 describe('TN-SAVE-08: the delete question with one switch', () => {
   interface SwitchFixture {
@@ -635,12 +643,38 @@ describe('TN-SAVE-08: the delete question with one switch', () => {
     expect(fixture.at('save-clear-confirm')?.hidden).toBe(true);
   });
 
-  it('still reaches "Delete everything" with a short press first', async () => {
+  it('does not delete when a stray press is followed by the hold meant for the safe answer', async () => {
     const fixture = openWithASwitch();
     fixture.at('save-clear')?.click();
 
-    /* The destructive answer is reachable, it is simply not where the ring
-       opens: one short press moves off the safe answer, and the ring wraps. */
+    /* One short press the player did not mean to make — a bounced contact, the
+       commonest error there is with one switch. It must not re-aim the hold
+       that follows at the answer that cannot be undone. */
+    pressSwitch(fixture.page, fixture.clock, 100);
+    expect(
+      fixture.at('save-clear-yes')?.getAttribute(HIGHLIGHT_ATTRIBUTE),
+      'one stray press put the highlight on "Delete everything"',
+    ).toBeNull();
+
+    /* The hold they did mean to make, aimed at "Keep my progress". */
+    pressSwitch(fixture.page, fixture.clock, 800);
+    await settle();
+
+    expect(fixture.onDelete, 'two presses deleted the save').not.toHaveBeenCalled();
+    expect(
+      fixture.at('save-clear-confirm')?.hidden,
+      'the hold on the question answered the question',
+    ).toBe(false);
+  });
+
+  it('still reaches "Delete everything", two short presses away', async () => {
+    const fixture = openWithASwitch();
+    fixture.at('save-clear')?.click();
+
+    /* The destructive answer is reachable and nothing about it is harder than
+       it was: it is simply not one advance from the safe answer. The first
+       press stops on the question, which is read out again. */
+    pressSwitch(fixture.page, fixture.clock, 100);
     pressSwitch(fixture.page, fixture.clock, 100);
     expect(fixture.at('save-clear-yes')?.getAttribute(HIGHLIGHT_ATTRIBUTE)).toBe('true');
 
