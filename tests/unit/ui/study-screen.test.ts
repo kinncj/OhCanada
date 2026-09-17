@@ -245,8 +245,10 @@ describe('French', () => {
     screen.setLocale('fr');
     expect(root.textContent).toContain('Révision');
     expect(root.textContent).toContain(
-      "Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps.",
+      "Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps.",
     );
+    /* The same claim the English test refuses: a new player has seen none. */
+    expect(root.textContent).not.toContain('déjà vues');
     expect(root.byTestId('study-start')?.textContent).toBe('Commencer');
     expect(root.byTestId('study-exit')?.textContent).toBe('Retour au jeu');
   });

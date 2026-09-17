@@ -1323,7 +1323,9 @@ test.describe('study', () => {
   test('says what will happen, and shows the drill size as text', async ({ page }) => {
     const root = await openScreen(page, 'study');
     await expect(root).toHaveAccessibleName('Study');
-    await expect(root).toContainText('Practise the questions you have seen. There is no time limit.');
+    /* Reworded after the third live-site audit: the screen used to promise "the
+       questions you have seen" to a player who had seen none. */
+    await expect(root).toContainText('Practise questions for the citizenship test. There is no time limit.');
     await expect(root.locator('[data-testid="study-count"]')).toHaveText('5 questions');
     await expect(root.locator('[data-testid="study-start"]')).toBeVisible();
   });
