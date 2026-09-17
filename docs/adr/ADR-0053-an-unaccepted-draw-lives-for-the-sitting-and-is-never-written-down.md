@@ -228,14 +228,32 @@ decided.
 - **The picture the creator draws (ADR-0040) is unaffected.** It draws whatever selection it is given; which
   selection that is has never been its question.
 
-- **OBLIGATION due=2026-11-17 owner=engine** — land rule 3. In `app/bootstrap/main.ts`: stop drawing a
+- ~~**OBLIGATION due=2026-11-17 owner=engine** — land rule 3. In `app/bootstrap/main.ts`: stop drawing a
   character for a save that has none (`repairSelection` keeps repairing a saved one), pass
   `random.fork('character')` to `createShell` as `ShellOptions.random`, take the appearance the renderer and
   the title figure are given from the shell's reports rather than from a second `characterSelection`, and
   draw no title figure until the save has a character. `app/ui/shell.ts` needs no new behaviour for this —
   `openingSelection()` already draws when it is given no selection — which is the test that the boundary is
   now in the right place. If it turns out `app/ui` must change too, say so here before changing it: that
-  would mean the seam is still wrong.
+  would mean the seam is still wrong.~~
+  **DISCHARGED 2026-09-17** — landed on branch `one-draw`, in `app/bootstrap/main.ts` and nowhere else.
+  `toSelection(progress.character)` is repaired **only when it answers a character**; a save with none is
+  handed to the shell with no `initialSelection` and `optionRepaired: false`, so the draw is made by
+  `openingSelection()` and held for the sitting. `random.fork('character')`'s `next` is passed as
+  `ShellOptions.random`, so the draw and "Surprise me" are a pure function of one seed instead of an
+  unseeded `Math.random`. `characterSelection` is now `Readonly<Record<string, string>> | null` and holds
+  **the save's** character only: the renderer is dressed from it at boot when there is one and otherwise
+  from the shell's `character/created` / `character/changed` report — a first run leaves the renderer's
+  empty appearance, which dresses the puppet in the rig artboard's own skins — and `titleFigure` answers
+  `null` while `progress.character` is `null`, so the title screen's frame settles `empty` and the landscape
+  is the whole picture (ADR-0041's shipped state). **`app/ui` needed no change at all — not one line** —
+  which is the boundary test this obligation set. Held by `tests/unit/bootstrap/front-door.test.ts` ("a save
+  with no character is handed no character": no selection, no appearance, the seeded stream handed over, no
+  title figure, and a saved character still repaired and opened on), by two new specs in
+  `tests/unit/ui/shell.test.ts` (rule 2's table across a Settings visit and a language change; the shell
+  reports the character it holds rather than the one it opened on) and by
+  `tests/e2e/first-run.spec.ts` ("shows no face on the title screen until the player has chosen one"), which
+  walks Play → "Surprise me" → Back on the built artefact and fails on the code this replaces.
 - **OBLIGATION due=2026-10-17 owner=ui-a11y** — build §4's gate: an end-to-end check over a real boot that
   the store still reports a first run while the creator is open and unfinished, through option changes,
   "Surprise me", a Settings visit and a language change, with no `character/created` or `character/changed`
