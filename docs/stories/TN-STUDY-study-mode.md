@@ -27,7 +27,7 @@ Read `README.md` in this directory first. Every count on this screen follows the
 |---|---|---|
 | `study.open` | Study | Réviser |
 | `study.title` | Study | Révision |
-| `study.intro` | Practise the questions you have seen. There is no time limit. | Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps. |
+| `study.intro` | *proposed, see below* | *proposed, see below* |
 | `study.count.one` | {{n}} question | {{n}} question |
 | `study.count.other` | {{n}} questions | {{n}} questions |
 | `study.start` | Start | Commencer |
@@ -46,6 +46,19 @@ Read `README.md` in this directory first. Every count on this screen follows the
 | `study.exit` | Back to the game | Retour au jeu |
 | `study.leave` | Leave | Quitter |
 | `study.leaveKept` | Your answers so far are saved. | Vos réponses sont enregistrées. |
+
+**A proposed row, not yet ratified (third live-site audit, 2026-09-17).** Written by `app/ui` and declared in
+`COPY_GAPS` (`app/ui/copy.ts`) until this file's owner moves it into the table above or replaces it. It
+replaces "Practise the questions you have seen. There is no time limit." / « Exercez-vous avec les questions
+que vous avez déjà vues. Il n'y a aucune limite de temps. », which was untrue for the player most likely to
+read it: Study draws from the whole bank and `available()` counts the whole bank, so on a brand-new profile
+the audit read that sentence above five cards, every one of them tagged "New question". The new sentence is
+true on the first drill and on the hundredth, and the card still says of each question whether it is new or
+seen (`card.kind.new`, `card.kind.seen`).
+
+| Key | EN | FR |
+|---|---|---|
+| `study.intro` | Practise questions for the citizenship test. There is no time limit. | Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps. |
 
 `study.count` and `study.short` are two rows each because one row draws "1 questions" — see
 `TN-COPY-strings-and-counts.md` for the rule and for why English and French need the same mechanism and not
@@ -90,7 +103,8 @@ Feature: A study drill
     When I tap "Study"
     Then the element "study-screen" is visible
     And it shows the heading "Study"
-    And it shows "Practise the questions you have seen. There is no time limit."
+    And it shows "Practise questions for the citizenship test. There is no time limit."
+    And nothing on it says the questions are ones I have already seen
     And the element "study-count" shows the number of questions in the drill
     And a button "Start" is offered
 
@@ -455,7 +469,7 @@ Feature: Study in French
     When I open Study
     Then the menu control reads "Réviser"
     And the heading reads "Révision"
-    And the body reads "Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps."
+    And the body reads "Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps."
     And the button reads "Commencer"
 
   Scenario: The count is French and reads correctly at one

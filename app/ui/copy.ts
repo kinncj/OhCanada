@@ -206,7 +206,14 @@ const EN = {
   /* docs/stories/TN-STUDY-study-mode.md */
   'study.open': 'Study',
   'study.title': 'Study',
-  'study.intro': 'Practise the questions you have seen. There is no time limit.',
+  /* Reworded 2026-09-17 and listed in {@link COPY_GAPS} until `TN-STUDY`'s owner
+     takes the new words. The ratified row — "Practise the questions you have
+     seen." — was untrue for the player most likely to read it: on a brand-new
+     profile Study draws from the whole bank, so the third live-site audit found
+     the sentence above five cards every one of which was tagged "New question".
+     This one is true on the first drill and on the hundredth, and the card still
+     says of each question whether it is new or seen. */
+  'study.intro': 'Practise questions for the citizenship test. There is no time limit.',
   'study.count.one': '{{n}} question',
   'study.count.other': '{{n}} questions',
   'study.start': 'Start',
@@ -1177,7 +1184,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.open': 'Réviser',
   'study.title': 'Révision',
   'study.intro':
-    "Exercez-vous avec les questions que vous avez déjà vues. Il n'y a aucune limite de temps.",
+    "Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps.",
   'study.count.one': '{{n}} question',
   'study.count.other': '{{n}} questions',
   'study.start': 'Commencer',
@@ -1794,6 +1801,12 @@ export const COPY_GAPS: readonly CopyKey[] = [
      Proposed rows in `TN-DONE` and `TN-HUD`. */
   'level.complete.nextOpen',
   'hud.task.behind',
+  /* The third live-site audit: Study's opening sentence, reworded. `TN-STUDY`
+     ratifies "Practise the questions you have seen.", which a brand-new profile
+     reads over five cards tagged "New question". Unratified again until that
+     story's owner takes the new words, which are written down there as a
+     proposed row. */
+  'study.intro',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

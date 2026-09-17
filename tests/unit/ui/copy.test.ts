@@ -250,8 +250,12 @@ describe('the copy table', () => {
          cue after the task when its stop is behind the player. */
       'level.complete.nextOpen',
       'hud.task.behind',
+      /* The third live-site audit: Study's opening sentence, reworded. The
+         ratified row promised "the questions you have seen" to a player who had
+         seen none, over five cards each tagged "New question". */
+      'study.intro',
     ]);
-    expect(COPY_GAPS).toHaveLength(79);
+    expect(COPY_GAPS).toHaveLength(80);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

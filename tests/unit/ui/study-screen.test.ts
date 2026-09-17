@@ -53,7 +53,18 @@ describe('opening Study', () => {
     expect(page.doc.getElementById(root.getAttribute('aria-labelledby') ?? '')?.textContent).toBe(
       'Study',
     );
-    expect(root.textContent).toContain('Practise the questions you have seen. There is no time limit.');
+    /*
+     * True for the player reading it, whichever player that is (third live-site
+     * audit). It used to say "the questions you have seen", and a brand-new
+     * profile read that over five cards each tagged "New question": Study draws
+     * from the whole bank, and `available()` counts it, so the sentence promised
+     * a history the player did not have.
+     */
+    expect(root.textContent).toContain('Practise questions for the citizenship test.');
+    expect(root.textContent).toContain('There is no time limit.');
+    expect(root.textContent, 'the screen still claims a history a new player has not got').not.toContain(
+      'questions you have seen',
+    );
     expect(at('study-start')?.textContent).toBe('Start');
   });
 
