@@ -100,7 +100,7 @@ draws four. **This level draws none, anywhere, at any scale**, for the reason
 | `the-north-layer-40-river-and-bar` | `layer-40-river-and-bar.svg` | 1920 × 320 | 759 | the glacier-fed river in three tones, then a cobble bar with driftwood, willow and sedge |
 | `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 2300 × 700 | 228 | **POI hero, and the level's place-anchor.** The authored 920 × 280 geometry under one uniform `scale(2.5)` group since 2026-09-16; §13 |
 | `the-north-prop-spruce-stand` | `prop-spruce-stand@1x.svg` | 620 × 760 | 46 | **POI hero, added 2026-09-13**: five spire-topped spruce of uneven height on a boulder bank |
-| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn twice on 2026-09-17**: seven bleached spars lying across one another at seven angles on the cobble bar, each tapering to a torn, slanted end — no elliptical end cap anywhere |
+| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn twice on 2026-09-17**: seven bleached spars lying across one another at seven angles on the cobble bar, each tapering to a torn, slanted end — no elliptical end cap anywhere. **Still reads as milled lumber — OPEN, see §8.1** |
 
 Shape counts are reported, not gated (ADR-0025). The sky is **49 shapes**, the same count as the CN Tower and
 the lowest of any layer in the game; the river-and-bar tile is **759**, the highest, and every one of them is
@@ -608,6 +608,37 @@ player beside the hull: `scratchpad/renders/sternwheeler/`.
 |---|---|---|---|---|
 | `the-north-ground-gravel-bar` | `ground-gravel-bar@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
 
-The gravel bar nearest the viewer: rounded river cobbles in light grey, dark grey and tan that grow larger toward the bottom, patches of silt sand in `stone-light`, silvered driftwood, and low willow tufts. It continues the bar of `layer-40-river-and-bar`.
+The gravel bar nearest the viewer: rounded river cobbles in light grey, dark grey and tan that grow larger toward the bottom, patches of silt sand in `stone-light`, two driftwood spars, and low willow tufts. It continues the bar of `layer-40-river-and-bar`.
+
+**The two spars were redrawn on 2026-09-17, and the cause was the played scene, not the file on its own.** Each was a straight constant-width quadrilateral carrying a cool `white-shade` highlight, and on the bar the player walks over, a pale straight rod with a cold highlight reads as a dropped pipe or a metal pole. Neither is straight or parallel-sided now: each is a five-point curve with a swelling belly that narrows toward both ends, each end is a torn splinter broken at its own angle, and each carries one snapped stub of a limb. The cool highlight is gone — one spar takes the warm `limestone` ramp and the other the warm `stone` ramp, off the neutral greys of the cobbles around them. The cobbles themselves were not touched: a live audit called this the best-looking ground in the game, and only the wood was wrong.
+
+### 8.1 OPEN: the POI card still reads as milled lumber, and four attempts did not fix it
+
+**The subject on the card is unfixed and is left exactly as `origin/main` had it.** A live audit read
+`prop-driftwood-pile@1x.svg` as "straight, uniform, pale spars with square dark-cut ends — a timber stack",
+and rendering the shipped file at play size agrees: it reads as a stack of planks. Four redraws were tried on
+2026-09-17 and **all four were rejected by the agent that drew them**, each at play size, each for a different
+reason. They are recorded because the next attempt should not repeat them:
+
+1. **Five bent spars, hand-drawn, 8–10:1, kinked edges, two-facet torn ends.** Still planks. Taper and torn
+   ends are not what was doing it.
+2. **Generated from an axis and a half-thickness profile, lit and shaded lenses at half the body each.** Worse:
+   splitting a long shape lengthwise into a pale top and a dark underside squeezes the base tone into a seam
+   down the middle, and it read as a stack of **canoes**.
+3. **Same, lens fractions cut to 0.30/0.20, ends kept thick.** Read as **leather straps or shoe soles** — the
+   shaded lens wrapping the blunt cap makes a sole, and at 10:1 a shaded band is a strap.
+4. **Short fat billets, 3–5:1, blunt caps, shade dying before the ends.** Read as **stacked cushions or bread
+   rolls**. The plank reading was gone and nothing recognisable replaced it.
+
+**What the four attempts do establish**, and what is worth carrying into a fifth: the cause is not the ends
+(attempt 1), not the tone split (2), not the end thickness (3), and not the length-to-width ratio alone (4).
+What no attempt supplied is **bark, knots, grain or any surface incident** — every version was a clean
+untextured solid, and a clean untextured solid of any proportion reads as something manufactured. The house
+style forbids texture and noise, so the next attempt should carry the incident in **silhouette**: a forked
+limb still attached, a split running in from one end, a barked section against a bare one, a curved trunk with
+a root flare — features a sawmill removes, drawn as shapes rather than as surface.
+
+Routed to the art owner as an open finding rather than absorbed. The **world** half of this defect — the two
+spars on the gravel bar the player walks over — is fixed, and is the section above.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

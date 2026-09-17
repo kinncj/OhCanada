@@ -39,7 +39,7 @@ Seven SVG sources. `scripts/assets.mjs` reads the level from the path, so everyt
 | `winnipeg-layer-10-sky` | `layer-10-sky.svg` | 1080 × 900 | one flat `sky-shade` field and six cloud banks |
 | `winnipeg-layer-20-skyline` | `layer-20-skyline.svg` | 1800 × 260 | twenty-one generic downtown masses over an opaque haze foot |
 | `winnipeg-layer-30-riverbank` | `layer-30-riverbank.svg` | 1800 × 320 | the far bank in autumn, the shore and the open water |
-| `winnipeg-layer-40-plaza` | `layer-40-plaza.svg` | 1920 × 520 | the riverside promenade — limestone slabs, parapet, lamps, benches, planters, three trees, six people |
+| `winnipeg-layer-40-plaza` | `layer-40-plaza.svg` | 1920 × 520 | the riverside promenade — limestone slabs, parapet, lamps, benches, planters, three street trees, six people. **The trees were redrawn on 2026-09-17**: each was one flat tan ellipse on a straight stick and read in the played scene as a lollipop or a mushroom cap. Each crown is now eight overlapping circles of six radii, so its edge is lobed rather than one smooth arc, over three branches that show below it; two take the saturated `oxide` ramp and one `grass`, replacing the near-neutral khaki `wood` tan |
 | `winnipeg-landmark-human-rights-museum@1x` | `landmark-human-rights-museum@1x.svg` | 1000 × 1040 | **POI hero, and the level's only place-anchor** |
 | `winnipeg-prop-cable-stayed-bridge` | `prop-cable-stayed-bridge@1x.svg` | 700 × 760 | **POI hero, added 2026-09-13**: one leaning mast, a fan of straight stays, a deck and its rail, over the river |
 | `winnipeg-prop-autumn-maple` | `prop-autumn-maple@1x.svg` | 560 × 640 | **POI hero, added 2026-09-13, redrawn 2026-09-17**: a maple in full autumn colour in a kerbed tree pit, three heavy branches showing in the open band under the crown, with five five-lobed fallen maple leaves |
@@ -371,6 +371,8 @@ planters, three trees and six people; the corridor was not short of things to lo
 |---|---|---|---|---|
 | `winnipeg-ground-promenade-paving` | `ground-promenade-paving@1x.svg` | 1080 × 640 | 1280 … 1920 | 2.65 MiB |
 
-The promenade nearest the viewer: courses of mottled buff limestone slabs, widening toward the bottom, with a lit top edge and `limestone-shade` joints; a cast-iron drain grate; and fallen maple leaves in `oxide-light`, `flag-red-base` and `brass-base`, for early autumn.
+The promenade nearest the viewer: courses of mottled buff limestone slabs, widening toward the bottom, with a lit top edge and `limestone-shade` joints; a cast-iron drain grate; and twelve fallen maple leaves in `oxide-light`, `flag-red-base` and `brass-base`, for early autumn.
+
+**The leaves were redrawn on 2026-09-17.** There were nineteen of them, each a ten-point rosette about 30 px across — 11 px at play size — and in the scene they read as small stars or confetti scattered on the pavement, on the one level whose POI teaches the maple leaf. They are now twelve, drawn with the POI maple's own leaf: a five-lobed blade with deep sinuses and a short stem, 48–63 px across, scaled up toward the bottom of the tile with the paving, at twelve angles, each over a flat `ao-shadow` ellipse. Twelve rather than nineteen because a bigger leaf needs room, and all twelve sit clear of the tile's side edges, so no leaf is drawn twice to survive the wrap.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
