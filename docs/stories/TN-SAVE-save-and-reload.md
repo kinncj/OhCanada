@@ -89,6 +89,59 @@ the count does not reset, no answer is forgotten, and one more answer finishes t
 | `save.import.done` | Your game is back. | Votre partie est restaurée. |
 | `save.clear` | Delete my progress | Supprimer ma progression |
 | `save.clear.confirm` | This cannot be undone. Delete everything? | Cette action est définitive. Tout supprimer? |
+| `save.clear.yes` | Delete everything | Tout supprimer |
+| `save.clear.keep` | Keep my progress | Garder ma progression |
+| `save.clear.failed` | We could not finish deleting your progress. | Nous n'avons pas pu terminer la suppression de votre progression. |
+| `save.clear.failed.help` | Some of it may still be on this device. Try again. | Une partie de votre progression est peut-être encore sur cet appareil. Réessayez. |
+
+**The last four rows were ratified on 2026-09-17.** They were written by `app/ui` under ADR-0046 and parked
+in `COPY_GAPS` because this table carried `save.clear` and `save.clear.confirm` and nothing else — so the one
+control in this game that destroys something had two ratified words and four unowned ones. They are this
+story's now, and `TN-SAVE-06`, `TN-SAVE-07`, `TN-SAVE-08`, `TN-SAVE-09`, `TN-SAVE-10`, `TN-SAVE-11` and
+`TN-SAVE-12` are what hold them.
+
+**The two answers are taken exactly as proposed.** "Delete everything" answers the question in the
+question's own words — `save.clear.confirm` asks "Delete everything?" — so the destructive answer cannot be
+read as a generic "OK", and a player who hears only the button still hears what it does. The safe answer
+**names what it keeps** and is never "Cancel": "Cancel" describes the dialog, "Keep my progress" describes
+the outcome, and a frightened player reading one word at a time needs the outcome. It is word for word
+`save.import.keep` and stays a separate row for the reason `card.next` and `exam.next` are separate: two
+confirmations must be free to be reworded apart. Neither answer is drawn in colour alone — the destructive
+control is a shape and a word (ADR-0046), which is `CLAUDE.md`'s "colour is never the only signal".
+
+**The refusal is ratified in English and amended in French, and the English wording is load-bearing.** The
+sentence is shown when a confirmed delete does not finish. It may **not** become "Nothing was changed":
+`clearBoth` (ADR-0026) attempts IndexedDB *and* the `localStorage` a save was carried out of and reports one
+error for either, so a clear that emptied one store and was refused by the other is indistinguishable, from
+the screen, from one that changed nothing. "Nothing was changed" would therefore be a lie in exactly the case
+where a stale copy comes back on the next boot. What the screen knows is that the delete did not finish, and
+that is all the first sentence claims. The second sentence says "**may** still be on this device", which is
+the honest quantifier: not "is", which the screen cannot know, and not "is not", which is the lie. Judged
+against the player who has just asked to delete everything and is now being told it failed, that is the
+right trade — it neither soothes them with a promise nor frightens them with a certainty, and it is the only
+sentence on this screen that could still be true after either outcome.
+
+**"Try again" is ratified as the instruction, and it was the part worth arguing about.** The objection is
+that trying again may be what finishes the job rather than a recovery — which is an argument *for* it, not
+against it: a second delete re-attempts **both** stores, cannot make a half-emptied store worse, and is the
+only action this screen offers. It matters more than it looks, because `app/bootstrap` releases the game's
+own write hold when a delete fails, so the session starts saving again and a retry is what clears whatever
+was written since. The instruction is also *where* it can be acted on: focus returns to "Delete my progress"
+and the sentence is that control's accessible description, so the player is told to try again while on the
+control that tries. This story therefore requires the sentence to name no button that does not exist — there
+is no second "Try again" control here, unlike `study.error.retry` and `level.error.retry` — and
+`TN-SAVE-12` asserts that the retry really is reachable from where the sentence leaves the player.
+
+**The French help line is not the proposed one: « Une partie est peut-être encore… » became « Une partie de
+votre progression est peut-être encore… ».** In this game's French, « partie » is the word for *a saved
+game* — « votre partie sauvegardée » (`save.error.title`), « Votre partie est restaurée »
+(`save.import.done`) — so « Une partie est peut-être encore sur cet appareil » reads first as *a saved game
+may still be on this device*, which is a different claim from "some of it may still be". That is
+`README.md`'s rule about a word this game has taught the player to read one way being used to mean another —
+the rule that gave level 8 "Horse" instead of "Riding" and kept « la grève » off level 10's loading screen —
+and it lands on the one sentence in the game where a misreading costs a player their certainty about what
+was destroyed. « Une partie **de votre progression** » can only be read as a portion, and names the same
+thing the first sentence named. It is longer, and `TN-SAVE-10` measures it at 200 %.
 
 ---
 
@@ -400,11 +453,13 @@ Feature: Export and import
     Then I am asked to confirm before my current progress is replaced
     And choosing no leaves my progress unchanged
 
-  Scenario: Deleting progress asks first
+  Scenario: Deleting progress asks first, and the answers say what they do
     When I tap "Delete my progress"
     Then I am asked "This cannot be undone. Delete everything?"
-    And choosing no changes nothing
-    And choosing yes clears storage and opens the title screen as it is for a first-time player
+    And the two answers read "Delete everything" and "Keep my progress"
+    And neither answer reads "Cancel", "OK", "Yes" or "No"
+    And choosing "Keep my progress" changes nothing
+    And choosing "Delete everything" clears storage and opens the title screen as it is for a first-time player
 ```
 
 ## TN-SAVE-07 — Save and reload from the keyboard
@@ -426,8 +481,15 @@ Feature: Keyboard-only persistence
   Scenario: The confirmation is operable
     When I activate "Delete my progress"
     Then focus moves into the confirmation
+    And "Delete everything" and "Keep my progress" are both reachable with "Tab" and activate with "Enter"
     And "Escape" cancels it
     And cancelling returns focus to "Delete my progress"
+
+  Scenario: A refused delete leaves the keyboard on the control that retries
+    Given I answered "Delete everything" and the delete did not finish
+    Then focus is on "save-clear"
+    And "Enter" asks "This cannot be undone. Delete everything?" again
+    And no control named "Try again" is on the screen
 ```
 
 ## TN-SAVE-08 — Save and reload with one switch
@@ -441,6 +503,19 @@ Feature: Single-switch persistence
     Then the highlight moves between "Download the old file" and "Start again"
     When I hold the switch past the hold-to-choose threshold
     Then the highlighted choice is taken
+
+  Scenario: The delete confirmation can be answered with the switch
+    Given single-switch mode is on
+    When I activate "Delete my progress"
+    Then the highlight moves between "Delete everything" and "Keep my progress"
+    And the highlight starts on "Keep my progress"
+    And only a hold past the hold-to-choose threshold takes the highlighted answer
+
+  Scenario: A refused delete can be retried with the switch
+    Given single-switch mode is on
+    And the delete did not finish
+    Then the refusal is reachable as text with the switch
+    And I can reach "Delete my progress" and ask again with short and long presses
 
   Scenario: Single-switch mode itself survives a reload
     Given single-switch mode is on
@@ -476,9 +551,24 @@ Feature: Announcing what happened to the save
     And it has no "aria-live" attribute of its own
     And it is announced once through "#tn-live-region"
 
+  Scenario: The delete question is named by the question itself
+    When I activate "Delete my progress"
+    Then "save-clear-confirm" has role "alertdialog"
+    And its accessible name is "This cannot be undone. Delete everything?"
+    And it has no accessible description, because the question carries its own cost
+    And the two answers are read as "Delete everything" and "Keep my progress"
+
   Scenario: Import and delete results are announced
     When an import succeeds, fails, or progress is deleted
     Then the result is announced in "#tn-live-region"
+
+  Scenario: A refused delete is spoken once, and belongs to its own control
+    Given the delete did not finish
+    Then "#tn-live-region" reads "We could not finish deleting your progress. Some of it may still be on this device. Try again."
+    And it is announced once, not once per sentence
+    And "save-clear-error" is the accessible description of "Delete my progress"
+    And it is not the accessible description of "Open a file"
+    And "save-clear-error" has no "aria-live" attribute of its own
 ```
 
 ## TN-SAVE-10 — Reduced motion and 200 % text
@@ -491,6 +581,12 @@ Feature: The persistence screens under accessibility settings
     Then it appears with no slide, fade or scale
     And the setting itself survives the reload that follows
 
+  Scenario: A refused delete does not animate either
+    Given reduced motion is on
+    And the delete did not finish
+    Then "save-clear-error" appears with no slide, fade or shake
+    And nothing on the screen pulses to draw attention to it
+
   Scenario: The error screen at 200 %
     Given text scaling is 200 %
     And the viewport is 390 x 844
@@ -498,6 +594,24 @@ Feature: The persistence screens under accessibility settings
     Then the whole message is readable, by scrolling inside the dialog if needed
     And both buttons are fully visible and at least 44 CSS px tall
     And the page does not scroll sideways
+
+  Scenario: The delete question and its answers at 200 %
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    When "save-clear-confirm" is visible
+    Then the whole question is readable, by scrolling inside the dialog if needed
+    And "Delete everything" and "Keep my progress" are both fully visible and at least 44 CSS px tall
+    And neither answer is truncated with an ellipsis in either language
+    And the page does not scroll sideways
+
+  Scenario: The refusal at 200 %, in the longer language
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    And the language is French
+    And the delete did not finish
+    Then the whole of "save-clear-error" is readable, by scrolling inside Settings if needed
+    And it is not truncated with an ellipsis
+    And "Delete my progress" is still fully visible and at least 44 CSS px tall
 
   Scenario: Text scale survives itself
     Given text scaling is 200 %
@@ -534,12 +648,97 @@ Feature: Saving and reloading in French
     And a failed import says "Nous n'avons pas pu lire ce fichier."
     And an oversized file says "Ce fichier est trop volumineux."
     And the confirmation asks "Cette action est définitive. Tout supprimer?"
+    And there is no space before the question mark
+
+  Scenario: The delete answers are French
+    When I activate "Supprimer ma progression"
+    Then the two answers read "Tout supprimer" and "Garder ma progression"
+    And neither answer reads "Annuler", "OK", "Oui" or "Non"
+    And choosing "Garder ma progression" changes nothing
+
+  Scenario: The refusal is French, and says "some of your progress" and not "a saved game"
+    Given the delete did not finish
+    Then "save-clear-error" says "Nous n'avons pas pu terminer la suppression de votre progression."
+    And it says "Une partie de votre progression est peut-être encore sur cet appareil. Réessayez."
+    And it does not contain "Une partie est peut-être"
+    And it does not say that nothing was changed
+    And it is announced in "#tn-live-region" with "lang" equal to "fr"
 
   Scenario: A save made in one language opens in the other
     Given I saved in French
     When I open the game and change the language to English
     Then every item in the survives list is unchanged
     And closing and reopening the tab now opens in English
+
+  Scenario: Changing language with the delete question open redraws it
+    Given "save-clear-confirm" is open in French
+    When I change the language to English
+    Then the question reads "This cannot be undone. Delete everything?"
+    And the answers read "Delete everything" and "Keep my progress"
+    And the dialog carries "lang" equal to "en"
+    And nothing has been deleted by the change
+```
+
+## TN-SAVE-12 — Deleting everything, and a delete that does not finish (failure path)
+
+```gherkin
+Feature: The one control that destroys something
+  Background:
+    Given I have progress in Ottawa
+    And I have opened Settings
+
+  Scenario: The control is offered, and only when it can do something
+    Then the element "save-clear" reads "Delete my progress"
+    And it is at least 44 CSS px wide and tall
+    And it is not drawn in colour alone
+    And it is absent altogether when this build cannot clear storage
+
+  Scenario: Nothing is deleted before the question is answered
+    When I tap "Delete my progress"
+    Then the element "save-clear-confirm" is visible
+    And my progress is still in storage
+    And closing the dialog with "Escape" leaves my progress in storage
+
+  Scenario: Answering yes deletes and opens the game again
+    When I tap "Delete my progress" and then "Delete everything"
+    Then storage holds no save for this game
+    And the title screen is shown as it is for a first-time player
+    And no dialog is shown between the delete and the title screen
+
+  Scenario: A delete that does not finish says only what is known
+    Given the delete will not finish
+    When I tap "Delete my progress" and then "Delete everything"
+    Then the element "save-clear-error" is visible
+    And it says "We could not finish deleting your progress."
+    And it says "Some of it may still be on this device. Try again."
+    And it does not say that nothing was changed
+    And it does not say that everything was deleted
+    And the element "save-clear-confirm" is closed
+    And the game does not restart
+
+  Scenario: The refusal belongs to the control that produced it
+    Given the delete did not finish
+    Then "save-clear-error" is the accessible description of "Delete my progress"
+    And the import's own message "save-import-error" is not shown
+    And no second copy of the sentence is drawn anywhere on the screen
+
+  Scenario: Trying again is possible from where the sentence leaves me
+    Given the delete did not finish
+    When I tap "Delete my progress" again and answer "Delete everything"
+    And the delete finishes this time
+    Then "save-clear-error" is gone
+    And it is no longer the description of any control
+    And the title screen is shown as it is for a first-time player
+
+  Scenario: A stale refusal never outlives the try that fixed it
+    Given the delete did not finish and then a later delete finished
+    Then no sentence from the earlier attempt is on the screen
+
+  Scenario: The game is still playable after a refused delete
+    Given the delete did not finish
+    Then I can close Settings and keep playing
+    And nothing on the screen counts down
+    And I am not asked again unless I ask
 ```
 
 ---
@@ -586,3 +785,12 @@ Feature: Saving and reloading in French
   `remainingSeconds`. `finishedAt: null` already distinguishes an unfinished attempt, and `TN-ATTEMPT-04`
   requires at most one of those at a time — which is a schema constraint worth writing down rather than a
   convention. Routed to the architect; `content/` is not this directory's to edit.
+- **`OQ-SAVE-9` — the screen cannot tell a partial clear from a total refusal, and the copy is written to
+  survive that.** `ProgressRepository.clear()` returns one error for two stores (`clearBoth`, ADR-0026), so
+  "Some of it may still be on this device." is the most precise sentence available and is deliberately
+  vaguer than the player deserves. *Recommendation:* a partial outcome on the port — which store was cleared
+  and which refused — after which this story would carry **two** refusals: one that names what is left and
+  one that says nothing was deleted. That is a port change and the persistence owner's call, so it is
+  reported, not invented here. **Until it exists the current sentence is ratified, not tolerated**: a screen
+  that guessed which of the two happened would be wrong roughly half the time, in the direction that loses a
+  player's trust (`TN-SAVE-12`).

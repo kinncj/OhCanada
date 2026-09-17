@@ -27,7 +27,7 @@ Read `README.md` in this directory first. Every count on this screen follows the
 |---|---|---|
 | `study.open` | Study | Réviser |
 | `study.title` | Study | Révision |
-| `study.intro` | *proposed, see below* | *proposed, see below* |
+| `study.intro` | Practise questions for the citizenship test. There is no time limit. | Exercez-vous avec des questions pour le test de citoyenneté. Il n'y a aucune limite de temps. |
 | `study.count.one` | {{n}} question | {{n}} question |
 | `study.count.other` | {{n}} questions | {{n}} questions |
 | `study.start` | Start | Commencer |
@@ -47,18 +47,35 @@ Read `README.md` in this directory first. Every count on this screen follows the
 | `study.leave` | Leave | Quitter |
 | `study.leaveKept` | Your answers so far are saved. | Vos réponses sont enregistrées. |
 
-**A proposed row, not yet ratified (third live-site audit, 2026-09-17).** Written by `app/ui` and declared in
-`COPY_GAPS` (`app/ui/copy.ts`) until this file's owner moves it into the table above or replaces it. It
-replaces "Practise the questions you have seen. There is no time limit." / « Exercez-vous avec les questions
-que vous avez déjà vues. Il n'y a aucune limite de temps. », which was untrue for the player most likely to
-read it: Study draws from the whole bank and `available()` counts the whole bank, so on a brand-new profile
-the audit read that sentence above five cards, every one of them tagged "New question". The new sentence is
-true on the first drill and on the hundredth, and the card still says of each question whether it is new or
-seen (`card.kind.new`, `card.kind.seen`).
+**`study.intro` was ratified on 2026-09-17, the English as `app/ui` proposed it and the French amended.** It
+is a table row like any other now; there is no proposed row under this table and no `COPY_GAPS` entry for it.
 
-| Key | EN | FR |
-|---|---|---|
-| `study.intro` | Practise questions for the citizenship test. There is no time limit. | Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps. |
+What it replaced was "Practise the questions you have seen. There is no time limit." / « Exercez-vous avec
+les questions que vous avez déjà vues. Il n'y a aucune limite de temps. », which was untrue for the player
+most likely to read it: Study draws from the whole bank and `available()` counts the whole bank, so on a
+brand-new profile the third live-site audit read that sentence above five cards, every one of them tagged
+"New question". **The English is taken exactly as `app/ui` wrote it**: it is true on the first drill and on
+the hundredth, it says nothing about how the questions are chosen (`TN-STUDY-02`'s last scenario), and the
+card still says of each question whether it is new or seen (`card.kind.new`, `card.kind.seen`). It matches
+the noun the front door already uses for the real thing — `title.tagline`, "Get ready for the Canadian
+citizenship test."
+
+**The French is not taken as proposed, and one word changed: « du test » became « pour le test ».** The
+proposed « des questions **du** test de citoyenneté » reads in French as *questions from the citizenship
+test* — the real test's own questions — where the English "questions **for** the citizenship test" states a
+purpose. This game's questions are paraphrased from *Discover Canada* and are non-verbatim by rule
+(`CLAUDE.md`, content rules); the real test's questions are not published, and `title.notOfficial` says on
+the first screen that this game is not the government's. A sentence that quietly claims otherwise is the same
+defect as the sentence being replaced — a promise the player's own screen cannot keep — arriving in the other
+language. « pour le » states the purpose and claims nothing about where the questions came from.
+`TN-STUDY-11` asserts both halves: the words that must be read, and the phrase that must not.
+
+**« test » and not « examen », deliberately.** In this game's French, « examen » is the *feature* — « Examen
+pratique » (`exam.title`), « le vrai examen » (`exam.timer.help`) — and « test » appears in no other French
+row. Naming the real thing « le test de citoyenneté » on this screen therefore cannot be misread as the
+practice exam the player can start from the menu. It does leave the front door and Study using two different
+French nouns for one real-world test; `OQ-STUDY-8` puts that in front of a French reviewer rather than
+renaming a title-screen row this file does not own.
 
 `study.count` and `study.short` are two rows each because one row draws "1 questions" — see
 `TN-COPY-strings-and-counts.md` for the rule and for why English and French need the same mechanism and not
@@ -107,6 +124,13 @@ Feature: A study drill
     And nothing on it says the questions are ones I have already seen
     And the element "study-count" shows the number of questions in the drill
     And a button "Start" is offered
+
+  Scenario: A brand-new player reads the same sentence, and it is true for them too
+    Given I have never answered a question
+    And I open Study through "Practise new questions"
+    Then it shows "Practise questions for the citizenship test. There is no time limit."
+    And no sentence on "study-screen" claims I have seen a question before
+    And every card in the drill may be tagged "New question" without contradicting it
 
   Scenario: The count reads correctly at one and at many
     Given exactly one question is ready for me
@@ -393,6 +417,12 @@ Feature: Study with a screen reader
     Then it has an accessible name that is not empty
     And the number of questions is text, not only a picture
 
+  Scenario: The opening sentence is read as text, and reads the same to everyone
+    When "study-screen" opens
+    Then "Practise questions for the citizenship test. There is no time limit." is in the accessibility tree
+    And it is not the accessible name of a control
+    And it says nothing a sighted player is not also shown
+
   Scenario: Starting is announced
     When the drill starts
     Then "#tn-live-region" reads a message naming the drill and the number of questions
@@ -444,6 +474,14 @@ Feature: Large text in Study
     And "Study again" and "Back to the game" are both reachable and at least 44 CSS px tall
     And the page does not scroll sideways
 
+  Scenario: The opening sentence fits in both languages
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    When "study-screen" is visible
+    Then the whole of the opening sentence is readable, by scrolling inside "study-screen" if needed
+    And it is not truncated with an ellipsis in either language
+    And "Start" is fully visible and at least 44 CSS px tall
+
   Scenario: The French score line fits too
     Given text scaling is 200 %
     And the language is French
@@ -469,8 +507,20 @@ Feature: Study in French
     When I open Study
     Then the menu control reads "Réviser"
     And the heading reads "Révision"
-    And the body reads "Exercez-vous avec des questions du test de citoyenneté. Il n'y a aucune limite de temps."
+    And the body reads "Exercez-vous avec des questions pour le test de citoyenneté. Il n'y a aucune limite de temps."
     And the button reads "Commencer"
+
+  Scenario: The French sentence claims a purpose and not a source
+    When I open Study
+    Then the body does not contain "des questions du test de citoyenneté"
+    And no sentence on "study-screen" says the questions are the real test's own questions
+    And it does not contain "déjà vues"
+
+  Scenario: A brand-new player reads the same French sentence
+    Given I have never answered a question
+    And I open Study through "S'exercer avec de nouvelles questions"
+    Then the body reads "Exercez-vous avec des questions pour le test de citoyenneté. Il n'y a aucune limite de temps."
+    And no sentence on "study-screen" claims I have seen a question before
 
   Scenario: The count is French and reads correctly at one
     Given exactly one question is ready for me
@@ -522,6 +572,12 @@ Feature: Study in French
     Then the new drill is French
     And the questions chosen are the same ones the English drill would have chosen
 
+  Scenario: Switching language on the Study screen redraws the opening sentence
+    Given "study-screen" is showing "Practise questions for the citizenship test. There is no time limit."
+    When I change the language to French
+    Then the body reads "Exercez-vous avec des questions pour le test de citoyenneté. Il n'y a aucune limite de temps."
+    And no English word remains in "study-screen"
+
   Scenario: Switching language on the summary redraws the score line in the other shape
     Given the summary is showing "You got 4 out of 5 right."
     When I change the language to French
@@ -557,3 +613,10 @@ Feature: Study in French
   shapes on the same line, which `OQ-COPY-4` puts in front of a French reviewer. *Recommendation:* leave the
   English alone. Changing a correct string to match the shape of a fixed one is how a fix turns into a
   rewrite, and the English wording is already printed in `TN-STUDY-01`, `TN-STUDY-04` and `TN-STUDY-08`.
+- **`OQ-STUDY-8` — the front door and Study use two French nouns for one real-world test.**
+  `title.tagline` says « Préparez-vous à l'examen de citoyenneté canadienne. » and `study.intro` now says
+  « le test de citoyenneté ». Both are understood, and `study.intro` cannot simply take « examen », because
+  « Examen pratique » is the name of a feature in this game's own menu and the sentence would then read as
+  being about that. *Recommendation:* put both rows in front of a French reviewer together, and change the
+  **pair** or neither. `TN-TITLE` owns `title.tagline`, so this file may not settle it alone, and nothing in
+  either language is wrong today — this is one vocabulary, not one defect.
