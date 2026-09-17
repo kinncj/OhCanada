@@ -80,6 +80,7 @@ import type { SaveTransferOptions } from '@ui/save-transfer';
 import { downloadSaveFile, saveTransferOptions } from './save-transfer';
 import { defaultSettings, withSettings } from '@domain/entities/player';
 import { reachLevelEnd } from '@domain/entities/level-end';
+import type { Randomness } from '@domain/scheduling/question-scheduler';
 import {
   newProgress,
   stampedLevelIds,
@@ -476,6 +477,20 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * `fork` keeps the study draw's stream clear of any other consumer's.
    */
   const random = createSeededRandom(Date.now() >>> 0);
+  /*
+   * Where every card's option order comes from (ADR-0057).
+   *
+   * One stream for the whole sitting, shared by Study, the level and the exam,
+   * rather than a fork taken per consumer: `fork` is deterministic from the seed
+   * and the label, so `random.fork('options')` called again on the second level
+   * would hand back a stream that starts over, and every visit would present its
+   * nth question in the same order as the last. One stream advances.
+   *
+   * Forked off `random` for the reason the comment above gives: shuffling a
+   * card's four options must never shift which questions the scheduler brings
+   * up, and the study and exam draws run on streams of their own.
+   */
+  const optionsRandom = random.fork('options');
   /*
    * The migrations are passed in here, not defaulted inside the codec: the
    * version numbers and the steps between them belong where the build is
@@ -1117,6 +1132,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       session: studySource,
       store,
       announce,
+      random: optionsRandom,
       record: (question, chosenIndex) => {
         recordAnswer(question, chosenIndex);
       },
@@ -1146,6 +1162,10 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       clock,
+      /* Option order only, on the sitting's one options stream — never the
+         exam's own draw, which is `random.fork('exam')` and must stay a pure
+         function of the seed (`TN-EXAM-02`, ADR-0057). */
+      random: optionsRandom,
       progress: () => progress,
       /* Apply and save in one step, so an answer and the exam it belongs to are
          never written a tick apart (`TN-ATTEMPT-02`). */
@@ -1382,6 +1402,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          `LevelWiring.questions`. */
       questions: studySource,
       record: recordAnswer,
+      /* One options stream for the sitting, shared with Study: see
+         `LevelWiring.random` (ADR-0057). */
+      random: optionsRandom,
       onExportSave: exportSave,
       saveTransfer,
       /*
@@ -1747,6 +1770,14 @@ interface LevelWiring {
   readonly questions: StudySession;
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
+  /**
+   * Where each card's option order comes from (ADR-0057).
+   *
+   * The same stream the front door's Study uses, so the order a question is
+   * drawn in keeps moving as the sitting goes on rather than restarting with
+   * every level opened.
+   */
+  readonly random: Randomness;
   readonly onExportSave: () => void;
   /** Settings' "Your progress" section, the same one the title screen's Settings draws (ADR-0046). */
   readonly saveTransfer?: SaveTransferOptions;
@@ -2161,6 +2192,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
       session: wiring.questions,
       store,
       announce: wiring.announce,
+      /* The level's own options stream, which is the front door's: a drill taken
+         on the canal and a question asked at the Peace Tower share one sitting
+         (ADR-0057). */
+      random: wiring.random,
       record: (question, chosenIndex) => {
         wiring.record(question, chosenIndex);
       },
@@ -2273,6 +2308,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     announce: wiring.announce,
     singleSwitch: store.current.singleSwitch,
     holdMs: store.current.holdToChooseMs,
+    random: wiring.random,
     /* A sheet over the level, as the landmark card before it is (ADR-0045). */
     overLevel: true,
     onAnswer: (question, chosenIndex) => {

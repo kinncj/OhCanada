@@ -159,9 +159,16 @@ const sfc32 = (seed: number): (() => number) => {
 /**
  * A reproducible `RandomSource`.
  *
- * `shuffle` is Fisher-Yates on a copy: `TN-CARD` shuffles the four options and
- * an in-place shuffle would reorder the content document itself, which is shared
- * across every drill that draws the same question.
+ * `shuffle` is Fisher-Yates on a copy, because an in-place shuffle would reorder
+ * the caller's own array — and for the exam draw that array is the bank itself.
+ *
+ * It is **not** what reorders a question's four options, though this comment
+ * claimed for a long time that `TN-CARD` used it for exactly that, while no
+ * caller anywhere did (ADR-0057). That job is
+ * `app/domain/entities/asked-question.ts`, which runs its own Fisher-Yates over
+ * the four positions using `next()` alone: where an option is drawn is a rule,
+ * rules live in the domain (ADR-0005), and `app/ui` may not import an adapter to
+ * reach one.
  */
 export const createSeededRandom = (seed: number): SeededRandomSource => {
   const nextFloat = sfc32(Math.trunc(seed) >>> 0);

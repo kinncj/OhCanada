@@ -53,8 +53,16 @@ import {
   withRemaining,
 } from '@application/use-cases/exam-attempt';
 import type { ExamSession } from '@application/use-cases/exam-session';
+import {
+  authoredAt,
+  inOptionOrder,
+  shownAt,
+  shuffledOptionOrder,
+  type OptionOrder,
+} from '@domain/entities/asked-question';
 import type { ExamAnswer, ExamInProgress, Progress } from '@domain/entities/progress';
 import type { QuestionId, SubjectId } from '@domain/ids';
+import type { Randomness } from '@domain/scheduling/question-scheduler';
 import { hasCopyRow, text, type UiLocale } from '@ui/copy';
 import { createConfirm, type Confirm } from '@ui/confirm';
 import { clockText, createExamClock, MINUTE_MS, type ExamClock } from '@ui/exam-clock';
@@ -89,6 +97,15 @@ export interface ExamControllerDeps {
    * they did at the end, from its own answers, never from the save read back.
    */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => void;
+  /**
+   * Where each question's option order comes from (ADR-0057).
+   *
+   * The exam is the one screen in the game with a pass mark, so it is the one
+   * place an answer-first bank has a consequence beyond a wasted learning
+   * moment: tapping option 1 through a twenty-question exam scored about 12 or
+   * 13 against a pass mark of 15 before this.
+   */
+  readonly random: Randomness;
   readonly events: ExamEventLog;
   /** `subject -> level`, so a result can name a subject the way the map does. */
   readonly subjects: () => Promise<SubjectIndex>;
@@ -135,6 +152,21 @@ interface Running {
   exam: ExamInProgress;
   /** The wording, by id. A question the bank has lost is simply absent. */
   readonly byId: ReadonlyMap<QuestionId, ShippableQuestion>;
+  /**
+   * Where each question's four options are drawn, by id (ADR-0057).
+   *
+   * Drawn once for the whole exam rather than per question presented, because
+   * `TN-EXAM-03` lets the player go back and change an answer, and options that
+   * moved under them between two visits to the same question would be a
+   * different card each time.
+   *
+   * It is **not** saved. An exam picked back up after a reload is re-ordered,
+   * which is correct: the stored `chosenIndex` is the author's index, so the
+   * option the player pressed is still the option shown as pressed — it has just
+   * moved. Persisting this would mean a save-schema migration (ADR-0046) to
+   * record something no player can perceive.
+   */
+  readonly shownAs: ReadonlyMap<QuestionId, OptionOrder>;
   /** Is the clock still running? A timer turned off mid-exam makes this false. */
   timed: boolean;
   /**
@@ -388,7 +420,14 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
 
     lastDrawn = new Set(drawn.value.map((question) => question.id));
     const exam = startExam(drawn.value, deps.clock.now(), timed ? timeLimitMs : null);
-    running = { exam, byId: index.value, timed, timeUp: false, timerStopped: false };
+    running = {
+      exam,
+      byId: index.value,
+      shownAs: orderExam(exam),
+      timed,
+      timeUp: false,
+      timerStopped: false,
+    };
 
     deps.update((progress) => withExamInProgress(progress, exam));
     deps.events.emit('exam/started');
@@ -415,6 +454,9 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     running = {
       exam: unfinished,
       byId: index.value,
+      /* A resumed exam is re-ordered. See {@link Running.shownAs}: the answers
+         already given are authored indices and still point at the same wording. */
+      shownAs: orderExam(unfinished),
       timed: unfinished.remainingMs !== null,
       timeUp: false,
       timerStopped: false,
@@ -523,13 +565,28 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     };
   }
 
+  /**
+   * One option order per question, drawn when the exam is (ADR-0057).
+   *
+   * Off `deps.random`, which the composition root forks for option order alone,
+   * so drawing twenty of these cannot move the exam's own seeded draw — that
+   * runs on `random.fork('exam')` and `TN-EXAM-02` requires it to be the same
+   * twenty for the same seed whatever else the player has done.
+   */
+  function orderExam(exam: ExamInProgress): ReadonlyMap<QuestionId, OptionOrder> {
+    return new Map(
+      exam.answers.map((answer) => [answer.questionId, shuffledOptionOrder(deps.random)]),
+    );
+  }
+
   function viewAt(index: number): ExamQuestionView | null {
     if (running === null) return null;
     const answer = running.exam.answers[index];
     if (answer === undefined) return null;
     const total = running.exam.answers.length;
     const question = running.byId.get(answer.questionId);
-    if (question === undefined) {
+    const order = running.shownAs.get(answer.questionId);
+    if (question === undefined || order === undefined) {
       return {
         index,
         total,
@@ -543,8 +600,9 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
       index,
       total,
       prompt: localised(question.prompt),
-      options: question.options.map(localised),
-      chosenIndex: answer.chosenIndex,
+      options: inOptionOrder(question.options, order).map(localised),
+      /* The attempt stores the author's index; the screen presses a position. */
+      chosenIndex: answer.chosenIndex === null ? null : shownAt(order, answer.chosenIndex),
     };
   }
 
@@ -552,10 +610,21 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     return locale() === 'fr' ? value.fr : value.en;
   }
 
-  function choose(index: number, chosenIndex: number): void {
+  function choose(index: number, shownIndex: number): void {
     if (running === null) return;
     const answer = running.exam.answers[index];
     if (answer === undefined) return;
+
+    /*
+     * The screen presses a position; everything from here down is the author's
+     * index (ADR-0057). `ExamAnswer.correctIndex` was copied off the bank when
+     * the exam was drawn and correctness is `chosenIndex === correctIndex` with
+     * no `correct` flag (ADR-0027), so storing a position would score the exam
+     * against the wrong key and re-grade every attempt already saved.
+     */
+    const order = running.shownAs.get(answer.questionId);
+    const chosenIndex =
+      order === undefined ? shownIndex : (authoredAt(order, shownIndex) ?? shownIndex);
 
     running.exam = withChoice(running.exam, index, chosenIndex);
 
@@ -691,7 +760,8 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
 
   function reviewItem(current: Running, answer: ExamAnswer): ExamReviewItem {
     const question = current.byId.get(answer.questionId);
-    if (question === undefined) {
+    const order = current.shownAs.get(answer.questionId);
+    if (question === undefined || order === undefined) {
       return {
         prompt: null,
         options: [],
@@ -702,11 +772,13 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     const explanation = localised(question.explanation);
     return {
       prompt: localised(question.prompt),
-      options: question.options.map(localised),
-      chosenIndex: answer.chosenIndex,
+      /* The order the player answered in, so the review is the card they saw
+         rather than the same question rearranged under them (ADR-0057). */
+      options: inOptionOrder(question.options, order).map(localised),
+      chosenIndex: answer.chosenIndex === null ? null : shownAt(order, answer.chosenIndex),
       /* The answer's own record, not the bank's: a key corrected since the exam
          was taken must not change what the player is told they got right. */
-      correctIndex: answer.correctIndex,
+      correctIndex: shownAt(order, answer.correctIndex) ?? answer.correctIndex,
       ...(explanation === '' ? {} : { explanation }),
     };
   }

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { StudyQuestion } from '@application/use-cases/study-session';
+import { AUTHORED_ORDER } from '@domain/entities/asked-question';
 
 import { questionView } from '../../../app/bootstrap/quiz';
 import { createScreenArt } from '../../../app/bootstrap/screen-art';
@@ -108,13 +109,19 @@ describe('the place a question is asked', () => {
     },
   } as unknown as StudyQuestion;
 
+  /* These assert about the place line, not about option order, so they pin the
+     order to the one the fixture wrote and let the shuffle be tested where it
+     belongs: `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0057). */
   it('reaches the card as the names it is handed', () => {
-    const view = questionView(selected, 'fr', 0, 1, null, ['Halifax', "Tour de l'horloge d'Halifax"]);
+    const view = questionView(selected, AUTHORED_ORDER, 'fr', 0, 1, null, [
+      'Halifax',
+      "Tour de l'horloge d'Halifax",
+    ]);
     expect(view.place).toEqual(['Halifax', "Tour de l'horloge d'Halifax"]);
   });
 
   it('is left off entirely in Study, where nothing names a place', () => {
-    expect('place' in questionView(selected, 'en', 0, 1)).toBe(false);
-    expect('place' in questionView(selected, 'en', 0, 1, null, [])).toBe(false);
+    expect('place' in questionView(selected, AUTHORED_ORDER, 'en', 0, 1)).toBe(false);
+    expect('place' in questionView(selected, AUTHORED_ORDER, 'en', 0, 1, null, [])).toBe(false);
   });
 });

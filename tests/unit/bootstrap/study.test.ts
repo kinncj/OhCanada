@@ -93,6 +93,17 @@ function bank(options: {
   };
 }
 
+/**
+ * A `Randomness` that leaves the four options exactly as the fixture wrote them.
+ *
+ * `shuffledOptionOrder` swaps position `i` with `floor(next() * (i + 1))`, so a
+ * draw just under 1 always picks `i` itself and every swap is a no-op. The
+ * assertions below name the right answer as "option 0", which is a property of
+ * `QUESTION` and not of the card; whether a real shuffle spreads the bank is
+ * `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0057).
+ */
+const noReorder = { next: (): number => 0.999_999 };
+
 function mount(options: Parameters<typeof bank>[0] = {}) {
   const page = buildPage();
   const store = createSettingsStore(DEFAULT_SETTINGS);
@@ -106,6 +117,7 @@ function mount(options: Parameters<typeof bank>[0] = {}) {
     session: source.session,
     store,
     announce,
+    random: noReorder,
     record,
     onOpen,
     onClose,

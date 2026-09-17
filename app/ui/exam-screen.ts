@@ -58,9 +58,16 @@ export interface ExamQuestionView {
   readonly index: number;
   readonly total: number;
   readonly prompt: string;
-  /** Authored order, four of them (`OQ-CARD-2`). Empty when unavailable. */
+  /**
+   * The four options in the order to draw them, shuffled from a seed by the
+   * caller (ADR-0057). Empty when unavailable.
+   */
   readonly options: readonly string[];
-  /** Which option the player took, or `null`. Changeable until the exam ends. */
+  /**
+   * Which option the player took, **by its drawn position**, or `null`.
+   * Changeable until the exam ends. The controller converts in both directions;
+   * what it stores in the attempt is the authored index.
+   */
   readonly chosenIndex: number | null;
   /**
    * The bank can no longer produce this question (`TN-EXAM-05`, "the bank

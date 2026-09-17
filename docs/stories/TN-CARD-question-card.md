@@ -482,11 +482,17 @@ Feature: The question card in French
   switch user. If usability testing disagrees, the change is one scenario in `TN-CARD-03`. **The exam is
   where this reasoning stops holding**, and it takes the other answer rather than adding a confirm step:
   `TN-EXAM-03` lets the answer be changed instead.
-- **`OQ-CARD-2` — are the four options shuffled?** These scenarios use the authored order, so a test can
-  name the correct option. *Recommendation:* keep the authored order in slice 1; if shuffling is wanted
-  later it must use the seeded `RandomSource` so a session stays replayable, and the content agents must be
-  told not to put the answer in the same position every time. The same answer binds the exam, whose draw is
-  seeded for the same reason (`TN-EXAM-02`).
+- **`OQ-CARD-2` — are the four options shuffled?** **Answered 2026-09-17 by ADR-0057: yes, every time a card
+  is presented, from a seeded stream.** The slice-1 recommendation — keep the authored order, and tell the
+  content agents not to put the answer in the same position every time — was half implemented: the order was
+  kept and the agents were never told. `docs/guidelines/anatomy-of-a-question.md` told them the opposite
+  ("the game shuffles them at play time from a seed"), so five of the ten subjects ended up keying
+  effectively every question to option 1, and the fifth live-site audit cleared Halifax 9/9, Peggy's Cove
+  6/6, Winnipeg 7/7 and Québec City 9/9 by tapping the top choice. The scenarios below still name the
+  correct option, because that is a property of their fixture: they pin the order with `AUTHORED_ORDER`.
+  The shuffle itself is measured over the whole bank in
+  `tests/unit/contracts/an-answer-is-not-always-in-the-same-place.test.ts`. The exam takes the same answer,
+  on its own stream (`TN-EXAM-02`).
 - **`OQ-CARD-3` — how does the player know how many questions are left in the level?**
   `card.progress` says "Question 1 of 3" because the quest step asks for three. In Study, the total is the
   drill size; in an exam it is twenty. *Recommendation:* one string, one meaning: "of" always counts the

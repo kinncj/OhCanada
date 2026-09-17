@@ -64,8 +64,17 @@ export interface QuestionView {
    */
   readonly place?: readonly string[];
   readonly prompt: string;
-  /** Authored order (`OQ-CARD-2`). Four of them, in slice 1. */
+  /**
+   * The four options **in the order to draw them**, already localised.
+   *
+   * Not the authored order: the caller shuffles from a seed (ADR-0057, which
+   * resolves `OQ-CARD-2`), and {@link QuestionView.correctIndex} points into
+   * *this* list. Nothing in this file needs to know that — the card reads the
+   * "the answer is …" wording straight out of this array — and nothing in this
+   * file may undo it by sorting.
+   */
   readonly options: readonly string[];
+  /** Which entry of {@link QuestionView.options} is right, by its drawn position. */
   readonly correctIndex: number;
   /** Absent is survivable: the result and the right answer still show. */
   readonly explanation?: string;

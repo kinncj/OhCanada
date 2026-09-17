@@ -48,6 +48,7 @@
 
 import type { ShippableQuestion } from '@application/ports';
 import type { StudySession } from '@application/use-cases/study-session';
+import type { Randomness } from '@domain/scheduling/question-scheduler';
 import { text, type UiLocale } from '@ui/copy';
 import { createStudyScreen, type StudyScreen, type StudyState } from '@ui/study-screen';
 import type { SettingsStore } from '@ui/settings';
@@ -68,6 +69,15 @@ export interface StudyControllerDeps {
   /** Followed for the language, single-switch and the hold threshold. */
   readonly store: SettingsStore;
   readonly announce: (message: string, lang?: string) => void;
+  /**
+   * Where each card's option order comes from (ADR-0057).
+   *
+   * Study is drawn from every subject at once, so it is where an answer-first
+   * bank is most visible to a player: five of the ten subjects key effectively
+   * every question to option 1. Passed down to the drill runner and used
+   * nowhere else here.
+   */
+  readonly random: Randomness;
   /**
    * Record one answer: `answerQuestion` against the live progress, then the
    * save. Returns nothing — Study shows the player how they did from the card's
@@ -145,7 +155,10 @@ export function createStudyController(deps: StudyControllerDeps): StudyControlle
       announce: deps.announce,
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
+      random: deps.random,
       onAnswer: (question, chosenIndex) => {
+        /* `chosenIndex` is already back in authored space: the runner converts
+           it at the card's edge (ADR-0057), so this recorder is unchanged. */
         deps.record(question, chosenIndex);
       },
       onFinished: (result) => {

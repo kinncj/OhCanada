@@ -42,7 +42,13 @@ import { createScreen, type Screen } from './screen';
 export interface ExamReviewItem {
   /** The question's wording, or `null` when this build no longer has it. */
   readonly prompt: string | null;
-  /** Four options in authored order. Empty when the question is unavailable. */
+  /**
+   * The four options in the order the player saw them during the exam
+   * (ADR-0057), so the review reads as the exam did rather than rearranging the
+   * question under them. {@link ExamReviewItem.chosenIndex} and
+   * {@link ExamReviewItem.correctIndex} point into this list. Empty when the
+   * question is unavailable.
+   */
   readonly options: readonly string[];
   /** What the player chose, or `null` for a question they did not answer. */
   readonly chosenIndex: number | null;

@@ -30,6 +30,14 @@
 
 import type { ShippableQuestion } from '@application/ports';
 import type { StudyQuestion } from '@application/use-cases/study-session';
+import {
+  authoredAt,
+  inOptionOrder,
+  shownAt,
+  shuffledOptionOrder,
+  type OptionOrder,
+} from '@domain/entities/asked-question';
+import type { Randomness } from '@domain/scheduling/question-scheduler';
 import type { UiLocale } from '@ui/copy';
 import { createQuestionCard, type QuestionCard, type QuestionView } from '@ui/question-card';
 
@@ -61,6 +69,16 @@ export interface DrillRunnerOptions {
   readonly announce: (message: string, lang?: string) => void;
   readonly singleSwitch: boolean;
   readonly holdMs: number;
+  /**
+   * Where each card's option order comes from (ADR-0057).
+   *
+   * A stream of the runner's own — the composition root hands in
+   * `random.fork('options')` — so shuffling a card's four options can never
+   * shift which questions the scheduler brings up. Seeded rather than
+   * `Math.random()`, so a player who reports that the answer keeps landing in
+   * the same place is reproducible from their seed.
+   */
+  readonly random: Randomness;
   /**
    * The card is asked over a running level, so it is a sheet with the level in
    * view above it (ADR-0045). Absent for Study.
@@ -113,13 +131,24 @@ const localised = (value: { readonly en: string; readonly fr: string }, locale: 
  *
  * Exported because the mapping is the whole seam between a content document and
  * a screen, and it is worth being able to assert on it without a DOM.
- * `index`/`total` count through **this activity**, not the bank (`OQ-CARD-3`),
- * and the options keep their authored order (`OQ-CARD-2`): a card that shuffled
- * would make the explanation's "the answer is" point at a different line every
- * time the same question came back.
+ * `index`/`total` count through **this activity**, not the bank (`OQ-CARD-3`).
+ *
+ * **The options are shown in `order`, not as authored (ADR-0057, resolving
+ * `OQ-CARD-2`).** The card's own "the answer is …" line reads the wording out of
+ * the view it was handed, so it points at whatever is on screen; nothing below
+ * here ever sees the authored order again. What the caller must not forget is
+ * the way back: {@link authoredAt} turns the tap into the index that gets
+ * written down.
  */
 export function questionView(
   selected: StudyQuestion,
+  /*
+   * Which authored option goes where on screen. Required, and deliberately not
+   * defaulted to `AUTHORED_ORDER`: that default *is* the defect this argument
+   * exists to fix, and it would come back silently the first time a caller
+   * forgot to pass one.
+   */
+  order: OptionOrder,
   locale: UiLocale,
   index: number,
   total: number,
@@ -144,8 +173,11 @@ export function questionView(
       : { progress: { n: counter.answered + index + 1, of: counter.total } }),
     ...(place.length === 0 ? {} : { place }),
     prompt: localised(question.prompt, locale),
-    options: question.options.map((option) => localised(option, locale)),
-    correctIndex: question.correctIndex,
+    options: inOptionOrder(question.options, order).map((option) => localised(option, locale)),
+    /* Where the key is *on screen*. The `??` is unreachable — the schema and
+       `question-document.ts` both hold `correctIndex` to 0-3 — and is here so
+       the type is total rather than asserted. */
+    correctIndex: shownAt(order, question.correctIndex) ?? question.correctIndex,
     /* Absent rather than empty: the card treats an empty explanation as one it
        must not draw, and `exactOptionalPropertyTypes` makes the two different
        types rather than the same one written twice. */
@@ -162,6 +194,13 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
   let correct = 0;
   const returning: string[] = [];
   let live = false;
+  /**
+   * The order the card on screen is drawing, or `null` before the first one.
+   *
+   * Held here rather than recomputed, because the way back from a tap has to be
+   * the exact order that produced the buttons the player was looking at.
+   */
+  let showing: OptionOrder | null = null;
 
   const card: QuestionCard = createQuestionCard(options.host, {
     locale,
@@ -171,7 +210,19 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
       if (selected === undefined) return;
       if (wasRight) correct += 1;
       else returning.push(localised(selected.question.prompt, locale));
-      options.onAnswer(selected.question, chosenIndex, wasRight);
+      /*
+       * Back into the author's index space before anything is written down
+       * (ADR-0057). Every review record and every exam answer ever saved stores
+       * the authored index, and correctness is `chosenIndex === correctIndex`
+       * with no `correct` flag to fall back on (ADR-0027) — so passing on a
+       * screen position would silently re-grade the player's whole history.
+       *
+       * `wasRight` is unaffected either way: the card judged it against the
+       * view it drew, which is the same answer in either index space.
+       */
+      const authored =
+        showing === null ? chosenIndex : (authoredAt(showing, chosenIndex) ?? chosenIndex);
+      options.onAnswer(selected.question, authored, wasRight);
     },
     onNext: () => {
       at += 1;
@@ -201,8 +252,16 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
   function present(): void {
     const selected = queue[at];
     if (selected === undefined) return;
+    /*
+     * A fresh order every time a card goes up, including for a question the
+     * player has already met this sitting. A position is never allowed to
+     * become a memorable property of a card, which is the whole of ADR-0057;
+     * and three draws off this runner's own forked stream cannot move the
+     * scheduler.
+     */
+    showing = shuffledOptionOrder(options.random);
     card.present(
-      questionView(selected, locale, at, queue.length, counting, placing?.(locale) ?? []),
+      questionView(selected, showing, locale, at, queue.length, counting, placing?.(locale) ?? []),
     );
   }
 
