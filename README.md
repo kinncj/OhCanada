@@ -11,11 +11,13 @@ and you can export it to a file whenever you like.
 It is built for newcomers of all ages, in plain language, and it is designed to be played one-handed on
 a phone held upright.
 
-**Status: early development.** Nothing is playable yet. Slice 1 builds the first level (Ottawa).
+**Status: playable.** All ten levels, Study and the practice exam are live, in English and French. The teaching content is still growing — some quests ask about material the level has not taught yet — and the art is being verified subject by subject against its references.
 
 ## Play
 
-Once the first slice ships: **https://kinncj.github.io/OhCanada/**
+**https://kinncj.github.io/OhCanada/**
+
+No install, no account. It works offline once loaded, and your progress stays in your browser.
 
 ## What makes it different
 
