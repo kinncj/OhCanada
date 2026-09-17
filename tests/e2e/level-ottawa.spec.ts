@@ -425,9 +425,18 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
     await expect(page.locator('#tn-shell')).toHaveCount(0);
     await expect(page.locator('main')).toHaveCount(1);
 
-    /* The desktop side panels are the *level's* sky and ground (ADR-0002), not
-       the boot screen's hills: those stops are collapsed while a level is open,
-       because a level's ground is a polyline and no single band matches it. */
+    /*
+     * The desktop side panels are the *level's* sky and ground (ADR-0002), and
+     * the ground half of that is this level's own polyline.
+     *
+     * These three stops used to be collapsed to `100%` while a level was open —
+     * no band at all — on the argument that a polyline has no single height. A
+     * third live-site audit read the result for what it was: the sky-to-ground
+     * ramp alone, a smooth blue-grey wash beside a canvas with a crisp horizon,
+     * which is the framed-picture effect these variables exist to remove.
+     * `levelLandBand` takes the polyline's mean instead, and the band runs
+     * opaque to the last row because a level's ground does too.
+     */
     const land = await page.evaluate(() => {
       const style = getComputedStyle(document.documentElement);
       return {
@@ -437,7 +446,11 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
         sky: style.getPropertyValue('--tn-sky').trim(),
       };
     });
-    expect(land.crest).toBe('100%');
+    const crest = Number.parseFloat(land.crest) / 100;
+    /* Inside the ground's own range: Ottawa's canal bank runs from 1236 to 1470
+       of a 1920-row world, so a stop outside that is not this level's ground. */
+    expect(crest).toBeGreaterThan(1236 / 1920);
+    expect(crest).toBeLessThan(1470 / 1920);
     expect(land.skirt).toBe('100%');
     expect(land.end).toBe('100%');
     /* And the panels carry the level's own theme, not `game.config.json`'s —

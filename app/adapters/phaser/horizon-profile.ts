@@ -224,3 +224,55 @@ export function landBand(
 export function landSkirtTop(horizonY: number): number {
   return Math.ceil(horizonY + RIDGE_MAX_DROP) + 1;
 }
+
+/**
+ * How much black the level's ground fill carries over `palette.ground`.
+ *
+ * Here for the same reason {@link LAND_SHADE} is: `level-scene.ts` paints the
+ * ground with it and `GameRenderer.cssVariables()` hands the same colour to the
+ * page, and neither file can be loaded outside a browser. One constant is what
+ * stops the canvas and the panel meeting at a seam.
+ */
+export const GROUND_FILL_SHADE = 0.06;
+
+/**
+ * Where an open level's ground sits on the page, as fractions of the design
+ * height — the level's own answer to {@link landBand}.
+ *
+ * ## The defect
+ *
+ * CLAUDE.md promises "side panels extend the level's sky/ground". With a level
+ * open they did not: `cssVariables()` collapsed the land band to nothing because
+ * the boot screen's fixed ridge is not a level's ground, and what was left was
+ * the sky-to-ground ramp alone — a smooth blue-grey wash down the whole height,
+ * beside a canvas with a crisp horizon two-thirds down. A live-site audit read
+ * the result as a framed picture on a flat gradient, which is precisely the
+ * effect these variables were added to remove.
+ *
+ * A level's ground *is* a polyline and it *does* scroll, so no single CSS stop
+ * can follow it — that much of the old comment was right. But "no exact answer"
+ * is not "no answer": the ground's mean height is a stop that is exact on every
+ * flat level (which is nine of the ten shipped) and off by the relief of the
+ * ridge on the one that rolls, against an alternative that is off by the whole
+ * lower third. The band is opaque from there to the bottom, because a level's
+ * ground *is* opaque to the bottom of the world (`#paintGround` fills to the
+ * floor) — unlike the boot screen's hills, which fade so the canvas and the page
+ * end on the same colour.
+ *
+ * Pure, and in this module rather than in the renderer, so the choice is unit
+ * tested against the shipped documents instead of screenshotted.
+ */
+export function levelLandBand(
+  ground: readonly { readonly y: number }[],
+  designHeight: number,
+): { readonly crest: number; readonly skirt: number; readonly end: number } {
+  const height = Number.isFinite(designHeight) && designHeight > 0 ? designHeight : 0;
+  const rows = ground.map((point) => point.y).filter((y) => Number.isFinite(y));
+  if (height === 0 || rows.length === 0) return { crest: 1, skirt: 1, end: 1 };
+
+  const mean = rows.reduce((total, y) => total + y, 0) / rows.length;
+  const crest = Math.min(1, Math.max(0, mean / height));
+  /* Solid from the ground line to the last row: `skirt` and `end` are where a
+     fade would start and finish, and a level's ground does not fade. */
+  return { crest, skirt: 1, end: 1 };
+}

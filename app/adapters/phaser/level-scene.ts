@@ -81,6 +81,7 @@ import {
   type ModeArtGap,
 } from './locomotion-pose';
 import { gestureHoldMs } from './engagement-pose';
+import { GROUND_FILL_SHADE } from './horizon-profile';
 import { cameraView, followCamera, intersectsView, type WorldRect } from './level-camera';
 import { rideArtProblems, rideBobPx, rideFor, rideFrameKey, ridePlacement, type RideArtSize } from './ride';
 import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from './depth-plan';
@@ -2108,7 +2109,13 @@ export class LevelScene extends Phaser.Scene {
 
     this.#repaint(() => {
       ground.clear();
-      ground.fillStyle(blendColors(toPhaserColor(this.#palette.ground), 0x000000, 0.06), 1);
+      /* `GROUND_FILL_SHADE`, not a literal: `GameRenderer.cssVariables()` paints
+         the desktop side panels with this exact colour, and a second copy of the
+         number is a seam at the letterbox edge waiting to happen. */
+      ground.fillStyle(
+        blendColors(toPhaserColor(this.#palette.ground), 0x000000, GROUND_FILL_SHADE),
+        1,
+      );
       /* Down to the ground dressing, when one drew to the bottom of the world:
          the fill below it would be covered in the same frame (ADR-0042). */
       const floor = this.#groundFloor();

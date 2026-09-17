@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   CONIFERS,
+  GROUND_FILL_SHADE,
   LAND_FADE_DEPTH,
   LAND_SHADE,
   RIDGE_MAX_DROP,
@@ -9,6 +10,7 @@ import {
   RIDGE_SAMPLES,
   landBand,
   landSkirtTop,
+  levelLandBand,
   ridgeHeightAt,
   ridgePoints,
 } from '@adapters/phaser/horizon-profile';
@@ -161,6 +163,68 @@ describe('landBand', () => {
   it('never runs off the page, however short the design space is', () => {
     const squat = landBand(400, HORIZON_FRACTION);
     expect(squat.end).toBeLessThanOrEqual(1);
+  });
+});
+
+/**
+ * The open level's ground, continued into the desktop side panels.
+ *
+ * CLAUDE.md: "Desktop centres the portrait canvas; side panels extend the
+ * level's sky/ground." With a level open the band used to collapse to nothing,
+ * on the argument that a polyline has no single height — so the panels were the
+ * sky-to-ground ramp alone, a flat blue-grey wash next to a canvas with a crisp
+ * horizon. The mean is the stop that keeps the promise: exact on a flat level,
+ * and far closer than nothing on one that rolls.
+ */
+describe('levelLandBand', () => {
+  const DESIGN = 1920;
+  const flat = [0, 2000, 4000, 6000].map((x) => ({ x, y: 1280 }));
+
+  it('puts the band exactly on the ground line of a flat level', () => {
+    expect(levelLandBand(flat, DESIGN).crest).toBeCloseTo(1280 / DESIGN, 9);
+  });
+
+  it('runs opaque to the last row, because a level\'s ground does not fade', () => {
+    /* Unlike the boot screen's hills, which fade so the canvas and the page end
+       on the same colour. `#paintGround` fills to the floor of the world. */
+    const band = levelLandBand(flat, DESIGN);
+    expect(band.skirt).toBe(1);
+    expect(band.end).toBe(1);
+  });
+
+  it('takes the mean of a ground that rolls, so no single stop is wildly wrong', () => {
+    /* Ottawa's shape: a canal bank that dips and rises along its length. */
+    const rolling = [
+      { x: 0, y: 1236 },
+      { x: 3000, y: 1470 },
+      { x: 6000, y: 1236 },
+      { x: 9000, y: 1314 },
+    ];
+    const mean = (1236 + 1470 + 1236 + 1314) / 4;
+
+    expect(levelLandBand(rolling, DESIGN).crest).toBeCloseTo(mean / DESIGN, 9);
+  });
+
+  it('collapses rather than throwing when there is no ground to read', () => {
+    for (const band of [levelLandBand([], DESIGN), levelLandBand(flat, 0)]) {
+      expect(band).toEqual({ crest: 1, skirt: 1, end: 1 });
+    }
+  });
+
+  it('stays inside the page, whatever a document says', () => {
+    const underneath = [{ x: 0, y: 99_999 }];
+    const overhead = [{ x: 0, y: -400 }];
+
+    expect(levelLandBand(underneath, DESIGN).crest).toBe(1);
+    expect(levelLandBand(overhead, DESIGN).crest).toBe(0);
+  });
+
+  it('shades the panel with the ground fill, which is lighter than the boot hills', () => {
+    /* Two different shades of `palette.ground` for two different pictures: the
+       scene's ground fill, and the boot screen's silhouetted ridge. The panel
+       takes whichever is on the canvas, so neither may drift from the other. */
+    expect(GROUND_FILL_SHADE).toBeGreaterThan(0);
+    expect(GROUND_FILL_SHADE).toBeLessThan(LAND_SHADE);
   });
 });
 

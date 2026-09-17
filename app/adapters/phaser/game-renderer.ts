@@ -21,7 +21,7 @@ import { dayPhase, tintPalette } from './time-of-day';
 import { LevelScene } from './level-scene';
 import { createPlayableMarker, type MarkerHost, type PlayableMarker } from './playable-marker';
 import { appErr, ok, type Result } from '@common/result';
-import { LAND_SHADE, landBand } from './horizon-profile';
+import { GROUND_FILL_SHADE, LAND_SHADE, landBand, levelLandBand } from './horizon-profile';
 import {
   identifyRenderer,
   type DebugInfoContext,
@@ -705,20 +705,25 @@ export class GameRenderer {
         : tintPalette(level.palette, { phase: dayPhase(this.#now()) });
 
     /*
-     * The land band is the *boot screen's* hills, and only the boot screen's.
+     * The land band is whichever ground is on the canvas: the boot screen's
+     * hills, or the open level's own.
      *
-     * `--tn-land-*` exists so the rolling horizon `boot-scene.ts` paints
-     * continues into the desktop side panels instead of ending on a hard
-     * vertical edge. A level's ground is a polyline that rises and falls along
-     * its own length, so there is no one height those three stops could take
-     * that would match it — and leaving slice 0's numbers in place frames a
-     * running level in scenery from a screen that is no longer on the canvas.
+     * It used to collapse to nothing with a level open, on the argument that a
+     * level's ground is a polyline and no single stop can follow it. True, and
+     * it left the panels as the sky-to-ground ramp alone — a smooth blue-grey
+     * wash beside a canvas with a crisp horizon two-thirds down, which a
+     * live-site audit read as a framed picture and CLAUDE.md forbids in one
+     * sentence: "side panels extend the level's sky/ground".
      *
-     * So with a level open the band collapses to nothing and the panels are what
-     * ADR-0002 actually asks for and nothing more: the level's own sky-to-ground
-     * gradient, continuing past the letterbox edge. Still zero draw calls.
+     * `levelLandBand` gives that polyline's mean height instead, which is exact
+     * on every flat level and much closer than nothing on the one that rolls,
+     * and the band runs opaque from there to the last row because a level's
+     * ground does too. Still zero draw calls: the panels are CSS.
      */
-    const band = level === null ? landBand(this.#config.designHeight, HORIZON_FRACTION) : null;
+    const band =
+      level === null
+        ? landBand(this.#config.designHeight, HORIZON_FRACTION)
+        : levelLandBand(level.ground, this.#config.designHeight);
 
     return {
       /* The theme sky under the current light: the ramp's colour, the browser
@@ -740,11 +745,20 @@ export class GameRenderer {
       '--tn-ground': palette.ground,
       '--tn-horizon': palette.horizon,
       /* A shade of the ground, computed once here so the page and the scene
-         cannot disagree about the colour of the same hill. */
-      '--tn-land': toCssColor(blendColors(toPhaserColor(palette.ground), 0x000000, LAND_SHADE)),
-      '--tn-land-crest': band === null ? '100%' : percent(band.crest),
-      '--tn-land-skirt': band === null ? '100%' : percent(band.skirt),
-      '--tn-land-end': band === null ? '100%' : percent(band.end),
+         cannot disagree about the colour of the same hill — or, with a level
+         open, of the same ground: `#paintGround` uses `GROUND_FILL_SHADE` and
+         the boot scene's silhouette uses the deeper `LAND_SHADE`, so the panel
+         takes whichever of the two is actually on the canvas. */
+      '--tn-land': toCssColor(
+        blendColors(
+          toPhaserColor(palette.ground),
+          0x000000,
+          level === null ? LAND_SHADE : GROUND_FILL_SHADE,
+        ),
+      ),
+      '--tn-land-crest': percent(band.crest),
+      '--tn-land-skirt': percent(band.skirt),
+      '--tn-land-end': percent(band.end),
     };
   }
 
