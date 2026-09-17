@@ -458,6 +458,26 @@ and Study landscape is screen art under `assets/src/svg/screens/`, resolved thro
 drawing. The three cards a level opens are sheets over it; the level behind is dimmed by a brightness filter on
 the canvas, never by a wash over words.
 
+### The letterbox seam
+
+`Scale.FIT` on a fixed 1080 × 1920 canvas (ADR-0002) always leaves page showing: a band above and below it on
+a phone taller than 9:16, and a panel down each side on a desktop window. Those are **CSS, not canvas** — zero
+draw calls, zero overdraw, no texture — and the seam that makes them match the level runs one way only:
+`app/adapters/phaser/level-scene.ts` reports *what the canvas draws*, `GameRenderer` publishes it as custom
+properties, and `app/bootstrap` applies them to `:root`. The adapter never styles the page, and the scene never
+learns that a panel exists. `sky-top.ts` is pure, so every case is a unit test rather than a screenshot taken
+at the right hour.
+
+Two decisions divide the work. **ADR-0044** owns the first row: the band above the canvas is painted with the
+colour the canvas actually draws on row 0, and it is painted inside `#game`, so ADR-0041's dimming filter
+reaches it. **ADR-0055** owns everything below that row: the side panels carry the level's **sky** as gradient
+stops, down to the top of the level's second layer in depth order — **read from the level document**, so a
+level moves its own boundary with no engine change — then a ramp through the mid-ground, then the flat land
+band (ADR-0042). The mid-ground's mismatch is accepted there rather than owed: one colour per row cannot
+describe a row with a skyline across it, and extending the real parallax layers into panels that are 1.846× the
+canvas area is refused against the 4× overdraw ceiling. Both decisions are fed by **one** report, so the band
+and the panels cannot drift.
+
 ## 6. Seams deliberately left open
 
 Named here so a later slice picks them up on purpose rather than inventing them under pressure.
