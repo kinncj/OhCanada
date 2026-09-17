@@ -103,7 +103,7 @@ describe('a landmark while an answer step is being played', () => {
   });
 
   it('is not paced by the day’s new-question budget, because the tracker promised the count', () => {
-    /* ADR-0053: the Peggy's Cove blocker. A task step's count is a promise made
+    /* ADR-0054: the Peggy's Cove blocker. A task step's count is a promise made
        on screen before a question is asked, so the budget may not shorten it. */
     const draw = landmarkDraw({
       levelSubject: RIGHTS,

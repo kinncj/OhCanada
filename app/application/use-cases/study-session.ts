@@ -94,7 +94,7 @@ export interface DrillScope {
    */
   readonly repeatWhenExhausted?: boolean | undefined;
   /**
-   * Does the day's new-question budget cap this draw? Default `true` (ADR-0053).
+   * Does the day's new-question budget cap this draw? Default `true` (ADR-0054).
    *
    * `false` on a task step's draw, whose count the tracker promised before a
    * question was asked. Study passes nothing and keeps the cap, which is whose

@@ -1,4 +1,4 @@
-# ADR-0053: A promised count is not paced by the day's new-question budget
+# ADR-0054: A promised count is not paced by the day's new-question budget
 
 - Status: Accepted (2026-09-17)
 - **Extends ADR-0036 and ADR-0048. It amends neither.** A level still asks its own subject, a task step still

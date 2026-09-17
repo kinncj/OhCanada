@@ -91,7 +91,7 @@ export interface ScheduleReviewInput {
    */
   readonly repeatWhenExhausted?: boolean | undefined;
   /**
-   * Does the day's new-question budget cap this draw? Default `true` (ADR-0053).
+   * Does the day's new-question budget cap this draw? Default `true` (ADR-0054).
    *
    * `false` only for a count the game has already promised the player: a quest
    * `answer` step's `count`, printed on the tracker as "Answer 3 questions" before

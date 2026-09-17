@@ -202,7 +202,7 @@ describe('50 draws from a 30-question pool never repeat inside the exclusion win
     expect(new Set(drawn).size).toBe(SHIPPED.dailyNewLimit);
   });
 
-  it('gives a promised count every question it asked for, past the day’s budget (ADR-0053)', () => {
+  it('gives a promised count every question it asked for, past the day’s budget (ADR-0054)', () => {
     /*
      * The Peggy's Cove blocker, at the scheduler. A new player finished Halifax's
      * task — nine new questions, on the same UTC day — and the next level's first

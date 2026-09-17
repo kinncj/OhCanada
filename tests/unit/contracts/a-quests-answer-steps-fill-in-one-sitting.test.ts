@@ -1,6 +1,6 @@
 /**
  * Every `answer` step of every quest can actually be answered, in one sitting,
- * by a player who started this morning (ADR-0053).
+ * by a player who started this morning (ADR-0054).
  *
  * The fourth live-site audit found Peggy's Cove unfinishable, which left Québec
  * City and every level after it Locked for every new player. The lighthouse
@@ -94,7 +94,7 @@ const MORNING = 1_767_603_600_000 as EpochMillis;
 
 const clock = { now: (): EpochMillis => MORNING, elapsed: (): number => 0 };
 
-describe('every answer step fills its count in one sitting (ADR-0053)', () => {
+describe('every answer step fills its count in one sitting (ADR-0054)', () => {
   it('has levels, quests and answer steps to walk, so this is about something (ADR-0024)', () => {
     expect(inJourneyOrder.length).toBeGreaterThan(0);
     expect(
@@ -150,7 +150,7 @@ describe('every answer step fills its count in one sitting (ADR-0053)', () => {
             `${String(drill.value.questions.length)}. A player who has answered ` +
             `everything before this point today cannot finish this step, so the quest ` +
             `never completes, no stamp is earned, and every level after this one stays ` +
-            `locked (ADR-0053).`,
+            `locked (ADR-0054).`,
         ).toBe(required);
 
         /* Nothing is repeated to make the number up: these are questions the

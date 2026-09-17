@@ -112,7 +112,7 @@ export interface SelectionRequest {
   readonly random: Randomness;
   readonly memory?: MemoryTuning;
   /**
-   * Does `dailyNewLimit` cap this draw? Default `true` (ADR-0053).
+   * Does `dailyNewLimit` cap this draw? Default `true` (ADR-0054).
    *
    * `false` for a draw whose count was **promised to the player**: a quest
    * `answer` step says "Answer 3 questions" on the tracker before a single one is
@@ -315,7 +315,7 @@ export const selectQuestions = (
   });
 
   /*
-   * ADR-0053. A promised count introduces whatever it needs; every other draw is
+   * ADR-0054. A promised count introduces whatever it needs; every other draw is
    * paced by the day's budget. `fresh.length` rather than `Infinity` so the slice
    * below stays a slice of a known length.
    */
