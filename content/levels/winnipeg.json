@@ -239,8 +239,8 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-17T18:33:29Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Canada is governed by an organized system of laws. These laws are the written rules intended to guide people in our society. They are made by elected representatives. The courts settle disputes and the police enforce the laws. The law in Canada applies to everyone, including judges, politicians and the police."
         }
