@@ -247,7 +247,7 @@ describe('"Your progress" in Settings', () => {
     const fixture = open(ready(() => Promise.resolve(true)), { locale: 'fr' });
     expect(fixture.at('save-export')?.textContent).toBe('Enregistrer dans un fichier');
     expect(fixture.at('save-import')?.textContent).toBe('Ouvrir un fichier');
-    expect(fixture.at('save-delete')?.textContent).toBe('Supprimer ma progression');
+    expect(fixture.at('save-clear')?.textContent).toBe('Supprimer ma progression');
 
     fixture.store.set('locale', 'en');
     expect(fixture.at('save-import')?.textContent).toBe('Open a file');
@@ -263,21 +263,32 @@ describe('"Your progress" in Settings', () => {
 });
 
 /**
- * "Delete my progress" (ADR-0026, and CLAUDE.md's local-only storage).
+ * "Delete my progress" (`TN-SAVE-06`, `TN-SAVE-07`, `TN-SAVE-11`, ADR-0026).
  *
  * A second live-site audit found it missing: every save this game writes lives
  * on the device, and the player had no way to clear one. It is the only control
- * in the game that destroys something, so what this file proves is the order
- * again — nothing is deleted before the player says yes, "no" and Escape delete
- * nothing, and the game starts again only when they ask — and that a store which
- * refused says so instead of pretending.
+ * in the game that destroys something, so what this file proves is the order —
+ * nothing is cleared before the player says yes, "no" and Escape clear nothing —
+ * and the two things a staff review caught the first version getting wrong:
+ *
+ *  - **the words are the story's.** `save.clear` and `save.clear.confirm` are
+ *    ratified in `TN-SAVE-save-and-reload.md`; an earlier pass invented a
+ *    `save.delete.*` family and declared it unowned, failing three scenarios
+ *    while every gate stayed green;
+ *  - **a confirmed delete opens the title screen**, per `TN-SAVE-06`, so there
+ *    is no dialog after it and no second control to press.
+ *
+ * And the honesty of the refusal: the port clears two stores and reports one
+ * error for either, so "nothing was changed" is a claim this screen cannot make.
  */
 describe('"Delete my progress" in Settings', () => {
   it('is a real button, last in the section, marked as the destructive one', () => {
     const { at } = open(refused('unreadable'));
-    const control = at('save-delete');
+    const control = at('save-clear');
 
     expect(control?.tagName).toBe('BUTTON');
+    /* The ratified row, not a rewording of it. */
+    expect(control?.textContent).toBe(text('en', 'save.clear'));
     expect(control?.textContent).toBe('Delete my progress');
     /* A shape and a word, never a colour alone: `screen-styles.ts` draws this
        attribute as the double-edged slab. */
@@ -288,45 +299,45 @@ describe('"Delete my progress" in Settings', () => {
     expect(buttons.map((node) => node.getAttribute('data-testid'))).toEqual([
       'save-export',
       'save-import',
-      'save-delete',
+      'save-clear',
     ]);
   });
 
-  it('is not drawn when the caller cannot delete', () => {
+  it('is not drawn when the caller cannot clear', () => {
     /* Absent draws no control, the way an absent save section draws none: a
        button that does nothing is worse than a missing one. */
-    expect(open(refused('unreadable'), {}, null).at('save-delete')).toBeNull();
+    expect(open(refused('unreadable'), {}, null).at('save-clear')).toBeNull();
   });
 
-  it('deletes nothing until the player says yes, and says what it would cost', async () => {
+  it('asks the question the story wrote, and "Keep my progress" clears nothing', async () => {
     const fixture = open(refused('unreadable'));
-    fixture.at('save-delete')?.click();
+    fixture.at('save-clear')?.click();
 
-    const dialog = fixture.at('save-delete-confirm');
+    const dialog = fixture.at('save-clear-confirm');
     expect(dialog?.hidden).toBe(false);
     expect(dialog?.getAttribute('role')).toBe('alertdialog');
     expect(
       fixture.page.doc.getElementById(dialog?.getAttribute('aria-labelledby') ?? '')?.textContent,
-    ).toBe(text('en', 'save.delete.confirm'));
-    expect(
-      fixture.page.doc.getElementById(dialog?.getAttribute('aria-describedby') ?? '')?.textContent,
-    ).toBe(text('en', 'save.delete.confirm.body'));
-    expect(fixture.at('save-delete-yes')?.textContent).toBe('Delete');
-    expect(fixture.at('save-delete-keep')?.textContent).toBe('Keep my progress');
+    ).toBe('This cannot be undone. Delete everything?');
+    /* The question carries its own cost, so there is no second sentence to
+       describe it with — and a dangling `aria-describedby` would be worse. */
+    expect(dialog?.getAttribute('aria-describedby')).toBeNull();
+    expect(fixture.at('save-clear-yes')?.textContent).toBe('Delete everything');
+    expect(fixture.at('save-clear-keep')?.textContent).toBe('Keep my progress');
     expect(fixture.onDelete).not.toHaveBeenCalled();
 
-    fixture.at('save-delete-keep')?.click();
+    fixture.at('save-clear-keep')?.click();
     await settle();
     expect(dialog?.hidden).toBe(true);
     expect(fixture.onDelete).not.toHaveBeenCalled();
-    expect(fixture.at('save-delete-done')).toBeNull();
+    expect(fixture.onRestart).not.toHaveBeenCalled();
   });
 
-  it('treats Escape in the confirmation as "no", and leaves Settings open', async () => {
+  it('treats Escape in the question as "no", and leaves Settings open', async () => {
     const fixture = open(refused('unreadable'));
-    fixture.at('save-delete')?.click();
+    fixture.at('save-clear')?.click();
 
-    const dialog = fixture.at('save-delete-confirm') as FakeElement;
+    const dialog = fixture.at('save-clear-confirm') as FakeElement;
     press(dialog, 'Escape');
     await settle();
 
@@ -336,70 +347,95 @@ describe('"Delete my progress" in Settings', () => {
     expect(fixture.at('settings-screen')?.hidden).toBe(false);
   });
 
-  it('deletes on "Delete", says so out loud, and starts the game again only when asked', async () => {
+  it('clears on yes and starts the game again, with no dialog in between', async () => {
     const fixture = open(refused('unreadable'));
-    fixture.at('save-delete')?.click();
-    fixture.at('save-delete-yes')?.click();
+    fixture.at('save-clear')?.click();
+    fixture.at('save-clear-yes')?.click();
     await settle();
 
     expect(fixture.onDelete).toHaveBeenCalledTimes(1);
-    const done = fixture.at('save-delete-done') as FakeElement;
-    expect(done.hidden).toBe(false);
-    expect(done.getAttribute('role')).toBe('alertdialog');
-    expect(
-      fixture.page.doc.getElementById(done.getAttribute('aria-labelledby') ?? '')?.textContent,
-    ).toBe(text('en', 'save.delete.done'));
-    expect(
-      fixture.page.doc.getElementById(done.getAttribute('aria-describedby') ?? '')?.textContent,
-    ).toBe(text('en', 'save.delete.done.help'));
-    /* The live region carries it too, for a player who cannot see the dialog. */
-    expect(fixture.announce).toHaveBeenCalledWith(
-      `${text('en', 'save.delete.done')} ${text('en', 'save.delete.done.help')}`,
-    );
-    expect(fixture.onRestart).not.toHaveBeenCalled();
-
-    press(done, 'Escape');
-    expect(done.hidden, 'the dialog after a delete was escaped into a game that is gone').toBe(
-      false,
-    );
-
-    fixture.at('save-delete-continue')?.click();
+    /* `TN-SAVE-06`: "choosing yes clears storage and opens the title screen as
+       it is for a first-time player" — the restart is that opening, and a dialog
+       congratulating the player on losing something is not in the story. */
     expect(fixture.onRestart).toHaveBeenCalledTimes(1);
+    expect(fixture.at('save-clear-error')?.hidden).not.toBe(false);
   });
 
-  it('says so under the control when the store refused, and leaves nothing open', async () => {
+  it('says only what it knows when the clear did not finish', async () => {
     const fixture = open(refused('unreadable'), {}, false);
-    fixture.at('save-delete')?.click();
-    fixture.at('save-delete-yes')?.click();
+    fixture.at('save-clear')?.click();
+    fixture.at('save-clear-yes')?.click();
     await settle();
 
-    const sentence = `${text('en', 'save.delete.failed')} ${text('en', 'save.import.notSaved.help')}`;
-    expect(fixture.at('save-delete-done')).toBeNull();
-    expect(fixture.at('save-delete-confirm')?.hidden).toBe(true);
-    expect(fixture.at('save-import-error')?.textContent).toBe(sentence);
-    /* The sentence belongs to the control that produced it, not to "Open a file". */
-    expect(fixture.at('save-delete')?.getAttribute('aria-describedby')).toBe(
-      fixture.at('save-import-error')?.id,
+    /* Not "Nothing was changed": the port clears two stores (ADR-0026) and
+       reports one error for either, so a clear that emptied one and was refused
+       by the other looks exactly like this from here. */
+    const sentence = `${text('en', 'save.clear.failed')} ${text('en', 'save.clear.failed.help')}`;
+    expect(sentence).not.toContain(text('en', 'save.import.notSaved.help'));
+    expect(fixture.onRestart).not.toHaveBeenCalled();
+    expect(fixture.at('save-clear-confirm')?.hidden).toBe(true);
+    expect(fixture.at('save-clear-error')?.textContent).toBe(sentence);
+    /* Its own element and its own control: the import's sentence is untouched. */
+    expect(fixture.at('save-clear')?.getAttribute('aria-describedby')).toBe(
+      fixture.at('save-clear-error')?.id,
     );
+    expect(fixture.at('save-import-error')?.hidden).toBe(true);
     expect(fixture.at('save-import')?.getAttribute('aria-describedby')).toBeNull();
     expect(fixture.announce).toHaveBeenCalledWith(sentence);
-    expect(fixture.page.doc.activeElement).toBe(fixture.at('save-delete'));
+    expect(fixture.page.doc.activeElement).toBe(fixture.at('save-clear'));
+  });
+
+  it('takes a stale failure away when the next try starts', async () => {
+    /* A sentence from a previous attempt must not survive the attempt that
+       worked, still wired as the control's description. */
+    let answer = false;
+    const page = buildPage();
+    const store = createSettingsStore(DEFAULT_SETTINGS);
+    const onRestart = vi.fn();
+    createSettingsScreen(page.host, {
+      store,
+      onClose: vi.fn(),
+      saveTransfer: {
+        onExport: vi.fn(),
+        onImport: () => refused('unreadable')(),
+        onRestart,
+        onDelete: () => Promise.resolve(answer),
+      },
+      now: () => 0,
+    }).show();
+    const at = (testId: string): FakeElement | null => page.doc.byTestId(testId);
+
+    at('save-clear')?.click();
+    at('save-clear-yes')?.click();
+    await settle();
+    expect(at('save-clear-error')?.hidden).toBe(false);
+
+    answer = true;
+    at('save-clear')?.click();
+    at('save-clear-yes')?.click();
+    await settle();
+
+    expect(at('save-clear-error')?.hidden).toBe(true);
+    expect(at('save-clear')?.getAttribute('aria-describedby')).toBeNull();
+    expect(onRestart).toHaveBeenCalledTimes(1);
   });
 
   it('asks in French in French, and follows a language change with the question open', () => {
     const fixture = open(refused('unreadable'), { locale: 'fr' });
-    fixture.at('save-delete')?.click();
+    expect(fixture.at('save-clear')?.textContent).toBe('Supprimer ma progression');
+    fixture.at('save-clear')?.click();
 
-    const dialog = fixture.at('save-delete-confirm');
+    const dialog = fixture.at('save-clear-confirm');
     expect(
       fixture.page.doc.getElementById(dialog?.getAttribute('aria-labelledby') ?? '')?.textContent,
-    ).toBe(text('fr', 'save.delete.confirm'));
-    expect(fixture.at('save-delete-yes')?.textContent).toBe('Supprimer');
+      /* `TN-SAVE-11` asserts this sentence by name. */
+    ).toBe('Cette action est définitive. Tout supprimer?');
+    expect(fixture.at('save-clear-yes')?.textContent).toBe('Tout supprimer');
 
     fixture.store.set('locale', 'en');
     expect(
       fixture.page.doc.getElementById(dialog?.getAttribute('aria-labelledby') ?? '')?.textContent,
-    ).toBe(text('en', 'save.delete.confirm'));
+    ).toBe('This cannot be undone. Delete everything?');
     expect(dialog?.getAttribute('lang')).toBe('en');
   });
 });

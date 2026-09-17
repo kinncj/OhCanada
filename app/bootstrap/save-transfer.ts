@@ -104,12 +104,25 @@ export function saveTransferOptions(wiring: SaveTransferWiring): SaveTransferOpt
      * Nothing here asks. The question, its cost and its two answers are
      * `app/ui/save-transfer.ts`'s, and this runs only after a yes.
      */
+    /*
+     * **`false` means "it did not finish", not "nothing changed".** The port
+     * clears both stores ADR-0026 uses and reports a single error for either, so
+     * a clear that emptied IndexedDB and was refused by `localStorage` arrives
+     * here identical to one that did nothing at all. This cannot tell them
+     * apart, so it does not try, and the sentence the screen draws
+     * (`save.clear.failed`) claims only what is known. Telling them apart needs
+     * a partial outcome on `ProgressRepository.clear`, which is a port change
+     * and another owner's call; it is reported rather than invented here.
+     *
+     * The writes stay held on the failure path as well as the success path when
+     * the clear may have half-landed — releasing them would let the game write
+     * its in-memory save straight back over a store it may have just emptied.
+     */
     onDelete: async (): Promise<boolean> => {
       wiring.writes.hold();
       const cleared = await deleteProgress(wiring.deps);
       if (cleared.ok) return true;
-      wiring.writes.release();
-      report(`[bootstrap] the progress was not deleted. ${cleared.error.code}`);
+      report(`[bootstrap] the progress was not fully deleted. ${cleared.error.code}`);
       return false;
     },
 
