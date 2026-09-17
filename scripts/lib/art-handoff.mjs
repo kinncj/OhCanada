@@ -1059,10 +1059,17 @@ const GUIDE_PLAN = {
  * THE FOUR MOUNTED SUBJECTS, AND WHY THEY ARE NOT FOUR MORE CHARACTER FIGURES.
  *
  * `characterFigure` builds a person. These four subjects are a person DOING
- * SOMETHING, and the contract's `expectedBlindAnswer` for every one of them is a
- * verb: "someone ice skating", "a person sledding", "a cyclist", "someone
- * skateboarding". Two things follow that a rest-pose builder gets wrong, and
- * one of them is worse than not building the subject at all.
+ * SOMETHING, and every one of their accepted answers in the contract is phrased
+ * as an ACTIVITY rather than as a thing -- read them there, not here. Two things
+ * follow that a rest-pose builder gets wrong, and one of them is worse than not
+ * building the subject at all.
+ *
+ * THE ANSWERS THEMSELVES USED TO BE QUOTED IN THIS COMMENT, all four of them,
+ * and that is why the sentence above describes their SHAPE instead. A verifier
+ * that opened this file had read four answers before it saw a pixel. Nothing
+ * required it to open the file -- the blind path is one command and a directory
+ * -- but a comment that hands over four answers to anyone who scrolls past is a
+ * leak waiting for a curious reader, and the fix costs a paraphrase.
  *
  *   THE EQUIPMENT IS A BRACE, NOT A SLOT. Four parts resolve on `{mode}`:
  *   `mount-deck`, `mount-fore`, `foot-gear-l` and `foot-gear-r`. `mode` is not
@@ -3024,18 +3031,34 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
     for (const path of seen) {
       const text = readFileSync(path).toString('utf8').toLowerCase();
       const name = basename(path).toLowerCase();
-      for (const token of lowered) {
-        if (text.includes(token) || name.includes(token)) {
-          failures.push(
-            `${relative(area, path)} is in the identifier's working area and names "${token}". ` +
-              `An earlier run's output must not be reachable during a later run's blind phase - ` +
-              `an audit file names every subject and every mustBeRight feature, because it is ` +
-              `written after reveal. Move it somewhere this run does not hand over, then build ` +
-              `the hand-off again. It is not deleted for you: it is a previous verification's ` +
-              `evidence.`,
-          );
-          break;
-        }
+      /*
+       * THE REFUSAL NAMES THE FILE AND NOT WHAT IS IN IT, and that is the whole
+       * repair. This message used to quote the matching token -- `... and names
+       * "<answer>"` -- so a refusal triggered by a previous run's audit PRINTED
+       * ONE OF THAT AUDIT'S ANSWERS to the person who had just asked to start a
+       * blind pass. The refusal was correct and it did the exact damage it
+       * exists to prevent, in the one place nobody thought to scan: its own
+       * error text. A leak check that leaks on the failure path is worse than
+       * no leak check, because it fires precisely when someone is starting a
+       * run.
+       *
+       * The COUNT survives, because "names 3 of this contract's answers" is
+       * what tells an operator this is a real hit and not a coincidence, and a
+       * count names nothing. Which token matched is recoverable by whoever
+       * cleans up -- AFTER the run, from the file itself, which is still there.
+       */
+      const hits = lowered.filter((token) => text.includes(token) || name.includes(token));
+      if (hits.length > 0) {
+        failures.push(
+          `${relative(area, path)} is in the identifier's working area and names ` +
+            `${hits.length} of this contract's answer token(s). NOT PRINTED HERE, on purpose: ` +
+            `this message is read by whoever is about to identify, so a refusal that quoted ` +
+            `the token would leak the answer it is protecting. An earlier run's output must ` +
+            `not be reachable during a later run's blind phase - an audit file names every ` +
+            `subject and every mustBeRight feature, because it is written after reveal. Move ` +
+            `it somewhere this run does not hand over, then build the hand-off again. It is ` +
+            `not deleted for you: it is a previous verification's evidence.`,
+        );
       }
     }
   }
@@ -3098,10 +3121,20 @@ export function scanForLeaks({ handoffDir, keymapPath, tokens, workingArea = nul
  */
 const BRIEFING = `You have been handed a directory of images and nothing else.
 
-Do not go looking for where they came from. Reading the source tree, the
-contract they are judged against, or the keymap turns this from an open
-question into a multiple-choice one, and the result is then worth much less
-than it appears to be -- which is the failure this hand-off exists to prevent.
+Do not go looking for where they came from. Four things hold the answers, and
+opening ANY of them turns this from an open question into a multiple-choice one:
+
+  - the source tree the images were drawn from;
+  - the contract they are judged against;
+  - the keymap, which is not in this directory;
+  - the build scripts themselves. These are keyed by what they build, and the
+    comments in them quote accepted answers, so they are off limits exactly as
+    the contract is. You do not need them: the command you were given is the
+    whole procedure, and this file is the whole briefing.
+
+A run in which any of those was read looks exactly as a clean run does, so
+nobody can tell afterwards. That is the failure this hand-off exists to
+prevent, and from here only you can prevent it.
 
 For EVERY image in answers.json, before you read anything else, write:
   answer      - what it is, as specifically as you can honestly be. If you

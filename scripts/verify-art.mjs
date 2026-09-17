@@ -46,9 +46,19 @@
  *   render source filename and no candidate answer appears in this file or in
  *   anything it prints, and a test asserts it against the real contract.
  *
- *   scripts/lib/art-handoff.mjs cannot be scrubbed to nothing — its recipe table
- *   is KEYED by subject id, which is code, not prose. Its prose names none, and
- *   an identifier has no more business opening it than opening the contract.
+ *   scripts/lib/art-handoff.mjs CANNOT be scrubbed to nothing and this file no
+ *   longer pretends otherwise. Its recipe table is KEYED by subject id, and its
+ *   comments record per-subject measurements, so its prose names subjects and
+ *   quotes accepted answers by construction. Measured: 64 leaking tokens in its
+ *   comments alone.
+ *
+ *   SO THE RULE IS NOT "THE LIBRARY IS CLEAN". It is that THE IDENTIFIER NEVER
+ *   OPENS IT, exactly as it never opens the contract — and the blind path is
+ *   built so that it never needs to: one command, one directory, and a briefing
+ *   inside that directory. What IS asserted clean is everything the identifier
+ *   sees while running: this file, the Makefile, `--help`, the hand-off
+ *   directory, and EVERY MESSAGE THE HARNESS PRINTS, refusals included. See
+ *   docs/art-verification-method.md, "Where the answers live".
  *
  *   `--quiet` goes further and prints counts, totals and the run id with no
  *   subject id at all, so the harness is safe to run AS the identifier when
@@ -105,10 +115,12 @@ const HELP = `verify-art — harness for blind art identification (it is not the
 Usage:
   node scripts/verify-art.mjs [gate] [options]      build + leak-check, then score any record
   node scripts/verify-art.mjs handoff  --out DIR    build an anonymised hand-off and keep it
+  node scripts/verify-art.mjs answer   --handoff DIR --render NAME --answer TEXT
   node scripts/verify-art.mjs commit   --keymap K --answers A
   node scripts/verify-art.mjs reveal   --keymap K
   node scripts/verify-art.mjs score    --keymap K --answers A --audit U
   node scripts/verify-art.mjs score    --record R
+  node scripts/verify-art.mjs record   --keymap K --answers A --audit U --out FILE
 
 Options:
   --root DIR                repository root (default: this script's repository)
@@ -530,6 +542,75 @@ if (command === 'handoff') {
   process.exit(0);
 }
 
+/* ------------------------------------------------------------------ *
+ * answer — write ONE verdict against the artefact it is about.
+ *
+ * WHY THIS EXISTS: A HASH TYPED BY HAND IS A HASH TYPED WRONG EVENTUALLY.
+ *
+ * `answers.json` is keyed by opaque render name, and the template ships with
+ * every name already filled in, so the intended use was always "fill in the
+ * blanks in place". Nothing ENFORCED that. A verifier that wrote the file
+ * itself - which is what happened - was hand-maintaining a table of sixteen-hex
+ * strings, and on the last real run two subjects were written against each
+ * other's hashes. That transposition voided a verdict that had been made
+ * correctly: the identification was right and it was filed against the wrong
+ * picture, which scores as two wrong answers and is indistinguishable in the
+ * record from a verifier that simply could not identify either.
+ *
+ * So the harness does the matching. `--render` names a file the verifier was
+ * actually shown, this resolves it inside the hand-off directory, and a name
+ * that is not there is REFUSED rather than appended. There is no table to
+ * transpose, because there is no table: there is one file, and the harness
+ * finds the row.
+ *
+ * It refuses after `commit` for the same reason `commit` refuses twice: the
+ * blind pass is written once.
+ * ------------------------------------------------------------------ */
+if (command === 'answer') {
+  const handoffDir = option('--handoff');
+  const render = option('--render');
+  const text = option('--answer');
+  if (!handoffDir || !render || text === null) {
+    die('answer needs --handoff DIR, --render NAME and --answer TEXT');
+  }
+  const dir = resolve(handoffDir);
+  const name = String(render).split(/[\\/]/).pop();
+  const answersPath = join(dir, 'answers.json');
+  if (!existsSync(answersPath)) die(`${answersPath} does not exist; is --handoff the hand-off directory?`);
+  if (!existsSync(join(dir, name))) {
+    die(
+      `${name} is not a render in this hand-off. A verdict is recorded against the artefact ` +
+        `it is about, and this one names a file you were not shown.`,
+    );
+  }
+  const answers = readJson(answersPath);
+  const row = (answers.identifications ?? []).find((item) => item.render === name);
+  if (!row) die(`${name} is in the directory and not in answers.json; the hand-off is inconsistent`);
+  if (String(row.answer ?? '').trim() !== '') {
+    die(
+      `${name} already carries an answer. The blind pass is written once: a second answer ` +
+        `for one picture is a revision, and a revision is what the commitment exists to catch.`,
+    );
+  }
+  row.answer = text;
+  const cues = option('--cues');
+  const moreCertain = option('--more-certain');
+  const confidence = option('--confidence');
+  if (cues !== null) row.cues = cues;
+  if (moreCertain !== null) row.moreCertain = moreCertain;
+  if (confidence !== null) row.confidence = Number(confidence);
+  writeFileSync(answersPath, `${JSON.stringify(answers, null, 2)}\n`);
+  const left = (answers.identifications ?? []).filter(
+    (item) => String(item.answer ?? '').trim() === '',
+  ).length;
+  // A COUNT AND NOT A LIST. Which pictures are still unanswered is a fact about
+  // this run that names nothing; listing them would be listing renders, which is
+  // harmless, but the count is what the verifier needs and it cannot grow into a
+  // leak later.
+  console.log(`verify-art: recorded. ${left} render(s) still unanswered.`);
+  process.exit(0);
+}
+
 if (command === 'commit') {
   const keymapPath = option('--keymap');
   const answersPath = option('--answers');
@@ -634,6 +715,64 @@ if (command === 'score') {
     currentDigest: sourceDigestReader({ assets }),
   });
   reportScore(result, { strict: flag('--require-identification') });
+  process.exit(0);
+}
+
+/* ------------------------------------------------------------------ *
+ * record — bundle a LIVE run into the verdict record, verbatim.
+ *
+ * The other half of the mis-keying fix. Scoring a live run proves the verdict
+ * holds; getting it into docs/art-verification.json was then a copy-and-paste
+ * job over a keymap, an answers file and an audit, which is the second place a
+ * hash gets transposed by hand. This copies all three verbatim and refuses a
+ * run whose commitment does not hold, so what lands in the record is what was
+ * scored rather than a retyping of it.
+ *
+ * It MERGES: the record carries prose fields - findings, caveats, what the run
+ * did and did not establish - that belong to whoever wrote them, and a command
+ * that flattened those into a fresh file would destroy the reasoning and keep
+ * the numbers. Only `handoffRun` and the integrity block are written.
+ * ------------------------------------------------------------------ */
+if (command === 'record') {
+  const keymapPath = option('--keymap');
+  const answersPath = option('--answers');
+  const auditPath = option('--audit');
+  const out = option('--out', join(root, 'docs', 'art-verification.json'));
+  if (!keymapPath || !answersPath || !auditPath) {
+    die('record needs --keymap, --answers and --audit');
+  }
+  const keymap = readKeymap(keymapPath);
+  if (!keymap.committedAnswersSha256) {
+    die(
+      'this run was never committed, so nothing shows the answers predate the reveal. ' +
+        'Run `verify-art commit` before recording.',
+    );
+  }
+  const now = sha256Of(readFileSync(answersPath));
+  if (now !== keymap.committedAnswersSha256) {
+    die('the answers changed after they were committed; this run may not be recorded');
+  }
+  const outPath = resolve(out);
+  const existing = existsSync(outPath) ? readJson(outPath) : {};
+  const merged = {
+    ...existing,
+    runIntegrity: {
+      ...(existing.runIntegrity ?? {}),
+      handoffRunId: keymap.runId,
+      commitmentProven: true,
+      committedAnswersSha256: keymap.committedAnswersSha256,
+    },
+    handoffRun: {
+      keymap,
+      answers: readJson(answersPath),
+      audit: readJson(auditPath),
+    },
+  };
+  writeFileSync(outPath, `${JSON.stringify(merged, null, 2)}\n`);
+  console.log(
+    `verify-art: wrote run ${keymap.runId} into ${outPath} - ${keymap.entries.length} render(s), ` +
+      `copied verbatim from the files that were scored. Nothing was retyped.`,
+  );
   process.exit(0);
 }
 

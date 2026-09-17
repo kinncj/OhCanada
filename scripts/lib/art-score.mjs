@@ -109,14 +109,16 @@ const padded = (value) => ` ${normalise(value)} `;
  * HOW MANY WORDS AN ANSWER MAY INSERT INTO AN EXPECTED PHRASE AND STILL MATCH.
  *
  * A contiguous substring match cannot accept a correct answer phrased with an
- * extra adjective, and that is not hypothetical: `rideau-canal-skateway`'s
- * contract was amended to accept a GENERIC answer, and a genuinely blind run
- * answered "an outdoor public skating rink on a frozen CITY canal". All four
- * generic phrases failed - "an outdoor skating rink on a frozen canal" is not a
- * substring of it - and the subject passed only because the verifier
- * volunteered "Rideau Canal", the place name the amendment makes optional. A
- * verifier obeying the contract exactly would have been marked wrong. The
- * contract was doing the right thing and the matcher was not.
+ * extra adjective, and that is not hypothetical. One subject's contract was
+ * amended to accept a GENERIC answer, and a genuinely blind run gave that answer
+ * with one ordinary adjective inserted into each of two noun phrases. Every
+ * generic phrase failed on the substring test, and the subject passed only
+ * because the verifier ALSO volunteered the place name the amendment had just
+ * made optional. A verifier obeying the contract exactly would have been marked
+ * wrong. The contract was doing the right thing and the matcher was not.
+ *
+ * The answers are not quoted here, nor is the subject named: this file is part
+ * of the leak surface for the same reason the hand-off is.
  *
  * So a candidate matches when its words appear IN ORDER, with at most this many
  * of the answer's own words between any two of them. Order is kept because it

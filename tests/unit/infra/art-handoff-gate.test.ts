@@ -984,8 +984,24 @@ describe('an earlier run must not be reachable during a later run\'s blind phase
     const result = run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'wa-1']);
     expect(result.status, result.output).toBe(1);
     expect(result.output).toContain('audit.json is in the identifier\'s working area');
-    expect(result.output).toContain(subjectId);
     expect(result.output).toContain('must not be reachable during a later run\'s blind phase');
+
+    // AND THE REFUSAL MAY NOT QUOTE WHAT IT FOUND. This case used to assert the
+    // OPPOSITE -- `toContain(subjectId)` -- and the harness obliged: a refusal
+    // triggered by a previous run's audit printed that audit's subject id and
+    // the matching answer token to the person who had just asked to begin a
+    // blind pass. The refusal was right and its wording did the exact damage
+    // the refusal exists to prevent, on the one path nobody had scanned: the
+    // error text. A leak check that leaks on its failure path fires precisely
+    // when someone is starting a run.
+    expect(result.output, 'the refusal named the subject it found').not.toContain(subjectId);
+    expect(result.output, 'the refusal quoted a feature out of the stale audit').not.toContain(
+      'a frozen canal with skaters',
+    );
+    // The count survives, because it is what tells an operator this is a real
+    // hit rather than a coincidence, and a count names nothing.
+    expect(result.output).toMatch(/names \d+ of this contract's answer token\(s\)/);
+    expect(result.output).toContain('NOT PRINTED HERE');
   });
 
   it('says it will not delete the file, because it is a previous verification\'s evidence', () => {
@@ -1899,12 +1915,48 @@ describe('what the harness PRINTS, and what its own entry points say', () => {
 
   it('the CLI source and the Makefile name no subject', () => {
     // The entry points an identifier plausibly opens: the file whose --help it
-    // just read, and the target it was told to run. scripts/lib/art-handoff.mjs
-    // is NOT asserted - its recipe table is keyed by subject id, which is code
-    // and cannot be scrubbed; its prose names none, and an identifier has no
-    // more business opening it than opening the contract.
+    // just read, and the target it was told to run.
+    //
+    // scripts/lib/art-handoff.mjs is NOT asserted, and the reason is now stated
+    // honestly rather than optimistically. It used to say "its prose names
+    // none", which was false: measured, its comments carry 64 leaking tokens,
+    // because the recipe table is KEYED by subject id and the comments record
+    // per-subject measurements. Neither can be scrubbed without destroying the
+    // file's meaning. So the rule is not that the library is clean; it is that
+    // THE IDENTIFIER NEVER OPENS IT, exactly as it never opens the contract --
+    // and the briefing now says so in as many words, because "no more business
+    // opening it" was a claim about etiquette resting on a false claim about
+    // content.
     assertClean('scripts/verify-art.mjs', readFileSync(SCRIPT, 'utf8'));
     assertClean('Makefile', readFileSync(join(REPO, 'Makefile'), 'utf8'));
+  });
+
+  it('names nothing on the REFUSAL paths either, which is where it leaked', () => {
+    // EVERY MESSAGE THE HARNESS PRINTS IS THE LEAK SURFACE, not just the happy
+    // path. `--quiet` was scrubbed and asserted above while a refusal went on
+    // quoting the token it had matched, so the one output an identifier is
+    // guaranteed to read closely -- the one explaining why its run will not
+    // start -- was the one that named an answer.
+    //
+    // Both refusals an identifier can trip by following its own instructions:
+    // a stale artefact in the working area, and a non-empty hand-off directory.
+    const out = scratch('refusal-clean');
+    writeFileSync(
+      join(out, 'audit.json'),
+      JSON.stringify({
+        runId: 'c3d5c9fb89330709',
+        audits: [{ subjectId: subjectsOf(REPO)[0]?.id ?? '', featuresPresent: ['a frozen canal'] }],
+      }),
+    );
+    const area = run(['handoff', '--root', REPO, '--out', out, ...CHEAP, '--seed', 'refuse-1']);
+    expect(area.status, area.output).toBe(1);
+    assertClean('the working-area refusal', area.output);
+
+    const twice = scratch('refusal-stale');
+    expect(run(['handoff', '--root', REPO, '--out', twice, ...CHEAP, '--seed', 'refuse-2']).status).toBe(0);
+    const second = run(['handoff', '--root', REPO, '--out', twice, ...CHEAP, '--seed', 'refuse-3']);
+    expect(second.status, second.output).toBe(1);
+    assertClean('the stale-directory refusal', second.output);
   });
 });
 

@@ -29,6 +29,41 @@ carefully it was drawn.
 5. **Verdict.** Pass requires the unprompted identification to match `expectedBlindAnswer` *and*
    every `mustBeRight` entry to be present. "Recognisable once you know what it is" is a fail.
 
+## Where the answers live, and how they are compared
+
+Decided 2026-09-17, after a run whose verifier had read four accepted answers out of the harness's own
+comments before it saw a pixel.
+
+**The answers live in exactly one place: `expectedBlindAnswer` in `assets/refs/references.json`.** They are
+compared to the verdict only by `scripts/lib/art-score.mjs`, and only *after* `verify-art commit` has frozen
+the answers and `verify-art reveal` has opened the keymap. Nothing compares them earlier and nothing needs to.
+
+**What the identifier is allowed to see while running.** One command and one directory. That is the whole
+procedure, and the briefing inside the directory says so:
+
+- the hand-off directory — renders, `READ-ME-FIRST.txt`, `answers.json`;
+- whatever the command prints, *including every refusal*;
+- `--help`, `Makefile`, and `scripts/verify-art.mjs`.
+
+Those are asserted clean, mechanically, against every subject id, accepted answer and render filename in the
+contract (`tests/unit/infra/art-handoff-gate.test.ts`). The refusal paths are asserted too, which is the
+repair: a refusal used to quote the token it had matched, so the one message a verifier reads most carefully —
+the one explaining why its run will not start — was the one that named an answer.
+
+**What it may not open, and why that is a rule rather than a guarantee.** `scripts/lib/art-handoff.mjs` and
+`scripts/lib/art-score.mjs` are off limits exactly as the contract is. They cannot be scrubbed: the recipe
+table is *keyed* by subject id and the comments record per-subject measurements. Measured on 2026-09-17, the
+build library's comments alone carry 64 leaking tokens. The four verbatim answers and the two quoted
+identifications that had no business being there are gone, but the honest statement is not "the library is
+clean" — it is **"the identifier never opens the library"**, and the blind path is built so it never needs to.
+The previous wording claimed the prose named nothing, which was false, and rested a real rule on it.
+
+**Recording a verdict.** The verifier never types a hash. `verify-art answer --handoff DIR --render NAME
+--answer TEXT` writes one verdict against the artefact it is about and refuses a name that is not in the
+directory; `verify-art record` copies the scored keymap, answers and audit into the verdict record verbatim.
+On the last hand-written run two subjects were filed against each other's hashes, which voided a verdict that
+had been reached correctly — a transposition scores exactly like a failure to identify.
+
 ## Blindness is fragile, and it broke on the first run
 
 The 2026-09-08 pass could not be run blind. The identifier had to locate the renders before it could
