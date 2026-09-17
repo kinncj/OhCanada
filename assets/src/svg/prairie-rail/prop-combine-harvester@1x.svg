@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480" shape-rendering="geometricPrecision">
-  <title>A combine harvester cutting standing grain: a red machine with a high glazed cab over one large drive wheel and a small rear wheel, an open grain tank on top, an unloading auger folded up over the left side, a sloping feeder house, and a wide header at the front carrying a slatted reel above a pale cutter bar, standing between cut stubble and standing wheat. A TYPE, not a make or a model: no badge, no wordmark, no model number and no lettering of any kind, and no figure in the cab. Drawn from assets/refs/prairie-rail/prairie-harvest-and-shelterbelt.jpg; see assets/refs/references.json, subject combine-harvester. POI hero, present at every visual tier.</title>
+  <title>A combine harvester cutting standing grain: a red machine with a high glazed cab over one large drive wheel and a small rear wheel, an open grain tank on top, an unloading auger folded up over the left side, a sloping feeder house, and a WIDE HEADER reaching forward across the whole right of the frame - a low pan with a pointed crop divider at its leading edge, a pale steel cutter bar running the full width of the pan and past it at both ends, and a slatted six-bat reel turning clear above it with daylight all round. The header is the identification and it is drawn as the machine's biggest single element rather than as a box tacked on the corner: the body was moved back and shortened to make room, so the header is 228 px of an 800 px machine with open air in front of the reel instead of the 176 px stub, half-swallowed by its own reel at the frame edge, that a blind reading called a stub. Standing wheat behind, cut stubble in front. A TYPE, not a make or a model: no badge, no wordmark, no model number and no lettering of any kind, and no figure in the cab. Drawn from assets/refs/prairie-rail/prairie-harvest-and-shelterbelt.jpg; see assets/refs/references.json, subject combine-harvester. POI hero, present at every visual tier.</title>
 
+  <rect x="0" y="392" width="800" height="26" fill="#d5c18e"/>
   <rect x="0" y="416" width="800" height="64" fill="#c29455"/>
   <rect x="0" y="416" width="800" height="12" fill="#d5c18e"/>
   <rect x="0" y="452" width="800" height="28" fill="#965630"/>
@@ -10,46 +11,50 @@
 
   <ellipse cx="400" cy="470" rx="360" ry="14" fill="#16203a" opacity="0.28"/>
 
-  <rect x="238" y="168" width="18" height="32" fill="#4e0e10"/>
-  <polygon points="230,198 256,168 86,112 68,142" fill="#605a55"/>
-  <polygon points="230,198 256,168 172,140 154,170" fill="#8b857c"/>
-  <rect x="60" y="110" width="36" height="46" rx="8" fill="#30384f"/>
+  <rect x="186" y="168" width="18" height="32" fill="#4e0e10"/>
+  <polygon points="178,198 204,168 34,112 16,142" fill="#605a55"/>
+  <polygon points="178,198 204,168 120,140 102,170" fill="#8b857c"/>
+  <rect x="8" y="110" width="36" height="46" rx="8" fill="#30384f"/>
 
-  <rect x="232" y="158" width="230" height="58" fill="#4e0e10"/>
-  <rect x="232" y="158" width="230" height="14" fill="#91301c"/>
+  <rect x="180" y="158" width="230" height="58" fill="#4e0e10"/>
+  <rect x="180" y="158" width="230" height="14" fill="#91301c"/>
 
-  <rect x="172" y="212" width="412" height="190" rx="10" fill="#91301c"/>
-  <rect x="172" y="212" width="412" height="34" fill="#cf5d2b"/>
-  <rect x="172" y="356" width="412" height="46" fill="#4e0e10"/>
-  <rect x="194" y="262" width="118" height="70" rx="6" fill="#4e0e10"/>
-  <rect x="194" y="262" width="118" height="12" fill="#cf5d2b"/>
+  <rect x="120" y="212" width="400" height="190" rx="10" fill="#91301c"/>
+  <rect x="120" y="212" width="400" height="34" fill="#cf5d2b"/>
+  <rect x="120" y="356" width="400" height="46" fill="#4e0e10"/>
+  <rect x="142" y="262" width="118" height="70" rx="6" fill="#4e0e10"/>
+  <rect x="142" y="262" width="118" height="12" fill="#cf5d2b"/>
 
-  <polygon points="552,292 616,328 616,404 552,388" fill="#4e0e10"/>
-  <polygon points="552,292 616,328 616,344 552,308" fill="#91301c"/>
+  <rect x="390" y="132" width="146" height="86" rx="10" fill="#30384f"/>
+  <rect x="402" y="144" width="122" height="62" rx="6" fill="#7d8fa0"/>
+  <rect x="382" y="118" width="164" height="20" rx="8" fill="#f0f2f5"/>
+  <rect x="382" y="118" width="164" height="8" rx="4" fill="#ffffff"/>
+  <rect x="458" y="144" width="10" height="62" fill="#30384f"/>
 
-  <rect x="442" y="132" width="146" height="86" rx="10" fill="#30384f"/>
-  <rect x="454" y="144" width="122" height="62" rx="6" fill="#7d8fa0"/>
-  <rect x="434" y="118" width="164" height="20" rx="8" fill="#f0f2f5"/>
-  <rect x="434" y="118" width="164" height="8" rx="4" fill="#ffffff"/>
-  <rect x="510" y="144" width="10" height="62" fill="#30384f"/>
+  <polygon points="500,292 566,330 566,406 500,388" fill="#4e0e10"/>
+  <polygon points="500,292 566,330 566,346 500,308" fill="#91301c"/>
 
-  <circle cx="512" cy="400" r="80" fill="#242b33"/>
-  <circle cx="512" cy="400" r="46" fill="#44555f"/>
-  <circle cx="512" cy="400" r="22" fill="#242b33"/>
-  <circle cx="212" cy="428" r="52" fill="#242b33"/>
-  <circle cx="212" cy="428" r="28" fill="#44555f"/>
+  <circle cx="460" cy="400" r="80" fill="#242b33"/>
+  <circle cx="460" cy="400" r="46" fill="#44555f"/>
+  <circle cx="460" cy="400" r="22" fill="#242b33"/>
+  <circle cx="168" cy="428" r="52" fill="#242b33"/>
+  <circle cx="168" cy="428" r="28" fill="#44555f"/>
 
-  <rect x="600" y="350" width="176" height="64" rx="6" fill="#91301c"/>
-  <rect x="600" y="350" width="176" height="14" fill="#cf5d2b"/>
-  <rect x="594" y="412" width="188" height="20" fill="#cbd2da"/>
-  <rect x="594" y="412" width="188" height="7" fill="#ffffff"/>
-  <polygon points="714,327 717,314 764,324 761,337" fill="#965630"/>
-  <polygon points="694,339 707,335 722,380 709,385" fill="#965630"/>
-  <polygon points="674,328 684,337 652,373 642,363" fill="#965630"/>
-  <polygon points="674,305 671,318 624,308 627,295" fill="#965630"/>
-  <polygon points="694,293 681,297 666,252 679,247" fill="#965630"/>
-  <polygon points="714,304 704,295 736,259 746,269" fill="#965630"/>
-  <circle cx="694" cy="316" r="44" fill="#c29455"/>
-  <path d="M 650 316 A 44 44 0 0 1 694 272 L 694 316 Z" fill="#d5c18e"/>
-  <circle cx="694" cy="316" r="13" fill="#965630"/>
+  <polygon points="556,346 748,346 790,374 790,412 556,412" fill="#91301c"/>
+  <polygon points="556,346 748,346 790,374 790,388 748,360 556,360" fill="#cf5d2b"/>
+  <polygon points="556,392 790,392 790,412 556,412" fill="#4e0e10"/>
+  <polygon points="566,352 674,300 682,314 574,366" fill="#4e0e10"/>
+
+  <rect x="546" y="410" width="250" height="20" fill="#cbd2da"/>
+  <rect x="546" y="410" width="250" height="7" fill="#ffffff"/>
+
+  <polygon points="666,232 678,232 678,296 666,296" fill="#965630"/>
+  <polygon points="722,264 728,274 672,306 666,296" fill="#965630"/>
+  <polygon points="722,328 728,318 672,286 666,296" fill="#965630"/>
+  <polygon points="666,360 678,360 678,296 666,296" fill="#965630"/>
+  <polygon points="622,328 616,318 672,286 678,296" fill="#965630"/>
+  <polygon points="622,264 616,274 672,306 678,296" fill="#965630"/>
+  <circle cx="672" cy="296" r="40" fill="#c29455"/>
+  <path d="M 632 296 A 40 40 0 0 1 672 256 L 672 296 Z" fill="#d5c18e"/>
+  <circle cx="672" cy="296" r="12" fill="#965630"/>
 </svg>
