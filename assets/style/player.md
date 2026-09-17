@@ -223,6 +223,24 @@ because it is proven on every pedal, deck, stirrup and seat. The shaft of the hi
 has no way to hide a covering on one costume without templating the covering on the costume. That would be a
 level decision inside a slot the player owns. A player who picked the toque still wears it in July.
 
+**And it is left alone a second time, 2026-09-17, on the same measurement reached independently.** A blind run
+reported *"the toque is absent on most variants"* for `player`, and an earlier run reported a toque reading as
+a **cycling helmet** on the bicycle. Neither is a fault in this costume, and the reason is in the builder
+rather than in any SVG:
+
+- `scripts/lib/art-handoff.mjs` builds **every mounted subject** — bicycle, skateboard, toboggan, skates —
+  through `mountedCharacter`, which composes at **`variantIndex: 0`**, always and only.
+- `PLAYER_PLAN` sets `headCovering: varied({ first: 'none' })`, so **variant 0 is `none` by construction**.
+
+Those two facts together mean **no mounted render this harness can build contains a toque**, so no toque was
+misread as a helmet; what a folded-forward rider shows at 390 px is the **hair**, and the smooth rounded cap of
+the `bob` and `crop` shapes is the shell that was seen. `art-bible.md` §7.4 already records that the twenty
+`hair-*` parts are owed a redraw and a re-measurement, and that — not the toque — is where this finding
+belongs. The second report follows from the same line: with `first: 'none'` and the default `--variants 2`,
+variant 0 is bare-headed and variant 1 is drawn at random, so the toque is absent from half the figures and can
+be absent from all of them. **That is variant coverage, not drawing**, and removing or reshaping a part to
+answer it would change a picture nobody objected to.
+
 **What the parka's width rule means here.** Every `jacket` window sits inside the matching `parka` window, so
 the body span `stand-off.ts` measures is the same and no stop moves. At rest the jacket figure is narrower than
 the parka.
