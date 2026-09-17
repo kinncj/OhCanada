@@ -70,7 +70,7 @@ export interface DrillRunnerOptions {
   readonly singleSwitch: boolean;
   readonly holdMs: number;
   /**
-   * Where each card's option order comes from (ADR-0057).
+   * Where each card's option order comes from (ADR-0059).
    *
    * A stream of the runner's own — the composition root hands in
    * `random.fork('options')` — so shuffling a card's four options can never
@@ -133,7 +133,7 @@ const localised = (value: { readonly en: string; readonly fr: string }, locale: 
  * a screen, and it is worth being able to assert on it without a DOM.
  * `index`/`total` count through **this activity**, not the bank (`OQ-CARD-3`).
  *
- * **The options are shown in `order`, not as authored (ADR-0057, resolving
+ * **The options are shown in `order`, not as authored (ADR-0059, resolving
  * `OQ-CARD-2`).** The card's own "the answer is …" line reads the wording out of
  * the view it was handed, so it points at whatever is on screen; nothing below
  * here ever sees the authored order again. What the caller must not forget is
@@ -212,7 +212,7 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
       else returning.push(localised(selected.question.prompt, locale));
       /*
        * Back into the author's index space before anything is written down
-       * (ADR-0057). Every review record and every exam answer ever saved stores
+       * (ADR-0059). Every review record and every exam answer ever saved stores
        * the authored index, and correctness is `chosenIndex === correctIndex`
        * with no `correct` flag to fall back on (ADR-0027) — so passing on a
        * screen position would silently re-grade the player's whole history.
@@ -255,7 +255,7 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
     /*
      * A fresh order every time a card goes up, including for a question the
      * player has already met this sitting. A position is never allowed to
-     * become a memorable property of a card, which is the whole of ADR-0057;
+     * become a memorable property of a card, which is the whole of ADR-0059;
      * and three draws off this runner's own forked stream cannot move the
      * scheduler.
      */

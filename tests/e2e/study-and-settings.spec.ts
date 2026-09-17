@@ -145,7 +145,7 @@ test.describe('Study, on the shipped build', () => {
 
     for (let asked = 0; asked < total; asked += 1) {
       await expect(progress).toHaveText(`Question ${String(asked + 1)} of ${String(total)}`);
-      /* Four options, in the order this sitting drew them (ADR-0057), every one
+      /* Four options, in the order this sitting drew them (ADR-0059), every one
          of them a real target. Which of the four is right is deliberately not
          asserted — the feedback check below accepts either outcome. */
       await expect(card.locator('[data-testid^="option-"]')).toHaveCount(4);

@@ -1,5 +1,5 @@
 /**
- * The gate for ADR-0057: **no subject's correct answers may cluster on one
+ * The gate for ADR-0059: **no subject's correct answers may cluster on one
  * position the player can see.**
  *
  * ## The defect this exists to have caught
@@ -210,7 +210,7 @@ describe('the answer is not always in the same place', () => {
     /*
      * The gate. Halifax (`rights`), Peggy's Cove (`who-we-are`), Winnipeg
      * (`justice`) and Québec City (`history`) each failed this at 95.8%-100%
-     * before ADR-0057, and `modern-canada` — the Prairies — failed it at 100%
+     * before ADR-0059, and `modern-canada` — the Prairies — failed it at 100%
      * without the audit ever reaching it.
      */
     expect(
@@ -219,7 +219,7 @@ describe('the answer is not always in the same place', () => {
         `No more than ${String(Math.round(MAX_SHARE * 100))}% of a subject's correct answers ` +
         `may land on one of the four positions on screen. If the shuffle in ` +
         `app/domain/entities/asked-question.ts is still wired into the draw, this is a ` +
-        `real clustering; it is never fixed by re-keying content (ADR-0057).`,
+        `real clustering; it is never fixed by re-keying content (ADR-0059).`,
     ).toEqual([]);
   });
 

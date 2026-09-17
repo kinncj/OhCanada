@@ -482,7 +482,7 @@ Feature: The question card in French
   switch user. If usability testing disagrees, the change is one scenario in `TN-CARD-03`. **The exam is
   where this reasoning stops holding**, and it takes the other answer rather than adding a confirm step:
   `TN-EXAM-03` lets the answer be changed instead.
-- **`OQ-CARD-2` — are the four options shuffled?** **Answered 2026-09-17 by ADR-0057: yes, every time a card
+- **`OQ-CARD-2` — are the four options shuffled?** **Answered 2026-09-17 by ADR-0059: yes, every time a card
   is presented, from a seeded stream.** The slice-1 recommendation — keep the authored order, and tell the
   content agents not to put the answer in the same position every time — was half implemented: the order was
   kept and the agents were never told. `docs/guidelines/anatomy-of-a-question.md` told them the opposite

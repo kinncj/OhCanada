@@ -99,7 +99,7 @@ export interface ExamControllerDeps {
   readonly record: (question: ShippableQuestion, chosenIndex: number) => void;
   /**
    * A reproducible stream, from a seed, for one attempt's option order
-   * (ADR-0057 §3).
+   * (ADR-0059 §3).
    *
    * A factory and not a stream, because the exam's orders must be a pure
    * function of the *attempt* rather than of the sitting: the same attempt has
@@ -160,7 +160,7 @@ interface Running {
   /** The wording, by id. A question the bank has lost is simply absent. */
   readonly byId: ReadonlyMap<QuestionId, ShippableQuestion>;
   /**
-   * Where each question's four options are drawn, by id (ADR-0057).
+   * Where each question's four options are drawn, by id (ADR-0059).
    *
    * Built once for the whole exam rather than per question presented, because
    * `TN-EXAM-03` lets the player go back and change an answer, and options that
@@ -461,7 +461,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
       exam: unfinished,
       byId: index.value,
       /* The same orders this attempt had before it was left: `orderExam` is
-         seeded from `startedAt`, which the save carries (ADR-0057 §3). */
+         seeded from `startedAt`, which the save carries (ADR-0059 §3). */
       shownAs: orderExam(unfinished),
       timed: unfinished.remainingMs !== null,
       timeUp: false,
@@ -572,7 +572,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
   }
 
   /**
-   * One option order per question, derived from the attempt itself (ADR-0057 §3).
+   * One option order per question, derived from the attempt itself (ADR-0059 §3).
    *
    * Seeded from `exam.startedAt`, which the save already carries and which does
    * not change when an exam is left and picked back up. So `begin` and
@@ -586,7 +586,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
    * no second copy of anything to keep in step.
    *
    * A *different* attempt has a different `startedAt` and so a fresh set of
-   * orders, which is the property ADR-0057 exists for: no position is durably
+   * orders, which is the property ADR-0059 exists for: no position is durably
    * the answer's home. Stability is scoped to the one paper in front of the
    * player, and no further.
    *
@@ -643,7 +643,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
 
     /*
      * The screen presses a position; everything from here down is the author's
-     * index (ADR-0057). `ExamAnswer.correctIndex` was copied off the bank when
+     * index (ADR-0059). `ExamAnswer.correctIndex` was copied off the bank when
      * the exam was drawn and correctness is `chosenIndex === correctIndex` with
      * no `correct` flag (ADR-0027), so storing a position would score the exam
      * against the wrong key and re-grade every attempt already saved.
@@ -799,7 +799,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
     return {
       prompt: localised(question.prompt),
       /* The order the player answered in, so the review is the card they saw
-         rather than the same question rearranged under them (ADR-0057). */
+         rather than the same question rearranged under them (ADR-0059). */
       options: inOptionOrder(question.options, order).map(localised),
       chosenIndex: answer.chosenIndex === null ? null : shownAt(order, answer.chosenIndex),
       /* The answer's own record, not the bank's: a key corrected since the exam

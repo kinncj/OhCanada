@@ -1,4 +1,4 @@
-# ADR-0057: A question's options are shuffled where they are drawn, not where they are written
+# ADR-0059: A question's options are shuffled where they are drawn, not where they are written
 
 - Status: Accepted (2026-09-17)
 - Resolves `OQ-CARD-2` (`docs/stories/TN-CARD-question-card.md`), which parked the question in slice 1 and

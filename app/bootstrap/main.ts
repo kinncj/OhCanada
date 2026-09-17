@@ -478,7 +478,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    */
   const random = createSeededRandom(Date.now() >>> 0);
   /*
-   * Where every card's option order comes from (ADR-0057).
+   * Where every card's option order comes from (ADR-0059).
    *
    * One stream for the whole sitting, shared by Study, the level and the exam,
    * rather than a fork taken per consumer: `fork` is deterministic from the seed
@@ -1164,7 +1164,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       clock,
       /* Option order only, and seeded per *attempt* rather than per sitting, so
          an exam picked back up is the paper the player left rather than the
-         same questions rearranged (ADR-0057 §3). Never the exam's own draw,
+         same questions rearranged (ADR-0059 §3). Never the exam's own draw,
          which is `random.fork('exam')` and must stay a pure function of the
          seed (`TN-EXAM-02`). */
       orderStream: (seed) => createSeededRandom(seed),
@@ -1405,7 +1405,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       questions: studySource,
       record: recordAnswer,
       /* One options stream for the sitting, shared with Study: see
-         `LevelWiring.random` (ADR-0057). */
+         `LevelWiring.random` (ADR-0059). */
       random: optionsRandom,
       onExportSave: exportSave,
       saveTransfer,
@@ -1773,7 +1773,7 @@ interface LevelWiring {
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   /**
-   * Where each card's option order comes from (ADR-0057).
+   * Where each card's option order comes from (ADR-0059).
    *
    * The same stream the front door's Study uses, so the order a question is
    * drawn in keeps moving as the sitting goes on rather than restarting with
@@ -2196,7 +2196,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       announce: wiring.announce,
       /* The level's own options stream, which is the front door's: a drill taken
          on the canal and a question asked at the Peace Tower share one sitting
-         (ADR-0057). */
+         (ADR-0059). */
       random: wiring.random,
       record: (question, chosenIndex) => {
         wiring.record(question, chosenIndex);

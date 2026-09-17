@@ -67,7 +67,7 @@ export interface QuestionView {
   /**
    * The four options **in the order to draw them**, already localised.
    *
-   * Not the authored order: the caller shuffles from a seed (ADR-0057, which
+   * Not the authored order: the caller shuffles from a seed (ADR-0059, which
    * resolves `OQ-CARD-2`), and {@link QuestionView.correctIndex} points into
    * *this* list. Nothing in this file needs to know that — the card reads the
    * "the answer is …" wording straight out of this array — and nothing in this

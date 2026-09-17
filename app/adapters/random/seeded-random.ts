@@ -164,7 +164,7 @@ const sfc32 = (seed: number): (() => number) => {
  *
  * It is **not** what reorders a question's four options, though this comment
  * claimed for a long time that `TN-CARD` used it for exactly that, while no
- * caller anywhere did (ADR-0057). That job is
+ * caller anywhere did (ADR-0059). That job is
  * `app/domain/entities/asked-question.ts`, which runs its own Fisher-Yates over
  * the four positions using `next()` alone: where an option is drawn is a rule,
  * rules live in the domain (ADR-0005), and `app/ui` may not import an adapter to

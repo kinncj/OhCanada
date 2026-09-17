@@ -44,7 +44,7 @@ export interface ExamReviewItem {
   readonly prompt: string | null;
   /**
    * The four options in the order the player saw them during the exam
-   * (ADR-0057), so the review reads as the exam did rather than rearranging the
+   * (ADR-0059), so the review reads as the exam did rather than rearranging the
    * question under them. {@link ExamReviewItem.chosenIndex} and
    * {@link ExamReviewItem.correctIndex} point into this list. Empty when the
    * question is unavailable.
