@@ -238,6 +238,65 @@ describe('changing a character that already exists', () => {
   });
 });
 
+describe('the character the creator opens on', () => {
+  /** A draw that would pick a different option every time it was asked. */
+  const stream = (values: readonly number[]): (() => number) => {
+    let index = 0;
+    return () => values[index++] ?? 0;
+  };
+
+  it('draws once and opens on that same character every time (third live-site audit)', () => {
+    /*
+     * `docs/content-review.md` §8.1 keeps the draw — nothing is pre-selected —
+     * and the audit found the other half missing: every opening redrew, so a
+     * character the player was about to edit changed under them. First draw
+     * picks Parka; a second draw, if one happened, would pick Anorak.
+     */
+    const random = vi.fn(stream([0, 0.99]));
+    const { shell, at } = firstRun({ random });
+    shell.start();
+
+    at('title-play')?.click();
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('true');
+
+    at('creator-back')?.click();
+    at('title-play')?.click();
+    expect(
+      at('slot-coat-parka')?.getAttribute('aria-checked'),
+      'the creator drew a new character the player had not asked for',
+    ).toBe('true');
+    expect(random, 'the draw was made more than once').toHaveBeenCalledTimes(1);
+  });
+
+  it('still draws again when the player asks, which is what "Surprise me" is for', () => {
+    const { shell, at } = firstRun({ random: stream([0, 0.99]) });
+    shell.start();
+    at('title-play')?.click();
+    expect(at('slot-coat-parka')?.getAttribute('aria-checked')).toBe('true');
+
+    at('randomise-character')?.click();
+    expect(at('slot-coat-anorak')?.getAttribute('aria-checked')).toBe('true');
+
+    /* And the character they asked for is the one the next opening shows. */
+    at('creator-back')?.click();
+    at('title-play')?.click();
+    expect(at('slot-coat-anorak')?.getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('opens on the saved character rather than a draw, when there is one', () => {
+    const random = vi.fn(stream([0.99]));
+    const { shell, at } = mount({
+      creator: { slots: SLOTS, required: true, initialSelection: { coat: 'anorak' } },
+      random,
+    });
+    shell.start();
+    at('title-play')?.click();
+
+    expect(at('slot-coat-anorak')?.getAttribute('aria-checked')).toBe('true');
+    expect(random, 'a saved character was redrawn').not.toHaveBeenCalled();
+  });
+});
+
 describe('the first run, end to end', () => {
   it('goes title -> creator -> level select', () => {
     const onCreateCharacter = vi.fn();

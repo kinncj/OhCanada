@@ -63,6 +63,7 @@ import type { LevelId } from '@domain/ids';
 
 import {
   createCharacterCreator,
+  randomSelection,
   type CharacterCreator,
   type CharacterSelection,
   type CreatorArtFactory,
@@ -382,6 +383,34 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
   }
 
   /**
+   * The character every opening of the creator starts from — drawn **once**.
+   *
+   * `docs/content-review.md` §8.1 forbids a pre-selected default ("the creator
+   * randomises on open"), so the first character a player meets is a uniform
+   * draw and not a house character. What the third live-site audit found is the
+   * other half of that rule going missing: the draw was remade for each opening,
+   * so a character the player was about to edit changed under them without their
+   * asking. Both halves hold here — **random once, then theirs**:
+   *
+   *  - the first opening draws, uniformly, over every option in every slot;
+   *  - every later opening — Back to the title and Play again, Settings'
+   *    "Change my character", a language change — opens on that same character;
+   *  - "Surprise me" inside the creator is the way to another draw, which is the
+   *    player asking.
+   *
+   * The draw belongs to this sitting. Keeping it across a reload would mean
+   * writing a character the player has never accepted, and a save that has a
+   * character is not a first run (`TN-FIRSTRUN`, ruling 1) — the creator would
+   * be skipped for a face nobody chose. A new sitting draws again, because
+   * nothing was promised about it and nothing was written.
+   */
+  function openingSelection(): CharacterSelection {
+    const drawn = selection ?? randomSelection(slotsFor(store.current.locale), options.random ?? Math.random);
+    selection = drawn;
+    return drawn;
+  }
+
+  /**
    * The setting **or** the device's preference, which is `resolveMotion`'s rule
    * and the one `applySettings` writes on the page. Reading the setting alone
    * left a player whose phone asks for less motion with a creator that said
@@ -479,7 +508,9 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       locale,
       primary: 'done',
       ...(options.announce === undefined ? {} : { announce: options.announce }),
-      ...(selection === undefined ? {} : { initialSelection: selection }),
+      /* The character the player has, or the one this sitting drew for them —
+         never a new one because Settings was the door they came through. */
+      initialSelection: openingSelection(),
       ...(options.random === undefined ? {} : { random: options.random }),
       ...(options.now === undefined ? {} : { now: options.now }),
       singleSwitch: store.current.singleSwitch,
@@ -499,7 +530,10 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
          `character/changed` is emitted (`TN-FIRSTRUN-04`). The selection the
          player was playing with is dropped by re-reading it on the next open. */
       onBack: () => {
-        selection = savedSelection;
+        /* What the player has, and — before they have saved one — the character
+           this sitting is already showing them. Never `undefined`, which would
+           be a new draw on the next opening (`openingSelection`). */
+        selection = savedSelection ?? selection;
         closeCharacterEditor();
       },
     });
@@ -632,7 +666,9 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
       slots: slotsFor(locale),
       locale,
       ...(options.announce === undefined ? {} : { announce: options.announce }),
-      ...(selection === undefined ? {} : { initialSelection: selection }),
+      /* The same character every time this screen opens (see `openingSelection`),
+         and never a fresh draw the player did not ask for. */
+      initialSelection: openingSelection(),
       ...(options.random === undefined ? {} : { random: options.random }),
       ...(options.now === undefined ? {} : { now: options.now }),
       singleSwitch: store.current.singleSwitch,
