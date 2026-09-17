@@ -19,13 +19,40 @@ import { buildPage } from './support/fake-dom';
 
 const sheet = (): string => injectScreenStyles(buildPage().document).textContent ?? '';
 
-/** The `.tn-hud` rule itself, and not the rules for what is inside it. */
-const hudBlock = (): string => {
+/**
+ * Every rule body whose selector list names exactly this selector.
+ *
+ * `.tn-hud` appears in the sheet as a rule of its own, inside the grouped
+ * `.tn-screen, .tn-hud { hyphens: manual }`, inside a reduced-motion group, and
+ * as the start of `.tn-hud button`, `.tn-hud p`, `.tn-hud :focus-visible` and
+ * the rest. Taking the first `\n.tn-hud {` found the hyphens rule and reported
+ * every declaration below as missing — which is what this helper got wrong, and
+ * why it now collects candidates instead of trusting the first match.
+ */
+const rulesFor = (selector: string): readonly string[] => {
   const css = sheet();
-  const start = css.indexOf('\n.tn-hud {');
-  expect(start, 'the sheet has no .tn-hud block').toBeGreaterThan(-1);
-  const end = css.indexOf('}', start);
-  return css.slice(start, end);
+  const bodies: string[] = [];
+  let from = 0;
+  for (;;) {
+    const at = css.indexOf(selector, from);
+    if (at === -1) return bodies;
+    from = at + selector.length;
+    const open = css.indexOf('{', from);
+    if (open === -1) return bodies;
+    /* Whole selector, and the last one in its list: `.tn-hud {` or
+       `.tn-screen,\n.tn-hud {`, never `.tn-hud button {` or `.tn-hud,\n…`. */
+    if (!/^[\s]*$/.test(css.slice(from, open))) continue;
+    const close = css.indexOf('}', open);
+    if (close === -1) return bodies;
+    bodies.push(css.slice(open + 1, close));
+  }
+};
+
+/** The rule that lays the strip out, told from the others by what it declares. */
+const hudBlock = (): string => {
+  const laid = rulesFor('.tn-hud').filter((body) => body.includes('inset-block-end'));
+  expect(laid, 'the sheet has no .tn-hud rule that places the strip').toHaveLength(1);
+  return laid[0] ?? '';
 };
 
 const declaration = (block: string, property: string): string =>
