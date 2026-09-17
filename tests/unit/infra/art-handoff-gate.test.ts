@@ -3256,8 +3256,19 @@ describe('a verdict is about a picture, and the picture moves', () => {
       return;
     }
     for (const id of unvouchable) {
-      expect(gate.stdout, `${id} is unvouchable and was printed as a pass`).not.toContain(`PASS ${id}`);
-      expect(gate.output, `${id} is unvouchable and was not reported`).toContain(`STALE ART - ${id}`);
+      /*
+       * Matched to the end of the id, not as a prefix. `PASS player-on-a-toboggan`
+       * contains `PASS player`, so a bare substring check failed the moment one
+       * subject's art moved while another whose id extends it still passed -
+       * which is what a round of redraws produces. The scorer writes
+       * `PASS <id> - identified on …`, so the separator is what ends the id.
+       */
+      expect(gate.stdout, `${id} is unvouchable and was printed as a pass`).not.toContain(
+        `PASS ${id} -`,
+      );
+      expect(gate.output, `${id} is unvouchable and was not reported`).toContain(
+        `STALE ART - ${id} -`,
+      );
     }
     expect(gate.status, gate.output).toBe(1);
   });
