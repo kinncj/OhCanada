@@ -231,6 +231,18 @@ resting on the sentence the landmark just told (the same `source.quote`, normali
 does, in `app/application/content/proposition.ts`) is asked first. The end of a level earns its stamp only
 when the task is done, the level sets none, or the stamp is already held (`app/domain/entities/level-end.ts`).
 
+**One sentence, one fact (ADR-0052).** A stamp says "I went and did this" and never "I know this", so no
+level has a pass mark and none can be failed; what a wrong answer costs is that the question comes back, and
+the completion card counts those and offers a control to them. The rule that keeps the card honest binds a
+**content** field: a quest's `doneLine` may describe where the player went, what the place was, and that the
+errand is finished — and nothing about answering, because the two rows that count answers are recomputed on
+every showing and a sentence authored months ago cannot be. It is held in two places and neither holds all of
+it: a contract test over every `doneLine` in both languages catches the word families, and the card's own
+structure keeps the counting rows apart from everything else. A warm sentence using none of those words still
+passes, and that residual is named in the ADR rather than left to be inferred. Nothing in it reaches the
+scheduler: a missed question already outranks the rest of the draw, so the card reports behaviour rather than
+requesting it.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]
