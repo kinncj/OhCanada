@@ -258,7 +258,7 @@ test.describe('"Your progress" in Settings', () => {
     expect(await focusedTestId(page)).not.toBe('save-import-file');
   });
 
-  test('one switch reaches "Open a file", and inside the confirmation only its two answers', async ({
+  test('one switch reaches "Open a file", and the highlight stays inside the confirmation', async ({
     page,
   }) => {
     await open(page, { singleSwitch: true });
@@ -419,7 +419,9 @@ test.describe('"Delete my progress" in Settings', () => {
     await expect(page.getByTestId('save-clear-confirm')).toBeVisible();
   });
 
-  test('one switch reaches it, and inside the question only its two answers', async ({ page }) => {
+  test('one switch reaches it, opens on the safe answer, and stops on the question next', async ({
+    page,
+  }) => {
     await open(page, { singleSwitch: true });
     const control = page.getByTestId('save-clear');
     for (let press = 0; press < 60; press += 1) {

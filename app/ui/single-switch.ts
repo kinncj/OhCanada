@@ -57,6 +57,30 @@ export const HIGHLIGHT_ATTRIBUTE = 'data-switch-highlight';
 export const SWITCH_LABEL_ATTRIBUTE = 'data-switch-label';
 
 /**
+ * Puts something that is **not** a control in the ring.
+ *
+ * The ring is built from controls, because on every other screen the things
+ * worth stopping on are the things that do something. A confirmation is the
+ * exception, and the reason is arithmetic: it draws exactly two answers, a ring
+ * of two wraps, so **every item in it is one advance from every other**. The
+ * order the two answers are drawn in cannot change that, and neither can the
+ * item the highlight opens on — from the safe answer the next advance is the
+ * destructive one, whichever way round they sit.
+ *
+ * So `app/ui/confirm.ts` marks the **question** a stop, and the scan reads the
+ * cost out again between the safe answer and the answer that cannot be undone.
+ * Nothing else in the game sets this attribute; it is opt-in, and a screen that
+ * does not use it has the ring it always had.
+ *
+ * A stop is not a control and must not pretend to be one: it carries no role,
+ * stays out of the Tab order with `tabindex="-1"` (`app/ui/focus-trap.ts`
+ * excludes a negative `tabindex`, so a keyboard player never meets it), and what
+ * a long press on it does is the screen's own business — never a confirmation,
+ * never a dismissal.
+ */
+export const SWITCH_STOP_ATTRIBUTE = 'data-switch-stop';
+
+/**
  * The longest hold an item is willing to demand, in milliseconds.
  *
  * This exists for exactly one control and it is the reason the control is
@@ -114,6 +138,7 @@ export interface SwitchRing {
 }
 
 const DEFAULT_ITEM_SELECTOR = [
+  `[${SWITCH_STOP_ATTRIBUTE}]`,
   'button:not([disabled]):not([aria-disabled="true"])',
   '[role="radio"]:not([aria-disabled="true"])',
   '[role="switch"]:not([aria-disabled="true"])',

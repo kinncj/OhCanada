@@ -413,6 +413,24 @@ const CSS = `
   border-width: 0.25rem;
 }
 
+/*
+  A confirmation's question is a stop in the switch ring (app/ui/confirm.ts),
+  so the rule above lands on a heading that has no border of its own: it would
+  gain a quarter-rem double edge on four sides the instant the highlight
+  arrived, growing the card and shifting the two answers under the player's
+  thumb. The edge is therefore always drawn and only ever changes colour, and it
+  is drawn outside the line the words already sat on, so marking the question a
+  stop moves nothing on a screen nobody is scanning.
+*/
+.tn-screen__question {
+  border: 0.25rem double transparent;
+  border-radius: var(--tn-radius);
+  margin-inline: -0.25rem;
+  /* A switch user cannot scroll: leave room above when the highlight lands. */
+  scroll-margin-block: 1rem;
+}
+.tn-screen__question[data-switch-highlight="true"] { border-color: var(--tn-focus); }
+
 .tn-screen__group {
   background: var(--tn-paper-2);
   border: var(--tn-edge-width) solid var(--tn-edge-soft);
