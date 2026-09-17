@@ -357,15 +357,23 @@ describe('the map above the route', () => {
     expect(at('level-select-list')?.querySelectorAll('li')).toHaveLength(10);
   });
 
-  it('carries no words, in either language, only the numbers the cards carry', () => {
+  it('carries no words, in either language, and no text at all', () => {
     /* No place name baked into the page, no caption, and no sentence about
-       which way the journey runs (`OQ-MAP-3`). Each pin carries its stop's
-       numeral, which is the same in both languages. */
+       which way the journey runs (`OQ-MAP-3`). The numerals are data the
+       stylesheet draws, not text (TN-MAP), so a reader hears the map as
+       nothing and the cards say "Level N" instead. */
     const { at, screen } = open();
     const numerals = SPINE.map(([number]) => String(number)).join('');
-    expect(at('level-select-map')?.textContent).toBe(numerals);
+    const drawn = (): string =>
+      [...(at('level-select-map')?.querySelectorAll('.tn-journey__pin') ?? [])]
+        .map((pin) => pin.getAttribute('data-map-number') ?? '')
+        .join('');
+
+    expect(at('level-select-map')?.textContent).toBe('');
+    expect(drawn()).toBe(numerals);
     screen.setLocale('fr');
-    expect(at('level-select-map')?.textContent).toBe(numerals);
+    expect(at('level-select-map')?.textContent).toBe('');
+    expect(drawn()).toBe(numerals);
   });
 
   it('numbers each pin with the number on its card, so a dot can be matched to a place by sight', () => {
@@ -374,7 +382,7 @@ describe('the map above the route', () => {
     expect(pins).toHaveLength(10);
     for (const pin of pins) {
       const handle = pin.getAttribute('data-map-handle') ?? '?';
-      const numeral = pin.querySelector('.tn-journey__pin')?.textContent ?? '';
+      const numeral = pin.querySelector('.tn-journey__pin')?.getAttribute('data-map-number') ?? '';
       expect(numeral, handle).toMatch(/^\d+$/u);
       const cardNumber = at(`level-card-${handle}`)?.querySelector('.tn-levels__number')?.textContent;
       expect(cardNumber, handle).toBe(`Level ${numeral}`);
