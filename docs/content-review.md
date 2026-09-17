@@ -154,6 +154,16 @@ carries cultural meaning, or stands on a named territory, is governed by §3–�
 says. In particular, a level's `territory.nations` is not a label and this permission does not reach it —
 §3.1's rule that an entry must be a name the cited source prints stands exactly as written.
 
+**The teaching surface is about to grow, and all of it is governed here (ADR-0057).** A level may ask only
+what that level taught, and closing the gap means roughly 64 to 126 new guide-sourced teaching claims written
+into quest dialogue and POI blurbs across the ten levels. Every one of them is a **depiction** under the table
+above from the moment it is drafted: a dialogue line is something an NPC says, and who is drawn saying it, and
+a blurb is a POI blurb. Volume is not a reason to route around this document, and an author closing a deficit
+against a date is exactly the author most likely to try. In particular, §9.1's terms, §9.3's endonyms and
+tense, and §9.4's bounds on questions about Indigenous peoples apply to a teaching line word for word — and
+§1's shipping rule still blocks anything in its blocked list while Tier 3 is empty, however much teaching is
+owed.
+
 ---
 
 ## 3. Rule 1 — Name the nation depicted
