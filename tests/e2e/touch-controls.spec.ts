@@ -11,6 +11,7 @@ import {
 
 import { reachLevelSelect } from './front-door';
 import { START_LEVEL } from './start-level';
+import { holdToMove } from './held-drive';
 import { walkWithProbe } from './walk';
 
 /**
@@ -249,6 +250,13 @@ async function waitForIntent(page: Page, move: number): Promise<void> {
 }
 
 async function openLevel(page: Page): Promise<CDPSession> {
+  /*
+   * A player who holds a finger to move (ADR-0058). Set here rather than in a
+   * `beforeEach`, because this file also holds the auto-move scenario, and that
+   * one has to meet the shipped default: it is the spec that proves a player
+   * gets this behaviour from the switch they can see.
+   */
+  await holdToMove(page);
   await page.goto(LEVEL_URL);
   await page.waitForSelector('[data-testid="playable"]');
   /* One frame of physics before anything is asked of the level: the camera
@@ -755,10 +763,12 @@ test.describe('auto-move, from the switch a player can actually reach', () => {
     await page.goto('./?e2e=1');
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
 
+    /* Since ADR-0058 the switch is already on for a player who has changed
+       nothing, so this reads it rather than sets it. The rest of the scenario is
+       unchanged: what it proves is that the option a player can see in Settings
+       is the one the level obeys. */
     await page.locator('[data-testid="title-settings"]').click();
     const toggle = page.locator('[data-testid="setting-auto-move"]');
-    await expect(toggle).toHaveAttribute('aria-checked', 'false');
-    await toggle.click();
     await expect(toggle).toHaveAttribute('aria-checked', 'true');
     await page.locator('[data-testid="settings-close"]').click();
 

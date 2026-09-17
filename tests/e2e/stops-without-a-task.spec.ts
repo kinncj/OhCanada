@@ -6,6 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { sharesProposition } from '@application/content/proposition';
 import { hasCopyRow, text } from '@ui/copy';
 
+import { holdToMove } from './held-drive';
 import { walkInLegs } from './walk';
 
 /**
@@ -183,6 +184,15 @@ async function rideTo(page: Page, prompt: string): Promise<boolean> {
   );
   return found === true;
 }
+
+/*
+ * A player who holds a control to move (ADR-0058): this walk is made of legs
+ * that hold and let go, and what it asserts is what a stop offers, not what
+ * carried the player to it.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('a stop with no task running asks only what it told (ADR-0048)', () => {
   test('on the Prairies with the task declined, each stop asks about itself or nothing, and nothing twice', async ({

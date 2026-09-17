@@ -28,6 +28,22 @@ import type { CharacterId, EpochMillis, LevelId, LocaleCode, QuestId } from '@do
  * the same saves (ADR-0036).
  */
 
+/**
+ * The settings a seeded save carries: the shipped defaults, with auto-walk off.
+ *
+ * Off because these saves exist for scenarios about quests, cards and the end of
+ * a level, and every one of them walks the player there by holding a control
+ * (`walk.ts`). Since ADR-0058 the shipped default walks by itself, so a seeded
+ * save that took the defaults whole would put a second driver into scenarios
+ * that are not about driving. `tests/e2e/held-drive.ts` says the same thing for
+ * the specs that seed no save of their own, and
+ * `tests/e2e/auto-walk-by-default.spec.ts` is where the default itself is proved.
+ */
+const seededSettings = (locale: 'en' | 'fr' = 'en') => ({
+  ...defaultSettings(locale as LocaleCode),
+  autoMove: false,
+});
+
 /** As much of a quest document as a seeded save needs. */
 export interface SeededQuest {
   readonly id: string;
@@ -104,7 +120,7 @@ function seededCharacter(): PlayerCharacter {
 export function finishedSave(quest: SeededQuest): string {
   const now = Date.now() as EpochMillis;
   const level = quest.levelId as LevelId;
-  let progress = newProgress(defaultSettings('en' as LocaleCode), [level]);
+  let progress = newProgress(seededSettings(), [level]);
   progress = withCharacter(progress, seededCharacter());
   progress = withQuestState(progress, level, {
     questId: quest.id as QuestId,
@@ -134,7 +150,7 @@ export function oneAnswerFromDoneSave(quest: SeededQuest): string {
   }
   const now = Date.now() as EpochMillis;
   const level = quest.levelId as LevelId;
-  const progress = withQuestState(newProgress(defaultSettings('en' as LocaleCode), [level]), level, {
+  const progress = withQuestState(newProgress(seededSettings(), [level]), level, {
     questId: quest.id as QuestId,
     status: 'active',
     stepIndex: lastIndex,
@@ -168,7 +184,7 @@ export function activeQuestSave(quest: SeededQuest, saved: SavedTask): string {
   const now = Date.now() as EpochMillis;
   const level = quest.levelId as LevelId;
   const settings = {
-    ...defaultSettings((saved.locale ?? 'en') as LocaleCode),
+    ...seededSettings(saved.locale ?? 'en'),
     textScale: saved.textScale ?? 1,
   };
   const progress = withQuestState(newProgress(settings, [level]), level, {

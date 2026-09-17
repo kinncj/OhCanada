@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 import { expect, test, type CDPSession, type Page } from '@playwright/test';
 
+import { holdToMove } from './held-drive';
 import { START_LEVEL } from './start-level';
 
 /**
@@ -237,6 +238,18 @@ async function touch(
 }
 
 /* --------------------------------------------------------------- scenarios -- */
+
+/*
+ * A player who holds a control to move (ADR-0058).
+ *
+ * The game walks by itself for anybody who has changed nothing, and every
+ * scenario below is about a *held* drive — where a hold comes to rest, what
+ * holding on does not overrule, what a release glides. That precondition used to
+ * be the shipped default and is now a choice, so the spec states it.
+ */
+test.beforeEach(async ({ page }) => {
+  await holdToMove(page);
+});
 
 test.describe('holding to move stops at each thing a player can choose (TN-REACH-09)', () => {
   test('a held key comes to rest at the first thing, and holding on does not move it', async ({

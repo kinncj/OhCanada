@@ -112,7 +112,10 @@ test.describe('under forced colours', () => {
     await open(page, { screen: 'settings', motion: 'reduced' });
     const placed = await knobPlacement(page, 'setting-reduced-motion');
     expect(placed, 'the knob of an on switch is not at the end of its track').toBe('end');
-    expect(await knobPlacement(page, 'setting-auto-move')).toBe('start');
+    /* A switch that is *off*, and no longer auto-move: that one ships on
+       (ADR-0058), so it would prove the same thing twice and nothing about the
+       off state. "Easier-to-read font" is off in every scan on this page. */
+    expect(await knobPlacement(page, 'setting-dyslexia-font')).toBe('start');
   });
 });
 
@@ -416,7 +419,7 @@ test.describe('Settings', () => {
     const fills = await page.evaluate(() => {
       const fill = (id: string): string =>
         getComputedStyle(document.querySelector(`[data-testid="${id}"]`) as Element).backgroundColor;
-      return { on: fill('setting-reduced-motion'), off: fill('setting-auto-move'), onWords: getComputedStyle(document.querySelector('[data-testid="setting-reduced-motion"]') as Element).color };
+      return { on: fill('setting-reduced-motion'), off: fill('setting-dyslexia-font'), onWords: getComputedStyle(document.querySelector('[data-testid="setting-reduced-motion"]') as Element).color };
     });
     expect(fills.on).toBe('rgb(0, 0, 0)');
     expect(fills.onWords).toBe('rgb(255, 255, 255)');
@@ -424,7 +427,10 @@ test.describe('Settings', () => {
     /* And never by colour alone: the word, and the knob's place on its track. */
     await expect(page.getByTestId('setting-reduced-motion')).toContainText('On');
     expect(await knobPlacement(page, 'setting-reduced-motion')).toBe('end');
-    expect(await knobPlacement(page, 'setting-auto-move')).toBe('start');
+    /* A switch that is *off*, and no longer auto-move: that one ships on
+       (ADR-0058), so it would prove the same thing twice and nothing about the
+       off state. "Easier-to-read font" is off in every scan on this page. */
+    expect(await knobPlacement(page, 'setting-dyslexia-font')).toBe('start');
   });
 
   test('in high contrast and French at 200 %, is clean and its contrast is known', async ({ page }) => {

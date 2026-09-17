@@ -175,12 +175,16 @@ const waitForRest = (page: Page): Promise<unknown> =>
   );
 
 /**
- * Turn auto-move on through the switch a player would use, then open the level
- * the map opens.
+ * Open the level the map opens, as a player who has changed nothing.
  *
- * Not `renderer.setAutoMove` and not a query parameter: the whole claim is that
- * a player can get this behaviour, and a test that pokes the adapter would pass
- * on a build where the settings screen had been unplugged.
+ * **Auto-move is not turned on here, and that is the point since ADR-0058: it is
+ * already on.** The switch is still read through the settings screen a player
+ * would use — not `renderer.setAutoMove` and not a query parameter — because the
+ * claim is that a player *gets* this behaviour, and a test that poked the
+ * adapter would pass on a build where the settings screen had been unplugged.
+ * What changed is which way the assertion points: the screen has to show the
+ * shipped default as on, and the level below has to move without anybody
+ * touching it.
  */
 async function playWithAutoMove(page: Page): Promise<void> {
   await page.goto('./?e2e=1');
@@ -188,9 +192,11 @@ async function playWithAutoMove(page: Page): Promise<void> {
 
   await page.locator('[data-testid="title-settings"]').click();
   const toggle = page.locator('[data-testid="setting-auto-move"]');
-  await expect(toggle).toHaveAttribute('aria-checked', 'false');
-  await toggle.click();
-  await expect(toggle).toHaveAttribute('aria-checked', 'true');
+  await expect(
+    toggle,
+    'a fresh profile did not ship with "Move by itself" on, so nothing below is about the default',
+  ).toHaveAttribute('aria-checked', 'true');
+  await expect(toggle).toContainText('On');
   await page.locator('[data-testid="settings-close"]').click();
 
   await reachLevelSelect(page);

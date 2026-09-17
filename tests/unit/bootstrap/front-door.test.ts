@@ -1184,14 +1184,34 @@ describe('the settings a level has to obey', () => {
     );
   });
 
-  it('follows the toggle while the game is running', async () => {
+  it('follows the toggle while the game is running, in both directions', async () => {
     await boot('');
     hoisted.state.autoMove = [];
 
+    /* Off first, because a fresh save now has it *on* (ADR-0058) and setting a
+       store field to the value it already holds notifies nobody. Turning it off
+       is also the direction this default made load-bearing: it is the one a
+       player who does not want to be walked has to be able to take. */
     const store = shellOption<{ set: (key: string, value: unknown) => void }>('store');
-    store.set('autoMove', true);
+    store.set('autoMove', false);
+    expect(hoisted.state.autoMove, 'turning auto-move off did not reach the scene').toEqual([
+      false,
+    ]);
 
-    expect(hoisted.state.autoMove, 'turning auto-move on did not reach the scene').toEqual([true]);
+    store.set('autoMove', true);
+    expect(hoisted.state.autoMove, 'turning auto-move back on did not reach the scene').toEqual([
+      false,
+      true,
+    ]);
+  });
+
+  it('starts the scene walking, from a save nobody has edited (ADR-0058)', async () => {
+    await boot('');
+
+    /* The half a unit test can reach of "a fresh player walks": the value the
+       composition root hands the renderer at boot. That it then *moves* is
+       `tests/e2e/auto-walk-by-default.spec.ts`, on the shipped build. */
+    expect(hoisted.state.autoMove.at(0), 'a fresh save did not start the level walking').toBe(true);
   });
 
   it('tells the renderer about "Less movement" at boot, from the save', async () => {
