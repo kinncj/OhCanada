@@ -1,4 +1,11 @@
-node_modules/
+# No trailing slash, on purpose. `node_modules/` matches a directory and NOT a
+# SYMLINK of that name, so an agent working in a git worktree - where linking the
+# dependencies from the main checkout is the normal setup - can `git add -A` and
+# commit a link to an absolute path on one machine. That happened: a
+# `node_modules -> /home/.../OhCanada/node_modules` blob reached a pushed branch
+# and `git status` reported it as a tracked deletion the moment the link was
+# tidied away.
+node_modules
 
 # Anchored to the repository root on purpose. An unanchored `dist/` also matches
 # `assets/dist/`, which silently deleted the tracked `assets/dist/.gitkeep` and
