@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "mncfn-treaty-lands-and-territory",
   "title": "Treaty Lands & Territory - Mississaugas of the Credit First Nation",
-  "publisher": "Mississaugas of the Credit First Nation (MCFN)",
+  "publisher": {
+    "en": "Mississaugas of the Credit First Nation (MCFN)",
+    "fr": "Mississaugas of the Credit First Nation (MCFN)"
+  },
   "edition": "Nation website, Treaty Lands & Territory page, fetched 13 September 2026",
   "url": "https://mncfn.ca/treaty-lands-and-territory/",
   "file": "mncfn-treaty-lands-and-territory.html",

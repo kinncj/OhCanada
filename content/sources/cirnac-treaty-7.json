@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "cirnac-treaty-7",
   "title": "Treaty Texts: Treaty and Supplementary Treaty No. 7",
-  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "publisher": {
+    "en": "Crown-Indigenous Relations and Northern Affairs Canada",
+    "fr": "Relations Couronne-Autochtones et Affaires du Nord Canada"
+  },
   "edition": "Transcription of the 1966 Queen's Printer reprint of the 1877 edition, web page fetched 9 September 2026",
   "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028793/1581292336658",
   "file": "cirnac-treaty-7.html",

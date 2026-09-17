@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "fhqtc-member-first-nations",
   "title": "Member First Nations - File Hills Qu'Appelle Tribal Council",
-  "publisher": "File Hills Qu'Appelle Tribal Council (FHQTC)",
+  "publisher": {
+    "en": "File Hills Qu'Appelle Tribal Council (FHQTC)",
+    "fr": "File Hills Qu'Appelle Tribal Council (FHQTC)"
+  },
   "edition": "Tribal council website, Member First Nations page, fetched 13 September 2026",
   "url": "https://www.fhqtc.com/member-first-nations",
   "file": "fhqtc-member-first-nations.html",

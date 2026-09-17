@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "aantc-home",
   "title": "AANTC - Algonquin Anishinabeg Nation Tribal Council language resources",
-  "publisher": "Algonquin Anishinabeg Nation Tribal Council (AANTC / Conseil tribal de la nation algonquine anishinabeg, CTNAA)",
+  "publisher": {
+    "en": "Algonquin Anishinabeg Nation Tribal Council (AANTC / Conseil tribal de la nation algonquine anishinabeg, CTNAA)",
+    "fr": "Algonquin Anishinabeg Nation Tribal Council (AANTC / Conseil tribal de la nation algonquine anishinabeg, CTNAA)"
+  },
   "edition": "Tribal council language-resources website, English home page (en_CA), fetched 13 September 2026",
   "url": "https://anishinabemowin.ca/en_CA/",
   "file": "aantc-home.html",

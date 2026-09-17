@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "mncfn-toronto-purchase-treaty-13",
   "title": "The Toronto Purchase Treaty, No. 13 (1805)",
-  "publisher": "Mississaugas of the Credit First Nation",
+  "publisher": {
+    "en": "Mississaugas of the Credit First Nation",
+    "fr": "Mississaugas of the Credit First Nation"
+  },
   "edition": "Web page posted 3 November 2020, fetched 8 September 2026",
   "url": "https://mncfn.ca/the-toronto-purchase-treaty-no-13-1805/",
   "file": "mncfn-toronto-purchase-treaty-13.html",

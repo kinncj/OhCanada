@@ -51,7 +51,10 @@
         "evidence": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service. Mining remains a significant part of the economy. The White Pass and Yukon Railway opened from Skagway in neighbouring Alaska to the territorial capital, Whitehorse in 1900"
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.12,

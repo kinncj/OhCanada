@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "kdfn-about-us",
   "title": "About us - Kwanlin Dün First Nation",
-  "publisher": "Kwanlin Dün First Nation",
+  "publisher": {
+    "en": "Kwanlin Dün First Nation",
+    "fr": "Kwanlin Dün First Nation"
+  },
   "edition": "Nation website, About us page, fetched 13 September 2026",
   "url": "https://www.kwanlindun.com/about/",
   "file": "kdfn-about-us.html",

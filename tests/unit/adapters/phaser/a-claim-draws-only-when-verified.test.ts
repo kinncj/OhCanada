@@ -503,7 +503,14 @@ describe('the same document, one verdict written both ways', () => {
          draw it. */
       expect(granted.about.statement.en).toContain('Halifax');
       expect(granted.about.statement.fr.length).toBeGreaterThan(0);
-      expect(granted.about.publisher.length).toBeGreaterThan(0);
+      /* Both halves, because the panel draws the one matching the language in
+         force and a publisher carried only in English put an English department
+         name under a French sentence. The exact strings are pinned to the cited
+         register, per language, by
+         tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts;
+         what matters here is that the adapter carries both through. */
+      expect(granted.about.publisher.en.length).toBeGreaterThan(0);
+      expect(granted.about.publisher.fr.length).toBeGreaterThan(0);
       expect(granted.about.sourceUrl).toMatch(/^https?:\/\//);
       /* Halifax names nobody, and that is the point of ADR-0051: *Discover
          Canada* names no people for this place, and a statement names only what

@@ -81,10 +81,16 @@ const minimal = (): Record<string, unknown> => ({
         evidence: 'Testville is on the territory of the Testville First Nation.',
       },
     },
-    /* Who published that page. One citation, one publisher (ADR-0051): the
-       `nationSource` block that used to sit here named where the NAMES came
-       from, and the panel drew it as though it named where the sentence did. */
-    sourcePublisher: 'The Testville Register',
+    /* Who published that page, in both languages. One citation, one publisher
+       (ADR-0051): the `nationSource` block that used to sit here named where the
+       NAMES came from, and the panel drew it as though it named where the
+       sentence did. The two halves differ here on purpose — the parser carries
+       the whole `LocalizedText` through, and a fixture whose `fr` echoed its
+       `en` would pass whether it did or not. */
+    sourcePublisher: {
+      en: 'The Testville Register',
+      fr: 'Le Registre de Testville',
+    },
   },
   camera: {
     followLerp: 0.2,
@@ -711,7 +717,10 @@ describe('a territory statement names only what its source names (ADR-0051)', ()
     expect(result.value.about).toMatchObject({
       kind: 'statement',
       nations: ['Testville First Nation'],
-      publisher: 'The Testville Register',
+      /* Both halves, carried through whole: the language is the composition
+         root's to resolve, and an adapter that dropped one half would leave the
+         French panel with nothing to draw but the English name. */
+      publisher: { en: 'The Testville Register', fr: 'Le Registre de Testville' },
       sourceUrl: 'https://example.invalid/testville',
     });
   });
@@ -728,7 +737,8 @@ describe('a territory statement names only what its source names (ADR-0051)', ()
        panel draws no heading over an empty list already
        (tests/unit/ui/about-this-place.test.ts). */
     expect(result.value.about.statement.en.length).toBeGreaterThan(0);
-    expect(result.value.about.publisher).toBe('The Testville Register');
+    expect(result.value.about.publisher.en).toBe('The Testville Register');
+    expect(result.value.about.publisher.fr).toBe('Le Registre de Testville');
     expect(result.value.about.sourceUrl).toBe('https://example.invalid/testville');
   });
 
@@ -760,7 +770,19 @@ describe('a territory statement names only what its source names (ADR-0051)', ()
     ],
     ['a name that is not a name', { nations: [42] }],
     ['no publisher for the page it cites', { sourcePublisher: undefined }],
-    ['a publisher that is only spaces', { sourcePublisher: '   ' }],
+    /* One string was the shape until the panel's French line was fixed, and it
+       is the shape that drew an English publisher under a French sentence. It
+       is refused outright rather than read as the English half and left to a
+       French panel with nothing of its own to draw. */
+    ['a publisher that is one string rather than two', { sourcePublisher: '   ' }],
+    [
+      'a publisher with no French name for the French panel to draw',
+      { sourcePublisher: { en: 'The Testville Register' } },
+    ],
+    [
+      'a publisher whose French half is empty',
+      { sourcePublisher: { en: 'The Testville Register', fr: '' } },
+    ],
   ])('refuses %s', (_label, patch) => {
     const result = withTerritory(patch as Record<string, unknown>);
     expect(result.ok).toBe(false);

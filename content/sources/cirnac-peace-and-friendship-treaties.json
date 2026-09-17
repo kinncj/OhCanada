@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "cirnac-peace-and-friendship-treaties",
   "title": "Peace and Friendship Treaties",
-  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "publisher": {
+    "en": "Crown-Indigenous Relations and Northern Affairs Canada",
+    "fr": "Relations Couronne-Autochtones et Affaires du Nord Canada"
+  },
   "edition": "Web page under Negotiations in Atlantic Canada, fetched 8 September 2026",
   "url": "https://www.rcaanc-cirnac.gc.ca/eng/1100100028589/1539608999656",
   "file": "cirnac-peace-and-friendship-treaties.html",

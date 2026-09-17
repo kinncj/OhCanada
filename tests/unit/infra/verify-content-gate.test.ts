@@ -1965,13 +1965,15 @@ const a4Level = (): Json => ({
         evidence: 'The Governor General is appointed by the Sovereign',
       },
     }),
-    // Who published the page this statement cites. It replaced a `nationSource`
-    // block - a second citation, carrying a verification block of its own -
-    // which ADR-0051 took off a level document: one statement, one source, and
-    // the names come out of it. This field sits in the same position, inside the
-    // claim's unit, which is what the A4 case below is about: the two lines that
-    // cost two verifier passes were written exactly here.
-    sourcePublisher: 'Nobody',
+    // Who published the page this statement cites, in both languages. It
+    // replaced a `nationSource` block - a second citation, carrying a
+    // verification block of its own - which ADR-0051 took off a level document:
+    // one statement, one source, and the names come out of it. This field sits
+    // in the same position, inside the claim's unit, which is what the A4 case
+    // below is about: the two lines that cost two verifier passes were written
+    // exactly here. Both halves are author-owned leaves, so either one moving
+    // unbinds the statement's grant - which is what the A4 case now edits.
+    sourcePublisher: { en: 'Nobody', fr: 'Personne' },
   },
   pois: [
     {
@@ -2171,9 +2173,14 @@ describe('A4 binds a grant to its own claim, not to the document around it', () 
       // grant SHOULD come unbound - a reader is being told a different body
       // published the words a verifier checked - and the two blurbs' grants
       // should not, which is what the empty rest of `voids` asserts.
+      // The FRENCH half, deliberately. Both halves are author-owned leaves
+      // inside the claim's unit, so either one unbinds the grant; editing `fr`
+      // says so where editing `en` would leave it open whether a localised
+      // publisher binds whole or only in English - which is the question the
+      // panel's French line turned on.
       what: "the publisher beside a territorial statement, where the two lines that started this were written",
       edit: (level_, quest_) => [
-        patched(level_, ['territory', 'sourcePublisher'], 'Somebody else entirely'),
+        patched(level_, ['territory', 'sourcePublisher', 'fr'], 'Quelqu un d autre entierement'),
         quest_,
       ],
       voids: [TERRITORY],
@@ -2378,7 +2385,7 @@ describe('a name a claim prints is a name its source prints', () => {
           evidence: 'The Fixture Nation has lived along this river',
         },
       }),
-      sourcePublisher: 'Nobody',
+      sourcePublisher: { en: 'Nobody', fr: 'Personne' },
       ...territory,
     },
     pois: [],

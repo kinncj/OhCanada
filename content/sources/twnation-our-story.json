@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "twnation-our-story",
   "title": "Our Story - Tsleil-Waututh Nation",
-  "publisher": "Tsleil-Waututh Nation",
+  "publisher": {
+    "en": "Tsleil-Waututh Nation",
+    "fr": "Tsleil-Waututh Nation"
+  },
   "edition": "Nation website, Our Story page, fetched 9 September 2026",
   "url": "https://twnation.ca/our-story/",
   "file": "twnation-our-story.html",

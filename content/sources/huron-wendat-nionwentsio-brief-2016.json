@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "huron-wendat-nionwentsio-brief-2016",
   "title": "Brief of the Huron-Wendat Nation to the Standing Committee on Transport, Infrastructure and Communities: Federal Review of Environmental and Regulatory Processes, Navigation Protection Act",
-  "publisher": "Huron-Wendat Nation, Office of the Nionwentsïo",
+  "publisher": {
+    "en": "Huron-Wendat Nation, Office of the Nionwentsïo",
+    "fr": "Huron-Wendat Nation, Office of the Nionwentsïo"
+  },
   "edition": "Brief submitted to TRAN, 42nd Parliament",
   "url": "https://www.ourcommons.ca/Content/Committee/421/TRAN/Brief/BR8708093/br-external/HuronWendatFirstNationCouncil-9505010-e.pdf",
   "file": "huron-wendat-nionwentsio-brief-2016.pdf",

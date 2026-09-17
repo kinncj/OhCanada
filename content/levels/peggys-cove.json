@@ -51,7 +51,10 @@
         "evidence": "Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping. … Picture: (Right) Peggy’s Cove harbour, Nova Scotia"
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.12,

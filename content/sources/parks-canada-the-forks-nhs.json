@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "parks-canada-the-forks-nhs",
   "title": "The Forks National Historic Site",
-  "publisher": "Parks Canada",
+  "publisher": {
+    "en": "Parks Canada",
+    "fr": "Parcs Canada"
+  },
   "edition": "Site landing page, fetched 9 September 2026",
   "url": "https://parks.canada.ca/lhn-nhs/mb/forks",
   "file": "parks-canada-the-forks-nhs.html",

@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "cirnac-algonquin-parliamentary-precinct",
   "title": "Traditional signing ceremony marks the commitment to establish a dedicated Algonquin space in the Parliamentary Precinct",
-  "publisher": "Crown-Indigenous Relations and Northern Affairs Canada",
+  "publisher": {
+    "en": "Crown-Indigenous Relations and Northern Affairs Canada",
+    "fr": "Relations Couronne-Autochtones et Affaires du Nord Canada"
+  },
   "edition": "News release, 5 June 2024",
   "url": "https://www.canada.ca/en/crown-indigenous-relations-northern-affairs/news/2024/06/traditional-signing-ceremony-marks-the-commitment-to-establish-a-dedicated-algonquin-space-in-the-parliamentary-precinct.html",
   "file": "cirnac-algonquin-parliamentary-precinct.html",

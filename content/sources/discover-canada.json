@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "discover-canada",
   "title": "Discover Canada: The Rights and Responsibilities of Citizenship",
-  "publisher": "Immigration, Refugees and Citizenship Canada",
+  "publisher": {
+    "en": "Immigration, Refugees and Citizenship Canada",
+    "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+  },
   "edition": "2012 large-print, PDF metadata modified 2024-11-08",
   "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
   "file": "discover-canada-2012-large-print.pdf",

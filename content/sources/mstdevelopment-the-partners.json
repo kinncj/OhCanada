@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "mstdevelopment-the-partners",
   "title": "The Partners - MST Development Corporation",
-  "publisher": "MST Development Corporation, owned jointly by the Musqueam Indian Band, the Squamish Nation and the Tsleil-Waututh Nation",
+  "publisher": {
+    "en": "MST Development Corporation, owned jointly by the Musqueam Indian Band, the Squamish Nation and the Tsleil-Waututh Nation",
+    "fr": "MST Development Corporation, owned jointly by the Musqueam Indian Band, the Squamish Nation and the Tsleil-Waututh Nation"
+  },
   "edition": "Corporation website, The Partners page, fetched 13 September 2026",
   "url": "https://mstdevelopment.ca/the-partners/",
   "file": "mstdevelopment-the-partners.html",

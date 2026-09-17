@@ -423,8 +423,12 @@ export type AboutThisPlace =
        * `fact.source.url`. Before ADR-0051 both came from `nationSource`, where
        * the names came from — a different page from the one the sentence was
        * quoted from on seven of the ten levels, and a different body on five.
+       *
+       * Both languages, resolved by the composition root exactly as the
+       * statement beside it is. It was a bare string, which is how the French
+       * panel came to print an English department name under a French sentence.
        */
-      readonly publisher: string;
+      readonly publisher: LocalizedText;
       readonly sourceUrl: string;
     }
   | {

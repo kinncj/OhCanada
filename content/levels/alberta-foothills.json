@@ -51,7 +51,10 @@
         "evidence": "Alberta is the largest producer of oil and gas, and the oil sands in the north are being developed as a major energy source. Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world’s major beef producers."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.11,

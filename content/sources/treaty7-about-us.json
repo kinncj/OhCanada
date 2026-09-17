@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "treaty7-about-us",
   "title": "About Us - Treaty 7 First Nations Chiefs' Association",
-  "publisher": "Treaty 7 First Nations Chiefs' Association (T7FNCA)",
+  "publisher": {
+    "en": "Treaty 7 First Nations Chiefs' Association (T7FNCA)",
+    "fr": "Treaty 7 First Nations Chiefs' Association (T7FNCA)"
+  },
   "edition": "Association website, About Us page, fetched 13 September 2026",
   "url": "https://www.treaty7.org/about",
   "file": "treaty7-about-us.html",

@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "treaty1-home",
   "title": "Home - Treaty One",
-  "publisher": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)",
+  "publisher": {
+    "en": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)",
+    "fr": "Treaty One Nation (the seven First Nations who are signatories to Treaty No. 1)"
+  },
   "edition": "Nation website, home page, fetched 13 September 2026",
   "url": "https://treaty1.ca/",
   "file": "treaty1-home.html",

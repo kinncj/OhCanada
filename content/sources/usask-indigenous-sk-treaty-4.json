@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "usask-indigenous-sk-treaty-4",
   "title": "Treaty 4 - Indigenous Saskatchewan Encyclopedia",
-  "publisher": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)",
+  "publisher": {
+    "en": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)",
+    "fr": "University of Saskatchewan (Indigenous Saskatchewan Encyclopedia, from the Encyclopedia of Saskatchewan)"
+  },
   "edition": "Encyclopedia entry, fetched 9 September 2026",
   "url": "https://teaching.usask.ca/indigenoussk/import/treaty_4.php",
   "file": "usask-indigenous-sk-treaty-4.html",

@@ -6,11 +6,17 @@
  * Four rules, and each is here rather than in a schema or a script for a stated
  * reason:
  *
- *  1. **`sourcePublisher` is the register's own `publisher`.** The panel draws
- *     it as the text of its source link, and the runtime cannot read a source
- *     register — there is no port for one, deliberately. So the string is
- *     carried in the level document and pinned to the register here, which is
- *     the only place that can open both files.
+ *  1. **`sourcePublisher` is the register's own `publisher`, in both
+ *     languages.** The panel draws it as the text of its source link, and the
+ *     runtime cannot read a source register — there is no port for one,
+ *     deliberately. So the value is carried in the level document and pinned to
+ *     the register here, which is the only place that can open both files.
+ *
+ *     The comparison is **per language**, and that is not a refinement of the
+ *     rule but the defect that prompted it: while both were bare strings, the
+ *     French "About this place" panel drew "Immigration, Refugees and
+ *     Citizenship Canada" under a French sentence, and this gate passed the
+ *     whole time, because the one string it compared was the English one.
  *  2. **`territory.fact.factual` is true.** `adjudicateClaim` treats a
  *     `factual: false` block as drawable, correctly, because a greeting needs no
  *     verifier; spent on a territorial statement that exemption would draw an
@@ -71,14 +77,38 @@ const levels = levelFiles.map((file) => ({
   document: JSON.parse(readFileSync(`${LEVELS_DIR}/${file}`, 'utf8')) as LevelJson,
 }));
 
-const registerPublisher = (sourceId: string): string => {
+/** The two languages every player-facing string carries (ADR-0010). */
+const LANGUAGES = ['en', 'fr'] as const;
+type Language = (typeof LANGUAGES)[number];
+
+/**
+ * A localised publisher, refused unless it carries both languages.
+ *
+ * It throws rather than returning what it found. A publisher missing its French
+ * half is precisely what this suite exists to catch, and a comparison that read
+ * `undefined` on both sides would agree with itself and report a pass.
+ */
+const bothLanguages = (value: unknown, where: string): Readonly<Record<Language, string>> => {
+  if (typeof value !== 'object' || value === null) {
+    throw new Error(`${where} carries no localised publisher`);
+  }
+  const record = value as Record<string, unknown>;
+  const both = {} as Record<Language, string>;
+  for (const language of LANGUAGES) {
+    const text = record[language];
+    if (typeof text !== 'string' || text.trim().length === 0) {
+      throw new Error(`${where} carries no ${language} publisher`);
+    }
+    both[language] = text;
+  }
+  return both;
+};
+
+const registerPublisher = (sourceId: string): Readonly<Record<Language, string>> => {
   const register = JSON.parse(
     readFileSync(`${SOURCES_DIR}/${sourceId}.json`, 'utf8'),
   ) as { readonly publisher?: unknown };
-  if (typeof register.publisher !== 'string') {
-    throw new Error(`content/sources/${sourceId}.json declares no publisher`);
-  }
-  return register.publisher;
+  return bothLanguages(register.publisher, `content/sources/${sourceId}.json`);
 };
 
 describe('every level states a territory, and states it about one source', () => {
@@ -100,17 +130,40 @@ describe('every level states a territory, and states it about one source', () =>
     ).toBe(true);
   });
 
-  it.each(levelFiles)('%s: names the publisher its own register names', (file) => {
-    const territory = levels.find((level) => level.file === file)?.document.territory;
-    const sourceId = territory?.fact?.source?.sourceId;
-    expect(typeof sourceId, `${file}: the territorial claim cites no sourceId`).toBe('string');
-    expect(
-      territory?.sourcePublisher,
-      `${file}: the "About this place" panel draws this as the text of the link it points at ` +
-        `${String(territory?.fact?.source?.url)}, so a publisher that is not the publisher of ` +
-        'that page attributes the sentence to somebody who did not write it (ADR-0051)',
-    ).toBe(registerPublisher(String(sourceId)));
-  });
+  /*
+   * PER LANGUAGE, and the loop is the point rather than tidiness.
+   *
+   * The panel draws this value as the text of its source link, so while the
+   * publisher was one string the French panel read "Immigration, Refugees and
+   * Citizenship Canada" under a French sentence — the only line on that panel
+   * nobody had translated. A gate that compares ONE string goes green on that
+   * corpus, because the one string it compares is the English one. Comparing
+   * each language against that language's half of the register's own publisher
+   * is what fails on it, and it is the reason this is not a single `toEqual`
+   * over the whole object: a later reader loosening this to "the publishers
+   * match" would restore exactly the hole it was written to close.
+   */
+  for (const language of LANGUAGES) {
+    it.each(levelFiles)(
+      `%s: names the publisher its own register names, in ${language}`,
+      (file) => {
+        const territory = levels.find((level) => level.file === file)?.document.territory;
+        const sourceId = territory?.fact?.source?.sourceId;
+        expect(typeof sourceId, `${file}: the territorial claim cites no sourceId`).toBe('string');
+        const printed = bothLanguages(
+          territory?.sourcePublisher,
+          `content/levels/${file} territory.sourcePublisher`,
+        );
+        expect(
+          printed[language],
+          `${file}: the "About this place" panel draws this as the text of the link it points at ` +
+            `${String(territory?.fact?.source?.url)}, so a publisher that is not the publisher of ` +
+            'that page attributes the sentence to somebody who did not write it (ADR-0051) — and ' +
+            `in ${language} it must be that register's own ${language} name, not its English one`,
+        ).toBe(registerPublisher(String(sourceId))[language]);
+      },
+    );
+  }
 
   it.each(levelFiles)('%s: has a page for the panel to link', (file) => {
     const territory = levels.find((level) => level.file === file)?.document.territory;

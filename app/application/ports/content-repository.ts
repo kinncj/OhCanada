@@ -419,8 +419,15 @@ export interface TerritoryStatement {
    * A copy of the register's own `publisher`, pinned to it by
    * `tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts`: the
    * runtime cannot read a source register, and an unpinned copy would drift.
+   *
+   * **Localised, and pinned per language.** It was one string, and the French
+   * panel drew "Immigration, Refugees and Citizenship Canada" under a French
+   * sentence — the only line on that panel in the wrong language. The fix is
+   * here rather than a lookup table in `app/ui`, which would print a name held
+   * by neither the register nor this document and would eventually be asked to
+   * translate a nation's own body (`docs/content-review.md` §9.3).
    */
-  readonly sourcePublisher: string;
+  readonly sourcePublisher: LocalizedText;
 }
 
 /** How the camera follows the player. Portrait only, so the vertical numbers matter. */

@@ -935,13 +935,14 @@ function readTerritory(
   const statement = readLocalizedText(territory, 'statement');
   if (!statement.ok) return invalid('territory.statement', statement.error.message);
 
-  const publisher = territory['sourcePublisher'];
-  if (typeof publisher !== 'string' || publisher.trim().length === 0) {
+  const publisher = readLocalizedText(territory, 'sourcePublisher');
+  if (!publisher.ok) {
     return invalid(
       'territory.sourcePublisher',
-      '"territory.sourcePublisher" must name who published the source this statement cites: ' +
-        '§10.2 requires the panel to name where the statement comes from, and a panel that ' +
-        'cannot cite it may not draw it.',
+      '"territory.sourcePublisher" must name who published the source this statement cites, in ' +
+        'both languages: §10.2 requires the panel to name where the statement comes from, a ' +
+        'panel that cannot cite it may not draw it, and a French panel citing an English name ' +
+        'is the one line on it nobody translated.',
     );
   }
 
@@ -981,7 +982,7 @@ function readTerritory(
     kind: 'statement',
     nations,
     statement: statement.value,
-    publisher,
+    publisher: publisher.value,
     sourceUrl,
   });
 }

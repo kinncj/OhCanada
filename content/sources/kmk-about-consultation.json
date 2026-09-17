@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "kmk-about-consultation",
   "title": "About Consultation - Kwilmu'kw Maw-klusuaqn (Mi'kmaq Rights Initiative)",
-  "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+  "publisher": {
+    "en": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+    "fr": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs"
+  },
   "edition": "Organisation website, About Consultation page (?page_id=53), fetched 13 September 2026",
   "url": "https://mikmaqrights.com/?page_id=53",
   "file": "kmk-about-consultation.html",

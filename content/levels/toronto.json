@@ -51,7 +51,10 @@
         "evidence": "Toronto is the largest city in Canada and the country’s main financial centre. Many people work in the service or manufacturing industries, which produce a large percentage of Canada’s exports."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.16,

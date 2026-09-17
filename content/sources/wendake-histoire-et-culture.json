@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "wendake-histoire-et-culture",
   "title": "Histoire & culture | Wendake",
-  "publisher": "Conseil de la Nation huronne-wendat (the site and the page speak as `la Nation Wendat` and `le Conseil de la Nation Wendat`)",
+  "publisher": {
+    "en": "Conseil de la Nation huronne-wendat (the site and the page speak as `la Nation Wendat` and `le Conseil de la Nation Wendat`)",
+    "fr": "Conseil de la Nation huronne-wendat (the site and the page speak as `la Nation Wendat` and `le Conseil de la Nation Wendat`)"
+  },
   "edition": "Nation website, Histoire & culture page, French only, fetched 13 September 2026",
   "url": "https://www.wendake.ca/histoire-et-culture",
   "file": "wendake-histoire-et-culture.html",

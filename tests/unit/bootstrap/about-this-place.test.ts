@@ -39,7 +39,20 @@ const STATEMENT: AboutThisPlace = {
     en: 'Fixture Town is on the traditional territory of the Fixture Nation.',
     fr: 'Fixture Town se trouve sur le territoire traditionnel de la Fixture Nation.',
   },
-  publisher: 'Fixture Nation Council',
+  /* Both languages, and the two halves differ — which is the whole of what this
+     file now proves about the publisher: the mapping resolves it in the language
+     asked for, exactly as it resolves the statement above.
+
+     Deliberately NOT a nation's own body. A nation's council carries the same
+     name in both languages (`docs/content-review.md` §9.3), so a fixture that
+     translated one would model the very thing this seam exists to avoid doing —
+     and it is why the two halves are copied from the cited register rather than
+     translated in `app/ui`. A records office, like the department that publishes
+     the guide, is a body that really does name itself twice. */
+  publisher: {
+    en: 'Fixture Valley Records Office',
+    fr: 'Bureau des archives de la vallée Fixture',
+  },
   sourceUrl: 'https://example.invalid/about',
 };
 
@@ -60,7 +73,7 @@ describe('the "About this place" view', () => {
       kind: 'statement',
       statement: 'Fixture Town is on the traditional territory of the Fixture Nation.',
       nations: ['Fixture Nation'],
-      publisher: 'Fixture Nation Council',
+      publisher: 'Fixture Valley Records Office',
       sourceUrl: 'https://example.invalid/about',
     });
 
@@ -70,7 +83,11 @@ describe('the "About this place" view', () => {
       /* `docs/content-review.md` §9.3: the endonym is not translated, so it is
          the same string in the French view as in the English one. */
       nations: ['Fixture Nation'],
-      publisher: 'Fixture Nation Council',
+      /* The publisher is the opposite case, and the two sit side by side here on
+         purpose. A body that names itself in both languages is drawn in the
+         language the player is reading — the French panel used to draw the
+         English name under a French sentence, because this was a bare string. */
+      publisher: 'Bureau des archives de la vallée Fixture',
     });
   });
 

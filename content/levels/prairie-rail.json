@@ -51,7 +51,10 @@
         "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas. Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.1,

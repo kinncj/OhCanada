@@ -51,7 +51,10 @@
         "evidence": "Nova Scotia is the most populous Atlantic Province, with a rich history as the gateway to Canada. … As Canada’s largest east coast port, deep-water and ice-free, the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.12,

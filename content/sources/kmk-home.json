@@ -2,7 +2,10 @@
   "$schema": "./../schemas/source.schema.json",
   "id": "kmk-home",
   "title": "Kwilmu’kw Maw-klusuaqn - we are seeking consensus (home page)",
-  "publisher": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+  "publisher": {
+    "en": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs",
+    "fr": "Kwilmu'kw Maw-klusuaqn, the Mi'kmaq Rights Initiative of the Assembly of Nova Scotia Mi'kmaw Chiefs"
+  },
   "edition": "Organisation website, home page, fetched 13 September 2026",
   "url": "https://mikmaqrights.com/",
   "file": "kmk-home.html",

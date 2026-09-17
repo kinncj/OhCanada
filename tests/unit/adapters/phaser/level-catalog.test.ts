@@ -132,8 +132,13 @@ describe('interpreting what came back', () => {
         },
       },
       /* One citation, one publisher (ADR-0051): the panel's source link names
-         who published the page the statement came from. */
-      sourcePublisher: 'The Testville Register',
+         who published the page the statement came from, in both languages —
+         the panel draws this as the link's text, and a French panel drawing an
+         English name is the one line on it nobody translated. */
+      sourcePublisher: {
+        en: 'The Testville Register',
+        fr: 'Le Registre de Testville',
+      },
     },
     camera: { followLerp: 0.2, deadZone: { x: 1, y: 1 }, offset: { x: 0, y: 0 }, zoom: 1 },
     ground: [

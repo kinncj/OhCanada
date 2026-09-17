@@ -678,6 +678,14 @@ answered before the level, not after it.
   the nation's own material where one exists" no longer describes a level: under the product owner's ruling
   the source is the study guide, so the link will read *Immigration, Refugees and Citizenship Canada*. That
   is the obligation in ADR-0051, not a detail.
+- **In the language the player is reading.** `sourcePublisher` is a `LocalizedText`, copied from the cited
+  register's own `publisher`, and the panel draws the half matching the language in force — so the French
+  panel's link reads « Immigration, Réfugiés et Citoyenneté Canada ». While it was one string the French
+  panel was French in every line except the one naming who published the guide. The names are **not**
+  translated in `app/ui`: a table there would print a name held by neither the register nor the level
+  document, and it would sooner or later be asked to translate a First Nation's own body, which §9.3
+  forbids. A publisher with no French name of its own carries the same string in both halves, which is the
+  honest answer rather than an unfinished one.
 - **A statement may name nobody.** Where the cited source names no people for the place, `nations` is empty,
   the document records why, and the panel draws the statement and its source link with no list and no
   heading over one. That is less than this section asked for when it was written, it is what the ruling
@@ -713,8 +721,10 @@ Every box, in order. A "no" stops the asset; it does not lower the bar.
 - [ ] For a character: `nationSource` resolves and contains that name (§3.2). **Held by review only** — no
       gate fetches it.
 - [ ] For a level: every name in `territory.nations` appears in the cached text of the source the statement
-      cites, and `sourcePublisher` is that source's own publisher (ADR-0051). The second is a gate on every
-      run; the first is a gate **only where the cached text is present**, which is never in CI.
+      cites, and `sourcePublisher` is that source's own publisher **in both languages** (ADR-0051). The
+      second is a gate on every run and it compares per language — a gate comparing one string passes while
+      the French panel names the publisher in English; the first is a gate **only where the cached text is
+      present**, which is never in CI.
 - [ ] Every visible design element traces to a cited reference; nothing is "inspired by" (§4.2).
 - [ ] Nothing on the presumed-restricted list appears, in any form (§5.2).
 - [ ] No item in §5.2 is a prop, pick-up, reward or physics object (§5.3).

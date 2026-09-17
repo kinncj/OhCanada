@@ -51,7 +51,10 @@
         "evidence": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway. The Port of Vancouver, Canada’s largest and busiest, handles billions of dollars in goods traded around the world. … The Port of Vancouver is our gateway to the Asia-Pacific."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.13,

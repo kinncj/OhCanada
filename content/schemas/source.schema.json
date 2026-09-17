@@ -11,7 +11,10 @@
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
     },
     "title": { "type": "string", "minLength": 1 },
-    "publisher": { "type": "string", "minLength": 1 },
+    "publisher": {
+      "description": "Who publishes this document, in both languages. Localised because a level document copies this value and the \"About this place\" panel PRINTS the copy (level.schema.json #/$defs/territoryStatement/sourcePublisher): while this was one string, the French panel was French in every line except the one naming who published the guide, which read \"Immigration, Refugees and Citizenship Canada\" under a French sentence. A lookup table in app/ui was the obvious alternative and is wrong twice over - it would print a name carried by neither this register nor the level document, which is the drift the pin in tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts exists to prevent, and the same table would sooner or later be asked to translate a First Nation's own body, which docs/content-review.md 9.3 forbids. So the name lives where the pin can reach it, in both languages, and the pin compares per language. WHAT `fr` HOLDS: the publisher's OWN French name where it has one - a federal department names itself in both official languages - and the same string as `en` where it does not. A body's own name is not translated (9.3), and inventing a French name for a nation's council or tribal registry would be exactly the translation that section refuses; identical values are the honest answer there, not an unfinished one.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
     "edition": {
       "description": "Which edition or revision this hash is of, in words. Two files can share a title and differ in every fact that matters.",
       "type": "string",

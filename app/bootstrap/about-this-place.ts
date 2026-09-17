@@ -83,7 +83,13 @@ export function aboutThisPlaceView(
          under it. Each name is already spelled as that nation spells it, in both
          languages (`docs/content-review.md` §9.3), so nothing here translates. */
       nations: [...about.nations],
-      publisher: about.publisher,
+      /* Localised through the caller's one `localise`, exactly as the statement
+         above is. A nation's name is not translated (§9.3) and the body that
+         published the source is: the guide's publisher names itself in both
+         official languages, and the panel drew the English one under a French
+         sentence while this was a bare string. Nothing is chosen here — both
+         halves were copied from the cited register and pinned to it. */
+      publisher: localise(about.publisher, locale),
       sourceUrl: about.sourceUrl,
     };
   }

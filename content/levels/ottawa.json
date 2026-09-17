@@ -51,7 +51,10 @@
         "evidence": "The National Capital Ottawa, located on the Ottawa River, was chosen as the capital in 1857 by Queen Victoria … The National Capital Region, 4,700 square kilometres surrounding Ottawa, preserves and enhances the area’s built heritage and natural environment. Picture: (from Top to Bottom) Ottawa’s Rideau Canal, once a military waterway, is now a tourist attraction and winter skateway."
       }
     },
-    "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
   },
   "camera": {
     "followLerp": 0.14,
