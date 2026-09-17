@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import type { Page } from '@playwright/test';
 
 import { PROGRESS_STORAGE_KEY } from '@adapters/persistence/record-progress-repository';
@@ -7,12 +9,7 @@ import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import type { PlayerCharacter } from '@domain/entities/character';
 import { defaultSettings } from '@domain/entities/player';
 import { newProgress, withCharacter, withQuestState, withStamp } from '@domain/entities/progress';
-import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
-
-/* Relative, like every other test that reads the composition root: there is no
-   `@bootstrap` alias, because `app/bootstrap` is the one layer nothing else is
-   allowed to import. A test may look at it; a module may not. */
-import { playerSlots, toPlayerCharacter } from '../../app/bootstrap/character-slots';
+import type { CharacterId, EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
 
 /**
  * Saves a scenario starts from, written by the game's own functions.
@@ -56,16 +53,51 @@ const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE
  * The save carries the character outright instead, so nothing about it depends
  * on which of two asynchronous things finishes first.
  */
+interface RigSlotFile {
+  readonly playerSelectable?: boolean;
+  readonly options: readonly string[];
+  readonly fallback: string | null;
+}
+
+interface RigFile {
+  readonly artboards: readonly {
+    readonly characterId?: string;
+    readonly playerSelectableSlots?: readonly string[];
+  }[];
+  readonly slots: Readonly<Record<string, RigSlotFile | undefined>>;
+}
+
+/*
+ * The rig read as a file, not imported.
+ *
+ * `app/bootstrap/character-slots.ts` is the module that knows this rule, and
+ * importing it from here is what a first attempt did - but it imports
+ * `content/characters/rig.json` as a module, and Playwright's Node loader
+ * refuses a JSON import with no `with { type: 'json' }`. Every e2e shard died at
+ * load, before a test ran. A spec reads content from disk, as `save-file.spec.ts`
+ * already does, so the rule is mirrored here rather than imported.
+ */
+const RIG = JSON.parse(
+  readFileSync(new URL('../../content/characters/rig.json', import.meta.url), 'utf8'),
+) as RigFile;
+
 function seededCharacter(): PlayerCharacter {
-  const selection = Object.fromEntries(
-    playerSlots().map(({ name, slot }) => [
-      name,
+  const artboard = RIG.artboards.find((board) => (board.playerSelectableSlots?.length ?? 0) > 0);
+  const listed = artboard?.playerSelectableSlots ?? [];
+  const names = [
+    ...listed.filter((name) => RIG.slots[name] !== undefined),
+    ...Object.keys(RIG.slots).filter((name) => !listed.includes(name)),
+  ];
+  const skins: Record<string, string> = {};
+  for (const name of names) {
+    const slot = RIG.slots[name];
+    if (slot === undefined || slot.playerSelectable !== true || slot.options.length === 0) continue;
+    skins[name] =
       slot.fallback !== null && slot.options.includes(slot.fallback)
         ? slot.fallback
-        : (slot.options[0] ?? ''),
-    ]),
-  );
-  return toPlayerCharacter(selection);
+        : (slot.options[0] ?? '');
+  }
+  return { characterId: (artboard?.characterId ?? 'player') as CharacterId, skins };
 }
 
 /** A save in which this level's quest is complete and its stamp earned, as the game writes one. */
