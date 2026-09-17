@@ -60,7 +60,7 @@ export interface ExamQuestionView {
   readonly prompt: string;
   /**
    * The four options in the order to draw them, shuffled from a seed by the
-   * caller (ADR-0057). Empty when unavailable.
+   * caller (ADR-0059). Empty when unavailable.
    */
   readonly options: readonly string[];
   /**

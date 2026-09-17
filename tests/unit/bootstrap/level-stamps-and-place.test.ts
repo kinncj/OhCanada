@@ -111,7 +111,7 @@ describe('the place a question is asked', () => {
 
   /* These assert about the place line, not about option order, so they pin the
      order to the one the fixture wrote and let the shuffle be tested where it
-     belongs: `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0057). */
+     belongs: `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0059). */
   it('reaches the card as the names it is handed', () => {
     const view = questionView(selected, AUTHORED_ORDER, 'fr', 0, 1, null, [
       'Halifax',

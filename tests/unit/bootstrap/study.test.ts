@@ -100,7 +100,7 @@ function bank(options: {
  * draw just under 1 always picks `i` itself and every swap is a no-op. The
  * assertions below name the right answer as "option 0", which is a property of
  * `QUESTION` and not of the card; whether a real shuffle spreads the bank is
- * `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0057).
+ * `an-answer-is-not-always-in-the-same-place.test.ts` (ADR-0059).
  */
 const noReorder = { next: (): number => 0.999_999 };
 

@@ -1665,7 +1665,7 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
       explanation: 'Because.',
     });
     /*
-     * The four options are shuffled for the card (ADR-0057), so this names the
+     * The four options are shuffled for the card (ADR-0059), so this names the
      * relationship rather than a literal order: all four wordings arrive, and
      * `correctIndex` points at the one the fixture keyed. Asserting
      * `['A', 'B', 'C', 'D']` and `correctIndex: 0` would now be asserting that
@@ -1731,7 +1731,7 @@ describe('a landmark teaches, then asks (TN-LEVEL-05, TN-CARD-01)', () => {
     const card = hoisted.state.questionOptions as { onAnswer: (index: number, right: boolean) => void };
     /*
      * Tap the option the card is *showing* as the right one. The runner converts
-     * a screen position back to the author's index before recording (ADR-0057),
+     * a screen position back to the author's index before recording (ADR-0059),
      * so this asserts the round trip: wherever the shuffle put the answer, what
      * reaches `answerQuestion` is the authored 0. Tapping a fixed position would
      * assert only that the shuffle had not run, and would miss a broken

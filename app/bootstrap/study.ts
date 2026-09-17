@@ -70,7 +70,7 @@ export interface StudyControllerDeps {
   readonly store: SettingsStore;
   readonly announce: (message: string, lang?: string) => void;
   /**
-   * Where each card's option order comes from (ADR-0057).
+   * Where each card's option order comes from (ADR-0059).
    *
    * Study is drawn from every subject at once, so it is where an answer-first
    * bank is most visible to a player: five of the ten subjects key effectively
@@ -158,7 +158,7 @@ export function createStudyController(deps: StudyControllerDeps): StudyControlle
       random: deps.random,
       onAnswer: (question, chosenIndex) => {
         /* `chosenIndex` is already back in authored space: the runner converts
-           it at the card's edge (ADR-0057), so this recorder is unchanged. */
+           it at the card's edge (ADR-0059), so this recorder is unchanged. */
         deps.record(question, chosenIndex);
       },
       onFinished: (result) => {

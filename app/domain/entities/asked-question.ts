@@ -9,7 +9,7 @@
  * seed". Both were true statements about a decision and false statements about
  * the program: nothing in `app/` ever shuffled anything, and `OQ-CARD-2` had
  * parked the question with "keep the authored order in slice 1". This module is
- * the missing half, and ADR-0057 is why it exists.
+ * the missing half, and ADR-0059 is why it exists.
  *
  * ## What went wrong without it
  *
