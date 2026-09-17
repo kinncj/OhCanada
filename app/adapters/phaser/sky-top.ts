@@ -367,26 +367,51 @@ const DESPIKE_WINDOW = 5;
  * The first and last samples are never replaced. The first is the canvas's own
  * first row, which ADR-0044 hands to the band above a letterboxed canvas; the
  * last meets the mid-ground and is the colour the ramp leaves on.
+ *
+ * ## The window is narrowed at the ends, never clipped
+ *
+ * This is the whole of a defect worth writing down, because it looked like
+ * nothing. The first version walked `index - half .. index + half` and simply
+ * skipped the samples that fell off the array. Near the start that leaves an
+ * **even** number of samples — four at index 1 — and the middle of an even set
+ * is not a median: `values[length / 2]` takes the upper of the two. On a sky
+ * that darkens downward, sample 1 was therefore replaced by sample 2's colour.
+ *
+ * That is a bias, not a rounding error. On the evenly ramped sky in
+ * `sky-top.test.ts` it moved sample 1 by about 6 counts, which is twice the
+ * simplifier's tolerance, so the ramp that should have collapsed to two stops
+ * kept five. On a real level it pulls the second sampled row toward the third —
+ * and if the third row is a cloud it *injects* that cloud into row two, which is
+ * the exact opposite of what this function is for.
+ *
+ * So the reach shrinks symmetrically instead: `min(reach, index, last - index)`.
+ * The window is always `2 * half + 1` wide, always centred, always odd, so the
+ * median is always the middle element and neither end of the profile is
+ * favoured. Near the ends it is a three-tap rather than a five-tap, which still
+ * outvotes a lone cloud.
  */
 function despike(
   channels: readonly (readonly [number, number, number])[],
   window: number = DESPIKE_WINDOW,
 ): (readonly [number, number, number])[] {
-  const half = Math.floor(Math.max(3, window) / 2);
+  const reach = Math.floor(Math.max(3, window) / 2);
+  const last = channels.length - 1;
 
   return channels.map((here, index): readonly [number, number, number] => {
-    if (index === 0 || index === channels.length - 1) return here;
+    if (index <= 0 || index >= last) return here;
 
-    const seen: (readonly [number, number, number])[] = [];
-    for (let at = index - half; at <= index + half; at += 1) {
-      const sample = channels[at];
-      if (sample !== undefined) seen.push(sample);
-    }
-    if (seen.length < 3) return here;
+    const half = Math.min(reach, index, last - index);
+    if (half < 1) return here;
 
     const middle = (channel: 0 | 1 | 2): number => {
-      const values = seen.map((sample) => sample[channel]).sort((one, other) => one - other);
-      return values[Math.floor(values.length / 2)] ?? 0;
+      const values: number[] = [];
+      for (let at = index - half; at <= index + half; at += 1) {
+        const sample = channels[at];
+        if (sample !== undefined) values.push(sample[channel]);
+      }
+      values.sort((one, other) => one - other);
+      /* `2 * half + 1` values, so the middle is an element and not a pair. */
+      return values[half] ?? here[channel];
     };
     return [middle(0), middle(1), middle(2)];
   });

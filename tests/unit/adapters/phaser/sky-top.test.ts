@@ -263,6 +263,33 @@ describe('canvasSkyProfile', () => {
     expect(stops[stops.length - 1]?.at).toBeCloseTo(1280 / 1920, 6);
   });
 
+  it('reads a ramp and its mirror the same way, so neither end of the sky is favoured', () => {
+    /*
+     * The invariant a clipped filter window breaks, and the reason the evenly
+     * ramped sky above once came back as five stops instead of two.
+     *
+     * The running median used to walk a fixed reach and skip whatever fell off
+     * the array, which near the start leaves an even number of samples — and the
+     * middle of an even set is not a median. Sample 1 was replaced by sample 2,
+     * about 6 counts away on this fixture, twice the simplifier's tolerance.
+     *
+     * Stated as a symmetry rather than as a stop count, because a bias at one
+     * end is exactly what a mirror exposes, and no tolerance can be loosened to
+     * make an asymmetric answer pass.
+     */
+    const down = canvasSkyProfile(
+      { backdrop: '#000000', layers: [ramp(0, 255, 1920)], cameraY: 0 },
+      { height: 1920, until: 1280 },
+    );
+    const up = canvasSkyProfile(
+      { backdrop: '#000000', layers: [ramp(255, 0, 1920)], cameraY: 0 },
+      { height: 1920, until: 1280 },
+    );
+
+    expect(down).toHaveLength(up.length);
+    expect(down.map((stop) => stop.at)).toEqual(up.map((stop) => stop.at));
+  });
+
   it('keeps a stop where the canvas steps, so a hill edge is not ramped through', () => {
     const sky = layer({ offsetY: 0, scrollFactorY: 0, height: 1920 });
     const hills = layer({
