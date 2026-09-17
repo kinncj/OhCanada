@@ -48,3 +48,27 @@ describe('the strip has a foot as deep as its sides', () => {
     expect(padding.match(/var\(--tn-text-scale, 1\)/g) ?? []).toHaveLength(4);
   });
 });
+
+describe('the strip is as wide as the playfield, not as wide as the window', () => {
+  it('takes the canvas column: the measured canvas height at the design ratio', () => {
+    const block = hudBlock();
+    /* 9/16 is 1080 x 1920 (ADR-0002), and the fallback is the window's own
+       height, so a page that publishes no measurement still gets a column. */
+    expect(declaration(block, 'inline-size')).toBe(
+      'min(100%, calc(var(--tn-canvas-height, 100dvh) * 9 / 16))',
+    );
+  });
+
+  it('centres what is left over, so the strip sits under the canvas', () => {
+    expect(declaration(hudBlock(), 'margin-inline')).toBe('auto');
+    /* Both edges are still pinned: with `inline-size` and auto margins that is
+       what centres an absolutely positioned box. */
+    expect(declaration(hudBlock(), 'inset-inline')).toBe('0');
+  });
+
+  it('never shrinks a phone: the column is wider than a portrait window', () => {
+    /* min(100%, …) is the whole claim — 100 % on a phone, the column on a
+       desktop — so the rule is written with `min` and never with a breakpoint. */
+    expect(declaration(hudBlock(), 'inline-size').startsWith('min(100%,')).toBe(true);
+  });
+});

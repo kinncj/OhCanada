@@ -2095,6 +2095,25 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   inset-inline: 0;
   inset-block-end: 0;
   box-sizing: border-box;
+  /*
+    The strip is as wide as the playfield, never as wide as the window
+    (ADR-0002, third live-site audit).
+
+    On a 1440 px desktop the portrait canvas is a 506 px column in the middle of
+    the page, and the strip spanned the whole window: Settings and Menu sat
+    400 px from the game they belong to, and the mode label ran the width of the
+    screen. The canvas is FIT at the design resolution, 1080 x 1920, so its
+    width is its height times 9/16. `--tn-canvas-height` is the height the page
+    measured for it (index.html); without one -- a test harness, a page that
+    does not say -- the window's own height is the same arithmetic. On a
+    portrait phone that is wider than the window, so `min()` gives the whole
+    width back and nothing about a phone changes.
+
+    The side panels beside it are the level's own sky and ground, which the
+    engine paints (CLAUDE.md); this half is only about where the chrome stops.
+  */
+  inline-size: min(100%, calc(var(--tn-canvas-height, 100dvh) * 9 / 16));
+  margin-inline: auto;
   max-block-size: 33vh;
   overflow-y: auto;
   overflow-x: hidden;

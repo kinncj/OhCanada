@@ -230,6 +230,51 @@ test.describe('the strip has a foot under its last line', () => {
   }
 });
 
+/*
+ * The third live-site audit, P1: on a desktop the strip spanned the window.
+ *
+ * The playfield is a portrait column — 506 px at 1440 x 900 — and the strip was
+ * 1440 px, so Settings and Menu sat 400 px from the game. The suite's own
+ * viewport is a phone, where the answer is the whole width; this test resizes,
+ * because the defect only exists on a window wider than 9:16.
+ */
+test.describe('the strip keeps to the portrait canvas', () => {
+  const column = (width: number, height: number): number => Math.min(width, (height * 9) / 16);
+
+  for (const size of [
+    { width: 1440, height: 900 },
+    { width: 1024, height: 768 },
+    { width: 390, height: 844 },
+  ]) {
+    test(`is the playfield's width at ${size.width} x ${size.height}, and centred on it`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(size);
+      await open(page, { screen: 'level', task: '1', prompt: '1' });
+
+      const strip = await page.getByTestId('hud').boundingBox();
+      expect(strip, 'the strip is not drawn').not.toBeNull();
+      const expected = column(size.width, size.height);
+      expect(
+        Math.abs((strip?.width ?? 0) - expected),
+        `the strip is ${String(strip?.width)} px wide where the playfield is ${String(expected)}`,
+      ).toBeLessThanOrEqual(2);
+      /* Centred: the same column the canvas is centred in (ADR-0002). */
+      const left = strip?.x ?? 0;
+      const right = size.width - left - (strip?.width ?? 0);
+      expect(Math.abs(left - right), 'the strip is not centred').toBeLessThanOrEqual(2);
+
+      /* And the controls are inside it, where the game is. */
+      for (const testId of ['hud-settings-button', 'menu-button', 'interact-prompt']) {
+        const box = await page.getByTestId(testId).boundingBox();
+        expect(box, `${testId} is not drawn`).not.toBeNull();
+        expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(left + (strip?.width ?? 0) + 1);
+        expect(box?.x ?? 0).toBeGreaterThanOrEqual(left - 1);
+      }
+    });
+  }
+});
+
 /* ------------------------------------------------------------ the question */
 
 test.describe('the question card', () => {
