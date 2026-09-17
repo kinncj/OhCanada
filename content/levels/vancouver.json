@@ -44,11 +44,11 @@
         "quote": "The Port of Vancouver, Canada’s largest and busiest, handles billions of dollars in goods traded around the world."
       },
       "verification": {
-        "status": "rejected",
+        "status": "verified",
         "model": "claude-opus-5",
-        "checkedAt": "2026-09-14T17:59:17Z",
-        "sourceHash": "3b401ed259aa6b5cbf94cf01c0bf69fdca7ec65eb8206b6db433365c999107a7",
-        "evidence": "Tsleil-Waututh Nation – People of the Inlet […] Originally, our great nation was about 10,000 strong, a distinct Coast Salish Nation whose territory includes səlilwət (Burrard Inlet) and the waters draining into it. […] We have partnered with the Squamish and Musqueam Nations to acquire multiple properties in our Nations’ traditional territories—through the MST Corporation"
+        "checkedAt": "2026-09-17T02:23:54Z",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "evidence": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway. The Port of Vancouver, Canada’s largest and busiest, handles billions of dollars in goods traded around the world. … The Port of Vancouver is our gateway to the Asia-Pacific."
       }
     },
     "sourcePublisher": "Immigration, Refugees and Citizenship Canada"

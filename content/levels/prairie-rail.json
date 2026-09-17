@@ -44,11 +44,11 @@
         "quote": "is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash"
       },
       "verification": {
-        "status": "rejected",
+        "status": "verified",
         "model": "claude-opus-5",
-        "checkedAt": "2026-09-14T18:11:12Z",
-        "sourceHash": "9b3aa495562773a02f5d51e984c11fe3fd34e214a4e821a4b8e90a802235ae11",
-        "evidence": "the strategy of the Cree and Saulteaux was to gain full compensation for their lands. … The treaty ceded 195,000 square km of territory ranging from the southeast corner of present-day Alberta through most of southern Saskatchewan to west-central Manitoba. Canada sent the Hon. Alexander Morris, Lieutenant-Governor of the North-West Territory, David Laird, Minister of the Interior, and William Christie, retired HBC factor, with an escort of 105 militia to Fort Qu’Appelle on September 8, 1874, to conduct negotiations on behalf of the British Crown. … Loud Voice called for the unity of the Cree and Saulteaux as the leader of the Saulteaux, Chief Cote, threatened to leave."
+        "checkedAt": "2026-09-17T02:23:54Z",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas. Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
       }
     },
     "sourcePublisher": "Immigration, Refugees and Citizenship Canada"

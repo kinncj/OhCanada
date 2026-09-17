@@ -45,10 +45,10 @@
       },
       "verification": {
         "status": "verified",
-        "model": "claude-opus-5[1m]",
-        "checkedAt": "2026-09-13T21:04:56Z",
-        "sourceHash": "2c43ab8478c9501413d566499665fe59ca202da492848b471645b39ceca73b49",
-        "evidence": "Kwilmu’kw Maw-klusuaqn takes direction from the Assembly of Nova Scotia Mi’kmaw Chiefs in their work on behalf of the Mi’kmaq of Nova Scotia … Mi’kmaq have never surrendered, ceded, or sold the Aboriginal Title to any of our lands. We have a Title claim to all lands in Nova Scotia. As keepers of the lands and resources, we expect that any potential impacts to Rights and Title shall be addressed."
+        "model": "claude-opus-5",
+        "checkedAt": "2026-09-17T02:23:54Z",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "evidence": "Known for the world’s highest tides in the Bay of Fundy, the province’s identity is linked to shipbuilding, fisheries and shipping. … Picture: (Right) Peggy’s Cove harbour, Nova Scotia"
       }
     },
     "sourcePublisher": "Immigration, Refugees and Citizenship Canada"
