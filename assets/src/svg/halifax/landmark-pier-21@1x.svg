@@ -1,27 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" shape-rendering="geometricPrecision">
   <title>A dockside passenger terminal: a three-storey red brick block with a stone-coped parapet, stone banding and a rhythm of sash windows, a streamlined pale entrance pylon with a curved canopy and a small balcony, long low pier sheds with monitor roofs running away on both sides, the white superstructure, two buff funnels and two masts of an ocean liner berthed alongside and rising above the shed roof, and a dark green heritage passenger coach standing on the pier track in front. NO LETTERING, NO EMBLEM AND NO CLOCK SIGN: the building carries painted lettering and a round emblem in life, and both are the operating institution naming itself. See assets/refs/references.json, subject pier-21, and assets/style/halifax-level.md section 6 for why this subject is not asked to carry blind identification of a place.</title>
-  <rect x="0" y="296" width="316" height="96" fill="#30384f"/>
-  <rect x="0" y="296" width="316" height="12" fill="#941835"/>
-  <rect x="6" y="186" width="304" height="110" fill="#f0f2f5"/>
-  <rect x="6" y="186" width="304" height="15" fill="#ffffff"/>
-  <rect x="6" y="280" width="304" height="16" fill="#cbd2da"/>
-  <rect x="22" y="210" width="272" height="13" fill="#30384f"/>
-  <rect x="22" y="236" width="272" height="13" fill="#30384f"/>
-  <rect x="22" y="258" width="272" height="13" fill="#30384f"/>
-  <rect x="20" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <rect x="70" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <rect x="120" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <rect x="170" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <rect x="220" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <rect x="270" y="302" width="30" height="22" rx="6" fill="#f0f2f5"/>
-  <polygon points="76,186 84,96 138,96 142,186" fill="#c29455"/>
-  <polygon points="76,186 84,96 103,96 99,186" fill="#d5c18e"/>
-  <polygon points="83,112 84,96 138,96 138,112" fill="#30384f"/>
-  <polygon points="182,186 190,96 244,96 248,186" fill="#c29455"/>
-  <polygon points="182,186 190,96 209,96 205,186" fill="#d5c18e"/>
-  <polygon points="189,112 190,96 244,96 244,112" fill="#30384f"/>
-  <polygon points="38,186 44,74 56,74 58,186" fill="#f0f2f5"/>
-  <rect x="34" y="116" width="30" height="14" rx="4" fill="#57647a"/>
+  <polygon points="0,300 292,282 352,346 352,392 0,392" fill="#30384f"/>
+  <polygon points="0,300 292,282 294,296 0,314" fill="#941835"/>
+  <polygon points="292,282 352,346 336,348 282,292" fill="#57647a"/>
+  <path d="M 6,206 L 268,206 C 286,206 298,214 300,226 L 302,300 L 6,300 Z" fill="#f0f2f5"/>
+  <rect x="6" y="206" width="288" height="14" fill="#ffffff"/>
+  <rect x="6" y="286" width="296" height="14" fill="#cbd2da"/>
+  <rect x="20" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="66" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="112" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="158" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="204" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="250" y="212" width="34" height="16" rx="6" fill="#f0f2f5"/>
+  <rect x="22" y="240" width="256" height="13" fill="#30384f"/>
+  <rect x="22" y="264" width="244" height="13" fill="#30384f"/>
+  <path d="M 40,160 L 214,160 C 230,160 240,168 242,180 L 244,206 L 40,206 Z" fill="#f0f2f5"/>
+  <rect x="40" y="160" width="196" height="12" fill="#ffffff"/>
+  <rect x="54" y="180" width="168" height="12" fill="#30384f"/>
+  <polygon points="88,160 78,86 122,86 132,160" fill="#c29455"/>
+  <polygon points="88,160 78,86 92,86 102,160" fill="#d5c18e"/>
+  <polygon points="78,86 122,86 123,102 79,102" fill="#30384f"/>
+  <polygon points="184,160 174,86 218,86 228,160" fill="#c29455"/>
+  <polygon points="184,160 174,86 188,86 198,160" fill="#d5c18e"/>
+  <polygon points="174,86 218,86 219,102 175,102" fill="#30384f"/>
+  <polygon points="258,176 248,60 258,60 268,176" fill="#f0f2f5"/>
+  <rect x="240" y="96" width="34" height="10" rx="4" fill="#57647a"/>
   <rect x="0" y="388" width="320" height="208" fill="#f0f2f5"/>
   <rect x="0" y="388" width="320" height="22" fill="#ffffff"/>
   <rect x="0" y="562" width="320" height="34" fill="#cbd2da"/>

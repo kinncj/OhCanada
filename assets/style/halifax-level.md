@@ -57,7 +57,7 @@ Eight SVG sources. `scripts/assets.mjs` reads the level from the path, so everyt
 | `halifax-layer-30-uptown` | `layer-30-uptown.svg` | 1800 × 260 | 137 | the town on the slope: gabled houses, mid-rise blocks, one plain steeple, and a lower row of roofs |
 | `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 353 | the boardwalk — a **modelled plank deck**, §5.1 — its lamps, benches, bollards, planters, panel, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
 | `halifax-landmark-town-clock` | `landmark-town-clock@1x.svg` | 800 × 1010 | 113 | **POI hero, and the level's only place-anchor** |
-| `halifax-landmark-pier-21` | `landmark-pier-21@1x.svg` | 900 × 620 | 137 | **POI hero**: the terminal, the liner and the immigrant train |
+| `halifax-landmark-pier-21` | `landmark-pier-21@1x.svg` | 900 × 620 | 140 | **POI hero**: the terminal, the liner and the immigrant train. The liner was redrawn 2026-09-17: a raked bow and stem, a tiered superstructure with a rounded front and a boat row, because as a flat-topped rectangle under two upright stacks it read as a factory |
 | `halifax-prop-market-stall` | `prop-market-stall@1x.svg` | 560 × 480 | 60 | **POI hero, added 2026-09-13**: a striped awning on two posts over a trestle of produce crates, with a barrel and two sacks on the deck |
 | `halifax-prop-harbour-tug` | `prop-harbour-tug@1x.svg` | 720 × 520 | 51 | **POI hero, added 2026-09-13**: a tug alongside the boardwalk edge, tied to a bollard |
 
