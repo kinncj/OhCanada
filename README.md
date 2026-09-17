@@ -11,7 +11,7 @@ and you can export it to a file whenever you like.
 It is built for newcomers of all ages, in plain language, and it is designed to be played one-handed on
 a phone held upright.
 
-**Status: playable.** All ten levels, Study and the practice exam are live, in English and French. The teaching content is still growing — some quests ask about material the level has not taught yet — and the art is being verified subject by subject against its references.
+**Status: playable, in production, and always in development.** All ten levels, Study and the practice exam are live in English and French at the link below — built and deployed, not a preview. It is open source, so development never really stops: the teaching content is still growing, and the art is being verified subject by subject against its references.
 
 ## Play
 
