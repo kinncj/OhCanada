@@ -22,6 +22,7 @@ import { LevelScene } from './level-scene';
 import { createPlayableMarker, type MarkerHost, type PlayableMarker } from './playable-marker';
 import { appErr, ok, type Result } from '@common/result';
 import { GROUND_FILL_SHADE, LAND_SHADE, landBand, levelLandBand } from './horizon-profile';
+import { skyStopList, type SkyStop } from './sky-top';
 import {
   identifyRenderer,
   type DebugInfoContext,
@@ -218,10 +219,13 @@ export class GameRenderer {
   #levelDocument: SceneLevel | null = null;
   #marker: PlayableMarker | null = null;
   /**
-   * The colour the open level draws on the canvas's first row, as it last
-   * reported it, or `null` before it has (ADR-0044).
+   * What the open level draws down its sky, as it last reported it, or `null`
+   * before it has (ADR-0044).
+   *
+   * The first stop is the canvas's first row, which the band above a letterboxed
+   * canvas takes; the list is what the desktop side panels take.
    */
-  #skyTop: string | null = null;
+  #skyBand: readonly SkyStop[] | null = null;
   /** One manifest fetch per session, shared by every level that opens after. */
   #manifest: Promise<Result<AssetManifest>> | null = null;
   /** One rig fetch per session, shared by every level that opens after. */
@@ -482,18 +486,18 @@ export class GameRenderer {
     }
     if (this.#game.scene.isActive(BootScene.KEY)) this.#game.scene.stop(BootScene.KEY);
 
-    /* The previous level's first row is not this one's. Until the new scene
-       reports, the page falls back to the tinted theme sky. */
-    this.#skyTop = null;
+    /* The previous level's sky is not this one's. Until the new scene reports,
+       the page falls back to the tinted theme sky and a plain ramp. */
+    this.#skyBand = null;
     const scene = new LevelScene({
       level: document.value,
       designWidth: this.#config.designWidth,
       designHeight: this.#config.designHeight,
       probe: this.#scene,
-      onSkyTop: (colour: string) => {
+      onSkyBand: (stops: readonly SkyStop[]) => {
         /* A scene that has since been replaced does not speak for the canvas. */
         if (this.#level !== scene) return;
-        this.#skyTop = colour;
+        this.#skyBand = stops;
         this.#options.onPageThemeChange?.();
       },
       marker,
@@ -741,7 +745,25 @@ export class GameRenderer {
        * draws; until it has, and on the boot screen, whose gradient starts on
        * the untinted config sky, the two are the same answer.
        */
-      '--tn-sky-top': level === null ? palette.sky : (this.#skyTop ?? palette.sky),
+      '--tn-sky-top':
+        level === null ? palette.sky : (this.#skyBand?.[0]?.colour ?? palette.sky),
+      /*
+       * What the canvas draws down the rest of its sky, as gradient stops the
+       * page splices into the middle of that ramp.
+       *
+       * The fourth live-site audit's finding: `--tn-sky-top` made the panel exact
+       * on row 0 and the ramp then ran straight from there to `--tn-ground`,
+       * through the hill line and the skyline without touching either. The step
+       * between panel and canvas grew from 0 at the top to 25 on Halifax and 33
+       * on the North by mid-screen — a seam down both edges of the playfield.
+       *
+       * A single space, not an empty string, when there is nothing to say: the
+       * page reads this in the middle of a stop list, and an unset custom
+       * property there is invalid at computed-value time and takes the whole
+       * gradient with it. The boot screen has no level and says nothing, which
+       * leaves exactly the two-stop ramp that shipped before.
+       */
+      '--tn-sky-stops': level === null ? ' ' : skyStopList(this.#skyBand ?? []),
       '--tn-ground': palette.ground,
       '--tn-horizon': palette.horizon,
       /* A shade of the ground, computed once here so the page and the scene

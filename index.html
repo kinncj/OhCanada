@@ -68,12 +68,54 @@
         --tn-land-skirt: 69.688%;
         --tn-land-end: 92.083%;
 
+        /*
+          The rest of the canvas's sky, as gradient stops #game::before splices
+          into its ramp. Empty until a level reports, which leaves the plain
+          two-stop ramp that shipped before.
+
+          A level's sky is not a straight line from its first row to its ground:
+          it has a hill line and a skyline in it, and a two-stop ramp ran through
+          both. Measured at 1440x900, the step between the side panel and the
+          canvas beside it grew from 0 at the top row to 25 on Halifax and 33 on
+          the North by mid-screen. app/adapters/phaser/sky-top.ts works the stops
+          out from what the scene draws.
+
+          Declared empty rather than left unset: `var()` with no declaration and
+          no fallback is invalid at computed-value time, and this one sits in the
+          middle of a stop list, so it would take the whole gradient down.
+        */
+        --tn-sky-stops: ;
+
         /* Mirrored as custom properties so the debug overlay can print the
            insets the browser actually reported. */
         --tn-safe-top: env(safe-area-inset-top, 0px);
         --tn-safe-right: env(safe-area-inset-right, 0px);
         --tn-safe-bottom: env(safe-area-inset-bottom, 0px);
         --tn-safe-left: env(safe-area-inset-left, 0px);
+
+        /*
+          Where the canvas sits, for the letterbox gradients #game::before
+          paints (see that rule). FIT + CENTER_BOTH inside #game's safe-area
+          insets, so the canvas is as wide as #game on a phone taller than 9:16
+          and as tall as #game on a window wider than it. 16 / 9 is the design
+          resolution, 1080x1920 (ADR-0002).
+
+          On :root, and that placement is load-bearing rather than tidy. A custom
+          property's own `var()`s are substituted at computed-value time on the
+          element that DECLARES it, not where it is used. app/bootstrap writes
+          --tn-sky-stops on :root and every stop in it is positioned with
+          `calc(var(--tn-canvas-top) + ...)`, so :root has to be an element these
+          three resolve on. Declared on body, as they were, they resolve to
+          nothing on :root and the whole letterbox gradient becomes invalid.
+          #game and the body still inherit them, so nothing else moves.
+        */
+        --tn-game-height: calc(100dvh - var(--tn-safe-top) - var(--tn-safe-bottom));
+        --tn-game-width: calc(100vw - var(--tn-safe-left) - var(--tn-safe-right));
+        --tn-canvas-height: min(var(--tn-game-height), var(--tn-game-width) * 16 / 9);
+        --tn-canvas-top: calc(
+          var(--tn-safe-top) + (var(--tn-game-height) - var(--tn-canvas-height)) / 2
+        );
+        --tn-canvas-bottom: calc(var(--tn-canvas-top) + var(--tn-canvas-height));
       }
 
       html {
@@ -94,21 +136,11 @@
         overscroll-behavior: none;
 
         /*
-          Where the canvas sits, for the letterbox gradients #game::before
-          paints (see that rule). FIT + CENTER_BOTH inside #game's safe-area
-          insets, so the canvas is as wide as #game on a phone taller than 9:16
-          and as tall as #game on a window wider than it. 16 / 9 is the design
-          resolution, 1080x1920 (ADR-0002). Declared here so both the body and
-          the pseudo-element inherit them.
-        */
-        --tn-game-height: calc(100dvh - var(--tn-safe-top) - var(--tn-safe-bottom));
-        --tn-game-width: calc(100vw - var(--tn-safe-left) - var(--tn-safe-right));
-        --tn-canvas-height: min(var(--tn-game-height), var(--tn-game-width) * 16 / 9);
-        --tn-canvas-top: calc(
-          var(--tn-safe-top) + (var(--tn-game-height) - var(--tn-canvas-height)) / 2
-        );
-        --tn-canvas-bottom: calc(var(--tn-canvas-top) + var(--tn-canvas-height));
-        /*
+          Where the canvas sits is declared on :root, not here. See that block:
+          --tn-sky-stops is written on :root and positions its stops with
+          var(--tn-canvas-top), which only resolves on an element that declares
+          it. The body and #game::before inherit all three from :root.
+
           The gradients themselves are painted by #game::before, below, and not
           here: the level is dimmed by a filter on #game while a card is open
           (ADR-0041), and a filter on #game cannot reach the body's background.
@@ -173,6 +205,18 @@
         by the scene. That is the untinted sky image on every shipped level, and
         --tn-sky, the tinted theme sky, was a visible step away from it.
 
+        Between those two ends sits --tn-sky-stops: what the canvas draws down
+        the REST of its sky, reported by the scene as gradient stops. Two stops
+        made the panel exact on the first row and then ran a straight line to the
+        ground through the hill line and the skyline, which no level's sky is on
+        — measured at 1440x900, the step between panel and canvas grew from 0 at
+        the top to 25 on Halifax and 33 on the North by mid-screen. The stops are
+        positioned against the canvas box for the same reason the ends are, so a
+        phone's flat bands are unaffected. `var(--tn-sky-stops, )` with an empty
+        fallback, and an empty declaration on :root: this substitutes into the
+        middle of a stop list, where an unset property would make the whole
+        gradient invalid and paint no letterbox at all.
+
         Painted by a pseudo-element of #game, not by body, so the filter that
         dims #game while a card is open (ADR-0041) dims the letterbox with the
         level. Its box is #game pushed out by the safe-area insets, which is the
@@ -206,6 +250,7 @@
               180deg,
               var(--tn-sky-top) 0,
               var(--tn-sky-top) var(--tn-canvas-top),
+              var(--tn-sky-stops, )
               var(--tn-ground) var(--tn-canvas-bottom),
               var(--tn-ground) 100%
             )

@@ -77,6 +77,55 @@ describe('index.html letterbox', () => {
     expect(CSS).toMatch(/--tn-sky-top:\s*var\(--tn-sky\)\s*;/u);
   });
 
+  /**
+   * The desktop side panels, which are the same ramp asked about every row.
+   *
+   * A fourth live-site audit found a seam down both edges of the playfield at
+   * 1440 x 900: the ramp was exact on the canvas's first row and then ran
+   * straight to the ground through the hill line and the skyline. The scene now
+   * reports the rows between as `--tn-sky-stops`. Three facts in this file carry
+   * that, and each one silently un-fixes it if a restyle drops it.
+   */
+  it('splices the level\'s own sky between the two ends of the ramp', () => {
+    const paint = ruleBody('#game::before') ?? '';
+    expect(
+      paint,
+      'the ramp runs straight from the first row to the ground again, through whatever the level draws between them',
+    ).toMatch(
+      /var\(--tn-sky-top\)\s+var\(--tn-canvas-top\)\s*,\s*var\(--tn-sky-stops[^)]*\)\s*var\(--tn-ground\)\s+var\(--tn-canvas-bottom\)/u,
+    );
+  });
+
+  it('never leaves the spliced stops unset, which would invalidate the whole gradient', () => {
+    /*
+     * `var()` in the middle of a stop list is invalid at computed-value time when
+     * the property is unset and has no fallback, and an invalid gradient paints
+     * no letterbox at all. Belt and braces: an empty declaration AND an empty
+     * fallback, so neither alone is load-bearing.
+     */
+    expect(CSS, 'index.html declares no --tn-sky-stops').toMatch(/--tn-sky-stops:\s*;/u);
+    const paint = ruleBody('#game::before') ?? '';
+    expect(paint, 'the spliced var has no fallback').toMatch(/var\(--tn-sky-stops,\s*\)/u);
+  });
+
+  it('declares the canvas box on :root, where the stop list can resolve it', () => {
+    /*
+     * A custom property's own `var()`s are substituted on the element that
+     * DECLARES it. `app/bootstrap` writes --tn-sky-stops on :root and every stop
+     * in it is `calc(var(--tn-canvas-top) + ...)`, so these have to be on :root.
+     * Declared on body, as they once were, they resolve to nothing there and the
+     * letterbox disappears on every viewport.
+     */
+    const root = ruleBody(':root') ?? '';
+    const body = ruleBody('body') ?? '';
+    for (const name of ['--tn-canvas-top', '--tn-canvas-height', '--tn-canvas-bottom']) {
+      expect(root, `${name} is not declared on :root`).toContain(`${name}:`);
+      expect(body, `${name} is declared on body, where the stop list cannot resolve it`).not.toContain(
+        `${name}:`,
+      );
+    }
+  });
+
   it('is dimmed by a rule on #game itself, which is what makes painting inside it enough', () => {
     /* If the dim moves to the canvas alone, the band above it stays bright again. */
     expect(SCREEN_STYLES).toMatch(/#game \{ filter: brightness\(/u);

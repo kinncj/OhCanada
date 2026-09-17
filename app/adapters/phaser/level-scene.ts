@@ -14,7 +14,7 @@ import type {
   Vec2,
 } from '@application/ports';
 
-import { blendColors, mixColor, toPhaserColor } from './boot-config';
+import { blendColors, mixColor, toCssColor, toPhaserColor } from './boot-config';
 import { backingScaleOf, fitCameraToDesign } from './design-viewport';
 import { groundFillFloor } from './ground-dressing';
 import { groundYAt, levelBounds, slopeAt, type LevelBounds } from './ground-profile';
@@ -88,7 +88,7 @@ import { depthPlan, interleavedDepths, type DepthGroup, type DepthPlan } from '.
 import { stopSubjectsFor } from './stand-off';
 import { backingBounds, backingTuning, createBacking, facingForward, type BackingWatch } from './backing';
 import { createKeyPresses, directionPressed, pressedAny, type KeyPresses } from './key-presses';
-import { canvasTopColour, meanRowColour, type Rgba, type SkyTopLayer } from './sky-top';
+import { canvasSkyProfile, medianRowColour, type Rgba, type SkyStop, type SkyTopLayer } from './sky-top';
 import type { SceneLevel } from './level-document';
 import { MAX_STEP_SECONDS, applyBounds, createLocomotion } from './locomotion';
 import { watchExit, type ExitWatch } from './level-exit';
@@ -332,14 +332,21 @@ export interface LevelSceneOptions {
    */
   readonly onMilestone?: SceneMilestoneListener;
   /**
-   * The colour the canvas draws on its first row, `#rrggbb`, whenever it changes.
+   * What the canvas draws down its sky, as gradient stops, whenever it changes.
    *
-   * The page paints the band above a letterboxed canvas with it (ADR-0044).
-   * Reported at `create`, and again only when the answer moves: the tier switched
-   * a layer off, the time-of-day tint repainted a sky that shows, or the camera
-   * scrolled a different row onto the top. Never on a frame where nothing moved.
+   * The page paints the letterbox with it: the band above a letterboxed canvas
+   * takes the first stop's colour (ADR-0044), and the desktop side panels take
+   * the whole list, so the level's sky continues past the canvas edge instead of
+   * a straight ramp running through it (CLAUDE.md, ADR-0002).
+   *
+   * One report rather than two, and the top colour is the first stop rather than
+   * a second number, so the band and the panels cannot disagree about the row
+   * they share. Reported at `create`, and again only when the answer moves: the
+   * tier switched a layer off, the time-of-day tint repainted a sky that shows,
+   * or the camera scrolled different rows onto the screen. Never on a frame
+   * where nothing moved.
    */
-  readonly onSkyTop?: (colour: string) => void;
+  readonly onSkyBand?: (stops: readonly SkyStop[]) => void;
 }
 
 /** One placeholder or textured parallax band, plus the document row it came from. */
@@ -603,10 +610,10 @@ export class LevelScene extends Phaser.Scene {
   #levelComplete = false;
   /** The five-second clock that lets the sky follow the device's time of day. */
   #skyClock: Phaser.Time.TimerEvent | null = null;
-  /** The first-row colour last handed to `onSkyTop`, so an unchanged answer is not sent twice. */
-  #skyTop: string | null = null;
+  /** The stop list last handed to `onSkyBand`, written out, so an unchanged answer is not sent twice. */
+  #skyBand: string | null = null;
   /** The camera row that answer was worked out at. `NaN` until the first one. */
-  #skyTopCameraY = Number.NaN;
+  #skyBandCameraY = Number.NaN;
   /** One colour per texture row asked for. A row of a loaded image never changes. */
   readonly #rowColours = new Map<string, Rgba | null>();
   /** The rig's atlas key, resolved once. `undefined` is "not asked yet". */
@@ -845,7 +852,7 @@ export class LevelScene extends Phaser.Scene {
     this.applyProfile(this.#profile);
     /* After the layers, the camera and the tier: every input to the first row.
        `applyProfile` reports too, but returns before it with no tier yet. */
-    this.#reportSkyTop();
+    this.#reportSkyBand();
     this.#startSkyClock();
 
     this.#ready = true;
@@ -977,7 +984,7 @@ export class LevelScene extends Phaser.Scene {
     this.#scrollLayers();
     this.#scrollGroundDressing();
     /* A tier that switched the sky layer off shows the gradient on the first row. */
-    this.#reportSkyTop();
+    this.#reportSkyBand();
 
     this.#snowQuantity = 0;
     const emitter = {
@@ -1107,7 +1114,7 @@ export class LevelScene extends Phaser.Scene {
     this.cameras.main.setScroll(this.#camera.x, this.#camera.y);
     /* A number compare on every frame, and nothing more on any shipped level: a
        world one viewport tall clamps the vertical scroll to 0, so it never moves. */
-    if (this.#camera.y !== this.#skyTopCameraY) this.#reportSkyTop();
+    if (this.#camera.y !== this.#skyBandCameraY) this.#reportSkyBand();
 
     this.#elapsedMs += delta;
     this.#placeRide(dt);
@@ -1870,25 +1877,96 @@ export class LevelScene extends Phaser.Scene {
   }
 
   /**
-   * Tell the renderer what the canvas draws on its first row, if that changed.
+   * Tell the renderer what the canvas draws down its sky, if that changed.
    *
-   * The page paints the band above a letterboxed canvas with it (ADR-0044). The
-   * rule is `sky-top.ts`; this only describes the layers as they stand right now
-   * — visible or switched off by the tier, textured or a placeholder, and where
-   * the camera has put them.
+   * The page paints the letterbox with it — the band above a letterboxed canvas
+   * (ADR-0044) and the desktop side panels. The rule is `sky-top.ts`; this only
+   * describes the layers as they stand right now — visible or switched off by
+   * the tier, textured or a placeholder, and where the camera has put them.
+   *
+   * The comparison is on the written-out list, not on the array, because the
+   * answer is rebuilt on every camera row and almost always the same: re-applying
+   * a dozen unchanged custom properties would be a style recalculation per frame.
    */
-  #reportSkyTop(): void {
-    this.#skyTopCameraY = this.#camera.y;
-    const colour = canvasTopColour({
-      /* The sky gradient's first band is `mixColor(sky, ground, 0)`, which is
-         the tinted sky exactly. */
-      backdrop: this.#palette.sky,
-      layers: this.#skyTopLayers(),
-      cameraY: this.#camera.y,
-    });
-    if (colour === this.#skyTop) return;
-    this.#skyTop = colour;
-    this.#options.onSkyTop?.(colour);
+  #reportSkyBand(): void {
+    this.#skyBandCameraY = this.#camera.y;
+    const stops = canvasSkyProfile(
+      {
+        /* The sky gradient's first band is `mixColor(sky, ground, 0)`, which is
+           the tinted sky exactly. */
+        backdrop: this.#palette.sky,
+        /* ...and every band after it is not. `#paintSky` ramps sky to ground in
+           GRADIENT_BANDS steps behind the layers, so what shows through a gap
+           between two bands depends on how far down the gap is. */
+        backdropAt: (row) => this.#skyGradientAt(row),
+        layers: this.#skyTopLayers(),
+        cameraY: this.#camera.y,
+      },
+      { height: this.#options.designHeight, until: this.#skyFloorY() },
+    );
+
+    const written = stops.map((stop) => `${String(stop.at)} ${stop.colour}`).join(',');
+    if (written === this.#skyBand) return;
+    this.#skyBand = written;
+    this.#options.onSkyBand?.(stops);
+  }
+
+  /**
+   * The sky gradient at one canvas row, `#rrggbb` — what shows where no layer draws.
+   *
+   * The same band arithmetic `#paintSky` fills with, read instead of drawn, so
+   * the two cannot disagree: same `GRADIENT_BANDS`, same band index, same
+   * `mixColor`. Screen rows, because that graphics object is screen-locked.
+   */
+  #skyGradientAt(screenRow: number): string {
+    const bandHeight = this.#options.designHeight / GRADIENT_BANDS;
+    const band = Math.min(
+      GRADIENT_BANDS - 1,
+      Math.max(0, Math.floor((Number.isFinite(screenRow) ? screenRow : 0) / bandHeight)),
+    );
+    return toCssColor(
+      mixColor(this.#palette.sky, this.#palette.ground, band / (GRADIENT_BANDS - 1)),
+    );
+  }
+
+  /**
+   * Where this level's sky ends, in design pixels: the top of its mid-ground.
+   *
+   * The backmost layer is the sky; the next one up in depth order is the first
+   * thing drawn in front of it — Halifax's citadel at 620, the North's range at
+   * 620, Ottawa's skyline at 780 — and that row is where rows stop being flat
+   * enough for one colour to describe them. Read from the level document, so a
+   * level that re-orders or re-offsets its layers moves its own answer and no
+   * engine change is needed (CLAUDE.md: a level is JSON and assets).
+   *
+   * Capped at the ground crest, because a level whose second band starts below
+   * its own ground line has no mid-ground to speak of, and never above 0.
+   */
+  #skyFloorY(): number {
+    const ground = this.#groundCrestY();
+    const ordered = [...this.#options.level.layers].sort((a, b) => a.depth - b.depth);
+    const mid = ordered
+      .slice(1)
+      .map((layer) => layer.offset.y)
+      .filter((y) => Number.isFinite(y));
+    return mid.length === 0 ? ground : Math.max(0, Math.min(ground, Math.min(...mid)));
+  }
+
+  /**
+   * The first row this level's ground can cover, in design pixels.
+   *
+   * Where the sky profile stops. Below it the page paints its opaque land band
+   * from `levelLandBand`, and the parallax layers this scene composites are no
+   * longer what the canvas shows there — `#paintGround` is. The *highest* point
+   * of the polyline rather than its mean, because the mean is where the panel's
+   * land starts and the highest point is the first row where asking about layers
+   * could be wrong. On the nine flat levels the two are the same row.
+   */
+  #groundCrestY(): number {
+    const rows = this.#options.level.ground
+      .map((point) => point.y)
+      .filter((y) => Number.isFinite(y));
+    return rows.length === 0 ? this.#options.designHeight : Math.min(...rows);
   }
 
   /** Every parallax band as the first row sees it. `#layers` is already in depth order. */
@@ -1947,7 +2025,11 @@ export class LevelScene extends Phaser.Scene {
         const context = canvas.getContext('2d', { willReadFrequently: true });
         if (context !== null && source.width > 0) {
           context.drawImage(source, 0, row, source.width, 1, 0, 0, source.width, 1);
-          colour = meanRowColour(context.getImageData(0, 0, source.width, 1).data);
+          /* The median, not the mean: a sky row with clouds on it averages to a
+             pale blue that is neither, and a panel built from such averages is a
+             smear. On a row that is one colour — every shipped sky's first row,
+             which is all ADR-0044 ever read — the two are the same number. */
+          colour = medianRowColour(context.getImageData(0, 0, source.width, 1).data);
         }
       }
     } catch (cause) {
@@ -3160,7 +3242,7 @@ export class LevelScene extends Phaser.Scene {
     this.#palette = palette;
     for (const draw of this.#repaintables) draw();
     /* The gradient, or a placeholder sky, may be what the first row shows. */
-    this.#reportSkyTop();
+    this.#reportSkyBand();
     this.#options.probe?.publish({ dayPhase: next });
   };
 
