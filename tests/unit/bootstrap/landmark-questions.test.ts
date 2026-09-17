@@ -102,6 +102,22 @@ describe('a landmark while an answer step is being played', () => {
     expect(draw.scope.subject).toBe('justice');
   });
 
+  it('is not paced by the day’s new-question budget, because the tracker promised the count', () => {
+    /* ADR-0053: the Peggy's Cove blocker. A task step's count is a promise made
+       on screen before a question is asked, so the budget may not shorten it. */
+    const draw = landmarkDraw({
+      levelSubject: RIGHTS,
+      answering: { step, done: 0, required: 3 },
+      teaches: [],
+    });
+    expect(draw.scope.dailyNewLimitApplies).toBe(false);
+  });
+
+  it('leaves a stop with no task paced like every other drill', () => {
+    const draw = landmarkDraw({ levelSubject: RIGHTS, answering: undefined, teaches: [] });
+    expect(draw.scope.dailyNewLimitApplies).toBeUndefined();
+  });
+
   it('never asks zero questions, whatever the save says was answered', () => {
     const draw = landmarkDraw({
       levelSubject: RIGHTS,

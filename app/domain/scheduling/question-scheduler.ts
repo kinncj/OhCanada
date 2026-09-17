@@ -111,6 +111,23 @@ export interface SelectionRequest {
   readonly settings: SchedulerSettings;
   readonly random: Randomness;
   readonly memory?: MemoryTuning;
+  /**
+   * Does `dailyNewLimit` cap this draw? Default `true` (ADR-0053).
+   *
+   * `false` for a draw whose count was **promised to the player**: a quest
+   * `answer` step says "Answer 3 questions" on the tracker before a single one is
+   * asked. The limit is Study's pacing rule — TN-STUDY-02's "new questions, but
+   * not all at once" — and pacing a drill the player chose to take is not the same
+   * act as refusing to ask a question the game has already committed to.
+   *
+   * It has to be a bypass here rather than a bigger number in
+   * `game.config.json`, because a fresh question the budget cut is not held back:
+   * it is `due`, so `heldBack` is false for it and the relaxation pass below can
+   * never bring it round again. The draw is simply short, silently, and a step
+   * that comes back short can never be finished — which is how Peggy's Cove
+   * locked levels 3–10 for every new player.
+   */
+  readonly dailyNewLimitApplies?: boolean;
 }
 
 /** Shortest gap the lateness measure will divide by, so a 1-minute step is meaningful. */
@@ -297,7 +314,15 @@ export const selectQuestions = (
     }
   });
 
-  const newBudget = Math.max(0, settings.dailyNewLimit - introducedToday(reviews, now));
+  /*
+   * ADR-0053. A promised count introduces whatever it needs; every other draw is
+   * paced by the day's budget. `fresh.length` rather than `Infinity` so the slice
+   * below stays a slice of a known length.
+   */
+  const newBudget =
+    request.dailyNewLimitApplies === false
+      ? fresh.length
+      : Math.max(0, settings.dailyNewLimit - introducedToday(reviews, now));
 
   const ranked: readonly Ranked[] = [
     // Everything whose moment has come, missed questions at the front of it.

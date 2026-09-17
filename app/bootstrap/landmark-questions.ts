@@ -110,6 +110,9 @@ export function landmarkDraw(input: LandmarkDrawInput): LandmarkDraw {
       ...(answering.step.questionPool === undefined ? {} : { pool: answering.step.questionPool }),
       answeredHere,
       repeatWhenExhausted: true,
+      /* ADR-0053: the tracker promised this count before a question was asked, so
+         the day's new-question budget does not get to make it unreachable. */
+      dailyNewLimitApplies: false,
     },
     counter: { answered: done, total: required },
   };

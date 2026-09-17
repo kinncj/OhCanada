@@ -47,6 +47,7 @@ interface Overrides {
   readonly settings?: SchedulerSettings;
   readonly now?: EpochMillis;
   readonly seed?: number;
+  readonly dailyNewLimitApplies?: boolean;
 }
 
 const request = (
@@ -61,6 +62,9 @@ const request = (
   now: overrides.now ?? at(ORIGIN),
   settings: overrides.settings ?? SHIPPED,
   random: seededRandom(overrides.seed ?? 1),
+  ...(overrides.dailyNewLimitApplies === undefined
+    ? {}
+    : { dailyNewLimitApplies: overrides.dailyNewLimitApplies }),
 });
 
 /** `selectQuestions`, unwrapped. Fails loudly rather than returning undefined. */
@@ -196,6 +200,33 @@ describe('50 draws from a 30-question pool never repeat inside the exclusion win
     // `dailyNewLimit` did its job: the player met that many questions today and
     // then went round them again, rather than meeting all thirty in one sitting.
     expect(new Set(drawn).size).toBe(SHIPPED.dailyNewLimit);
+  });
+
+  it('gives a promised count every question it asked for, past the day’s budget (ADR-0053)', () => {
+    /*
+     * The Peggy's Cove blocker, at the scheduler. A new player finished Halifax's
+     * task — nine new questions, on the same UTC day — and the next level's first
+     * task step asks three from a pool of five nobody has met.
+     *
+     * With the budget applied the draw comes back with whatever is left of the
+     * day's ten and never recovers: a fresh question is `due`, so the relaxation
+     * pass cannot bring back one the budget cut. The step then cannot be
+     * finished, the quest cannot complete, and no stamp is earned.
+     */
+    const spentToday = answerAll(poolOf(9), at(ORIGIN), () => true);
+    const task = ['p-0', 'p-1', 'p-2', 'p-3', 'p-4'].map(qid);
+    const options = { reviews: spentToday, now: at(ORIGIN + HOUR) };
+
+    expect(ids(select(task, 3, { ...options, dailyNewLimitApplies: false }))).toHaveLength(3);
+    /* The rule it is an exception to, unchanged: Study is still paced. */
+    expect(ids(select(task, 3, options))).toHaveLength(1);
+  });
+
+  it('paces a drill nobody promised a count for, which is whose rule this is', () => {
+    /* TN-STUDY-02. The default is unchanged and stays the default. */
+    const spentToday = answerAll(poolOf(SHIPPED.dailyNewLimit), at(ORIGIN), () => true);
+    const fresh = poolOf(5).map((id) => qid(`new-${String(id)}`));
+    expect(ids(select(fresh, 3, { reviews: spentToday, now: at(ORIGIN + HOUR) }))).toHaveLength(0);
   });
 
   it('replays exactly from its seed, and differs when the seed does', () => {

@@ -93,6 +93,14 @@ export interface DrillScope {
    * least recently first, rather than stopping short (ADR-0048).
    */
   readonly repeatWhenExhausted?: boolean | undefined;
+  /**
+   * Does the day's new-question budget cap this draw? Default `true` (ADR-0053).
+   *
+   * `false` on a task step's draw, whose count the tracker promised before a
+   * question was asked. Study passes nothing and keeps the cap, which is whose
+   * rule it is (TN-STUDY-02, "new questions, but not all at once").
+   */
+  readonly dailyNewLimitApplies?: boolean | undefined;
 }
 
 export interface StudyDrill {
@@ -179,6 +187,7 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
           preferOnly: scope?.onlyWhatItTells,
           answeredHere: scope?.answeredHere,
           repeatWhenExhausted: scope?.repeatWhenExhausted,
+          dailyNewLimitApplies: scope?.dailyNewLimitApplies,
         },
       );
       if (!drawn.ok) return drawn;

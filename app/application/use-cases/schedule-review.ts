@@ -90,6 +90,15 @@ export interface ScheduleReviewInput {
    * `repeated` so the caller can say so. Without it a spent scope is a short draw.
    */
   readonly repeatWhenExhausted?: boolean | undefined;
+  /**
+   * Does the day's new-question budget cap this draw? Default `true` (ADR-0053).
+   *
+   * `false` only for a count the game has already promised the player: a quest
+   * `answer` step's `count`, printed on the tracker as "Answer 3 questions" before
+   * anything is asked. Study keeps the cap, which is whose rule it is
+   * (TN-STUDY-02).
+   */
+  readonly dailyNewLimitApplies?: boolean | undefined;
   readonly memory?: MemoryTuning | undefined;
 }
 
@@ -210,6 +219,9 @@ export const scheduleReview = (
       now: deps.clock.now(),
       settings: tuning,
       random: deps.random,
+      ...(input.dailyNewLimitApplies === undefined
+        ? {}
+        : { dailyNewLimitApplies: input.dailyNewLimitApplies }),
       ...(memory === undefined ? {} : { memory }),
     });
     return map(drawn, (selected) =>
