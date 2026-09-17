@@ -502,11 +502,67 @@ skate scoring and not a snow bank.
 
 **The library is drawn twice in this level and it is on purpose.** `landmark-parliament-hill@1x.svg` carries
 it as a spire tip behind the right wing — a dark cone and a finial, no drum, no dormers, no windows. The new
-hero is the building: a sixteen-sided sandstone drum, four buttresses with pinnacles, three pointed windows,
+hero is the building: a sixteen-sided sandstone drum, six buttresses with pinnacles, five pointed windows,
 a ribbed polygonal roof with a ring of gabled dormers and a stone lantern. Far view and near view of one
 building, 1 800 px apart, which is the same abstraction that puts the Halifax Town Clock and Pier 21 3 400 px
 apart when they are three kilometres apart in life. `references.json` says so on the subject, so a verifier
 who sees both does not report it as a duplication.
+
+### The drum was redrawn because it never read as round (2026-09-17)
+
+A blind pass read this hero cold as **"a stone church or basilica tower in snow"**. That is the failure the
+subject's own `expectedBlindAnswerNote` names in capitals — *"THE FAILURE TO WATCH FOR IS 'a church', 'a
+chapel'…"* — and `a church` is the one reading the note refuses while accepting `a chapter house`. So it was a
+genuine fail and not a scoring quibble.
+
+**The diagnosis, confirmed against the render before anything was drawn.** The roof, its ribs, the dormers, the
+lantern and the spike finial were all correct and none of them was the problem. **The drum was.** Every cue
+that makes a sixteen-sided drum read as round had been drawn flat:
+
+| cue | what the file actually said | why it read as a west front |
+|---|---|---|
+| facet width | three window bays at a 120 px pitch, equal | equal bay spacing **is** the projection of a flat wall |
+| cornice | one `rect x="46" width="508"` | a straight horizontal 508 px cornice is a flat plane, whatever sits above it |
+| buttresses | four `rect width="36"`, identical | identical widths cannot march around a curve |
+| roof ribs | seven ribs at an even 60 px pitch | the roof disagreed with the drum about being round |
+| wall tone | one `stone-base` field with a flat light block left and a dark block right | a slab lit from the left, not a cylinder |
+| pinnacles | 72 px over the eave | too short to give the ring a rhythm |
+
+**What replaced it is measured, not adjusted.** A regular sixteen-sided drum of radius R = 245, seen in
+elevation with one facet square to the viewer, projects its vertices at R·sin φ for φ = ±11.25°, ±33.75°,
+±56.25° and ±78.75°. About x = 300 that is **x = 60, 96, 164, 252, 348, 436, 504, 540**, so the seven visible
+bays are **36 : 68 : 88 : 96 : 88 : 68 : 36** wide. That ratio is the whole fix — it is what an eye reads as
+"this wall turns away from me" — and every other element was put on the same numbers:
+
+- **the cornice and base rings curve.** Above eye level the near part of a horizontal ring projects highest, so
+  the cornice arches **up** 27 px at the centre (`y = 556 − 32·cos φ`); below eye level it inverts, so the base
+  ring sags **down** 17 px (`y = 742 + 22·cos φ`). Two curved horizontals are the cheapest cylinder available
+  in flat art, and the old file had neither.
+- **six buttresses, not four**, at the six vertices that are not on the silhouette, **34 / 30 / 24 px wide** by
+  position, each casting an `ao-shadow` 0.18 strip on the bay to its right. Rhythm, not count (art bible §5
+  rule 3); the contract's "four visible" was a description of the old drawing.
+- **the roof ribs land on the drum's own vertices**, so the cone recedes at exactly the rate the wall does.
+- **the wall tone ramps across the facets** — base, light, light, base, base, shade, shade — with the terminator
+  right of centre, which is a cylinder lit from the upper left rather than a symmetric object.
+- **pinnacles stand 92 px over the cornice at the centre and 78 at the turn**, and they **interlock with the
+  dormers**: pinnacles on the vertices at x 96/164/252/348/436/504, dormers on the facet centres at
+  x 130/205/300/395/470, each dormer sitting in the gap between two pinnacles. That alternation is itself a
+  roundness cue.
+
+**Five windows, and the count is deliberate.** `mustBeRight` says "three tall pointed-arch windows"; the three
+front bays carry them at 58 / 52 / 52 px wide, and the two **turning** bays carry a visibly narrower 36 px
+window of the same shape. A window compressed at the turn is the strongest single statement that the wall
+continues around, it is what `refs/ottawa/parliament-hill-skyline.jpg` actually shows, and art bible §5 rule 3
+governs repeated detail by shape and spacing rather than by number. It is an accuracy gain and not an
+invention — but it is a departure from the contract's wording, and it is written here rather than left to be
+found.
+
+**Nothing on the `neverAdd` list moved.** No cross, no bell stage, no west door, no clock, no flag, no statue,
+no lettering, no green copper roof. The roof assembly is **436.6 px over a 496 px base = 0.88**, which is the
+figure `references.json` measured off the reference photograph, against 0.75 before.
+
+**It costs nothing.** The canvas is unchanged at 600 × 820, so the decoded texture is identical and Ottawa
+stays at **39.20 MiB of 48.00 (82 %)**; the payload moved 0.69 → **0.70 MiB of 8.00**.
 
 **The hut is drawn twice too, and that one is a scale relationship rather than a fiction.**
 `layer-50-canalwall.svg` has a small warming hut on the **far** retaining wall, on a tile that repeats every
