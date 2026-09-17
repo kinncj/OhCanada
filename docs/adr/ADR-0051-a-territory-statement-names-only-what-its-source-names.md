@@ -9,6 +9,10 @@
   names no file in `docs/adr` is a citation the gate rightly refuses.
 - Numbering: this is ADR-0051 by instruction. The dropped draft held 0050, so that number stays spent
   and no branch merging later reuses it.
+- Amended 2026-09-17: the product owner ruled on the three things this ADR left open or left uncomfortable —
+  the §3.2 conflict, Québec City's statement, and what `sourcePublisher` names. All three are recorded under
+  "The product owner's rulings, 2026-09-17" below, the first discharges this ADR's §3.2 obligation, and §3
+  gains a measured note about the field's actual shape. No decision in the body above is reversed.
 
 ## Context
 
@@ -138,6 +142,35 @@ two disagree. The runtime cannot read a source register — there is no port for
 them") — so the string is carried in the document and pinned to the register by a gate, rather than being
 either absent or unverifiable.
 
+**Amended 2026-09-17: `sourcePublisher` is localised text, and the paragraph above is read with "the string"
+as "each half".** The field carries a `LocalizedText`, both halves copied from the register, and the pin
+compares them **per language**. Re-measured on the tree that carries it, in the order a reader would check:
+`content/schemas/level.schema.json#/$defs/territoryStatement/properties/sourcePublisher` says "in both
+languages" and "LOCALISED, and the pin compares PER LANGUAGE"; `content/schemas/source.schema.json`'s own
+`publisher` — the field this one is a copy of — is localised for the same reason;
+`app/application/ports/content-repository.ts` declares `readonly sourcePublisher: LocalizedText`; all ten
+level documents carry `{"en": "Immigration, Refugees and Citizenship Canada", "fr": "Immigration, Réfugiés
+et Citoyenneté Canada"}`, as does `content/sources/discover-canada.json`; and
+`tests/unit/contracts/a-territory-names-what-its-source-prints.test.ts` compares per language. It landed in
+`8522b66`, and `1bc2ffd` re-granted all ten statements that gate A4 unbound when the field's shape changed —
+A4 working exactly as this ADR's Consequences describe.
+
+**Why per language and not one comparison: a gate comparing one string would have gone on passing while the
+French panel printed an English name.** That is the whole reason the single string was invisible for as long
+as it was, and it is recorded here so that the next field copied out of a register is localised at the point
+it is copied. The names themselves are **not** translated in `app/ui`: a table there would print a name held
+by neither the register nor the level document, and would sooner or later be asked to translate a First
+Nation's own body, which `docs/content-review.md` §9.3 forbids. A publisher with no French name of its own
+carries the same value in both halves.
+
+**The limit this ADR recorded earlier on 2026-09-17 — "one un-localised string drawn to English and French
+readers alike", so a French player read the department's English name — is discharged, not merely
+restated.** The French panel now draws « Immigration, Réfugiés et Citoyenneté Canada ». The earlier
+measurement was true when it was taken, on the tree before `8522b66` merged, and it is left described here
+rather than deleted because a limit that ends by being fixed should say so: this is what the honest form of
+that record looks like when the fix lands, and it is the reason the limit was written down rather than
+waved at.
+
 ### 4. A territorial statement states a fact
 
 `territory.fact.factual` must be `true`. Enforced in `parseLevelDocument`, which refuses the level, and in
@@ -248,7 +281,12 @@ content, written by an author and granted by a verifier.
   obligation below is that dropped draft's, restated because that dropped draft is not in this tree and an obligation nobody's
   gate reads is not one.
 - **The Tier 3 obligations in `docs/content-review.md` §13 are untouched.** They are about depiction and
-  review, not about which document a name came from, and nothing here discharges any of them.
+  review, not about which document a name came from, and nothing here discharges any of them. **Still true,
+  and overtaken on 2026-09-17 by something else:** two of the three were closed as `VOIDED` under a separate
+  product-owner ruling, recorded in "The product owner's rulings" below, because the guide-only rewrite
+  removed the quoted material they were written about. It was not this decision that closed them, which is
+  what this bullet says and remains exactly right; it was the decision about what to do once this one had
+  emptied them.
 - **The name gate is unchecked in CI and says so on every run.** `verify-content` prints how many names it
   searched for, how many it checked against a cached extraction, and how many it could not check. A run where
   nothing was searched says so in those words, so the line can never be read as a pass.
@@ -284,12 +322,21 @@ which ADR-0003 forbids and gate A1/A2 refuses. So the author's commit and the ve
 separate commits — which is what the rest of this ADR's Consequences already assume, where the five granted
 statements "come unbound … until a verifier re-grants them".
 
-- **OBLIGATION due=2026-12-16 owner=po** — settle `docs/content-review.md` §3.2 against this ruling in
+- ~~**OBLIGATION due=2026-12-16 owner=po** — settle `docs/content-review.md` §3.2 against this ruling in
   writing: either amend §3.2 so a territorial statement's names may come from the study guide the game
   teaches, or restate that they must come from the nation's own material and take the consequence for the ten
   statements. Until it is settled, §3.2 says one thing and the content says another, and the first person to
   notice will be a reviewer reading both. Restated from that dropped draft, which is on a branch the obligation gate
-  does not read.
+  does not read.~~
+  **DISCHARGED 2026-09-17** — the product owner took the first branch, and §3.2 is amended in writing rather
+  than in a decision recorded elsewhere. `docs/content-review.md` §3.2 now carries "Amended 2026-09-17 — a
+  territorial statement may take its names from the study guide", which states what is permitted (a name the
+  cited guide prints for a people, in `territory.nations`), why (the game teaches one exam and a territorial
+  statement is a claim about that exam's own document), and six things the section still protects — §3.1
+  everywhere else, characters and art subjects, one document rather than a class of them, the unrelaxed
+  deny-list, provenance as distinct from accuracy and consent, and what a reader of the panel must not
+  conclude from the list's heading. The two documents no longer say different things, and the ruling's cost
+  stays visible in both. Recorded in full below under "The product owner's rulings, 2026-09-17".
 
 - **OBLIGATION due=2026-10-16 owner=content** — rewrite the ten territory statements to *Discover Canada*
   under the shape this ADR sets out, and have a verifier re-grant them. Until that lands, five territorial
@@ -297,11 +344,163 @@ statements "come unbound … until a verifier re-grants them".
   work undone, re-date it with what was tried (ADR-0009) rather than letting a red gate become the normal
   state — a failing gate that everybody has learned to ignore is worse than no gate.
 
+## The product owner's rulings, 2026-09-17
+
+Three questions this ADR left open, or left open and uncomfortable, went to the product owner and came back
+answered. They are recorded together because they are one decision seen from three sides: the game teaches a
+specific exam, and its territorial statements say what that exam's own document says — including where a
+reader of this repository's other rules would have written something else.
+
+### 1. §3.2 is amended for the guide
+
+**Ruled:** amend `docs/content-review.md` §3.2 so a territorial statement may take the names it prints from
+the study guide the game teaches. The amendment is written in that document, at §3.2, and the obligation
+above is discharged against it. It is deliberately narrow — this field, in these statements, for this
+reason — and §3.1's rule that a nation is named as it names itself is untouched everywhere else, including
+on every character and every art subject. The amendment says so in six numbered protections rather than
+leaving a reader to infer the boundary, because the sentence that will be remembered from it is "the guide
+wins", and that is not what was decided.
+
+### 2. Québec City's statement ships as it is
+
+**Ruled: keep it.** `content/levels/quebec-city.json` prints the guide's words — Champlain "allied the
+colony with the Algonquin, the Montagnais and the Huron", whom the guide calls historic enemies of the
+Iroquois — and `nations` carries `Algonquin`, `Montagnais`, `Huron`.
+
+**What was put to the product owner before they chose, restated here in full because a decision a reader
+cannot check is not one.** All four of these were stated explicitly, and none of them is in dispute:
+
+- **These three are the only nations the game names anywhere.** The other nine levels name nobody
+  (`nations: []` with `nationsAbsentBecause: "source-names-none"`), so this one list is the whole of the
+  game's naming of Indigenous peoples in its territorial statements.
+- **They are introduced by whose side they took in a French colonial alliance.** The only thing the player
+  learns about them at the panel is that Champlain allied his colony with them — the guide's frame, on the
+  guide's page 25, which is the sentence the statement cites.
+- **The Iroquois appear only as enemies, and have no entry of their own.** They are named in the sentence as
+  the historic enemies of the three allied peoples, and they are not in `nations`, so the panel lists them
+  nowhere and says nothing else about them.
+- **`Montagnais` and `Huron` are exonyms.** Those nations say **Innu** and **Wendat**. §3.1 asks for the
+  form a nation uses for itself, and this list does not carry it.
+
+**The decision, unsoftened:** the statement ships as it is. The product owner saw the four points above and
+chose the guide's words anyway, on the guide-only ruling — this game teaches *Discover Canada* and the panel
+quotes it. No agent may reopen this by reaching for a better name, and no agent may soften it by adding a
+sentence to the panel explaining the guide, which §10.1 and ADR-0056 both forbid for the same reason: the
+project does not narrate a source in its own voice on a screen that exists to quote it.
+
+**What this ruling does not do.** It does not grant cultural review — §1's Tier 3 does not exist and none of
+these three nations has been asked anything. It does not make an exonym acceptable anywhere else in the
+project. And it does not close `docs/content-review.md` §13's obligations, which are about depiction and
+review and are untouched by it.
+
+### 3. `sourcePublisher` names the department as it is today
+
+**Ruled:** the field names **Immigration, Refugees and Citizenship Canada**, the department as it is now, in
+both languages — which is what shipped on all ten levels.
+
+**The recorded reason.** `sourcePublisher` is a **link label**, not a citation line: the panel draws it as
+the text of a link whose `href` is `fact.source.url`, which points at IRCC's own site. Naming the 2012
+department instead would send a reader who clicks looking for a body that no longer bears that name. And
+neither language was ever a quotation of the document — the cached guide and the live page both print the
+former name, in English and French alike, so there is no language in which the shipped value reproduces what
+the PDF says.
+
+**The wart, stated rather than tidied away.** A reader who follows the link and opens the PDF sees a
+different department name from the one they clicked. That is true today, it was true before this ruling, and
+it is not being fixed. It is the cost of labelling a link by where it goes rather than by what the document
+called itself in 2012, and the product owner chose it with that cost named.
+
+**One honesty note about the reason, in this ADR's own terms — and it has since been settled.** ADR-0003
+requires that a claim this repository makes about a source be re-derivable from the cached bytes. When this
+ruling was recorded, the claim that the guide prints the former name in both languages was **not**
+re-derivable in the worktree that recorded it: `content/sources/discover-canada.json` is `committed: false`,
+the extraction is git-ignored, and the check needs the bytes. It has since been re-derived by somebody
+holding them: the verifier's re-grant, `1bc2ffd`, reports the cached bytes naming the former department in
+both languages — *Citizenship and Immigration Canada* at page 4, with the live French page still printing
+*Citoyenneté et Immigration Canada* — and records that the French half was checked against the department's
+own French page. So the reason now stands on a reading of the source rather than on the ruling alone, which
+is the footing this ADR asks every claim about a document to stand on.
+
+**The wart survives that check unchanged**, and is worth restating because a re-derivation can read as a
+resolution: the guide still calls itself by a name the panel does not print, in both languages now rather
+than in one. Nothing about the localisation fixes that, and nothing was meant to.
+
+### 4. A statement's opening locative comes from the guide too
+
+**Ruled:** the guide-only rule reaches the **opening locative** — the words a statement uses to place the
+level before it starts quoting the guide's material. A statement may not set its scene in geography the
+guide does not print, any more than it may name a people or a place the guide does not print.
+
+**What the ruling names.** `alberta-foothills` opens "This level is set in the Alberta foothills, where the
+plains meet the Rocky Mountains", and the finding put with the ruling is that the guide contains no
+"foothills" and no "plains" outside the Plains of Abraham. The same reading catches `vancouver`'s "This
+level is set on the Vancouver waterfront". **An author is fixing the wording separately; what is recorded
+here is the rule, not the replacement sentence** — this ADR does not write statements, as its own per-level
+table says.
+
+**This reopens claims a verifier granted, and that is the part a reader is owed.** Both statements read
+`verified` today, re-granted on 2026-09-17 in `1bc2ffd` after the publisher split unbound them. Editing the
+opening sentence edits the `/territory` node, so gate A4 unbinds the grant again and a verifier re-grants in
+a separate commit — the author-then-verifier order this ADR already sets out. Said plainly rather than left
+to be inferred: **a `verified` claim is being reopened by a product-owner ruling about wording, not by a
+defect the verifier missed.** The grant was clean against the rule as it stood; the rule moved. Searched for
+a level-specific reservation recorded with either grant — the two grant commits and `docs/` carry none
+naming this locative — so the record shows a straightforward grant rather than a reserved one, and this
+ruling is what overturns it.
+
+**What cannot be re-derived here, in the same terms as the publisher note above.** The claim that the guide
+prints no "foothills" and no "plains" outside the Plains of Abraham needs the cached bytes, which are
+`committed: false` and absent from this worktree — `discover-canada-2012-large-print.txt` is not on disk
+here. It is recorded as the finding put with the ruling, and whoever holds the extraction settles it with
+`containsRun` from `scripts/lib/claims.mjs`, the matcher the gates use and the one that does not fail on the
+extraction's hard wrapping. A line-based `grep` cannot answer it.
+
+### 5. The two Tier 3 review obligations in §13 are closed as overtaken
+
+**Ruled: close them.** `docs/content-review.md` §13's obligations to put Peggy's Cove in front of a Tier 3
+reviewer from Kwilmu'kw Maw-klusuaqn and The North in front of one from Kwanlin Dün First Nation are closed
+in that document, at their own markers. §13's third obligation — `OQ-REVIEW-2`, whether there is a Tier 3
+reviewer at all — is untouched and stands.
+
+**The reasoning as it was put to the product owner.** Both obligations were written when those two levels
+**quoted those nations' own material**: Peggy's Cove carried Kwilmu'kw Maw-klusuaqn's words and The North
+carried Kwanlin Dün First Nation's acknowledgement of the Tagish Kwan, along with *Chu Níikwän* and
+*Kwanlin*. The guide-only rewrite removed all of it. Both levels now name nobody — `nations: []` with
+`nationsAbsentBecause: "source-names-none"` — so the material each obligation was written about is gone, and
+items (1) and (2) of each are questions about words no longer in the documents.
+
+**What a reviewer would have been asked about instead is the silence**, and there is one new instance of it
+created the same day: a landmark card now reads "This is Peggy's Point Lighthouse", printing the settler
+name on a coast whose Mi'kmaw name the game never gives. Items (3), (4) and (5) of each obligation — the
+unfilled silence, a level that depicts nobody, and meaning in the art an outsider cannot see — are not
+answered by anything, and the product owner closed the obligations knowing that.
+
+**The consequence, named plainly because this is the kind of decision that otherwise looks like an
+expiry.** The decision to name that coast only in the settler's name now stands **without anyone from that
+nation having seen it**, and closing these markers removes the mechanism by which that would have been
+raised. That is the cost of the ruling, it was visible when the ruling was made, and no agent may soften it
+or re-argue it here.
+
+**Two limits this closure does not reach**, stated in the same breath because closing a review obligation
+reads as review having happened: §3.1's naming rule stands, and the §3.2 amendment's protection 5 stands —
+**a guide-sourced name is not a reviewed name, and nothing in these rulings makes any content culturally
+reviewed.** No `communityReview` status moves, none may move (§1, and ADR-0003's rule A3), and §1's shipping
+rule is unchanged.
+
+**Why those two markers read `VOIDED` rather than `DISCHARGED`.** Each asked that a level be put in front of
+a named reviewer and that the answer be recorded. That work was never done: no reviewer was engaged, none is
+named, and no answer exists. What ended was the **premise** — the quoted material the obligations were
+written about. ADR-0009 splits the two keywords for exactly this case and says that recording a withdrawn
+obligation as discharged "claims a delivery that never happened", so `VOIDED` is the honest keyword and the
+closure sentence says what removed the premise. The gate treats the two identically, so nothing is bought by
+the wrong one.
+
 ## References
 
 - `docs/content-review.md` §3.1 (the deny-list), §3.2 (where a name comes from), §9.2 (quoting a source's own
   terms), §9.3 (endonyms are not translated), §10.1–10.3 (the fact, the panel, the half-step), §11 (the
-  checklist box no gate keeps), §13 (the Tier 3 obligations, untouched)
+  checklist box no gate keeps), §13 (the Tier 3 obligations — untouched by the naming decision, and two of
+  the three later closed as overtaken on 2026-09-17; see the rulings section)
 - ADR-0003 (the two ends of a citation, the author/verifier split, A1/A2), ADR-0007 (the schema is the
   contract), ADR-0008 (a seam exists when something calls it), ADR-0015 (prune it or tripwire it),
   ADR-0016 (staleness, banned terms and the clocks a guide citation brings), ADR-0024 (an empty collection

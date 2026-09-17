@@ -190,6 +190,16 @@ may say what *Discover Canada* says about "the Métis of the Red River" whether 
 entry. The two are different objects: a sentence is prose a reader can weigh, and `nations` is a list the
 panel prints under a heading saying these are names.
 
+**Where that lands on the shipped game, named here so a reader meets a decision rather than an oversight.**
+One level prints names at all. Québec City's panel lists `Algonquin`, `Montagnais` and `Huron`, because
+page 25 is the only place the guide both names peoples and puts them where a level is set. Two of those
+three are colonial exonyms — those nations say **Innu** and **Wendat** — so §3.1's rule that a nation is
+named as it names itself is not satisfied by that list, and the product owner chose it anyway, knowing that.
+What was put to them and what they decided is recorded in full in
+`docs/adr/ADR-0051-a-territory-statement-names-only-what-its-source-names.md` under "The product owner's
+rulings". §3.1 is not amended by that choice: it is overridden in this one field, by the §3.2 amendment
+below, and nowhere else in this document.
+
 ### 3.2 Where it is recorded, and how it is verified
 
 `CharacterDocument.nation` already exists in `content/schemas/character.schema.json` and points here. It is
@@ -217,19 +227,61 @@ citation: **every name a statement prints must be a name the source it cites pri
 names no people for the place, `nations` is empty and `nationsAbsentBecause: "source-names-none"` records
 that it is empty because the source is silent rather than because nobody looked.
 
-**This section and the product owner's ruling disagree, and only the product owner can settle it.** The
-ruling is that every fact and every name a level prints comes from *Discover Canada*:
+#### Amended 2026-09-17 — a territorial statement may take its names from the study guide
+
+This section used to say that it and the product owner's ruling disagreed, and that only the product owner
+could settle it. They have settled it, and the answer is written into the rule rather than left standing
+beside it. The ruling is that every fact and every name a level prints comes from *Discover Canada*:
 
 > literally use the names from the official guide. that's all… all the study materials should be from the
 > official guide.
 
-*Discover Canada* is the Crown's study guide. It is not "the nation's own published material", and it is not
-a registry a nation is listed in — and this project has already moved a name source **away** from the Crown
-once for exactly that reason (`content/sources/kmk-about-consultation.json` records Halifax's Mi'kmaq name
-source moving off `cirnac-peace-and-friendship-treaties`). No agent may reconcile that quietly: this document
-is what content is reviewed against, and content that contradicts it is content that fails its own review.
-ADR-0051 carries the obligation to settle it in writing, and until it is settled a reader of both will find
-them saying different things.
+**What is now permitted.** A level's `territory.nations` may print a name that the study guide this game
+teaches prints for a people, sourced to the guide and to nothing else — even though *Discover Canada* is the
+Crown's study guide and is therefore neither "the nation's own published material" nor a registry a nation is
+listed in. The names come from the one document the statement cites in `territory.fact.source`, which under
+ADR-0051 is also where the sentence comes from and where the panel's link points.
+
+**Why, and the reason is narrow enough to be load-bearing.** This game teaches one exam, and a territorial
+statement is a claim about *that exam's own document*. A player using it is examined on *Discover Canada*;
+a statement drawn from the guide, citing the guide, under a panel link that opens the guide is a sentence
+about what the guide says, attributed to the body that said it. The rule this section states for a
+character's `nation` answers a different question — *who is this person?* — and the answer to that one may
+not come from a Crown document about them. Accepting the ruling costs what ADR-0051 already prices: nine of
+the ten levels now name nobody, and the names the old statements carried are gone.
+
+**What §3.2 still protects. Read this before citing the amendment anywhere else, because it is narrower
+than it will be remembered as.**
+
+1. **§3.1 is untouched, everywhere.** A nation is named in the form that nation uses for itself. This
+   amendment does not make the guide an authority on anyone's name; it makes the guide the authority on
+   *what the guide says*, in a field whose whole subject is that document.
+2. **It reaches this field, in these statements, and no other.** `territory.nations` on a level document.
+   `CharacterDocument.nation` still requires a `nationSource` that is the nation's own published material or
+   a registry that nation is listed in — the rule stated above this amendment, unchanged — and so does a
+   subject in `assets/refs/references.json`. A character is not a level.
+3. **It permits one document, not a class of them.** The permitted source is the one the statement cites,
+   which is the guide. It is not "a Crown page", and it does not reopen CIRNAC, Parks Canada, a university
+   encyclopedia or a tribal council's site as a name source for a level: ADR-0051 removed the second
+   citation so that a statement's names and its sentence cannot come from two places. The move this project
+   already made **away** from a Crown page for a name — `content/sources/kmk-about-consultation.json`
+   records Halifax's Mi'kmaq name source coming off `cirnac-peace-and-friendship-treaties` — is not reversed
+   by this amendment; that name is gone from the level entirely, because the guide does not print it.
+4. **The deny-list is not relaxed.** §3.1's anchored pattern stands exactly as written, case-insensitively:
+   a bare category word is a build failure whatever document printed it.
+5. **Provenance is not accuracy, and neither is consent.** This amendment says where a name may be copied
+   from. It says nothing about whether the name is right, whether the nation would recognise it, or whether
+   the depiction is wanted — §1's three tiers are unchanged, Tier 3 still does not exist, and a
+   guide-sourced name is not a reviewed name.
+6. **What a reader of the panel must not conclude.** The list is headed "Named in this statement". It says
+   these are the names the cited document prints; it does not say these are the names those peoples use for
+   themselves, and where the two differ this document sides with the peoples everywhere except in this
+   field.
+
+The consequence is recorded rather than implied: for as long as the game's territorial statements cite the
+guide, a reader who compares §3.1 with the "About this place" panel will find names §3.1 would not have
+chosen. That is the shape of the decision, not a defect in it, and ADR-0051 carries what was put to the
+product owner and what they chose.
 
 **How it is verified.** The `content-verifier` fetches `nationSource`, confirms the page contains the name
 in `nation`, and records the hash exactly as it does for a `FactSource`. That is a check that the name was
@@ -828,7 +880,7 @@ request from the three story files that found it.
   (ADR-0009); letting the date pass in silence is what this marker exists to prevent. Until it is answered,
   §1's shipping rule stands and nothing in its blocked list may be authored.
 
-- **OBLIGATION due=2026-12-08 owner=po** — put the Peggy's Cove level in front of a Tier 3 reviewer from the
+- ~~**OBLIGATION due=2026-12-08 owner=po** — put the Peggy's Cove level in front of a Tier 3 reviewer from the
   **Mi'kmaq**, and record the answer. Scope: `content/levels/peggys-cove.json`, the two `peggys-cove-*`
   subjects in `assets/refs/references.json`, and `docs/stories/TN-LEVEL-peggys-cove.md`. The date is
   deliberately `OQ-REVIEW-2`'s. Copied verbatim in substance from `assets/style/peggys-cove-level.md` §0,
@@ -843,9 +895,26 @@ request from the three story files that found it.
   exactly that half-step; (5) whether anything in the art — the rock, the stores, the water — carries a
   meaning an outsider cannot see. **Nothing in this repository may record an answer to any of these.** Per
   §1, an agent may write `communityReview.status = "not-sought"` and nothing else, and none is written. Per
-  `docs/stories/TN-PEGGYS-06`, no string that level draws may imply that this review has happened.
+  `docs/stories/TN-PEGGYS-06`, no string that level draws may imply that this review has happened.~~
+  **VOIDED 2026-09-17** — closed as overtaken by the product owner. What removed the premise: this
+  obligation was written when the level **quoted Kwilmu'kw Maw-klusuaqn's own words**, and the guide-only
+  rewrite (ADR-0051) removed them. `content/levels/peggys-cove.json` now names nobody — `nations: []` with
+  `nationsAbsentBecause: "source-names-none"` — so items (1) and (2) above ask about words that are no
+  longer in the document. **The work was never done and this does not claim it was:** no reviewer was
+  engaged, none is named, no answer exists, and `VOIDED` rather than `DISCHARGED` is the honest keyword for
+  that under ADR-0009. **Items (3), (4) and (5) are not answered, and the closure is the decision not to
+  answer them.** What a reviewer would now be asked about is the silence, including one instance created on
+  the day of this ruling: a landmark card reads "This is Peggy's Point Lighthouse", printing the settler
+  name on a coast whose Mi'kmaw name the game never gives. **The cost, stated rather than left to be
+  inferred: the decision to name that coast only in the settler's name now stands without anyone from that
+  nation having seen it, and this marker was the mechanism by which that would have been raised.** It does
+  not make the level reviewed — §1's tiers are unchanged, no `communityReview` status moves, and §3.2's
+  amendment says in its fifth protection that a guide-sourced name is not a reviewed name. Recorded in full,
+  with the reasoning as it was put, in
+  `docs/adr/ADR-0051-a-territory-statement-names-only-what-its-source-names.md` under "The product owner's
+  rulings".
 
-- **OBLIGATION due=2026-12-08 owner=po** — put the North level in front of a Tier 3 reviewer from **Kwanlin
+- ~~**OBLIGATION due=2026-12-08 owner=po** — put the North level in front of a Tier 3 reviewer from **Kwanlin
   Dün First Nation**, and record the answer. Scope: `content/levels/the-north.json`, the two `the-north`
   subjects in `assets/refs/references.json`, and `docs/stories/TN-LEVEL-the-north.md`. The date is
   deliberately `OQ-REVIEW-2`'s. Copied in substance from `assets/style/the-north-level.md` §0, where the gate
@@ -862,4 +931,18 @@ request from the three story files that found it.
   Indigenous reads as respect or as erasure, which §10.3 already calls a half-step. **Nothing in this
   repository may record an answer to any of these.** Per §1 an agent may write
   `communityReview.status = "not-sought"` and nothing else, and none is written. Per
-  `docs/stories/TN-NORTH-06`, no string that level draws may imply that this review has happened.
+  `docs/stories/TN-NORTH-06`, no string that level draws may imply that this review has happened.~~
+  **VOIDED 2026-09-17** — closed as overtaken by the product owner, on the same ruling as the Peggy's Cove
+  marker above. What removed the premise: this obligation was written when the level **quoted Kwanlin Dün
+  First Nation's own acknowledgement of the Tagish Kwan** and printed *Chu Níikwän* and *Kwanlin*, and the
+  guide-only rewrite (ADR-0051) removed all of it. `content/levels/the-north.json` now names nobody —
+  `nations: []` with `nationsAbsentBecause: "source-names-none"` — so items (1) and (2) above ask about words
+  no longer in the document, and item (4)'s silence about the Ta'an Kwäch'än Council is now a silence about
+  everybody. **The work was never done and this does not claim it was:** no reviewer was engaged, none is
+  named, no answer exists, which is why this is `VOIDED` and not `DISCHARGED` (ADR-0009). **Items (3) and
+  (5) are not answered** — a level titled *The North* that depicts nobody in a region where most people are
+  Indigenous is exactly the half-step §10.3 names, and closing this marker removes the mechanism by which a
+  reviewer would have been asked about it. It does not make the level reviewed: §1's tiers are unchanged, no
+  `communityReview` status moves, and a guide-sourced name is not a reviewed name (§3.2, fifth protection).
+  Recorded in full in `docs/adr/ADR-0051-a-territory-statement-names-only-what-its-source-names.md` under
+  "The product owner's rulings".
