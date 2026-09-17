@@ -256,6 +256,21 @@ passes, and that residual is named in the ADR rather than left to be inferred. N
 scheduler: a missed question already outranks the rest of the draw, so the card reports behaviour rather than
 requesting it.
 
+**A level asks only what it taught (ADR-0057).** Measured on 2026-09-17, the ten levels tell 88 distinct
+propositions between them and their tasks ask 76 questions from pools naming 187 ids — 126 of which rest on a
+sentence their level never says. The rule binds **content, at the `questionPool`**: an `answer` step may name
+only questions whose `source.quote` shares a proposition with a granted `factClaim` that level tells, and a
+claim told in quest dialogue must be told by an earlier step. No code and no schema moves, because the pool is
+already the narrowing the draw applies — it is ADR-0048's stop rule reaching the task, where the pool was the
+one exempt path. The deficit is closed by **teaching more, never by asking less**: a taught-only draw over
+today's content leaves six of ten levels unable to fill their own task, which is ADR-0054's blocker. The extra
+teaching is *Discover Canada*'s, surfaced rather than invented (ADR-0056 §2), so a level's teaching is bounded
+by its subject's remit in the guide, which is finite. The remit itself does not move: ADR-0028's floor of
+thirty stands, a subject grades more than any one level teaches, and the surplus is met in Study and the exam
+— neither of which this rule reaches, because there the player is the one asking. A contract test can hold the
+quote arithmetic and the step order; it cannot tell whether a true sentence teaches anything, and that
+residual belongs to the author's brief rather than to a sixth verification check.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]
