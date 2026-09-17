@@ -87,13 +87,18 @@
  *
  * TODAY'S DEFAULT (`make verify-art`, and CI)
  *
- *   No harness-shaped verdict record exists yet — docs/art-verification.json
- *   holds the hand pass, which says of itself `blindnessHeld: false`. So the
- *   default run builds and leak-checks the hand-off, and reports
- *   `identification: NOT ESTABLISHED` in the same breath as it reports OK. It
- *   does not print a bare "OK", because that is the shape of the lie this whole
- *   task is about. `--require-identification` turns the missing record into a
- *   failure, and is how this becomes fully gating once a clean run is recorded.
+ *   docs/art-verification.json now holds a harness-shaped record from a run that
+ *   was made blind, so the default run builds and leak-checks the hand-off AND
+ *   scores that record. It still never prints a bare "OK", because that is the
+ *   shape of the lie this whole task is about: every run says in the same breath
+ *   what it did not establish.
+ *
+ *   It exits 1 while any recorded verdict is about art that has since been
+ *   redrawn, whatever else passed. That is the gate working, not the gate
+ *   broken: a re-run is owed for those subjects and no output may imply
+ *   otherwise. `--require-identification` goes further and makes an entry the
+ *   record's own hand-off could not answer, or a subject it never covered, a
+ *   failure too.
  */
 
 import { mkdtempSync, existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';

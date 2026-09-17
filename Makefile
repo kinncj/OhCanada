@@ -220,11 +220,15 @@ verify-content: ## ADR-0003/ADR-0016: separation of duties, the CI clause, the r
 # clean one's, which is why this target prints what it did not prove alongside
 # what it did, and never a bare OK.
 #
-# There is no scored verdict record yet -- docs/art-verification.json is that
-# hand pass and says of itself `blindnessHeld: false` -- so the gate reports
-# `identification: NOT ESTABLISHED` and exits 0 on the half it can prove.
-# `--require-identification` makes the missing record a failure, and is the
-# one-flag change that makes this fully gating once a clean run is recorded.
+# docs/art-verification.json now holds a scored record from a run that was made
+# blind, so this target SCORES it as well as building the hand-off. It exits 1
+# while any recorded verdict is about art that has since been redrawn: nobody has
+# looked at the new picture, so there is nothing for exit 0 to mean. That is not
+# a broken gate, it is the gate saying a re-run is owed, and CI reports it
+# without blocking for exactly that reason.
+# `--require-identification` additionally makes an entry the record's own hand-off
+# could not answer, or a subject it never covered, a failure -- the one-flag
+# change that makes this fully gating once every subject carries a current verdict.
 verify-art: ## Build + leak-check the blind hand-off, and score any recorded verdict
 	npm run verify-art
 

@@ -1297,8 +1297,10 @@ function mountedWindow(rig, plan) {
  * THE SIZE LADDER DOES NOT APPLY TO A POSE, AND THIS IS WHERE THAT IS DECIDED.
  *
  * `LADDER_WIDTHS` is [300, 140], and it was derived on a landmark. The verifier
- * that ran it wrote down what it measured and what it did not
- * (docs/art-verification.json, `findings.sizeLadderMeasuresRetentionNotRecognition`):
+ * that ran it wrote down what it measured and what it did not (record 5.0.0 of
+ * docs/art-verification.json, `findings.sizeLadderMeasuresRetentionNotRecognition`;
+ * the record that superseded it makes the same point under
+ * `runIntegrity.whatIsNotProven`):
  *
  *     "The landmark silhouettes survive the ladder and the ACTIVITY does not. At
  *     140 px the Peace Tower, the Chateau, the CN Tower, the Town Clock and the
