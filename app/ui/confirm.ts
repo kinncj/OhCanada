@@ -25,6 +25,24 @@
  * trap's, so it happens whether the player pressed Escape, the cancel control,
  * or closed it some way nobody has thought of yet.
  *
+ * ## It hugs what it asks (ADR-0045 §3 and §5)
+ *
+ * `tn-screen--hug`, for the reason the exam intro and the exam menu already
+ * carry it: a confirmation draws one heading and two answers, and the default
+ * card fills the viewport, so the question sat at the very top and its answers
+ * at the very bottom with a column of blank paper between them. The fourth live
+ * audit read the delete question that way — "a page that failed to load" — with
+ * 646 px of white between the question and "Delete everything" on a 400 × 900
+ * phone. `--hug` and not `--sheet`: every confirmation in this game is asked
+ * over another screen (Settings, the exam, the exam intro) rather than over a
+ * level, and `--sheet` dims `#game` behind it, which would darken a level
+ * nobody is looking at.
+ *
+ * **Nothing about the question changes.** The words, the order the two answers
+ * are drawn in, and which of them the single-switch highlight opens on are
+ * `TN-SAVE-06` and `TN-SAVE-08`'s and are untouched: this is where the card
+ * sits, not what it says.
+ *
  * ## Nothing here counts down
  *
  * `TN-ATTEMPT-07`: "when I do nothing for two minutes, nothing has been
@@ -92,6 +110,9 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
     testId: options.testId,
     locale,
     role: 'alertdialog',
+    /* The answers sit under the question, not under a column of blank paper.
+       See "It hugs what it asks" at the top of this file. */
+    className: 'tn-screen--hug',
     onEscape: () => {
       cancel();
     },

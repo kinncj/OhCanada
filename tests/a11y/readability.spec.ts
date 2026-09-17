@@ -5,6 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 import { labelled, text } from '../../app/ui/copy';
+import { HIGHLIGHT_ATTRIBUTE } from '../../app/ui/single-switch';
 
 import { HARNESS_URL } from './playwright.config';
 
@@ -643,3 +644,67 @@ test.describe('the exam', () => {
     await expect(page.getByTestId('exam-timer-toggle')).toContainText('30 minutes');
   });
 });
+
+/* ------------------------------------------------- the fourth live audit */
+
+const LARGE_AND_SMALL: readonly (readonly [string, Params])[] = [
+  ['in English', {}],
+  ['in French', { locale: 'fr' }],
+  ['at 200 % text', { textScale: '200' }],
+  ['in French at 200 % text', { locale: 'fr', textScale: '200' }],
+];
+
+/*
+ * P1: "Delete my progress" asked its question at the very top of the screen and
+ * drew its two answers at the very bottom, with 646 px of blank paper between
+ * them on a 400 x 900 phone — a page that had failed to load. The confirmation
+ * now hugs what it asks (`tn-screen--hug`, ADR-0045 §3 and §5).
+ *
+ * Measured as the pair that answers the question: the **last thing drawn**
+ * before the answers, against the answers. Not the heading, because the import
+ * confirmation draws a second sentence under its question and a gap measured
+ * from the heading there would be the cost of a real line of text.
+ */
+test.describe('the delete question hugs its answers', () => {
+  for (const [label, params] of LARGE_AND_SMALL) {
+    test(`draws "Delete everything" under the question ${label}`, async ({ page }) => {
+      await open(page, { screen: 'settings', save: '1', ...params });
+      await page.getByTestId('save-clear').click();
+      await expect(page.getByTestId('save-clear-confirm')).toBeVisible();
+
+      const layout = await page.evaluate(() => {
+        const dialog = document.querySelector('[data-testid="save-clear-confirm"]');
+        const card = dialog?.querySelector('.tn-screen__card');
+        const actions = card?.querySelector('.tn-screen__actions');
+        if (!card || !actions) return null;
+        const said = [...card.children]
+          .filter((child) => child !== actions && !(child as HTMLElement).hidden)
+          .at(-1);
+        if (said === undefined) return null;
+        return {
+          gap: actions.getBoundingClientRect().top - said.getBoundingClientRect().bottom,
+          bottom: card.getBoundingClientRect().bottom,
+          height: innerHeight,
+        };
+      });
+
+      expect(layout, 'the confirmation drew no question or no answers').not.toBeNull();
+      expect(
+        layout?.gap ?? Number.POSITIVE_INFINITY,
+        'blank paper between the question and the answer to it',
+      ).toBeLessThan(48);
+      /* Still at the foot of the screen, where a thumb is. */
+      expect(layout?.bottom ?? 0).toBeGreaterThanOrEqual((layout?.height ?? 0) - 1);
+    });
+  }
+
+  test('keeps the safe answer highlighted for a switch player', async ({ page }) => {
+    /* The layout moved; `TN-SAVE-08` did not. A switch's first press must not
+       be able to delete everything. */
+    await open(page, { screen: 'settings', save: '1', switch: '1' });
+    await page.getByTestId('save-clear').click();
+    await expect(page.getByTestId('save-clear-keep')).toHaveAttribute(HIGHLIGHT_ATTRIBUTE, 'true');
+    await expect(page.getByTestId('save-clear-yes')).not.toHaveAttribute(HIGHLIGHT_ATTRIBUTE, 'true');
+  });
+});
+

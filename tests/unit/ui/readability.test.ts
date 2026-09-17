@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type { LevelId } from '@domain/ids';
+import { createConfirm } from '@ui/confirm';
 import { createExamScreen, type ExamQuestionView } from '@ui/exam-screen';
 import { createExamStartScreen } from '@ui/exam-start';
 import type { MapEntry } from '@ui/level-select';
@@ -130,6 +131,65 @@ describe('menus hug what they offer', () => {
     const menu = page.doc.byTestId('exam-menu');
     expect(menu?.hidden).toBe(false);
     expect(menu?.className.split(' ')).toContain('tn-screen--hug');
+  });
+});
+
+/**
+ * The fourth live audit, on the delete question: the heading sat at the very top
+ * of the screen, its two answers at the very bottom, and 646 px of blank paper
+ * between them on a 400 × 900 phone. It read as a page that had failed to load.
+ *
+ * The confirmation is the shared dialog (`app/ui/confirm.ts`), so this is
+ * asserted of the dialog rather than of the one screen the audit happened to
+ * open. Geometry is `tests/a11y/readability.spec.ts`'s.
+ */
+describe('a confirmation hugs the question it asks', () => {
+  function ask(): ReturnType<typeof createConfirm> {
+    const page = buildPage();
+    const confirm = createConfirm(page.host, {
+      id: 'tn-fixture-confirm',
+      testId: 'fixture-confirm',
+      locale: 'en',
+      /* A fixture, not copy: the wording of the delete question is `TN-SAVE`'s
+         and is asserted in `save-transfer.test.ts`. This file is about where
+         the card sits. */
+      describe: () => ({ title: 'Delete everything?' }),
+      confirmKey: 'save.clear.yes',
+      confirmTestId: 'fixture-yes',
+      cancelKey: 'save.clear.keep',
+      cancelTestId: 'fixture-keep',
+      onConfirm: vi.fn(),
+      onCancel: vi.fn(),
+    });
+    confirm.open();
+    return confirm;
+  }
+
+  it('sits at the foot of the screen with its answers under its question', () => {
+    const classes = ask().element.className.split(' ');
+    expect(classes).toContain('tn-screen--hug');
+    /* Never a sheet: a confirmation is asked over another screen — Settings, the
+       exam, the exam intro — and the sheet rule dims `#game` behind it, which
+       would darken a level nobody is looking at. */
+    expect(classes).not.toContain('tn-screen--sheet');
+  });
+
+  it('keeps the question, its cost and the two answers in that order', () => {
+    /* Hugging moves nothing and hides nothing: the answers are still drawn
+       destructive-first, and which one the switch opens on is
+       `confirm.ts`'s and is held by `save-transfer.test.ts`. */
+    const confirm = ask();
+    const card = (confirm.element as unknown as FakeElement).children[0];
+    expect(card?.children.map((child) => child.tagName)).toEqual(['H2', 'P', 'DIV']);
+    const actions = card?.children[2];
+    expect(actions?.children.map((child) => child.getAttribute('data-testid'))).toEqual([
+      'fixture-yes',
+      'fixture-keep',
+    ]);
+  });
+
+  it('still says the actions start right under the words', () => {
+    expect(css()).toContain('.tn-screen--hug .tn-screen__actions { margin-block-start: 0; }');
   });
 });
 
