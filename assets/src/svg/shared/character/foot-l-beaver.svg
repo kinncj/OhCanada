@@ -3,12 +3,12 @@
   <path d="M 115,436 A 17 17 0 0 1 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436 Z" fill="#7c4327"/>
   <defs><clipPath id="ft"><path d="M 115,436 A 17 17 0 0 1 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436 Z"/></clipPath></defs>
   <g clip-path="url(#ft)">
-    <ellipse cx="158" cy="447" rx="11" ry="5" fill="#b4733b"/>
+    <path d="M 146,444 C 158,443 168,447 174,453 C 175,457 172,460 166,461 L 148,461 C 144,455 144,449 146,444 Z" fill="#b4733b"/>
     <ellipse cx="114" cy="452" rx="8" ry="10" fill="#401812"/>
     <path d="M 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <path d="M 149,436 C 151,440 158,441 168,443 C 168,445 174,451 172,456 C 171,460 167,461.5 160,461.5 L 118,461.5 C 110,461.5 109,452 111,444 C 112,440 113,438 115,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 154,455 L 157,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 161,455 L 164,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 168,455 L 171,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 150,459 L 157,447" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 159,460.5 L 165,447" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 168,459 L 172,448" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

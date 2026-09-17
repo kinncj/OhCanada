@@ -3,12 +3,12 @@
   <path d="M 91,436 A 17 17 0 0 1 125,436 C 127,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 89,438 91,436 Z" fill="#7c4327"/>
   <defs><clipPath id="ft"><path d="M 91,436 A 17 17 0 0 1 125,436 C 127,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 89,438 91,436 Z"/></clipPath></defs>
   <g clip-path="url(#ft)">
-    <ellipse cx="140" cy="447" rx="11" ry="5" fill="#b4733b"/>
+    <path d="M 128,444 C 140,443 150,447 156,453 C 157,457 154,460 148,461 L 130,461 C 126,455 126,449 128,444 Z" fill="#b4733b"/>
     <ellipse cx="90" cy="452" rx="8" ry="10" fill="#401812"/>
     <path d="M 125,436 C 127,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 89,438 91,436" fill="none" stroke="#7c4327" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <path d="M 125,436 C 127,440 134,441 144,443 C 150,445 156,451 154,456 C 153,460 149,461.5 142,461.5 L 94,461.5 C 86,461.5 85,452 87,444 C 88,440 89,438 91,436" fill="none" stroke="#3a2018" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 136,455 L 139,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 143,455 L 146,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 150,455 L 153,449" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 132,459 L 139,447" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 141,460.5 L 147,447" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 150,459 L 154,448" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

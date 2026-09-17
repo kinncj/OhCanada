@@ -158,6 +158,15 @@ shell. The lit face was then enlarged to cover most of the upper half, because a
 the hind feet were both `hide-base` and merged into one dark mass; the hind feet now sit a tone lighter,
 which is also correct, since a sole plane faces the sky and a hanging tail does not.
 
+**The webbing, 2026-09-17.** A blind run identified the guide at 0.90 — *"clearly a beaver"* — and still failed
+it on one entry: **webbed hind feet, absent**. It was right. The web was three ink ticks **6.7 px long** at the
+very front of the foot, and a 6.7 px mark on a foot that is 28 px wide at play size is not a cue, it is noise.
+The toe lines now run the foot's full depth, about 13 px, and behind them a `leather-light` **web fan** fills
+the whole toe pan, so the foot reads as one paddle divided into three toes rather than as a dark lozenge with
+scratches on it. **Nothing about the part's frame moved**: the silhouette, the `viewBox`, the ankle circle and
+the sole line at y 461.5 are untouched, because the sole is canon shared with every other character
+(`art-bible.md` §7.2) and an atlas frame that changes size repacks the shared page.
+
 **The incisors.** Two of them, white, tucked under the shared smile and ending well above the chin. Until §0
 they were deliberately larger than life and hung below the snout pad, where they read as buck teeth in a gape.
 Exaggerating an identifying feature is simplification; adding one would be invention (`art-bible.md` §5).
