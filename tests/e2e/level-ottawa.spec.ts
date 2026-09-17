@@ -451,8 +451,11 @@ test.describe('TN-LEVEL-01 — the level becomes playable', () => {
        of a 1920-row world, so a stop outside that is not this level's ground. */
     expect(crest).toBeGreaterThan(1236 / 1920);
     expect(crest).toBeLessThan(1470 / 1920);
-    expect(land.skirt).toBe('100%');
-    expect(land.end).toBe('100%');
+    /* Read as heights, not as spellings: now that the crest carries a
+       polyline's mean, the band is formatted to three decimals, so the two
+       full-height stops arrive as "100.000%". */
+    expect(Number.parseFloat(land.skirt)).toBe(100);
+    expect(Number.parseFloat(land.end)).toBe(100);
     /* And the panels carry the level's own theme, not `game.config.json`'s —
        at noon, unmodulated. See the clock at the top of this test. */
     expect(land.sky.toLowerCase()).toBe(OTTAWA.theme.sky.toLowerCase());

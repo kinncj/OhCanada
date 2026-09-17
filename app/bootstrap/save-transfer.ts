@@ -114,14 +114,19 @@ export function saveTransferOptions(wiring: SaveTransferWiring): SaveTransferOpt
      * a partial outcome on `ProgressRepository.clear`, which is a port change
      * and another owner's call; it is reported rather than invented here.
      *
-     * The writes stay held on the failure path as well as the success path when
-     * the clear may have half-landed — releasing them would let the game write
-     * its in-memory save straight back over a store it may have just emptied.
+     * The writes are released again when the clear did not finish. Holding them
+     * would hand a player who is still playing a game that saves nothing and
+     * never says so, and they would lose the session they never asked to
+     * delete. Releasing can at worst write the in-memory save back over a
+     * half-emptied store — which is the state the screen has just told them to
+     * try again from. Of the two, a game that keeps its promise to save is the
+     * one the player can see, so that is the one this takes.
      */
     onDelete: async (): Promise<boolean> => {
       wiring.writes.hold();
       const cleared = await deleteProgress(wiring.deps);
       if (cleared.ok) return true;
+      wiring.writes.release();
       report(`[bootstrap] the progress was not fully deleted. ${cleared.error.code}`);
       return false;
     },

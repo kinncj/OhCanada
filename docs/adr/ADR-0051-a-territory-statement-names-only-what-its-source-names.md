@@ -1,19 +1,20 @@
 # ADR-0051: A territory statement names only what its source names, and cites that source
 
 - Status: Accepted (2026-09-16)
-- Supersedes the `territoryStatement` half of ADR-0050. ADR-0050 decided that a statement cites **one**
-  source; this decides **which** source that is for the names, what a statement does when the source names
-  nobody, and what the "About this place" panel links to. ADR-0050 lives on the branch
-  `multi-nation-source` and is not on `main`; its findings are restated here rather than referenced, because
-  a decision that rests on a file the reader cannot open is a decision nobody can check.
-- Numbering: `main` holds ADR-0001…ADR-0047. ADR-0048, ADR-0049 and ADR-0050 are not in this tree.
-  This is ADR-0051 by instruction, so no number is reused by a branch that later merges.
+- Supersedes the `territoryStatement` half of an earlier draft, on the branch `multi-nation-source`, which
+  was dropped and never merged. That draft decided that a statement cites **one** source; this decides
+  **which** source that is for the names, what a statement does when the source names nobody, and what the
+  "About this place" panel links to. Its findings are restated here rather than referenced, because a
+  decision that rests on a file the reader cannot open is a decision nobody can check — and a number that
+  names no file in `docs/adr` is a citation the gate rightly refuses.
+- Numbering: this is ADR-0051 by instruction. The dropped draft held 0050, so that number stays spent
+  and no branch merging later reuses it.
 
 ## Context
 
 ### The ruling
 
-The product owner ruled, while the several-source design of ADR-0050 was being implemented:
+The product owner ruled, while the several-source design of that dropped draft was being implemented:
 
 > literally use the names from the official guide. that's all… all the study materials should be from the
 > official guide.
@@ -70,7 +71,7 @@ comments. `scripts/lib/claims.mjs` finds a claim by the shape of a `factClaim` �
 verification }` — and a name is not a claim, so no check in gate B or gate C reaches one. `make
 validate-content` checks the block's shape and the deny-list on each name, and cannot open a page. §11's
 checklist box — "`nationSource` resolves and contains that name" — is held by review and by nothing else.
-ADR-0050 measured this first; it is still true on `main`.
+that dropped draft measured this first; it is still true on `main`.
 
 **(3) The deny-list is anchored, and nobody has said so out loud.** `nationName`'s pattern is
 `^\s*(?:…)\s*$`: it matches a value that **is** a category word, not one that contains one. `Red River
@@ -98,7 +99,7 @@ rule on names is:
 `nationSource` stays in `common.schema.json` and stays on `CharacterDocument`, where a character's nation is
 still sourced to that nation's own material under §3.2. It leaves the level document because under the
 ruling there is no second page to cite: the names and the fact come from the same document, and two
-citations of one document are two things to keep in step and one hash to get wrong (ADR-0050's rejected
+citations of one document are two things to keep in step and one hash to get wrong (that dropped draft's rejected
 `nationSources` array, by another route).
 
 What this makes **unrepresentable**, which is the point: a statement whose names come from one page and
@@ -200,7 +201,7 @@ content, written by an author and granted by a verifier.
   already legal, and §9.2 already lets the *sentence* carry the source's term. Relaxing the list would buy
   nothing and spend a rule.
 - **Keep `nationSource` and let a statement carry either citation (`oneOf`).** Rejected for the reason
-  ADR-0050 gives against its own `nationSources` array: a second way to write a citation is a shape every
+  that dropped draft gives against its own `nationSources` array: a second way to write a citation is a shape every
   reader must branch on, every consumer must handle and no gate exercises, and the first document to use the
   rare branch is authored by somebody reading a shape nobody has filled in. It would also keep defect (1)
   alive on the branch that keeps `nationSource`.
@@ -244,7 +245,7 @@ content, written by an author and granted by a verifier.
   the Crown's study guide and is neither, and this project has already moved a name source **away** from the
   Crown once for exactly that reason (`content/sources/kmk-about-consultation.json` records Halifax's Mi'kmaq
   name source moving off `cirnac-peace-and-friendship-treaties`). No agent may quietly reconcile that. The
-  obligation below is ADR-0050's, restated because ADR-0050 is not in this tree and an obligation nobody's
+  obligation below is that dropped draft's, restated because that dropped draft is not in this tree and an obligation nobody's
   gate reads is not one.
 - **The Tier 3 obligations in `docs/content-review.md` §13 are untouched.** They are about depiction and
   review, not about which document a name came from, and nothing here discharges any of them.
@@ -282,7 +283,7 @@ the null form (ADR-0003, gate A1/A2) — so the author's commit and the verifier
   writing: either amend §3.2 so a territorial statement's names may come from the study guide the game
   teaches, or restate that they must come from the nation's own material and take the consequence for the ten
   statements. Until it is settled, §3.2 says one thing and the content says another, and the first person to
-  notice will be a reviewer reading both. Restated from ADR-0050, which is on a branch the obligation gate
+  notice will be a reviewer reading both. Restated from that dropped draft, which is on a branch the obligation gate
   does not read.
 
 - **OBLIGATION due=2026-10-16 owner=content** — rewrite the ten territory statements to *Discover Canada*
@@ -300,7 +301,7 @@ the null form (ADR-0003, gate A1/A2) — so the author's commit and the verifier
   contract), ADR-0008 (a seam exists when something calls it), ADR-0015 (prune it or tripwire it),
   ADR-0016 (staleness, banned terms and the clocks a guide citation brings), ADR-0024 (an empty collection
   must not reduce to a pass), ADR-0030 (a told claim is outside the one-proposition rule)
-- ADR-0050, on branch `multi-nation-source` — one source per statement, the missing gate, and the
+- The dropped draft, on branch `multi-nation-source` — one source per statement, the missing gate, and the
   `nationName` consequence this ADR answers
 - `content/sources/discover-canada.json` (the register; the document itself is `committed: false`),
   `content/sources/kmk-about-consultation.json` (the name source that moved off a Crown page)

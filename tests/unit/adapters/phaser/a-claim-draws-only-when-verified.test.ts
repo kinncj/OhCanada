@@ -501,11 +501,15 @@ describe('the same document, one verdict written both ways', () => {
       /* The sentence, both languages, and where it came from — §10.2 requires
          the panel to name its source, and a panel that cannot cite it may not
          draw it. */
-      expect(granted.about.statement.en).toContain("Mi'kmaq");
+      expect(granted.about.statement.en).toContain('Halifax');
       expect(granted.about.statement.fr.length).toBeGreaterThan(0);
       expect(granted.about.publisher.length).toBeGreaterThan(0);
       expect(granted.about.sourceUrl).toMatch(/^https?:\/\//);
-      expect(granted.about.nations).toContain("Mi'kmaq");
+      /* Halifax names nobody, and that is the point of ADR-0051: *Discover
+         Canada* names no people for this place, and a statement names only what
+         its source names. The panel still draws, still cites, and says what the
+         guide does say about the city. */
+      expect(granted.about.nations).toEqual([]);
     }
   });
 
