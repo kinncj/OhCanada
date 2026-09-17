@@ -887,12 +887,27 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     progress = withCharacter(progress, toPlayerCharacter(repairedCharacter.selection));
     persist();
   }
-  /* The level draws what the player chose. Takes effect at the next level open,
-     which is every open in this route: the creator is always upstream of a
-     level. Nothing is said on a first run, because there is nothing the player
-     has chosen yet: the renderer's empty appearance dresses the puppet in the
-     rig artboard's own skins — "a complete character rather than a naked one" —
-     and the real one arrives with `character/created`. */
+  /*
+   * The level draws what the player chose. Takes effect at the next level open,
+   * which is every open in this route: the creator is always upstream of a
+   * level. Nothing is said on a first run, because there is nothing the player
+   * has chosen yet: the renderer's empty appearance dresses the puppet in the
+   * rig artboard's own skins — "a complete character rather than a naked one" —
+   * and the real one arrives with `character/created`.
+   *
+   * **This line owns dressing a saved character, and the shell's reports cannot
+   * replace it.** ADR-0053 rule 3 moved the *draw* to the screen, and it is
+   * worth being exact about what did not move with it: the shell reports a
+   * character only when the creator is finished (`character/created`,
+   * `character/changed`), and a returning player can go title → Continue →
+   * level without ever opening the creator. Delete this line and that player
+   * plays every level as the rig's own skins.
+   *
+   * The two dress sites are disjoint by construction — this one runs once, at
+   * boot, only for a character that was already in the save; `keepCharacter`
+   * runs only when the player accepts one — so no boot dresses the puppet
+   * twice.
+   */
   if (characterSelection !== null) renderer.setPlayerAppearance(characterSelection);
 
   /** Save the character, tell the level, and say which of the two events it was. */

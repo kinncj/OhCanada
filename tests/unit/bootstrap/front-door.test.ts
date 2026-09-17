@@ -965,6 +965,26 @@ beforeEach(() => {
   hoisted.state.shellOptions = null;
   hoisted.state.shellHost = null;
   hoisted.state.previews = [];
+  /*
+   * Cleared like every other recorder in this list — and it was the one that
+   * was not.
+   *
+   * `appearance` was declared, initialised once at module scope and never reset,
+   * so a test that dressed the puppet left its entry in the array for every test
+   * that ran after it. Nothing had ever dressed one until ADR-0053's suite
+   * arrived, which is why a field missing from a list of sixty-two could sit
+   * here unnoticed; the first two tests to record an appearance reported two
+   * identical entries on one boot, which reads exactly like the composition root
+   * dressing the player twice. It is not: `app/bootstrap/main.ts` has two dress
+   * sites — the boot line, for a character the save already had, and
+   * `keepCharacter`, reachable only from `onCreateCharacter` and
+   * `onChangeCharacter` — and a returning boot runs the first and not the
+   * second.
+   *
+   * A leaked recorder is worse than a missing one: it fails a later test with an
+   * earlier test's evidence, and the defect it accuses is in the wrong file.
+   */
+  hoisted.state.appearance = [];
   hoisted.state.storageWarning = false;
   hoisted.state.entries = null;
   hoisted.state.level = null;
@@ -3422,6 +3442,12 @@ describe('a save with no character is handed no character (ADR-0053, rule 3)', (
       creator.initialSelection,
       'the returning player was re-randomised instead of being given their own character',
     ).toEqual(SAVED_SKINS);
-    expect(hoisted.state.appearance).toEqual([SAVED_SKINS]);
+    /* Once, and with the save's character: the boot line is the only thing that
+       dresses a returning player, and `keepCharacter` is not reachable on this
+       route. A second entry here is a second dress, not a wrong character. */
+    expect(
+      hoisted.state.appearance,
+      'the puppet was dressed more than once on one boot',
+    ).toEqual([SAVED_SKINS]);
   });
 });
