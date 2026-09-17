@@ -235,7 +235,15 @@ describe('the settings store', () => {
     const listener = vi.fn();
     const unsubscribe = store.subscribe(listener);
     unsubscribe();
-    store.set('autoMove', true);
+    /*
+     * A change the store is not already holding. This used to set `autoMove` to
+     * `true`, and when that became the shipped default (ADR-0058) the set turned
+     * into a no-op — so this test passed whether or not `unsubscribe` did
+     * anything at all. A test that cannot fail is worse than no test, and the
+     * guard below is what keeps the vehicle honest if another default moves.
+     */
+    expect(DEFAULT_SETTINGS.dyslexiaFont, 'the vehicle is not a change').toBe(false);
+    store.set('dyslexiaFont', true);
     expect(listener).not.toHaveBeenCalled();
   });
 
@@ -253,7 +261,26 @@ describe('the settings store', () => {
     });
     store.subscribe(() => seen.push('second'));
 
-    store.set('autoMove', true);
+    /*
+     * The subject here is listener bookkeeping — `commit` notifies over a copy
+     * of the set (`[...listeners]`), so a listener that removes itself mid-
+     * notification cannot make the next one be skipped. The setting is only the
+     * vehicle that produces one notification.
+     *
+     * It has to be a setting the store is **not** already holding. This used to
+     * be `autoMove: true`, which stopped being a change the day auto-move became
+     * the default (ADR-0058): the store correctly said nothing, no listener ran,
+     * and the failure read as if the bookkeeping had broken. `dyslexiaFont`
+     * ships off — ADR-0058 turns auto-move on and leaves every other switch
+     * exactly as it was — and the guard states that dependency out loud rather
+     * than leaving the next default change to rediscover it here.
+     *
+     * The store's "say nothing when a set changes nothing" behaviour is a
+     * different claim with its own test above ("says nothing when a set changes
+     * nothing"), which writes `subtitles: true` deliberately.
+     */
+    expect(DEFAULT_SETTINGS.dyslexiaFont, 'the vehicle is not a change').toBe(false);
+    store.set('dyslexiaFont', true);
     expect(seen).toEqual(['first', 'second']);
   });
 });
