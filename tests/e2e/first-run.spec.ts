@@ -275,6 +275,25 @@ test.describe('changing a character, later, which is what the intro promised', (
     /* The first-run route ran once, and changing a character did not re-run it. */
     expect(trace.filter((name) => name === 'character/created')).toHaveLength(1);
 
+    /*
+     * Wait for the write before reloading. The assertion below is about what the
+     * store kept, and a reload that beats the write reads a game with no
+     * character: the creator then opens on a fresh draw and the chosen tone is
+     * not checked. That is what failed here on a loaded runner while the same
+     * spec passed five times elsewhere - a race, not a regression, and the
+     * second one of this shape found today.
+     *
+     * `exam.spec.ts` already waits on this event. The save after the change is
+     * the one that matters, so this waits for a `progress/saved` that follows
+     * the `character/changed` rather than for any save at all - the first run
+     * wrote one before this test ever clicked Done.
+     */
+    await page.waitForFunction(() => {
+      const probe = (window as unknown as { __tnExam?: { events(): { name: string }[] } }).__tnExam;
+      const names = (probe?.events() ?? []).map((entry) => entry.name);
+      return names.lastIndexOf('progress/saved') > names.lastIndexOf('character/changed');
+    });
+
     /* And it survives a reload, which is the only proof the save was written. */
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
