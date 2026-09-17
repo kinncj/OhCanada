@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="109" height="89" viewBox="67 0 109 89" shape-rendering="geometricPrecision">
-  <title>Knitted toque, three-quarter facing right: a snug red crown, a darker ribbed red cuff and a white pom on top. The cuff runs level over the face and clears the highest brow in every expression and presentation (checked by the generator), then drops behind the ear.</title>
+  <title>Knitted toque, three-quarter facing right: a snug red crown, a darker ribbed red cuff and a white pom on top. The cuff runs level over the face and clears the highest brow in every expression and presentation (checked by the generator), then drops behind the ear. THE POM IS DRAWN LARGE ON PURPOSE. Ridden on the bicycle at 390 px, a 20 px bobble is about 16 px on the trail, and a blind reading of that render reported a HELMET - which is on that subject's `neverAdd`. Nothing was removed, because there was nothing to remove: the rig offers `none` and `toque` and no helmet exists anywhere in this project's art. What the reading found is that at play size a snug red crown with a small pale bobble has the silhouette of a smooth shell, and the one thing that separates knitted headwear from a helmet - the bobble - was the part too small to do it. The pom is now 28 x 22 rather than 20 x 20, grown sideways and down rather than up so it stays inside the part window and no rig geometry moves. Colour, crown, cuff and ink are untouched.</title>
   <path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z" fill="#d8262c"/>
   <defs><clipPath id="tqc"><path d="M 76,72 C 70,40 94,21 122,21 C 152,21 172,35 170,50 C 144,48 106,54 76,72 Z"/></clipPath></defs>
   <g clip-path="url(#tqc)">
@@ -19,12 +19,12 @@
   <path d="M 155,44 L 155,58" fill="none" stroke="#d8262c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <path d="M 72,66 C 96,52 132,44 166,43 C 174,43 176,57 167,58 C 140,57 120,56 107,62 C 98,67 92,76 88,84 C 80,92 64,80 72,66 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="#e6eff7"/>
-  <defs><clipPath id="tqp"><path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z"/></clipPath></defs>
+  <path d="M 123,1 C 130.7,1 137,5.9 137,12 C 137,18.1 130.7,23 123,23 C 115.3,23 109,18.1 109,12 C 109,5.9 115.3,1 123,1 Z" fill="#e6eff7"/>
+  <defs><clipPath id="tqp"><path d="M 123,1 C 130.7,1 137,5.9 137,12 C 137,18.1 130.7,23 123,23 C 115.3,23 109,18.1 109,12 C 109,5.9 115.3,1 123,1 Z"/></clipPath></defs>
   <g clip-path="url(#tqp)">
-    <ellipse cx="118" cy="9" rx="4.5" ry="3.5" fill="#ffffff"/>
-    <ellipse cx="126" cy="20" rx="6" ry="3.5" fill="#c2d6e8"/>
-    <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="none" stroke="#e6eff7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <ellipse cx="117" cy="8" rx="6" ry="4.5" fill="#ffffff"/>
+    <ellipse cx="128" cy="19" rx="8" ry="4" fill="#c2d6e8"/>
+    <path d="M 123,1 C 130.7,1 137,5.9 137,12 C 137,18.1 130.7,23 123,23 C 115.3,23 109,18.1 109,12 C 109,5.9 115.3,1 123,1 Z" fill="none" stroke="#e6eff7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <path d="M 122,3 C 128,3 132,7.2 132,13 C 132,18.8 128,23 122,23 C 116,23 112,18.8 112,13 C 112,7.2 116,3 122,3 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 123,1 C 130.7,1 137,5.9 137,12 C 137,18.1 130.7,23 123,23 C 115.3,23 109,18.1 109,12 C 109,5.9 115.3,1 123,1 Z" fill="none" stroke="#3a2018" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

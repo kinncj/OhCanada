@@ -1,10 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="240" height="176" viewBox="0 296 240 176" shape-rendering="geometricPrecision">
-  <title>Bicycle, side view, facing right: two wheels, a diamond frame, a saddle, cranks and pedals, and a bar drawn wide across the three-quarter view so the far grip sits forward of the near one, where the far hand has to reach it. Wheels are 88 px across and tubes 10 px wide, which is heavier than scale, because the Toronto waterfront trail is ridden at 390 px and a 3 px tube is not a bicycle. Frame tubes are stroked twice - ink under, colour over - so every tube carries the rig's 6 px silhouette without a second path per tube. Tyre and rim follow the bicycles already drawn into `toronto/layer-40-boulevard.svg`: dark tyre, light rim, visible spokes.</title>
+  <title>Bicycle, side view, facing right: two wheels, a diamond frame, a saddle, cranks and pedals, and a bar drawn wide across the three-quarter view so the far grip sits forward of the near one, where the far hand has to reach it. Wheels are 88 px across and tubes 10 px wide, which is heavier than scale, because the Toronto waterfront trail is ridden at 390 px and a 3 px tube is not a bicycle. Frame tubes are stroked twice - ink under, colour over - so every tube carries the rig's 6 px silhouette without a second path per tube. Tyre and rim follow the bicycles already drawn into `toronto/layer-40-boulevard.svg`: dark tyre, light rim, visible spokes. THE SPOKES ARE DRAWN DARK AND HEAVY, and that is a correction. They were 3 px of `white-shade` inside a `white-base` rim, over the transparent hole of the wheel - so on the trail they were a pale line on whatever pale thing was behind them, and at the 390 px this is ridden at a blind reading recorded the wheels as UNSPOKED while eight spokes were in the file. They are now 5 px of `slate-base` with a hub of the same at each axle: a mid-dark tone reads against the pale asphalt, the sky and the water alike, which a near-white one cannot. Eight spokes and not more - `references.json` simplifies away "individual spokes beyond a readable few", and twelve at this size close into a disc.</title>
   <ellipse cx="120" cy="462" rx="104" ry="8" fill="#16203a" opacity="0.28"/>
-  <g stroke="#cbd2da" stroke-width="3" stroke-linecap="round">
+  <g stroke="#57647a" stroke-width="5" stroke-linecap="round">
     <path d="M 50,377 L 50,455 M 11,416 L 89,416 M 22,388 L 78,444 M 22,444 L 78,388"/>
     <path d="M 190,377 L 190,455 M 151,416 L 229,416 M 162,388 L 218,444 M 162,444 L 218,388"/>
   </g>
+  <circle cx="50" cy="416" r="9" fill="#57647a"/>
+  <circle cx="190" cy="416" r="9" fill="#57647a"/>
   <g fill="none" stroke="#242b33" stroke-width="12">
     <circle cx="50" cy="416" r="39"/>
     <circle cx="190" cy="416" r="39"/>
