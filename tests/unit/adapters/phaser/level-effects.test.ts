@@ -221,11 +221,16 @@ describe('selectLayers', () => {
     expect(selectLayers(SIX, profileFor(tier).parallaxLayers, UNIFORM)).toHaveLength(expected);
   });
 
-  it('draws one layer under reduced motion at every tier — scenery, not parallax', () => {
+  it('keeps every band under reduced motion — still scenery, not less of it', () => {
+    /* Reduced motion used to collapse this to one band, which on a real screen
+       meant the sky and nothing else: a live audit found Halifax reduced to two
+       characters on a flat void. The bands a device draws is the tier's question;
+       what reduced motion switches off is `parallax-drift`, so they stay pinned
+       to the world instead of parting from it. */
     for (const tier of ['low', 'medium', 'high'] as const) {
-      expect(
-        selectLayers(SIX, profileFor(tier, 'reduced').parallaxLayers, UNIFORM),
-      ).toHaveLength(1);
+      expect(selectLayers(SIX, profileFor(tier, 'reduced').parallaxLayers, UNIFORM)).toHaveLength(
+        PRESETS[tier].parallaxLayers,
+      );
     }
   });
 });
