@@ -533,6 +533,10 @@ export interface RenderProfile {
   readonly maxPixelRatio: number;
   /** Already clamped to the tier preset, the device ceiling and reduced motion. */
   readonly particles: number;
+  /**
+   * How many parallax bands to draw. The **tier's** number, never the motion
+   * setting's: reduced motion holds the scenery still, it does not remove it.
+   */
   readonly parallaxLayers: number;
   /** Layers may ease independently of the camera. Off under reduced motion. */
   readonly parallaxEasing: boolean;
@@ -554,12 +558,33 @@ export interface RenderProfileInput {
  *
  * Order matters and is asserted by test: the preset is read, the particle count
  * is clamped to the device's budget, and *then* reduced motion is applied. A
- * reduced-motion player ends at zero particles and one parallax layer at every
+ * reduced-motion player ends at zero particles, no easing and no squash at every
  * tier, so no measurement can hand them motion back.
  *
- * One parallax layer rather than zero: a level still needs a backdrop, and a
- * single layer at camera speed does not parallax. "Reduced motion", not "no
- * scenery".
+ * ## Reduced motion keeps every layer, and that is the defect this fixed
+ *
+ * This used to return `Math.min(1, preset.parallaxLayers)`, and a live-site audit
+ * found what that means on a screen: turning on "Less movement" **emptied the
+ * world**. `selectLayers` keeps as many bands as this number allows, so one layer
+ * is one band — the sky — and Halifax lost its houses, trees, harbour and
+ * background people to a flat grey-blue void; Toronto lost its whole skyline. The
+ * setting reads "Less movement" and it was deleting the scenery.
+ *
+ * CLAUDE.md scopes reduced motion to "parallax easing, particles and
+ * squash-and-stretch". None of those is a layer. A band is *drawn* art, and how
+ * many bands a device draws is the **tier's** question — it is measured frame
+ * cost, and a player who asks for stillness has not asked for a weaker device.
+ * So every layer the tier allows is drawn at every motion level, and stillness is
+ * carried by `parallaxEasing` alone: `level-scene.ts` pins each band to the world
+ * (scroll factor 1, 1) and only the `parallax-drift` effect — skipped under
+ * reduced motion — gives it a rate of its own. The scenery is all there; it moves
+ * with the camera instead of parting from it.
+ *
+ * Costs nothing extra against CLAUDE.md's budgets: this restores the *same* band
+ * count the same tier already draws at full motion, which is the count the
+ * overdraw budget is measured against, and layer textures are loaded from the
+ * level manifest whether or not a band is visible, so decoded texture memory is
+ * unchanged either way.
  */
 export function resolveRenderProfile(input: RenderProfileInput): RenderProfile {
   const preset = input.presets[input.tier];
@@ -575,7 +600,9 @@ export function resolveRenderProfile(input: RenderProfileInput): RenderProfile {
     renderScale: preset.renderScale,
     maxPixelRatio: preset.maxPixelRatio,
     particles: reduced ? 0 : Math.max(0, Math.min(preset.particles, particleCeiling)),
-    parallaxLayers: reduced ? Math.min(1, preset.parallaxLayers) : preset.parallaxLayers,
+    /* Never lowered by the motion setting. See the header: a band is scenery, and
+       stillness is `parallaxEasing` below. */
+    parallaxLayers: preset.parallaxLayers,
     parallaxEasing: !reduced,
     squashStretch: !reduced,
   };

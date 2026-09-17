@@ -477,9 +477,17 @@ describe('resolveRenderProfile', () => {
       const profile = profileFor(tier, { motion: 'reduced' });
 
       expect(profile.particles, `${tier}: particles survived reduced motion`).toBe(0);
-      expect(profile.parallaxLayers).toBeLessThanOrEqual(1);
       expect(profile.parallaxEasing).toBe(false);
       expect(profile.squashStretch).toBe(false);
+      /* And the scenery is NOT one of the things reduced motion takes: the band
+         count is the tier's, unchanged. CLAUDE.md names easing, particles and
+         squash-and-stretch, and a band is none of them. */
+      expect(
+        profile.parallaxLayers,
+        `${tier}: reduced motion deleted parallax bands. That is the defect a live audit found: ` +
+          `"Less movement" emptied the world — Halifax lost its houses, trees and harbour, ` +
+          `Toronto its skyline — because one layer is one band, the sky.`,
+      ).toBe(PRESETS[tier].parallaxLayers);
     }
   });
 
@@ -494,8 +502,15 @@ describe('resolveRenderProfile', () => {
     expect(still.filters).toBe(true);
   });
 
-  it('leaves a backdrop rather than no scenery: one layer, not zero', () => {
-    expect(profileFor('high', { motion: 'reduced' }).parallaxLayers).toBe(1);
+  it('draws the same world still as it draws moving: every band the tier allows', () => {
+    /* The whole picture, held still — not a backdrop with the level taken out of
+       it. Stillness is `parallaxEasing`, which the scene honours by leaving every
+       band pinned to the world (`level-effects.ts`, PINNED_SCROLL_FACTOR). */
+    for (const tier of TIER_ORDER) {
+      expect(profileFor(tier, { motion: 'reduced' }).parallaxLayers).toBe(
+        profileFor(tier, { motion: 'full' }).parallaxLayers,
+      );
+    }
   });
 
   it('keeps the authored preset visible alongside the applied numbers', () => {
