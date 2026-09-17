@@ -81,6 +81,11 @@ export interface Confirm {
 export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confirm {
   const doc = host.ownerDocument;
   let locale = options.locale;
+  /* Tracked here as well as in the screen, because the screen does not report
+     it and the highlight below must not move when the switch is off. */
+  let switchEnabled = options.singleSwitch === true;
+  /** The safe answer, kept so the switch can open on it. Rebuilt by `render`. */
+  let cancelControl: HTMLElement | null = null;
 
   const screen: Screen = createScreen(host, {
     id: options.id,
@@ -119,25 +124,56 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
       screen.describedBy(body);
     }
 
-    replaceChildren(actions, [
-      button(doc, {
-        testId: options.confirmTestId,
-        text: text(locale, options.confirmKey),
-        attrs: { 'data-tn-action': 'primary' },
-        onClick: () => {
-          screen.hide();
-          options.onConfirm();
-        },
-      }),
-      button(doc, {
-        testId: options.cancelTestId,
-        text: text(locale, options.cancelKey),
-        attrs: { 'data-tn-action': 'quiet' },
-        onClick: () => {
-          cancel();
-        },
-      }),
-    ]);
+    /* Drawn in this order — the answer first, the safe one second — because
+       `TN-SAVE-06` and `TN-EXAM-04` print the two answers in it. Which one the
+       *switch* opens on is a separate question, answered by
+       `highlightSafeAnswer` below. */
+    const confirmControl = button(doc, {
+      testId: options.confirmTestId,
+      text: text(locale, options.confirmKey),
+      attrs: { 'data-tn-action': 'primary' },
+      onClick: () => {
+        screen.hide();
+        options.onConfirm();
+      },
+    });
+    cancelControl = button(doc, {
+      testId: options.cancelTestId,
+      text: text(locale, options.cancelKey),
+      attrs: { 'data-tn-action': 'quiet' },
+      onClick: () => {
+        cancel();
+      },
+    });
+    replaceChildren(actions, [confirmControl, cancelControl]);
+  }
+
+  /**
+   * Open the single-switch highlight on the **safe** answer.
+   *
+   * `createScreen` highlights the first item in the ring, which is the right
+   * default everywhere else and is wrong here: the first item is the answer
+   * that does the thing, so a switch user whose first press is a fraction too
+   * long would confirm it. `TN-SAVE-08` requires it of the delete question in
+   * so many words — "the highlight starts on 'Keep my progress'" — and every
+   * confirmation in this game asks something whose yes costs a player
+   * something they cannot get back, so it is the behaviour of the shared
+   * dialog rather than a flag each caller has to remember. `single-switch.ts`
+   * already treats a long press with nothing highlighted as an advance for the
+   * same reason.
+   *
+   * `TN-SAVE`'s "the highlight position starts at the first item" is about what
+   * a *reload* does not restore, and is not a claim about which control a
+   * confirmation opens on.
+   *
+   * Re-applied after a re-render, because `refreshSwitch` cannot find the item
+   * it was on once `render` has replaced both buttons and falls back to the
+   * first.
+   */
+  function highlightSafeAnswer(): void {
+    if (!switchEnabled || !screen.visible || cancelControl === null) return;
+    const at = screen.ring.items.indexOf(cancelControl);
+    if (at >= 0) screen.ring.highlight(at);
   }
 
   function cancel(): void {
@@ -156,6 +192,7 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
       render();
       screen.show();
       screen.refreshSwitch();
+      highlightSafeAnswer();
       /*
        * The question, once. It is the dialog's own name as well, so a screen
        * reader that reads the dialog on arrival hears it twice at worst and
@@ -177,10 +214,13 @@ export function createConfirm(host: HTMLElement, options: ConfirmOptions): Confi
       screen.setLocale(next);
       render();
       screen.refreshSwitch();
+      highlightSafeAnswer();
     },
 
     setSingleSwitch(enabled, holdMs): void {
+      switchEnabled = enabled;
       screen.setSwitchEnabled(enabled, holdMs);
+      highlightSafeAnswer();
     },
 
     destroy(): void {

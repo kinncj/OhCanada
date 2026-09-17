@@ -5,7 +5,16 @@ import type { SaveFileLike, SaveImportCheck } from '@ui/save-transfer';
 import { createSettingsScreen } from '@ui/settings-screen';
 import { createSettingsStore, DEFAULT_SETTINGS, type Settings } from '@ui/settings';
 
-import { buildPage, FakeEvent, press, type FakeElement, type FakePage } from './support/fake-dom';
+import { HIGHLIGHT_ATTRIBUTE } from '@ui/single-switch';
+
+import {
+  buildPage,
+  FakeEvent,
+  press,
+  pressSwitch,
+  type FakeElement,
+  type FakePage,
+} from './support/fake-dom';
 
 /**
  * "Your progress" in Settings, and the two dialogs an import opens
@@ -437,5 +446,206 @@ describe('"Delete my progress" in Settings', () => {
       fixture.page.doc.getElementById(dialog?.getAttribute('aria-labelledby') ?? '')?.textContent,
     ).toBe('This cannot be undone. Delete everything?');
     expect(dialog?.getAttribute('lang')).toBe('en');
+  });
+});
+
+/**
+ * `TN-SAVE-12` — "the one control that destroys something" — which arrived with
+ * the 2026-09-17 ratification and had no suite of its own.
+ *
+ * The scenarios already held above are not repeated: the control's words and
+ * shape, Escape, the clear-and-restart, and the stale sentence taken away by
+ * the next try. What is added is what only this story asks, and all of it is
+ * about the delete that **did not finish** — the one screen in the game where a
+ * player needs certainty about what was destroyed and cannot be given it,
+ * because `clearBoth` (ADR-0026, `OQ-SAVE-9`) reports one error for two stores:
+ *
+ *  - the sentence claims neither outcome it cannot see;
+ *  - it is drawn once, under the control that produced it;
+ *  - the player is left on the control that retries, and no "Try again" button
+ *    is invented beside it;
+ *  - the game is still playable afterwards.
+ */
+describe('TN-SAVE-12: a delete that does not finish', () => {
+  /** The refused sentence, built the way the screen builds it. */
+  const refusal = (locale: 'en' | 'fr'): string =>
+    `${text(locale, 'save.clear.failed')} ${text(locale, 'save.clear.failed.help')}`;
+
+  /** Ask, answer "Delete everything", and let the refusal land. */
+  async function refuseADelete(locale: 'en' | 'fr' = 'en'): Promise<Fixture> {
+    const fixture = open(refused('unreadable'), { locale }, false);
+    fixture.at('save-clear')?.click();
+    fixture.at('save-clear-yes')?.click();
+    await settle();
+    return fixture;
+  }
+
+  it('deletes nothing until the question is answered', async () => {
+    const fixture = open(refused('unreadable'));
+    fixture.at('save-clear')?.click();
+
+    expect(fixture.at('save-clear-confirm')?.hidden).toBe(false);
+    expect(fixture.onDelete).not.toHaveBeenCalled();
+
+    press(fixture.at('save-clear-confirm') as FakeElement, 'Escape');
+    await settle();
+    expect(fixture.onDelete).not.toHaveBeenCalled();
+    expect(fixture.onRestart).not.toHaveBeenCalled();
+  });
+
+  it('says only what is known: neither that nothing changed nor that everything went', async () => {
+    const fixture = await refuseADelete();
+    const sentence = fixture.at('save-clear-error')?.textContent ?? '';
+
+    expect(sentence).toBe(refusal('en'));
+    /* The two claims the screen cannot make. "Nothing was changed" is the
+       import's row, and it would be a lie in exactly the case where a stale
+       copy comes back on the next boot; the other direction is the refusal
+       pretending to be the success. */
+    expect(sentence).not.toContain(text('en', 'save.import.notSaved.help'));
+    expect(sentence.toLowerCase()).not.toContain('nothing was changed');
+    expect(sentence.toLowerCase()).not.toContain('everything was deleted');
+    /* "may still be", never "is" and never "is not". */
+    expect(sentence).toContain('may still be');
+  });
+
+  it('draws the sentence once, and nowhere but under its own control', async () => {
+    const fixture = await refuseADelete();
+    const sentence = refusal('en');
+
+    const copies = fixture.page.doc
+      .querySelectorAll('p')
+      .filter((node) => node.textContent === sentence);
+    expect(copies.map((node) => node.getAttribute('data-testid'))).toEqual(['save-clear-error']);
+    expect(fixture.at('save-clear')?.getAttribute('aria-describedby')).toBe(
+      fixture.at('save-clear-error')?.id,
+    );
+    /* Never the other control's description (`TN-SAVE-09`). */
+    expect(fixture.at('save-import')?.getAttribute('aria-describedby')).toBeNull();
+    /* And not a second announcer: it is said through the live region only. */
+    expect(fixture.at('save-clear-error')?.getAttribute('aria-live')).toBeNull();
+  });
+
+  it('leaves the player on the control that retries, and invents no "Try again" beside it', async () => {
+    const fixture = await refuseADelete();
+
+    /* `TN-SAVE-07`: "focus is on save-clear … and no control named Try again is
+       on the screen". The sentence says to try again *where* it can be done, so
+       a second control would be a button the story does not have. */
+    expect(fixture.page.doc.activeElement).toBe(fixture.at('save-clear'));
+    const labels = fixture.page.doc
+      .querySelectorAll('button')
+      .map((node) => node.textContent);
+    expect(labels).not.toContain(text('en', 'study.error.retry'));
+    expect(labels).not.toContain('Try again');
+
+    /* And asking again really does ask again, from that control. */
+    fixture.at('save-clear')?.click();
+    expect(fixture.at('save-clear-confirm')?.hidden).toBe(false);
+  });
+
+  it('leaves the game playable, with nothing counting down', async () => {
+    const fixture = await refuseADelete();
+
+    expect(fixture.at('settings-screen')?.hidden).toBe(false);
+    expect(fixture.onRestart).not.toHaveBeenCalled();
+    fixture.at('settings-close')?.click();
+    expect(fixture.onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('says it in French as a portion of the progress, never as a saved game', async () => {
+    /*
+     * `TN-SAVE-11`, and the row the story **amended** at ratification. In this
+     * game's French « partie » is a saved game — « votre partie sauvegardée »,
+     * « Votre partie est restaurée » — so « Une partie est peut-être encore sur
+     * cet appareil » read as *a saved game may still be here*, which is a
+     * different claim from "some of it may still be". Pinned literally on both
+     * sides, because the whole defect is one reading of one word.
+     */
+    const fixture = await refuseADelete('fr');
+    const sentence = fixture.at('save-clear-error')?.textContent ?? '';
+
+    expect(sentence).toBe(refusal('fr'));
+    expect(sentence).toContain('Une partie de votre progression est peut-être encore');
+    expect(sentence, 'the French reads as a saved game left behind').not.toContain(
+      'Une partie est peut-être',
+    );
+    expect(sentence).not.toContain("Rien n'a été modifié");
+    expect(fixture.announce).toHaveBeenCalledWith(refusal('fr'));
+  });
+});
+
+/**
+ * `TN-SAVE-08`: "the highlight starts on 'Keep my progress'".
+ *
+ * The answers are drawn destructive-first, because `TN-SAVE-06` prints them in
+ * that order, and `createScreen` opens the switch ring on the first item. Those
+ * two correct rules meet on this dialog as: a single-switch player's very first
+ * press, if it runs a fraction past the hold threshold, deletes everything they
+ * have. `app/ui/confirm.ts` therefore opens the highlight on the safe answer.
+ */
+describe('TN-SAVE-08: the delete question with one switch', () => {
+  interface SwitchFixture {
+    readonly page: FakePage;
+    readonly clock: { now: number };
+    readonly onDelete: ReturnType<typeof vi.fn>;
+    at(testId: string): FakeElement | null;
+  }
+
+  function openWithASwitch(): SwitchFixture {
+    const page = buildPage();
+    const clock = { now: 0 };
+    const onDelete = vi.fn(() => Promise.resolve(true));
+    createSettingsScreen(page.host, {
+      store: createSettingsStore({ ...DEFAULT_SETTINGS, singleSwitch: true }),
+      onClose: vi.fn(),
+      saveTransfer: {
+        onExport: vi.fn(),
+        onImport: () => refused('unreadable')(),
+        onRestart: vi.fn(),
+        onDelete,
+      },
+      now: () => clock.now,
+    }).show();
+
+    return { page, clock, onDelete, at: (testId) => page.doc.byTestId(testId) };
+  }
+
+  it('opens the highlight on "Keep my progress", not on "Delete everything"', () => {
+    const fixture = openWithASwitch();
+    fixture.at('save-clear')?.click();
+
+    expect(fixture.at('save-clear-confirm')?.hidden).toBe(false);
+    expect(fixture.at('save-clear-keep')?.getAttribute(HIGHLIGHT_ATTRIBUTE)).toBe('true');
+    expect(
+      fixture.at('save-clear-yes')?.getAttribute(HIGHLIGHT_ATTRIBUTE),
+      'the switch opened on the answer that deletes everything',
+    ).toBeNull();
+  });
+
+  it('takes the safe answer when the first press is a long one, and clears nothing', async () => {
+    const fixture = openWithASwitch();
+    fixture.at('save-clear')?.click();
+
+    /* One long press, the first gesture the player makes in this dialog. */
+    pressSwitch(fixture.page, fixture.clock, 800);
+    await settle();
+
+    expect(fixture.onDelete, 'a single long press deleted the save').not.toHaveBeenCalled();
+    expect(fixture.at('save-clear-confirm')?.hidden).toBe(true);
+  });
+
+  it('still reaches "Delete everything" with a short press first', async () => {
+    const fixture = openWithASwitch();
+    fixture.at('save-clear')?.click();
+
+    /* The destructive answer is reachable, it is simply not where the ring
+       opens: one short press moves off the safe answer, and the ring wraps. */
+    pressSwitch(fixture.page, fixture.clock, 100);
+    expect(fixture.at('save-clear-yes')?.getAttribute(HIGHLIGHT_ATTRIBUTE)).toBe('true');
+
+    pressSwitch(fixture.page, fixture.clock, 800);
+    await settle();
+    expect(fixture.onDelete).toHaveBeenCalledTimes(1);
   });
 });

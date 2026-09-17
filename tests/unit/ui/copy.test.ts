@@ -231,14 +231,6 @@ describe('the copy table', () => {
       'save.import.notSaved.help',
       'save.import.done.help',
       'save.import.continue',
-      /* What "Delete my progress" needs beyond the two rows `TN-SAVE` owns
-         (`save.clear` and `save.clear.confirm`, transcribed and therefore not
-         listed here): the confirmation's two answers, and the two halves of the
-         sentence for a clear that did not finish. */
-      'save.clear.yes',
-      'save.clear.keep',
-      'save.clear.failed',
-      'save.clear.failed.help',
       /* ADR-0034's amendment: the card a level shows offline when its art was
          never kept. */
       'level.needsConnection.body',
@@ -250,12 +242,16 @@ describe('the copy table', () => {
          cue after the task when its stop is behind the player. */
       'level.complete.nextOpen',
       'hud.task.behind',
-      /* The third live-site audit: Study's opening sentence, reworded. The
-         ratified row promised "the questions you have seen" to a player who had
-         seen none, over five cards each tagged "New question". */
-      'study.intro',
     ]);
-    expect(COPY_GAPS).toHaveLength(80);
+    /*
+     * 80 until 2026-09-17, when `TN-STUDY` and `TN-SAVE` ratified five of them
+     * into their own copy tables: `study.intro`, and the four rows
+     * "Delete my progress" needed — the confirmation's two answers and the two
+     * halves of the sentence for a clear that did not finish. Removing an entry
+     * is what a story file writing the row down looks like, and it is a green
+     * change; the number moves with the list so neither can drift alone.
+     */
+    expect(COPY_GAPS).toHaveLength(75);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
