@@ -8,8 +8,10 @@ one, talk to people, take on small quests, and answer questions drawn from the s
 test uses. There are no accounts, no servers and no tracking: your progress lives in your own browser,
 and you can export it to a file whenever you like.
 
-It is built for newcomers of all ages, in plain language, and it is designed to be played one-handed on
-a phone held upright.
+It is built for newcomers of all ages, in plain language. **It is made for a phone held upright, and
+that is where it plays best** — one thumb, portrait, no landscape layout at all. It runs on a tablet
+or a desktop browser too, centred in the same portrait shape with the level's sky and ground carried
+out into the side panels, but the controls and the reading length were designed for a phone.
 
 **Status: playable, in production, and always in development.** All ten levels, Study and the practice exam are live in English and French at the link below — built and deployed, not a preview. It is open source, so development never really stops: the teaching content is still growing, and the art is being verified subject by subject against its references.
 
@@ -17,7 +19,9 @@ a phone held upright.
 
 **https://kinncj.github.io/OhCanada/**
 
-No install, no account. It works offline once loaded, and your progress stays in your browser.
+**Best on a phone, held upright.** It works on a tablet or a desktop browser as well, but it is built
+portrait-first and one-handed. No install, no account. It works offline once loaded, and your progress
+stays in your browser.
 
 ## What makes it different
 
