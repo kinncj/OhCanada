@@ -271,6 +271,29 @@ thirty stands, a subject grades more than any one level teaches, and the surplus
 quote arithmetic and the step order; it cannot tell whether a true sentence teaches anything, and that
 residual belongs to the author's brief rather than to a sixth verification check.
 
+**The whole guide is readable by chapter, and a lesson passage tells one proposition (ADR-0061).** Measured
+on 2026-09-18 against the cached extraction at the hash every claim is granted against, the guide is 18,372
+words and the corpus's 602 claims cover 46.3% of them. The teachable remainder is about **5,446 words**,
+concentrated in *Canada's History* (2,321) rather than in the North, and the short chapters are genuinely
+exhausted — *Canada's Economy* has 61 uncited teachable words left and *The Justice System* 9. That remainder
+does not fit on landmarks: a `pointOfInterest` carries exactly one `fact`, and every new stop is art, a
+reference entry, a blind identification run and texture budget. It goes instead on a **Learn** surface beside
+Study and Exam, organised by the guide's own chapters, where a chapter holds lessons and a lesson holds
+**passages** — a passage being one bilingual paragraph carrying exactly one `factClaim`: one proposition, one
+contiguous quote, one grant. The unit is a decision about verification rather than layout, because a grant
+stretched over a chapter has no truth condition a verifier can check and would end the property that every
+shipped claim carries the passage supporting it. Passages require a stable `id`: `scripts/lib/claims.mjs`
+keys an array step by the item's `id` only when the schema requires one, so without it inserting a passage
+re-points every pointer beneath it and voids every grant in the lesson. A lesson is a **told** claim carrying
+a `chapter` and deliberately no `subject`, so it enters no floor, no exam row and no schedule (ADR-0030); the
+thirty-question floor and the exam are untouched, and no level may ask anything on the strength of a lesson —
+ADR-0057's programme runs beside this one and neither can do the other's job. Chapters are lazily imported
+and cached on first read, so Learn works offline and stays out of the ≤ 8 MB initial payload, costing no
+texture memory and nothing in any level's budget. "The whole guide" never means the guide's sentences: the
+source is Crown copyright and `committed: false`, which is also why the coverage measurement cannot run in
+CI — and picture captions, the study worksheet, the museum invitation, front and back matter and the Oath's
+recitation are excluded from it by name.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]
