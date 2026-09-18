@@ -525,11 +525,33 @@ here, because it is a design question for the story and the a11y owner.
 
 ## Obligations
 
-- **OBLIGATION due=2026-11-18 owner=architect** — write the `lesson` schema into `content/schemas/` and the port
+- ~~**OBLIGATION due=2026-11-18 owner=architect** — write the `lesson` schema into `content/schemas/` and the port
   addition in §8 before any lesson is authored, to §2's unit: a lesson with `chapter`, `order`, bilingual
   `title` and a non-empty array of passages; a passage with a **required unique `id`**, bilingual `text` and
   exactly one `factClaim`; `additionalProperties: false` throughout. The schema is what makes A4 bind per
-  passage, so it precedes the content rather than following it.
+  passage, so it precedes the content rather than following it.~~
+  **DISCHARGED 2026-09-18** — `content/schemas/lesson.schema.json` is written to §2's unit, with
+  `additionalProperties: false` on the root and on the passage, `minItems: 1` on `passages`, and no `subject`
+  — which `additionalProperties: false` is what actually keeps out, the same mechanism as the absent `level`
+  on `sourceChapter`. `tests/unit/contracts/a-lesson-passage-is-known-by-its-id.test.ts` proves the claim this
+  schema is written to make: over a fixture lesson, `claimKeys` keys each passage's grant `[id=…]`, a passage
+  inserted ahead of another leaves that other's key unchanged, and a copy of the schema with `id` removed from
+  `required` — the counterfactual — collapses the same lesson to positional keys and reports drift. It also
+  runs the content gate's own ajv over a passage with no `id` (rejected), a lesson with none (rejected) and a
+  lesson carrying `subject` (rejected).
+  **Three things resolved differently from the wording above, each for a stated reason.** (1) The passage's
+  block is `fact`, not `factClaim`: `factClaim` is the *`$def`* this obligation names, and `fact` is what the
+  other three surfaces call that block, so a fourth name would read as a fourth thing. (2) **`factual: true`
+  is not expressible here** and the schema says so rather than implying it — stating it needs a subschema
+  naming `factual` beneath a property, which ADR-0007's rule against inline object shapes refuses, and
+  duplicating `factClaim` to carry the constant would put lesson claims outside the recogniser that scopes
+  every check they get. It is added to what the §9 gate owes, below. (3) **The port addition is the two
+  document types and not the two methods.** ADR-0007 forced `LessonDocument` and `LessonPassage` into
+  `app/application/ports/content-repository.ts` the moment the schema existed, and they are pinned to it
+  property by property; `chapters()` and `lessons(chapter)` were **not** written, because ADR-0008 says a port
+  exists when something calls it and nothing does — in a consumed file they would be dead members, which is
+  ADR-0015's prune case rather than a marker case. The seam, and what its first implementer adds, is recorded
+  in `docs/architecture.md` §6. No lesson content was authored: this is the contract only (ADR-0003).
 
 - **OBLIGATION due=2026-12-18 owner=infra** — build §9's gates over `content/lessons/**`: chapter names
   resolved against the register, page ranges inside the cited chapter's span, unique passage ids, unique

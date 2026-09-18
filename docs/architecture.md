@@ -225,6 +225,14 @@ make that claim. A date, a height, a superlative or a founding attached to a lan
 iconic the landmark. None of this reaches a level's `territory` block, where ADR-0051's rule that a statement
 names only what its source names stands untouched.
 
+**A fourth surface carries claims, and it is read rather than played (ADR-0061).** A *lesson* in
+`content/lessons/<chapter>/<id>.json` is a sequence of **passages**, and a passage is one bilingual paragraph
+plus one `FactClaim` — the same block, so the same gates. Its unit is chosen for verification rather than for
+layout: a grant stretched over a chapter of prose has no truth condition a verifier can check. A passage's
+`id` is **required**, which is what makes gate A4 bind per passage — `claims.mjs` keys an array step by `id`
+only when the item's schema requires one — so inserting a passage voids no grant beneath it and two authors
+can work one chapter without voiding each other. The schema is written; no lesson is authored yet.
+
 **Verification follows the claim; ownership follows the grade.** These are two rules, and they are easy to
 merge by accident. Every claim, graded or told, is verified to the same standard (ADR-0003). Only a
 *graded* proposition — the one a question's prompt asks and its `correctIndex` keys — belongs to a subject,
@@ -572,6 +580,19 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   narrow the draw with an optional `questionPool`. The quest says *how many* and *from where*; the FSRS
   scheduler in the domain says *which*, from the player's own review state. A quest naming the ids outright
   would make the scheduler decorative; a scheduler ignoring the quest would make the step unbounded.
+- **Reading a lesson (ADR-0061).** `content/schemas/lesson.schema.json` exists and `LessonDocument` /
+  `LessonPassage` mirror it in `content-repository.ts`, because ADR-0007 binds a schema to a type the moment
+  the schema is written. **The capability is deliberately not written.** ADR-0061 §8 names it — list the
+  chapters, load one chapter's lessons — and ADR-0008 says a port exists when something calls it: there is no
+  Learn screen, no lesson catalogue and no task scheduled, so `chapters()` and `lessons(chapter)` would be
+  dead members in a *consumed* file, where the marker gate cannot see them and ADR-0015 says to prune rather
+  than mark. What the first implementer adds, so it is picked up on purpose: two `Result`-returning methods on
+  `ContentRepository` (never a second content port — an adapter that reads bundled JSON already exists), a
+  catalogue in `app/adapters/content` built from one `import.meta.glob` **per chapter, lazily imported**, so a
+  chapter is a chunk fetched on first open and the ≤ 8 MB initial payload does not move; the
+  shippable-passage filter in `app/application`, never in the screen, since only `verified` claims for the
+  current `sourceHash` are readable and a lesson that loses a passage to quarantine renders without it,
+  silently; and the screen in `app/ui`, DOM only. `app/domain` gets nothing: a lesson is data, not behaviour.
 - **Device tiers.** Which tier gets Rive and which gets the sprite atlas is a bootstrap policy; the
   detection rule is not written yet, and no port needs to know it.
 - **Save migration.** `SaveCodec` declares `version` and `minSupportedVersion`. The first migration is

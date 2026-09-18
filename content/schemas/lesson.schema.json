@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truenorth.app/schemas/lesson.schema.json",
+  "title": "TrueNorth lesson",
+  "description": "One readable lesson on the Learn surface, `content/lessons/<chapter>/<id>.json` (ADR-0061). A chapter of *Discover Canada* is a sequence of lessons; a lesson is an ordered sequence of PASSAGES; and a passage carries exactly one proposition, one contiguous quote and one verifier's grant. The prose is the game's own bilingual plain language and never the guide's sentences - the guide is Crown copyright, paraphrased and cited rather than redistributed (ADR-0004), and verbatim wording fails ADR-0003 check 5. This schema is written BEFORE any lesson is authored, because it is what decides how a grant binds: see `$defs/passage/properties/id`.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": {
+      "description": "Names this lesson document, unique among lessons. Kebab-case.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+    },
+    "chapter": {
+      "description": "The chapter of the guide this lesson is read under, exactly as `content/sources/discover-canada.json` prints it in `chapters[].title` - the same vocabulary a claim's `source.chapter` uses, so the two can be joined. A schema cannot compare a value against another document, so that the title RESOLVES, and that every passage's `source.page` falls inside that chapter's `page`/`endPage` span, are cross-document checks (ADR-0061 §9.1, owed by infra); this field is the thing they join on. Organising by chapter rather than by subject is ADR-0061 §5: a subject is a teaching remit and a chapter is only where the sentences are, the relation is many-to-many, and forcing an author to pick a remit for a paragraph the guide simply prints would re-run ADR-0028's argument in a second place with a weaker answer.",
+      "type": "string",
+      "minLength": 1
+    },
+    "order": {
+      "description": "Position of this lesson within its chapter, 1 upward. `(chapter, order)` is unique, so a chapter's lessons have one reading order - a cross-document check (ADR-0061 §9.5), because a schema sees one file.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "description": "What the chapter's list of lessons calls this one, in both languages.",
+      "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+    },
+    "passages": {
+      "description": "The lesson, in reading order. `minItems: 1` is ADR-0024 stated in the schema: a lesson with no passages renders as an empty screen, and an empty collection must not reduce to a pass. It is NOT the whole of that rule - a lesson whose every passage is quarantined is a non-empty array that renders nothing, and that case must fail the build rather than draw a blank chapter (ADR-0061 §8), which is a check over the built corpus and not over one file.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/passage" },
+      "minItems": 1
+    }
+  },
+  "required": ["$schema", "id", "chapter", "order", "title", "passages"],
+  "additionalProperties": false,
+  "$comment": "THERE IS DELIBERATELY NO `subject` HERE, AND `additionalProperties: false` IS WHAT KEEPS IT OUT - the same mechanism, for the same reason, as the absent `level` on `source.schema.json#/$defs/sourceChapter`. A lesson passage is a TOLD claim (ADR-0030 §1): it has no prompt, no options and no `correctIndex`, so no proposition it states is GRADED by it. Giving a lesson a subject would put told claims where graded ones are counted, and the harm is specific rather than tidy-minded - the thirty-verified-questions-per-subject floor exists so that six distinct drills of `study.drillSize` run before the first repeat (ADR-0028 §1), so a subject reaching thirty partly on passages would pass the floor and hand the FSRS scheduler a bank it cannot draw from. Passages are not drawable, enter no exam row and enter no schedule. ADR-0061 §5, §6.",
+  "$defs": {
+    "passage": {
+      "title": "Lesson passage",
+      "description": "One paragraph of the game's own bilingual prose, and exactly one claim about Canada. THE PASSAGE IS THE UNIT BECAUSE OF VERIFICATION, NOT LAYOUT (ADR-0061 §2): ADR-0003 asks a verifier to quote the supporting passage and confirm the claim is entailed by it, and a single grant stretched over a chapter-sized block of prose has no truth condition a verifier can check or a reader can audit. One passage, one proposition, one contiguous `source.quote`, one page, one `asOf`, one `volatile` flag, one grant. The guide gets longer on screen; the claim does not get wider.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "THIS FIELD IS WHAT MAKES A GRANT BIND TO THIS PASSAGE, and it is required for that reason rather than for tidiness. `scripts/lib/claims.mjs` keys every array step on the path to a claim by the item's `id` WHEN THE ITEM'S SCHEMA REQUIRES ONE, and by position otherwise - a rule read from this file's `required` list at the revision being read, not from a list of arrays kept somewhere else. Gate A4 in `scripts/verify-content.mjs` then asks whether a grant still sits on the fields it was granted over, and gates A1/A2 ask whether a commit wrote or changed one. Keyed by POSITION, inserting a passage at the top of a lesson re-points every pointer beneath it: every grant below the insertion is voided, the commit reads as rewriting grants it never touched, and a passage that MOVED keeps a grant that now describes different words - which is exactly how a landmark's grant once followed the slot `/pois/2` instead of the claim in it. A lesson is the longest array of claims this project will have and two authors will work one chapter, so without a required id they would void each other's work on every commit. Keyed by id, an insertion voids nothing and the two-commit author/verifier dance stays per passage. UNIQUE WITHIN ITS LESSON, which JSON Schema cannot say - `uniqueItems` compares whole items, so two passages sharing an id and differing in a word would pass it. Duplicates are caught where identity is computed: `claimKeys` returns a fault for them and for a missing id, `tests/unit/contracts/a-claim-is-known-by-its-id.test.ts` fails the corpus on any fault, and ADR-0024 is why that is a failure rather than a fall back to position. A RENAME IS A NEW IDENTITY: changing an id removes one claim and adds another, so it goes back to the null verification form and is re-verified rather than carrying its old grant across.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "text": {
+          "description": "The passage the player reads, in both languages, in the game's own plain words - roughly CLB 4 / grade 6. Both are structural: `localizedText` requires `en` and `fr`, which is how ADR-0003's \"missing EN or FR text\" clause is enforced per document (ADR-0010). It carries the claim's prose, and it is found BY SHAPE rather than by name - `claims.mjs` treats every `localizedText`-shaped sibling of a `factClaim` as the words that claim is about - so the verbatim, banned-term and contiguity checks reach it the day the first lesson exists, with no change to any gate.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/localizedText"
+        },
+        "fact": {
+          "description": "The one claim this passage makes: `factual`, `source` and `verification`, the SAME block a landmark blurb, a territorial statement and a line of NPC dialogue already carry. The same block on purpose, and not a shape of its own: `isFactClaim` in `scripts/lib/claims.mjs` is what scopes every check a non-question claim gets, so a lesson-specific block would be a claim no gate inspected while looking exactly like one that is inspected. The field is named `fact` for the same reason - it is the name the other three surfaces use for this block (`pointOfInterest.fact`, `territoryStatement.fact`, `dialogueLine.fact`), and a fourth name for one shape reads as a fourth thing. EVERY PASSAGE IS A CLAIM, so `factual` must be `true` here; the schema cannot say so, and says that rather than implying it. Stating it would mean a subschema naming `factual` under a property of this object, which ADR-0007's rule against inline object shapes refuses - the nearest bindable ancestor does not declare that name - and duplicating `factClaim` to add the constant would undo the paragraph above. It is owed to the gate over `content/lessons/**` (ADR-0061 §9.3, owner infra), with `factual: false` meanwhile being a passage that asserts nothing, which is a passage that teaches nothing.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/factClaim"
+        }
+      },
+      "required": ["id", "text", "fact"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -45,6 +45,8 @@ export type {
   LevelAssetKind,
   LevelAssetRef,
   LevelCharacter,
+  LessonDocument,
+  LessonPassage,
   LevelDocument,
   LevelSummary,
   LocaleBundle,

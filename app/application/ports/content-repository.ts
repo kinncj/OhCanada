@@ -840,6 +840,79 @@ export interface QuestionDocument {
 export type ShippableQuestion = Shippable<QuestionDocument>;
 
 /* --------------------------------------------------------------------------
+ * content/lessons/<chapter>/<id>.json — schema: content/schemas/lesson.schema.json
+ *
+ * The Learn surface's documents (ADR-0061). These two types are here because
+ * ADR-0007 puts them here: `content/schemas/lesson.schema.json` exists, so
+ * `ports-match-schemas.test.ts` binds its root and its `passage` $def to the
+ * interfaces below and compares them property by property and type by type. A
+ * schema with no mirror type is the gap that rule closes.
+ *
+ * WHAT IS DELIBERATELY NOT HERE: the lesson-reading METHODS. ADR-0061 §8 names a
+ * capability on this port — list the chapters, load one chapter's lessons — and
+ * ADR-0008 says a port exists when something calls it. Nothing calls it: there is
+ * no Learn screen, no lesson catalogue adapter and no task in the current or next
+ * slice, so `chapters()` and `lessons(chapter)` would be dead members inside a
+ * consumed file, which is precisely the case ADR-0015 says to prune rather than
+ * mark. The seam is described in `docs/architecture.md` §6 instead, which is
+ * where ADR-0008 sends a seam with no task, and the first implementer writes the
+ * signatures against a real caller. A document TYPE and a CAPABILITY are
+ * different claims: the type says "this is the shape a validated lesson has",
+ * which is true today; a method would say "something answers this", which is not.
+ * ----------------------------------------------------------------------- */
+
+/**
+ * One paragraph of a lesson, and exactly one claim about Canada.
+ *
+ * The passage is the unit because of *verification*, not layout (ADR-0061 §2): a
+ * grant stretched over a chapter of prose has no truth condition a verifier can
+ * check, so one passage carries one proposition, one contiguous quote and one
+ * grant.
+ *
+ * `id` is required, and it is load-bearing rather than decorative. `claims.mjs`
+ * keys an array step by an item's `id` only when that item's schema requires
+ * one, and by position otherwise — so without it, inserting a passage would void
+ * every grant beneath it and a moved passage would keep a grant describing
+ * different words. See the schema, which carries the full argument.
+ */
+export interface LessonPassage {
+  /** Stable, unique within its lesson. A rename is a new claim, not a moved one. */
+  readonly id: string;
+  /** What the player reads, both languages required by the schema. */
+  readonly text: LocalizedText;
+  /**
+   * The same `factual` / `source` / `verification` block a blurb and a dialogue
+   * line carry, so every gate scoped by the claim recogniser reaches a passage
+   * unchanged. `factual` is `true` on every shippable passage; the schema cannot
+   * state that constant without violating ADR-0007's inline-object rule, and the
+   * gate over `content/lessons/**` holds it (ADR-0061 §9.3).
+   */
+  readonly fact: FactClaim;
+}
+
+/**
+ * `content/lessons/<chapter>/<id>.json` — one readable lesson on the Learn
+ * surface, mirrored from `lesson.schema.json` (ADR-0007).
+ *
+ * **There is no `subject`, and that is the decision rather than an omission**
+ * (ADR-0061 §5). A lesson is a *told* claim: it has no prompt, no options and no
+ * key, so it grades nothing, enters no thirty-per-subject floor, no exam row and
+ * no FSRS schedule. A subject reaching thirty partly on reading material would
+ * pass the floor and hand the scheduler a bank it cannot draw.
+ */
+export interface LessonDocument {
+  readonly $schema: string;
+  readonly id: string;
+  /** A chapter title exactly as the source register prints it; the join is cross-document. */
+  readonly chapter: string;
+  /** Position within the chapter; `(chapter, order)` is unique across the corpus. */
+  readonly order: number;
+  readonly title: LocalizedText;
+  /** At least one; a lesson that renders nothing is a build failure (ADR-0024). */
+  readonly passages: readonly LessonPassage[];
+}
+
+/* --------------------------------------------------------------------------
  * content/characters/<id>.json — schema: content/schemas/character.schema.json
  * ----------------------------------------------------------------------- */
 
