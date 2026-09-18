@@ -164,6 +164,7 @@ import {
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
 import { readSubjectIndex } from './subjects';
+import { watchPortraitFit, type PortraitWatch } from './portrait-notice';
 import { watchForUpdates, workerContainerOf, type UpdateWatch } from './update-notice';
 
 /**
@@ -330,12 +331,45 @@ function main(): void {
     },
   });
 
-  const syncOrientation = (): void => {
+  /** What the window is right now, in CSS pixels. The visual viewport when the
+      browser has one, because that is what a pinch-zoomed page is actually
+      showing. */
+  const measureViewport = (): { readonly width: number; readonly height: number } => {
     const viewport = window.visualViewport;
-    const width = viewport?.width ?? window.innerWidth;
-    const height = viewport?.height ?? window.innerHeight;
+    return {
+      width: viewport?.width ?? window.innerWidth,
+      height: viewport?.height ?? window.innerHeight,
+    };
+  };
+
+  const syncOrientation = (): void => {
+    const { width, height } = measureViewport();
     root.dataset['tnMode'] = overlay.sync(width, height);
   };
+
+  /*
+   * "This game works best on a phone held upright" (ADR-0060, `./portrait-notice.ts`).
+   *
+   * Measured here, once, from the viewport the page loaded at — and deliberately
+   * *not* re-measured by `syncOrientation` above. The rotate overlay has to
+   * follow every resize because a phone can turn at any moment; this is a
+   * sentence about the device, said once on arrival, and a version of it that
+   * re-fired when a desktop player dragged their window would be an interruption
+   * nobody asked for.
+   *
+   * It cannot collide with the overlay: `classifyAudience` answers
+   * `phone-landscape` on exactly the branch `classifyViewport` answers
+   * `landscape-phone` on, and the notice is never owed for it.
+   */
+  const portrait = watchPortraitFit({
+    ...measureViewport(),
+    /* The same probe the save uses, and a different key: a dismissal is a
+       property of this device, not of this player's progress (ADR-0060). */
+    storage: browserLocalStorage(),
+  });
+  /* Published like `data-tn-mode` beside it, so a suite can assert which of the
+     three audiences the page decided it had without guessing from pixels. */
+  root.dataset['tnAudience'] = portrait.audience;
 
   window.addEventListener('resize', syncOrientation, { passive: true });
   window.addEventListener('orientationchange', syncOrientation, { passive: true });
@@ -379,6 +413,7 @@ function main(): void {
     rules: rules.value,
     onMounted: syncOrientation,
     updates,
+    portrait,
     /* The pictures the DOM screens draw (ADR-0041). With no page `fetch` there
        are none, and every screen is its words. */
     screenArt: createScreenArt({
@@ -429,6 +464,15 @@ interface FrontDoor {
   readonly onMounted: () => void;
   /** The update notice's watch, started in `main` before anything awaited. */
   readonly updates: UpdateWatch;
+  /**
+   * The portrait notice's watch (ADR-0060), which has already classified the
+   * viewport the page loaded at.
+   *
+   * Handed over for the same reason the rotate overlay is: it is decided before
+   * the save has been read, and the words it draws are in the player's language,
+   * which only this function knows.
+   */
+  readonly portrait: PortraitWatch;
   /** Where the screens' pictures come from (ADR-0041). */
   readonly screenArt: ScreenArt;
 }
@@ -1121,6 +1165,18 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     },
   });
 
+  /*
+   * The portrait notice (ADR-0060), drawn in the same place and in the language
+   * the save has just been read in. It is owed only to a desktop, a laptop or a
+   * tablet, and only until the player closes it once on this device; on a phone
+   * held upright this call does nothing at all.
+   */
+  deps.portrait.attach({
+    store,
+    announce,
+    host: () => session?.hud.main ?? shell.main,
+  });
+
   /* Built on the first Study, kept for the session: the drill's `recentlyAsked`
      lives in `studySource` and the screen's is only DOM, but rebuilding the
      screen on every open would throw away a summary the player is reading. */
@@ -1495,8 +1551,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
        */
       openedNext: () => openedWhileIn(entriesOnEntry),
     });
-    /* The level's `<main>` has the page now: the update notice follows it. */
+    /* The level's `<main>` has the page now: the notices follow it. */
     deps.updates.rehome();
+    deps.portrait.rehome();
 
     /* The snapshot the comparison above is against, taken before a single
        question could have been answered. */
@@ -1590,6 +1647,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     shell.leaveLevel(opened === null ? {} : { focusLevelId: opened });
     /* And back to the front door's, which is attached again. */
     deps.updates.rehome();
+    deps.portrait.rehome();
   }
 
   /**

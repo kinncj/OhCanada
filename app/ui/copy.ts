@@ -1037,6 +1037,28 @@ const EN = {
      is `common.close`, so no third row is written. */
   'update.ready': 'A new version is ready',
   'update.reload': 'Reload',
+
+  /* The portrait notice (ADR-0060; `app/ui/portrait-notice.ts`): what a desktop,
+     a laptop or a tablet is told once, on the load it opens the game on.
+     **Both rows are written by app/ui and listed in {@link COPY_GAPS}**: no story
+     table carries them.
+
+     Two rows, because they say two different things and only one of them is the
+     news. The first is the recommendation. The second is the part a player on a
+     supported platform has to be told in the same breath, or the first reads as
+     a refusal: desktop is a platform this game is built for (CLAUDE.md,
+     Orientation), the canvas is the same canvas, and nothing here is broken.
+
+     "This game", not "TrueNorth": the product's name is `title.game`, it is on
+     the screen behind this notice, and a row that spells it again is a second
+     place it has to be changed. "Held upright" rather than "in portrait", which
+     is a word about a layout and not about a hand — and it is the rotate
+     overlay's own word, so a player who meets both meets one vocabulary. No
+     imperative: nobody is being told to go and find a phone.
+
+     The notice's only control is `common.close`, so no third row is written. */
+  'portrait.notice': 'This game works best on a phone held upright.',
+  'portrait.notice.help': 'You can still play here.',
 } as const;
 
 /** Every row in the table, plural forms included. */
@@ -1653,6 +1675,13 @@ const FR: Readonly<Record<CopyRow, string>> = {
      French browser puts on the same action. */
   'update.ready': 'Une nouvelle version est prête',
   'update.reload': 'Recharger',
+
+  /* Listed in COPY_GAPS with the English. « à la verticale » is the rotate
+     overlay's own phrase, so the two screens a player could meet on the same
+     device use one wording. « Ce jeu » carries no agreement with the player, and
+     « ici » is the screen they are on rather than a device they do not have. */
+  'portrait.notice': 'Ce jeu fonctionne mieux sur un téléphone tenu à la verticale.',
+  'portrait.notice.help': 'Vous pouvez quand même jouer ici.',
 };
 
 /**
@@ -1791,6 +1820,11 @@ export const COPY_GAPS: readonly CopyKey[] = [
      ratifies them. */
   'update.ready',
   'update.reload',
+  /* The portrait notice's two (ADR-0060): the recommendation, and the sentence
+     that keeps it from reading as a refusal on a platform this game supports.
+     ADR-0060 names this list as where they go until a story ratifies them. */
+  'portrait.notice',
+  'portrait.notice.help',
   /* ADR-0043: what the strip says while a drive holds the player at a stop,
      proposed for `TN-REACH-12` until that story's owner takes the words. */
   'hud.stop.hint',

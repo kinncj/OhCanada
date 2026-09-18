@@ -2586,6 +2586,108 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   .tn-update-notice button { border: 0.125rem solid ButtonText; }
 }
 
+/* ------------------------------------------------------------------ *
+ * "This game works best on a phone held upright" (ADR-0060,
+ * app/ui/portrait-notice.ts).
+ *
+ * The update notice's block above, with one button instead of two and a second
+ * sentence under the first. Same placement and the same reasons: a line first in
+ * the page's own <main>, in the flow rather than floating, so at 200 % text it
+ * grows downwards and covers no control.
+ *
+ * A border of weight and a heavier start edge, so it reads as a notice without
+ * colour, and the words say what they mean on their own - there is no icon and
+ * no tint carrying any part of the message. No transition and no animation
+ * anywhere in this block, so reduced motion has nothing to take away from it.
+ * The font is inherited, so the dyslexia-friendly face reaches it.
+ * ------------------------------------------------------------------ */
+
+.tn-portrait-notice {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  inline-size: calc(100% - 2.25rem);
+  max-inline-size: 34rem;
+  margin: 0.75rem auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.75rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-inline-start-width: 0.625rem;
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper);
+  color: var(--tn-ink);
+  line-height: 1.4;
+  pointer-events: auto;
+}
+
+[data-tn-font="dyslexia"] .tn-portrait-notice {
+  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+}
+
+.tn-portrait-notice__words {
+  flex: 1 1 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tn-portrait-notice__message {
+  margin: 0;
+  color: var(--tn-ink);
+  font-weight: 800;
+  overflow-wrap: break-word;
+}
+
+.tn-portrait-notice__help {
+  margin: 0;
+  color: var(--tn-ink);
+  overflow-wrap: break-word;
+}
+
+.tn-portrait-notice button {
+  box-sizing: border-box;
+  flex: 0 1 7rem;
+  min-block-size: 3rem;
+  min-inline-size: 3rem;
+  inline-size: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 0.875rem;
+  border: var(--tn-edge-width) solid var(--tn-ink);
+  border-radius: var(--tn-radius);
+  background: var(--tn-paper-2);
+  color: var(--tn-ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  box-shadow: 0 var(--tn-lift) 0 var(--tn-edge-soft);
+  pointer-events: auto;
+}
+
+.tn-portrait-notice button:active { box-shadow: none; }
+
+.tn-portrait-notice :focus-visible,
+.tn-portrait-notice [data-switch-highlight="true"] {
+  outline: 0.25rem solid var(--tn-focus);
+  outline-offset: 0.1875rem;
+  box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
+  border-style: double;
+  border-width: 0.25rem;
+}
+
+@media (forced-colors: active) {
+  .tn-portrait-notice { border: 0.25rem solid CanvasText; }
+  .tn-portrait-notice button { border: 0.125rem solid ButtonText; }
+}
+
 /* Motion is a separate axis from the visual tier: the attribute is written from
    the setting OR the media query, and the media query is also honoured alone. */
 [data-tn-motion="reduced"] .tn-screen,

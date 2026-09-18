@@ -214,6 +214,14 @@ describe('the copy table', () => {
          flow"), which names this list as their home until a story ratifies them. */
       'update.ready',
       'update.reload',
+      /* ADR-0060: what a desktop, a laptop or a tablet is told once on load —
+         the recommendation, and the sentence that keeps it from reading as a
+         refusal on a platform this game supports. Listed here in the order
+         `copy.ts` declares them: this assertion is an equality over an array,
+         so a row added in the table and appended here would fail on position
+         while holding the same set. */
+      'portrait.notice',
+      'portrait.notice.help',
       /* ADR-0043: what the strip says while a drive holds the player at a stop,
          proposed for TN-REACH-12. */
       'hud.stop.hint',
@@ -251,7 +259,7 @@ describe('the copy table', () => {
      * is what a story file writing the row down looks like, and it is a green
      * change; the number moves with the list so neither can drift alone.
      */
-    expect(COPY_GAPS).toHaveLength(75);
+    expect(COPY_GAPS).toHaveLength(77);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
