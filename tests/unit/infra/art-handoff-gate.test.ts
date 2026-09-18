@@ -89,7 +89,28 @@ interface Run {
 }
 
 const run = (args: readonly string[]): Run => {
-  const result = spawnSync(process.execPath, [SCRIPT, ...args], { encoding: 'utf8' });
+  const result = spawnSync(process.execPath, [SCRIPT, ...args], {
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  /*
+   * ASSERTED FIRST, FOR THE REASON `callLib` BELOW ALREADY RECORDS.
+   *
+   * A spawn that never ran leaves every field `undefined`, and the `?? ''`
+   * defaults below turn that into an empty stdout -- so a case asserting on
+   * output fails with "expected '' to match /.../", which says nothing about
+   * the real fault and points at the gate rather than at the spawn.
+   *
+   * That is not hypothetical here: on 2026-09-18 these two cases went red on a
+   * docs-only branch whose base had just run them green, and the empty string
+   * cost three wrong diagnoses before anyone ran the CLI by hand and found it
+   * printing 10,885 bytes perfectly well. `callLib` was given this guard when
+   * E2BIG bit it; `run` was not, and inherited the same silence.
+   */
+  expect(
+    result.error,
+    `verify-art could not be run (${args.join(' ')}): ${result.error?.message ?? ''}`,
+  ).toBeUndefined();
   return {
     status: result.status ?? -1,
     stdout: result.stdout ?? '',
