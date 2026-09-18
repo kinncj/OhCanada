@@ -1,0 +1,363 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-02-british-colony-first-assemblies",
+  "chapter": "Canada's History",
+  "order": 2,
+  "title": {
+    "en": "A British colony, and the first assemblies",
+    "fr": "Une colonie britannique et les premières assemblées"
+  },
+  "passages": [
+    {
+      "id": "h2-renamed-province-of-quebec",
+      "text": {
+        "en": "After the war, Great Britain governed the French colony. It gave the colony a new name, the Province of Quebec.",
+        "fr": "Après la guerre, la Grande-Bretagne a gouverné la colonie française. Elle lui a donné un nouveau nom, la Province de Québec."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Following the war, Great Britain renamed the colony the “Province of Quebec.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-canadiens-kept-their-way-of-life",
+      "text": {
+        "en": "The Canadiens were French-speaking and Catholic. They now lived in an empire that was English-speaking and ruled by Protestants, and they worked hard to keep their own way of life.",
+        "fr": "Les Canadiens étaient de langue française et de religion catholique. Ils vivaient désormais dans un empire anglophone dirigé par des protestants, et ils se sont efforcés de préserver leur mode de vie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "strove to preserve their way of life in the English-speaking, Protestant-ruled British Empire"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-quebec-act-passed-1774",
+      "text": {
+        "en": "Most people in the province were French and Catholic. To govern them better, the British Parliament passed the Quebec Act in 1774.",
+        "fr": "La majorité des habitants de la province étaient français et catholiques. Pour mieux les gouverner, le Parlement britannique a adopté l'Acte de Québec en 1774."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "To better govern the French Roman Catholic majority, the British Parliament passed the Quebec Act of 1774."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-quebec-act-is-a-foundation",
+      "text": {
+        "en": "The Quebec Act is one of the laws Canada's constitution is built on. It fitted British ways of governing to how the province really lived.",
+        "fr": "L'Acte de Québec est l'une des assises constitutionnelles du Canada. Il a adapté les institutions britanniques à la réalité de la province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "One of the constitutional foundations of Canada, the Quebec Act accommodated the principles of British institutions to the reality of the province."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-thirteen-colonies-become-the-united-states",
+      "text": {
+        "en": "In 1776 the 13 British colonies south of Quebec said they were no longer ruled by Britain. They formed the United States.",
+        "fr": "En 1776, les 13 colonies britanniques situées au sud du Québec ont déclaré leur indépendance. Elles ont formé les États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1776, the 13 British colonies to the south of Quebec declared independence and formed the United States."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-loyalists-came-from-many-backgrounds",
+      "text": {
+        "en": "The Loyalists were not one single people. They had Dutch, German, British, Scandinavian and Aboriginal roots. Among them were Presbyterians, Anglicans, Baptists, Methodists, Jews, Quakers and Catholics.",
+        "fr": "Les loyalistes ne formaient pas un seul et même peuple. Ils avaient des origines néerlandaises, allemandes, britanniques, scandinaves et autochtones. On comptait parmi eux des presbytériens, des anglicans, des baptistes, des méthodistes, des juifs, des quakers et des catholiques."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Loyalists came from Dutch, German, British, Scandinavian, Aboriginal and other origins and from Presbyterian, Anglican, Baptist, Methodist, Jewish, Quaker, and Catholic religious backgrounds."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-freetown-sierra-leone",
+      "text": {
+        "en": "Black Nova Scotians were given poor land. Some of them left and helped start Freetown, in Sierra Leone, in West Africa. Freetown was a new British colony for freed slaves.",
+        "fr": "Les Noirs de la Nouvelle-Écosse ont reçu de mauvaises terres. Certains sont repartis et ont participé à la fondation de Freetown, en Sierra Leone, en Afrique de l'Ouest. Freetown était une nouvelle colonie britannique destinée aux esclaves affranchis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "given poor land, moved on to establish Freetown, Sierra Leone (West Africa), a new British colony for freed slaves."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-pei-1773-and-nb-1785",
+      "text": {
+        "en": "Other colonies soon elected assemblies of their own. Prince Edward Island did so in 1773, and New Brunswick in 1785.",
+        "fr": "D'autres colonies ont bientôt élu leur propre assemblée. L'Île-du-Prince-Édouard l'a fait en 1773 et le Nouveau-Brunswick, en 1785."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Prince Edward Island followed in 1773, New Brunswick in 1785."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-two-canadas-were-different",
+      "text": {
+        "en": "The two new Canadas were not alike. Upper Canada was mainly Loyalist, Protestant and English-speaking. Lower Canada was largely Catholic and French-speaking.",
+        "fr": "Les deux nouveaux Canadas n'étaient pas semblables. Le Haut-Canada était surtout loyaliste, protestant et de langue anglaise. Le Bas-Canada était en grande partie catholique et de langue française."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "which was mainly Loyalist, Protestant and English-speaking, and Lower Canada (later Quebec), heavily Catholic and French-speaking."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-british-north-america",
+      "text": {
+        "en": "The Atlantic colonies and the two Canadas were spoken of together under one name. That name was British North America.",
+        "fr": "On désignait ensemble les colonies de l'Atlantique et les deux Canadas sous un seul nom. Ce nom était l'Amérique du Nord britannique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Atlantic colonies and the two Canadas were known collectively as British North America."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-slavery-existed-worldwide",
+      "text": {
+        "en": "Slavery was not found in one part of the world only. It existed in Asia, in Africa, in the Middle East and in the Americas.",
+        "fr": "L'esclavage n'existait pas que dans une seule région du monde. On le trouvait en Asie, en Afrique, au Moyen-Orient et dans les Amériques."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Slavery has existed all over the world, from Asia, Africa and the Middle East to the Americas."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-abolition-movement-begins",
+      "text": {
+        "en": "In the late 1700s, people began to call for an end to the slave trade across the Atlantic. That first movement started in the British Parliament.",
+        "fr": "À la fin des années 1700, des voix se sont élevées pour réclamer la fin de la traite des esclaves dans l'Atlantique. Ce premier mouvement est né au Parlement britannique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The first movement to abolish the transatlantic slave trade emerged in the British Parliament in the late 1700s."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h2-followed-the-north-star",
+      "text": {
+        "en": "Thousands of enslaved people ran away from the United States. They travelled north at night, following the North Star.",
+        "fr": "Des milliers de personnes réduites en esclavage se sont enfuies des États-Unis. Elles voyageaient vers le nord la nuit, en suivant l'étoile du Nord."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Thousands of slaves escaped from the United States, followed “the North Star”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

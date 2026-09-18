@@ -1,0 +1,417 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-06-first-world-war-and-the-vote",
+  "chapter": "Canada's History",
+  "order": 6,
+  "title": {
+    "en": "The First World War, and votes for women",
+    "fr": "La Première Guerre mondiale et le droit de vote des femmes"
+  },
+  "passages": [
+    {
+      "id": "h6-pride-in-the-empire",
+      "text": {
+        "en": "Canada was part of the British Empire, and most Canadians were proud of that.",
+        "fr": "Le Canada faisait partie de l'Empire britannique, et la plupart des Canadiens en étaient fiers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Most Canadians were proud to be part of the British Empire."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-paardeberg-and-lillefontein",
+      "text": {
+        "en": "In 1900 Canadians fought in two battles in South Africa, Paardeberg and Lillefontein. Both were won, and both made Canadians prouder of their country.",
+        "fr": "En 1900, des Canadiens ont pris part à deux batailles en Afrique du Sud, Paardeberg et Lillefontein. Ces victoires ont renforcé la fierté nationale au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1900, Canadians took part in the battles of Paardeberg (“Horse Mountain”) and Lillefontein, victories that strengthened national pride in Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-canadian-expeditionary-force",
+      "text": {
+        "en": "Germany attacked Belgium and France in 1914 and Britain declared war. Ottawa then raised the Canadian Expeditionary Force, which later became the Canadian Corps.",
+        "fr": "L'Allemagne a attaqué la Belgique et la France en 1914 et la Grande-Bretagne a déclaré la guerre. Ottawa a alors formé le Corps expéditionnaire canadien, qui est devenu plus tard le Corps canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "When Germany attacked Belgium and France in 1914 and Britain declared war, Ottawa formed the Canadian Expeditionary Force (later the Canadian Corps)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-reputation-after-vimy",
+      "text": {
+        "en": "Vimy made the Canadians' name as soldiers. Across the British Empire's armies they were spoken of as shock troops, sent where the fighting was hardest.",
+        "fr": "Vimy a fait la réputation des soldats canadiens. Dans les armées de l'Empire britannique, on parlait d'eux comme de troupes de choc, envoyées là où les combats étaient les plus durs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "securing the Canadians’ reputation for valour as the “shock troops of the British Empire.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-vimy-day",
+      "text": {
+        "en": "That battle has its own day of remembrance. April 9 is Vimy Day.",
+        "fr": "Cette bataille a sa propre journée du souvenir. Le 9 avril est le jour de Vimy."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "April 9 is celebrated as Vimy Day."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-officer-saw-a-nation-begin",
+      "text": {
+        "en": "One Canadian officer described what he saw at Vimy. He said the whole country, from one ocean to the other, was on parade, and that in those few minutes he watched a nation begin.",
+        "fr": "Un officier canadien a décrit ce qu'il a vu à Vimy. Il a dit que tout le pays, d'un océan à l'autre, était au défilé et que, en quelques minutes, il avait vu naître une nation."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "One Canadian officer said: “It was Canada from the Atlantic to the Pacific on parade"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-britain-advised-against-internment",
+      "text": {
+        "en": "Britain told Ottawa not to intern these men. Canada went ahead with the policy anyway.",
+        "fr": "La Grande-Bretagne avait déconseillé à Ottawa d'interner ces hommes. Le Canada a tout de même appliqué cette politique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 39,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "even though Britain advised against the policy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-last-hundred-days",
+      "text": {
+        "en": "In the last hundred days of the war, the Canadian Corps pushed forward. It advanced beside French and British Empire troops.",
+        "fr": "Pendant les cent derniers jours de la guerre, le Corps canadien a mené l'offensive. Il progressait aux côtés des troupes françaises et de celles de l'Empire britannique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 39,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the Canadian Corps advanced alongside the French and British Empire troops in the last hundred days"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-battle-of-amiens",
+      "text": {
+        "en": "The Canadians won at Amiens on August 8, 1918, a day the German army itself called black. Victories at Arras, Canal du Nord, Cambrai and Mons followed.",
+        "fr": "Les Canadiens ont vaincu à Amiens le 8 août 1918, une journée que l'armée allemande elle-même a qualifiée de noire. D'autres victoires ont suivi à Arras, au canal du Nord, à Cambrai et à Mons."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 39,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "These included the victorious Battle of Amiens on August 8, 1918—which the Germans called “the black day of the German Army”—followed by Arras, Canal du Nord, Cambrai and Mons."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-war-strengthened-pride",
+      "text": {
+        "en": "The war left Canadians prouder both of their own country and of the Empire. That feeling was strongest in English Canada.",
+        "fr": "La guerre a accru la fierté des Canadiens envers leur pays et envers l'Empire. Ce sentiment était le plus fort au Canada anglais."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 39,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The war strengthened both national and imperial pride, particularly in English Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-what-suffrage-means",
+      "text": {
+        "en": "Women had to fight for the right to vote. That long effort is called the women's suffrage movement.",
+        "fr": "Les femmes ont dû lutter pour obtenir le droit de vote. On appelle ce long combat le mouvement pour le suffrage des femmes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 40,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The effort by women to achieve the right to vote is known as the women’s suffrage movement."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-narrow-franchise-was-common",
+      "text": {
+        "en": "Canada was not unusual in limiting who could vote. Most democracies of that time did the same.",
+        "fr": "Le Canada n'était pas une exception en limitant le droit de vote. La plupart des démocraties de l'époque faisaient de même."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 40,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This was common in most democratic countries at the time."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-federal-vote-in-1917",
+      "text": {
+        "en": "In 1917 the government of Sir Robert Borden opened the federal vote to some women. Nurses serving at the front could vote first, then women with a close relative in active service.",
+        "fr": "En 1917, le gouvernement de sir Robert Borden a accordé le vote fédéral à certaines femmes. Les infirmières servant au front ont voté les premières, puis les femmes ayant un proche en service actif."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 40,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the federal government of Sir Robert Borden gave women the right to vote in federal elections—first to nurses at the battle front, then to women who were related to men in active wartime service."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-who-remembrance-day-honours",
+      "text": {
+        "en": "Remembrance Day honours more than a million men and women who have served Canada. It also honours the 110,000 who died.",
+        "fr": "Le jour du Souvenir honore plus d'un million d'hommes et de femmes qui ont servi le Canada. Il honore aussi les 110 000 qui ont donné leur vie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 41,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "to honour the sacrifices of over a million brave men and women who have served, and the 110,000 who have given their lives."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h6-poem-is-recited",
+      "text": {
+        "en": "The poem written by John McCrae is still read aloud at ceremonies on Remembrance Day.",
+        "fr": "Le poème écrit par John McCrae est encore récité lors des cérémonies du jour du Souvenir."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 41,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "it is often recited on Remembrance Day"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

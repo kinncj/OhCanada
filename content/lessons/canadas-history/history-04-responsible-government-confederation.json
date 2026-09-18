@@ -1,0 +1,363 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-04-responsible-government-confederation",
+  "chapter": "Canada's History",
+  "order": 4,
+  "title": {
+    "en": "Responsible government and Confederation",
+    "fr": "Le gouvernement responsable et la Confédération"
+  },
+  "passages": [
+    {
+      "id": "h4-reformers-became-fathers-of-confederation",
+      "text": {
+        "en": "Some of the reformers of that time went on to build the country. Sir Etienne-Paschal Tache, Sir George-Etienne Cartier and Sir John A. Macdonald all became Fathers of Confederation.",
+        "fr": "Certains réformistes de cette époque ont ensuite bâti le pays. Sir Étienne-Paschal Taché, sir George-Étienne Cartier et sir John A. Macdonald sont tous devenus des Pères de la Confédération."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 32,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Some reformers, including Sir Étienne-Paschal Taché and Sir George-Étienne Cartier, later became Fathers of Confederation, as did a former member of the voluntary government militia in Upper Canada, Sir John A. Macdonald."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-la-fontaine-baldwin-and-howe",
+      "text": {
+        "en": "Reformers worked with the British governors to win responsible government. Sir Louis-Hippolyte La Fontaine and Robert Baldwin did this in the Canadas, and Joseph Howe did the same in Nova Scotia.",
+        "fr": "Des réformistes ont travaillé avec les gouverneurs britanniques pour obtenir un gouvernement responsable. Sir Louis-Hippolyte La Fontaine et Robert Baldwin l'ont fait dans les Canadas, et Joseph Howe a fait de même en Nouvelle-Écosse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 32,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Reformers such as Sir Louis-Hippolyte La Fontaine and Robert Baldwin, in parallel with Joseph Howe in Nova Scotia, worked with British governors toward responsible government."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-lord-elgin-introduced-it",
+      "text": {
+        "en": "Lord Elgin was the governor of United Canada. In 1848 and 1849, with support from London, he brought in responsible government.",
+        "fr": "Lord Elgin était le gouverneur du Canada-Uni. En 1848 et 1849, avec l'appui de Londres, il a instauré le gouvernement responsable."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 32,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1848–49 the governor of United Canada, Lord Elgin, with encouragement from London, introduced responsible government."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-confidence-vote-today",
+      "text": {
+        "en": "Canada still uses that system. If the government loses a vote of confidence in the assembly, it must resign.",
+        "fr": "Le Canada utilise toujours ce système. Si le gouvernement perd un vote de confiance à l'assemblée, il doit démissionner."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 32,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This is the system that we have today: if the government loses a confidence vote in the assembly it must resign."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-three-years-of-talks",
+      "text": {
+        "en": "From 1864 to 1867, men from Nova Scotia, New Brunswick and the Province of Canada met to build a new country. Britain supported their work.",
+        "fr": "De 1864 à 1867, des représentants de la Nouvelle-Écosse, du Nouveau-Brunswick et de la Province du Canada se sont réunis pour créer un nouveau pays. La Grande-Bretagne a appuyé leurs travaux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 33,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "From 1864 to 1867, representatives of Nova Scotia, New Brunswick and the Province of Canada, with British support, worked together to establish a new country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-each-province-its-own-legislature",
+      "text": {
+        "en": "Each province would elect a legislature of its own. Each would also look after areas such as education and health.",
+        "fr": "Chaque province élirait sa propre législature. Chacune s'occuperait aussi de domaines comme l'éducation et la santé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 33,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Each province would elect its own legislature and have control of such areas as education and health."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-british-north-america-act",
+      "text": {
+        "en": "The new country needed a law to create it. The British Parliament passed the British North America Act in 1867.",
+        "fr": "Il fallait une loi pour créer le nouveau pays. Le Parlement britannique a adopté l'Acte de l'Amérique du Nord britannique en 1867."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 33,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The British Parliament passed the British North America Act in 1867."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-where-the-name-dominion-came-from",
+      "text": {
+        "en": "Sir Leonard Tilley took the word Dominion from the Bible. Psalm 72 speaks of rule that stretches from one sea to another, and that idea matched the vision of a free country crossing a continent.",
+        "fr": "Sir Leonard Tilley a tiré le mot Dominion de la Bible. Le psaume 72 parle d'une domination qui s'étend d'une mer à l'autre, une image qui correspondait au rêve d'un pays libre couvrant tout un continent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 33,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "He was inspired by Psalm 72 in the Bible which refers to “dominion from sea to sea and from the river to the ends of the earth.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-dominion-title-and-our-heritage",
+      "text": {
+        "en": "The title Dominion was written into the Constitution. It was used officially for about a hundred years and is still part of Canada's heritage.",
+        "fr": "Le titre de Dominion a été inscrit dans la Constitution. Il a servi officiellement pendant une centaine d'années et fait toujours partie du patrimoine canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "was used officially for about 100 years, and remains part of our heritage today."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-1870-manitoba-and-northwest-territories",
+      "text": {
+        "en": "The new country soon grew. Manitoba and the Northwest Territories came into Canada in 1870.",
+        "fr": "Le nouveau pays s'est vite agrandi. Le Manitoba et les Territoires du Nord-Ouest sont entrés dans le Canada en 1870."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1870 – Manitoba, Northwest Territories"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-1873-prince-edward-island",
+      "text": {
+        "en": "Prince Edward Island joined Canada in 1873.",
+        "fr": "L'Île-du-Prince-Édouard s'est jointe au Canada en 1873."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1873 – Prince Edward Island"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-1880-arctic-islands",
+      "text": {
+        "en": "In 1880 the Arctic Islands were transferred to Canada. They were added to the Northwest Territories.",
+        "fr": "En 1880, les îles de l'Arctique ont été transférées au Canada. Elles ont été rattachées aux Territoires du Nord-Ouest."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1880 – Transfer of the Arctic Islands (to N.W.T.)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h4-1898-yukon-territory",
+      "text": {
+        "en": "The Yukon Territory was added in 1898.",
+        "fr": "Le Territoire du Yukon a été créé en 1898."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1898 – Yukon Territory"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

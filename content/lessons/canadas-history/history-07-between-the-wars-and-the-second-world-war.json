@@ -1,0 +1,471 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-07-between-the-wars-and-the-second-world-war",
+  "chapter": "Canada's History",
+  "order": 7,
+  "title": {
+    "en": "Between the wars, and the Second World War",
+    "fr": "L'entre-deux-guerres et la Seconde Guerre mondiale"
+  },
+  "passages": [
+    {
+      "id": "h7-canada-in-the-commonwealth",
+      "text": {
+        "en": "Canada is still a leading member of the Commonwealth. So are other countries that were once part of the Empire, such as India, Australia, New Zealand and several countries in Africa and the Caribbean.",
+        "fr": "Le Canada demeure un membre important du Commonwealth. D'autres pays qui faisaient autrefois partie de l'Empire en font aussi partie, comme l'Inde, l'Australie, la Nouvelle-Zélande et plusieurs pays d'Afrique et des Caraïbes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada remains a leading member of the Commonwealth to this day, together with other successor states of the Empire such as India, Australia, New Zealand, and several African and Caribbean countries."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-roaring-twenties",
+      "text": {
+        "en": "The 1920s were good years for the economy. Businesses did well and few people were out of work.",
+        "fr": "Les années 1920 ont été de bonnes années pour l'économie. Les entreprises prospéraient et peu de gens étaient sans emploi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The “Roaring Twenties” were boom times, with prosperity for businesses and low unemployment."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-crash-of-1929",
+      "text": {
+        "en": "Those good years ended with the stock market crash of 1929. The hard years that followed are called the Great Depression, or the Dirty Thirties.",
+        "fr": "Ces bonnes années ont pris fin avec le krach boursier de 1929. Les années difficiles qui ont suivi sont appelées la Grande Dépression, ou les années trente sales."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The stock market crash of 1929, however, led to the Great Depression or the “Dirty Thirties.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-demand-for-a-safety-net",
+      "text": {
+        "en": "More and more people asked the government for protection against hard times. They wanted minimum wages, a set work week, and programs such as unemployment insurance.",
+        "fr": "De plus en plus de gens ont demandé à l'État de les protéger contre les temps durs. Ils réclamaient un salaire minimum, une semaine de travail normale et des programmes comme l'assurance-chômage."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There was growing demand for the government to create a social safety net with minimum wages, a standard work week and programs such as unemployment insurance."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-allies-invaded-occupied-europe",
+      "text": {
+        "en": "Nazi Germany and its allies held much of Europe. To defeat Nazism and Fascism, the Allies invaded the lands they held.",
+        "fr": "L'Allemagne nazie et ses alliés occupaient une grande partie de l'Europe. Pour vaincre le nazisme et le fascisme, les Alliés ont envahi les territoires occupés."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In order to defeat Nazism and Fascism, the Allies invaded Nazi-occupied Europe."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-liberation-of-italy",
+      "text": {
+        "en": "Canadians helped free Italy in 1943 and 1944.",
+        "fr": "Des Canadiens ont contribué à libérer l'Italie en 1943 et 1944."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadians took part in the liberation of Italy in 1943–44."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-one-in-ten-on-d-day",
+      "text": {
+        "en": "Canada's part in the Normandy landings was large for a country its size. About one in every ten Allied soldiers who landed on D-Day was Canadian.",
+        "fr": "La part du Canada dans le débarquement de Normandie était importante pour un pays de sa taille. Environ un soldat allié sur dix qui a débarqué le jour J était canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Approximately one in ten Allied soldiers on D-Day was Canadian."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-canada-joined-its-allies",
+      "text": {
+        "en": "Canada did not stay out of the war. It joined its democratic allies and fought to defeat tyranny by force of arms.",
+        "fr": "Le Canada n'est pas resté à l'écart de la guerre. Il s'est joint à ses alliés démocratiques et a combattu par les armes pour vaincre la tyrannie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada joined with its democratic allies in the fight to defeat tyranny by force of arms."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-44000-were-killed",
+      "text": {
+        "en": "That was a high share of the country's people. Of those who served, 44,000 were killed.",
+        "fr": "C'était une proportion élevée de la population du pays. De ceux qui ont servi, 44 000 ont été tués."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This was a high proportion and of these, 44,000 were killed."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-rcaf-in-the-battle-of-britain",
+      "text": {
+        "en": "The Royal Canadian Air Force fought in the Battle of Britain. It also supplied a large share of the Commonwealth crews who flew bombers and fighters over Europe.",
+        "fr": "L'Aviation royale canadienne a pris part à la bataille d'Angleterre. Elle a aussi fourni une grande partie des équipages du Commonwealth qui pilotaient les bombardiers et les chasseurs au-dessus de l'Europe."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Royal Canadian Air Force (RCAF) took part in the Battle of Britain and provided a high proportion of Commonwealth aircrew in bombers and fighter planes over Europe."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-largest-air-contribution",
+      "text": {
+        "en": "No other Commonwealth country gave more to the Allied air effort than Canada.",
+        "fr": "Aucun autre pays du Commonwealth n'a contribué davantage que le Canada à l'effort aérien des Alliés."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada contributed more to the Allied air effort than any other Commonwealth country"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-rcn-battle-of-the-atlantic",
+      "text": {
+        "en": "The Royal Canadian Navy did its finest work in the Battle of the Atlantic. Its ships guarded convoys of merchant ships against German submarines.",
+        "fr": "La Marine royale canadienne a accompli son plus grand exploit lors de la bataille de l'Atlantique. Ses navires protégeaient les convois de navires marchands contre les sous-marins allemands."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Royal Canadian Navy (RCN) saw its finest hour in the Battle of the Atlantic, protecting convoys of merchant ships against German submarines."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-merchant-navy-supplied-britain",
+      "text": {
+        "en": "Canada's Merchant Navy carried what Britain needed across the ocean. Its crews helped feed, clothe and resupply the country.",
+        "fr": "La marine marchande du Canada transportait outre-mer ce dont la Grande-Bretagne avait besoin. Ses équipages ont aidé à nourrir, à vêtir et à ravitailler le pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s Merchant Navy helped to feed, clothe and resupply Britain."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-japan-attacked-north-america",
+      "text": {
+        "en": "The Pacific war reached North America. Japan took the Aleutian Islands, fired on a lighthouse on Vancouver Island, and sent fire balloons over British Columbia and the Prairies.",
+        "fr": "La guerre du Pacifique a atteint l'Amérique du Nord. Le Japon a envahi les îles Aléoutiennes, a attaqué un phare sur l'île de Vancouver et a lancé des ballons incendiaires au-dessus de la Colombie-Britannique et des Prairies."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the Pacific war, Japan invaded the Aleutian Islands, attacked a lighthouse on Vancouver Island, launched fire balloons over B.C. and the Prairies"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-prisoners-taken-at-hong-kong",
+      "text": {
+        "en": "Canadian soldiers were captured when Hong Kong fell. Japan treated those prisoners of war very badly.",
+        "fr": "Des soldats canadiens ont été faits prisonniers lors de la chute de Hong Kong. Le Japon a traité ces prisonniers de guerre avec une grande cruauté."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "grossly maltreated Canadian prisoners of war captured at Hong Kong."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-japanese-canadians-were-moved",
+      "text": {
+        "en": "The war and public feeling in British Columbia led to a grave wrong. The federal government forced Canadians of Japanese origin to leave their homes and sold their property without paying them for it.",
+        "fr": "La guerre et l'opinion publique en Colombie-Britannique ont mené à une grave injustice. Le gouvernement fédéral a forcé les Canadiens d'origine japonaise à quitter leur foyer et a vendu leurs biens sans les indemniser."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the state of war and public opinion in B.C. led to the forcible relocation of Canadians of Japanese origin by the federal government and the sale of their property without compensation."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h7-warned-they-posed-little-danger",
+      "text": {
+        "en": "Ottawa had been told this was not needed. The military and the RCMP said these Canadians posed little danger to the country.",
+        "fr": "On avait pourtant prévenu Ottawa que cette mesure n'était pas nécessaire. L'armée et la GRC affirmaient que ces Canadiens représentaient peu de danger pour le pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This occurred even though the military and the RCMP told Ottawa that they posed little danger to Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

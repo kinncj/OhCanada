@@ -1,0 +1,390 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-01-first-peoples-and-europeans",
+  "chapter": "Canada's History",
+  "order": 1,
+  "title": {
+    "en": "First peoples and the first Europeans",
+    "fr": "Les premiers peuples et les premiers Européens"
+  },
+  "passages": [
+    {
+      "id": "h1-living-off-the-land",
+      "text": {
+        "en": "Long before Europeans came, peoples were already living in every part of this land. They took what they needed from it. Some hunted and gathered their food. Others grew crops.",
+        "fr": "Bien avant l'arrivée des Européens, des peuples vivaient déjà dans toutes les régions de ce territoire. Ils tiraient leur subsistance de la terre. Certains chassaient et cueillaient leur nourriture. D'autres cultivaient la terre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The native people lived off the land, some by hunting and gathering, others by raising crops."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-cree-and-dene",
+      "text": {
+        "en": "The Cree and the Dene lived in the Northwest. They hunted and gathered what they needed to live.",
+        "fr": "Les Cris et les Dénés vivaient dans le Nord-Ouest. Ils chassaient et cueillaient ce dont ils avaient besoin pour vivre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Cree and Dene of the Northwest were hunter-gatherers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-inuit-arctic-wildlife",
+      "text": {
+        "en": "The Inuit lived in the Arctic. The animals, birds and fish of the Far North gave them their food and their clothing.",
+        "fr": "Les Inuits vivaient dans l'Arctique. Les animaux, les oiseaux et les poissons du Grand Nord leur fournissaient nourriture et vêtements."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Inuit lived off Arctic wildlife."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-conflict-over-land",
+      "text": {
+        "en": "These peoples did not always live at peace with one another. Fighting between groups was common, often over land, over resources, or over standing.",
+        "fr": "Ces peuples ne vivaient pas toujours en paix les uns avec les autres. Les affrontements entre groupes étaient fréquents, souvent pour le territoire, les ressources ou le prestige."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Warfare was common among Aboriginal groups as they competed for land, resources and prestige."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-newcomers-changed-everything",
+      "text": {
+        "en": "Traders, missionaries, soldiers and settlers then arrived from Europe. Their coming changed the way of life of the first peoples for good.",
+        "fr": "Des commerçants, des missionnaires, des soldats et des colons sont ensuite arrivés d'Europe. Leur venue a changé pour toujours le mode de vie des premiers peuples."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The arrival of European traders, missionaries, soldiers and colonists changed the native way of life forever."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-vikings-reached-labrador",
+      "text": {
+        "en": "About a thousand years ago, Vikings from Iceland settled Greenland. They also reached Labrador and the island of Newfoundland.",
+        "fr": "Il y a environ mille ans, des Vikings venus d'Islande ont colonisé le Groenland. Ils ont aussi atteint le Labrador et l'île de Terre-Neuve."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Vikings from Iceland who colonized Greenland 1,000 years ago also reached Labrador and the island of Newfoundland."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-st-croix-then-port-royal",
+      "text": {
+        "en": "The first French settlers built on St. Croix Island, in what is now the state of Maine. They then moved to Port-Royal, in Acadia, in what is now Nova Scotia.",
+        "fr": "Les premiers colons français se sont installés dans l'île Sainte-Croix, dans l'actuel État du Maine. Ils se sont ensuite établis à Port-Royal, en Acadie, dans l'actuelle Nouvelle-Écosse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "first on St. Croix Island (in present-day Maine), then at Port-Royal, in Acadia (present-day Nova Scotia)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-harsh-climate",
+      "text": {
+        "en": "Life in the new colony was hard. The settlers had to get through a harsh climate.",
+        "fr": "La vie dans la nouvelle colonie était difficile. Les colons devaient affronter un climat rigoureux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The colonists struggled against a harsh climate."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-iroquois-confederation",
+      "text": {
+        "en": "The Iroquois were a confederation of five First Nations, and later six. For a hundred years they fought the French settlements.",
+        "fr": "Les Iroquois formaient une confédération de cinq Premières Nations, puis de six. Pendant un siècle, ils ont combattu les établissements français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "a confederation of five (later six) First Nations who battled with the French settlements for a century"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-fur-trade-worked-together",
+      "text": {
+        "en": "The fur trade was a very large business. French and Aboriginal people worked in it together.",
+        "fr": "La traite des fourrures était un commerce très important. Les Français et les peuples autochtones y travaillaient ensemble."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The French and Aboriginal people collaborated in the vast fur-trade economy"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-french-empire-leaders",
+      "text": {
+        "en": "Leaders such as Jean Talon, Bishop Laval and Count Frontenac built a French empire in North America. It reached from Hudson Bay all the way to the Gulf of Mexico.",
+        "fr": "Des dirigeants comme Jean Talon, Mgr de Laval et le comte de Frontenac ont bâti un empire français en Amérique du Nord. Cet empire s'étendait de la baie d'Hudson jusqu'au golfe du Mexique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Outstanding leaders like Jean Talon, Bishop Laval, and Count Frontenac built a French Empire in North America that reached from Hudson Bay to the Gulf of Mexico."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-hbc-against-montreal-traders",
+      "text": {
+        "en": "For the next hundred years, the Hudson's Bay Company had rivals. Traders based in Montreal competed with it for the same furs.",
+        "fr": "Pendant les cent années suivantes, la Compagnie de la Baie d'Hudson a eu des rivaux. Les marchands établis à Montréal lui faisaient concurrence pour les mêmes fourrures."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "For the next 100 years the Company competed with Montreal-based traders."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-english-colonies-grew-larger",
+      "text": {
+        "en": "English colonies grew along the Atlantic coast from the early 1600s. In time they became richer than New France, and far more people lived in them.",
+        "fr": "Des colonies anglaises se sont développées le long de la côte atlantique dès le début des années 1600. Avec le temps, elles sont devenues plus riches que la Nouvelle-France et bien plus peuplées."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "English colonies along the Atlantic seaboard, dating from the early 1600s, eventually became richer and more populous than New France."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h1-france-and-britain-fight-for-the-continent",
+      "text": {
+        "en": "In the 1700s, France and Great Britain went to war over North America. Each wanted to control the continent.",
+        "fr": "Au cours des années 1700, la France et la Grande-Bretagne se sont fait la guerre en Amérique du Nord. Chacune voulait dominer le continent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the 1700s France and Great Britain battled for control of North America."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

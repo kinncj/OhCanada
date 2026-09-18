@@ -1,0 +1,390 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-03-growing-economy-war-of-1812",
+  "chapter": "Canada's History",
+  "order": 3,
+  "title": {
+    "en": "A growing economy, and the War of 1812",
+    "fr": "Une économie qui grandit et la guerre de 1812"
+  },
+  "passages": [
+    {
+      "id": "h3-first-companies-competed-for-furs",
+      "text": {
+        "en": "The first companies in Canada were set up while the French and then the British governed. They competed with one another for the fur trade.",
+        "fr": "Les premières entreprises au Canada ont été créées sous le régime français, puis sous le régime britannique. Elles se faisaient concurrence pour la traite des fourrures."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The first companies in Canada were formed during the French and British regimes and competed for the fur trade."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-hbc-dominated-the-northwest",
+      "text": {
+        "en": "The Hudson's Bay Company came to control the trade of the northwest. French, British and Aboriginal people worked for it, at posts from Fort Garry and Fort Edmonton to Fort Langley and Fort Victoria.",
+        "fr": "La Compagnie de la Baie d'Hudson en est venue à dominer le commerce dans le Nord-Ouest. Des Français, des Britanniques et des Autochtones y travaillaient, dans des postes allant de Fort Garry et Fort Edmonton jusqu'à Fort Langley et Fort Victoria."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Hudson’s Bay Company, with French, British and Aboriginal employees, came to dominate the trade in the northwest from Fort Garry (Winnipeg) and Fort Edmonton to Fort Langley (near Vancouver) and Fort Victoria"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-first-financial-institutions",
+      "text": {
+        "en": "Canada's first banks and other financial institutions opened in the late 1700s and the early 1800s.",
+        "fr": "Les premières banques et autres institutions financières du Canada ont ouvert leurs portes à la fin des années 1700 et au début des années 1800."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The first financial institutions opened in the late 18th and early 19th centuries."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-royal-navy-after-trafalgar",
+      "text": {
+        "en": "In 1805, at the Battle of Trafalgar, the British beat Napoleon Bonaparte's fleet. After that the Royal Navy ruled the seas.",
+        "fr": "En 1805, à la bataille de Trafalgar, les Britanniques ont vaincu la flotte de Napoléon Bonaparte. Dès lors, la Royal Navy régnait sur les mers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "After the defeat of Napoleon Bonaparte’s fleet in the Battle of Trafalgar (1805), the Royal Navy ruled the waves."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-empire-resisted-napoleon",
+      "text": {
+        "en": "Napoleon wanted to rule Europe. The British Empire fought to stop him, and Canada was part of that empire.",
+        "fr": "Napoléon voulait dominer l'Europe. L'Empire britannique a lutté pour l'en empêcher, et le Canada faisait partie de cet empire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The British Empire, which included Canada, fought to resist Bonaparte’s bid to dominate Europe."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-american-anger-over-shipping",
+      "text": {
+        "en": "The British stopped and searched American ships during that war. Americans grew angry about it.",
+        "fr": "Pendant cette guerre, les Britanniques arraisonnaient les navires américains. Les Américains s'en sont indignés."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This led to American resentment at British interference with their shipping."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-de-salaberry-and-his-soldiers",
+      "text": {
+        "en": "Lieutenant-Colonel Charles de Salaberry led 460 soldiers against the American invaders. Most of his soldiers were French Canadiens.",
+        "fr": "Le lieutenant-colonel Charles de Salaberry a mené 460 soldats contre les envahisseurs américains. La plupart de ses soldats étaient des Canadiens français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Lieutenant-Colonel Charles de Salaberry and 460 soldiers, mostly French Canadiens"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-ross-burned-the-white-house",
+      "text": {
+        "en": "Britain struck back in 1814. Major-General Robert Ross led an expedition from Nova Scotia that burned down the White House and other public buildings in Washington.",
+        "fr": "La Grande-Bretagne a riposté en 1814. Le major-général Robert Ross a mené depuis la Nouvelle-Écosse une expédition qui a incendié la Maison-Blanche et d'autres édifices publics à Washington."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 30,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Major-General Robert Ross led an expedition from Nova Scotia that burned down the White House and other public buildings in Washington, D.C."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-ross-buried-in-halifax",
+      "text": {
+        "en": "Ross was killed in battle soon afterwards. He was buried in Halifax with full military honours.",
+        "fr": "Ross a été tué au combat peu de temps après. Il a été inhumé à Halifax avec tous les honneurs militaires."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 30,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ross died in battle soon afterwards and was buried in Halifax with full military honours."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-american-attempt-failed-by-1814",
+      "text": {
+        "en": "By 1814 the Americans had given up on taking Canada. Their attempt to conquer it had failed.",
+        "fr": "En 1814, les Américains avaient renoncé à s'emparer du Canada. Leur tentative de conquête avait échoué."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 30,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "By 1814, the American attempt to conquer Canada had failed."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-reformers-wanted-faster-change",
+      "text": {
+        "en": "In the 1830s, reformers in Upper and Lower Canada were not satisfied. They believed the move toward full democracy was going too slowly.",
+        "fr": "Dans les années 1830, les réformistes du Haut-Canada et du Bas-Canada n'étaient pas satisfaits. Ils trouvaient que la marche vers une pleine démocratie était trop lente."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 31,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the 1830s, reformers in Upper and Lower Canada believed that progress toward full democracy was too slow."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-some-looked-to-the-united-states",
+      "text": {
+        "en": "Some of those reformers looked south for a model. They thought Canada should take up American republican values, or even join the United States.",
+        "fr": "Certains de ces réformistes cherchaient un modèle au sud. Ils estimaient que le Canada devait adopter les valeurs républicaines américaines, voire se joindre aux États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 31,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Some believed Canada should adopt American republican values or even try to join the United States."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-what-happened-to-the-rebels",
+      "text": {
+        "en": "The rebels paid a heavy price. Some were hanged and others were sent out of the country, though a number of those exiles came back to Canada later.",
+        "fr": "Les rebelles ont payé cher leur geste. Certains ont été pendus, d'autres ont été exilés, même si plusieurs de ces exilés sont revenus au Canada par la suite."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 31,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "A number of rebels were hanged or exiled; some exiles later returned to Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h3-durham-report-recommendation",
+      "text": {
+        "en": "Britain sent Lord Durham, an English reformer, to report on the rebellions. He advised joining Upper and Lower Canada together and giving them responsible government.",
+        "fr": "La Grande-Bretagne a envoyé lord Durham, un réformiste anglais, faire rapport sur les rébellions. Il a recommandé de réunir le Haut-Canada et le Bas-Canada et de leur accorder un gouvernement responsable."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 31,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Lord Durham, an English reformer sent to report on the rebellions, recommended that Upper and Lower Canada be merged and given responsible government."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

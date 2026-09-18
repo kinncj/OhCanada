@@ -1,0 +1,498 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-05-opening-the-west",
+  "chapter": "Canada's History",
+  "order": 5,
+  "title": {
+    "en": "The West, the Mounties and the railway",
+    "fr": "L'Ouest, la Police montée et le chemin de fer"
+  },
+  "passages": [
+    {
+      "id": "h5-british-west-indies-idea",
+      "text": {
+        "en": "In the 1920s, some people thought the British islands and territories in the Caribbean Sea should become part of Canada. That did not happen.",
+        "fr": "Dans les années 1920, certains croyaient que les îles et territoires britanniques de la mer des Caraïbes devraient faire partie du Canada. Cela ne s'est pas produit."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 35,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the 1920s, some believed that the British West Indies (British territories in the Caribbean Sea) should become part of Canada. This did not occur"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-macdonald-born-in-scotland",
+      "text": {
+        "en": "Canada's first Prime Minister was born in Scotland on January 11, 1815. He came to Upper Canada as a child.",
+        "fr": "Le premier premier ministre du Canada est né en Écosse le 11 janvier 1815. Il est arrivé dans le Haut-Canada lorsqu'il était enfant."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 35,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-macdonald-lawyer-in-kingston",
+      "text": {
+        "en": "Before he led the country, Sir John A. Macdonald worked as a lawyer in Kingston, Ontario. He was a skilled politician and a colourful man.",
+        "fr": "Avant de diriger le pays, sir John A. Macdonald était avocat à Kingston, en Ontario. C'était un politicien habile et un personnage haut en couleur."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 35,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "He was a lawyer in Kingston, Ontario, a gifted politician and a colourful personality."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-macdonald-day",
+      "text": {
+        "en": "Parliament has set aside a day in his honour. January 11 is Sir John A. Macdonald Day.",
+        "fr": "Le Parlement a institué une journée en son honneur. Le 11 janvier est la Journée sir John A. Macdonald."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 35,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Parliament has recognized January 11 as Sir John A. Macdonald Day."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-canada-took-over-the-northwest",
+      "text": {
+        "en": "In 1869 Canada took over the vast northwest region. Until then the Hudson's Bay Company had held it.",
+        "fr": "En 1869, le Canada a pris possession de l'immense région du Nord-Ouest. Jusque-là, elle appartenait à la Compagnie de la Baie d'Hudson."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 35,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "When Canada took over the vast northwest region from the Hudson’s Bay Company in 1869"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-soldiers-retook-fort-garry",
+      "text": {
+        "en": "Ottawa answered the uprising with force. It sent soldiers to take back Fort Garry in 1870.",
+        "fr": "Ottawa a répondu au soulèvement par la force. Le gouvernement a envoyé des soldats reprendre Fort Garry en 1870."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ottawa sent soldiers to retake Fort Garry in 1870."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-riel-elected-never-took-his-seat",
+      "text": {
+        "en": "Louis Riel was elected to Parliament. He never took his seat there.",
+        "fr": "Louis Riel a été élu au Parlement. Il n'a jamais siégé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Riel was elected to Parliament but never took his seat."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-second-rebellion-1885",
+      "text": {
+        "en": "Settlers kept moving west, and the rights of the Metis and of First Nations were threatened once more. A second rebellion broke out in 1885.",
+        "fr": "La colonisation poursuivait sa marche vers l'Ouest et les droits des Métis et des Premières Nations étaient de nouveau menacés. Une deuxième rébellion a éclaté en 1885."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-riel-trial-and-execution",
+      "text": {
+        "en": "Riel was put on trial and put to death for high treason. Many people in Quebec were strongly against that decision.",
+        "fr": "Riel a été jugé puis exécuté pour haute trahison. Beaucoup de gens au Québec se sont vivement opposés à cette décision."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "led to Riel’s trial and execution for high treason, a decision that was strongly opposed in Quebec."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-why-the-nwmp-was-created",
+      "text": {
+        "en": "The North West Mounted Police were sent west for two jobs. They were to bring order to the region and to help with talks with First Nations.",
+        "fr": "La Police à cheval du Nord-Ouest a été envoyée dans l'Ouest pour deux raisons. Elle devait y faire régner l'ordre et aider aux négociations avec les Premières Nations."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "to pacify the West and assist in negotiations with the Indians."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-nwmp-posts-became-towns",
+      "text": {
+        "en": "The Mounted Police built posts across the West, among them Fort Calgary and Fort MacLeod. Those posts are cities and towns today.",
+        "fr": "La Police montée a établi des postes dans tout l'Ouest, dont Fort Calgary et Fort MacLeod. Ces postes sont aujourd'hui des villes et des villages."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The NWMP founded Fort Calgary, Fort MacLeod and other centres that today are cities and towns."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-regina-was-the-headquarters",
+      "text": {
+        "en": "The force needed a base. Regina became the headquarters of the North West Mounted Police.",
+        "fr": "Le corps policier avait besoin d'une base. Regina est devenue le quartier général de la Police à cheval du Nord-Ouest."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Regina became its headquarters."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-sam-steele-came-from-the-mounties",
+      "text": {
+        "en": "Some of Canada's best-known heroes served in the Mounties. Major General Sir Sam Steele was one of them.",
+        "fr": "Parmi les héros les plus connus du Canada, certains ont servi dans la Police montée. Le major-général sir Sam Steele était de ceux-là."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 36,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Some of Canada’s most colourful heroes, such as Major General Sir Sam Steele, came from the ranks of the Mounties."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-who-paid-for-and-built-the-railway",
+      "text": {
+        "en": "British and American investors paid for the railway across the country. European and Chinese workers built it.",
+        "fr": "Des investisseurs britanniques et américains ont financé le chemin de fer transcontinental. Des ouvriers européens et chinois l'ont construit."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 37,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The project was financed by British and American investors and built by both European and Chinese labour."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-boom-of-the-1890s",
+      "text": {
+        "en": "Canada's economy did well in the 1890s and the early 1900s. It grew larger, and more of the work was done in factories.",
+        "fr": "L'économie du Canada s'est bien portée dans les années 1890 et au début des années 1900. Elle a pris de l'ampleur et s'est industrialisée."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 37,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s economy grew and became more industrialized during the economic boom of the 1890s and early 1900s."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-british-and-american-newcomers",
+      "text": {
+        "en": "Newcomers arrived in large numbers during that boom. One million came from Britain and one million from the United States.",
+        "fr": "De nombreux nouveaux arrivants sont venus pendant cette période de prospérité. Un million venaient de Grande-Bretagne et un million, des États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 37,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "One million British and one million Americans immigrated to Canada at this time."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-railway-carried-ukrainian-settlers",
+      "text": {
+        "en": "The railway made it possible for immigrants to reach the West. Among them were 170,000 Ukrainians.",
+        "fr": "Le chemin de fer a permis aux immigrants de gagner l'Ouest. Parmi eux se trouvaient 170 000 Ukrainiens."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 37,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The railway made it possible for immigrants, including 170,000 Ukrainians"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h5-settlers-built-farming-in-the-west",
+      "text": {
+        "en": "Tens of thousands of settlers also came from Germany, France, Norway and Sweden. They settled the West before 1914 and built up farming there.",
+        "fr": "Des dizaines de milliers de colons sont aussi venus d'Allemagne, de France, de Norvège et de Suède. Ils se sont établis dans l'Ouest avant 1914 et y ont développé l'agriculture."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 38,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "tens of thousands from Germany, France, Norway and Sweden to settle in the West before 1914 and develop a thriving agricultural sector."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
