@@ -1112,8 +1112,8 @@ const GUIDE_PLAN = {
  *     toboggan/walk t 0    torso -27 deg, (-28, +131)
  *                                        =  "reclined 27 degrees ... drops 131
  *                                             px and moves 28 px back"
- *     bike/walk t 0        torso 22 deg   =  "The torso folds 22 degrees over
- *                                             the bar"
+ *     bike/walk t 0        torso 34 deg   =  "34 degrees at the torso, and the
+ *                                             hands do not move to get there"
  *     skateboard/walk t 0  feet 92 px apart, torso 9 deg
  *                                        =  "the ankles are 92 px apart";
  *                                             "Torso pitched 5, 9 and 14
@@ -1666,13 +1666,40 @@ const RECIPES = {
   'combine-harvester': singleSource(),
   'container-car': singleSource(),
   /**
-   * The car the player rides on the Prairies (ADR-0031), on its own, at 1x. The
-   * rider is deliberately not composited: a ride subject built with `slots.pose`
-   * would fall under the mounted-subject block, which demands `{mode}` equipment
-   * a ride by definition does not have. The car is the art this source ships;
-   * the seated rider is the rig's, and `posedModesWithoutSubject` says so.
+   * The car the player rides on the Prairies (ADR-0031), OVER THE TRACK IT
+   * STANDS ON, which is what the player sees and what this subject now is.
+   *
+   * It was `singleSource()`, and that is how a required feature came to be
+   * audited ABSENT while the art was right. `mustBeRight` asks for "two
+   * four-wheel trucks under the car, OVER A RAIL", and says in its own detail
+   * that the trucks stand "on the row the ride's track strip puts its rail head
+   * on" -- so the rail belongs to the track file by construction, and a render
+   * of the car ALONE can never contain it. A blind pass read the car as
+   * floating on its own shadow, which is exactly what the isolated file shows.
+   *
+   * The numbers are the level's, not this harness's: content/levels/prairie-
+   * rail.json puts `track.topY` at 582 in the car's own coordinates, the car's
+   * wheel bottoms are at y 586, and the strip's rail head is its own y 4..16 --
+   * so the rail lands at car y 586..598, directly under both trucks. NEGATIVE
+   * `nearTop`, for the same reason the railbed's is: the near layer (the car)
+   * begins ABOVE the far one (the track), so `farAt` is 582 and `nearAt` is 0.
+   *
+   * The rider is still deliberately not composited: a ride subject built with
+   * `slots.pose` would fall under the mounted-subject block, which demands
+   * `{mode}` equipment a ride by definition does not have. The car and its
+   * track are the art this source ships; the seated rider is the rig's, and
+   * `posedModesWithoutSubject` says so.
+   *
+   * `levelOffsetDrift` does not police this pair, and that is not an oversight
+   * being hidden: it resolves offsets from a level's `layers[]`, and a ride's
+   * art and track are not layers, so it finds nothing and says nothing.
    */
-  'park-car': singleSource(),
+  'park-car': twoParallaxTiles({
+    farMatch: 'ride-park-car-track',
+    nearMatch: 'ride-park-car@',
+    nearTop: -582,
+    what: 'a park car and the ride track it stands on',
+  }),
 
   /**
    * The foothills' two. `beef-cattle` is the first animal drawn since the llama

@@ -831,11 +831,15 @@ arithmetic, not taste, and both changed a pose:
   Every mode pose therefore adds `R(torso) · (joint − waist) − (joint − waist)` to the arm chains and to the
   head-and-neck group. That is why `head` and the six parts that share its pivot carry a `dx` for the first
   time in this rig.
-- **The arms are 136 px and the legs 172, and both run out.** The cyclist folds 22° over the bar and not
-  further, because at 22° the bar is 132 px from the carried shoulder and at 30° it is 142 — past the end of
-  the arm. The tobogganer's knees are up rather than out, because 172 px of leg from a hip 19 px above the
-  deck reaches about 70 px forward and no more. Neither number is a drawing decision that could have gone
-  another way.
+- **The arms are 136 px and the legs 172, and one of them runs out.** The cyclist folds **34°** over the bar.
+  This bullet used to say 22° "and not further, because at 22° the bar is 132 px from the carried shoulder and
+  at 30° it is 142 — past the end of the arm", and that had the sign backwards: the shoulder sits 119 px from
+  the torso pivot, so the fold carries it **towards** the bar and the reach **shortens** — 132 px at 22°, 124
+  at 30°, 113 at 34°, against 136 px of arm. The rider stayed too upright to read for as long as the wrong
+  number stood, and a blind pass at 390 px recorded the fold ABSENT. The grips did not move; the arm chain is
+  re-solved by the same two-link IK, so the arms just carry more elbow. The tobogganer's knees are up rather
+  than out, because 172 px of leg from a hip 19 px above the deck reaches about 70 px forward and no more —
+  that number is still arithmetic and still binds.
 
 Three more rules that a later editor will otherwise undo:
 

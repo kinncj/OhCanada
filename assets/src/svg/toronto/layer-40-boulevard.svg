@@ -114,8 +114,8 @@
   <rect x="670" y="128" width="32" height="62" rx="14" fill="#2b3660"/>
   <rect x="678" y="54" width="56" height="82" rx="18" fill="#d8262c"/>
   <rect x="720" y="66" width="34" height="15" rx="8" fill="#d8262c"/>
-  <circle cx="746" cy="34" r="24" fill="#c68550"/>
-  <path d="M 722 26 Q 746 -2 770 28 Z" fill="#f0f2f5"/>
+  <circle cx="746" cy="41" r="17" fill="#c68550"/>
+  <path d="M 729 35.3 Q 746 15.5 763 36.8 Z" fill="#f0f2f5"/>
   <ellipse cx="1220" cy="252" rx="76" ry="10" fill="#16203a" opacity="0.28"/>
   <circle cx="1176" cy="210" r="38" fill="none" stroke="#30384f" stroke-width="9"/>
   <circle cx="1264" cy="210" r="38" fill="none" stroke="#30384f" stroke-width="9"/>
@@ -125,8 +125,8 @@
   <rect x="1190" y="128" width="32" height="62" rx="14" fill="#57647a"/>
   <rect x="1198" y="54" width="56" height="82" rx="18" fill="#46b896"/>
   <rect x="1240" y="66" width="34" height="15" rx="8" fill="#46b896"/>
-  <circle cx="1266" cy="34" r="24" fill="#7a4923"/>
-  <path d="M 1242 26 Q 1266 -2 1290 28 Z" fill="#d6a727"/>
+  <circle cx="1266" cy="41" r="17" fill="#7a4923"/>
+  <path d="M 1249 35.3 Q 1266 15.5 1283 36.8 Z" fill="#d6a727"/>
   <ellipse cx="400" cy="252" rx="34.53" ry="6.42" fill="#16203a" opacity="0.28"/>
   <rect x="370.47" y="150.13" width="25.68" height="91.31" rx="11.56" fill="#101629"/>
   <rect x="366.62" y="240.73" width="33.38" height="9.27" rx="3.57" fill="#7c4327"/>

@@ -1,9 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2016" height="640" viewBox="0 0 2016 640" shape-rendering="geometricPrecision">
-  <title>The Rideau Canal Skateway's far retaining wall, snow banks, lamp rhythm, warming hut, lane spruces, skaters and one road bridge crossed end-on. Survives the low graphics preset. World y 700..1340; 2016 px wide so 2x stays under the 4096 px cap.</title>
+  <title>The Rideau Canal Skateway's far retaining wall, drawn as COURSED MASONRY - a coping band over three block courses, the vertical joints staggered half a block per course and every joint closed on all four sides, because a dark line that closes right round a shape is mortar whatever it encloses. The containment is the whole read: a blind pass found the ice edged by snowbank and conifers and called it a pond rather than a built canal, and a flat grey band is an embankment, not a wall. Also snow banks, lamp rhythm, warming hut, lane spruces, skaters and one road bridge crossed end-on. Survives the low graphics preset. World y 700..1340; 2016 px wide so 2x stays under the 4096 px cap.</title>
   <rect x="0" y="300" width="2016" height="64" fill="#e6eff7"/>
   <rect x="0" y="300" width="2016" height="16" fill="#ffffff"/>
   <rect x="0" y="348" width="2016" height="192" fill="#605a55"/>
   <rect x="0" y="348" width="2016" height="26" fill="#8b857c"/>
+  <rect x="0" y="370" width="2016" height="4" fill="#16203a" opacity="0.3"/>
+  <rect x="0" y="412" width="2016" height="3" fill="#16203a" opacity="0.3"/>
+  <rect x="0" y="415" width="2016" height="2" fill="#8b857c"/>
+  <rect x="0" y="452" width="2016" height="3" fill="#16203a" opacity="0.3"/>
+  <rect x="0" y="455" width="2016" height="2" fill="#8b857c"/>
+  <rect x="0" y="492" width="2016" height="3" fill="#16203a" opacity="0.3"/>
+  <rect x="8" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="208" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="408" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="608" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="808" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="1008" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="1208" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="1408" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="1608" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="1808" y="374" width="3" height="38" fill="#16203a" opacity="0.3"/>
+  <rect x="108" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="308" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="508" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="708" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="908" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1108" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1308" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1508" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1708" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1908" y="415" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="8" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="208" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="408" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="608" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="808" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1008" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1208" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1408" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1608" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
+  <rect x="1808" y="455" width="3" height="37" fill="#16203a" opacity="0.3"/>
   <rect x="0" y="514" width="2016" height="26" fill="#16203a" opacity="0.18"/>
   <rect x="0" y="300" width="2016" height="12" fill="#30384f"/>
   <rect x="14" y="300" width="12" height="62" rx="4" fill="#57647a"/>

@@ -716,7 +716,29 @@
         "someone in a parka and toque",
         "a kid dressed for the snow",
         "a person in a winter coat, hat, scarf and mittens",
-        "someone bundled up for winter"
+        "someone bundled up for winter",
+        "a person in winter clothes",
+        "someone in winter clothes",
+        "a kid in winter clothes",
+        "someone dressed for winter",
+        "a person dressed for the cold"
+      ],
+      "expectedBlindAnswerNote": [
+        "WIDENED ON THE PRECEDENT THIS CONTRACT HAS ALREADY SET TWICE, and the amendment is one word. A blind",
+        "pass answered `A young person standing in winter clothes: red pom-pom toque, blue coat, red scarf, red",
+        "mittens, grey jeans and brown boots` and FAILED, because this list accepted `winter clothing` and not",
+        "`winter clothes`. Every garment the subject exists to carry was named in that answer. It is the same",
+        "defect `toronto-trail` and `rideau-canal-skateway` were each amended for, and the general rule is",
+        "stated there: an expectedBlindAnswer list is a VOCABULARY for one picture, and a list that omits the",
+        "plain word for the thing drawn measures the verifier's diction rather than the art.",
+        "WHAT IS NOT WIDENED. Nothing added here accepts a figure that is merely dressed: `a person`, `a child`,",
+        "`a pedestrian` and `a person in a coat` all still FAIL. The subject is someone dressed for a CANADIAN",
+        "WINTER, and the winter reading is the thing being checked.",
+        "AND THE COSTUME IS NOT THE VARIABLE. The same pass was read as evidence that the costume does not hold",
+        "between renders - a red pom-pom toque on one figure, bare hair on another. It does hold: every player",
+        "render carries the same parka, red scarf, mitts and tall boots, and what differs is `headCovering`,",
+        "because the renderRecipe above REQUIRES that slot to vary between runs and requires at least one",
+        "bare-headed run. Pinning it would not fix a defect; it would retire a check."
       ],
       "designSheet": "assets/style/player.md",
       "referenceFiles": [],
@@ -3074,9 +3096,10 @@
       "id": "park-car",
       "subject": "The rear car of a stainless-steel passenger train, with a rounded observation end and a glass dome on its roof",
       "renders": [
+        "src/svg/prairie-rail/ride-park-car-track@1x.svg",
         "src/svg/prairie-rail/ride-park-car@1x.svg"
       ],
-      "renderRecipe": "Rasterise the file on its own at 1x with `singleSource()`. It is the front layer of the Prairies ride (ADR-0031): the engine draws the player BEHIND this file, seated in the dome, so the file's dome is EMPTY and this render shows the car without its passenger. That is deliberate. The seated rider is the rig's (`train/*` in rig-contract.json) and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have; `verify-art` reports `train` as a posed mode with no subject, and that report is the true statement.",
+      "renderRecipe": "Composite the two at the LEVEL's own numbers: the car over the ride track, the track laid 582 px below the car's top edge, which is `track.topY` in content/levels/prairie-rail.json expressed in the car's own coordinates, and REPEATED across the car's width exactly as the level tiles it. `twoParallaxTiles({ farMatch: 'ride-park-car-track', nearMatch: 'ride-park-car@', nearTop: -582 })`; the sign is negative because the near layer (the car) begins ABOVE the far one (the track). IT WAS `singleSource()`, AND THAT IS HOW A REQUIRED FEATURE CAME TO BE AUDITED ABSENT WHILE THE ART WAS RIGHT: `mustBeRight` asks for trucks OVER A RAIL and its own detail puts the rail head on the track strip, so a render of the car ALONE can never contain one, and a blind pass read the car as floating on its own shadow. The car's wheel bottoms are at y 586 and the strip's rail head is at car y 586..598, so both trucks stand on it. The rider is still deliberately not composited: the engine draws the player BEHIND this file, seated in the dome, so the file's dome is EMPTY and this render shows the car without its passenger. The seated rider is the rig's (`train/*` in rig-contract.json) and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have; `verify-art` reports `train` as a posed mode with no subject, and that report is the true statement.",
       "expectedBlindAnswer": [
         "a passenger train car",
         "a passenger rail car",
@@ -4207,7 +4230,7 @@
         {
           "feature": "the rider is folded over the bar",
           "why": "An upright figure with a bicycle under it reads as a person standing over a bicycle.",
-          "detail": "About 22 degrees at the torso and no more: the arms are 136 px and at 30 degrees the bar is 142 px away, which is past the end of the arm."
+          "detail": "34 degrees at the torso, and the hands do not move to get there. MEASURED on the rig: the shoulder joint sits 119 px from the torso pivot, so leaning FORWARD carries it TOWARDS the bar rather than away — shoulder-to-grip is 132 px at 22 degrees, 124 at 30 and 113 at 34, against a 136 px arm — and the arms simply bend more. This entry used to read `about 22 degrees at the torso and no more: the arms are 136 px and at 30 degrees the bar is 142 px away, which is past the end of the arm`, which had the sign backwards, and that is why the fold stayed too shallow to read: a blind pass at 390 px recorded the rider as UPRIGHT while every other entry on this subject passed. The grips do not move (near hand x 182, far hand x 216, both on y 300) and the arm chain is re-solved by two-link inverse kinematics to reach them from the new shoulder, so `hands ON the bar` holds by construction rather than by eye."
         },
         {
           "feature": "the frame is not the colour of the level’s own bicycles",
