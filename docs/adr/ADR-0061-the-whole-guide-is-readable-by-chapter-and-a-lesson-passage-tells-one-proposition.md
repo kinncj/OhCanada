@@ -365,7 +365,7 @@ Stated as boundaries because that is this document's job. **No code is written b
 
 | Layer | What is added | Rule it obeys |
 |---|---|---|
-| `content/lessons/<chapter>/*.json` | the lessons; `content/schemas/lesson.schema.json` | every content file declares `$schema`; unknown properties rejected |
+| `content/lessons/<chapter>/*.json` | the lessons, and a new `lesson` schema beside the others in `content/schemas/` (the obligation below writes it; it does not exist yet) | every content file declares `$schema`; unknown properties rejected |
 | `app/domain` | **nothing** | a lesson is data, not behaviour; ADR-0008 — a port exists when something calls it |
 | `app/application/ports` | a lesson-reading capability on the content port: list chapters, load one chapter's lessons | ports are interfaces only; no DOM, no Phaser |
 | `app/application` | chapter/lesson ordering and the shippable-passage filter | imports `domain` and `common` only |
@@ -525,7 +525,7 @@ here, because it is a design question for the story and the a11y owner.
 
 ## Obligations
 
-- **OBLIGATION due=2026-11-18 owner=architect** — write `content/schemas/lesson.schema.json` and the port
+- **OBLIGATION due=2026-11-18 owner=architect** — write the `lesson` schema into `content/schemas/` and the port
   addition in §8 before any lesson is authored, to §2's unit: a lesson with `chapter`, `order`, bilingual
   `title` and a non-empty array of passages; a passage with a **required unique `id`**, bilingual `text` and
   exactly one `factClaim`; `additionalProperties: false` throughout. The schema is what makes A4 bind per
