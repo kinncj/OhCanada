@@ -837,7 +837,11 @@ arithmetic, not taste, and both changed a pose:
   the torso pivot, so the fold carries it **towards** the bar and the reach **shortens** — 132 px at 22°, 124
   at 30°, 113 at 34°, against 136 px of arm. The rider stayed too upright to read for as long as the wrong
   number stood, and a blind pass at 390 px recorded the fold ABSENT. The grips did not move; the arm chain is
-  re-solved by the same two-link IK, so the arms just carry more elbow. The tobogganer's knees are up rather
+  re-solved by the same two-link IK, so the arms just carry more elbow. **Moving a fold moves the neck too**,
+  and the first pass at this one did not: the chest and the head went to 34° and the neck kept the transform
+  the 22° fold had given it, 8.3 px behind the average §4 requires, in all thirteen keys of the three `bike`
+  states. `tests/unit/contracts/a-joint-bends-the-way-a-body-does.test.ts` caught it. The neck is not a pose
+  decision — it is `(chest + head) / 2` per component, so it is re-derived whenever either end moves. The tobogganer's knees are up rather
   than out, because 172 px of leg from a hip 19 px above the deck reaches about 70 px forward and no more —
   that number is still arithmetic and still binds.
 
