@@ -129,3 +129,19 @@ These are the 24 landmarks where no question in the level's subject rests on the
 - Nothing after slice 1 starts until slice 1 is live on Pages with `verify-art` and `verify-content` green.
 - A gate is not trusted until it has been seen to fail on a real violation. Slice 0's audit found three that
   measured nothing and two skipped tests that asserted `0 === 0`; assume the next one is in here too.
+
+**The guide's \$10 bill sentence is stale, and deliberately carries no staleness flag (2026-09-19).**
+*Discover Canada* p.35 says Sir John A. Macdonald appears on the \$10 bill. The \$10 note has carried
+Viola Desmond since 2018 and Macdonald is on no circulating note. A `knownStaleness` entry was written
+for it and then **withdrawn**: `grain` has one value in use across all fourteen entries, `pages`, and
+page 35 is Macdonald's biography page. Flagging it armed ADR-0016 §2 row 1 against four claims that are
+correct and guide-faithful — `hist-54` (first Prime Minister, 1867), `hist-55` (Cartier and
+Confederation), `hist-56` and `winnipeg.json` (the 12,000 Métis of the Red River were not consulted) —
+none of which is about a banknote. Putting true, stable facts about 1867 on a 180-day re-verification
+clock is a worse outcome than the gap.
+
+So the guard is this row rather than a flag. **No question or lesson may teach the \$10 portrait from
+this source**: the guide is wrong about the note, and the correct holder is not in the guide either, so
+neither belongs in an answer. The history lessons authored on 2026-09-18 excluded it for this reason.
+A page-flag becomes safe only if `knownStaleness` gains a finer grain than `pages`, which is an ADR-0016
+change and not one to improvise.
