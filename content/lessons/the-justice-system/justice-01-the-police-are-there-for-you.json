@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "justice-01-the-police-are-there-for-you",
+  "chapter": "The Justice System",
+  "order": 1,
+  "title": {
+    "en": "The police are there for you",
+    "fr": "La police est là pour vous"
+  },
+  "passages": [
+    {
+      "id": "j1-police-are-there-for-you",
+      "text": {
+        "en": "In Canada, the police are on your side. If you need them, ask for their help — that is what they are for.",
+        "fr": "Au Canada, la police est de votre côté. Si vous avez besoin d'elle, demandez son aide : c'est à cela qu'elle sert."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Remember, the police are there to help you."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

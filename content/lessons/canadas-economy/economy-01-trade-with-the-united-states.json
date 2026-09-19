@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "economy-01-trade-with-the-united-states",
+  "chapter": "Canada's Economy",
+  "order": 1,
+  "title": {
+    "en": "Trading with our closest neighbour",
+    "fr": "Le commerce avec notre plus proche voisin"
+  },
+  "passages": [
+    {
+      "id": "e1-biggest-trading-partners",
+      "text": {
+        "en": "Canada and the United States keep close ties, and each of them is the other's biggest trading partner.",
+        "fr": "Le Canada et les États-Unis entretiennent des liens étroits, et chacun des deux est le plus important partenaire commercial de l'autre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada enjoys close relations with the United States and each is the other’s largest trading partner."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-where-canadian-exports-go",
+      "text": {
+        "en": "Most of what Canada sells abroad goes to the United States.",
+        "fr": "La plus grande partie de ce que le Canada vend à l'étranger part vers les États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Over three-quarters of Canadian exports are destined for the U.S.A."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "rights-responsibilities-01-what-the-charter-opens-with",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "order": 1,
+  "title": {
+    "en": "What the Charter's first words say",
+    "fr": "Ce que disent les premiers mots de la Charte"
+  },
+  "passages": [
+    {
+      "id": "rr1-charter-opening-words",
+      "text": {
+        "en": "Canada's Charter of Rights and Freedoms opens with a line that puts the supremacy of God beside the rule of law. Those first words matter in two ways: they say religious traditions have a place in Canadian society, and they say each human being has dignity and worth.",
+        "fr": "La Charte canadienne des droits et libertés s'ouvre sur une phrase qui place la suprématie de Dieu à côté de la primauté du droit. Ces premiers mots comptent de deux façons : ils disent que les traditions religieuses ont leur place dans la société canadienne, et que chaque être humain a une dignité et une valeur."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 12,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the Canadian Charter of Rights and Freedoms, which begins with the words, “Whereas Canada is founded upon principles that recognize the supremacy of God and the rule of law.” This phrase underlines the importance of religious traditions to Canadian society and the dignity and worth of the human person."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

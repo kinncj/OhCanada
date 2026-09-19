@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "rights-responsibilities-02-ways-people-volunteer",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "order": 2,
+  "title": {
+    "en": "Ways people volunteer",
+    "fr": "Des façons de faire du bénévolat"
+  },
+  "passages": [
+    {
+      "id": "rr2-ways-to-volunteer",
+      "text": {
+        "en": "Volunteering takes many forms. It can mean giving time to people in need, lending a hand at your child's school, working at a food bank or another charity, or helping newcomers find their place here.",
+        "fr": "Le bénévolat prend bien des formes. Cela peut vouloir dire donner du temps à des personnes dans le besoin, aider à l'école de son enfant, travailler dans une banque alimentaire ou un autre organisme de bienfaisance, ou aider les nouveaux arrivants à trouver leur place ici."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 14,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "helping people in need, assisting at your child’s school, volunteering at a food bank or other charity, or encouraging newcomers to integrate."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
