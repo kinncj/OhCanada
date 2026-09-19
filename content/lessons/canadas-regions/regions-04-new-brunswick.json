@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-04-new-brunswick",
+  "chapter": "Canada's Regions",
+  "order": 4,
+  "title": {
+    "en": "New Brunswick",
+    "fr": "Le Nouveau-Brunswick"
+  },
+  "passages": [
+    {
+      "id": "r4-in-the-appalachian-range",
+      "text": {
+        "en": "New Brunswick sits in the Appalachian Range.",
+        "fr": "Le Nouveau-Brunswick se trouve dans la chaîne des Appalaches."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Situated in the Appalachian Range"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-founded-by-the-loyalists",
+      "text": {
+        "en": "The United Empire Loyalists founded New Brunswick.",
+        "fr": "Ce sont les Loyalistes de l'Empire-Uni qui ont fondé le Nouveau-Brunswick."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the province was founded by the United Empire Loyalists"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-saint-john-river-system",
+      "text": {
+        "en": "The St. John River system runs through New Brunswick. On the Atlantic coastline of North America, only one river system is larger.",
+        "fr": "Le réseau hydrographique du fleuve Saint-Jean traverse le Nouveau-Brunswick. Sur la côte atlantique de l'Amérique du Nord, un seul réseau est plus grand."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "has the second largest river system on North America’s Atlantic coastline, the St. John River system."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-fredericton-historic-capital",
+      "text": {
+        "en": "Fredericton is New Brunswick's historic capital.",
+        "fr": "Fredericton est la capitale historique du Nouveau-Brunswick."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and Fredericton, the historic capital."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-the-only-bilingual-province",
+      "text": {
+        "en": "New Brunswick is the one province in Canada that is officially bilingual.",
+        "fr": "Le Nouveau-Brunswick est la seule province officiellement bilingue au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "New Brunswick is the only officially bilingual province."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-working-in-french",
+      "text": {
+        "en": "About one person in three in New Brunswick lives and works in French.",
+        "fr": "Environ une personne sur trois au Nouveau-Brunswick vit et travaille en français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "about one-third of the population lives and works in French."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r4-festivals-and-traditional-music",
+      "text": {
+        "en": "Street festivals and traditional music in New Brunswick bring its French and pioneer Loyalist past to life.",
+        "fr": "Les fêtes de rue et la musique traditionnelle du Nouveau-Brunswick font revivre son passé français et loyaliste."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The province’s pioneer Loyalist and French cultural heritage and history come alive in street festivals and traditional music."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

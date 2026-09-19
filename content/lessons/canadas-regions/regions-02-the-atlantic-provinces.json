@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-02-the-atlantic-provinces",
+  "chapter": "Canada's Regions",
+  "order": 2,
+  "title": {
+    "en": "On the Atlantic coast",
+    "fr": "Sur la côte atlantique"
+  },
+  "passages": [
+    {
+      "id": "r2-coasts-shaped-the-provinces",
+      "text": {
+        "en": "The coasts and natural resources of Atlantic Canada made those provinces an important part of the country's history and its growth.",
+        "fr": "Les côtes et les ressources naturelles du Canada atlantique ont fait de ces provinces une part importante de l'histoire et de l'essor du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "have made these provinces an important part of Canada’s history and development."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r2-newfoundland-heritage-of-the-sea",
+      "text": {
+        "en": "Newfoundland and Labrador is known for its natural beauty. The province also has a heritage of its own that is tied to the sea.",
+        "fr": "Terre-Neuve-et-Labrador est reconnue pour sa beauté naturelle. La province possède aussi un patrimoine bien à elle, lié à la mer."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In addition to its natural beauty, the province has a unique heritage linked to the sea."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r2-newfoundland-fisheries-and-culture",
+      "text": {
+        "en": "For a long time, Newfoundland and Labrador has been known for a culture of its own, for its fishing villages along the coast and for its fisheries.",
+        "fr": "Depuis longtemps, Terre-Neuve-et-Labrador est reconnue pour une culture bien à elle, pour ses villages de pêche sur la côte et pour ses pêcheries."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the province has long been known for its fisheries, coastal fishing villages and distinct culture."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r2-prince-edward-island-potatoes",
+      "text": {
+        "en": "Prince Edward Island is known for its red soil and for farming. The crop it is best known for is the potato.",
+        "fr": "L'Île-du-Prince-Édouard est reconnue pour sa terre rouge et pour l'agriculture. La pomme de terre est la culture qui l'a le plus fait connaître."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "red soil and agriculture, especially potatoes."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r2-anne-of-green-gables-story",
+      "text": {
+        "en": "Anne of Green Gables is a story many readers love. It follows the adventures of a small orphan girl with red hair.",
+        "fr": "Anne of Green Gables est un récit que bien des lecteurs adorent. Il raconte les aventures d'une petite orpheline aux cheveux roux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "is a much-loved story about the adventures of a little red-headed orphan girl."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

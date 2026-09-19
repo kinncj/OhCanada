@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-01-the-land-and-the-capital",
+  "chapter": "Canada's Regions",
+  "order": 1,
+  "title": {
+    "en": "The land, the five regions and the capital",
+    "fr": "Le territoire, les cinq régions et la capitale"
+  },
+  "passages": [
+    {
+      "id": "r1-canada-united-states-boundary",
+      "text": {
+        "en": "The border between Canada and the United States runs along Canada's southern edge.",
+        "fr": "La frontière entre le Canada et les États-Unis longe la limite sud du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 93,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Along the southern edge of Canada lies the Canada-United States boundary."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r1-a-safe-and-efficient-frontier",
+      "text": {
+        "en": "Canada and the United States have both promised to keep their shared border safe, secure and efficient.",
+        "fr": "Le Canada et les États-Unis se sont tous deux engagés à garder leur frontière commune sûre, sécuritaire et efficace."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 93,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Both Canada and the U.S.A. are committed to a safe, secure and efficient frontier."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r1-the-five-regions-named",
+      "text": {
+        "en": "Canada's regions are the West Coast, the Prairie Provinces, Central Canada, the Northern Territories and the Atlantic Provinces.",
+        "fr": "Les régions du Canada sont la Côte Ouest, les provinces des Prairies, le Centre du Canada, les territoires du Nord et les provinces de l'Atlantique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 93,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "• The Atlantic Provinces • Central Canada • The Prairie Provinces • The West Coast • The Northern Territories"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r1-national-capital-region",
+      "text": {
+        "en": "Ottawa sits inside the National Capital Region, an area of 4,700 square kilometres. The region protects and improves the older buildings and the natural setting around the city.",
+        "fr": "Ottawa se trouve au cœur de la région de la capitale nationale, un territoire de 4 700 kilomètres carrés. La région protège et met en valeur le patrimoine bâti et le milieu naturel des environs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 94,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The National Capital Region, 4,700 square kilometres surrounding Ottawa, preserves and enhances the area’s built heritage and natural environment."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r1-where-canadians-live",
+      "text": {
+        "en": "Most people in Canada live in cities. Others live in small towns, in country areas, and everywhere in between.",
+        "fr": "La plupart des gens au Canada habitent en ville. D'autres vivent dans de petites villes, à la campagne et partout entre les deux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 94,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "While the majority live in cities, Canadians also live in small towns, rural areas and everywhere in between."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

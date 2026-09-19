@@ -1,0 +1,255 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-08-british-columbia",
+  "chapter": "Canada's Regions",
+  "order": 8,
+  "title": {
+    "en": "British Columbia and the West Coast",
+    "fr": "La Colombie-Britannique et la Côte Ouest"
+  },
+  "passages": [
+    {
+      "id": "r8-goods-through-the-port",
+      "text": {
+        "en": "Goods worth billions of dollars move through the Port of Vancouver and are traded around the world.",
+        "fr": "Des marchandises valant des milliards de dollars passent par le port de Vancouver et sont échangées partout dans le monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "handles billions of dollars in goods traded around the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-the-westernmost-province",
+      "text": {
+        "en": "British Columbia lies on the Pacific coast. No province in Canada is farther west.",
+        "fr": "La Colombie-Britannique borde la côte du Pacifique. Aucune province du Canada n'est située plus à l'ouest."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "British Columbia (B.C.), on the Pacific coast, is Canada’s westernmost province"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-gateway-to-the-asia-pacific",
+      "text": {
+        "en": "Canada reaches the Asia-Pacific through the Port of Vancouver.",
+        "fr": "C'est par le port de Vancouver que le Canada s'ouvre sur l'Asie-Pacifique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Port of Vancouver is our gateway to the Asia-Pacific."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-the-most-valuable-forestry-industry",
+      "text": {
+        "en": "No other province has a forestry industry worth as much as British Columbia's.",
+        "fr": "Aucune autre province n'a une industrie forestière d'une valeur aussi grande que celle de la Colombie-Britannique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the most valuable forestry industry in Canada"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-mining-and-fishing",
+      "text": {
+        "en": "British Columbia is known for fishing and for mining too.",
+        "fr": "La Colombie-Britannique est aussi reconnue pour la pêche et l'exploitation minière."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "B.C. is also known for mining, fishing"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-okanagan-orchards-and-wine",
+      "text": {
+        "en": "The Okanagan Valley is known for its wine industry and its fruit orchards.",
+        "fr": "La vallée de l'Okanagan est reconnue pour son industrie vinicole et ses vergers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the fruit orchards and wine industry of the Okanagan Valley"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-the-largest-park-system",
+      "text": {
+        "en": "No province has a bigger system of parks than British Columbia.",
+        "fr": "Aucune province n'a un réseau de parcs plus vaste que celui de la Colombie-Britannique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "B.C. has the most extensive park system in Canada"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-languages-in-the-cities",
+      "text": {
+        "en": "British Columbia's large Asian communities have made Punjabi and Chinese the languages most spoken in the province's cities after English.",
+        "fr": "Les importantes communautés asiatiques de la Colombie-Britannique ont fait du pendjabi et du chinois les langues les plus parlées dans les villes de la province, après l'anglais."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The province’s large Asian communities have made Chinese and Punjabi the most spoken languages in the cities after English."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r8-victoria-draws-visitors",
+      "text": {
+        "en": "Victoria, the capital of British Columbia, draws many visitors.",
+        "fr": "Victoria, la capitale de la Colombie-Britannique, attire de nombreux visiteurs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The capital, Victoria, is a tourist centre"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

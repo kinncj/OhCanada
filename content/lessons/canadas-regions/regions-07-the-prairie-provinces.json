@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-07-the-prairie-provinces",
+  "chapter": "Canada's Regions",
+  "order": 7,
+  "title": {
+    "en": "Across the Prairies",
+    "fr": "Dans les Prairies"
+  },
+  "passages": [
+    {
+      "id": "r7-prairie-climate",
+      "text": {
+        "en": "The Prairie region is mostly dry. Its winters are cold and its summers are hot.",
+        "fr": "La région des Prairies est surtout sèche. Les hivers y sont froids et les étés, chauds."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The region is mostly dry, with cold winters and hot summers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r7-saskatchewan-oil-and-gas",
+      "text": {
+        "en": "Saskatchewan also produces oil and natural gas.",
+        "fr": "La Saskatchewan produit aussi du pétrole et du gaz naturel."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and produces oil and natural gas."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r7-alberta-has-the-most-people",
+      "text": {
+        "en": "Alberta has more people than any other Prairie province.",
+        "fr": "L'Alberta compte plus d'habitants que toute autre province des Prairies."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Alberta is the most populous Prairie province."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r7-lake-louise-in-the-rockies",
+      "text": {
+        "en": "Lake Louise, in the Rocky Mountains, is famous around the world.",
+        "fr": "Le lac Louise, dans les montagnes Rocheuses, est célèbre dans le monde entier."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the world-famous Lake Louise in the Rocky Mountains"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

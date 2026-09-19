@@ -1,0 +1,174 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-10-northwest-territories-and-nunavut",
+  "chapter": "Canada's Regions",
+  "order": 10,
+  "title": {
+    "en": "The Northwest Territories and Nunavut",
+    "fr": "Les Territoires du Nord-Ouest et le Nunavut"
+  },
+  "passages": [
+    {
+      "id": "r10-territories-made-in-1870",
+      "text": {
+        "en": "The Northwest Territories were first put together in 1870, out of the North-Western Territory and Rupert's Land.",
+        "fr": "Les Territoires du Nord-Ouest ont d'abord été formés en 1870, à partir du Territoire du Nord-Ouest et de la Terre de Rupert."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Northwest Territories (N.W.T.) were originally made up in 1870 from Rupert’s Land and the North-Western Territory."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r10-dene-inuit-and-metis",
+      "text": {
+        "en": "The Aboriginal peoples of the Northwest Territories today are the Dene, the Inuit and the Métis.",
+        "fr": "Les peuples autochtones des Territoires du Nord-Ouest sont aujourd'hui les Dene, les Inuit et les Métis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the population is Aboriginal (Dene, Inuit and Métis)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r10-what-the-mackenzie-drains",
+      "text": {
+        "en": "Water from 1.8 million square kilometres of land flows into the Mackenzie River.",
+        "fr": "Les eaux d'un territoire de 1,8 million de kilomètres carrés s'écoulent dans le fleuve Mackenzie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and drains an area of 1.8 million square kilometres."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r10-frobisher-in-1576",
+      "text": {
+        "en": "Martin Frobisher went into the uncharted Arctic in 1576, for Queen Elizabeth I.",
+        "fr": "Martin Frobisher s'est aventuré dans l'Arctique inexploré en 1576, pour la reine Elizabeth I."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "who penetrated the uncharted Arctic for Queen Elizabeth I in 1576"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r10-inuktitut-an-official-language",
+      "text": {
+        "en": "In Nunavut, Inuktitut is one of the official languages.",
+        "fr": "Au Nunavut, l'inuktitut est une des langues officielles."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Inuktitut is an official language"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r10-inuktitut-in-schools",
+      "text": {
+        "en": "In Nunavut's schools, Inuktitut is the first language used.",
+        "fr": "Dans les écoles du Nunavut, l'inuktitut est la première langue utilisée."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Inuktitut is an official language and the first language in schools."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
