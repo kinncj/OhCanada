@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-03-the-royal-family-and-the-legislatures",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 3,
+  "title": {
+    "en": "The Royal Family, other monarchies and the legislatures",
+    "fr": "La famille royale, d'autres monarchies et les assemblées législatives"
+  },
+  "passages": [
+    {
+      "id": "g3-royal-family-lifelong-service",
+      "text": {
+        "en": "The Royal Family serves the community for a lifetime. That example is meant to encourage citizens to give their own country their best.",
+        "fr": "La famille royale sert la collectivité toute sa vie. Cet exemple vise à encourager les citoyens à donner le meilleur d'eux-mêmes à leur pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Royal Family’s example of lifelong service to the community is an encouragement for citizens to give their best to their country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g3-other-constitutional-monarchies",
+      "text": {
+        "en": "Other countries are constitutional monarchies too. They include Japan, Jordan and Morocco, and also Spain, the Netherlands, Thailand, Denmark, Norway, Sweden, Australia and New Zealand.",
+        "fr": "D'autres pays sont eux aussi des monarchies constitutionnelles. On y trouve le Japon, la Jordanie et le Maroc, ainsi que l'Espagne, les Pays-Bas, la Thaïlande, le Danemark, la Norvège, la Suède, l'Australie et la Nouvelle-Zélande."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Other constitutional monarchies include Denmark, Norway, Sweden, Australia, New Zealand, The Netherlands, Spain, Thailand, Japan, Jordan and Morocco."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g3-each-legislature-passes-its-own-laws",
+      "text": {
+        "en": "Every province and territory has a legislature whose members are elected. Those members pass the laws for that province or territory.",
+        "fr": "Chaque province et chaque territoire a une assemblée législative dont les membres sont élus. Ces membres adoptent les lois de la province ou du territoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 58,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Each provincial and territorial government has an elected legislature where provincial and territorial laws are passed."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

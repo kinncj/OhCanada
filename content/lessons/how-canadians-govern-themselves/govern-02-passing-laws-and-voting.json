@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-02-passing-laws-and-voting",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 2,
+  "title": {
+    "en": "Steps a bill goes through, and why voting matters",
+    "fr": "Les étapes d'un projet de loi, et l'importance du vote"
+  },
+  "passages": [
+    {
+      "id": "g2-both-chambers-study-a-bill",
+      "text": {
+        "en": "A bill is examined in both chambers. The House of Commons studies it, and so does the Senate.",
+        "fr": "Un projet de loi est examiné dans les deux chambres. La Chambre des communes l'étudie, et le Sénat aussi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Both the House of Commons and the Senate consider and review bills"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g2-report-stage",
+      "text": {
+        "en": "At the report stage, members can propose other changes to the bill.",
+        "fr": "À l'étape du rapport, les députés peuvent proposer d'autres modifications au projet de loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Report Stage – Members can make other amendments."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g2-third-reading",
+      "text": {
+        "en": "At third reading, members debate the bill and then vote on it.",
+        "fr": "À la troisième lecture, les députés débattent du projet de loi, puis votent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Third Reading – Members debate and vote on the bill."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g2-royal-assent-step-seven",
+      "text": {
+        "en": "Royal assent is step seven. A bill receives it once both Houses have passed it.",
+        "fr": "La sanction royale est la septième étape. Un projet de loi la reçoit une fois que les deux chambres l'ont adopté."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Royal Assent – The bill receives royal assent after being STEP 7 passed by both Houses."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g2-voting-at-three-levels",
+      "text": {
+        "en": "Canadians who are eighteen or older should take part in their democracy and vote. That means elections at all three levels: municipal, provincial or territorial, and federal.",
+        "fr": "Les Canadiens de dix-huit ans ou plus devraient participer à leur démocratie et voter. Cela vaut pour les élections des trois ordres : municipales, provinciales ou territoriales, et fédérales."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "It is important for Canadians aged 18 or more to participate in their democracy by voting in federal, provincial or territorial and municipal elections."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

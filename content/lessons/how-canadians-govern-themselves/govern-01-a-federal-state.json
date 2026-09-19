@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-01-a-federal-state",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 1,
+  "title": {
+    "en": "What federalism gives a province",
+    "fr": "Ce que le fédéralisme donne à une province"
+  },
+  "passages": [
+    {
+      "id": "g1-policies-that-fit-each-province",
+      "text": {
+        "en": "Under federalism, a province can shape its policies to suit the people who live there.",
+        "fr": "Grâce au fédéralisme, une province peut adapter ses politiques aux gens qui y vivent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Federalism allows different provinces to adopt policies tailored to their own populations"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g1-room-to-try-new-ideas",
+      "text": {
+        "en": "Federalism also leaves a province room to try new ideas and new policies.",
+        "fr": "Le fédéralisme laisse aussi à une province la latitude d'essayer de nouvelles idées et de nouvelles politiques."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "gives provinces the flexibility to experiment with new ideas and policies."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
