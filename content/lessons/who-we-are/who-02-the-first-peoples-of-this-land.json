@@ -11,8 +11,8 @@
     {
       "id": "w2-first-nations-cultures-and-belief",
       "text": {
-        "en": "First Nations cultures are many and full of life. Religious belief lies at their root: how people stand with the Creator, with the natural world, and with one another.",
-        "fr": "Les cultures des Premières Nations sont nombreuses et bien vivantes. La croyance religieuse en est la racine : le rapport des personnes avec le Créateur, avec la nature et les unes avec les autres."
+        "en": "Long before Europeans came, there were many First Nations cultures on this land. They were diverse and full of life. Religious belief was at the heart of each one: how people saw their ties to the Creator, to the natural world, and to one another.",
+        "fr": "Bien avant l'arrivée des Européens, il y avait de nombreuses cultures des Premières Nations sur ce territoire. Elles étaient diverses et pleines de vie. La croyance religieuse était au cœur de chacune : la façon dont les gens voyaient leurs liens avec le Créateur, avec la nature et entre eux."
       },
       "fact": {
         "factual": true,
@@ -38,7 +38,7 @@
     {
       "id": "w2-residential-schools-purpose",
       "text": {
-        "en": "Aboriginal children were placed in residential schools by the federal government. The aim was to teach them and to make them part of the country's mainstream culture.",
+        "en": "Aboriginal children were placed in residential schools by the federal government. The aim was to teach them and to assimilate them into the country's mainstream culture.",
         "fr": "Le gouvernement fédéral a placé des enfants autochtones dans des pensionnats. Le but était de les instruire et de les assimiler à la culture dominante du pays."
       },
       "fact": {
@@ -66,7 +66,7 @@
       "id": "w2-schools-short-of-money",
       "text": {
         "en": "The residential schools had too little money, and they were hard on the students.",
-        "fr": "Les pensionnats manquaient d'argent et la vie y était dure pour les élèves."
+        "fr": "Les pensionnats manquaient d'argent et ils étaient durs envers les élèves."
       },
       "fact": {
         "factual": true,
