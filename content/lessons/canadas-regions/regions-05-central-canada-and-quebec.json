@@ -1,0 +1,174 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-05-central-canada-and-quebec",
+  "chapter": "Canada's Regions",
+  "order": 5,
+  "title": {
+    "en": "Central Canada and Quebec",
+    "fr": "Le Centre du Canada et le Québec"
+  },
+  "passages": [
+    {
+      "id": "r5-the-industrial-heartland",
+      "text": {
+        "en": "Southern Quebec and southern Ontario are called Central Canada. They are the industrial and manufacturing heart of the country.",
+        "fr": "Le sud du Québec et le sud de l'Ontario forment ce qu'on appelle le Centre du Canada. C'est le cœur industriel et manufacturier du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "known as Central Canada and the industrial and manufacturing heartland"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r5-living-along-the-st-lawrence",
+      "text": {
+        "en": "Almost all the people of Quebec live on or close to the St. Lawrence River.",
+        "fr": "La très grande majorité des habitants du Québec vivent le long du fleuve Saint-Laurent ou tout près."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the vast majority along or near the St. Lawrence River"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r5-canadian-shield-industries",
+      "text": {
+        "en": "What the Canadian Shield holds has helped Quebec build up important industries: mining, energy and forestry.",
+        "fr": "Les richesses du Bouclier canadien ont aidé le Québec à bâtir d'importantes industries : les mines, l'énergie et la forêt."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The resources of the Canadian Shield have helped Quebec to develop important industries, including forestry, energy and mining."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r5-montreal-second-largest-city",
+      "text": {
+        "en": "Montreal is the second largest city in Canada.",
+        "fr": "Montréal est la deuxième ville en importance au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Montreal, Canada’s second largest city"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r5-montreal-and-paris",
+      "text": {
+        "en": "Among the cities of the world where most people speak French, Montreal is second in size. Only Paris is larger.",
+        "fr": "Parmi les villes du monde où la population parle surtout français, Montréal vient au deuxième rang. Seul Paris est plus grand."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the second largest mainly French-speaking city in the world after Paris"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r5-montreal-cultural-diversity",
+      "text": {
+        "en": "Montreal is well known for the many cultures of its people.",
+        "fr": "Montréal est bien connue pour la diversité culturelle de sa population."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "is famous for its cultural diversity"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

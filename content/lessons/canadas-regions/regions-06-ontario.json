@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-06-ontario",
+  "chapter": "Canada's Regions",
+  "order": 6,
+  "title": {
+    "en": "Ontario",
+    "fr": "L'Ontario"
+  },
+  "passages": [
+    {
+      "id": "r6-more-than-a-third-of-canadians",
+      "text": {
+        "en": "More than one Canadian in three lives in Ontario.",
+        "fr": "Plus d'un Canadien sur trois habite en Ontario."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the people of Ontario make up more than one-third of Canadians."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r6-a-vital-economy",
+      "text": {
+        "en": "Ontario has a strong economy. Its large population from many cultures, its natural resources and its location all help.",
+        "fr": "L'Ontario a une économie vigoureuse. Sa population nombreuse et de cultures variées, ses ressources naturelles et sa situation géographique y contribuent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The large and culturally diverse population, natural resources and strategic location contribute to a vital economy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r6-founded-by-the-loyalists",
+      "text": {
+        "en": "The United Empire Loyalists founded Ontario.",
+        "fr": "Ce sont les Loyalistes de l'Empire-Uni qui ont fondé l'Ontario."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Founded by United Empire Loyalists"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r6-french-speaking-population",
+      "text": {
+        "en": "Outside Quebec, no province has more French speakers than Ontario.",
+        "fr": "À l'extérieur du Québec, aucune province ne compte plus de francophones que l'Ontario."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ontario also has the largest French-speaking population outside of Quebec"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r6-keeping-the-french-language",
+      "text": {
+        "en": "Ontario's French-speaking community has a proud history of keeping its language and its culture.",
+        "fr": "La communauté francophone de l'Ontario est fière de protéger sa langue et sa culture depuis longtemps."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "with a proud history of preserving their language and culture"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

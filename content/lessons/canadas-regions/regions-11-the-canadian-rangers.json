@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-11-the-canadian-rangers",
+  "chapter": "Canada's Regions",
+  "order": 11,
+  "title": {
+    "en": "The Canadian Rangers",
+    "fr": "Les Rangers canadiens"
+  },
+  "passages": [
+    {
+      "id": "r11-security-and-sovereignty-in-the-north",
+      "text": {
+        "en": "Canada's huge northern region raises challenges of security and sovereignty.",
+        "fr": "L'immense région nordique du Canada pose des défis de sécurité et de souveraineté."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s vast north brings security and sovereignty challenges."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-part-of-the-forces-reserves",
+      "text": {
+        "en": "The Canadian Rangers belong to the Canadian Forces Reserves, which are the militia.",
+        "fr": "Les Rangers canadiens font partie de la Réserve des Forces canadiennes, c'est-à-dire la milice."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the Canadian Rangers, part of the Canadian Forces Reserves (militia)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-a-key-role-in-hard-conditions",
+      "text": {
+        "en": "In an isolated region and in harsh weather, the Canadian Rangers play an important part.",
+        "fr": "Dans une région isolée et par un temps rude, les Rangers canadiens jouent un rôle de premier plan."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Dealing with harsh weather conditions in an isolated region, the Canadian Rangers, part of the Canadian Forces Reserves (militia), play a key role."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-indigenous-knowledge-and-experience",
+      "text": {
+        "en": "The Canadian Rangers draw on indigenous knowledge and experience.",
+        "fr": "Les Rangers canadiens s'appuient sur les savoirs et l'expérience autochtones."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Drawing on indigenous knowledge and experience"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-how-the-rangers-travel",
+      "text": {
+        "en": "In summer the Canadian Rangers use all-terrain vehicles, and in winter they travel by snowmobile.",
+        "fr": "L'été, les Rangers canadiens se déplacent en véhicules tout-terrain et, l'hiver, ils voyagent en motoneige."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the Rangers travel by snowmobile in the winter and all-terrain vehicles in the summer"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-between-resolute-and-the-magnetic-north-pole",
+      "text": {
+        "en": "The Canadian Rangers range between Resolute and the Magnetic North Pole.",
+        "fr": "Les Rangers canadiens parcourent le territoire entre Resolute et le pôle Nord magnétique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "from Resolute to the Magnetic North Pole"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r11-keeping-the-flag-flying",
+      "text": {
+        "en": "In Canada's Arctic, the Canadian Rangers keep the country's flag flying.",
+        "fr": "Dans l'Arctique du Canada, les Rangers canadiens font flotter le drapeau du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 105,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and keep the flag flying in Canada’s Arctic."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

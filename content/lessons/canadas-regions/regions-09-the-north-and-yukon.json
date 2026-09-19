@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-09-the-north-and-yukon",
+  "chapter": "Canada's Regions",
+  "order": 9,
+  "title": {
+    "en": "The Northern Territories and Yukon",
+    "fr": "Les territoires du Nord et le Yukon"
+  },
+  "passages": [
+    {
+      "id": "r9-one-third-of-the-land",
+      "text": {
+        "en": "Yukon, Nunavut and the Northwest Territories together take up one-third of Canada's land.",
+        "fr": "Le Yukon, le Nunavut et les Territoires du Nord-Ouest occupent ensemble le tiers du territoire du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Northwest Territories, Nunavut and Yukon contain one-third of Canada’s land mass"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-three-months-of-darkness",
+      "text": {
+        "en": "In winter the sun vanishes in the North, and darkness stays for three months.",
+        "fr": "En hiver, le soleil disparaît dans le Nord et l'obscurité s'installe pour trois mois."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In winter, the sun disappears and darkness sets in for three months."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-hunting-fishing-and-trapping",
+      "text": {
+        "en": "Today, some people in the North still earn their living by trapping, fishing and hunting.",
+        "fr": "Aujourd'hui, des gens du Nord gagnent encore leur vie par le piégeage, la pêche et la chasse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Some continue to earn a living by hunting, fishing and trapping."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-inuit-art-around-the-world",
+      "text": {
+        "en": "Art made by Inuit artists is sold today across Canada and in other countries.",
+        "fr": "L'art des Inuit se vend aujourd'hui partout au Canada et à l'étranger."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Inuit art is sold throughout Canada and around the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-white-pass-railway",
+      "text": {
+        "en": "The White Pass and Yukon Railway first ran in 1900. It linked Skagway, in neighbouring Alaska, with Whitehorse, the capital of the territory.",
+        "fr": "Le chemin de fer White Pass and Yukon Railway a commencé à rouler en 1900. Il reliait Skagway, dans l'Alaska voisin, à Whitehorse, la capitale du territoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The White Pass and Yukon Railway opened from Skagway in neighbouring Alaska to the territorial capital, Whitehorse in 1900"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-riding-the-railway-today",
+      "text": {
+        "en": "Today the White Pass and Yukon Railway gives visitors a spectacular ride across steep passes and bridges.",
+        "fr": "Aujourd'hui, le White Pass and Yukon Railway offre aux visiteurs un trajet spectaculaire à travers des cols escarpés et des ponts."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and provides a spectacular tourist excursion across precipitous passes and bridges"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r9-canadas-coldest-temperature",
+      "text": {
+        "en": "The coldest temperature ever measured in Canada, -63 °C, was reached in Yukon.",
+        "fr": "La température la plus froide jamais mesurée au Canada, -63 °C, l'a été au Yukon."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Yukon holds the record for the coldest temperature ever recorded in Canada (-63°C)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

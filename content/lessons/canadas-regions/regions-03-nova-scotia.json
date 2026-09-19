@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-03-nova-scotia",
+  "chapter": "Canada's Regions",
+  "order": 3,
+  "title": {
+    "en": "Nova Scotia",
+    "fr": "La Nouvelle-Écosse"
+  },
+  "passages": [
+    {
+      "id": "r3-most-people-of-the-atlantic-provinces",
+      "text": {
+        "en": "Nova Scotia has more people than any other Atlantic province.",
+        "fr": "La Nouvelle-Écosse compte plus d'habitants que toute autre province de l'Atlantique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Nova Scotia is the most populous Atlantic Province"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r3-gateway-to-canada",
+      "text": {
+        "en": "Nova Scotia has a long and rich history as Canada's gateway.",
+        "fr": "La Nouvelle-Écosse a une longue et riche histoire comme porte d'entrée du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "with a rich history as the gateway to Canada"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r3-offshore-oil-and-gas-search",
+      "text": {
+        "en": "Off the coast of Nova Scotia, there is now a search for oil and gas as well.",
+        "fr": "Au large des côtes de la Nouvelle-Écosse, on cherche aussi maintenant du pétrole et du gaz."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today there is also off-shore oil and gas exploration."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r3-military-tattoo-in-halifax",
+      "text": {
+        "en": "Nova Scotia's yearly festivals include a spectacular military tattoo held in Halifax.",
+        "fr": "Parmi les festivals annuels de la Nouvelle-Écosse, il y a un spectaculaire tattoo militaire présenté à Halifax."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "including the spectacular military tattoo in Halifax"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
