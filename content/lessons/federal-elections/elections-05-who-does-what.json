@@ -81,9 +81,9 @@
           "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T21:40:00Z",
+          "checkedAt": "2026-09-19T21:32:27Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
         }
@@ -135,11 +135,11 @@
           "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T21:40:00Z",
+          "checkedAt": "2026-09-19T21:32:27Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
+          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways"
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario)"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T21:40:00Z",
+          "checkedAt": "2026-09-19T21:32:27Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
+          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario)"
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T21:40:00Z",
+          "checkedAt": "2026-09-19T21:32:27Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
+          "evidence": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly (MNA) or • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights"
         }
       }
     },
