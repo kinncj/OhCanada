@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-03-the-two-official-languages",
+  "chapter": "Canadian Symbols",
+  "order": 3,
+  "title": {
+    "en": "The two official languages",
+    "fr": "Les deux langues officielles"
+  },
+  "passages": [
+    {
+      "id": "s3-anglophones-and-francophones",
+      "text": {
+        "en": "People who speak English are called Anglophones. People who speak French are called Francophones. For more than 300 years they have lived together, as partners and in creative tension.",
+        "fr": "Les personnes qui parlent anglais sont appelées anglophones. Celles qui parlent français sont appelées francophones. Depuis plus de 300 ans, elles vivent ensemble, en partenariat et dans une tension créatrice."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 82,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "English speakers (Anglophones) and French speakers (Francophones) have lived together in partnership and creative tension for more than 300 years."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s3-act-equality-in-government",
+      "text": {
+        "en": "One aim of the Official Languages Act is equality. French and English are to stand equal in Parliament, in the Government of Canada, and in the institutions the Act covers.",
+        "fr": "Un des objectifs de la Loi sur les langues officielles est l'égalité. Le français et l'anglais doivent être égaux au Parlement, au gouvernement du Canada et dans les institutions visées par la Loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 83,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Establish equality between French and English in Parliament, the Government of Canada and institutions subject to the Act"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s3-act-minority-communities",
+      "text": {
+        "en": "The Official Languages Act also aims to support the communities in Canada where an official language is in the minority, and to help them grow.",
+        "fr": "La Loi sur les langues officielles vise aussi à soutenir les communautés du Canada où une langue officielle est en situation minoritaire et à les aider à se développer."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 83,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Maintain and develop official language minority communities in Canada"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s3-act-equality-in-society",
+      "text": {
+        "en": "The Official Languages Act looks beyond government offices as well. It works to make French and English equal within Canadian society itself.",
+        "fr": "La Loi sur les langues officielles regarde aussi au-delà des bureaux du gouvernement. Elle vise à rendre le français et l'anglais égaux dans la société canadienne elle-même."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 83,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Promote equality of French and English in Canadian society."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

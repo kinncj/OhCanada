@@ -1,0 +1,228 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-04-honours-and-the-victoria-cross",
+  "chapter": "Canadian Symbols",
+  "order": 4,
+  "title": {
+    "en": "The Victoria Cross and those who received it",
+    "fr": "La Croix de Victoria et ceux qui l'ont reçue"
+  },
+  "passages": [
+    {
+      "id": "s4-ninety-six-since-1854",
+      "text": {
+        "en": "Since 1854, the Victoria Cross has gone to 96 Canadians.",
+        "fr": "Depuis 1854, la Croix de Victoria a été décernée à 96 Canadiens."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The V.C. has been awarded to 96 Canadians since 1854"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-dunn-born-in-toronto",
+      "text": {
+        "en": "Lieutenant Alexander Roberts Dunn was born in the place that is Toronto today.",
+        "fr": "Le lieutenant Alexander Roberts Dunn est né là où se trouve aujourd'hui Toronto."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Then lieutenant Alexander Roberts Dunn, born in present-day Toronto"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-konowal-hill-70",
+      "text": {
+        "en": "Corporal Filip Konowal was born in Ukraine. In 1917, at the Battle of Hill 70, he showed great courage.",
+        "fr": "Le caporal Filip Konowal est né en Ukraine. En 1917, à la bataille de la cote 70, il a fait preuve d'un grand courage."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Corporal Filip Konowal, born in Ukraine, showed exceptional courage in the Battle of Hill 70 in 1917"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-konowal-first-outside-the-empire",
+      "text": {
+        "en": "Filip Konowal was the first in the Canadian Corps to win the Victoria Cross who had been born outside the British Empire.",
+        "fr": "Filip Konowal a été le premier membre du Corps canadien né hors de l'Empire britannique à recevoir la Croix de Victoria."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "became the first member of the Canadian Corps not born in the British Empire to be awarded the V.C."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-bishop-flying-ace",
+      "text": {
+        "en": "Captain Billy Bishop was a flying ace born in Owen Sound, Ontario. He earned the Victoria Cross with the Royal Flying Corps in the First World War.",
+        "fr": "Le capitaine Billy Bishop était un as de l'aviation né à Owen Sound, en Ontario. Il a reçu la Croix de Victoria dans le Royal Flying Corps pendant la Première Guerre mondiale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Flying ace Captain Billy Bishop, born in Owen Sound, Ontario, earned the V.C. in the Royal Flying Corps during the First World War"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-bishop-air-marshal",
+      "text": {
+        "en": "Billy Bishop later held the honorary rank of Air Marshal in the Royal Canadian Air Force.",
+        "fr": "Billy Bishop a plus tard porté le grade honorifique de maréchal de l'air dans l'Aviation royale canadienne."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "was later an honorary Air Marshal of the Royal Canadian Air Force"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-triquet-casa-berardi",
+      "text": {
+        "en": "Captain Paul Triquet came from Cabano, Quebec. In 1943, during the Second World War, he led his men and a few tanks in an attack at Casa Berardi, in Italy. He earned the Victoria Cross for it.",
+        "fr": "Le capitaine Paul Triquet venait de Cabano, au Québec. En 1943, pendant la Seconde Guerre mondiale, il a mené ses hommes et quelques chars à l'attaque de Casa Berardi, en Italie. Il a reçu la Croix de Victoria pour cette action."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Captain Paul Triquet of Cabano, Quebec, earned the V.C. leading his men and a handful of tanks in the attack on Casa Berardi in Italy in 1943 during the Second World War"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s4-triquet-brigadier",
+      "text": {
+        "en": "Paul Triquet later reached the rank of Brigadier.",
+        "fr": "Paul Triquet a plus tard atteint le grade de brigadier."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and was later a Brigadier"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

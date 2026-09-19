@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-02-sports-canadians-play",
+  "chapter": "Canadian Symbols",
+  "order": 2,
+  "title": {
+    "en": "The sports Canadians play",
+    "fr": "Les sports que pratiquent les Canadiens"
+  },
+  "passages": [
+    {
+      "id": "s2-where-young-canadians-play-hockey",
+      "text": {
+        "en": "Many young people in Canada play hockey — at school, in a league, or on a quiet street. Games in the street are called road hockey or street hockey. Parents drive their children to the rink.",
+        "fr": "Beaucoup de jeunes au Canada jouent au hockey : à l'école, dans une ligue ou dans une rue tranquille. Les parties jouées dans la rue s'appellent le hockey de rue. Les parents conduisent leurs enfants à l'aréna."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 81,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Many young Canadians play hockey at school, in a hockey league or on quiet streets—road hockey or street hockey—and are taken to the hockey rink by their parents."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s2-hockey-cards",
+      "text": {
+        "en": "Collecting hockey cards is an old habit in Canada. Children have done it for generations.",
+        "fr": "Collectionner les cartes de hockey est une habitude ancienne au Canada. Les enfants le font depuis des générations."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 81,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian children have collected hockey cards for generations."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s2-canadian-football-second",
+      "text": {
+        "en": "One sport comes second for popularity in Canada: Canadian football.",
+        "fr": "Un sport vient au deuxième rang pour la popularité au Canada : le football canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 81,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian football is the second most popular sport"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

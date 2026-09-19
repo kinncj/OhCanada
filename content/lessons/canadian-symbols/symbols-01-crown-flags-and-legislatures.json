@@ -1,0 +1,174 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-01-crown-flags-and-legislatures",
+  "chapter": "Canadian Symbols",
+  "order": 1,
+  "title": {
+    "en": "The Crown, the flags and the legislature buildings",
+    "fr": "La Couronne, les drapeaux et les édifices des assemblées législatives"
+  },
+  "passages": [
+    {
+      "id": "s1-crown-four-hundred-years",
+      "text": {
+        "en": "The Crown stands for the state. It has done so in Canada for 400 years.",
+        "fr": "La Couronne représente l'État. Elle le fait au Canada depuis 400 ans."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 78,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Crown has been a symbol of the state in Canada for 400 years."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s1-provincial-and-territorial-flags",
+      "text": {
+        "en": "The provinces and the territories have their own flags too. Each flag stands for the traditions that set that place apart.",
+        "fr": "Les provinces et les territoires ont eux aussi leur propre drapeau. Chaque drapeau représente les traditions qui distinguent cet endroit."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The provinces and territories also have flags that embody their distinct traditions."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s1-fleur-de-lys-in-the-red-ensign",
+      "text": {
+        "en": "The fleur-de-lys came back into use at Confederation. It was one of the symbols on the Canadian Red Ensign.",
+        "fr": "La fleur-de-lys est revenue en usage au moment de la Confédération. Elle figurait parmi les symboles du Red Ensign canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Revived at Confederation, the fleur-de-lys was included in the Canadian Red Ensign."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s1-parliament-buildings-traditions",
+      "text": {
+        "en": "The Parliament Buildings bring three traditions together: those of Aboriginal peoples, of the English and of the French. Their arches, towers, sculptures and stained glass also show the Gothic Revival style, popular in Queen Victoria's time.",
+        "fr": "Les édifices du Parlement réunissent trois traditions : celles des Autochtones, des Anglais et des Français. Leurs arcs, leurs tours, leurs sculptures et leurs vitraux montrent aussi le style néogothique, populaire à l'époque de la reine Victoria."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s1-quebec-national-assembly-style",
+      "text": {
+        "en": "Each province's legislature building is a treasure of architecture. Quebec's National Assembly was built in the style known as French Second Empire.",
+        "fr": "Les édifices des assemblées législatives des provinces sont des trésors d'architecture. L'Assemblée nationale du Québec a été construite dans le style Second Empire français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The provincial legislatures are architectural treasures. The Quebec National Assembly is built in the French Second Empire style"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s1-other-legislature-styles",
+      "text": {
+        "en": "In the other provinces, the legislature buildings are Baroque, Romanesque or neoclassical. Those styles come from the Greek and Roman heritage of Western civilization, where democracy began.",
+        "fr": "Dans les autres provinces, les édifices législatifs sont de style baroque, roman ou néoclassique. Ces styles viennent de l'héritage gréco-romain de la civilisation occidentale, là où la démocratie est née."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the legislatures of the other provinces are Baroque, Romanesque and neoclassical, reflecting the Greco-Roman heritage of Western civilization in which democracy originated."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
