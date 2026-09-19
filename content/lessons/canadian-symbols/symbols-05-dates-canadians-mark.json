@@ -27,11 +27,11 @@
           "quote": "New Year’s Day January 1"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] New Year’s Day January 1"
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "Monday preceding May 25 Victoria Day (Sovereign’s birthday)"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Monday preceding May 25 Victoria Day (Sovereign’s birthday)"
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Labour Day First Monday of September"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Labour Day First Monday of September"
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Thanksgiving Day Second Monday of October"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Thanksgiving Day Second Monday of October"
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "Remembrance Day November 11"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Remembrance Day November 11"
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Sir Wilfrid Laurier Day November 20"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Sir Wilfrid Laurier Day November 20"
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Christmas Day December 25"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Christmas Day December 25"
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "Boxing Day December 26"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T18:40:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "NATIONAL PUBLIC HOLIDAYS AND OTHER IMPORTANT DATES [...] Boxing Day December 26"
         }
       }
     }
