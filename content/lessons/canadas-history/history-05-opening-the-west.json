@@ -54,11 +54,11 @@
           "quote": "Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
+          "evidence": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
         }
       }
     },
@@ -216,9 +216,9 @@
           "quote": "as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Later, as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885 in present-day Saskatchewan led to Riel’s trial and execution for high treason"
         }

@@ -162,11 +162,11 @@
           "quote": "This led to American resentment at British interference with their shipping."
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "This led to American resentment at British interference with their shipping."
+          "evidence": "The British Empire, which included Canada, fought to resist Bonaparte’s bid to dominate Europe. This led to American resentment at British interference with their shipping."
         }
       }
     },
@@ -216,9 +216,9 @@
           "quote": "Major-General Robert Ross led an expedition from Nova Scotia that burned down the White House and other public buildings in Washington, D.C."
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "In retaliation in 1814, Major-General Robert Ross led an expedition from Nova Scotia that burned down the White House and other public buildings in Washington, D.C."
         }

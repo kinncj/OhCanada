@@ -245,7 +245,7 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "More than one million Canadians and Newfoundlanders (Newfoundland was a separate British entity) served in the Second World War, out of a population of 11.5 million. This was a high proportion and of these, 44,000 were killed."
         }
@@ -378,9 +378,9 @@
           "quote": "In the Pacific war, Japan invaded the Aleutian Islands, attacked a lighthouse on Vancouver Island, launched fire balloons over B.C. and the Prairies"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T00:00:00Z",
+          "checkedAt": "2026-09-19T04:24:52Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "In the Pacific war, Japan invaded the Aleutian Islands, attacked a lighthouse on Vancouver Island, launched fire balloons over B.C. and the Prairies"
         }
