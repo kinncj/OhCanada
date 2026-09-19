@@ -27,11 +27,11 @@
           "quote": "known as Central Canada and the industrial and manufacturing heartland"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "CENTRAL CANADA More than half the people in Canada live in cities and towns near the Great Lakes and the St. Lawrence River in southern Quebec and Ontario, known as Central Canada and the industrial and manufacturing heartland."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "the vast majority along or near the St. Lawrence River"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Quebec Nearly eight million people live in Quebec, the vast majority along or near the St. Lawrence River."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "The resources of the Canadian Shield have helped Quebec to develop important industries, including forestry, energy and mining."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The resources of the Canadian Shield have helped Quebec to develop important industries, including forestry, energy and mining. Quebec is Canada’s main producer of pulp and paper."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Montreal, Canada’s second largest city"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Montreal, Canada’s second largest city and the second largest mainly French-speaking city in the world after Paris, is famous for its cultural diversity."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "the second largest mainly French-speaking city in the world after Paris"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Montreal, Canada’s second largest city and the second largest mainly French-speaking city in the world after Paris, is famous for its cultural diversity."
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "is famous for its cultural diversity"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T15:20:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Montreal, Canada’s second largest city and the second largest mainly French-speaking city in the world after Paris, is famous for its cultural diversity."
         }
       }
     }
