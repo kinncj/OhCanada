@@ -27,11 +27,11 @@
           "quote": "In the 1920s, some believed that the British West Indies (British territories in the Caribbean Sea) should become part of Canada. This did not occur"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Did you know? In the 1920s, some believed that the British West Indies (British territories in the Caribbean Sea) should become part of Canada. This did not occur, though Canada and Commonwealth Caribbean countries and territories enjoy close ties today."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "rejected",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Born in Scotland on January 11, 1815, he came to Upper Canada as a child."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "He was a lawyer in Kingston, Ontario, a gifted politician and a colourful personality."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. He was a lawyer in Kingston, Ontario, a gifted politician and a colourful personality."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Parliament has recognized January 11 as Sir John A. Macdonald Day."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Parliament has recognized January 11 as Sir John A. Macdonald Day."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "When Canada took over the vast northwest region from the Hudson’s Bay Company in 1869"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "When Canada took over the vast northwest region from the Hudson’s Bay Company in 1869, the 12,000 Métis of the Red River were not consulted."
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Ottawa sent soldiers to retake Fort Garry in 1870."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In response, Louis Riel led an armed uprising and seized Fort Garry, the territorial capital. Canada’s future was in jeopardy. How could the Dominion reach from sea to sea if it could not control the interior? Ottawa sent soldiers to retake Fort Garry in 1870."
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Riel was elected to Parliament but never took his seat."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Riel was elected to Parliament but never took his seat."
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "rejected",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Later, as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885 in present-day Saskatchewan led to Riel’s trial and execution for high treason"
         }
       }
     },
@@ -243,11 +243,11 @@
           "quote": "led to Riel’s trial and execution for high treason, a decision that was strongly opposed in Quebec."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Later, as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885 in present-day Saskatchewan led to Riel’s trial and execution for high treason, a decision that was strongly opposed in Quebec."
         }
       }
     },
@@ -270,11 +270,11 @@
           "quote": "to pacify the West and assist in negotiations with the Indians."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "After the first Métis uprising, Prime Minister Macdonald established the North West Mounted Police (NWMP) in 1873 to pacify the West and assist in negotiations with the Indians."
         }
       }
     },
@@ -297,11 +297,11 @@
           "quote": "The NWMP founded Fort Calgary, Fort MacLeod and other centres that today are cities and towns."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The NWMP founded Fort Calgary, Fort MacLeod and other centres that today are cities and towns."
         }
       }
     },
@@ -324,11 +324,11 @@
           "quote": "Regina became its headquarters."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The NWMP founded Fort Calgary, Fort MacLeod and other centres that today are cities and towns. Regina became its headquarters."
         }
       }
     },
@@ -351,11 +351,11 @@
           "quote": "Some of Canada’s most colourful heroes, such as Major General Sir Sam Steele, came from the ranks of the Mounties."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Some of Canada’s most colourful heroes, such as Major General Sir Sam Steele, came from the ranks of the Mounties."
         }
       }
     },
@@ -378,11 +378,11 @@
           "quote": "The project was financed by British and American investors and built by both European and Chinese labour."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The project was financed by British and American investors and built by both European and Chinese labour."
         }
       }
     },
@@ -405,11 +405,11 @@
           "quote": "Canada’s economy grew and became more industrialized during the economic boom of the 1890s and early 1900s."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada’s economy grew and became more industrialized during the economic boom of the 1890s and early 1900s."
         }
       }
     },
@@ -432,11 +432,11 @@
           "quote": "One million British and one million Americans immigrated to Canada at this time."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "One million British and one million Americans immigrated to Canada at this time."
         }
       }
     },
@@ -459,11 +459,11 @@
           "quote": "The railway made it possible for immigrants, including 170,000 Ukrainians"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The railway made it possible for immigrants, including 170,000 Ukrainians"
         }
       }
     },
@@ -486,11 +486,11 @@
           "quote": "tens of thousands from Germany, France, Norway and Sweden to settle in the West before 1914 and develop a thriving agricultural sector."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T00:00:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Poles and tens of thousands from Germany, France, Norway and Sweden to settle in the West before 1914 and develop a thriving agricultural sector."
         }
       }
     }
