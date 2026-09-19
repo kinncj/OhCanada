@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-04-other-levels-of-government",
+  "chapter": "Federal Elections",
+  "order": 4,
+  "title": {
+    "en": "Voting closer to home",
+    "fr": "Voter près de chez soi"
+  },
+  "passages": [
+    {
+      "id": "e4-local-government-in-daily-life",
+      "text": {
+        "en": "Local government, also called municipal government, plays a big part in people's everyday lives.",
+        "fr": "Le gouvernement local, aussi appelé gouvernement municipal, occupe une grande place dans la vie de tous les jours."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 66,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Local or municipal government plays an important role in the lives of our citizens."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e4-learn-the-rules-where-you-live",
+      "text": {
+        "en": "Find out how voting works where you live: in your province or territory, and in your city or town. Those rules are what let you use your right to vote there.",
+        "fr": "Renseignez-vous sur le déroulement du vote là où vous vivez : dans votre province ou territoire, et dans votre ville ou village. Ce sont ces règles qui vous permettent d'exercer votre droit de vote là aussi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 66,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "It is important to find out the rules for voting in provincial, territorial and local elections so that you can exercise your right to vote."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

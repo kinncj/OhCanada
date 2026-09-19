@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-01-the-right-to-vote",
+  "chapter": "Federal Elections",
+  "order": 1,
+  "title": {
+    "en": "The right to vote and your voter information card",
+    "fr": "Le droit de vote et votre carte d'information de l'électeur"
+  },
+  "passages": [
+    {
+      "id": "e1-voting-is-a-privilege-of-citizenship",
+      "text": {
+        "en": "Canadian citizens have the privilege of voting. Voting is a right that comes with citizenship.",
+        "fr": "Les citoyennes et citoyens canadiens ont le privilège de voter. Le vote est un droit qui vient avec la citoyenneté."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 61,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "One of the privileges of Canadian citizenship is the right to vote."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-card-gives-a-number-for-special-help",
+      "text": {
+        "en": "Your voter information card also gives a phone number. Call that number if you need an interpreter or other special help.",
+        "fr": "Votre carte d'information de l'électeur donne aussi un numéro de téléphone. Appelez ce numéro si vous avez besoin d'un interprète ou d'un autre service spécial."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 61,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "The card lists when and where you vote and the number to call if you require an interpreter or other special services."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-no-number-call-elections-canada",
+      "text": {
+        "en": "If you do not know the number of your local elections office, you can call Elections Canada, in Ottawa, instead.",
+        "fr": "Si vous ne connaissez pas le numéro de votre bureau local d'élections, vous pouvez plutôt appeler Élections Canada, à Ottawa."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 64,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters’ list. If you do not have the number, call Elections Canada, in Ottawa, at 1-800-463-6868."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

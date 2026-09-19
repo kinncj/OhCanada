@@ -1,0 +1,282 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-05-who-does-what",
+  "chapter": "Federal Elections",
+  "order": 5,
+  "title": {
+    "en": "Who does what: the three governments",
+    "fr": "Qui fait quoi : les trois ordres de gouvernement"
+  },
+  "passages": [
+    {
+      "id": "e5-federal-defence-foreign-policy-citizenship",
+      "text": {
+        "en": "The federal government looks after national defence, foreign policy and citizenship.",
+        "fr": "Le gouvernement fédéral s'occupe de la défense nationale, de la politique étrangère et de la citoyenneté."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 67,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Federal • Members of • National Defence Parliament (MPs) • Foreign Policy • Citizenship"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-aboriginal-affairs-is-federal",
+      "text": {
+        "en": "Aboriginal affairs are a responsibility of the federal government.",
+        "fr": "Les affaires autochtones relèvent du gouvernement fédéral."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 67,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Federal • Members of • National Defence Parliament (MPs) • Foreign Policy • Citizenship • Policing • Criminal Justice • International Trade • Aboriginal Affairs"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-provincial-and-territorial-member-titles",
+      "text": {
+        "en": "In a province or a territory, an elected member of the assembly is a Member of the Legislative Assembly (MLA), of the National Assembly (MNA), of the Provincial Parliament (MPP) or of the House of Assembly (MHA). Which title is used depends on the province or territory.",
+        "fr": "Dans une province ou un territoire, une personne élue à l'assemblée est députée à l'Assemblée législative (MLA), à l'Assemblée nationale (MNA), au Parlement provincial (MPP) ou à la Chambre d'assemblée (MHA). Le titre employé dépend de la province ou du territoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 68,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights (MHA)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-education-and-health-care",
+      "text": {
+        "en": "Provinces and territories look after education and health care.",
+        "fr": "Les provinces et les territoires s'occupent de l'éducation et des soins de santé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 68,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-natural-resources-and-highways",
+      "text": {
+        "en": "Natural resources and highways are in the hands of the provinces and territories.",
+        "fr": "Les ressources naturelles et les routes sont entre les mains des provinces et des territoires."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 68,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly • Highways"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-policing-in-quebec-and-ontario",
+      "text": {
+        "en": "In Quebec and in Ontario, policing is a provincial responsibility.",
+        "fr": "Au Québec et en Ontario, la police relève de la province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 68,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-property-and-civil-rights",
+      "text": {
+        "en": "Property and civil rights are a provincial and territorial responsibility.",
+        "fr": "La propriété et les droits civils relèvent des provinces et des territoires."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 68,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial and • Members of the • Education Territorial Legislative Assembly (MLA) or • Health Care • Members of the • Natural Resources National Assembly • Highways • Members of the Provincial • Policing (Quebec, Parliament (MPP) or Ontario) • Members of the • Property and Civil House of Assembly Rights"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-municipal-elected-officials",
+      "text": {
+        "en": "The people elected to a municipal, or local, government are the mayor or reeve and the councillors or aldermen.",
+        "fr": "Les personnes élues au gouvernement municipal, ou local, sont le maire ou le préfet et les conseillers ou échevins."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-recycling-programs",
+      "text": {
+        "en": "Recycling programs are run by the municipal government.",
+        "fr": "Les programmes de recyclage sont gérés par le gouvernement municipal."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-transportation-and-utilities",
+      "text": {
+        "en": "Transportation and utilities are looked after by the municipal government.",
+        "fr": "Les transports et les services publics sont pris en charge par le gouvernement municipal."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

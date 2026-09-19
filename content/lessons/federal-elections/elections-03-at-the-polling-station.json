@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-03-at-the-polling-station",
+  "chapter": "Federal Elections",
+  "order": 3,
+  "title": {
+    "en": "At the polling station",
+    "fr": "Au bureau de scrutin"
+  },
+  "passages": [
+    {
+      "id": "e3-fold-your-ballot-and-hand-it-over",
+      "text": {
+        "en": "When your ballot is marked, fold it and hand it to the poll officials.",
+        "fr": "Une fois votre bulletin rempli, pliez-le et remettez-le aux responsables du scrutin."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "Once marked, fold it and present it to the poll officials."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e3-the-ballot-number-is-torn-off",
+      "text": {
+        "en": "Your ballot carries a number, and the poll official tears that number off.",
+        "fr": "Votre bulletin porte un numéro, et le responsable du scrutin détache ce numéro."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "The poll official will tear off the ballot number"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e3-every-ballot-is-counted",
+      "text": {
+        "en": "Once the polls have closed, every ballot is counted. The results are then made public.",
+        "fr": "Une fois les bureaux de scrutin fermés, chaque bulletin est compté. Les résultats sont ensuite rendus publics."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": false,
+          "quote": "When the polls close, every ballot is counted and the results are made public."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-02-the-cabinet-and-the-opposition",
+  "chapter": "Federal Elections",
+  "order": 2,
+  "title": {
+    "en": "The Cabinet and the opposition parties",
+    "fr": "Le Cabinet et les partis de l'opposition"
+  },
+  "passages": [
+    {
+      "id": "e2-prime-minister-picks-the-ministers",
+      "text": {
+        "en": "The Prime Minister picks the ministers of the Crown. Most of them are members of the House of Commons.",
+        "fr": "Le premier ministre choisit les ministres de la Couronne. La plupart d'entre eux sont députés à la Chambre des communes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": true,
+          "quote": "The Prime Minister chooses the ministers of the Crown, most of them from among members of the House of Commons."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e2-cabinet-ministers-run-the-departments",
+      "text": {
+        "en": "Cabinet ministers run the departments of the federal government.",
+        "fr": "Les ministres du Cabinet dirigent les ministères du gouvernement fédéral."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": true,
+          "quote": "Cabinet ministers are responsible for running the federal government departments."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e2-mps-may-question-cabinet-decisions",
+      "text": {
+        "en": "The decisions the Cabinet makes can be questioned by every MP in the House of Commons.",
+        "fr": "Les décisions du Cabinet peuvent être remises en question par tous les députés de la Chambre des communes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": true,
+          "quote": "Their decisions can be questioned by all members of the House of Commons."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e2-the-opposition-parties",
+      "text": {
+        "en": "The parties that do not hold power are known as the opposition parties.",
+        "fr": "Les partis qui ne détiennent pas le pouvoir sont appelés les partis de l'opposition."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-19T00:00:00Z",
+          "volatile": true,
+          "quote": "The other parties that are not in power are known as opposition parties."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
