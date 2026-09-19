@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-02-the-first-peoples-of-this-land",
+  "chapter": "Who We Are",
+  "order": 2,
+  "title": {
+    "en": "The first peoples of this land",
+    "fr": "Les premiers peuples de ce territoire"
+  },
+  "passages": [
+    {
+      "id": "w2-first-nations-cultures-and-belief",
+      "text": {
+        "en": "First Nations cultures are many and full of life. Religious belief lies at their root: how people stand with the Creator, with the natural world, and with one another.",
+        "fr": "Les cultures des Premières Nations sont nombreuses et bien vivantes. La croyance religieuse en est la racine : le rapport des personnes avec le Créateur, avec la nature et les unes avec les autres."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Diverse, vibrant First Nations cultures were rooted in religious beliefs about their relationship to the Creator, the natural environment and each other."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w2-residential-schools-purpose",
+      "text": {
+        "en": "Aboriginal children were placed in residential schools by the federal government. The aim was to teach them and to make them part of the country's mainstream culture.",
+        "fr": "Le gouvernement fédéral a placé des enfants autochtones dans des pensionnats. Le but était de les instruire et de les assimiler à la culture dominante du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 17,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the federal government placed many Aboriginal children in residential schools to educate and assimilate them into mainstream Canadian culture"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w2-schools-short-of-money",
+      "text": {
+        "en": "The residential schools had too little money, and they were hard on the students.",
+        "fr": "Les pensionnats manquaient d'argent et la vie y était dure pour les élèves."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 17,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The schools were poorly funded and inflicted hardship on the students"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w2-some-students-were-abused",
+      "text": {
+        "en": "Some of the students in the residential schools suffered physical abuse.",
+        "fr": "Certains élèves des pensionnats ont subi de la violence physique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 17,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The schools were poorly funded and inflicted hardship on the students; some were physically abused."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w2-renewed-pride-today",
+      "text": {
+        "en": "Aboriginal peoples in Canada today feel a new pride and a new confidence.",
+        "fr": "Aujourd'hui, au Canada, les peuples autochtones éprouvent une fierté et une confiance renouvelées."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 17,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In today’s Canada, Aboriginal peoples enjoy renewed pride and confidence"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

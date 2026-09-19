@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-01-what-canadians-share",
+  "chapter": "Who We Are",
+  "order": 1,
+  "title": {
+    "en": "What Canadians share",
+    "fr": "Ce que les Canadiens ont en commun"
+  },
+  "passages": [
+    {
+      "id": "w1-proud-of-our-identity",
+      "text": {
+        "en": "Canada has an identity all its own, and the people who live here are proud of it.",
+        "fr": "Le Canada a une identité bien à lui, et les gens d'ici en sont fiers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadians are proud of their unique identity."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w1-institutions-and-good-government",
+      "text": {
+        "en": "Canada's institutions hold to a promise of Peace, Order, and Good Government.",
+        "fr": "Les institutions du Canada défendent une promesse : paix, ordre et bon gouvernement."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Our institutions uphold a commitment to Peace, Order, and Good Government"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w1-three-founding-peoples",
+      "text": {
+        "en": "Three founding peoples shaped this country: Aboriginal, French and British. Learning about all three is part of understanding what being Canadian means.",
+        "fr": "Trois peuples fondateurs ont façonné ce pays : les Autochtones, les Français et les Britanniques. Comprendre ce que signifie être Canadien passe par la connaissance de ces trois peuples."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "To understand what it means to be Canadian, it is important to know about our three founding peoples— Aboriginal, French and British."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

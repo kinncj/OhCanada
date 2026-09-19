@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-06-diversity-in-canada",
+  "chapter": "Who We Are",
+  "order": 6,
+  "title": {
+    "en": "Diversity in Canada",
+    "fr": "La diversité au Canada"
+  },
+  "passages": [
+    {
+      "id": "w6-a-land-of-immigrants",
+      "text": {
+        "en": "People often call Canada a land of immigrants.",
+        "fr": "On appelle souvent le Canada une terre d'immigration."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 21,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada is often referred to as a land of immigrants"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w6-state-and-faith-communities",
+      "text": {
+        "en": "In Canada, government and faith communities have a long habit of working together.",
+        "fr": "Au Canada, l'État et les communautés religieuses ont depuis longtemps l'habitude de travailler ensemble."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 21,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In Canada the state has traditionally partnered with faith communities"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w6-gay-and-lesbian-canadians",
+      "text": {
+        "en": "Gay and lesbian Canadians are part of the country's diversity.",
+        "fr": "Les Canadiennes et les Canadiens gais et lesbiennes font partie de la diversité du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 22,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s diversity includes gay and lesbian Canadians"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

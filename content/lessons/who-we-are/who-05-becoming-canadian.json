@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-05-becoming-canadian",
+  "chapter": "Who We Are",
+  "order": 5,
+  "title": {
+    "en": "Becoming Canadian",
+    "fr": "Devenir Canadien"
+  },
+  "passages": [
+    {
+      "id": "w5-tweedsmuir-governor-general",
+      "text": {
+        "en": "Canadians liked John Buchan, the 1st Baron Tweedsmuir, as their Governor General. He held the post from 1935 to 1940.",
+        "fr": "Les Canadiens appréciaient John Buchan, 1er baron Tweedsmuir, comme gouverneur général. Il a occupé ce poste de 1935 à 1940."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "John Buchan, the 1st Baron Tweedsmuir, was a popular Governor General of Canada (1935-40)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w5-buchan-on-immigrant-groups",
+      "text": {
+        "en": "Buchan believed newcomer groups should hold on to what makes them themselves, and that each one should add something to the character of the country.",
+        "fr": "Buchan croyait que les groupes d'immigrants devaient garder ce qui fait leur caractère propre et que chacun devait apporter quelque chose au caractère national."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Immigrant groups, he said, “should retain their individuality and each make its contribution to the national character.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w5-some-newcomers-have-known-war",
+      "text": {
+        "en": "Some people who come to Canada have lived through war or fighting in the place they left.",
+        "fr": "Certaines personnes qui viennent au Canada ont vécu la guerre ou des conflits là d'où elles viennent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 20,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Some Canadians immigrate from places where they have experienced warfare or conflict."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w5-no-hateful-prejudice-brought-here",
+      "text": {
+        "en": "Hard experiences in another country are no reason to bring violent, extreme or hateful prejudice to Canada.",
+        "fr": "Des expériences difficiles vécues ailleurs ne justifient pas d'apporter au Canada des préjugés violents, extrêmes ou haineux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 20,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Such experiences do not justify bringing to Canada violent, extreme or hateful prejudices."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w5-pioneers-and-builders",
+      "text": {
+        "en": "Over many generations, people of British background — and people from other groups too — put in their work and bore hardship to lay this country's foundations.",
+        "fr": "Au fil de nombreuses générations, des gens d'origine britannique — et des gens d'autres groupes aussi — ont travaillé et enduré des épreuves pour poser les fondations du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 20,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Generations of pioneers and builders of British origins, as well as other groups, invested and endured hardship in laying the foundations of our country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

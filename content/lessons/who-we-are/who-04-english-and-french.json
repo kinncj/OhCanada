@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-04-english-and-french",
+  "chapter": "Who We Are",
+  "order": 4,
+  "title": {
+    "en": "English and French",
+    "fr": "L'anglais et le français"
+  },
+  "passages": [
+    {
+      "id": "w4-two-civilizations-brought-by-settlers",
+      "text": {
+        "en": "Settlers carried two Christian civilizations here from Europe, one English-speaking and one French-speaking. Canadian society today grows mostly out of those two.",
+        "fr": "Des colons ont apporté d'Europe deux civilisations chrétiennes, l'une anglophone et l'autre francophone. La société canadienne d'aujourd'hui en découle en grande partie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian society today stems largely from the English-speaking and French-speaking Christian civilizations that were brought here from Europe by settlers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w4-daily-life-in-two-languages",
+      "text": {
+        "en": "For most people here, the two languages of everyday life are English and French.",
+        "fr": "Pour la plupart des gens, les deux langues de la vie de tous les jours sont l'anglais et le français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "English and French define the reality of day-to-day life for most people"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w4-most-francophones-live-in-quebec",
+      "text": {
+        "en": "Most Francophones in Canada live in Quebec.",
+        "fr": "La plupart des francophones du Canada vivent au Québec."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "While the majority of Francophones live in the province of Quebec"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w4-who-quebecers-are",
+      "text": {
+        "en": "The people of Quebec are called Quebecers, and most of them speak French.",
+        "fr": "Les habitants du Québec s'appellent les Québécois, et la plupart d'entre eux parlent français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebecers are the people of Quebec, the vast majority French-speaking."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w4-quebecers-keep-their-identity",
+      "text": {
+        "en": "Quebecers keep an identity, a culture and a language of their own.",
+        "fr": "Les Québécois conservent une identité, une culture et une langue qui leur sont propres."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "maintain a unique identity, culture and language."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
