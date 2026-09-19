@@ -92,8 +92,8 @@
     {
       "id": "h6-reputation-after-vimy",
       "text": {
-        "en": "Vimy made the Canadians' name as soldiers. Across the British Empire's armies they were spoken of as shock troops, sent where the fighting was hardest.",
-        "fr": "Vimy a fait la réputation des soldats canadiens. Dans les armées de l'Empire britannique, on parlait d'eux comme de troupes de choc, envoyées là où les combats étaient les plus durs."
+        "en": "Vimy made the Canadians' name as soldiers. Their courage earned them a reputation as the British Empire's shock troops.",
+        "fr": "Vimy a fait la réputation des soldats canadiens. Leur courage leur a valu d'être vus comme les troupes de choc de l'Empire britannique."
       },
       "fact": {
         "factual": true,
@@ -173,8 +173,8 @@
     {
       "id": "h6-britain-advised-against-internment",
       "text": {
-        "en": "Britain told Ottawa not to intern these men. Canada went ahead with the policy anyway.",
-        "fr": "La Grande-Bretagne avait déconseillé à Ottawa d'interner ces hommes. Le Canada a tout de même appliqué cette politique."
+        "en": "Britain advised Ottawa against the internment policy. Canada went ahead with it anyway.",
+        "fr": "La Grande-Bretagne a déconseillé à Ottawa la politique d'internement. Le Canada l'a tout de même appliquée."
       },
       "fact": {
         "factual": true,
