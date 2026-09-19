@@ -27,11 +27,11 @@
           "quote": "Canadian artists have a long history of achievement in which Canadians take pride."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian artists have a long history of achievement in which Canadians take pride."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "Artists from all regions reflect and define our culture and forms of creative expression and have achieved greatness both at home and abroad."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Artists from all regions reflect and define our culture and forms of creative expression and have achieved greatness both at home and abroad."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Canadians have made significant contributions to literature in English and in French."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadians have made significant contributions to literature in English and in French. Men and women of letters included Stephen Leacock, Louis Hémon, Sir Charles G.D. Roberts, Pauline Johnson, Émile Nelligan, Robertson Davies, Margaret Laurence and Mordecai Richler."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Novelists, poets, historians, educators and musicians have had a significant cultural impact."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Novelists, poets, historians, educators and musicians have had a significant cultural impact."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "Men and women of letters included Stephen Leacock, Louis Hémon, Sir Charles G.D. Roberts, Pauline Johnson, Émile Nelligan, Robertson Davies, Margaret Laurence and Mordecai Richler."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Men and women of letters included Stephen Leacock, Louis Hémon, Sir Charles G.D. Roberts, Pauline Johnson, Émile Nelligan, Robertson Davies, Margaret Laurence and Mordecai Richler."
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Musicians such as Sir Ernest MacMillan and Healey Willan won renown in Canada and abroad."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Musicians such as Sir Ernest MacMillan and Healey Willan won renown in Canada and abroad."
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Writers such as Joy Kogawa, Michael Ondaatje and Rohinton Mistry have diversified Canada’s literary experience."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Writers such as Joy Kogawa, Michael Ondaatje and Rohinton Mistry have diversified Canada’s literary experience."
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "Quebec’s Louis-Philippe Hébert was a celebrated sculptor of historical figures."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-19T14:12:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Quebec’s Louis-Philippe Hébert was a celebrated sculptor of historical figures."
         }
       }
     }
