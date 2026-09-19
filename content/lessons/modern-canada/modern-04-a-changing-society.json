@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-04-a-changing-society",
+  "chapter": "Modern Canada",
+  "order": 4,
+  "title": {
+    "en": "A changing society",
+    "fr": "Une société qui change"
+  },
+  "passages": [
+    {
+      "id": "m4-a-more-open-society",
+      "text": {
+        "en": "Over more than fifty years, what people valued changed, and Canada became a more open and more flexible society.",
+        "fr": "Au fil de plus de cinquante ans, les valeurs des gens ont changé, et le Canada est devenu une société plus ouverte et plus souple."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "As social values changed over more than 50 years, Canada became a more flexible and open society."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-more-people-went-to-school",
+      "text": {
+        "en": "More places opened up in high schools, colleges and universities, and many Canadians took them up.",
+        "fr": "Il y a eu plus de places dans les écoles secondaires, les collèges et les universités, et beaucoup de Canadiens en ont profité."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Many took advantage of expanding secondary and postsecondary educational opportunities"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-women-in-the-professions",
+      "text": {
+        "en": "More and more women began to work in the professions.",
+        "fr": "De plus en plus de femmes se sont mises à exercer des professions."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "a growing number of women entered the professional work force"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-every-citizen-over-18-may-vote",
+      "text": {
+        "en": "Today, any citizen who is more than 18 years old can vote.",
+        "fr": "Aujourd'hui, tout citoyen de plus de 18 ans peut voter."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today every citizen over the age of 18 may vote."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-multiculturalism-gained-ground",
+      "text": {
+        "en": "People coming to Canada in the 1800s and the 1900s gave the idea of multiculturalism new force.",
+        "fr": "Les personnes venues s'établir au Canada aux XIXe et XXe siècles ont donné une nouvelle force à l'idée du multiculturalisme."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The idea of multiculturalism, as a result of 19th- and 20th- century immigration, gained a new impetus."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-origins-neither-british-nor-french",
+      "text": {
+        "en": "By the 1960s, a third of Canadians had roots that were not British and not French. Those Canadians were proud to keep their own culture as part of Canadian life.",
+        "fr": "Dans les années 1960, un tiers des Canadiens avaient des origines qui n'étaient ni britanniques ni françaises. Ces Canadiens étaient fiers de garder leur propre culture au sein de la société canadienne."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "By the 1960s, one- third of Canadians had origins that were neither British nor French, and took pride in preserving their distinct culture in the Canadian fabric."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m4-diversity-enriches-life-in-cities",
+      "text": {
+        "en": "Today, the mix of people living in Canada makes life here richer, and this shows most of all in the cities.",
+        "fr": "Aujourd'hui, la diversité de la population rend la vie plus riche au Canada, et cela se voit surtout dans les villes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today, diversity enriches Canadians’ lives, particularly in our cities."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

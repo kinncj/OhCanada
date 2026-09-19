@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-03-canada-and-quebec",
+  "chapter": "Modern Canada",
+  "order": 3,
+  "title": {
+    "en": "Canada and Quebec",
+    "fr": "Le Canada et le Québec"
+  },
+  "passages": [
+    {
+      "id": "m3-french-canadian-culture-flourished",
+      "text": {
+        "en": "After the war, the society and the culture of French Canada grew strong.",
+        "fr": "Après la guerre, la société et la culture du Canada français se sont épanouies."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "French-Canadian society and culture flourished in the postwar years."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m3-many-quebecers-sought-to-separate",
+      "text": {
+        "en": "Many people in Quebec wanted their province to separate from Canada.",
+        "fr": "Beaucoup de gens au Québec voulaient que leur province se sépare du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Many Quebecers sought to separate from Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

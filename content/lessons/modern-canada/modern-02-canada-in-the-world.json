@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-02-canada-in-the-world",
+  "chapter": "Modern Canada",
+  "order": 2,
+  "title": {
+    "en": "Canada in the world",
+    "fr": "Le Canada dans le monde"
+  },
+  "passages": [
+    {
+      "id": "m2-autonomy-grew-gradually",
+      "text": {
+        "en": "Little by little, Canada took charge of its own affairs, as Australia and New Zealand did. In time, Canada could make an important contribution in the world.",
+        "fr": "Petit à petit, le Canada a pris en main ses propres affaires, comme l'ont fait l'Australie et la Nouvelle-Zélande. Avec le temps, le Canada a pu apporter une contribution importante dans le monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Like Australia, New Zealand and other countries, Canada developed its autonomy gradually with a capacity to make significant contributions internationally."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m2-cold-war-began",
+      "text": {
+        "en": "The Cold War began when several countries in eastern Europe, just freed, became part of a Communist bloc. The Soviet Union controlled that bloc, and Josef Stalin was its dictator.",
+        "fr": "La guerre froide a commencé lorsque plusieurs pays de l'Europe de l'Est, tout juste libérés, sont entrés dans un bloc communiste. L'Union soviétique contrôlait ce bloc, et Josef Staline en était le dictateur."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Cold War began when several liberated countries of eastern Europe became part of a Communist bloc controlled by the Soviet Union under the dictator Josef Stalin."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m2-joined-the-united-nations",
+      "text": {
+        "en": "Canada also became a member of international bodies. The United Nations, or UN, is one of them.",
+        "fr": "Le Canada est aussi devenu membre d'organisations internationales. L'Organisation des Nations Unies, ou ONU, en est une."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada joined international organizations such as the United Nations (UN)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

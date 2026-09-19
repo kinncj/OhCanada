@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-01-prosperity-and-social-programs",
+  "chapter": "Modern Canada",
+  "order": 1,
+  "title": {
+    "en": "Prosperity and social programs",
+    "fr": "La prospérité et les programmes sociaux"
+  },
+  "passages": [
+    {
+      "id": "m1-postwar-prosperity",
+      "text": {
+        "en": "After the Second World War, Canada was richer than it had ever been. People's day-to-day lives got better too.",
+        "fr": "Après la Seconde Guerre mondiale, le Canada était plus riche qu'il ne l'avait jamais été. Les conditions de vie des gens se sont aussi améliorées."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Postwar Canada enjoyed record prosperity and material progress."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m1-social-programs-grew-with-prosperity",
+      "text": {
+        "en": "The richer the country became, the more it could afford to pay for social assistance programs.",
+        "fr": "Plus le pays s'enrichissait, plus il pouvait payer des programmes d'aide sociale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "As prosperity grew, so did the ability to support social assistance programs."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m1-publicly-funded-education",
+      "text": {
+        "en": "Each province and each territory provides the education that public money pays for.",
+        "fr": "Chaque province et chaque territoire offre l'enseignement financé par les fonds publics."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Publicly funded education is provided by the provinces and territories."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

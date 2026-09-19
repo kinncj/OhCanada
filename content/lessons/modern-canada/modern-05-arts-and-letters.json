@@ -1,0 +1,228 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-05-arts-and-letters",
+  "chapter": "Modern Canada",
+  "order": 5,
+  "title": {
+    "en": "Arts and letters",
+    "fr": "Les arts et les lettres"
+  },
+  "passages": [
+    {
+      "id": "m5-artists-and-national-pride",
+      "text": {
+        "en": "Artists in Canada have done fine work for a very long time, and Canadians are proud of it.",
+        "fr": "Les artistes du Canada font de belles œuvres depuis très longtemps, et les Canadiens en sont fiers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian artists have a long history of achievement in which Canadians take pride."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-artists-from-every-region",
+      "text": {
+        "en": "Artists from every region show what Canadian culture is and help shape the ways people create. Their work has been outstanding at home and in other countries.",
+        "fr": "Des artistes de toutes les régions montrent ce qu'est la culture canadienne et façonnent les formes de création. Leur travail est remarquable au pays comme à l'étranger."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Artists from all regions reflect and define our culture and forms of creative expression and have achieved greatness both at home and abroad."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-literature-in-both-languages",
+      "text": {
+        "en": "Canadian writers have added a great deal to literature in both English and French.",
+        "fr": "Les écrivains canadiens ont beaucoup apporté à la littérature en anglais comme en français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadians have made significant contributions to literature in English and in French."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-writers-and-musicians-shaped-culture",
+      "text": {
+        "en": "Novel writers, poets, historians, teachers and musicians have all left a deep mark on the country's culture.",
+        "fr": "Les romanciers, les poètes, les historiens, les enseignants et les musiciens ont tous laissé une marque profonde sur la culture du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Novelists, poets, historians, educators and musicians have had a significant cultural impact."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-men-and-women-of-letters",
+      "text": {
+        "en": "Canada's writers have included Pauline Johnson, Mordecai Richler, Stephen Leacock, Émile Nelligan, Margaret Laurence, Louis Hémon, Robertson Davies and Sir Charles G.D. Roberts.",
+        "fr": "Parmi les écrivains du Canada, on compte Pauline Johnson, Mordecai Richler, Stephen Leacock, Émile Nelligan, Margaret Laurence, Louis Hémon, Robertson Davies et Sir Charles G.D. Roberts."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Men and women of letters included Stephen Leacock, Louis Hémon, Sir Charles G.D. Roberts, Pauline Johnson, Émile Nelligan, Robertson Davies, Margaret Laurence and Mordecai Richler."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-musicians-macmillan-and-willan",
+      "text": {
+        "en": "Two musicians, Healey Willan and Sir Ernest MacMillan, became well known in Canada and in other countries.",
+        "fr": "Deux musiciens, Healey Willan et Sir Ernest MacMillan, se sont fait connaître au Canada comme à l'étranger."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Musicians such as Sir Ernest MacMillan and Healey Willan won renown in Canada and abroad."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-writers-who-widened-canadian-writing",
+      "text": {
+        "en": "Rohinton Mistry, Michael Ondaatje and Joy Kogawa have widened the range of writing in Canada.",
+        "fr": "Rohinton Mistry, Michael Ondaatje et Joy Kogawa ont élargi l'éventail de la littérature au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Writers such as Joy Kogawa, Michael Ondaatje and Rohinton Mistry have diversified Canada’s literary experience."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m5-louis-philippe-hebert-sculptor",
+      "text": {
+        "en": "Louis-Philippe Hébert, from Quebec, was a well-known sculptor. He made statues of figures from history.",
+        "fr": "Louis-Philippe Hébert, du Québec, était un sculpteur renommé. Il a sculpté des personnages de l'histoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 49,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebec’s Louis-Philippe Hébert was a celebrated sculptor of historical figures."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

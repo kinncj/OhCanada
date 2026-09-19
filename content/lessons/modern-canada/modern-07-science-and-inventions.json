@@ -1,0 +1,228 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "modern-07-science-and-inventions",
+  "chapter": "Modern Canada",
+  "order": 7,
+  "title": {
+    "en": "Science, discovery and invention",
+    "fr": "La science, les découvertes et les inventions"
+  },
+  "passages": [
+    {
+      "id": "m7-science-and-technology-world-renowned",
+      "text": {
+        "en": "Canada has moved science and technology forward in ways known around the world. That work changed how people everywhere talk to each other and do business.",
+        "fr": "Le Canada a fait avancer la science et la technologie d'une manière reconnue partout dans le monde. Ces travaux ont changé la façon dont les gens communiquent et font des affaires."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 50,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian advances in science and technology are world renowned and have changed the way the world communicates and does business."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-mcluhan-and-innis",
+      "text": {
+        "en": "Harold Innis and Marshall McLuhan were thinkers who broke new ground.",
+        "fr": "Harold Innis et Marshall McLuhan ont été des penseurs qui ont ouvert la voie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 50,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Marshall McLuhan and Harold Innis were 50 pioneer thinkers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-research-attracts-the-world",
+      "text": {
+        "en": "Research done in Canada is recognized around the world. It draws top students, teachers and business founders who work in fields such as medical research and telecommunications.",
+        "fr": "La recherche menée au Canada est reconnue partout dans le monde. Elle attire des étudiants, des professeurs et des entrepreneurs de haut niveau qui travaillent dans des domaines comme la recherche médicale et les télécommunications."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 51,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Science and research in Canada have won international recognition and attracted world-class students, academics and entrepreneurs engaged in medical research, telecommunications and other fields."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-nobel-prize-winning-scientists",
+      "text": {
+        "en": "Nobel Prize winners in science include Bertram Brockhouse, Michael Smith, Richard E. Taylor, Sidney Altman, John Polanyi and Gerhard Herzberg, who was a refugee from Nazi Germany.",
+        "fr": "Parmi les lauréats d'un prix Nobel en sciences, on compte Bertram Brockhouse, Michael Smith, Richard E. Taylor, Sidney Altman, John Polanyi et Gerhard Herzberg, qui était un réfugié de l'Allemagne nazie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 51,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Gerhard Herzberg, a refugee from Nazi Germany, John Polanyi, Sidney Altman, Richard E. Taylor, Michael Smith and Bertram Brockhouse were Nobel Prize-winning scientists."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-edison-commercialized-the-light-bulb",
+      "text": {
+        "en": "Thomas Edison is the name most people know when it comes to the light bulb, because Edison turned it into something that could be sold.",
+        "fr": "C'est le nom de Thomas Edison que la plupart des gens associent à l'ampoule électrique, parce qu'Edison en a fait un produit à vendre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 51,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Thomas Edison who, more famously, commercialized the light bulb."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-wilder-penfield",
+      "text": {
+        "en": "Dr. Wilder Penfield broke new ground in brain surgery at McGill University in Montreal. In his lifetime, people called him the greatest living Canadian.",
+        "fr": "Le Dr Wilder Penfield a ouvert de nouvelles voies en chirurgie du cerveau à l'Université McGill, à Montréal. De son vivant, on l'appelait le plus grand des Canadiens vivants."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 52,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Dr. Wilder Penfield — was a pioneering brain surgeon at McGill University in Montreal, and was known as “the greatest living Canadian.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-spar-and-nrc-built-the-canadarm",
+      "text": {
+        "en": "The Canadarm is a robot arm built for use in space. SPAR Aerospace and the National Research Council invented it.",
+        "fr": "Le Canadarm est un bras robotisé conçu pour être utilisé dans l'espace. Il a été inventé par SPAR Aerospace et le Conseil national de recherches."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 52,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "SPAR Aerospace / National Research Council — invented the Canadarm, a robotic arm used in outer space."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m7-blackberry-lazaridis-and-balsillie",
+      "text": {
+        "en": "Jim Balsillie and Mike Lazaridis worked at the wireless communications company Research in Motion (RIM). The invention RIM is most famous for is the BlackBerry.",
+        "fr": "Jim Balsillie et Mike Lazaridis travaillaient à Research in Motion (RIM), une entreprise de communications sans fil. L'invention la plus célèbre de RIM est le BlackBerry."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 52,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Mike Lazaridis and Jim Balsillie — of Research in Motion (RIM)—a wireless communications company known for its most famous invention—the BlackBerry."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
