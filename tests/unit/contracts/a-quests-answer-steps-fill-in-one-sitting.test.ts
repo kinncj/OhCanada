@@ -47,6 +47,7 @@ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 interface StepFile {
   readonly id: string;
   readonly kind: string;
+  readonly targetId?: string;
   readonly count?: number;
   readonly questionPool?: readonly string[];
 }
@@ -55,10 +56,53 @@ interface QuestFile {
   readonly levelId: string;
   readonly steps: readonly StepFile[];
 }
+/** As much of a placed landmark as a walk needs: where it is, and what it tells. */
+interface PoiFile {
+  readonly id: string;
+  readonly position: { readonly x: number };
+  readonly fact?: { readonly source?: { readonly quote?: string } | null } | null;
+}
 interface LevelFile {
   readonly id: string;
   readonly subject: string;
+  readonly pois?: readonly PoiFile[];
+  readonly characters?: readonly {
+    readonly characterId: string;
+    readonly position: { readonly x: number };
+  }[];
 }
+
+/** One thing the player comes to, in the order they come to it. */
+interface Stop {
+  readonly id: string;
+  readonly x: number;
+  /** The `source.quote` this stop teaches, when it teaches one. */
+  readonly quote: string | undefined;
+}
+
+/**
+ * Every engageable the level places, in the order a player walking right meets
+ * it: its landmarks and the characters standing among them.
+ *
+ * Characters are in here because three of the ten quests are given by one, and a
+ * walk that skipped them would never complete a `talk` step — so the quest would
+ * never leave step 0 and every `answer` step after it would go unmeasured. That
+ * is not a hypothetical: it is what the first draft of this walk did, and it
+ * reported eight levels "stuck on meet-the-guide" while the game was fine.
+ */
+const stopsOf = (level: LevelFile): readonly Stop[] =>
+  [
+    ...(level.pois ?? []).map((poi) => ({
+      id: poi.id,
+      x: poi.position.x,
+      quote: poi.fact?.source?.quote,
+    })),
+    ...(level.characters ?? []).map((character) => ({
+      id: character.characterId,
+      x: character.position.x,
+      quote: undefined,
+    })),
+  ].sort((a, b) => a.x - b.x);
 interface ConfigFile {
   readonly scheduler: SchedulerTuning;
   readonly study: { readonly drillSize: number };
@@ -172,6 +216,161 @@ describe('every answer step fills its count in one sitting (ADR-0054)', () => {
           answeredHere = rememberAnswered(answeredHere, asked.question.id);
         }
       }
+    }
+  });
+
+  /**
+   * The same day, walked rather than summarised.
+   *
+   * The test above asks each `answer` step in isolation: it visits no landmark
+   * that has no task, it never lets a stop teach the draw what it just told, and
+   * it takes the steps in document order rather than in the order the player
+   * meets their targets. All three are simplifications, and each one hides a way
+   * a promised count could come back short:
+   *
+   *  - **a stop with no task still draws** (ADR-0048 rule 5), and that draw is
+   *    still paced by `dailyNewLimit` (ADR-0054 exempts only a promised count).
+   *    So the stops between the task's steps spend the day's budget, and the
+   *    budget they leave is what the next promised count meets;
+   *  - **what a landmark just told is asked first** (ADR-0036 rule 4). A
+   *    preference is resolved over the whole bank and then narrowed to the
+   *    step's pool, so a pool with no slack — seven steps ship one — is drawn
+   *    through a different branch of `scheduleReview` than a pool with room;
+   *  - **the giver is a stop too.** Three quests are given by a character and
+   *    seven by a landmark, and accepting one finishes its opening `talk` step,
+   *    which is what puts the player on the `answer` step that is then asked
+   *    *at the giver* (`onAccepted`, ADR-0036). A walk that skipped characters
+   *    would leave those quests on step 0 for ever and measure nothing.
+   *
+   * So this walks every level in `journey` order and every engageable it places
+   * in the order a player going right comes to them, advances the quest through
+   * the same rules the domain uses, and requires two things: every promised
+   * count is handed back whole, and **the quest finishes**. The second is the
+   * one the player cares about — an unfinished quest is no stamp, and no stamp
+   * is every later level locked.
+   *
+   * Seen to fail: with `dailyNewLimitApplies: false` taken out of
+   * `landmark-questions.ts` — that is, with ADR-0054 reverted — this reports
+   * Peggy's Cove asking 1 of 3 at the lighthouse and 0 of 2 at both stops after
+   * it, its quest stuck on `answer-at-the-light`, and the same shape in six more
+   * levels. That is the audit ADR-0054 was written for, and it is what this gate
+   * is here to keep from coming back.
+   */
+  it('finishes every level’s task, walking its stops in the order a player meets them', async () => {
+    let progress: Progress = newProgress(defaultSettings('en' as LocaleCode));
+
+    const session = createStudySession({
+      bank: createQuestionBank({}),
+      clock,
+      random: createSeededRandom(2026),
+      progress: () => progress,
+      tuning: config.scheduler,
+      drillSize: config.study.drillSize,
+    });
+
+    for (const { level, quest } of inJourneyOrder) {
+      /* One opening of the level: what it has answered is its own (ADR-0048). */
+      let answeredHere: readonly QuestionId[] = [];
+      /* The quest as the domain holds it: which step, and how far into it. */
+      let stepIndex = 0;
+      let stepProgress = 0;
+
+      for (const stop of stopsOf(level)) {
+        /* A `talk`, `visit` or `collect` step whose target this is completes on
+           arrival, before anything is asked — `quests.visited()` runs before the
+           card, and accepting an offer completes the opening `talk` step in the
+           same move (`acceptQuest`). */
+        const arrivedAt = quest.steps[stepIndex];
+        if (
+          arrivedAt !== undefined &&
+          arrivedAt.kind !== 'answer' &&
+          arrivedAt.targetId === stop.id
+        ) {
+          stepIndex += 1;
+          stepProgress = 0;
+        }
+
+        const step = quest.steps[stepIndex];
+        const playing = step !== undefined && step.kind === 'answer' ? step : undefined;
+        const required = playing === undefined ? 0 : Math.max(1, playing.count ?? 1);
+
+        const draw = landmarkDraw({
+          levelSubject: level.subject as SubjectId,
+          answering:
+            playing === undefined
+              ? undefined
+              : {
+                  step: {
+                    subject: level.subject as SubjectId,
+                    ...(playing.questionPool === undefined
+                      ? {}
+                      : {
+                          questionPool: playing.questionPool as unknown as readonly QuestionId[],
+                        }),
+                  },
+                  done: stepProgress,
+                  required,
+                },
+          /* What this stop tells the player, which is asked first when a
+             question in scope rests on it (ADR-0036 rule 4). */
+          teaches: stop.quote === undefined ? [] : [stop.quote],
+          answeredHere,
+        });
+
+        const drill = await session.drill(draw.count, draw.scope);
+        if (!drill.ok) {
+          /* A stop with nothing left to ask is the level quietly carrying on
+             (ADR-0048). A task step the bank refuses is the blocker itself. */
+          expect(
+            playing,
+            `${level.id}/${stop.id}: the bank refused a task draw. ${drill.error.message}`,
+          ).toBeUndefined();
+          continue;
+        }
+
+        if (playing !== undefined) {
+          const where = `content/quests/${quest.id}.json step "${playing.id}", asked at ${stop.id}`;
+          expect(
+            drill.value.questions.length,
+            `${where}: the tracker promised ${String(draw.count)} question(s) and the game ` +
+              `handed back ${String(drill.value.questions.length)}. A player who has walked ` +
+              `every stop before this one today cannot finish this step, so the quest never ` +
+              `completes, no stamp is earned, and every level after this one stays locked ` +
+              `(ADR-0054).`,
+          ).toBe(draw.count);
+          /* Nothing repeated to make the number up: these are questions the
+             player has not met here, not one asked twice (ADR-0048). */
+          expect(drill.value.repeated ?? 0, `${where}: a question was repeated to fill it`).toBe(0);
+        }
+
+        for (const asked of drill.value.questions) {
+          const answered = answerQuestion(
+            { clock },
+            { question: asked.question, chosenIndex: 0, progress },
+          );
+          expect(
+            answered.ok,
+            `${level.id}/${stop.id}: ${String(asked.question.id)} could not be answered`,
+          ).toBe(true);
+          if (!answered.ok) return;
+          progress = answered.value.progress;
+          answeredHere = rememberAnswered(answeredHere, asked.question.id);
+          if (playing === undefined) continue;
+          stepProgress += 1;
+          if (stepProgress >= required) {
+            stepIndex += 1;
+            stepProgress = 0;
+          }
+        }
+      }
+
+      expect(
+        stepIndex,
+        `${level.id}: walking every stop left the quest "${quest.id}" on step ` +
+          `"${quest.steps[stepIndex]?.id ?? '?'}" with ` +
+          `${String(quest.steps.length - stepIndex)} step(s) unfinished, so its stamp is never ` +
+          `earned and every level after it stays locked (ADR-0036, ADR-0054).`,
+      ).toBe(quest.steps.length);
     }
   });
 });
