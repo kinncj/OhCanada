@@ -113,9 +113,15 @@ describe('a landmark while an answer step is being played', () => {
     expect(draw.scope.dailyNewLimitApplies).toBe(false);
   });
 
-  it('leaves a stop with no task paced like every other drill', () => {
+  it('exempts a stop with no task too, because a landmark always asks (ADR-0062)', () => {
+    /* ADR-0062 reversed this line. It used to read `toBeUndefined()`: a stop
+       outside a task was paced like a Study drill, and only ADR-0048's
+       "ask what you told, or nothing" routing kept the budget from ever being
+       consulted for one. The owner ruled that a landmark asks however long the
+       day has been, so the exemption is stated at the draw rather than inherited
+       from where the draw happens to be answered. */
     const draw = landmarkDraw({ levelSubject: RIGHTS, answering: undefined, teaches: [] });
-    expect(draw.scope.dailyNewLimitApplies).toBeUndefined();
+    expect(draw.scope.dailyNewLimitApplies).toBe(false);
   });
 
   it('never asks zero questions, whatever the save says was answered', () => {

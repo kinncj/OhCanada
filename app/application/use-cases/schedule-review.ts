@@ -91,12 +91,13 @@ export interface ScheduleReviewInput {
    */
   readonly repeatWhenExhausted?: boolean | undefined;
   /**
-   * Does the day's new-question budget cap this draw? Default `true` (ADR-0054).
+   * Does the day's new-question budget cap this draw? Default `true`
+   * (ADR-0054, widened by ADR-0062).
    *
-   * `false` only for a count the game has already promised the player: a quest
-   * `answer` step's `count`, printed on the tracker as "Answer 3 questions" before
-   * anything is asked. Study keeps the cap, which is whose rule it is
-   * (TN-STUDY-02).
+   * `false` for everything a level asks: a quest `answer` step's promised
+   * `count`, and a landmark stop with no task. Study passes nothing and keeps
+   * the cap, which is whose rule it is (TN-STUDY-02) and now the only place it
+   * binds.
    */
   readonly dailyNewLimitApplies?: boolean | undefined;
   readonly memory?: MemoryTuning | undefined;

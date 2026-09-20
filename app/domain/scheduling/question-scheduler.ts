@@ -144,13 +144,31 @@ const areValidSettings = (settings: SchedulerSettings): boolean =>
   settings.dailyNewLimit >= 0;
 
 /**
- * How many never-seen questions the player has already met today.
+ * How many never-seen questions the player has already met today — **from
+ * anywhere**, including the draws the cap does not apply to (ADR-0062 §2).
  *
  * Counted from `firstReviewedAt`, so drilling a question a second time does not
- * quietly give the day's budget back. That field is not in
- * `ReviewStateDocument` yet — see the report for slice 1 task 1.4. Falling back
- * to `reps === 1` would make `dailyNewLimit` bypassable by tapping "Study
- * again", which is exactly the scenario TN-STUDY-02 writes the limit for.
+ * quietly give the day's budget back. Falling back to `reps === 1` would make
+ * `dailyNewLimit` bypassable by tapping "Study again", which is exactly the
+ * scenario TN-STUDY-02 writes the limit for.
+ *
+ * Why exempt draws still count, now that Study is the only thing capped. What a
+ * new question costs is not the minute it takes to answer, it is the reviews it
+ * owes for the rest of the month — and a question first met at a landmark owes
+ * exactly what one first met in Study owes. So this measures the day's *load*,
+ * which is source-independent, and the cap then decides the one question it can
+ * still honestly decide: whether Study piles more on top. Counting only Study's
+ * own introductions would have Study add ten to a day that had already
+ * delivered seventy-six (measured, `journey` order, one sitting), which is the
+ * opposite of what the limit is for.
+ *
+ * The cost, stated because it is real: after a long sitting the budget is spent
+ * before Study is opened, so Study introduces nothing new for the rest of that
+ * UTC day. It is never *starved* by this — a spent budget means ten questions
+ * were introduced today, and those ten are themselves reviewable, so the `due`
+ * and not-yet-due tiers fill the drill (measured: five of five, none of them
+ * new). What a heavy day changes is what Study is *for*: consolidating what the
+ * levels taught, instead of opening more.
  */
 const introducedToday = (reviews: readonly ReviewRecord[], now: EpochMillis): number =>
   reviews.filter(

@@ -94,11 +94,13 @@ export interface DrillScope {
    */
   readonly repeatWhenExhausted?: boolean | undefined;
   /**
-   * Does the day's new-question budget cap this draw? Default `true` (ADR-0054).
+   * Does the day's new-question budget cap this draw? Default `true`
+   * (ADR-0054, widened by ADR-0062).
    *
-   * `false` on a task step's draw, whose count the tracker promised before a
-   * question was asked. Study passes nothing and keeps the cap, which is whose
-   * rule it is (TN-STUDY-02, "new questions, but not all at once").
+   * `false` on every draw a level makes — a task step's promised count, and a
+   * landmark stop standing outside a task. Study passes nothing and keeps the
+   * cap, which is whose rule it is (TN-STUDY-02, "new questions, but not all at
+   * once") and now the only draw it binds.
    */
   readonly dailyNewLimitApplies?: boolean | undefined;
 }

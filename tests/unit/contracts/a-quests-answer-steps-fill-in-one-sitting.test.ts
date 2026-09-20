@@ -228,10 +228,12 @@ describe('every answer step fills its count in one sitting (ADR-0054)', () => {
    * meets their targets. All three are simplifications, and each one hides a way
    * a promised count could come back short:
    *
-   *  - **a stop with no task still draws** (ADR-0048 rule 5), and that draw is
-   *    still paced by `dailyNewLimit` (ADR-0054 exempts only a promised count).
-   *    So the stops between the task's steps spend the day's budget, and the
-   *    budget they leave is what the next promised count meets;
+   *  - **a stop with no task still draws** (ADR-0048 rule 5), and what it asks
+   *    still spends the day's new questions, so the budget the stops between a
+   *    task's steps leave behind is what the next promised count meets. That
+   *    draw is no longer *paced* by the budget — ADR-0062 exempts every draw a
+   *    level makes, not only a promised count — but it is still counted, which
+   *    is the half of it this walk depends on;
    *  - **what a landmark just told is asked first** (ADR-0036 rule 4). A
    *    preference is resolved over the whole bank and then narrowed to the
    *    step's pool, so a pool with no slack — seven steps ship one — is drawn

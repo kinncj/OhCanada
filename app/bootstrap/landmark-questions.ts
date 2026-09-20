@@ -95,7 +95,26 @@ export function landmarkDraw(input: LandmarkDrawInput): LandmarkDraw {
   if (answering === undefined) {
     return {
       count: 1,
-      scope: { subject, teaches, onlyWhatItTells: true, answeredHere },
+      scope: {
+        subject,
+        teaches,
+        onlyWhatItTells: true,
+        answeredHere,
+        /* ADR-0062: a landmark stop is never paced by the day's new-question
+           budget either. The player walked up to a place and it has something to
+           tell them about; how much they have already played today is not a
+           reason for it to say nothing.
+
+           Today this changes no draw, and that is the point of writing it down.
+           `onlyWhatItTells` sends this draw through `scheduleReview`'s
+           preferOnly branch, which answers from what the stop told and returns
+           before `selectQuestions` is reached, so the budget is never consulted.
+           The exemption is therefore inherited from ADR-0048's routing rather
+           than stated — and the day ADR-0048 lets a stop ask anything wider than
+           its own sentence, the draw lands back on the scheduler and the cap
+           silently binds it again. Stating it here makes the rule the rule. */
+        dailyNewLimitApplies: false,
+      },
       counter: null,
     };
   }
