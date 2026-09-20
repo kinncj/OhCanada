@@ -309,9 +309,9 @@
           "quote": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-20T12:47:05Z",
+          "checkedAt": "2026-09-20T15:12:53Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
         }
