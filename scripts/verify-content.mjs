@@ -273,7 +273,7 @@ Usage: node scripts/verify-content.mjs [options]
                     reporting which checks it disables
   --collections <a,b>
                     the collections under content/ that MUST yield a factual
-                    claim. Default questions,quests,levels. This is an
+                    claim. Default questions,quests,levels,lessons. This is an
                     anti-vacuum floor and NOT the scope: every claim under
                     content/ is checked wherever it lives.
   --no-history      skip the git separation-of-duties gate
@@ -2217,9 +2217,9 @@ if (tally.questions === 0) {
  * reintroduced one level up: gate B did not fail over `content/quests/`, it
  * simply never looked there.
  *
- * So the three collections that carry claims today are named ONCE, in
+ * So the four collections that carry claims today are named ONCE, in
  * scripts/lib/claims.mjs, and each must yield at least one FACTUAL claim. The
- * list is a floor and not a scope: a fourth collection is walked and checked
+ * list is a floor and not a scope: a fifth collection is walked and checked
  * without appearing here, and the per-collection line printed below is what
  * makes it visible. `--collections` restates the floor for a tree that
  * legitimately has fewer — the fixture trees in

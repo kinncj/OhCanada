@@ -18,12 +18,20 @@
  *
  * ADR-0019 names the pattern: a rule drawn round a container measures the
  * container. `content/questions/` is a container; a claim is not. So the scope
- * here is the SHAPE OF A CLAIM, and the three collections that carry claims
+ * here is the SHAPE OF A CLAIM, and the four collections that carry claims
  * today appear in exactly one place — `CLAIM_COLLECTIONS`, which is an
  * anti-vacuum FLOOR (ADR-0024) and not the scope of the walk. A new collection
  * is checked the day it is written; what it does not get automatically is a
  * floor, and the summary prints where the claims were found so an unlisted
  * collection is visible rather than silent.
+ *
+ * `content/lessons/` is the worked example of that last sentence, in both
+ * directions. Its 302 passages were checked by shape from the day they were
+ * written — contiguity, verbatim, evidence, banned terms, and gate A's history
+ * rules, none of which needed a line of code to reach them — and they went
+ * un-FLOORED for the same period, which the summary said out loud on every run.
+ * A collection is checked by shape and floored by name, and the two are separate
+ * events.
  *
  * THE TWO SHAPES, AND WHY THEY ARE NORMALISED HERE AND NOWHERE ELSE
  *
@@ -89,10 +97,23 @@ import { answerText } from './staleness.mjs';
  * ADR-0024: an empty collection must not reduce to a pass. The walk finds claims
  * wherever they are; this list is what makes "found none" a failure instead of a
  * green run over a directory somebody moved. It is deliberately NOT the scope —
- * a fourth collection of claims is checked without being named here, and the
+ * a further collection of claims is checked without being named here, and the
  * per-collection counts in the summary are what make it visible.
+ *
+ * `lessons` JOINED THIS LIST LATE, AND THE GAP IT CLOSES IS THE FLOOR AND NOT THE
+ * WALK. `content/lessons/**` shipped 48 documents and 302 granted passages while
+ * this list named three collections, and every one of those passages WAS being
+ * checked the whole time: gate B finds a claim by shape anywhere under content/,
+ * and `make validate-content` validates any document that declares a `$schema`.
+ * What was missing is the thing this list is: had the lessons stopped yielding
+ * claims — renamed away, emptied, or their `fact` blocks quietly stopped being
+ * recognised — the run would have gone green over the silence, and the only
+ * visible trace would have been a per-collection line no longer printed. That is
+ * the state ADR-0024 exists to refuse, and it is the state the summary was
+ * announcing on every run with "(not named in --collections, so an empty run of
+ * it would not fail)". ADR-0061 §9.
  */
-export const CLAIM_COLLECTIONS = ['questions', 'quests', 'levels'];
+export const CLAIM_COLLECTIONS = ['questions', 'quests', 'levels', 'lessons'];
 
 /**
  * ROOT FIELDS A CLAIM BINDS TO FROM OUTSIDE ITS OWN UNIT, and the reason each
