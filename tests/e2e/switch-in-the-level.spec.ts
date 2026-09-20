@@ -230,10 +230,27 @@ test.describe('one switch, in the level (TN-HUD-06)', () => {
 
     await tapSwitch(page, LONG_MS);
 
-    /* Whichever the first thing in this level is — a person speaks, a place
-       shows its card — engaging it opens a sheet, and that sheet is scanned. */
-    const sheet = page.locator('[data-testid="dialogue"], [data-testid="poi-card"]');
-    await expect(sheet.first()).toBeVisible();
+    /*
+     * The sheet that **opened** — not the first element that matches.
+     *
+     * This assertion was wrong, and it failed twice in CI while the product was
+     * right both times. `poi-card` is built **hidden** when the level opens and
+     * `dialogue` is built when somebody first speaks, so both match a comma
+     * selector and `.first()` is a claim about *DOM order*, not about the game:
+     * it resolved to the hidden card and failed while the guide's dialogue was
+     * on screen. Traced on the built page — after the long press the matches are
+     * `#0 poi-card hidden=true`, `#1 dialogue hidden=false`, `.first()` is the
+     * card, and the `:visible` set is exactly the dialogue.
+     *
+     * So: whichever the first thing in this level is — a person speaks, a place
+     * shows its card — engaging it opens exactly **one** sheet, and that sheet
+     * is scanned. Both halves are about the player's screen, and neither can be
+     * satisfied by an element nobody can see.
+     */
+    const sheet = page.locator(
+      '[data-testid="dialogue"]:visible, [data-testid="poi-card"]:visible',
+    );
+    await expect(sheet).toHaveCount(1);
     await expect.poll(() => page.locator('[data-switch-highlight="true"]').count()).toBe(1);
   });
 });
