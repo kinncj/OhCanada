@@ -198,9 +198,15 @@ A single agent doing both would be marking its own homework, and the status woul
 Status is granted against a `sourceHash`. If canada.ca changes, the hash changes, the status no longer
 matches, and the question falls out of the build — automatically, without anyone noticing the edit.
 
-The verifier writes five fields and only five (ADR-0003, mirrored by `FactVerification` in
+The verifier writes five fields on every claim (ADR-0003, mirrored by `FactVerification` in
 `app/application/ports/content-repository.ts`): `status`, `model`, `checkedAt`, `sourceHash` and
-`evidence`. `evidence` is the passage from the cited section quoted exactly, and it is the field that makes
+`evidence`. A sixth, `distractorsNotEntailed`, exists on exactly one shape of claim and is absent
+everywhere else — ADR-0064: where a question's `source.quote` states a threshold and two or more of its
+options are stated in comparable terms, a distractor can be *stricter than the answer and therefore also
+true*, and the verifier records that ADR-0003's check 3 was made against that threshold in both languages.
+It is `true` or absent, never `false`, and it is forbidden on an unverified block so that the author — who
+may legitimately write that block — cannot pre-satisfy a judgement addressed to the verifier.
+`evidence` is the passage from the cited section quoted exactly, and it is the field that makes
 ADR-0003's "the bank is auditable" consequence true — a `verified` status with no quoted passage is an
 assertion, not an audit trail. An earlier draft of the port dropped it; nothing may drop it again, and since
 slice 1 nothing can: `common.schema.json#/$defs/factVerification` carries a conditional requiring a non-empty

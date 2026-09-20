@@ -256,6 +256,88 @@ const VERBATIM_RUN_WORDS = 14;
  */
 const EVIDENCE_RUN_WORDS = 5;
 
+/* -------------------------------------------------------------------------- */
+/* ADR-0064 — where a TRUE distractor can live                                 */
+/* -------------------------------------------------------------------------- */
+/*
+ * THE DEFECT IS ENTAILMENT BETWEEN TWO OPTIONS, AND NO REGEX DECIDES IT. Four
+ * questions shipped with a distractor that is defensibly TRUE:
+ *
+ *   gov-51  answer "at least half the seats"   distractor "two thirds"
+ *   sym-32  answer "aged 55 or over" exempted  distractor "aged 65 or over"
+ *   gov-39  answer "the most votes"            distractor "more than half the votes"
+ *   elec-14 answer "fewer than half the seats" distractor "fewer than a third" (repaired)
+ *
+ * In every one the distractor's condition ENTAILS the answer's: two thirds is at
+ * least half, 65 is over 55, more than half of a district's votes is the most of
+ * them. The prompt asks for a CONDITION, so any value satisfying it yields a
+ * true option and a stricter value is defensible.
+ *
+ * The direction is what makes one safe and one fatal, and it is worth stating
+ * because the surface shape is identical. LOOSENING a threshold is safely false
+ * — gov-40 answers "at least 18" and offers "16 or older", which is false
+ * because 16- and 17-year-olds may not vote. TIGHTENING it is dangerously true.
+ * gov-38 tightens to 21 and survives on one word: "ONLY Canadian citizens aged
+ * 21 or older" asserts a false universal, where "any" would have been true.
+ *
+ * So arithmetic cannot settle this, and gov-39 is the proof: "the most votes"
+ * carries no parsable quantity, and a strict numeric screen missed it. What the
+ * two patterns below do is NARROW, not decide — they find the questions where
+ * the defect can live so a person is asked to look. The verdict is a human's,
+ * recorded in `verification.distractorsNotEntailed`.
+ *
+ * Measured on this corpus (498 questions): the quote pattern alone fires 68
+ * times, the option pattern alone 13, and their CONJUNCTION 12 — catching all
+ * four cases above and none of the 486 others. Three of the twelve are live
+ * defects, one is repaired, one is gov-38's near miss and seven are clean.
+ *
+ * ENGLISH DRIVES THE TRIGGER because `source.quote` is a plain string, not a
+ * localizedText: the cached extraction is the English document and there is no
+ * French quote to match. Measured: 8 of the 12 fire on the French options too,
+ * 4 fire only on English — all four of those are harmless point-counts — and
+ * ZERO fire on French that English misses. The obligation the trigger raises
+ * covers BOTH languages; only its aim is English.
+ */
+const THRESHOLD_QUOTE =
+  /\b(at least|less than|fewer than|more than|no more than|no fewer than|over|under|or over|or older|or more|or less|up to|minimum|maximum|half|third|thirds|quarter|quarters|majority|most|all but)\b/iu;
+const COMPARABLE_OPTION =
+  /\b(at least|less than|fewer than|more than|over|under|or over|or older|or more|or less|half|third|thirds|quarter|quarters|most|majority)\b/iu;
+const COMPARABLE_OPTIONS_NEEDED = 2;
+
+/**
+ * A quantity an option states, as a lower bound or a bare point value, or null
+ * when nothing is parsable. Deliberately small: it exists to make the REPORT
+ * concrete, never to decide anything, and it returns null far more often than
+ * it returns a number. gov-39's "the most votes" is the case it cannot read,
+ * and that case is printed rather than passed over.
+ */
+const FRACTIONS = new Map([
+  ['half', 0.5],
+  ['a third', 1 / 3],
+  ['one third', 1 / 3],
+  ['two thirds', 2 / 3],
+  ['a quarter', 0.25],
+  ['three quarters', 0.75],
+]);
+const quantityOf = (text) => {
+  const lower = text.toLowerCase();
+  let magnitude = null;
+  for (const [word, value] of FRACTIONS) {
+    if (lower.includes(word)) {
+      magnitude = value;
+      break;
+    }
+  }
+  if (magnitude === null) {
+    const digits = /\b(\d[\d,]*)\b/u.exec(lower);
+    if (digits !== null) magnitude = Number(digits[1].replaceAll(',', ''));
+  }
+  if (magnitude === null) return null;
+  const atLeast = /\b(at least|more than|over|or over|or older|or more)\b/u.test(lower);
+  const atMost = /\b(less than|fewer than|under|or less|no more than|up to)\b/u.test(lower);
+  return { magnitude, atLeast, atMost };
+};
+
 const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 
 /* -------------------------------------------------------------------------- */
@@ -295,6 +377,11 @@ Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
         where the claim is a question; non-empty evidence when verified;
         source.quote contiguous in the extraction; wording not lifted from the
         source.
+        ADR-0064, REPORTING ONLY: where a question's source states a threshold
+        and two or more options are stated in comparable terms, a distractor can
+        be stricter than the answer and therefore also TRUE. Those questions are
+        counted and named, with whether the verifier recorded
+        distractorsNotEntailed. No arithmetic here decides anything.
 Gate C  ADR-0016 §2's re-check table and §3's banned terms
         which 180-day clock binds — the question's source.asOf or the register's
         liveChecks[].checkedAt — depends on what the register establishes about
@@ -1076,6 +1163,11 @@ const tally = {
   namesChecked: 0,
   namesUnchecked: 0,
   nameFaults: 0,
+  thresholdQuestions: 0,
+  thresholdRecorded: 0,
+  thresholdUnrecorded: [],
+  thresholdTightened: [],
+  thresholdUnparsable: 0,
 };
 
 const claims = [];
@@ -1315,6 +1407,48 @@ for (const claim of claims) {
           );
         }
       }
+    }
+
+    /* --- B10: a threshold question records check 3 was made (ADR-0064) ---- */
+    //
+    // REPORTING, NOT BLOCKING, and the staging is deliberate rather than timid.
+    // Twelve questions trigger today and none can carry the record yet: the
+    // field did not exist when they were granted, and only the verifier may
+    // write it. A rule that failed the build on all twelve would be failing it
+    // for the gate's own newness, which teaches exactly the habit ADR-0064
+    // exists to avoid — waving a check through. ADR-0064 carries the dated
+    // obligation to record the twelve and a second to flip this to fail().
+    const quote = str(source?.quote) ?? '';
+    const comparable = options.filter((option) => COMPARABLE_OPTION.test(str(option?.en) ?? ''));
+    if (
+      THRESHOLD_QUOTE.test(quote) &&
+      comparable.length >= COMPARABLE_OPTIONS_NEEDED &&
+      status === 'verified'
+    ) {
+      tally.thresholdQuestions += 1;
+      if (verification.distractorsNotEntailed === true) {
+        tally.thresholdRecorded += 1;
+      } else {
+        tally.thresholdUnrecorded.push(where);
+      }
+
+      // The arithmetic half, printed and never enforced. A distractor whose
+      // lower bound is STRICTER than the answer's describes a subset of the
+      // answer's condition, so it is true whenever the answer is.
+      const answer = quantityOf(str(options[correctIndex]?.en) ?? '');
+      let parsedAny = false;
+      if (answer !== null && answer.atLeast) {
+        for (const [index, option] of options.entries()) {
+          if (index === correctIndex) continue;
+          const other = quantityOf(str(option?.en) ?? '');
+          if (other === null || other.atMost) continue;
+          parsedAny = true;
+          if (other.magnitude > answer.magnitude) {
+            tally.thresholdTightened.push(`${where} options[${String(index)}]`);
+          }
+        }
+      }
+      if (!parsedAny) tally.thresholdUnparsable += 1;
     }
   }
 
@@ -2369,6 +2503,29 @@ console.log(
     `a staleness flag naming ${String(tally.banTermChecks)} term(s) to search for; ` +
     `${String(tally.banFaults)} violation(s)` +
     `${tally.banClaims === 0 ? '. NOTHING WAS SEARCHED: no claim resolved to a flag with a bannedFromAnswers list, so this line is not evidence of anything' : ''}.`,
+);
+// ADR-0064. Printed on every run, including when it is zero, and saying in the
+// line itself what it does NOT establish. The arithmetic here is a reading aid:
+// it finds a distractor stricter than the answer, which is the commonest form of
+// the defect and not the only one. gov-39 shipped with "more than half of the
+// votes" against an answer of "the most votes" and carries no quantity at all —
+// `unparsable` counts exactly that class, so the number this line cannot see is
+// on the line.
+console.log(
+  `verify-content: ADR-0064 threshold questions — ${String(tally.thresholdQuestions)} question(s) ` +
+    `whose source states a threshold and whose options are comparable; ` +
+    `${String(tally.thresholdRecorded)} recorded distractorsNotEntailed, ` +
+    `${String(tally.thresholdUnrecorded.length)} did NOT` +
+    `${
+      tally.thresholdUnrecorded.length > 0
+        ? ` (${tally.thresholdUnrecorded.slice(0, 12).join(', ')}${tally.thresholdUnrecorded.length > 12 ? ', and more' : ''})`
+        : ''
+    }; ${String(tally.thresholdTightened.length)} option(s) state a bound STRICTER than the answer's ` +
+    `and are true whenever it is` +
+    `${tally.thresholdTightened.length > 0 ? ` — ${tally.thresholdTightened.slice(0, 8).join(', ')}` : ''}` +
+    `; ${String(tally.thresholdUnparsable)} carried no parsable quantity, which is gov-39's class and ` +
+    `is why the arithmetic alone is not the check. REPORTING ONLY — this line never fails the build, ` +
+    `and the judgement it asks for is the verifier's (ADR-0064).`,
 );
 console.log(
   `verify-content: text checks ran against a cached extraction for ` +

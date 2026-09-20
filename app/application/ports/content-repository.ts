@@ -129,6 +129,19 @@ export interface FactVerification {
   readonly sourceHash: string;
   /** The passage from the cited section that entails the claim, quoted exactly. */
   readonly evidence: string;
+  /**
+   * ADR-0064. The verifier's record that ADR-0003's check 3 — "confirm each of
+   * the three distractors is not entailed" — was made against the threshold the
+   * source states, in both languages.
+   *
+   * `true` or absent, never `false`: a check that failed is `status:
+   * 'rejected'`, and a check nobody made is silence. OPTIONAL, and it must stay
+   * optional — most claims can never carry it (a blurb has no distractor), and
+   * requiring it would both void every grant in the corpus and stop
+   * `app/adapters/content/question-document.ts` compiling, which reads five
+   * fields and builds this object from them.
+   */
+  readonly distractorsNotEntailed?: true;
 }
 
 /**
