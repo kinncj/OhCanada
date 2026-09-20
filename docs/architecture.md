@@ -593,6 +593,13 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   shippable-passage filter in `app/application`, never in the screen, since only `verified` claims for the
   current `sourceHash` are readable and a lesson that loses a passage to quarantine renders without it,
   silently; and the screen in `app/ui`, DOM only. `app/domain` gets nothing: a lesson is data, not behaviour.
+  **There are now two readers of that one catalogue, and it is deliberately one catalogue (ADR-0063).** Learn
+  reads a chapter end to end; a `read` quest step reads a handful of passages named by
+  `questStep.passages[]`, on the path, while the level is being played. Both resolve a
+  `{ lesson, passage }` pair against the same `import.meta.glob` catalogue and both apply the same
+  application-side shippable-passage filter, so a passage quarantined by ADR-0016's clock disappears from
+  the level and from Learn in one change. The second reader is what makes `lessons(chapter)` worth writing:
+  until ADR-0063 the capability had no caller at all, which is why ADR-0008 kept it unwritten.
 - **Device tiers.** Which tier gets Rive and which gets the sprite atlas is a bootstrap policy; the
   detection rule is not written yet, and no port needs to know it.
 - **Save migration.** `SaveCodec` declares `version` and `minSupportedVersion`. The first migration is

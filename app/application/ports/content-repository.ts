@@ -722,6 +722,27 @@ export interface DialogueLine {
 }
 
 /**
+ * One passage of one lesson, addressed rather than copied (ADR-0063).
+ *
+ * Both halves are required because a passage id is unique only **within its
+ * lesson** — `lesson.schema.json` says so explicitly, because `uniqueItems`
+ * compares whole items and cannot express it. All 302 authored passage ids are
+ * distinct corpus-wide today, which is luck rather than a guarantee, and a
+ * reference resting on it would break silently the first time two chapters both
+ * named a passage. `lesson` is the sibling discriminator that
+ * `common.schema.json#/$defs/id` requires of an unbranded id; the cross-document
+ * gate that resolves the pair, and fails on zero matches and on two, is owed.
+ *
+ * Unbranded on both halves: there is no `LessonId` in `app/domain/ids.ts` and
+ * this does not invent one, because a brand is earned by a vocabulary the domain
+ * reasons about, and `app/domain` is given nothing by a lesson (ADR-0061 §8).
+ */
+export interface LessonPassageReference {
+  readonly lesson: string;
+  readonly passage: string;
+}
+
+/**
  * One objective.
  *
  * `targetId` is deliberately an unbranded string: what it names depends on
@@ -729,7 +750,7 @@ export interface DialogueLine {
  */
 export interface QuestStepDocument {
   readonly id: string;
-  readonly kind: 'talk' | 'visit' | 'collect' | 'answer';
+  readonly kind: 'talk' | 'visit' | 'collect' | 'answer' | 'read';
   readonly targetId: string;
   readonly prompt: LocalizedText;
   /**
@@ -746,6 +767,18 @@ export interface QuestStepDocument {
   readonly questionPool?: readonly QuestionId[];
   /** Lines spoken when the step starts. Present on `talk` steps, absent elsewhere. */
   readonly dialogue?: readonly DialogueLine[];
+  /**
+   * What a `read` step puts in front of the player, in reading order. Required
+   * on `read`, absent on every other kind, and never carried beside `dialogue`:
+   * the passage is the voice, and a line next to it is a second narrator for one
+   * proposition (ADR-0063 §3).
+   *
+   * References, not text. The passage keeps its single grant where it was
+   * authored; copying its sentence into a dialogue line would author a second
+   * claim about one proposition and leave the passage itself reachable by
+   * nothing.
+   */
+  readonly passages?: readonly LessonPassageReference[];
 }
 
 export interface QuestDocument {

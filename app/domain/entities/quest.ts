@@ -30,7 +30,21 @@ import type {
 
 import type { LocalizedText } from '@domain/entities/values';
 
-export type QuestStepKind = 'talk' | 'visit' | 'collect' | 'answer';
+/**
+ * The kinds of objective a quest can set.
+ *
+ * `read` was added by ADR-0063: a step that shows the player passages of
+ * `content/lessons/**` by reference, rather than carrying words of its own.
+ *
+ * This union is stated **three** times in the tree — here, on
+ * `QuestStepDocument` in `app/application/ports/content-repository.ts`, and as a
+ * runtime list in `app/bootstrap/quests.ts` — and only the middle one is held by
+ * a gate (`ports-match-schemas.test.ts` compares it against the schema's `enum`
+ * in both directions). The duplication is load-bearing rather than cosmetic: a
+ * kind added to the port alone fails `make typecheck` here. Ending it is owed
+ * by ADR-0063's engine obligation.
+ */
+export type QuestStepKind = 'talk' | 'visit' | 'collect' | 'answer' | 'read';
 
 /**
  * One objective.

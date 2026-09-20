@@ -47,6 +47,7 @@ export type {
   LevelCharacter,
   LessonDocument,
   LessonPassage,
+  LessonPassageReference,
   LevelDocument,
   LevelSummary,
   LocaleBundle,

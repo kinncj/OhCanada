@@ -64,7 +64,7 @@
   "$defs": {
     "questStep": {
       "title": "Quest step document",
-      "description": "One objective. `targetId` is deliberately an unbranded id: what it names depends on `kind` (a character OR A POINT OF INTEREST for talk, a POI for visit or collect, a question pool for answer), and a union of brands is not a shape a schema can state. `talk` gained the POI case with ADR-0029: on a level that may draw no figure, the thing the player taps to be told something is a plaque, and this field was already the right shape for that - `giver` was not, and that is what ADR-0029 fixed.",
+      "description": "One objective. `targetId` is deliberately an unbranded id: what it names depends on `kind` (a character OR A POINT OF INTEREST for talk, a POI for visit or collect, a question pool for answer, and the engageable the player taps to open the reader for read), and a union of brands is not a shape a schema can state. `talk` gained the POI case with ADR-0029: on a level that may draw no figure, the thing the player taps to be told something is a plaque, and this field was already the right shape for that - `giver` was not, and that is what ADR-0029 fixed. `read` was added by ADR-0063 and is the one kind whose content lives in another document: it names passages of `content/lessons/**` instead of carrying words of its own. ADR-0057 rejected a fifth kind when the candidate was `teach`, and it was right to - `visit` and `talk` with `dialogue` already are that step - but it named the condition under which a fifth kind is legitimate: a behaviour `visit` cannot express, additive, with a measurement behind it. Reading a paragraph the quest does not own is that behaviour, and the measurement is in ADR-0063.",
       "type": "object",
       "properties": {
         "id": {
@@ -76,7 +76,8 @@
             "talk",
             "visit",
             "collect",
-            "answer"
+            "answer",
+            "read"
           ]
         },
         "targetId": {
@@ -111,6 +112,15 @@
             "$ref": "#/$defs/dialogueLine"
           },
           "minItems": 1
+        },
+        "passages": {
+          "description": "Which lesson passages a `read` step puts in front of the player, in reading order. Required on `read` and forbidden on every other kind. THESE ARE REFERENCES, NOT TEXT, AND THAT IS THE WHOLE OF ADR-0063: a passage already exists in `content/lessons/<chapter>/<id>.json`, already carries one proposition, one contiguous quote and one verifier's grant, and naming it here spends none of those again. Copying its sentence into a `dialogue` line instead would author a SECOND claim about one proposition - a fresh paraphrase, a fresh translation and a fresh grant in a separate commit (ADR-0003) - and would leave the passage itself still reachable by nothing, which is the measured defect this step exists to fix. A step MAY NOT carry both `passages` and `dialogue`: the passage is the voice, and a line beside it is a second narrator for one paragraph. Ordering is the array's, so a level reads a chapter's argument in the order its author wrote it.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lessonPassageRef"
+          },
+          "minItems": 1,
+          "uniqueItems": true
         }
       },
       "required": [
@@ -121,6 +131,46 @@
       ],
       "additionalProperties": false,
       "allOf": [
+        {
+          "$comment": "`passages` belongs to a `read` step and to nothing else, and a `read` step is nothing without it - a step that opens a reader over an empty list is ADR-0024's empty collection reducing to a pass, drawn as a blank sheet the player taps past. The `else` branch also forbids `dialogue` on a `read` step: ADR-0063 §3 gives the passage the voice, and a spoken line beside a read paragraph is two narrators for one proposition. Only property names this object already declares appear here (ADR-0007).",
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "read"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "passages"
+            ],
+            "$comment": "`passages` is restated as an empty schema ONLY to satisfy ajv's strictRequired lint, which asks that a property named in `required` be declared in the same subschema. It imposes nothing: the real type is on questStep's own `properties` above and still applies, because a conditional subschema is evaluated against the same instance. This is the same accommodation the `answer` branch below makes for `subject` and `count`, and it is made the same way for the same reason.",
+            "properties": {
+              "passages": {}
+            },
+            "not": {
+              "required": [
+                "dialogue"
+              ],
+              "properties": {
+                "dialogue": {}
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "passages"
+              ],
+              "properties": {
+                "passages": {}
+              }
+            }
+          }
+        },
         {
           "$comment": "The draw specification belongs to `answer` steps and to nothing else, so a `talk` step cannot carry a stray subject or count that nothing reads. Only property names this object already declares appear here (ADR-0007).",
           "if": {
@@ -202,6 +252,26 @@
         "speaker",
         "text",
         "fact"
+      ],
+      "additionalProperties": false
+    },
+    "lessonPassageRef": {
+      "title": "Lesson passage reference",
+      "description": "One passage of one lesson, addressed rather than copied (ADR-0063). BOTH HALVES ARE REQUIRED BECAUSE A PASSAGE ID IS NOT UNIQUE ON ITS OWN, and that is a contract rather than an observation: `lesson.schema.json` requires a passage's `id` to be unique WITHIN ITS LESSON and says so explicitly, because `uniqueItems` compares whole items and cannot express it. Measured on the tree this was written against, all 302 authored passage ids happen to be distinct corpus-wide - which is luck, not a guarantee, and a reference that relied on it would break silently the first time two chapters both named a passage `e1-the-vote`. `common.schema.json#/$defs/id` states the rule this obeys: an unbranded id must be resolved by a sibling discriminator on the same object, or by a cross-document gate that names the collections it searched and fails on zero matches and on two. `lesson` is that sibling discriminator, and the gate is still owed (ADR-0063's infra obligation) because a schema sees one file and cannot know whether the lesson it names exists.",
+      "type": "object",
+      "properties": {
+        "lesson": {
+          "description": "The `id` of the lesson document holding the passage - `content/lessons/<chapter>/<id>.json`'s own `id`, not its filename and not its chapter. Unbranded: there is no `LessonId` in `app/domain/ids.ts`, and this schema does not invent one, because a brand is earned by a vocabulary the domain reasons about and a lesson is data the domain never sees (ADR-0061 §8 gives `app/domain` nothing).",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        },
+        "passage": {
+          "description": "The `id` of the passage inside that lesson. A RENAME IS A NEW IDENTITY, exactly as it is for the grant: `lesson.schema.json` records that changing a passage's id removes one claim and adds another, so a reference that still names the old id points at nothing and must fail the cross-document gate rather than fall back to position.",
+          "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/id"
+        }
+      },
+      "required": [
+        "lesson",
+        "passage"
       ],
       "additionalProperties": false
     }
