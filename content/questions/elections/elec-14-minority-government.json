@@ -20,8 +20,8 @@
       "fr": "Quand le parti au pouvoir n'a aucun siège au Sénat, dont les membres siègent jusqu'à 75 ans."
     },
     {
-      "en": "When the party in power holds fewer than a third of the seats in the House of Commons.",
-      "fr": "Quand le parti au pouvoir détient moins du tiers des sièges à la Chambre des communes."
+      "en": "When the party in power holds at least half the seats in the House of Commons.",
+      "fr": "Quand le parti au pouvoir détient au moins la moitié des sièges à la Chambre des communes."
     }
   ],
   "correctIndex": 0,
