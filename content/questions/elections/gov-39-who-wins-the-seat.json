@@ -26,8 +26,8 @@
   ],
   "correctIndex": 2,
   "explanation": {
-    "en": "Voters mark one ballot, for a candidate and a party in their own district. The candidate ahead of the others wins the seat, even without half the votes. No ballot anywhere names a Prime Minister.",
-    "fr": "Les électeurs remplissent un seul bulletin, pour un candidat et un parti dans leur propre circonscription. Le candidat qui devance les autres remporte le siège, même sans obtenir la moitié des voix. Aucun bulletin ne porte le nom d'un premier ministre."
+    "en": "Voters mark one ballot, for a candidate and a party in their own district. The candidate ahead of the others wins the seat, even without half the votes. No ballot asks you to choose a Prime Minister; that office goes to the leader of the party that holds the confidence of the House of Commons.",
+    "fr": "Les électeurs remplissent un seul bulletin, pour un candidat et un parti dans leur propre circonscription. Le candidat qui devance les autres remporte le siège, même sans obtenir la moitié des voix. Aucun bulletin ne vous demande de choisir un premier ministre; cette fonction revient au chef du parti qui a la confiance de la Chambre des communes."
   },
   "source": {
     "sourceId": "discover-canada",
