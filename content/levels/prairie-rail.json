@@ -213,20 +213,20 @@
         "fr": "Silos à grains"
       },
       "blurb": {
-        "en": "Farms across Saskatchewan grow grain and oilseed crops. No other province in Canada produces more.",
-        "fr": "Les fermes de la Saskatchewan cultivent des céréales et des oléagineux. Aucune autre province du Canada n'en produit davantage."
+        "en": "In 1951, for the first time, most Canadians could afford enough food, a home and clothing. Before that year, many could not.",
+        "fr": "En 1951, pour la première fois, la majorité des Canadiens pouvaient se payer assez de nourriture, un logement et des vêtements. Avant cette année-là, beaucoup n'y arrivaient pas."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 100,
+          "chapter": "Modern Canada",
+          "page": 45,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "is the country's largest producer of grains and oilseeds"
+          "volatile": false,
+          "quote": "In 1951, for the first time, a majority of Canadians were able to afford adequate food, shelter and clothing."
         },
         "verification": {
           "status": "verified",
@@ -288,20 +288,20 @@
         "fr": "Une moissonneuse-batteuse"
       },
       "blurb": {
-        "en": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces. They hold some of the most fertile farmland in the world.",
-        "fr": "Le Manitoba, la Saskatchewan et l'Alberta sont les provinces des Prairies. On y trouve certaines des terres agricoles les plus fertiles du monde."
+        "en": "Oil was found in Alberta in 1947. That discovery started Canada's modern energy industry.",
+        "fr": "Du pétrole a été découvert en Alberta en 1947. Cette découverte a lancé l'industrie énergétique moderne du Canada."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 100,
+          "chapter": "Modern Canada",
+          "page": 45,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
+          "quote": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
         },
         "verification": {
           "status": "verified",
@@ -325,20 +325,20 @@
         "fr": "Un wagon porte-conteneurs"
       },
       "blurb": {
-        "en": "Canada has always been a trading nation. Buying and selling with other countries is still the engine of the country's growth.",
-        "fr": "Le Canada a toujours été un pays commerçant. Le commerce avec d'autres pays demeure le moteur de la croissance du pays."
+        "en": "Trains run to a timetable. Sir Sandford Fleming worked out the system of standard time zones that the whole world still uses.",
+        "fr": "Les trains circulent selon un horaire. Sir Sandford Fleming a mis au point le système de fuseaux horaires standards que le monde entier utilise encore."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Economy",
-          "page": 90,
+          "chapter": "Modern Canada",
+          "page": 51,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Canada has always been a trading nation and commerce remains the engine of economic growth."
+          "quote": "Sir Sandford Fleming — invented the worldwide system of standard time zones."
         },
         "verification": {
           "status": "verified",

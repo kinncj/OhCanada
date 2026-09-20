@@ -188,20 +188,20 @@
         "fr": "La côte de granit"
       },
       "blurb": {
-        "en": "Three oceans touch Canada: the Pacific in the west, the Atlantic in the east, and the Arctic in the north. This bare rock is the Atlantic edge.",
-        "fr": "Trois océans bordent le Canada : le Pacifique à l'ouest, l'Atlantique à l'est et l'Arctique au nord. Cette roche nue, c'est la bordure de l'Atlantique."
+        "en": "The first French settlers reached these Maritime shores in 1604. The people descended from them are the Acadians.",
+        "fr": "Les premiers colons français sont arrivés sur les côtes des Maritimes en 1604. Leurs descendants sont les Acadiens."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 93,
+          "chapter": "Who We Are",
+          "page": 19,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Three oceans line Canada's frontiers: the Pacific Ocean in the west, the Atlantic Ocean in the east, and the Arctic Ocean to the north."
+          "quote": "The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604."
         },
         "verification": {
           "status": "verified",
@@ -263,20 +263,20 @@
         "fr": "Un hangar de pêche"
       },
       "blurb": {
-        "en": "Much of Atlantic Canada's history comes from its coastline and its natural resources. Fishing, farming, forestry and mining built these provinces and gave them a big place in the country's story.",
-        "fr": "Une grande partie de l'histoire du Canada atlantique vient de son littoral et de ses ressources naturelles. La pêche, l'agriculture, la foresterie et l'exploitation minière ont bâti ces provinces et leur ont donné une grande place dans l'histoire du pays."
+        "en": "In the last two hundred years, millions of newcomers have helped to build this country and to defend the way of life here. People who came from somewhere else are part of what made Canada.",
+        "fr": "Depuis deux cents ans, des millions de nouveaux arrivants ont aidé à bâtir ce pays et à défendre le mode de vie qu'on y trouve. Les personnes venues d'ailleurs font partie de ce qui a fait le Canada."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 96,
+          "chapter": "Who We Are",
+          "page": 21,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Atlantic Canada's coasts and natural resources, including fishing, farming, forestry and mining, have made these provinces an important part of Canada's history and development."
+          "quote": "over the past 200 years, millions of newcomers have helped to build and defend our way of life."
         },
         "verification": {
           "status": "verified",
@@ -300,20 +300,20 @@
         "fr": "Une maison du village"
       },
       "blurb": {
-        "en": "Most Canadians live in cities. Canadians also live in small towns, in the countryside, and everywhere in between.",
-        "fr": "La plupart des Canadiens vivent dans des villes. Des Canadiens vivent aussi dans de petites localités, à la campagne, et partout entre les deux."
+        "en": "Behind a door like this one, you might hear many different languages. Languages other than English and French are widely spoken in Canadian homes.",
+        "fr": "Derrière une porte comme celle-ci, on peut entendre bien des langues. Les langues autres que l'anglais et le français se parlent couramment dans les foyers canadiens."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 94,
+          "chapter": "Who We Are",
+          "page": 21,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "While the majority live in cities, Canadians also live in small towns, rural areas and everywhere in between."
+          "quote": "Non-official languages are widely spoken in Canadian homes."
         },
         "verification": {
           "status": "verified",

@@ -218,20 +218,20 @@
         "fr": "La marina"
       },
       "blurb": {
-        "en": "British Columbia is known for its mountains and as Canada's gateway to the Pacific.",
-        "fr": "La Colombie-Britannique est reconnue pour ses montagnes et comme la porte du Canada sur le Pacifique."
+        "en": "Flags fly over the boats here. Canada's official Royal Flag is the Union Jack.",
+        "fr": "Des drapeaux flottent au-dessus des bateaux. Le drapeau royal officiel du Canada est l'Union Jack."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 102,
+          "chapter": "Canadian Symbols",
+          "page": 79,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "British Columbia is known for its majestic mountains and as Canada's Pacific gateway."
+          "quote": "The Union Jack is our official Royal Flag."
         },
         "verification": {
           "status": "verified",
@@ -293,20 +293,20 @@
         "fr": "Un navire de charge"
       },
       "blurb": {
-        "en": "No port in Canada is bigger or busier than the Port of Vancouver. Goods worth billions of dollars pass through it on their way to markets around the world.",
-        "fr": "Aucun port canadien n'est plus grand ni plus achalandé que le port de Vancouver. Des marchandises valant des milliards de dollars y transitent vers des marchés du monde entier."
+        "en": "After the First World War, out of national pride, Canada took an official coat of arms and a national motto: A Mari Usque Ad Mare. The Latin means from sea to sea.",
+        "fr": "Après la Première Guerre mondiale, par fierté nationale, le Canada s'est donné des armoiries officielles et une devise nationale : A Mari Usque Ad Mare. En latin, cela veut dire « d'un océan à l'autre »."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 102,
+          "chapter": "Canadian Symbols",
+          "page": 80,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "The Port of Vancouver, Canada's largest and busiest, handles billions of dollars in goods traded around the world."
+          "volatile": false,
+          "quote": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
         },
         "verification": {
           "status": "verified",

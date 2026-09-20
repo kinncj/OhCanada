@@ -272,20 +272,20 @@
         "fr": "Les \u00e9cluses du canal"
       },
       "blurb": {
-        "en": "Ottawa sits on the Ottawa River. Queen Victoria chose it as Canada's capital in 1857.",
-        "fr": "Ottawa se trouve sur la rivi\u00e8re des Outaouais. La reine Victoria en a fait la capitale du Canada en 1857."
+        "en": "Take a moment at the locks. Discover Canada says the Sovereign is a symbol of Canada's sovereignty, a guardian of the freedoms set out in the Constitution, and a reflection of our history.",
+        "fr": "Prenez un moment aux \u00e9cluses. D\u00e9couvrir le Canada dit que le souverain ou la souveraine est un symbole de la souverainet\u00e9 du Canada, un gardien des libert\u00e9s pr\u00e9vues par la Constitution et un reflet de notre histoire."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 94,
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": false,
-          "quote": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857 by Queen Victoria"
+          "volatile": true,
+          "quote": "Her Majesty is a symbol of Canadian sovereignty, a guardian of constitutional freedoms, and a reflection of our history."
         },
         "verification": {
           "status": "verified",
@@ -309,20 +309,20 @@
         "fr": "La Biblioth\u00e8que du Parlement"
       },
       "blurb": {
-        "en": "Fire destroyed the Centre Block in 1916, and it was rebuilt by 1922. The Library is the only part of the first building still standing.",
-        "fr": "Un incendie a d\u00e9truit l'\u00e9difice du Centre en 1916, et il a \u00e9t\u00e9 reconstruit en 1922. La Biblioth\u00e8que est la seule partie du premier \u00e9difice encore debout."
+        "en": "Here is how a bill starts on its way to becoming a law. First it is read and printed. At second reading, members debate the main idea behind the bill. Then a committee studies it clause by clause.",
+        "fr": "Voici comment un projet de loi commence son parcours vers l'adoption. Il est d'abord lu et imprim\u00e9. \u00c0 la deuxi\u00e8me lecture, les d\u00e9put\u00e9s d\u00e9battent de l'id\u00e9e principale du projet de loi. Ensuite, un comit\u00e9 l'\u00e9tudie article par article."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canadian Symbols",
-          "page": 80,
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922. The Library is the only part of the original building remaining."
+          "quote": "First Reading \u2013 The bill is considered read for the first STEP 1 time and is printed. STEP 2 Second Reading \u2013 Members debate the bill\u2019s principle. Committee Stage \u2013 Committee members study the bill STEP 3 clause by clause."
         },
         "verification": {
           "status": "verified",
@@ -346,20 +346,20 @@
         "fr": "La Colline du Parlement"
       },
       "blurb": {
-        "en": "The Parliament Buildings were finished in the 1860s. The Peace Tower was added in 1927, to remember the First World War.",
-        "fr": "Les \u00e9difices du Parlement ont \u00e9t\u00e9 achev\u00e9s dans les ann\u00e9es 1860. La tour de la Paix a \u00e9t\u00e9 ajout\u00e9e en 1927, en m\u00e9moire de la Premi\u00e8re Guerre mondiale."
+        "en": "A bill that reaches the Senate goes through much the same steps it has already been through. The Senate looks at it again, step by step.",
+        "fr": "Un projet de loi qui arrive au S\u00e9nat passe par des \u00e9tapes semblables \u00e0 celles qu'il a d\u00e9j\u00e0 franchies. Le S\u00e9nat l'examine de nouveau, \u00e9tape par \u00e9tape."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canadian Symbols",
-          "page": 80,
+          "chapter": "How Canadians Govern Themselves",
+          "page": 56,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "The towers, arches, sculptures and stained glass of the Parliament Buildings embody the French, English and Aboriginal traditions and the Gothic Revival architecture popular in the time of Queen Victoria. The buildings were completed in the 1860s. The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922. The Library is the only part of the original building remaining. The Peace Tower was completed in 1927 in memory of the First World War."
+          "quote": "Senate \u2013 The bill follows a similar process in the Senate."
         },
         "verification": {
           "status": "verified",
@@ -384,20 +384,20 @@
         "fr": "Une cabane chauff\u00e9e"
       },
       "blurb": {
-        "en": "The Rideau Canal in Ottawa once served the military. Today people visit it, and in winter they skate on its ice.",
-        "fr": "Le canal Rideau, \u00e0 Ottawa, a autrefois servi \u00e0 l'arm\u00e9e. Aujourd'hui, les gens le visitent et, l'hiver, ils patinent sur sa glace."
+        "en": "Snow clearing and places to play sport are jobs for your local government. Municipalities normally look after planning, streets and roads, garbage, snow clearing, firefighting, ambulances, recreation centres, public transit, and some health and social services close to home.",
+        "fr": "Le d\u00e9neigement et les lieux o\u00f9 faire du sport rel\u00e8vent de votre administration locale. Les municipalit\u00e9s s'occupent normalement de l'am\u00e9nagement, des rues et des routes, des ordures, du d\u00e9neigement, de la lutte contre les incendies, des ambulances, des centres de loisirs, du transport en commun et de certains services de sant\u00e9 et services sociaux pr\u00e8s de chez vous."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 94,
+          "chapter": "Federal Elections",
+          "page": 66,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Ottawa's Rideau Canal, once a military waterway, is now a tourist attraction and winter skateway."
+          "quote": "Municipalities are normally responsible for urban or regional planning, streets and roads, sanitation (such as garbage removal), snow removal, firefighting, ambulance and other emergency services, recreation facilities, public transit and some local health and social services."
         },
         "verification": {
           "status": "verified",

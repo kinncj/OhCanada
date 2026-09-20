@@ -188,20 +188,20 @@
         "fr": "La passerelle"
       },
       "blurb": {
-        "en": "Across the river is St. Boniface, Winnipeg's French Quarter. It has the largest French-speaking community in Western Canada.",
-        "fr": "De l'autre côté de la rivière se trouve Saint-Boniface, le quartier français de Winnipeg. On y trouve la plus grande communauté francophone de l'Ouest canadien."
+        "en": "Canada's laws are meant to keep order in society and to give people a peaceful way to settle a disagreement. They also put into words what Canadians value and believe.",
+        "fr": "Les lois du Canada visent à maintenir l'ordre dans la société et à offrir aux gens un moyen pacifique de régler un désaccord. Elles expriment aussi ce que les Canadiens valorisent et croient."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canada's Regions",
-          "page": 100,
+          "chapter": "The Justice System",
+          "page": 75,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "Winnipeg's French Quarter, St. Boniface, has Western Canada's largest Francophone community at 45,000."
+          "volatile": false,
+          "quote": "Our laws are intended to provide order in society and a peaceful way to settle disputes, and to express the values and beliefs of Canadians."
         },
         "verification": {
           "status": "verified",
@@ -263,20 +263,20 @@
         "fr": "Un érable en automne"
       },
       "blurb": {
-        "en": "The maple leaf is the best-known symbol of Canada. Canadian soldiers began wearing it in the 1850s.",
-        "fr": "La feuille d'érable est le symbole le plus connu du Canada. Les soldats canadiens ont commencé à la porter dans les années 1850."
+        "en": "A legal system is something handed down. Canada's rests on the rule of law, freedom under the law, ideas of democracy, and due process.",
+        "fr": "Un système juridique est un héritage. Celui du Canada repose sur la primauté du droit, la liberté sous le régime de la loi, les principes démocratiques et l'application régulière de la loi."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Canadian Symbols",
-          "page": 79,
+          "chapter": "The Justice System",
+          "page": 75,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "The maple leaf is Canada’s best-known symbol. Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
+          "quote": "Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
         },
         "verification": {
           "status": "verified",
