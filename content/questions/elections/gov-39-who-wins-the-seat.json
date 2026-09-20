@@ -42,8 +42,9 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-20T19:42:16Z",
+    "checkedAt": "2026-09-20T22:19:14Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "The people in each electoral district vote for the candidate and political party of their choice. The candidate who receives the most votes becomes the MP for that electoral district."
+    "evidence": "The people in each electoral district vote for the candidate and political party of their choice. The candidate who receives the most votes becomes the MP for that electoral district. … Ordinarily, after an election, the leader of the political party with the most seats in the House of Commons is invited by the Governor General to form the government. After being appointed by the Governor General, the leader of this party becomes the Prime Minister. … The Prime Minister and the party in power run the government as long as they have the support or confidence of the majority of the MPs.",
+    "distractorsNotEntailed": true
   }
 }

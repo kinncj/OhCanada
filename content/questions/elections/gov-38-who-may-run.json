@@ -41,9 +41,10 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-20T22:19:14Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Canadian citizens who are 18 years old or older may run in a federal election. The people who run for office are called candidates."
+    "evidence": "Canadian citizens who are 18 years old or older may run in a federal election. The people who run for office are called candidates. There can be many candidates in an electoral district. … You are eligible to vote in a federal election or cast a ballot in a federal referendum if you are: a Canadian citizen; and at least 18 years old on voting day; and on the voters’ list.",
+    "distractorsNotEntailed": true
   }
 }
