@@ -18,7 +18,10 @@
  *     much a question the player has missed before is worth *before* it comes
  *     due — because that is the only tier where the stories leave a choice.
  *   - TN-CARD-02, "the missed question appears in the next drill": the same tier,
- *     plus a window that only holds back a question whose moment has not come.
+ *     plus a window that only holds back a question whose moment has not come —
+ *     and, for a draw that says it is a new drill, `askMissedAgain`, which lets
+ *     what the player has just missed come round ahead of new material instead
+ *     of waiting out the one to ten minutes its short-term step bought it.
  *   - TN-CARD-02 / TN-STUDY-02, "a question answered *rightly* is not asked
  *     again in the same session": the exclusion window, carried by the caller
  *     across drills.
@@ -128,6 +131,31 @@ export interface SelectionRequest {
    * locked levels 3–10 for every new player.
    */
   readonly dailyNewLimitApplies?: boolean;
+  /**
+   * Is this draw a **new drill**, which may ask again what the player has just
+   * missed? Default `false`.
+   *
+   * A wrong answer buys a question one to ten minutes (the learning and
+   * relearning steps), so for that long it is not due, the exclusion window
+   * holds it back, and the day's new material outranks it. Between one card and
+   * the next that is exactly right: it is what stops the same question being put
+   * straight back on screen, and it is the property the 30-question draw in
+   * `tests/unit/domain/scheduling/question-scheduler.test.ts` pins.
+   *
+   * Between one *drill* and the next it is wrong, and it is what made Study's
+   * summary lie: "We will ask these again:" over a list, with a "Study again"
+   * button under it that drew five questions the player had never seen. A drill
+   * boundary is the one thing this module cannot see — `recentlyAsked` is a flat
+   * list with no seam in it — so the caller says, the same way a promised count
+   * says `dailyNewLimitApplies` (ADR-0054).
+   *
+   * Nothing about FSRS moves either way: no `dueAt`, `stability` or `difficulty`
+   * is written here, and `recordAnswer` measures elapsed time in whole UTC days,
+   * so a question re-asked thirty seconds after the miss is graded exactly as one
+   * re-asked ten minutes after it. What this changes is the order of the asking,
+   * never the memory the answer writes.
+   */
+  readonly askMissedAgain?: boolean;
 }
 
 /** Shortest gap the lateness measure will divide by, so a 1-minute step is meaningful. */
@@ -198,6 +226,8 @@ interface Ranked {
   readonly due: boolean;
   /** The last answer was wrong. Ranks above everything else that is due. */
   readonly missed: boolean;
+  /** The moment the schedule set for this question. Orders the tier below. */
+  readonly moment: EpochMillis;
   readonly key: number;
   readonly jitter: number;
   readonly order: number;
@@ -223,6 +253,15 @@ const byMissedThenKey = (a: Ranked, b: Ranked): number =>
 /** Highest key first; equal keys settled by the seeded draw, then by pool order. */
 const byKeyThenJitter = (a: Ranked, b: Ranked): number =>
   b.key - a.key || b.jitter - a.jitter || a.order - b.order;
+
+/**
+ * Soonest moment first: "due soonest" for questions that are not due yet.
+ *
+ * The one ordering a missed question's own schedule states. A player who missed
+ * a question a minute ago and one ten minutes ago meets them in that order.
+ */
+const bySoonestMoment = (a: Ranked, b: Ranked): number =>
+  a.moment - b.moment || b.jitter - a.jitter || a.order - b.order;
 
 /**
  * Choose the next `count` questions.
@@ -285,6 +324,9 @@ export const selectQuestions = (
   const due: Ranked[] = [];
   const fresh: Ranked[] = [];
   const later: Ranked[] = [];
+  /** Missed, and its moment has not arrived. Empty unless the caller asked. */
+  const missedSoon: Ranked[] = [];
+  const askMissedAgain = request.askMissedAgain === true;
 
   pool.forEach((questionId, order) => {
     const jitter = jitterFor.get(questionId) ?? 0;
@@ -298,6 +340,7 @@ export const selectQuestions = (
         familiarity: 'new',
         due: true,
         missed: false,
+        moment: now,
         key: 0,
         jitter,
         order,
@@ -311,7 +354,22 @@ export const selectQuestions = (
         familiarity: 'seen',
         due: true,
         missed,
+        moment: record.dueAt,
         key: lateness(record, now),
+        jitter,
+        order,
+      });
+    } else if (missed && askMissedAgain) {
+      // Missed, and its moment is minutes away rather than here. A new drill may
+      // ask it now: the player was told it was coming back, and the order below
+      // is the one its own schedule states.
+      missedSoon.push({
+        questionId,
+        familiarity: 'seen',
+        due: false,
+        missed,
+        moment: record.dueAt,
+        key: 0,
         jitter,
         order,
       });
@@ -325,6 +383,7 @@ export const selectQuestions = (
         familiarity: 'seen',
         due: false,
         missed,
+        moment: record.dueAt,
         key: weightOf(record, settings) * (1 - recallProbabilityNow(record, now, memory)),
         jitter,
         order,
@@ -345,6 +404,10 @@ export const selectQuestions = (
   const ranked: readonly Ranked[] = [
     // Everything whose moment has come, missed questions at the front of it.
     ...[...due].sort(byMissedThenKey),
+    // Then, for a new drill, what the player has just missed, soonest first:
+    // "We will ask these again" is a promise this tier keeps (TN-STUDY-04).
+    // Empty for every other draw, which leaves the three tiers below unchanged.
+    ...[...missedSoon].sort(bySoonestMoment),
     // Then new material, capped so a drill is never all-new (TN-STUDY-02).
     ...[...fresh].sort(byKeyThenJitter).slice(0, newBudget),
     // Then whatever is closest to being forgotten, so "Study again" always has
@@ -371,6 +434,11 @@ export const selectQuestions = (
    */
   const heldBack = (item: Ranked): boolean => {
     if (item.due) return false;
+    /* A new drill is the break TN-CARD-04's "again soon" was measured against,
+       so the window no longer holds a question the player got wrong. It still
+       holds every question they got right, which is the other half of the same
+       rule and the half a study tool must not break. */
+    if (item.missed && askMissedAgain) return false;
     const ago = askedAgo.get(item.questionId);
     return ago !== undefined && ago < settings.exclusionWindow;
   };

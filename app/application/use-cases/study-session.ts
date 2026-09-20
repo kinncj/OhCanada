@@ -103,6 +103,15 @@ export interface DrillScope {
    * once") and now the only draw it binds.
    */
   readonly dailyNewLimitApplies?: boolean | undefined;
+  /**
+   * May this drill ask again what the player has just missed? Default `false`.
+   *
+   * Study passes `true`: its summary lists those questions under "We will ask
+   * these again:" and the control under that list is a new drill. A level draw
+   * passes nothing — `answeredHere` already keeps a visit from asking the same
+   * question twice (ADR-0048).
+   */
+  readonly askMissedAgain?: boolean | undefined;
 }
 
 export interface StudyDrill {
@@ -190,6 +199,7 @@ export const createStudySession = (deps: StudySessionDeps): StudySession => {
           answeredHere: scope?.answeredHere,
           repeatWhenExhausted: scope?.repeatWhenExhausted,
           dailyNewLimitApplies: scope?.dailyNewLimitApplies,
+          askMissedAgain: scope?.askMissedAgain,
         },
       );
       if (!drawn.ok) return drawn;

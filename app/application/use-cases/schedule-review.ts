@@ -100,6 +100,17 @@ export interface ScheduleReviewInput {
    * binds.
    */
   readonly dailyNewLimitApplies?: boolean | undefined;
+  /**
+   * Is this draw a new drill, which may ask again what the player just missed?
+   * Default `false`.
+   *
+   * `true` for a Study drill, whose summary has just listed those questions and
+   * promised them back. A level draw passes nothing and keeps the window: what a
+   * visit has already answered is held out by `answeredHere` instead (ADR-0048),
+   * which is the stronger rule and the one that stopped the grain bins and the
+   * combine harvester asking the same question twice.
+   */
+  readonly askMissedAgain?: boolean | undefined;
   readonly memory?: MemoryTuning | undefined;
 }
 
@@ -223,6 +234,9 @@ export const scheduleReview = (
       ...(input.dailyNewLimitApplies === undefined
         ? {}
         : { dailyNewLimitApplies: input.dailyNewLimitApplies }),
+      ...(input.askMissedAgain === undefined
+        ? {}
+        : { askMissedAgain: input.askMissedAgain }),
       ...(memory === undefined ? {} : { memory }),
     });
     return map(drawn, (selected) =>

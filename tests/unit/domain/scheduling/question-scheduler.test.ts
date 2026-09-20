@@ -48,6 +48,7 @@ interface Overrides {
   readonly now?: EpochMillis;
   readonly seed?: number;
   readonly dailyNewLimitApplies?: boolean;
+  readonly askMissedAgain?: boolean;
 }
 
 const request = (
@@ -65,6 +66,9 @@ const request = (
   ...(overrides.dailyNewLimitApplies === undefined
     ? {}
     : { dailyNewLimitApplies: overrides.dailyNewLimitApplies }),
+  ...(overrides.askMissedAgain === undefined
+    ? {}
+    : { askMissedAgain: overrides.askMissedAgain }),
 });
 
 /** `selectQuestions`, unwrapped. Fails loudly rather than returning undefined. */
@@ -285,6 +289,69 @@ describe('TN-CARD-02 — what "scheduled" means to the player', () => {
     });
     expect(ids(drill)).toContain(missed);
     expect(drill[0]?.questionId).toBe(missed);
+  });
+
+  it('asks the next drill for what the player just missed, ahead of new material', () => {
+    /*
+     * The fourth live-site audit, 2026-09-19. Study's summary lists what was
+     * missed under "We will ask these again:", and the control directly under
+     * that list drew five questions the player had never seen.
+     *
+     * A wrong answer buys the question one to ten minutes, so at the moment the
+     * button is tapped it is not due, the exclusion window holds it back, and
+     * the day's new material outranks it. `askMissedAgain` is the caller saying
+     * "this is a new drill", which is the one thing the scheduler cannot see.
+     */
+    const pool = poolOf(30);
+    const first = ids(select(pool, DRILL_SIZE, { now: at(ORIGIN) }));
+    const missed = [first[1] as QuestionId, first[3] as QuestionId];
+    /* Eight seconds a card, which is fast for reading one. */
+    const reviews = first.map(
+      (id, index) =>
+        recordAnswer(null, id, !missed.includes(id), at(ORIGIN + index * 8_000)).record,
+    );
+    const options = {
+      reviews,
+      recentlyAsked: rememberAsked([], first, SHIPPED),
+      /* Five seconds after the last answer: inside every short-term step. */
+      now: at(ORIGIN + DRILL_SIZE * 8_000 + 5_000),
+    };
+
+    const again = ids(select(pool, DRILL_SIZE, { ...options, askMissedAgain: true }));
+    /* Both of them, soonest moment first, at the front of the drill. */
+    expect(again.slice(0, missed.length)).toStrictEqual(missed);
+    /* And the drill is still a full one, filled out behind them. */
+    expect(again).toHaveLength(DRILL_SIZE);
+    expect(new Set(again).size).toBe(again.length);
+    /*
+     * The other half of TN-CARD-02, which this must not break: a question
+     * answered *rightly* is still not asked again in the same session.
+     */
+    const rightly = first.filter((id) => !missed.includes(id));
+    expect(again.filter((id) => rightly.includes(id))).toStrictEqual([]);
+  });
+
+  it('holds a missed question back from every draw that did not ask for it', () => {
+    /*
+     * The default, unchanged, and it is what keeps the window meaningful
+     * between one card and the next: the 30-question draw at the top of this
+     * file answers a question and draws again with no drill boundary between
+     * the two, and a missed question must not come straight back there.
+     */
+    const pool = poolOf(30);
+    const first = ids(select(pool, DRILL_SIZE, { now: at(ORIGIN) }));
+    const missed = first[1] as QuestionId;
+    const reviews = first.map(
+      (id, index) => recordAnswer(null, id, id !== missed, at(ORIGIN + index * 8_000)).record,
+    );
+    const next = ids(
+      select(pool, DRILL_SIZE, {
+        reviews,
+        recentlyAsked: rememberAsked([], first, SHIPPED),
+        now: at(ORIGIN + DRILL_SIZE * 8_000 + 5_000),
+      }),
+    );
+    expect(next).not.toContain(missed);
   });
 
   it('does not ask a question answered rightly again in the same session', () => {

@@ -214,7 +214,21 @@ export function createStudyController(deps: StudyControllerDeps): StudyControlle
   async function beginDrill(): Promise<void> {
     const mine = (generation += 1);
     const study = build();
-    const drawn = await deps.session.drill(deps.session.drillSize);
+    /*
+     * `askMissedAgain`: this is a new drill, so it may ask again what the player
+     * has just missed (`TN-STUDY-04`). The summary they tapped through listed
+     * exactly those questions under "We will ask these again:", and the control
+     * under that list is this call — a drill that drew five questions they had
+     * never seen made the sentence above the button untrue.
+     *
+     * Set for every Study drill rather than only for "Study again", because
+     * `TN-STUDY-05` asks the same of the drill after leaving part-way: "Given I
+     * answered question A wrongly before leaving / When I start a new drill /
+     * Then question A is offered."
+     */
+    const drawn = await deps.session.drill(deps.session.drillSize, {
+      askMissedAgain: true,
+    });
     if (mine !== generation || !showing) return;
 
     if (!drawn.ok) {

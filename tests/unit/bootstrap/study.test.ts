@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { Result } from '@common/result';
 import type { ShippableQuestion } from '@application/ports';
-import type { StudyDrill, StudySession } from '@application/use-cases/study-session';
+import type { DrillScope, StudyDrill, StudySession } from '@application/use-cases/study-session';
 import { createSettingsStore, DEFAULT_SETTINGS } from '@ui/settings';
 import { text } from '@ui/copy';
 
@@ -49,6 +49,8 @@ const QUESTION = (id: string): ShippableQuestion =>
 interface Bank {
   readonly session: StudySession;
   readonly drills: number[];
+  /** What each drill was asked for, so the scope Study sets can be read. */
+  readonly scopes: (DrillScope | undefined)[];
   availables: number;
 }
 
@@ -58,6 +60,7 @@ function bank(options: {
   size?: number;
 }): Bank {
   const drills: number[] = [];
+  const scopes: (DrillScope | undefined)[] = [];
   const state = { availables: 0 };
   const session: StudySession = {
     drillSize: options.size ?? 3,
@@ -65,8 +68,9 @@ function bank(options: {
       state.availables += 1;
       return Promise.resolve(options.available ?? { ok: true, value: 12 });
     },
-    drill: async (count) => {
+    drill: async (count, scope) => {
       drills.push(count);
+      scopes.push(scope);
       return Promise.resolve(
         options.drill ?? {
           ok: true,
@@ -84,6 +88,7 @@ function bank(options: {
   return {
     session,
     drills,
+    scopes,
     get availables(): number {
       return state.availables;
     },
@@ -284,6 +289,30 @@ describe('running a drill', () => {
     at('study-again')?.click();
     await flush();
     expect(source.drills).toEqual([3, 3]);
+  });
+
+  it('asks each drill for the questions just missed, which the summary promised', async () => {
+    /*
+     * `TN-STUDY-04`. The summary lists what was missed under "We will ask these
+     * again:" and "Study again" is the call below it; the fourth live-site audit
+     * found that drill drawing five questions the player had never seen. Asked
+     * of every drill, not only the second: `TN-STUDY-05` wants the same of the
+     * drill after leaving part-way.
+     */
+    const { at, source } = await start();
+    for (let index = 0; index < 3; index += 1) {
+      at('option-0')?.click();
+      at('question-next')?.click();
+    }
+    await flush();
+
+    at('study-again')?.click();
+    await flush();
+
+    expect(source.scopes).toHaveLength(2);
+    for (const scope of source.scopes) {
+      expect(scope?.askMissedAgain).toBe(true);
+    }
   });
 
   it('keeps the answers when the player leaves part-way, and says so', async () => {
