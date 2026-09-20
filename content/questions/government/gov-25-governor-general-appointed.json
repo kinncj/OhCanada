@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "Canadians elect the Governor General for a four-year term.",
-      "fr": "Les Canadiens élisent le gouverneur général pour un mandat de quatre ans."
+      "en": "Canadians elect the Governor General directly, at the same time as their member of Parliament.",
+      "fr": "Les Canadiens élisent directement le gouverneur général, en même temps que leur député fédéral."
     },
     {
       "en": "The Sovereign appoints them on the advice of the Prime Minister, usually for five years.",
       "fr": "Le souverain ou la souveraine le nomme sur l'avis du premier ministre, habituellement pour cinq ans."
     },
     {
-      "en": "Parliament votes to choose them.",
-      "fr": "Le Parlement le choisit par un vote."
+      "en": "The House of Commons and the Senate vote together to choose them after each general election.",
+      "fr": "La Chambre des communes et le Sénat le choisissent par un vote après chaque élection générale."
     },
     {
-      "en": "The position is inherited.",
-      "fr": "La charge est héréditaire."
+      "en": "The position is hereditary and passes down within the Royal Family, as the Sovereign's does.",
+      "fr": "La charge est héréditaire et se transmet dans la famille royale, comme celle du souverain."
     }
   ],
   "correctIndex": 1,

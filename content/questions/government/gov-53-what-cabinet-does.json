@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "It hears court cases about new laws.",
-      "fr": "Il entend les causes portant sur les nouvelles lois."
+      "en": "It hears the court cases that arise about new laws.",
+      "fr": "Il entend les causes judiciaires soulevées par les nouvelles lois."
     },
     {
-      "en": "It counts the ballots after an election.",
-      "fr": "Il compte les bulletins de vote après une élection."
+      "en": "It counts the ballots and announces the election result.",
+      "fr": "Il compte les bulletins et annonce le résultat de l'élection."
     },
     {
       "en": "It prepares the budget and puts forward most new laws.",
       "fr": "Il prépare le budget et propose la plupart des nouvelles lois."
     },
     {
-      "en": "It appoints the Governor General.",
-      "fr": "Il nomme le gouverneur général."
+      "en": "It appoints the Governor General and the country's senators.",
+      "fr": "Il nomme le gouverneur général ainsi que les sénateurs du pays."
     }
   ],
   "correctIndex": 2,

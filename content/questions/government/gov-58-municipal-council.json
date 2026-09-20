@@ -12,16 +12,16 @@
       "fr": "Un maire ou un préfet, avec des conseillers ou des échevins."
     },
     {
-      "en": "A Lieutenant Governor and elected members.",
-      "fr": "Un lieutenant-gouverneur et des membres élus."
+      "en": "A Lieutenant Governor together with the elected members of council.",
+      "fr": "Un lieutenant-gouverneur ainsi que les membres élus du conseil."
     },
     {
-      "en": "The members of Parliament for the area.",
-      "fr": "Les députés fédéraux de la région."
+      "en": "The members of Parliament elected for that part of the country.",
+      "fr": "Les députés fédéraux élus pour cette partie du pays."
     },
     {
-      "en": "Members chosen by the provincial government.",
-      "fr": "Des membres choisis par le gouvernement provincial."
+      "en": "Members chosen by the provincial government rather than elected locally.",
+      "fr": "Des membres choisis par le gouvernement provincial plutôt qu'élus localement."
     }
   ],
   "correctIndex": 0,

@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "For a full four years, whatever happens.",
-      "fr": "Pendant quatre années complètes, quoi qu'il arrive."
+      "en": "For a full four years, whatever the House of Commons votes.",
+      "fr": "Pendant quatre années complètes, peu importe les votes de la Chambre des communes."
     },
     {
-      "en": "Until the Senate withdraws its support.",
-      "fr": "Jusqu'à ce que le Sénat leur retire son appui."
+      "en": "Until the Senate withdraws its support from the party in power.",
+      "fr": "Jusqu'à ce que le Sénat retire son appui au parti au pouvoir."
     },
     {
       "en": "As long as most members of the House of Commons support them.",
       "fr": "Tant que la majorité des députés de la Chambre des communes les appuient."
     },
     {
-      "en": "Until the Governor General's own term ends.",
-      "fr": "Jusqu'à la fin du mandat du gouverneur général."
+      "en": "Until the Governor General's own five-year term comes to an end.",
+      "fr": "Jusqu'à la fin du mandat de cinq ans du gouverneur général."
     }
   ],
   "correctIndex": 2,

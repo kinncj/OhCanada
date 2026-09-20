@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "To block every government proposal, whatever it is.",
-      "fr": "Bloquer toutes les propositions du gouvernement, quelles qu'elles soient."
+      "en": "To block every government proposal outright and force an early election.",
+      "fr": "Bloquer d'emblée toutes les propositions du gouvernement et forcer des élections anticipées."
     },
     {
-      "en": "To run the government departments.",
-      "fr": "Diriger les ministères du gouvernement."
+      "en": "To run the government departments and prepare the budget each year.",
+      "fr": "Diriger les ministères du gouvernement et préparer le budget chaque année."
     },
     {
       "en": "To oppose government proposals peacefully, or to try to make them better.",
       "fr": "S'opposer pacifiquement aux propositions du gouvernement ou tenter de les améliorer."
     },
     {
-      "en": "To choose the Prime Minister.",
-      "fr": "Choisir le premier ministre."
+      "en": "To choose the Prime Minister and name the ministers who will sit in Cabinet.",
+      "fr": "Choisir le premier ministre et nommer les ministres qui siégeront au Cabinet."
     }
   ],
   "correctIndex": 2,

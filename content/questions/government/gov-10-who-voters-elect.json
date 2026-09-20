@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "The Prime Minister, whose name is on the ballot.",
-      "fr": "Le premier ministre, dont le nom figure sur le bulletin de vote."
+      "en": "The Prime Minister directly, whose name appears on the ballot in every electoral district.",
+      "fr": "Le premier ministre directement, dont le nom figure sur le bulletin dans chaque circonscription."
     },
     {
       "en": "Members of the House of Commons, and members of their provincial or territorial legislature.",
       "fr": "Des députés à la Chambre des communes et des députés de leur assemblée provinciale ou territoriale."
     },
     {
-      "en": "Senators and the Governor General.",
-      "fr": "Les sénateurs et le gouverneur général."
+      "en": "Senators, who serve until age 75, and the Governor General, who normally serves five years.",
+      "fr": "Les sénateurs, qui siègent jusqu'à 75 ans, et le gouverneur général, nommé pour cinq ans."
     },
     {
-      "en": "The Head of State, every four years.",
-      "fr": "Le chef d'État, tous les quatre ans."
+      "en": "The Head of State, at a general election held on the third Monday in October every four years.",
+      "fr": "Le chef d'État, lors d'une élection générale tenue le troisième lundi d'octobre tous les quatre ans."
     }
   ],
   "correctIndex": 1,

@@ -12,16 +12,16 @@
       "fr": "Quand le parti au pouvoir détient moins de la moitié des sièges à la Chambre des communes."
     },
     {
-      "en": "When it wins fewer than half the votes cast.",
-      "fr": "Quand il obtient moins de la moitié des votes exprimés."
+      "en": "When the party in power wins fewer than half the votes cast across the whole country.",
+      "fr": "Quand le parti au pouvoir obtient moins de la moitié des votes exprimés dans tout le pays."
     },
     {
-      "en": "When it has no support in the Senate.",
-      "fr": "Quand il n'a aucun appui au Sénat."
+      "en": "When the party in power holds no seats in the Senate, whose members sit until age 75.",
+      "fr": "Quand le parti au pouvoir n'a aucun siège au Sénat, dont les membres siègent jusqu'à 75 ans."
     },
     {
-      "en": "When it holds fewer than a third of the seats.",
-      "fr": "Quand il détient moins du tiers des sièges."
+      "en": "When the party in power holds fewer than a third of the seats in the House of Commons.",
+      "fr": "Quand le parti au pouvoir détient moins du tiers des sièges à la Chambre des communes."
     }
   ],
   "correctIndex": 0,

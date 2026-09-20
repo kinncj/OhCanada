@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "Leaders of other countries who visit Canada.",
-      "fr": "Celui des dirigeants d'autres pays qui visitent le Canada."
+      "en": "The leaders of other countries who come to Canada on official visits.",
+      "fr": "Celui des dirigeants d'autres pays venus au Canada en visite officielle."
     },
     {
-      "en": "Only the members of your own family.",
-      "fr": "Seulement celui des membres de votre famille."
+      "en": "Only the members of your own family who settled in this country before you.",
+      "fr": "Seulement celui des membres de votre famille établis au pays avant vous."
     },
     {
       "en": "The Canadians who came before you and made sacrifices to serve the country.",
       "fr": "Celui des Canadiens venus avant vous, qui ont fait des sacrifices pour servir le pays."
     },
     {
-      "en": "The owners of the biggest companies in your town.",
-      "fr": "Celui des propriétaires des plus grandes entreprises de votre ville."
+      "en": "The owners of the biggest companies in your town, who create the local jobs.",
+      "fr": "Celui des propriétaires des plus grandes entreprises de votre ville, qui créent les emplois."
     }
   ],
   "correctIndex": 2,

@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "Which candidate your neighbours support.",
-      "fr": "Quel candidat vos voisins appuient."
+      "en": "Which candidates are running in your electoral district and which party each one belongs to.",
+      "fr": "Quels candidats se présentent dans votre circonscription et à quel parti chacun appartient."
     },
     {
       "en": "When and where to vote, and a number to call if you need help such as an interpreter.",
       "fr": "Quand et où voter, ainsi qu'un numéro à composer si vous avez besoin d'aide, par exemple d'un interprète."
     },
     {
-      "en": "How you must mark your ballot.",
-      "fr": "Comment vous devez remplir votre bulletin de vote."
+      "en": "Step-by-step instructions for marking your ballot and folding it for the ballot box.",
+      "fr": "Des instructions détaillées pour marquer votre bulletin et le plier pour la boîte de scrutin."
     },
     {
-      "en": "The result of the election in your district.",
-      "fr": "Le résultat de l'élection dans votre circonscription."
+      "en": "The result of the election in your electoral district, mailed once the ballots are counted.",
+      "fr": "Le résultat de l'élection dans votre circonscription, posté une fois les bulletins comptés."
     }
   ],
   "correctIndex": 1,

@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "The Senate takes over the government.",
-      "fr": "Le Sénat prend en charge le gouvernement."
+      "en": "The Senate takes over the running of the government until the next election.",
+      "fr": "Le Sénat prend en charge la direction du gouvernement jusqu'à la prochaine élection."
     },
     {
-      "en": "Nothing changes until the next fixed date.",
-      "fr": "Rien ne change jusqu'à la prochaine date fixe."
+      "en": "Nothing changes until the fixed election date in October four years later.",
+      "fr": "Rien ne change jusqu'à la date fixe des élections, en octobre, quatre ans plus tard."
     },
     {
       "en": "The Prime Minister usually asks the Governor General to call an election.",
       "fr": "Le premier ministre demande habituellement au gouverneur général de déclencher une élection."
     },
     {
-      "en": "The Official Opposition forms a government at once.",
-      "fr": "L'opposition officielle forme aussitôt un gouvernement."
+      "en": "The Official Opposition forms a government at once, with no election held.",
+      "fr": "L'Opposition officielle forme aussitôt un gouvernement, sans qu'il y ait d'élection."
     }
   ],
   "correctIndex": 2,
