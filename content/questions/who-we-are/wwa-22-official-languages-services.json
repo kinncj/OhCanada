@@ -8,16 +8,16 @@
   },
   "options": [
     {
-      "en": "English and French.",
-      "fr": "En anglais et en français."
+      "en": "English and French, the official languages.",
+      "fr": "En anglais et en français, langues officielles."
     },
     {
       "en": "English only, except in Quebec.",
       "fr": "En anglais seulement, sauf au Québec."
     },
     {
-      "en": "The language chosen by each province.",
-      "fr": "Dans la langue choisie par chaque province."
+      "en": "The language chosen by each provincial government.",
+      "fr": "Dans la langue choisie par chaque gouvernement provincial."
     },
     {
       "en": "Any language a community asks for.",

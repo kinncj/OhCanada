@@ -16,12 +16,12 @@
       "fr": "Le gouverneur général, seul."
     },
     {
-      "en": "The Prime Minister.",
-      "fr": "Le premier ministre."
+      "en": "The Prime Minister, who leads the government.",
+      "fr": "Le premier ministre, qui dirige le gouvernement."
     },
     {
-      "en": "The Senate, from among its own members.",
-      "fr": "Le Sénat, parmi ses propres membres."
+      "en": "The Senate, choosing from among its own appointed members.",
+      "fr": "Le Sénat, choisissant parmi ses propres membres nommés."
     }
   ],
   "correctIndex": 2,

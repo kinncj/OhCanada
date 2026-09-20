@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "The snowmobile.",
-      "fr": "La motoneige."
+      "en": "The snowmobile, a light winter vehicle.",
+      "fr": "La motoneige, un véhicule d'hiver léger."
     },
     {
       "en": "The pacemaker.",
@@ -20,8 +20,8 @@
       "fr": "Les fuseaux horaires standards."
     },
     {
-      "en": "The first electric light bulb.",
-      "fr": "La première ampoule électrique."
+      "en": "The first electric light bulb, later sold to Thomas Edison.",
+      "fr": "La première ampoule électrique, vendue plus tard à Thomas Edison."
     }
   ],
   "correctIndex": 0,
