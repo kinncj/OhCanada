@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "Nunavut.",
-      "fr": "Le Nunavut."
+      "en": "Nunavut, Canada's newest territory.",
+      "fr": "Le Nunavut, le territoire le plus récent du Canada."
     },
     {
-      "en": "Yukon.",
-      "fr": "Le Yukon."
+      "en": "Yukon, which holds Canada's coldest temperature record.",
+      "fr": "Le Yukon, qui détient le record de froid au Canada."
     },
     {
       "en": "The Northwest Territories.",
       "fr": "Les Territoires du Nord-Ouest."
     },
     {
-      "en": "Labrador.",
-      "fr": "Le Labrador."
+      "en": "Labrador, on Canada's Atlantic coast.",
+      "fr": "Le Labrador, sur la côte atlantique du Canada."
     }
   ],
   "correctIndex": 2,
