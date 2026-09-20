@@ -41,9 +41,9 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-09T04:06:30Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-20T19:15:59Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "provincial police forces in Ontario and Quebec and municipal police departments in all provinces"
+    "evidence": "There are different types of police in Canada. There are provincial police forces in Ontario and Quebec and municipal police departments in all provinces."
   }
 }

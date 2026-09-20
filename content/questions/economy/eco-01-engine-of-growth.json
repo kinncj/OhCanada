@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-16T11:30:00Z",
+    "checkedAt": "2026-09-20T19:15:59Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "Canada has always been a trading nation and commerce remains the engine of economic growth."
+    "evidence": "Canada has always been a trading nation and commerce remains the engine of economic growth. As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
   }
 }
