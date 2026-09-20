@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-20T19:15:59Z",
+    "checkedAt": "2026-09-20T19:42:16Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters' list. If you do not have the number, call Elections Canada, in Ottawa, at 1-800-463-6868."
+    "evidence": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters’ list."
   }
 }
