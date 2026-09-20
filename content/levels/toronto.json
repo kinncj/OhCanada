@@ -197,9 +197,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-14T02:56:51Z",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Local or municipal government plays an important role in the lives of our citizens. Municipal governments usually have a council that passes laws called “by-laws” that affect only the local community. The council usually includes a mayor (or a reeve) and councillors or aldermen. Municipalities are normally responsible for urban or regional planning, streets and roads, sanitation (such as garbage removal), snow removal, firefighting, ambulance and other emergency services, recreation facilities, public transit and some local health and social services."
+          "evidence": "Provincial, territorial and municipal elections are held by secret ballot, but the rules are not the same as those for federal elections."
         }
       },
       "position": {
@@ -234,9 +234,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-17T18:33:29Z",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Toronto is the largest city in Canada and the country’s main financial centre."
+          "evidence": "You can see the results on television or on the Elections Canada website (www.elections.ca)."
         }
       },
       "position": {
@@ -272,9 +272,9 @@
         "verification": {
           "status": "verified",
           "model": "claude-opus-5",
-          "checkedAt": "2026-09-17T18:33:29Z",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "More than half the people in Canada live in cities and towns near the Great Lakes and the St. Lawrence River in southern Quebec and Ontario, known as Central Canada and the industrial and manufacturing heartland. Southern Ontario and Quebec have cold winters and warm humid summers."
+          "evidence": "You are eligible to vote in a federal election or cast a ballot in a federal referendum if you are: • a Canadian citizen; and • at least 18 years old on voting day; and • on the voters’ list."
         }
       },
       "position": {

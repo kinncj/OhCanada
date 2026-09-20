@@ -205,10 +205,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community at 45,000."
+          "evidence": "Our laws are intended to provide order in society and a peaceful way to settle disputes, and to express the values and beliefs of Canadians."
         }
       },
       "position": {
@@ -280,10 +280,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The maple leaf is Canada’s best-known symbol. Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
+          "evidence": "Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
         }
       },
       "position": {

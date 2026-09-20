@@ -205,10 +205,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T19:13:39Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The Northwest Territories, Nunavut and Yukon contain one-third of Canada’s land mass but have a population of only 100,000."
+          "evidence": "The Northern territories have long cold winters and short cool summers."
         }
       },
       "position": {

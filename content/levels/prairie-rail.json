@@ -230,10 +230,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T20:05:31Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Saskatchewan […] is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer, and produces oil and natural gas."
+          "evidence": "In 1951, for the first time, a majority of Canadians were able to afford adequate food, shelter and clothing."
         }
       },
       "position": {
@@ -305,10 +305,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T20:05:31Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "THE PRAIRIE PROVINCES Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
+          "evidence": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
         }
       },
       "position": {
@@ -342,10 +342,10 @@
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5[1m]",
-          "checkedAt": "2026-09-13T20:05:31Z",
+          "model": "claude-opus-5",
+          "checkedAt": "2026-09-20T12:47:05Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "A TRADING NATION Canada has always been a trading nation and commerce remains the engine of economic growth. As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
+          "evidence": "Sir Sandford Fleming — invented the worldwide system of standard time zones."
         }
       },
       "position": {
