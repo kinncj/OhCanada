@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-20T15:50:07Z",
+    "checkedAt": "2026-09-20T18:20:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "a large percentage of Canada’s exports are natural resources commodities."
+    "evidence": "Natural resources industries include forestry, fishing, agriculture, mining and energy. … Today, the economy of many areas of the country still depends on developing natural resources, and a large percentage of Canada’s exports are natural resources commodities."
   }
 }
