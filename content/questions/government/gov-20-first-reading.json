@@ -41,9 +41,9 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T19:41:25Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-19T00:00:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "STEP 1 First Reading — The bill is considered read for the first time and is printed."
+    "evidence": "First Reading – The bill is considered read for the first STEP 1 time and is printed."
   }
 }

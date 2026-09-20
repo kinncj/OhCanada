@@ -42,8 +42,8 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-15T11:12:20Z",
+    "checkedAt": "2026-09-19T00:00:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-    "evidence": "STEP 5 Third Reading – Members debate and vote on the bill. STEP 6 Senate – The bill follows a similar process in the Senate. STEP 7 Royal Assent – The bill receives royal assent after being passed by both Houses."
+    "evidence": "STEP 5 Third Reading – Members debate and vote on the bill. STEP 6 Senate – The bill follows a similar process in the Senate. Royal Assent – The bill receives royal assent after being STEP 7 passed by both Houses."
   }
 }
