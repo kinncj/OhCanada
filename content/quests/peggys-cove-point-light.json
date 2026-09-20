@@ -87,8 +87,8 @@
         {
           "speaker": "peggys-point-light",
           "text": {
-            "en": "You have reached the light on the bare rock. Two things about this country come first, then three questions.",
-            "fr": "Vous voici au phare, sur la roche nue. D'abord deux choses sur ce pays, puis trois questions."
+            "en": "You have reached the light on the bare rock. Two things about this country come first, then five questions.",
+            "fr": "Vous voici au phare, sur la roche nue. D'abord deux choses sur ce pays, puis cinq questions."
           },
           "fact": {
             "factual": false,
@@ -153,8 +153,8 @@
         {
           "speaker": "peggys-point-light",
           "text": {
-            "en": "Three questions about that come next. After them, keep walking: there are two more stops along the rock, and each has something of its own.",
-            "fr": "Trois questions là-dessus viennent ensuite. Après, continuez à marcher : il y a deux autres haltes sur la roche, chacune avec sa propre matière."
+            "en": "Five questions about that come next. After them, keep walking: there are two more stops along the rock, and each has something of its own.",
+            "fr": "Cinq questions là-dessus viennent ensuite. Après, continuez à marcher : il y a deux autres haltes sur la roche, chacune avec sa propre matière."
           },
           "fact": {
             "factual": false,
@@ -169,7 +169,7 @@
       "kind": "answer",
       "targetId": "who-we-are",
       "subject": "who-we-are",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "wwa-22-official-languages-services",
         "wwa-23-anglophones-and-francophones",
@@ -178,8 +178,8 @@
         "wwa-31-anglo-quebecers"
       ],
       "prompt": {
-        "en": "Answer 3 questions about English and French in Canada",
-        "fr": "Répondez à 3 questions sur l'anglais et le français au Canada"
+        "en": "Answer 5 questions about English and French in Canada",
+        "fr": "Répondez à 5 questions sur l'anglais et le français au Canada"
       }
     },
     {
@@ -237,7 +237,7 @@
       "kind": "answer",
       "targetId": "who-we-are",
       "subject": "who-we-are",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "wwa-04-three-founding-peoples",
         "wwa-26-acadians-1604",
@@ -247,8 +247,8 @@
         "wwa-36-land-of-immigrants"
       ],
       "prompt": {
-        "en": "Answer 2 questions about what built this country",
-        "fr": "Répondez à 2 questions sur ce qui a bâti ce pays"
+        "en": "Answer 5 questions about what built this country",
+        "fr": "Répondez à 5 questions sur ce qui a bâti ce pays"
       }
     },
     {

@@ -229,7 +229,7 @@
       "kind": "answer",
       "targetId": "history",
       "subject": "history",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "hist-01-why-called-indians",
         "hist-07-john-cabot-1497",
@@ -241,8 +241,8 @@
         "hist-50-leonard-tilley-dominion"
       ],
       "prompt": {
-        "en": "Answer 3 questions about Canada's name and the first explorers",
-        "fr": "Répondez à 3 questions sur le nom du Canada et les premiers explorateurs"
+        "en": "Answer 5 questions about Canada's name and the first explorers",
+        "fr": "Répondez à 5 questions sur le nom du Canada et les premiers explorateurs"
       }
     },
     {
@@ -302,7 +302,7 @@
       "kind": "answer",
       "targetId": "history",
       "subject": "history",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "hist-19-quebec-act-religious-freedom",
         "hist-20-quebec-act-two-legal-systems",
@@ -312,8 +312,8 @@
         "hist-96-habitants-and-canadiens"
       ],
       "prompt": {
-        "en": "Answer 3 questions about what came after 1759",
-        "fr": "Répondez à 3 questions sur ce qui a suivi 1759"
+        "en": "Answer 5 questions about what came after 1759",
+        "fr": "Répondez à 5 questions sur ce qui a suivi 1759"
       }
     },
     {

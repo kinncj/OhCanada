@@ -229,7 +229,7 @@
       "kind": "answer",
       "targetId": "economy",
       "subject": "economy",
-      "count": 2,
+      "count": 4,
       "questionPool": [
         "eco-05-three-types-of-industries",
         "eco-06-most-workers-in-services",
@@ -237,8 +237,8 @@
         "eco-11-natural-resource-industries"
       ],
       "prompt": {
-        "en": "Answer 2 questions about the kinds of work in Canada",
-        "fr": "Répondez à 2 questions sur les types d'emplois au Canada"
+        "en": "Answer 4 questions about the kinds of work in Canada",
+        "fr": "Répondez à 4 questions sur les types d'emplois au Canada"
       }
     },
     {
@@ -298,7 +298,7 @@
       "kind": "answer",
       "targetId": "economy",
       "subject": "economy",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "eco-08-what-manufacturing-does",
         "eco-09-manufactured-product-example",
@@ -310,8 +310,8 @@
         "eco-46-alberta-beef-producer"
       ],
       "prompt": {
-        "en": "Answer 3 questions about what Canada makes and sells",
-        "fr": "Répondez à 3 questions sur ce que le Canada produit et vend"
+        "en": "Answer 5 questions about what Canada makes and sells",
+        "fr": "Répondez à 5 questions sur ce que le Canada produit et vend"
       }
     },
     {
@@ -371,7 +371,7 @@
       "kind": "answer",
       "targetId": "economy",
       "subject": "economy",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "eco-12-resources-in-history",
         "eco-22-labrador-hydro-electricity",
@@ -387,8 +387,8 @@
         "eco-48-yukon-mining-today"
       ],
       "prompt": {
-        "en": "Answer 2 questions about oil, gas and other resources",
-        "fr": "Répondez à 2 questions sur le pétrole, le gaz et les autres ressources"
+        "en": "Answer 5 questions about oil, gas and other resources",
+        "fr": "Répondez à 5 questions sur le pétrole, le gaz et les autres ressources"
       }
     },
     {
@@ -448,7 +448,7 @@
       "kind": "answer",
       "targetId": "economy",
       "subject": "economy",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "eco-01-engine-of-growth",
         "eco-02-standard-of-living-needs-trade",
@@ -462,8 +462,8 @@
         "eco-41-ontario-exports-from-services-and-manufacturing"
       ],
       "prompt": {
-        "en": "Answer 2 questions about what Canada sells to other countries",
-        "fr": "Répondez à 2 questions sur ce que le Canada vend à d'autres pays"
+        "en": "Answer 5 questions about what Canada sells to other countries",
+        "fr": "Répondez à 5 questions sur ce que le Canada vend à d'autres pays"
       }
     }
   ]

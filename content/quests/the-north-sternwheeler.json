@@ -153,8 +153,8 @@
         {
           "speaker": "yukon-river-sternwheeler",
           "text": {
-            "en": "Two questions on that come next. Then keep walking along the bar: there is more at the driftwood. Nothing here is timed.",
-            "fr": "Deux questions là-dessus viennent ensuite. Puis continuez le long de la plage : il y a d'autres choses au bois flotté. Rien ici n'est chronométré."
+            "en": "Five questions on that come next. Then keep walking along the bar: there is more at the driftwood. Nothing here is timed.",
+            "fr": "Cinq questions là-dessus viennent ensuite. Puis continuez le long de la plage : il y a d'autres choses au bois flotté. Rien ici n'est chronométré."
           },
           "fact": {
             "factual": false,
@@ -169,7 +169,7 @@
       "kind": "answer",
       "targetId": "regions",
       "subject": "regions",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "reg-16-capital-of-nunavut",
         "reg-17-yellowknife-is-the-capital-of-the-northwest-territories",
@@ -183,8 +183,8 @@
         "reg-58-nunavut-consensus-government"
       ],
       "prompt": {
-        "en": "Answer 2 questions about Canada's North",
-        "fr": "Répondez à 2 questions sur le Nord du Canada"
+        "en": "Answer 5 questions about Canada's North",
+        "fr": "Répondez à 5 questions sur le Nord du Canada"
       }
     },
     {

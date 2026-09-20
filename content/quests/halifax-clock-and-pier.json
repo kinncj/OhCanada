@@ -363,7 +363,7 @@
       "kind": "answer",
       "targetId": "rights",
       "subject": "rights",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "rights-01-where-rights-come-from",
         "rights-07-freedom-of-conscience-and-religion",
@@ -383,8 +383,8 @@
         "rights-21-equality-of-women-and-men"
       ],
       "prompt": {
-        "en": "Answer 3 questions about the Charter and your rights",
-        "fr": "Répondez à 3 questions sur la Charte et vos droits"
+        "en": "Answer 5 questions about the Charter and your rights",
+        "fr": "Répondez à 5 questions sur la Charte et vos droits"
       }
     },
     {
@@ -444,7 +444,7 @@
       "kind": "answer",
       "targetId": "rights",
       "subject": "rights",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "rights-30-helping-others-volunteering",
         "rights-31-what-volunteering-gives-back",
@@ -453,8 +453,8 @@
         "rights-38-coast-guard-and-emergency-services"
       ],
       "prompt": {
-        "en": "Answer 2 questions about serving your community",
-        "fr": "Répondez à 2 questions sur le service à la collectivité"
+        "en": "Answer 5 questions about serving your community",
+        "fr": "Répondez à 5 questions sur le service à la collectivité"
       }
     }
   ]

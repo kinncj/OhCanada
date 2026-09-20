@@ -229,15 +229,15 @@
       "kind": "answer",
       "targetId": "justice",
       "subject": "justice",
-      "count": 2,
+      "count": 3,
       "questionPool": [
         "jus-08-what-laws-are",
         "jus-13-why-canada-has-laws",
         "jus-14-laws-express-values"
       ],
       "prompt": {
-        "en": "Answer 2 questions about what laws are for",
-        "fr": "Répondez à 2 questions sur le rôle des lois"
+        "en": "Answer 3 questions about what laws are for",
+        "fr": "Répondez à 3 questions sur le rôle des lois"
       }
     },
     {
@@ -297,7 +297,7 @@
       "kind": "answer",
       "targetId": "justice",
       "subject": "justice",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "jus-01-due-process-guaranteed",
         "jus-02-due-process-covers-everyone",
@@ -309,8 +309,8 @@
         "jus-12-law-applies-to-judges-and-police"
       ],
       "prompt": {
-        "en": "Answer 3 questions about your rights before the law",
-        "fr": "Répondez à 3 questions sur vos droits devant la loi"
+        "en": "Answer 5 questions about your rights before the law",
+        "fr": "Répondez à 5 questions sur vos droits devant la loi"
       }
     },
     {

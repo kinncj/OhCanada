@@ -229,15 +229,15 @@
       "kind": "answer",
       "targetId": "symbols",
       "subject": "symbols",
-      "count": 2,
+      "count": 3,
       "questionPool": [
         "sym-07-union-jack-royal-flag",
         "sym-08-red-ensign-hundred-years",
         "sym-12-quebec-flag-1948"
       ],
       "prompt": {
-        "en": "Answer 2 questions about Canada's flags",
-        "fr": "Répondez à 2 questions sur les drapeaux du Canada"
+        "en": "Answer 3 questions about Canada's flags",
+        "fr": "Répondez à 3 questions sur les drapeaux du Canada"
       }
     },
     {
@@ -297,7 +297,7 @@
       "kind": "answer",
       "targetId": "symbols",
       "subject": "symbols",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "sym-04-new-flag-1965",
         "sym-05-flag-pattern-origin",
@@ -307,8 +307,8 @@
         "sym-15-where-arms-appear"
       ],
       "prompt": {
-        "en": "Answer 3 questions about the flag and the coat of arms",
-        "fr": "Répondez à 3 questions sur le drapeau et les armoiries"
+        "en": "Answer 5 questions about the flag and the coat of arms",
+        "fr": "Répondez à 5 questions sur le drapeau et les armoiries"
       }
     },
     {
@@ -368,15 +368,15 @@
       "kind": "answer",
       "targetId": "symbols",
       "subject": "symbols",
-      "count": 2,
+      "count": 3,
       "questionPool": [
         "sym-31-language-for-citizenship",
         "sym-32-language-exemption-at-55",
         "sym-33-official-languages-act-objectives"
       ],
       "prompt": {
-        "en": "Answer 2 questions about the two official languages",
-        "fr": "Répondez à 2 questions sur les deux langues officielles"
+        "en": "Answer 3 questions about the two official languages",
+        "fr": "Répondez à 3 questions sur les deux langues officielles"
       }
     }
   ]

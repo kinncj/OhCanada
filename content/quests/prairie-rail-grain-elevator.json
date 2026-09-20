@@ -229,7 +229,7 @@
       "kind": "answer",
       "targetId": "modern-canada",
       "subject": "modern-canada",
-      "count": 2,
+      "count": 4,
       "questionPool": [
         "mc-02-alberta-oil-1947",
         "mc-03-1951-food-shelter-clothing",
@@ -237,8 +237,8 @@
         "mc-19-aboriginal-people-granted-the-vote"
       ],
       "prompt": {
-        "en": "Answer 2 questions about how life changed after the war",
-        "fr": "Répondez à 2 questions sur les changements d'après-guerre"
+        "en": "Answer 4 questions about how life changed after the war",
+        "fr": "Répondez à 4 questions sur les changements d'après-guerre"
       }
     },
     {
@@ -298,7 +298,7 @@
       "kind": "answer",
       "targetId": "modern-canada",
       "subject": "modern-canada",
-      "count": 2,
+      "count": 4,
       "questionPool": [
         "mc-04-canada-health-act",
         "mc-05-employment-insurance",
@@ -306,8 +306,8 @@
         "mc-07-pension-plans-1965"
       ],
       "prompt": {
-        "en": "Answer 2 questions about the programs that support people here",
-        "fr": "Répondez à 2 questions sur les programmes qui soutiennent les gens ici"
+        "en": "Answer 4 questions about the programs that support people here",
+        "fr": "Répondez à 4 questions sur les programmes qui soutiennent les gens ici"
       }
     },
     {
@@ -434,7 +434,7 @@
       "kind": "answer",
       "targetId": "modern-canada",
       "subject": "modern-canada",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "mc-27-james-naismith-basketball",
         "mc-33-canadian-space-agency",
@@ -447,8 +447,8 @@
         "mc-40-banting-and-best-insulin"
       ],
       "prompt": {
-        "en": "Answer 3 questions about Canadian discoveries and inventions",
-        "fr": "Répondez à 3 questions sur les découvertes et inventions canadiennes"
+        "en": "Answer 5 questions about Canadian discoveries and inventions",
+        "fr": "Répondez à 5 questions sur les découvertes et inventions canadiennes"
       }
     }
   ]

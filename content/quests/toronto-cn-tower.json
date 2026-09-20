@@ -229,7 +229,7 @@
       "kind": "answer",
       "targetId": "elections",
       "subject": "elections",
-      "count": 2,
+      "count": 5,
       "questionPool": [
         "elec-08-what-voters-choose-on-the-ballot",
         "elec-11-which-polling-station",
@@ -238,8 +238,8 @@
         "gov-60-other-election-rules"
       ],
       "prompt": {
-        "en": "Answer 2 questions about voting where you live",
-        "fr": "Répondez à 2 questions sur le vote là où vous habitez"
+        "en": "Answer 5 questions about voting where you live",
+        "fr": "Répondez à 5 questions sur le vote là où vous habitez"
       }
     },
     {
@@ -299,7 +299,7 @@
       "kind": "answer",
       "targetId": "elections",
       "subject": "elections",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "elec-03-another-name-for-a-riding",
         "elec-04-whom-an-mp-represents",
@@ -308,8 +308,8 @@
         "gov-39-who-wins-the-seat"
       ],
       "prompt": {
-        "en": "Answer 3 questions about electoral districts",
-        "fr": "Répondez à 3 questions sur les circonscriptions électorales"
+        "en": "Answer 5 questions about electoral districts",
+        "fr": "Répondez à 5 questions sur les circonscriptions électorales"
       }
     },
     {
@@ -369,7 +369,7 @@
       "kind": "answer",
       "targetId": "elections",
       "subject": "elections",
-      "count": 3,
+      "count": 5,
       "questionPool": [
         "elec-01-what-canadians-vote-for",
         "elec-02-re-elect-or-choose-new",
@@ -390,8 +390,8 @@
         "gov-48-secret-ballot"
       ],
       "prompt": {
-        "en": "Answer 3 questions about voting across Canada",
-        "fr": "Répondez à 3 questions sur le vote partout au Canada"
+        "en": "Answer 5 questions about voting across Canada",
+        "fr": "Répondez à 5 questions sur le vote partout au Canada"
       }
     }
   ]
