@@ -83,6 +83,8 @@ afterAll(() => {
 
 interface Run {
   readonly status: number;
+  /** `null` unless the child was KILLED rather than allowed to exit. See `run`. */
+  readonly signal: NodeJS.Signals | null;
   readonly stdout: string;
   readonly stderr: string;
   readonly output: string;
@@ -111,13 +113,64 @@ const run = (args: readonly string[]): Run => {
     result.error,
     `verify-art could not be run (${args.join(' ')}): ${result.error?.message ?? ''}`,
   ).toBeUndefined();
+  /*
+   * ASSERTED SECOND, AND IT IS NOT THE SAME QUESTION AS AN EMPTY STDOUT.
+   *
+   * `error` catches a spawn that never LAUNCHED. It does not catch a child that
+   * launched and was then KILLED, and `spawnSync` reports those two quite
+   * differently: a kill comes back `error: undefined`, `status: null`,
+   * `signal: 'SIGKILL'` -- or `SIGABRT`, which is how V8 ends a heap
+   * out-of-memory -- with nothing on stdout at all. `status ?? -1` below then
+   * turns that `null` into a plausible-looking -1, and a case asserting on
+   * output fails with "expected '' to contain ...": the exact silence the guard
+   * above exists to end, one layer further down.
+   *
+   * WHY THIS IS NOT WRITTEN AS "stdout must not be empty". That was tried, and
+   * it was wrong. Half the cases in this file exist to assert that the gate
+   * REFUSES -- a previous run's audit beside the hand-off, the keymap written
+   * into it, a stale working area -- and A REFUSAL IS PRECISELY A NON-ZERO EXIT
+   * WITH AN EMPTY STDOUT and the reason on stderr. An assertion keyed on empty
+   * stdout fires on every one of those correct behaviours.
+   *
+   * A SIGNAL is keyed on something no case here ever expects. No correct
+   * behaviour of this gate ends by being killed: a refusal exits, with a status,
+   * and `signal` null. So this cannot fire on a refusal, and it names the one
+   * ending that the empty stdout would otherwise be blamed on.
+   */
+  expect(
+    result.signal,
+    `verify-art was KILLED by ${result.signal ?? ''} rather than exiting (${args.join(' ')}). ` +
+      `That is a machine that ran out of something, not a verdict from the gate. ` +
+      `stderr: ${result.stderr ?? ''}`,
+  ).toBeNull();
   return {
     status: result.status ?? -1,
+    signal: result.signal,
     stdout: result.stdout ?? '',
     stderr: result.stderr ?? '',
     output: `${result.stdout ?? ''}${result.stderr ?? ''}`,
   };
 };
+
+/**
+ * Why a run that was expected to PRINT something printed nothing.
+ *
+ * FOR CASES THAT EXPECT OUTPUT, AND ONLY THOSE. A refusal case must not use
+ * this: refusing IS an empty stdout, and there is nothing there to explain.
+ *
+ * `verify-art` prints its whole summary in one place and LAST -- scripts/
+ * verify-art.mjs calls `printHandoffSummary` only once the hand-off is built --
+ * and both paths that give up before it write to stderr and exit: `die()` when
+ * the build threw, `report()` when the build found failures. So an empty stdout
+ * on a case that expected the summary means the gate gave up early, and the
+ * reason is on stderr, which an assertion that reads `stdout` alone throws away.
+ * That is how "expected '' to contain 'anonymisation held'" came to be reported
+ * four times in one day with no clue in it as to which of the two paths ran.
+ */
+const why = (result: Run): string =>
+  `verify-art exited ${String(result.status)} after printing ` +
+  `${String(result.stdout.length)} byte(s) of stdout, so it gave up before the summary. ` +
+  `Its stderr was:\n${result.stderr === '' ? '(empty)' : result.stderr}`;
 
 /**
  * Ask the shipped module, in its own process, what it answers.
@@ -448,8 +501,10 @@ describe('the gate over the repository as it stands', () => {
     // What is this file's to assert is the half that must hold either way: a
     // hand-off was built, and the anonymisation over it held. The scoring half
     // is asserted below over records this file constructs.
-    expect(gate.stdout).toMatch(/hand-off run [0-9a-f]{16} - \d+ render\(s\) over \d+ subject\(s\)/);
-    expect(gate.stdout).toContain('anonymisation held');
+    expect(gate.stdout, why(gate)).toMatch(
+      /hand-off run [0-9a-f]{16} - \d+ render\(s\) over \d+ subject\(s\)/,
+    );
+    expect(gate.stdout, why(gate)).toContain('anonymisation held');
   });
 
   it('never prints a bare OK, on a run that does pass', () => {
@@ -1237,7 +1292,7 @@ describe('an earlier run must not be reachable during a later run\'s blind phase
     // Walking that would be both meaningless and slow, so the scan runs only
     // when the operator passed --out. This asserts the gate still completes.
     const result = run(['--root', REPO, ...CHEAP]);
-    expect(result.stdout).toContain('anonymisation held');
+    expect(result.stdout, why(result)).toContain('anonymisation held');
   });
 });
 
