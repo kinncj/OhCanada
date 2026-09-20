@@ -111,6 +111,29 @@ const run = (args: readonly string[]): Run => {
     result.error,
     `verify-art could not be run (${args.join(' ')}): ${result.error?.message ?? ''}`,
   ).toBeUndefined();
+  /*
+   * AND SAY SO WHEN IT RAN BUT PRINTED NOTHING.
+   *
+   * `result.error` is set only when the spawn fails to LAUNCH. A process that
+   * starts, exits and writes nothing leaves `error` undefined and `stdout` '',
+   * so the guard above passes and the case fails later as "expected '' to
+   * contain ...", which names the assertion rather than the cause -- the same
+   * silence the comment above describes, one layer further in.
+   *
+   * That is the shape this gate has actually failed in: repeatedly, only under
+   * concurrency, and green on a rerun of the identical tree. The cases build
+   * into an mkdtemp under the SYSTEM temp directory, which concurrent agents
+   * share, so contention there is the standing suspicion -- but the evidence to
+   * confirm or kill it is the exit status and stderr, which were being
+   * discarded. They are reported here so the next occurrence carries its own
+   * diagnosis instead of costing another round of guesses.
+   */
+  if ((result.stdout ?? '') === '') {
+    expect(
+      { status: result.status, stderr: (result.stderr ?? '').slice(0, 2000) },
+      `verify-art ran but printed nothing (${args.join(' ')})`,
+    ).toEqual({ status: 0, stderr: '' });
+  }
   return {
     status: result.status ?? -1,
     stdout: result.stdout ?? '',
