@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-20T15:50:07Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Generations of pioneers and builders of British origins, as well as other groups, invested and endured hardship in laying the foundations of our country. This helps explain why Anglophones (English speakers) are generally referred to as English Canadians."
   }

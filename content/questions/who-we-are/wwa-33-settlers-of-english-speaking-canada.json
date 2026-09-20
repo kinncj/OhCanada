@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5[1m]",
-    "checkedAt": "2026-09-08T21:05:00Z",
+    "model": "claude-opus-5",
+    "checkedAt": "2026-09-20T15:50:07Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "The basic way of life in English-speaking areas was established by hundreds of thousands of English, Welsh, Scottish and Irish settlers, soldiers and migrants from the 1600s to the 20th century."
   }
