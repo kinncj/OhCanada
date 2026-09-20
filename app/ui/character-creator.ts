@@ -699,6 +699,20 @@ export function createCharacterCreator(
     focusOption(slot.id, option.id);
   }
 
+  /**
+   * The option this node is, or sits inside — `null` for anything else.
+   *
+   * Structural rather than `instanceof Element`, for the reason
+   * `app/ui/focus-trap.ts` gives: this screen is exercised against more than one
+   * document double, and in a realm where `Element` is not a global the check
+   * would throw rather than answer.
+   */
+  function optionIdOf(node: EventTarget | Element | null): string | null {
+    const candidate = node as Element | null;
+    if (candidate === null || typeof candidate.closest !== 'function') return null;
+    return candidate.closest('[data-option-id]')?.getAttribute('data-option-id') ?? null;
+  }
+
   function onGroupKey(slot: CreatorSlot, event: KeyboardEvent): void {
     const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
     if (!keys.includes(event.key)) return;
@@ -706,10 +720,38 @@ export function createCharacterCreator(
     const list = optionsOf(slot);
     if (list.length === 0) return;
     const forward = event.key === 'ArrowRight' || event.key === 'ArrowDown';
-    const current = list.findIndex((option) => option.id === selection[slot.id]);
-    const next = (current + (forward ? 1 : -1) + list.length) % list.length;
+    /*
+     * An arrow moves from the option that has **focus**, not from the one that
+     * is chosen — the ARIA radio group pattern, and the only reading that is
+     * true when the two have come apart.
+     *
+     * Roving tabindex puts the Tab stop on the chosen option, so most of the
+     * time they are the same node and this is invisible. They separate where a
+     * switch highlight, a pointer that has not let go, or Shift+Tab back into a
+     * group leaves focus on an unchosen option — and there ArrowRight used to
+     * move to the option after whichever one was *checked*, jumping focus past
+     * the one the player was actually on.
+     *
+     * The chosen option is the fallback, for a key pressed on the group itself
+     * rather than on a radio; with neither, the ends are where a first arrow
+     * lands.
+     */
+    const focusedId = optionIdOf(event.target) ?? optionIdOf(doc.activeElement);
+    const focusedAt = list.findIndex((option) => option.id === focusedId);
+    const current =
+      focusedAt === -1 ? list.findIndex((option) => option.id === selection[slot.id]) : focusedAt;
+    const next =
+      current === -1
+        ? forward
+          ? 0
+          : list.length - 1
+        : (current + (forward ? 1 : -1) + list.length) % list.length;
     const target = list[next];
-    if (target !== undefined) select(slot, target);
+    if (target === undefined) return;
+    select(slot, target);
+    /* `select` returns early when the option is already chosen, and an arrow
+       that lands on the chosen option must still take focus there. */
+    focusOption(slot.id, target.id);
   }
 
   function focusOption(slotId: string, optionId: string): void {

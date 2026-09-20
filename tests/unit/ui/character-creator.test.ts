@@ -388,6 +388,47 @@ describe('the character creator', () => {
       expect(creator.selection['hair']).toBe('braids');
     });
 
+    it('moves from the option that has focus, not from the one that is chosen', () => {
+      /*
+       * The ARIA radio group pattern. Roving tabindex puts the Tab stop on the
+       * chosen option, so the two are usually the same node — they come apart
+       * where a switch highlight, a pointer that has not let go, or Shift+Tab
+       * back into a group leaves focus on an unchosen option, and there
+       * ArrowRight used to move to the option after whichever was *checked*.
+       */
+      const { option, creator, page } = open({
+        initialSelection: { skin: 'skin-1', hair: 'curly', coat: 'parka' },
+      });
+
+      /* Focus the last option; the chosen one is the second. */
+      const braids = option('slot-hair', 'braids');
+      braids.focus();
+      press(braids, 'ArrowRight');
+      /* Wraps from the focused end to the first option, not to "straight". */
+      expect(creator.selection['hair']).toBe('coily');
+      expect(page.doc.activeElement?.getAttribute('data-option-id')).toBe('coily');
+
+      const straight = option('slot-hair', 'straight');
+      straight.focus();
+      press(straight, 'ArrowLeft');
+      expect(creator.selection['hair']).toBe('curly');
+      expect(page.doc.activeElement?.getAttribute('data-option-id')).toBe('curly');
+    });
+
+    it('takes focus onto the chosen option when an arrow lands on it', () => {
+      /* Choosing is a no-op here — the option is already chosen — and focus
+         must still move, or the arrow does nothing a player can see. */
+      const { option, creator, page } = open({
+        initialSelection: { skin: 'skin-1', hair: 'curly', coat: 'parka' },
+      });
+      const coily = option('slot-hair', 'coily');
+      coily.focus();
+
+      press(coily, 'ArrowRight');
+      expect(creator.selection['hair']).toBe('curly');
+      expect(page.doc.activeElement?.getAttribute('data-option-id')).toBe('curly');
+    });
+
     it('leaves one Tab stop per group, so Tab moves between groups', () => {
       const { group } = open({ initialSelection: { skin: 'skin-1', hair: 'coily', coat: 'parka' } });
       const stops = group('slot-hair')
