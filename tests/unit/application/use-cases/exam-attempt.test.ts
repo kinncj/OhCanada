@@ -32,6 +32,8 @@ import {
   withExamInProgress,
   withRemaining,
 } from '@application/use-cases/exam-attempt';
+import { toProgressSnapshot } from '@application/persistence/progress-document';
+import { validateProgressDocument } from '@application/persistence/progress-schema';
 
 const NOW = 1_764_000_000_000 as EpochMillis;
 
@@ -76,6 +78,12 @@ describe('starting an exam', () => {
        there is only one field to write. */
     expect(startExam([question('a', 'rights')], NOW, null).remainingMs).toBeNull();
   });
+
+  it('writes the clock down as whole milliseconds, whatever the clock read', () => {
+    /* The clock reads `deadline - performance.now()`, which carries a fraction.
+       `remainingMs` is an integer in the schema. */
+    expect(startExam([question('a', 'rights')], NOW, 1_799_999.7).remainingMs).toBe(1_799_999);
+  });
 });
 
 describe('answering, and changing an answer', () => {
@@ -110,6 +118,69 @@ describe('answering, and changing an answer', () => {
     const held = withRemaining(exam, null);
     expect(held).toBe(exam);
     expect(withRemaining(exam, 60_000).remainingMs).toBe(60_000);
+  });
+
+  it('folds a live clock reading in as a whole millisecond', () => {
+    const folded = withRemaining(exam, 1_799_412.399_999_9);
+    expect(folded.remainingMs).toBe(1_799_412);
+    /* Already whole, and the same number: the same object, so an answer that
+       did not move the clock does not rewrite the attempt. */
+    expect(withRemaining(folded, 1_799_412)).toBe(folded);
+    /* Floored, never rounded up: a fraction of a millisecond the player does
+       not have is not time the save may give back to them. */
+    expect(withRemaining(exam, 0.9).remainingMs).toBe(0);
+    /* Not a duration, so not written down as one (`minimum: 0`, and NaN is not
+       a number the schema has any shape for). */
+    expect(withRemaining(exam, -5).remainingMs).toBe(0);
+    expect(withRemaining(exam, Number.NaN).remainingMs).toBeNull();
+  });
+});
+
+/**
+ * The regression: a timed exam could not be saved at all.
+ *
+ * `bootstrap/exam.ts` folds `ExamClock.remainingMs` into the attempt on every
+ * answer, and that reading is `deadline - Clock.elapsed()` where `elapsed()` is
+ * `performance.now()` — a fraction. `examInProgress.remainingMs` is
+ * `{ "type": "integer", "minimum": 0 }`, so every save after the first answer
+ * of every timed exam was refused by our own schema with `save.schema.invalid`,
+ * while untimed exams (`remainingMs: null`) saved perfectly. The player was
+ * then told their browser was not saving, and a reload resumed the only write
+ * that had ever landed: the one `begin` made, with no answers in it.
+ */
+describe('a timed exam, all the way to the schema', () => {
+  it('writes a document the save schema accepts after an answer', () => {
+    const exam = startExam(
+      [question('a', 'rights', 1), question('b', 'government', 0)],
+      NOW,
+      1_800_000,
+    );
+    /* The order `choose` uses: the answer, then the clock as it reads now. */
+    const answered = withRemaining(withChoice(exam, 0, 1), 1_799_412.399_999_9);
+    const written = toProgressSnapshot(withExamInProgress(blank(), answered), {
+      version: 3,
+      updatedAt: NOW,
+    });
+    expect(written.ok).toBe(true);
+    if (!written.ok) return;
+
+    const inProgress = written.value.examInProgress;
+    expect(inProgress?.remainingMs).toBe(1_799_412);
+    expect(validateProgressDocument(written.value).ok).toBe(true);
+    if (inProgress === null || inProgress === undefined) return;
+
+    /* The rule that was being broken, stated as the schema states it. This is
+       the document every timed save used to be. */
+    const raw = validateProgressDocument({
+      ...written.value,
+      examInProgress: { ...inProgress, remainingMs: 1_799_412.399_999_9 },
+    });
+    expect(raw.ok).toBe(false);
+    if (raw.ok) return;
+    expect(raw.error.code).toBe('save.schema.invalid');
+    expect(raw.error.details?.violations).toContain(
+      '/examInProgress/remainingMs must be a whole number',
+    );
   });
 });
 

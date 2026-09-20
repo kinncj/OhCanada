@@ -57,8 +57,41 @@ export const startExam = (
     chosenIndex: null,
     correctIndex: question.correctIndex,
   })),
-  remainingMs,
+  remainingMs: wholeMillisLeft(remainingMs),
 });
+
+/**
+ * The clock, as a save is allowed to write it down.
+ *
+ * `progress.schema.json#/$defs/examInProgress/properties/remainingMs` is
+ * `{ "type": "integer", "minimum": 0 }` or `null`: a **whole** count of
+ * milliseconds. A clock reading is not one. `ExamClock.remainingMs` is
+ * `deadline - Clock.elapsed()`, and `elapsed()` is `performance.now()`, which
+ * carries a fraction — so a thirty-minute exam answered a moment in reads
+ * `1799999.7`, and every save of a *timed* exam was refused by our own schema
+ * with `save.schema.invalid` at `/examInProgress/remainingMs`, "must be a whole
+ * number". Only the write at `begin` survived, because that one carries the
+ * round number out of `game.config.json` and has never been near the clock. An
+ * untimed exam writes `null` and was never affected, which is why the defect
+ * read as "the timer breaks saving" rather than "the exam breaks saving".
+ *
+ * Floored rather than rounded: the whole millisecond the player certainly still
+ * has, never a fraction of one they do not. Nothing on screen can tell the
+ * difference, because the clock draws whole minutes and rounds them up
+ * (`TN-TIMER` rule 2, `clockMinutes`).
+ *
+ * A non-finite reading is not a duration and cannot be written as one, so it is
+ * recorded as `null`. The attempt keeps every answer and comes back untimed,
+ * which is the only outcome that loses nothing the player actually did.
+ *
+ * Applied here, at the two functions that build an `ExamInProgress`, rather
+ * than at the caller in `app/bootstrap`: the invariant belongs to the value the
+ * schema describes, so a screen that reads a clock cannot forget it.
+ */
+export const wholeMillisLeft = (remainingMs: number | null): number | null =>
+  remainingMs === null || !Number.isFinite(remainingMs)
+    ? null
+    : Math.max(0, Math.floor(remainingMs));
 
 /**
  * Record one answer, or change one.
@@ -78,9 +111,16 @@ export const withChoice = (
   ),
 });
 
-/** The clock, folded back in before the exam is written down. */
-export const withRemaining = (exam: ExamInProgress, remainingMs: number | null): ExamInProgress =>
-  exam.remainingMs === remainingMs ? exam : { ...exam, remainingMs };
+/**
+ * The clock, folded back in before the exam is written down — as a whole number
+ * of milliseconds, which is the only shape the save schema has for one. See
+ * {@link wholeMillisLeft}: this is the function every answer, every leave and
+ * every stopped timer passes a live clock reading through.
+ */
+export const withRemaining = (exam: ExamInProgress, remainingMs: number | null): ExamInProgress => {
+  const left = wholeMillisLeft(remainingMs);
+  return exam.remainingMs === left ? exam : { ...exam, remainingMs: left };
+};
 
 /**
  * Keep the unfinished exam. Leaving records this and nothing else — no
