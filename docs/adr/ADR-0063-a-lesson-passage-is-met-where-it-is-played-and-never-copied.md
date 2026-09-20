@@ -390,12 +390,37 @@ the contract only.
   must leave the level the way it leaves Learn. It ships covering the shipped corpus so it is not vacuous on
   its first run (ADR-0024), which on a tree with no `read` step means asserting the resolver finds the 302
   passages it searches.
+  **DISCHARGED 2026-09-20** — `scripts/lib/lesson-passages.mjs`, with hand-written types in
+  `lesson-passages.d.mts` so the one implementation stays one implementation, driven by
+  `tests/unit/contracts/a-read-step-names-a-passage-that-exists.test.ts`. `resolvePassage` answers
+  **exactly one or a named failure** and never `undefined`: zero matches is `dangling` and two or more is
+  `ambiguous`, each carrying the count and naming the collection searched. Both routes to an ambiguity are
+  covered, because both are real and neither is visible to a schema — two lesson documents sharing an `id`,
+  and two passages sharing an `id` inside one lesson (`uniqueItems` compares whole items). `passageVerdict`
+  adds the readable-passage rule: a `quarantined`/`rejected` grant, a grant made for a `sourceHash` the
+  passage no longer cites, `verified` with no evidence, and `factual: false` each refuse separately.
+  **Not vacuous:** the sweep resolves all **302** passages across **48** lessons and **10** chapters by
+  their own pair and holds every one to the readable rule; the quest walk reports **0** references today,
+  asserted as a number rather than assumed.
 
 - **OBLIGATION due=2026-12-20 owner=engine** — make `read` a kind the loader accepts or explicitly refuses
   with a named reason, and end the duplicated step-kind vocabulary: `app/domain/entities/quest.ts`'s
   `QuestStepKind` and `app/bootstrap/quests.ts`'s `STEP_KINDS` both restate the union the schema and the port
   already agree on. One of the three is the source; the other two derive from it. Until this lands the schema
   permits a step the engine rejects, which is safe and is why this is dated before the content marker.
+  **DISCHARGED 2026-09-20** — `app/bootstrap/quests.ts` accepts `read`, and the vocabulary is now stated
+  four times with **every link gated**. The schema is the source. `STEP_KINDS` is `Object.keys` of a
+  `Record` keyed by the port's own union, so a kind the port declares and the loader does not handle is a
+  **compile error** rather than a message listing four kinds out of five, and the sentence a developer reads
+  is built from the same list the reader checks against. `app/domain`'s `QuestStepKind` cannot derive from
+  the port — `domain-is-pure` forbids the import — so it is **pinned** instead:
+  `entities-mirror-ports.test.ts` asserts the two unions are assignable in both directions, which for string
+  literals is equality. `a-step-kind-is-written-once.test.ts` holds the runtime list to the schema's `enum`
+  at run time, which is the one link no type can hold. A `read` step is refused at load for *shape* — no
+  `passages`, an empty `passages`, a malformed pair, or `dialogue` carried beside it (ADR-0063 §3) — and the
+  cross-document resolution is the infra gate above, deliberately: resolving a reference in the composition
+  root would mean eagerly globbing 48 lesson documents into the initial payload, against §6's per-chapter
+  lazy catalogue and the ≤ 8 MB budget.
 
 - **OBLIGATION due=2027-01-20 owner=ui-a11y** — decide how a single-switch player and a screen-reader player
   move through a `read` step, and record it in the story that carries the reader. It is the same question

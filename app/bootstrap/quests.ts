@@ -35,6 +35,26 @@
  * This is the artefact's guard, not the repository's: a document that reaches a
  * player must be *drawable*, and the rest fails the build long before that.
  *
+ * ## Where a `read` step's checking is split, and why
+ *
+ * A `read` step (ADR-0063) is the one kind whose content lives in another
+ * document, so "drawable" and "resolvable" come apart. This file holds the
+ * **shape**: the step carries a non-empty `passages[]`, every entry is a
+ * `{ lesson, passage }` pair of kebab-case ids, and no `dialogue` sits beside
+ * them. A step failing any of those is refused loudly, by name, at load.
+ *
+ * It does **not** resolve the references, and that is deliberate rather than
+ * pending. Resolving `{ lesson, passage }` means having the lesson corpus, and
+ * ADR-0063 §6 puts that behind one `import.meta.glob` **per chapter, lazily
+ * imported**, so a chapter is a chunk fetched on first open and the ≤ 8 MB
+ * initial payload does not move. Eagerly globbing 48 lesson documents into the
+ * composition root to check a reference would spend that budget to hold a gate
+ * CI can hold for nothing, and would pre-empt a catalogue design owed to
+ * somebody else. The cross-document half is
+ * `scripts/lib/lesson-passages.mjs`, driven by
+ * `tests/unit/contracts/a-read-step-names-a-passage-that-exists.test.ts`, which
+ * fails differently on a reference naming nothing and one naming two things.
+ *
  * ## What changed: verification is not the schema's job alone
  *
  * This file used to say that whether a line's claim is verified was
@@ -54,7 +74,12 @@
  */
 
 import { appErr, ok, type Result } from '@common/result';
-import type { DialogueLine, QuestDocument, QuestStepDocument } from '@application/ports';
+import type {
+  DialogueLine,
+  LessonPassageReference,
+  QuestDocument,
+  QuestStepDocument,
+} from '@application/ports';
 import type { CharacterId, LevelId, QuestId, QuestionId, SubjectId } from '@domain/ids';
 import type { LocalizedText } from '@domain/entities/values';
 
@@ -127,7 +152,47 @@ function readLocalized(
   return ok({ en, fr });
 }
 
-const STEP_KINDS: readonly QuestStepDocument['kind'][] = ['talk', 'visit', 'collect', 'answer'];
+/**
+ * The step kinds this reader can draw — **derived from the port, not listed
+ * beside it.**
+ *
+ * This used to be a hand-written array of four, and ADR-0063 found what that
+ * costs. The step-kind vocabulary is stated in four places: the schema's `enum`,
+ * the union on `QuestStepDocument`, `QuestStepKind` in
+ * `app/domain/entities/quest.ts`, and this runtime list. Only the schema-to-port
+ * pair was gated, so `read` could be added to both of those and *this* file
+ * would go on rejecting a `read` step at load with "must be one of talk, visit,
+ * collect, answer" — a document the repository accepts and the artefact refuses,
+ * which is the safe direction but not a state to leave a build in.
+ *
+ * A `Record` keyed by the port's own union is what ends it. The compiler demands
+ * a key per member, so a sixth kind added to the schema and the port **cannot
+ * compile** until it is handled here, and a key for a kind the port does not
+ * declare is equally an error. The array is then `Object.keys` of the table
+ * rather than a second literal, so the message a developer reads and the set the
+ * reader checks against can never be different lists.
+ *
+ * That leaves the domain's `QuestStepKind`, which cannot derive from this one —
+ * `app/domain` imports nothing outside `domain` and `common`, so it has to
+ * restate the union. It is pinned instead of derived:
+ * `tests/unit/contracts/entities-mirror-ports.test.ts` asserts the port union
+ * and the domain union are assignable **in both directions**, which is equality
+ * stated as two identity functions, and
+ * `tests/unit/contracts/a-step-kind-is-written-once.test.ts` holds this table to
+ * the schema's `enum` at run time. Four statements, one source, every link
+ * gated.
+ */
+const STEP_KIND_TABLE: Readonly<Record<QuestStepDocument['kind'], true>> = {
+  talk: true,
+  visit: true,
+  collect: true,
+  answer: true,
+  read: true,
+};
+
+export const STEP_KINDS: readonly QuestStepDocument['kind'][] = Object.keys(
+  STEP_KIND_TABLE,
+) as QuestStepDocument['kind'][];
 
 /**
  * The lines a step's giver speaks, in both languages.
@@ -197,6 +262,47 @@ function readLine(line: unknown, at: string): Result<DialogueLine> {
   });
 }
 
+/**
+ * What a `read` step puts in front of the player: references, never words.
+ *
+ * ADR-0063 §2 is the load-bearing half of that step, and it is a rule about
+ * *ownership* rather than layout. A passage already exists in
+ * `content/lessons/<chapter>/<id>.json`, already carries one proposition, one
+ * contiguous quote and one verifier's grant; naming it here spends none of those
+ * again, and copying its sentence into a `dialogue` line instead would author a
+ * second claim about one proposition — a fresh paraphrase, a fresh translation
+ * and a fresh verifier commit (ADR-0003) — while leaving the passage itself
+ * reachable by nothing.
+ *
+ * Both halves of the pair are required, and that is a contract rather than
+ * belt-and-braces: `lesson.schema.json` scopes a passage id's uniqueness to
+ * **within its lesson**, so a bare id is not a key. All 302 authored ids happen
+ * to be distinct corpus-wide today, which is luck; a reference resting on it
+ * would break silently the first time two chapters both named a passage
+ * `e1-the-vote` (ADR-0063 §4).
+ *
+ * An empty list is refused rather than carried. A reader opened over no
+ * passages is a blank sheet the player taps past — ADR-0024's empty collection
+ * reducing to a pass, with a screen attached.
+ */
+function readPassages(raw: unknown, where: string): Result<LessonPassageReference[]> {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return invalid(where, 'must be a non-empty array of { lesson, passage } references.');
+  }
+
+  const passages: LessonPassageReference[] = [];
+  for (const [index, entry] of raw.entries()) {
+    const at = `${where}[${String(index)}]`;
+    if (!isRecord(entry)) return invalid(at, 'must be an object with lesson and passage.');
+    const lesson = readId(entry, 'lesson', at);
+    if (!lesson.ok) return lesson;
+    const passage = readId(entry, 'passage', at);
+    if (!passage.ok) return passage;
+    passages.push({ lesson: lesson.value, passage: passage.value });
+  }
+  return ok(passages);
+}
+
 function readStep(raw: unknown, where: string): Result<QuestStepDocument> {
   if (!isRecord(raw)) return invalid(where, 'must be an object.');
 
@@ -220,6 +326,26 @@ function readStep(raw: unknown, where: string): Result<QuestStepDocument> {
     targetId: targetId.value,
     prompt: prompt.value,
   };
+
+  if (kind === 'read') {
+    /*
+     * One voice, and it is the passage's (ADR-0063 §3). `dialogue` beside
+     * `passages` is two narrators for one paragraph, and it re-opens the
+     * question of which of them the verifier granted — so it is refused here as
+     * well as by the schema's conditional, because this is the artefact and not
+     * the repository.
+     */
+    if (raw['dialogue'] !== undefined) {
+      return invalid(
+        `${where}.dialogue`,
+        'may not sit beside passages: a read step is spoken by the passage, and a line next ' +
+          'to it is a second narrator for one proposition.',
+      );
+    }
+    const passages = readPassages(raw['passages'], `${where}.passages`);
+    if (!passages.ok) return passages;
+    return ok({ ...base, passages: passages.value });
+  }
 
   if (kind !== 'answer') {
     /*

@@ -41,7 +41,7 @@ import type { Character, PlayerCharacter } from '@domain/entities/character';
 import type { Level } from '@domain/entities/level';
 import type { Player, Settings, VolumeSettings } from '@domain/entities/player';
 import type { Progress } from '@domain/entities/progress';
-import type { Quest, QuestStep } from '@domain/entities/quest';
+import type { Quest, QuestStep, QuestStepKind } from '@domain/entities/quest';
 import type { Question } from '@domain/entities/question';
 
 import { spawnPoint } from '@domain/entities/level';
@@ -67,6 +67,27 @@ const ottawa = JSON.parse(
 const asQuestion = (document: QuestionDocument): Question => document;
 const asQuest = (document: QuestDocument): Quest => document;
 const asQuestStep = (document: QuestStepDocument): QuestStep => document;
+
+/**
+ * The step-kind vocabulary, pinned in **both** directions — ADR-0063.
+ *
+ * Everywhere else in this file the relation is port ⊆ entity, because a document
+ * flowing into a domain rule is the direction that matters. For this union that
+ * is not enough, and ADR-0063 recorded exactly why: the vocabulary is stated
+ * four times, `app/domain` cannot import the port so it has to restate it, and
+ * one-way assignability would let the domain grow a kind the schema has never
+ * heard of. Two identity functions in opposite directions is mutual
+ * assignability, which for a union of string literals is equality — so the two
+ * lists are the same list or `make typecheck` fails here.
+ *
+ * ADR-0063 predicted this would be latent and was wrong: adding `read` to the
+ * port alone broke `tests/unit/domain/entities/quest.test.ts`, a file that looks
+ * unrelated to the change, because a `QuestDocument` is passed where a domain
+ * `Quest` is expected. The duplication has teeth; what it lacked was a place
+ * where the failure *names the vocabulary*. This is that place.
+ */
+const asDomainStepKind = (kind: QuestStepDocument['kind']): QuestStepKind => kind;
+const asPortStepKind = (kind: QuestStepKind): QuestStepDocument['kind'] => kind;
 const asCharacter = (document: CharacterDocument): Character => document;
 const asLevel = (document: LevelDocument): Level => document;
 
@@ -97,6 +118,20 @@ describe('a content document is the domain entity that reads it', () => {
     const step = document.steps[0];
     expect(step).toBeDefined();
     if (step !== undefined) expect(asQuestStep(step)).toBe(step);
+  });
+
+  it('spells a step kind the same way in the port and in the domain', () => {
+    /*
+     * The assertion is the two functions above, at compile time. This runs them
+     * so the pin is exercised rather than merely declared, and it names `read`
+     * specifically: it is the kind ADR-0063 added, and the one that reached the
+     * schema and the port while `app/bootstrap/quests.ts` still refused it.
+     */
+    expect(asDomainStepKind('read')).toBe('read');
+    expect(asPortStepKind('read')).toBe('read');
+    for (const kind of ['talk', 'visit', 'collect', 'answer', 'read'] as const) {
+      expect(asPortStepKind(asDomainStepKind(kind))).toBe(kind);
+    }
   });
 
   it('passes a character straight through', () => {

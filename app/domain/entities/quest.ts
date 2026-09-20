@@ -36,13 +36,25 @@ import type { LocalizedText } from '@domain/entities/values';
  * `read` was added by ADR-0063: a step that shows the player passages of
  * `content/lessons/**` by reference, rather than carrying words of its own.
  *
- * This union is stated **three** times in the tree — here, on
- * `QuestStepDocument` in `app/application/ports/content-repository.ts`, and as a
- * runtime list in `app/bootstrap/quests.ts` — and only the middle one is held by
- * a gate (`ports-match-schemas.test.ts` compares it against the schema's `enum`
- * in both directions). The duplication is load-bearing rather than cosmetic: a
- * kind added to the port alone fails `make typecheck` here. Ending it is owed
- * by ADR-0063's engine obligation.
+ * This union is stated four times in the tree — here, on `QuestStepDocument` in
+ * `app/application/ports/content-repository.ts`, as the schema's `enum`, and as
+ * a runtime list in `app/bootstrap/quests.ts`. **The schema is the source and
+ * every link is now gated**, which is ADR-0063's engine obligation discharged:
+ *
+ *  - schema ↔ port — `ports-match-schemas.test.ts`, both directions.
+ *  - port ↔ this union — `entities-mirror-ports.test.ts` asserts the two are
+ *    assignable *in both directions*, which is equality stated as two identity
+ *    functions. This one cannot *derive* from the port, and that is the
+ *    architecture rather than an oversight: `app/domain` imports nothing outside
+ *    `domain` and `common`, so it restates the union and is pinned instead.
+ *  - port ↔ the runtime list — `app/bootstrap/quests.ts` builds it from a
+ *    `Record` keyed by the port's own union, so a kind the port declares and the
+ *    loader does not handle is a compile error, and
+ *    `a-step-kind-is-written-once.test.ts` holds the list to the schema's `enum`
+ *    at run time.
+ *
+ * A sixth kind therefore cannot repeat ADR-0063's defect, where `read` reached
+ * the schema and the port while the loader went on rejecting it.
  */
 export type QuestStepKind = 'talk' | 'visit' | 'collect' | 'answer' | 'read';
 

@@ -232,3 +232,138 @@ describe('a document that will not load', () => {
     expect(catalogue.refused).toHaveLength(1);
   });
 });
+
+/**
+ * The `read` step (ADR-0063).
+ *
+ * Until this landed, `STEP_KINDS` listed four kinds and a `read` step authored
+ * against the shipped schema was refused at load with a message naming four
+ * kinds out of five. That was the safe direction — a step the engine cannot draw
+ * is better refused than drawn as a blank sheet — but it meant the repository
+ * accepted a document the artefact would not.
+ *
+ * What this file owns is the **shape**, which is the half the composition root
+ * can decide on its own: the step carries a non-empty `passages[]`, every entry
+ * is a `{ lesson, passage }` pair, and no `dialogue` sits beside them. Whether
+ * those references *resolve* is a cross-document question over
+ * `content/lessons/**`, and it belongs to
+ * `tests/unit/contracts/a-read-step-names-a-passage-that-exists.test.ts` — the
+ * loader does not hold the lesson corpus and deliberately does not fetch it
+ * (ADR-0063 §6: one lazy `import.meta.glob` per chapter, so the ≤ 8 MB initial
+ * payload does not move).
+ */
+describe('a read step', () => {
+  const readStepQuest = (step: Record<string, unknown>): Record<string, unknown> => ({
+    $schema: 'https://truenorth.app/schemas/quest.schema.json',
+    id: 'quest.somewhere.a-reading',
+    levelId: 'somewhere',
+    giver: 'a-plaque',
+    title: { en: 'A reading', fr: 'Une lecture' },
+    summary: { en: 'Read the panel.', fr: 'Lisez le panneau.' },
+    steps: [step],
+  });
+
+  const aReadStep = (overrides: Record<string, unknown> = {}): Record<string, unknown> => ({
+    id: 'read-the-panel',
+    kind: 'read',
+    targetId: 'a-plaque',
+    prompt: { en: 'Read the panel', fr: 'Lisez le panneau' },
+    passages: [{ lesson: 'who-01-what-canadians-share', passage: 'w1-proud-of-our-identity' }],
+    ...overrides,
+  });
+
+  it('loads, and carries its references through as references', () => {
+    /*
+     * The load-bearing half of ADR-0063 §2: the step names passages, it never
+     * contains them. If this ever carries text, a passage has been copied and
+     * the copy needs its own paraphrase, its own French and its own verifier
+     * commit — two homes for one proposition, with nothing able to join them.
+     */
+    const read = readQuest(readStepQuest(aReadStep()), 'fixture');
+    expect(read.ok).toBe(true);
+    if (!read.ok) return;
+
+    const step = read.value.steps[0];
+    expect(step?.kind).toBe('read');
+    expect(step?.passages).toEqual([
+      { lesson: 'who-01-what-canadians-share', passage: 'w1-proud-of-our-identity' },
+    ]);
+    expect(step?.dialogue).toBeUndefined();
+  });
+
+  it('keeps the author\'s reading order', () => {
+    // The array is the order a chapter's argument is read in, so a reader that
+    // re-sorted it would rearrange somebody's paragraph sequence.
+    const read = readQuest(
+      readStepQuest(
+        aReadStep({
+          passages: [
+            { lesson: 'who-01-what-canadians-share', passage: 'p-three' },
+            { lesson: 'who-01-what-canadians-share', passage: 'p-one' },
+            { lesson: 'who-02-the-first-peoples-of-this-land', passage: 'p-two' },
+          ],
+        }),
+      ),
+      'fixture',
+    );
+    expect(read.ok).toBe(true);
+    if (!read.ok) return;
+    expect(read.value.steps[0]?.passages?.map((reference) => reference.passage)).toEqual([
+      'p-three',
+      'p-one',
+      'p-two',
+    ]);
+  });
+
+  it.each([
+    ['no passages at all', aReadStep({ passages: undefined })],
+    ['an empty passages list', aReadStep({ passages: [] })],
+    ['a passage that is not an object', aReadStep({ passages: ['w1-proud-of-our-identity'] })],
+    ['only the lesson half', aReadStep({ passages: [{ lesson: 'who-01-what-canadians-share' }] })],
+    ['only the passage half', aReadStep({ passages: [{ passage: 'w1-proud-of-our-identity' }] })],
+    ['a lesson id that is not an id', aReadStep({ passages: [{ lesson: 'Who We Are', passage: 'p-1' }] })],
+  ])('is refused when it carries %s', (_what, step) => {
+    /*
+     * An empty list is the ADR-0024 case with a screen attached: a reader opened
+     * over no passages is a blank sheet the player taps past, which reads to
+     * them as a bug in the game rather than a bug in the content.
+     *
+     * A bare id is refused because a passage id is unique only WITHIN its lesson
+     * (`lesson.schema.json`), so the pair is the key. All 302 authored ids are
+     * distinct corpus-wide today, and ADR-0063 §4 calls that luck rather than a
+     * contract.
+     */
+    expect(readQuest(readStepQuest(step), 'fixture').ok).toBe(false);
+  });
+
+  it('is refused when a spoken line sits beside the passage', () => {
+    /*
+     * ADR-0063 §3: the passage is the voice. A line next to it is a second
+     * narrator for one proposition, and it re-opens the question of which of the
+     * two a verifier granted. The schema forbids it with a conditional; this is
+     * the artefact repeating the check, because a player does not play the
+     * repository.
+     */
+    const withVoice = aReadStep({
+      dialogue: [
+        {
+          speaker: 'a-plaque',
+          text: { en: 'And another thing.', fr: 'Et autre chose.' },
+          fact: { factual: false, source: null, verification: null },
+        },
+      ],
+    });
+    const read = readQuest(readStepQuest(withVoice), 'fixture');
+    expect(read.ok).toBe(false);
+    if (!read.ok) expect(read.error.message).toContain('dialogue');
+  });
+
+  it('names the step and the field when a reference is malformed', () => {
+    const read = readQuest(
+      readStepQuest(aReadStep({ passages: [{ lesson: 'a-lesson' }] })),
+      'content/quests/a.json',
+    );
+    expect(read.ok).toBe(false);
+    if (!read.ok) expect(read.error.message).toContain('steps[0].passages[0].passage');
+  });
+});
