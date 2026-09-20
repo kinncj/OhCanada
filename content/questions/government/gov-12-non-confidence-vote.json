@@ -12,16 +12,16 @@
       "fr": "Rien; le gouvernement termine son mandat de quatre ans."
     },
     {
-      "en": "Resign, having lost the confidence of the House.",
-      "fr": "Démissionner, ayant perdu la confiance de la Chambre."
+      "en": "Resign, having lost the confidence of the House of Commons.",
+      "fr": "Démissionner, ayant perdu la confiance de la Chambre des communes."
     },
     {
-      "en": "Ask the Senate to hold the vote again.",
-      "fr": "Demander au Sénat de reprendre le vote."
+      "en": "Ask the Senate to hold the vote again, since it reviews bills.",
+      "fr": "Demander au Sénat de reprendre le vote, puisqu'il examine les projets de loi."
     },
     {
-      "en": "Wait for a court to decide.",
-      "fr": "Attendre la décision d'un tribunal."
+      "en": "Wait for a court to decide, once the case is filed.",
+      "fr": "Attendre la décision d'un tribunal, une fois la cause déposée."
     }
   ],
   "correctIndex": 1,

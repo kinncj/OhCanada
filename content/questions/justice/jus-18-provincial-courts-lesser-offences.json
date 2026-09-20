@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "Lesser offences, the less serious ones.",
-      "fr": "Les infractions mineures, les moins graves."
+      "en": "Lesser offences, along with family and traffic matters.",
+      "fr": "Les infractions mineures, ainsi que les affaires familiales et de circulation."
     },
     {
-      "en": "Changes to the Constitution.",
-      "fr": "Les modifications à la Constitution."
+      "en": "Changes to the Constitution, amended in 1982.",
+      "fr": "Les modifications à la Constitution, modifiée en 1982."
     },
     {
-      "en": "Appeals from the Supreme Court of Canada.",
-      "fr": "Les appels des décisions de la Cour suprême du Canada."
+      "en": "Appeals from the Supreme Court of Canada, our highest court.",
+      "fr": "Les appels des décisions de la Cour suprême du Canada, notre plus haut tribunal."
     },
     {
-      "en": "Treaties with other countries.",
-      "fr": "Les traités avec d'autres pays."
+      "en": "Treaties with other countries, a matter of foreign policy.",
+      "fr": "Les traités avec d'autres pays, une question de politique étrangère."
     }
   ],
   "correctIndex": 0,

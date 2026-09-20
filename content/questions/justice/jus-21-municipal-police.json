@@ -8,20 +8,20 @@
   },
   "options": [
     {
-      "en": "In all provinces, alongside other forces.",
-      "fr": "Dans toutes les provinces, avec d'autres corps policiers."
+      "en": "In all provinces, alongside the other kinds of police force.",
+      "fr": "Dans toutes les provinces, en plus des autres types de corps policiers."
     },
     {
-      "en": "Only in the three territories.",
-      "fr": "Seulement dans les trois territoires."
+      "en": "Only in the three territories, not in the provinces.",
+      "fr": "Seulement dans les trois territoires, pas dans les provinces."
     },
     {
-      "en": "Only in Ontario and Quebec.",
-      "fr": "Seulement en Ontario et au Québec."
+      "en": "Only in Ontario and Quebec, which have provincial forces.",
+      "fr": "Seulement en Ontario et au Québec, qui ont des forces provinciales."
     },
     {
-      "en": "Only in cities of more than one million people.",
-      "fr": "Seulement dans les villes de plus d'un million d'habitants."
+      "en": "Only in cities of more than one million people, and nowhere else.",
+      "fr": "Seulement dans les villes de plus d'un million d'habitants, nulle part ailleurs."
     }
   ],
   "correctIndex": 0,
