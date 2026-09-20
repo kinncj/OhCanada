@@ -33,6 +33,38 @@
  * hold on the play area behind the strip reaches the level and activates
  * nothing here (`TN-HUD-01`, last scenario).
  *
+ * ## One switch, in the level itself
+ *
+ * `TN-HUD-06` puts the menu in the highlight ring, and a live-site audit found
+ * the half nobody had built: **the strip's own controls were in no ring at
+ * all**. With one switch the player walked past every landmark — fourteen short
+ * presses highlighted nothing, because the only rings on the page belonged to
+ * the shell (detached while a level runs, `app/ui/shell.ts`) and to the sheets
+ * over the level (`app/ui/screen.ts`), and between two sheets there was nothing.
+ *
+ * So the strip owns a ring, built by the same {@link createSwitchRing} every
+ * other surface uses and with the same contract — short press advances, long
+ * press chooses, nothing scans by itself. It walks the strip's **controls** in
+ * the order they are drawn (ADR-0039): the offer, then Settings and Menu, then
+ * the storage warning's Export when that is raised. The task, the cue, the
+ * notice and `interact-hint` are paragraphs and cannot be in it, which
+ * `TN-HUD-06` requires and which is a property of what they are rather than a
+ * rule applied to them.
+ *
+ * **Two rings never answer one tap.** A sheet over the level takes the page,
+ * exactly as Study takes it from the shell, and the strip stands down:
+ * {@link Hud.setCovered} is the same contract `Screen.setCovered` and
+ * `Shell.setModalOpen` state, one level along, and the composition root brackets
+ * every screen it mounts over the level with it. The HUD brackets its **own**
+ * menu, because it owns it.
+ *
+ * And the strip refuses to come back while it cannot be used: {@link syncRing}
+ * never enables a ring over a region that is `inert` — which is what
+ * `app/ui/focus-trap.ts` makes the whole page behind an open dialog. Guarded
+ * rather than trusted: a caller that forgets to say a sheet opened leaves the
+ * player with **no** highlight, which is the failure they can escape by closing
+ * the sheet, rather than two rings fighting over one contact.
+ *
  * DOM only (ADR-0005): no adapters, no scenes.
  */
 
@@ -40,6 +72,7 @@ import { labelled, text, type UiLocale } from './copy';
 import { button, element } from './dom';
 import { createMenu, type Menu } from './menu';
 import { injectScreenStyles } from './screen-styles';
+import { createSwitchRing, type SwitchRing } from './single-switch';
 import { createStorageWarning, type StorageWarning } from './storage-warning';
 
 export interface HudOptions {
@@ -154,6 +187,19 @@ export interface Hud {
   openMenu(): void;
   closeMenu(): void;
   setLocale(locale: UiLocale): void;
+  /**
+   * A surface the *caller* mounted over the level opened or closed.
+   *
+   * The strip's switch ring stands down while another surface owns the page and
+   * comes back when it is gone — the contract `app/ui/screen.ts` states as
+   * `setCovered` and `app/ui/shell.ts` as `setModalOpen`, held one level along.
+   * Two enabled rings both answer "tap anywhere", and the one under the sheet is
+   * the one nobody can see.
+   *
+   * Focus is untouched: the surface above has just taken it, and its own trap
+   * gives it back. The HUD brackets its own menu and needs no call for that.
+   */
+  setCovered(covered: boolean): void;
   setSingleSwitch(enabled: boolean, holdMs?: number): void;
   destroy(): void;
 }
@@ -171,6 +217,10 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   let hint: string | null = null;
   let notice: string | null = null;
   let taskCue: 'behind' | null = null;
+  let singleSwitch = options.singleSwitch === true;
+  let holdToChooseMs = options.holdMs ?? 600;
+  /** A screen the caller mounted over the level is up. See {@link Hud.setCovered}. */
+  let covered = false;
 
   const main = findOrCreateMain(doc, host);
   /*
@@ -238,7 +288,13 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     testId: 'hud-settings-button',
     className: 'tn-hud__settings-button',
     text: text(locale, 'common.settings'),
-    ...(options.onOpenSettings === undefined ? {} : { onClick: options.onOpenSettings }),
+    ...(options.onOpenSettings === undefined
+      ? {}
+      : {
+          onClick: (): void => {
+            openScreen(options.onOpenSettings);
+          },
+        }),
   });
   settingsButton.hidden = options.onOpenSettings === undefined;
 
@@ -305,23 +361,140 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   const menu: Menu = createMenu(host, {
     locale,
     ...(options.announce === undefined ? {} : { announce: options.announce }),
-    ...(options.onOpenSettings === undefined ? {} : { onOpenSettings: options.onOpenSettings }),
-    ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
-    ...(options.onOpenPassport === undefined ? {} : { onOpenPassport: options.onOpenPassport }),
-    ...(options.onLeaveLevel === undefined ? {} : { onLeaveLevel: options.onLeaveLevel }),
-    ...(options.onOpenAbout === undefined ? {} : { onOpenAbout: options.onOpenAbout }),
+    /*
+     * Every item is wrapped, and the wrapper is one line: the screen it opens
+     * takes the page, so the strip re-reads its own ring and stands down. The
+     * menu closes itself before the handler runs (`app/ui/menu.ts`), so without
+     * this the strip would come back for exactly as long as it takes the next
+     * screen to open — and in a caller that never brackets it, for good.
+     */
+    ...(options.onOpenSettings === undefined
+      ? {}
+      : {
+          onOpenSettings: (): void => {
+            openScreen(options.onOpenSettings);
+          },
+        }),
+    ...(options.onOpenStudy === undefined
+      ? {}
+      : {
+          onOpenStudy: (): void => {
+            openScreen(options.onOpenStudy);
+          },
+        }),
+    ...(options.onOpenPassport === undefined
+      ? {}
+      : {
+          onOpenPassport: (): void => {
+            openScreen(options.onOpenPassport);
+          },
+        }),
+    ...(options.onLeaveLevel === undefined
+      ? {}
+      : {
+          onLeaveLevel: (): void => {
+            openScreen(options.onLeaveLevel);
+          },
+        }),
+    ...(options.onOpenAbout === undefined
+      ? {}
+      : {
+          onOpenAbout: (): void => {
+            openScreen(options.onOpenAbout);
+          },
+        }),
     onDismiss: () => {
       options.onResume?.();
+      /* Nothing was chosen and the level is the player's again: the strip takes
+         the contact back. */
+      syncRing();
     },
     singleSwitch: options.singleSwitch === true,
     holdMs: options.holdMs ?? 600,
     ...(options.now === undefined ? {} : { now: options.now }),
   });
 
+  /**
+   * The strip's ring: its controls, in the order they are drawn.
+   *
+   * Built over the region rather than over `<main>`, so the `aria-hidden` canvas
+   * and anything the composition root mounts beside the strip are outside it —
+   * the ring walks what the player can press in the level, and nothing else. The
+   * default selector is the shared one, which is why `interact-hint`, the task,
+   * the cue and the notice cannot appear in it: they are paragraphs.
+   */
+  const ring: SwitchRing = createSwitchRing(region, {
+    /* Read at each press, so a hold time changed in Settings applies to the
+       strip without the level being reopened (`TN-SET-09`). */
+    holdMs: () => holdToChooseMs,
+    ...(options.now === undefined ? {} : { now: options.now }),
+    ...(options.announce === undefined
+      ? {}
+      : {
+          announce: (message: string): void => {
+            say(message);
+          },
+        }),
+  });
+
+  /** Is another surface answering "tap anywhere" right now? */
+  function ringIsCovered(): boolean {
+    if (covered || menu.visible) return true;
+    /*
+     * The belt to that brace. A focus trap makes everything behind an open
+     * dialog `inert` (`app/ui/focus-trap.ts`), so a strip that cannot be pressed
+     * is a strip that must not be scanned — whether or not the caller remembered
+     * to say a screen had opened. A detached strip is the same answer: the level
+     * has been left.
+     */
+    return !region.isConnected || region.closest('[inert]') !== null;
+  }
+
+  function syncRing(): void {
+    if (!singleSwitch || ringIsCovered()) {
+      ring.disable();
+      return;
+    }
+    if (!ring.enabled) ring.enable();
+    ring.refresh();
+    if (ring.index !== -1) return;
+    /*
+     * Where the highlight opens, and it is not always item one.
+     *
+     * `TN-FLOW-07` says it starts at the first item and does not move until the
+     * player presses. In the strip the first item is the **offer** when there is
+     * one, which is what ADR-0039 already puts first on screen — so a switch
+     * player who has walked up to the guide is one long press from talking to
+     * them. Focus wins where it is already on a control in the strip, so a
+     * player who arrived there with Tab is not sent back to the top.
+     */
+    const focused = doc.activeElement as HTMLElement | null;
+    const at = focused === null ? -1 : ring.items.indexOf(focused);
+    ring.highlight(at === -1 ? 0 : at);
+  }
+
+  /**
+   * A control in the strip — or an item in the menu — opened something.
+   *
+   * The screen that opens owns the page from here, so the ring is re-read after
+   * the handler rather than before it: by then the new surface has activated its
+   * trap, {@link ringIsCovered} can see it, and the strip has stood down.
+   */
+  function openScreen(open: (() => void) | undefined): void {
+    open?.();
+    syncRing();
+  }
+
   function openMenu(): void {
     menu.open();
     options.onPause?.();
+    syncRing();
   }
+
+  /* The strip may open with the ring already live: single-switch is a saved
+     setting, so a player who enters a level with it on has a highlight before
+     they press anything (`TN-FLOW-07`). */
+  syncRing();
 
   function say(message: string): void {
     options.announce?.(message, locale);
@@ -395,7 +568,13 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
         testId: 'interact-prompt',
         className: 'tn-hud__prompt',
         text: promptLabel,
-        ...(options.onInteract === undefined ? {} : { onClick: options.onInteract }),
+        ...(options.onInteract === undefined
+          ? {}
+          : {
+              onClick: (): void => {
+                openScreen(options.onInteract);
+              },
+            }),
       }),
     );
     /* A new offer is the top of the strip, and a player who had scrolled down to
@@ -508,6 +687,11 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       if (label === promptLabel) return;
       promptLabel = label;
       renderPrompt();
+      /* The offer arriving or being withdrawn changes the ring, and it is the
+         one item in it that comes and goes. An offer that appeared while the
+         highlight was on Menu leaves it on Menu: `refresh` follows the item, not
+         the index. */
+      syncRing();
       /* Deliberately silent. `app/ui/level-events.ts` announces the offer when
          the target comes into reach; announcing here as well would say it
          twice, and neither speaker would know the other had. */
@@ -534,6 +718,9 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     setStorageWarning(raised): void {
       if (raised) warning.raise();
       else warning.clear();
+      /* The warning is words, but the way out of it is a control (`TN-HUD-03`),
+         and `TN-HUD-06` requires every real control to stay reachable. */
+      syncRing();
     },
 
     focus(): void {
@@ -563,13 +750,26 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       renderNotice();
       warning.setLocale(next);
       menu.setLocale(next);
+      /* The words a long press would choose have changed, so what the ring
+         announces has to change with them. */
+      syncRing();
+    },
+
+    setCovered(next): void {
+      if (covered === next) return;
+      covered = next;
+      syncRing();
     },
 
     setSingleSwitch(enabled, holdMs): void {
+      singleSwitch = enabled;
+      if (holdMs !== undefined) holdToChooseMs = holdMs;
       menu.setSingleSwitch(enabled, holdMs);
+      syncRing();
     },
 
     destroy(): void {
+      ring.destroy();
       menu.destroy();
       warning.destroy();
       region.remove();

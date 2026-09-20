@@ -648,3 +648,127 @@ describe('the HUD in French', () => {
     });
   });
 });
+
+/**
+ * One switch, **in the level**, with no sheet open — the half of `TN-HUD-06`
+ * that was never built.
+ *
+ * A live-site audit in single-switch mode reached Halifax, waited for "Talk to
+ * the guide", and tapped the sky fourteen times: no `data-switch-highlight`
+ * existed anywhere on the page, focus sat on `main`, and long presses chose
+ * nothing. Scanning worked in Settings and inside every sheet, because those
+ * surfaces own rings; between two sheets there was no ring at all, so the player
+ * walked past every landmark unable to engage one.
+ */
+describe('one switch, while the level is running', () => {
+  /** The one control the switch would choose, by its marker. */
+  const highlighted = (page: FakePage): string | null =>
+    page.doc.querySelector('[data-switch-highlight="true"]')?.getAttribute('data-testid') ?? null;
+
+  it('opens the highlight on a control, walks the strip, wraps, and scans nothing by itself', () => {
+    const { page, clock, announce } = mount({ singleSwitch: true, holdMs: 600 });
+
+    /* A level entered with the setting already on has a highlight before the
+       player presses anything (`TN-FLOW-07`). */
+    expect(highlighted(page)).toBe('hud-settings-button');
+
+    pressSwitch(page, clock, 100);
+    expect(highlighted(page)).toBe('menu-button');
+    /* And the player is told where the highlight is, through the one live
+       region — the strip is silent for everything else it draws. */
+    expect(announce).toHaveBeenCalledWith('Menu', 'en');
+
+    /* A ring of two wraps. */
+    pressSwitch(page, clock, 100);
+    expect(highlighted(page)).toBe('hud-settings-button');
+
+    /* Two minutes pass on the injected clock and nothing has moved: no scanner,
+       no countdown, nothing chosen for the player. */
+    clock.now += 120_000;
+    expect(highlighted(page)).toBe('hud-settings-button');
+  });
+
+  it('puts the offer in the ring and engages it with a long press', () => {
+    const { hud, page, clock, handlers } = mount({ singleSwitch: true, holdMs: 600 });
+    hud.setPrompt('Talk to the guide');
+
+    /*
+     * The offer joins the ring where it is drawn — first, ADR-0039 — and the
+     * highlight does **not** jump to it. A control that moves under a player's
+     * thumb because the world changed is how a hold aimed at one thing takes
+     * another (the reason a confirmation's question is a stop, `app/ui/confirm.ts`).
+     */
+    expect(highlighted(page)).toBe('hud-settings-button');
+
+    pressSwitch(page, clock, 100);
+    expect(highlighted(page)).toBe('menu-button');
+    pressSwitch(page, clock, 100);
+    expect(highlighted(page)).toBe('interact-prompt');
+
+    pressSwitch(page, clock, 700);
+    expect(handlers['onInteract']).toHaveBeenCalledTimes(1);
+  });
+
+  it('stands down while a screen is over the level and takes the contact back after it', () => {
+    const { hud, page, clock } = mount({ singleSwitch: true, holdMs: 600 });
+
+    hud.setCovered(true);
+    expect(highlighted(page)).toBeNull();
+    pressSwitch(page, clock, 100);
+    expect(highlighted(page), 'the strip scanned under an open screen').toBeNull();
+
+    hud.setCovered(false);
+    expect(highlighted(page)).toBe('hud-settings-button');
+  });
+
+  it('refuses to scan a strip a dialog has made inert, whatever the caller said', () => {
+    /*
+     * What `app/ui/focus-trap.ts` does to everything behind an open dialog. The
+     * guard decides the direction a mistake fails in: a caller that forgets to
+     * bracket its screen leaves the player with no highlight — recoverable by
+     * closing that screen — never with two rings answering one contact.
+     */
+    const { hud, page } = mount({ singleSwitch: true, holdMs: 600 });
+    hud.main.inert = true;
+    hud.setSingleSwitch(true, 600);
+
+    expect(highlighted(page)).toBeNull();
+  });
+
+  it('hands the contact to the menu and takes it back when the menu closes', () => {
+    const { hud, at, page, clock } = mount({ singleSwitch: true, holdMs: 600 });
+    hud.openMenu();
+
+    /* One ring at a time: the menu's, while the menu is there (`TN-HUD-06`). */
+    expect(page.doc.querySelectorAll('[data-switch-highlight="true"]')).toHaveLength(1);
+    expect(at('menu-settings')?.getAttribute('data-switch-highlight')).toBe('true');
+    pressSwitch(page, clock, 100);
+    expect(at('menu-study')?.getAttribute('data-switch-highlight')).toBe('true');
+    expect(at('menu-button')?.getAttribute('data-switch-highlight')).toBeNull();
+
+    at('menu-close')?.click();
+    expect(highlighted(page)).toBe('hud-settings-button');
+  });
+
+  it('keeps the paragraphs out of the ring and the warning way out in it', () => {
+    const { hud, page, clock } = mount({ singleSwitch: true, holdMs: 600 });
+    hud.setTask('Find the Town Clock');
+    hud.setTaskCue('behind');
+    hud.setNotice('The questions are not ready right now.');
+    hud.setHint('A mark shows something to see.');
+    hud.setPrompt('Look at this place');
+    /* `TN-HUD-06`: the warning is never highlighted as if it were a control, and
+       every real control — including its "Save a copy" — stays reachable. */
+    hud.setStorageWarning(true);
+
+    const seen = new Set<string | null>();
+    for (let press = 0; press < 10; press += 1) {
+      seen.add(highlighted(page));
+      pressSwitch(page, clock, 100);
+    }
+
+    expect([...seen].sort()).toEqual(
+      ['hud-settings-button', 'interact-prompt', 'menu-button', 'save-export'].sort(),
+    );
+  });
+});

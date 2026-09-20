@@ -315,11 +315,22 @@ function main(): void {
   /* The update notice waits on three of these: a level holds `poi`, `study` and
      `quest` exactly while a landmark's card and its question, a drill, or a quest
      dialogue is open. Every reason still reaches the renderer unchanged. */
-  const pause = updates.deferDuring<PauseReason>(createPauseControl(renderer, root), [
-    'poi',
-    'study',
-    'quest',
-  ]);
+  const pausing = createPauseControl(renderer, root);
+  const deferred = updates.deferDuring<PauseReason>(pausing, ['poi', 'study', 'quest']);
+  /* `deferDuring` wraps the two calls it defers on and hands back those two;
+     `watch` is the control's own and is not one of them, so the pair is put
+     together here rather than in `./update-notice.ts`, which has no business
+     knowing that a level has a HUD. Every hold still reaches the renderer, and
+     every watcher still hears it, whichever of the two objects it came through. */
+  const pause: PauseControl = {
+    hold: (reason) => {
+      deferred.hold(reason);
+    },
+    release: (reason) => {
+      deferred.release(reason);
+    },
+    watch: (listen) => pausing.watch(listen),
+  };
 
   const overlay = createRotateOverlay(uiHost, {
     locale: toUiLocale(config.defaultLocale),
@@ -3207,6 +3218,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
 
   const offFailure = bus.on('level/failed', () => {
     failure.show();
+    /* The card owns the page now, and it has a ring of its own: "Try again" and
+       "Go back" are what a switch reaches, not the strip behind it. */
+    syncHudCover();
   });
 
   /* The player tapped the landmark on the canvas. The other route in is the
@@ -3333,9 +3347,43 @@ function openLevel(wiring: LevelWiring): LevelSession {
     return offline;
   };
 
+  /**
+   * Whether anything is over the level right now — which is whether the strip's
+   * switch ring may answer a tap (`app/ui/hud.ts`, `setCovered`).
+   *
+   * Two sources, and both are already facts this file holds rather than a list
+   * of screens kept by hand:
+   *
+   *  - **the pause**, which every surface the player can open over a level takes
+   *    a reason on: the menu, a landmark's card and its question, a quest
+   *    dialogue, Settings, the passport, "About this place", Study, the
+   *    completion card, and the rotate overlay. One watcher covers all ten, and
+   *    a screen added later that forgets to pause is a bug with a louder
+   *    symptom than this one;
+   *  - **the two level screens**, which do *not* pause: the level is not running
+   *    yet while it is opening, and there is nothing to pause when it failed to.
+   *    They are asked for their own `visible`, so nothing here has to remember
+   *    which of the three was last shown.
+   */
+  function syncHudCover(): void {
+    hud.setCovered(
+      levelPaused || loading.visible || failure.visible || offline?.visible === true,
+    );
+  }
+
+  /** What the pause last said. Declared before the watch that writes it. */
+  let levelPaused = false;
+  const offPause = pause.watch((paused) => {
+    levelPaused = paused;
+    syncHudCover();
+  });
+
   async function load(): Promise<void> {
     root.dataset['tnLevel'] = 'loading';
     loading.show();
+    /* The waiting screen is a dialog over the strip, so the strip stops scanning
+       for as long as it is up. It takes no pause: there is no level to pause. */
+    syncHudCover();
     announceWait();
     await renderer.ready;
     /*
@@ -3360,6 +3408,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
             ' (ADR-0034).',
         );
         needsConnectionCard().show();
+        syncHudCover();
         /* The dialog takes focus, so a screen reader reads it on arrival; the one
            live region says it once as well, because `level/failed` is not
            published for a level that was never asked to load. */
@@ -3414,6 +3463,9 @@ function openLevel(wiring: LevelWiring): LevelSession {
   function levelIsPlayable(): void {
     /* Out of the accessibility tree rather than behind a style rule. */
     loading.hide();
+    /* The level is the player's: with one switch, the strip starts scanning now
+       — the offer when there is one, then Settings and Menu. */
+    syncHudCover();
     root.dataset['tnLevel'] = 'ready';
     /* The side panels are this level's sky and ground now, not the boot
        screen's. Re-applied so a wide window does not frame a level in the
@@ -3522,6 +3574,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       about?.setSingleSwitch(enabled, holdMs);
     },
     close(): void {
+      offPause();
       offFailure();
       offEngaged();
       offNpcEngaged();
@@ -3684,16 +3737,39 @@ type PauseReason =
 interface PauseControl {
   hold(reason: PauseReason): void;
   release(reason: PauseReason): void;
+  /**
+   * Hear when the level stops and when it runs again. Returns the unsubscribe.
+   *
+   * Every surface that can sit over a level takes a reason here — the menu, a
+   * landmark's card and its question, a quest dialogue, Settings, the passport,
+   * "About this place", Study, the completion card, the rotate overlay — so
+   * "something is over the level" is a fact this control already holds, and the
+   * HUD's switch ring stands down on exactly that fact rather than on a list of
+   * screens somebody has to keep in step (`app/ui/hud.ts`, `setCovered`). The
+   * alternative was bracketing eleven call sites, where the one forgotten
+   * bracket is two switch rings answering one contact.
+   *
+   * Notified only when the answer changes, so a second reason taken over the
+   * first says nothing.
+   */
+  watch(listen: (paused: boolean) => void): () => void;
 }
 
 function createPauseControl(renderer: GameRenderer, root: HTMLElement): PauseControl {
   const reasons = new Set<PauseReason>();
+  const watchers = new Set<(paused: boolean) => void>();
+  let was = false;
 
   const sync = (): void => {
     const paused = reasons.size > 0;
     if (paused) renderer.pause();
     else renderer.resume();
     root.dataset['tnPaused'] = paused ? 'true' : 'false';
+    if (paused === was) return;
+    was = paused;
+    /* A copy, so a listener that unsubscribes while being told does not shorten
+       the list being walked. */
+    for (const listen of [...watchers]) listen(paused);
   };
 
   return {
@@ -3705,6 +3781,12 @@ function createPauseControl(renderer: GameRenderer, root: HTMLElement): PauseCon
     release(reason): void {
       if (!reasons.delete(reason)) return;
       sync();
+    },
+    watch(listen): () => void {
+      watchers.add(listen);
+      return () => {
+        watchers.delete(listen);
+      };
     },
   };
 }

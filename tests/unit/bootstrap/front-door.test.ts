@@ -499,6 +499,11 @@ vi.mock('@ui/hud', () => ({
         hoisted.state.notices.push(message);
       },
       setStorageWarning: () => undefined,
+      /* The strip's switch ring stands down while a screen is over the level and
+         comes back when it goes. The composition root brackets every one of them
+         through the pause control, so a double without this throws on the first
+         card opened in any level this suite plays. */
+      setCovered: () => undefined,
       openMenu: () => undefined,
       closeMenu: () => undefined,
       setLocale: () => undefined,
