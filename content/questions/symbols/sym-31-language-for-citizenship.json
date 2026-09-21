@@ -40,9 +40,9 @@
     "quote": "English and French are the two official languages and are important symbols of identity. English speakers (Anglophones) and French speakers (Francophones) have lived together in partnership and creative tension for more than 300 years. You must have adequate knowledge of English or French to become a Canadian citizen."
   },
   "verification": {
-    "status": "verified",
+    "status": "rejected",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-16T11:30:00Z",
+    "checkedAt": "2026-09-21T00:45:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "You must have adequate knowledge of English or French to become a Canadian citizen."
   }
