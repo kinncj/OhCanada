@@ -78,6 +78,17 @@ Four rules follow, and none of them is new:
 - **Only the last item in the ring closes anything.**
 - **Nothing scans by itself and nothing expires.** No `setTimeout`, no countdown, no timer outside Exam mode.
 
+**How long the page takes to catch up, measured.** The scroll is smooth, so it is asynchronous: a press
+settles in about **130 ms** at 100 % text, where in practice nothing has to move, and in **420–1 100 ms** at
+200 % with the longest passages, where a press can move the scroller by thousands of pixels. Nothing is
+required of the player in that window — there is no timer on this screen and nothing expires — and the
+passage is spoken through the live region whether or not the scroll has landed, so the slow case costs
+patience and never information. Pressing again mid-scroll simply re-aims it, and the scroller arrives at the
+right place. It is recorded because it is the difference between a scan that looks broken and one that is
+merely mid-flight, and because `tests/a11y/lesson-reader.spec.ts` was written not knowing it: the first
+version of that scan asked where a paragraph was **12 px into a 4 037 px jump** and reported that a switch
+player could not see it.
+
 **The highlight opens on the first passage, in silence.** The dialog has just read every passage as its own
 description (below); announcing the first one again would be saying it twice. The scan comes round to it on
 the lap, so **every passage is spoken within one turn of the ring** — verified in

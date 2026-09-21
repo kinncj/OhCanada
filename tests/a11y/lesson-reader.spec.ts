@@ -73,6 +73,51 @@ interface ReaderOptions {
   readonly passages?: 'long';
 }
 
+/**
+ * Where the reader's own scroller is.
+ *
+ * The scroller is the screen root (`.tn-screen` is `overflow-y: auto`), not the
+ * document: `window.scrollY` is 0 on this page at every text size, so a test
+ * that watched the window would watch a number that never changes.
+ */
+const scrollState = (page: Page) =>
+  page.locator(READER).evaluate((node) => ({
+    scrollTop: Math.round(node.scrollTop),
+    scrollHeight: Math.round(node.scrollHeight),
+    clientHeight: Math.round(node.clientHeight),
+  }));
+
+/**
+ * Wait until the reader has stopped scrolling.
+ *
+ * Smooth scrolling is asynchronous and its duration grows with the distance:
+ * measured on this fixture, a press at 200 % text settles in 420–1 100 ms, and
+ * about 130 ms at 100 % where nothing has to move. Polling for *stillness* rather
+ * than sleeping a fixed time is what keeps this honest on a slow CI machine and
+ * quick on a fast one.
+ *
+ * It **throws** rather than returning quietly if the page never settles: a
+ * helper that gave up silently would turn a page that scrolls for ever into a
+ * green tick.
+ */
+async function settleScroll(page: Page, capMs = 10_000): Promise<void> {
+  const started = Date.now();
+  let previous: number | null = null;
+  let stillSince: number | null = null;
+  while (Date.now() - started < capMs) {
+    const { scrollTop } = await scrollState(page);
+    if (scrollTop === previous) {
+      stillSince ??= Date.now();
+      if (Date.now() - stillSince >= 150) return;
+    } else {
+      previous = scrollTop;
+      stillSince = null;
+    }
+    await page.waitForTimeout(25);
+  }
+  throw new Error(`the reader was still scrolling after ${String(capMs)} ms`);
+}
+
 /** Open the reader and wait for the marker that says it is really there. */
 async function open(page: Page, options: ReaderOptions = {}): Promise<Locator> {
   const params = new URLSearchParams({ screen: 'lesson-reader' });
@@ -304,10 +349,15 @@ test.describe('the lesson reader', () => {
       .locator(PASSAGE)
       .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('tabindex')));
     expect(indexes).toEqual(['-1', '-1', '-1', '-1']);
+    /* The attribute name is passed IN, not closed over: this callback is
+       serialised and run in the page, where this file's imports do not exist. */
     expect(
       await page
         .locator(PASSAGE)
-        .evaluateAll((nodes) => nodes.map((node) => node.getAttribute(SWITCH_STOP_ATTRIBUTE))),
+        .evaluateAll(
+          (nodes, attribute: string) => nodes.map((node) => node.getAttribute(attribute)),
+          SWITCH_STOP_ATTRIBUTE,
+        ),
     ).toEqual(['true', 'true', 'true', 'true']);
   });
 
@@ -357,9 +407,25 @@ test.describe('the lesson reader', () => {
   }) => {
     await open(page, { singleSwitch: true, textScale: 200, passages: 'long', locale: 'fr' });
 
-    /* Press until the last passage is highlighted, then ask whether it is on
-       screen. Before `focusAndReveal`, this was the failure: the highlight was
-       real, the paragraph was below the fold, and nothing moved. */
+    /*
+     * The premise, asserted rather than assumed: at 200 % text in French the
+     * prose really is taller than the phone. Without this the test could pass on
+     * a document that never needed scrolling, which is the vacuous-green failure
+     * this directory's rule 1 is about.
+     */
+    const before = await scrollState(page);
+    expect(before.scrollHeight, 'the reader fits the phone; this scan measures nothing')
+      .toBeGreaterThan(before.clientHeight + 200);
+    /*
+     * It opens essentially at the top — but not at exactly 0, and that is the
+     * ring doing its job rather than a defect: the highlight opens on the first
+     * passage, so the ring reveals it, which nudges the scroller by that
+     * paragraph's `scroll-margin` (12 px here). Asserting `0` would be asserting
+     * something this screen has never done.
+     */
+    expect(before.scrollTop, 'the reader did not open near the top').toBeLessThan(200);
+
+    /* Press until the last passage is highlighted. */
     const last = page.locator(PASSAGE).last();
     for (let press = 0; press < 20; press += 1) {
       if ((await last.getAttribute(HIGHLIGHT_ATTRIBUTE)) === 'true') break;
@@ -367,11 +433,44 @@ test.describe('the lesson reader', () => {
     }
     await expect(last).toHaveAttribute(HIGHLIGHT_ATTRIBUTE, 'true');
 
-    const onScreen = await last.evaluate((node) => {
-      const box = node.getBoundingClientRect();
-      return box.bottom > 0 && box.top < window.innerHeight;
+    /*
+     * Ask **after the page has stopped moving**, and not before.
+     *
+     * This is the whole reason this test has a settle step. The scroll is
+     * smooth, so it is asynchronous: reading `getBoundingClientRect()` in the
+     * same breath as the press measures the scroller a few pixels into a jump of
+     * thousands, and reports "nobody could see it" about a paragraph that is on
+     * its way. Measured on this fixture: 12 px into a 4 037 px scroll. Settling
+     * is not a relaxation — the assertions below are unchanged and still fail if
+     * the page never moves, which is the defect this test exists for.
+     */
+    await settleScroll(page);
+
+    /* The page moved. Before `focusAndReveal`, this was the failure: the
+       highlight was real, the paragraph was below the fold, and nothing moved. */
+    const after = await scrollState(page);
+    expect(
+      after.scrollTop,
+      'the highlight moved but the page did not follow it',
+    ).toBeGreaterThan(before.scrollTop + 500);
+
+    const box = await last.evaluate((node) => {
+      const rect = node.getBoundingClientRect();
+      return { top: rect.top, bottom: rect.bottom, viewport: window.innerHeight };
     });
-    expect(onScreen, 'the switch highlighted a passage nobody could see').toBe(true);
+    expect(
+      box.bottom > 0 && box.top < box.viewport,
+      'the switch highlighted a passage nobody could see',
+    ).toBe(true);
+    /*
+     * And the stronger promise, which is the one a reader needs: going **down**
+     * the ring, the scan lands on a paragraph's START, not on its tail. A
+     * paragraph taller than the phone cannot be shown whole, and `TN-READ`'s
+     * `OQ-READ-2` records the one case this does not hold — the wrap back up to
+     * the first passage — which is why this walks downwards and stops.
+     */
+    expect(box.top, 'the scan landed past the start of the passage').toBeGreaterThanOrEqual(0);
+    expect(box.top, 'the start of the passage is below the fold').toBeLessThan(box.viewport);
   });
 
   test('a long press on a passage changes nothing; a long press on Close closes', async ({
