@@ -297,29 +297,43 @@ describe('the Prairies with the task declined, over the shipped bank (ADR-0048)'
   it('asks a spent task step again only when told to, and counts what came round again', async () => {
     const step = prairieQuest.steps.find((candidate) => candidate.id === 'answer-at-the-combine-harvester');
     const pool = (step !== undefined && 'questionPool' in step ? step.questionPool : []) as unknown as QuestionId[];
-    expect(pool.length, 'the combine’s pool no longer holds exactly its two questions').toBe(2);
-    const [spent, fresh] = pool;
-    if (spent === undefined || fresh === undefined) return;
+    /*
+     * Exhaustion is the subject, so what this needs is a pool with nothing
+     * fresh left in it — not a pool of any particular size. Spending all but
+     * the last id produces that from whatever the combine's pool holds, and it
+     * held exactly two when this was written. Pinning the two was pinning a
+     * content document to a number: widening the pool by one id to give it
+     * slack failed this scenario without changing anything it is about.
+     */
+    expect(pool.length, 'the combine’s pool is too small to exhaust').toBeGreaterThanOrEqual(2);
+    const fresh = pool[pool.length - 1];
+    const spent = pool.slice(0, -1);
+    const lastSpent = spent[spent.length - 1];
+    if (fresh === undefined || lastSpent === undefined) return;
 
+    /* Two asked, one id left unspent: the second can only be one that came round again. */
     const again = await sourceOver().drill(2, {
       subject: SUBJECT,
       pool,
-      answeredHere: [spent],
+      answeredHere: spent,
       repeatWhenExhausted: true,
     });
     expect(again.ok).toBe(true);
     if (!again.ok) return;
-    expect(again.value.questions.map((drawn) => String(drawn.question.id))).toEqual([
-      String(fresh),
-      String(spent),
-    ]);
+    const drawn = again.value.questions.map((question) => String(question.question.id));
+    expect(drawn[0], 'the fresh id was not asked first').toBe(String(fresh));
+    expect(drawn).toHaveLength(2);
+    expect(spent.map(String), 'the second ask was not one of the spent ids').toContain(drawn[1]);
     expect(again.value.repeated).toBe(1);
     expect(again.value.shortfall).toBe(0);
 
-    const short = await sourceOver().drill(2, { subject: SUBJECT, pool, answeredHere: [spent] });
+    /* Not told to repeat: the fresh id, and the shortfall stated rather than padded. */
+    const short = await sourceOver().drill(2, { subject: SUBJECT, pool, answeredHere: spent });
     expect(short.ok).toBe(true);
     if (!short.ok) return;
-    expect(short.value.questions.map((drawn) => String(drawn.question.id))).toEqual([String(fresh)]);
+    expect(short.value.questions.map((question) => String(question.question.id))).toEqual([
+      String(fresh),
+    ]);
     expect(short.value.repeated).toBe(0);
     expect(short.value.shortfall).toBe(1);
   });
