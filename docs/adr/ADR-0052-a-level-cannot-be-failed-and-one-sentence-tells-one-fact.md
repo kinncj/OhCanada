@@ -142,7 +142,9 @@ audit saw. Specified fully enough to be built without further design decisions:
   accents are significant and are not stripped.
 - **Two term families, one module beside the gate**, so a list is never scattered across files:
   - *answering* — EN `answer`/`answered`/`answering`, `question`/`questions`, `right`, `correct`, `wrong`,
-    `learn`/`learned`, `quiz`, `score`, `test`; FR `répond*` (`répondu`, `répondez`, `réponse`, `réponses`),
+    `learn`/`learned`, `quiz`, `score`, `test`; FR **`répond*` and `répons*`** (`répondu`, `répondez`,
+    `réponse`, `réponses` — two stems, because the noun is spelled with an `s` where the participle has a
+    `d`; amended 2026-09-20, see "Amendment" below, and do not implement this line as one stem),
     `question`/`questions`, `bonne(s) réponse(s)`, `appris`, `juste`, `exact`;
   - *praise* — EN `well done`, `great`, `perfect`, `nice work`, `proud`, `excellent`, `amazing`; FR `bravo`,
     `parfait`, `excellent`, `félicitations`, `fier`/`fière`.
@@ -315,6 +317,36 @@ block says nothing about §3, because it never did (§4); and an under-count aft
   practice exam. That is the decision, asserted on purpose in `TN-STANDING-07` so that a future audit reads
   it as intended.
 
+## Amendment, 2026-09-20: §4(a)'s French term family is two stems, not one
+
+§4(a) wrote the *answering* family's French side as `répond*` and then named four forms under it —
+`répondu`, `répondez`, `réponse`, `réponses`. **A `d`-stem reaches only the first two.** *Réponse* and
+*réponses* are spelled with an `s` where *répondu* has a `d`, so `répond` is not a prefix of either, and a
+reader implementing §4(a) exactly as written would ship a family silently missing both **noun** forms — the
+forms « bonnes réponses » is built from, and the ones the shipped French lines actually carried.
+
+**§4(a)'s list now reads `répond*` and `répons*`**, which is exactly the four forms this ADR named and no
+more. The gate that landed — `tests/unit/contracts/done-line-terms.ts` — already carries both stems and
+asserts each of the four forms separately, so **no code changes with this amendment**; what changes is that
+the specification now says what the gate does.
+
+**Why not the wider `répon*`.** It would cover the same four French words on today's corpus and it claims
+more than this ADR decided: it also reaches *répons* and any future *répon-* word nobody weighed. A term
+list is a rule people read, so it states the two stems it means rather than a prefix that happens to work.
+
+**Why this is an amendment and not a note inside a strike.** The discrepancy was first recorded in the
+discharge note on §4(a)'s infra obligation below, whose last line asked a reader of §4(a) to mentally
+substitute both stems. That is the wrong place for a correction to a **specification**: §4(a) is the clause
+an implementer reads, the obligation's discharge note is a record of work already done, and nobody
+implementing the list a second time — a French exam-mode gate, say, or a translation check — would open a
+closed obligation first. The rule this project already applies to code applies to its documents: the defect
+was not that the gate was wrong, it was that **the spec would reproduce the bug**, and a correction has to
+live where the bug would be copied from.
+
+**Each of the four forms is asserted separately in the gate**, rather than by a loop over one stem. A loop
+over one stem is how the gap got past this ADR in the first place, and an assertion per form is what makes
+the next such gap fail a test instead of shipping.
+
 ## Obligations
 
 - **OBLIGATION due=2026-10-17 owner=infra** — build §4(a)'s gate:
@@ -356,8 +388,10 @@ block says nothing about §3, because it never did (§4); and an under-count aft
   carries **both** stems, `répond*` and `répons*`, which is exactly the four forms this ADR asked for; the
   wider `répon*` would cover the same French words and was not used, because it claims more than this ADR
   decided. Each of the four is asserted separately, a loop over one stem being how the gap got past the ADR
-  in the first place. **This paragraph is the amendment**: a reader of §4(a)'s list should take `répond*` as
-  `répond*` and `répons*`.
+  in the first place. **This paragraph recorded the correction; §4(a) itself now carries it.** Asking a
+  reader of §4(a) to substitute both stems from inside a closed obligation left the clause an implementer
+  reads still wrong, so the list was corrected in place and the reasoning moved to "Amendment, 2026-09-20:
+  §4(a)'s French term family is two stems, not one" above.
 
   **It is not a rename of `a-closing-line-claims-only-what-was-asked.test.ts`, and neither file replaces the
   other.** That gate reads each quest's *arithmetic* — whether a line claiming the questions **of the place**
