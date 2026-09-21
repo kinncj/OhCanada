@@ -317,6 +317,33 @@ source is Crown copyright and `committed: false`, which is also why the coverage
 CI — and picture captions, the study worksheet, the museum invitation, front and back matter and the Oath's
 recitation are excluded from it by name.
 
+**The guide is reached by reading first, by stops next, and by cities last (ADR-0065).** Measured on
+2026-09-21 over `4842127`, by the containment rule in `app/application/content/proposition.ts`: the corpus
+covers **729** distinct propositions and a full playthrough **tells 105 of them — 14.4%**, which is the
+owner's "not even 10%" made exact. The three other numbers people reach for are not that one: 493 verified
+questions exist, 187 are pooled by a quest step, 130 are asked in a sitting, and **0 of 302 lesson passages
+are reachable by playing**. The rule is a **reach test** applied in tiers, cheapest first: *point at material
+that already exists* (a `read` step, a Learn chapter, a pool widened as far as ADR-0057 allows), then *a stop
+on a level that exists*, then *a new level*. The ratio is the argument — reading the 302 granted passages on
+the quest path would take told coverage from 105 to **383 (52.5%)** for an editorial pass with no art and no
+verifier commit, where a stop buys **one** told proposition for two content commits, an art commit, a
+`references.json` contract, a blind identification run and ~1.28 MB of decoded texture, and a whole new city
+buys about **nine**. Neither payload nor texture is the ceiling — levels are 0.55–0.74 MB of a 100 MB budget
+and sit at 68–86% of their declared texture budgets — **the subject is**: a level carries one `subject`, the
+draw in `app/bootstrap/landmark-questions.ts` scopes every in-level question to it so two levels may never
+share one, and a split is a partition of one bank whose halves each owe thirty verified questions. Hence
+**levels ≤ subjects ≤ Σ⌊verified ÷ 30⌋**, which is **12** today (`history` at 97 is the only splittable
+bank), with a second absolute term from `allocateQuotas`: past twenty subjects a subject cannot receive a
+question in a twenty-question exam. The split needs no new gate —
+`a-proposition-belongs-to-one-subject.test.ts` already refuses two subjects resting on one sentence — but it
+is not cheap: `subject` is a bound author field for a question, so A4 voids the grant on every question a
+split re-files. The map is already at its pin limit at ten stops (a pin is 4.2% of the map's width; Ottawa
+and Toronto are 44.4 of 1080 viewBox units apart), so an eleventh southern city needs a second inset and
+`map-anchors.schema.json` carries `inset` as one object — but the map is `aria-hidden` decoration and the
+control is the scrolling card list, which is why the level count stays a content question rather than a
+screen-geometry one. A stop's reading is capped at **four passages and 120 words**, counted per stop rather
+than per step, derived from a 17-word median passage against ADR-0061 §1's rejected 155 words per landmark.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]

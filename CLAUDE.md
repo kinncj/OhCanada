@@ -9,7 +9,7 @@ Portrait-first 2D side-scrolling game teaching the official IRCC Canadian citize
 |---|---|
 | Audience | Newcomers of all ages, public release. Plain language. Accessibility is a requirement, not a feature. |
 | Purpose | Learning tool. Exam mirrors IRCC: 20 questions, 15 to pass, 30 min. Timer only in Exam mode, and optional. |
-| Scope | 10 levels, 10 subjects, exam. Slices are engineering practice, never a scope cut. |
+| Scope | 10 levels, 10 subjects, exam today. Growth follows ADR-0065's reach test: reach material that already exists before adding a stop, and add a stop before adding a city. A level carries one subject and no two levels share one, so a new city needs a subject split whose halves each hold 30 verified questions. **Levels ≤ subjects ≤ Σ⌊verified ÷ 30⌋ per bank — 12 today.** Slices are engineering practice, never a scope cut. |
 | Orientation | Portrait always. Design resolution 1080×1920. Desktop centres the portrait canvas; side panels extend the level's sky/ground. |
 | Traversal | One-thumb: hold to move, tap to jump/interact, tap NPC or POI to engage. No trick system. Auto-move option. |
 | Art | Casual cartoon: bold rounded shapes, saturated palette, 3-tone cel shading, outline on characters only. Landmarks and NPCs are reference-accurate, simplified — never invented. |
