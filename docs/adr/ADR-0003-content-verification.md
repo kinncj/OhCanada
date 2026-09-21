@@ -304,11 +304,25 @@ The failure this avoids is not "somebody edits the gate maliciously". It is that
 disabled in order to do the right thing teaches everybody that gates are disabled to do the right thing**,
 and the next one disabled will be one that mattered.
 
-- **OBLIGATION due=2026-12-08 owner=infra** — land an identity the committer does not control (signed
+- ~~**OBLIGATION due=2026-12-08 owner=infra** — land an identity the committer does not control (signed
   commits, or CODEOWNERS plus branch protection on `content/characters/**` and `content/questions/**`), and
   replace rule A3 with one that reads it rather than refusing outright. Until this lands, the project can
   seek community review but cannot record the answer, and that is a real limit on shipping any Indigenous
-  content — not merely a gate inconvenience.
+  content — not merely a gate inconvenience.~~
+  **VOIDED 2026-09-20** — closed as unachievable as written, with the reasoning in "Amendment, 2026-09-20"
+  below. **No work was done and this does not claim any was:** no identity was landed, no signing key
+  exists, rule A3 is unchanged and still refuses every transition. What removed the premise is that the
+  premise was never true — every remedy it names attests to a credential, and in a repository with one
+  maintainer running both agents every credential resolves to that one person. Measured: all 216 commits
+  touching `content/` carry one author email and no signature, and the two signatures anywhere in this
+  history belong to GitHub's merge key on commits that touch no content. The CODEOWNERS route additionally
+  cannot be satisfied at all — a pull request author may not approve their own pull request, and the sole
+  code owner is the author of every pull request — so it can only block everything or be bypassed, and it is
+  being bypassed. **The cost, stated rather than inferred:** the project still cannot record a community
+  sign-off, and that limit on shipping Indigenous content is now permanent as things stand rather than
+  pending. The condition that would reopen it is a second party with their own credentials, which is
+  `OQ-REVIEW-2`'s question and is already owned by the product owner; no new obligation is raised here,
+  because restating this one in different words is what the ruling refuses.
 
 ### 3. The record gains a pointer to evidence
 
@@ -347,6 +361,166 @@ path at all**. The file is the colour allow-list every SVG is linted against —
 art pipeline, never by the game — so `assets/` is where it belongs, and moving it would have created the
 two-live-paths drift its own table exists to catch. `OQ-ART-01` can be closed as answered rather than
 discharged; the work it asked for was not the work that was needed.
+
+## Amendment, 2026-09-20: two-party authorship needs two parties, and this repository has one
+
+The 2026-09-08 amendment above left an obligation on infra: *land an identity the committer does not
+control (signed commits, or CODEOWNERS plus branch protection)*. This amendment rules on it. **It is closed
+as unachievable as written, and this ADR's guarantee is narrowed to exactly what the gate holds.** Nothing
+about the per-commit rule changes: `verify-content` gate A still fails any commit that both authors a claim
+and grants its verification, and that is not weakened here in any respect.
+
+The reason for ruling rather than re-dating is that the obligation is not blocked on effort. It asks the
+repository to establish a fact about the world that is not true. **Two-party authorship requires two
+parties, and this project has one.** Every identity mechanism attests to a *credential*; in a
+single-operator repository every credential resolves to the same operator, who runs both agents. A
+mechanism cannot manufacture a second party, and an obligation that waits for one to appear is a hope with
+a date on it — which ADR-0009 says is not an obligation.
+
+### 1. What this project guarantees about a grant, exactly
+
+State it in full, because everything below is the argument for not claiming more. For each of the 904
+grants in the corpus, `verify-content` establishes:
+
+1. **No single commit both authored the claim and granted it.** Within one document, a commit that touches
+   an author-owned field may not also write or change a `verification` block — with the one allowance that a
+   newly added file may carry the block in its null form.
+2. **A grant binds the text it was granted against.** Rule A4 re-binds every grant at `HEAD` by the claim's
+   own id, so editing a claim under a standing grant fails rather than inheriting it.
+3. **The five CI-clause checks and the re-check table hold**, per claim, for the current `sourceHash`.
+
+And here is the whole of what it does **not** establish, said as plainly as it deserves: **that the grant
+was made by a second party.** One agent making two commits in the right order produces a history that is
+byte-for-byte identical to two properly separated agents producing the same result. The two-commit shape is
+the entire guarantee. It raises the cost of marking your own homework from zero to "you must split it in
+two, in that order" — real, and not the rule the Decision states.
+
+So the Decision's "two separate agents with no shared context" is an **operating instruction to whoever runs
+the agents**, and it is enforced by how this project is operated, not by anything in the repository. That
+distinction is the point of this amendment. It was already true; it was written down in
+`scripts/verify-content.mjs` and nowhere a reader of the ADR would find it.
+
+### 2. The identity surface, measured today rather than recalled
+
+The gate's header recorded this measurement at 58 commits and it has drifted, in a direction worth
+correcting because the drift looks like progress and is not:
+
+```
+git log --format='%an|%ae|%cn|%ce|%G?' | sort -u
+dependabot[bot]|49699333+dependabot[bot]@…|Kinn Coelho Juliao|kinncj@gmail.com|N
+Kinn Coelho Juliao|kinncj@gmail.com|GitHub|noreply@github.com|E
+Kinn Coelho Juliao|kinncj@gmail.com|Kinn Coelho Juliao|kinncj@gmail.com|N
+```
+
+570 commits. **Two of them carry a signature** — `bef3cd5` and `f1b2b1d`, both squash-merges made through
+the GitHub web UI and signed by GitHub's own key — and one author identity is not the maintainer's, namely
+Dependabot's. So the flat claim "one identity and no signature" is now false at the repository level.
+
+It remains exactly true where it matters, and the restriction is the finding: **of the 216 commits that
+touch `content/`, all 216 carry `kinncj@gmail.com` as author and `%G?` of `N`.** Not one is signed. Not one
+carries any other identity.
+
+That is the ruling's best piece of evidence, not a footnote. The two identities in this repository that the
+committer genuinely does not control — GitHub's signing key and Dependabot's account — **exist already**,
+and neither has ever authored or granted a content claim, because neither is an actor that writes content.
+The mechanism the obligation asks for is present and attests to the wrong things.
+
+### 3. Why each named remedy fails here
+
+- **Signed commits.** The key is generated, held and used by the operator who runs both agents. A signature
+  would prove "this operator's key made this commit", which the single author email already tells us. It
+  cannot separate the author agent from the verifier agent, because both run as the same OS user with access
+  to the same keyring — the condition the header already names as *theatre that would read as cryptographic
+  proof*. Worse than useless: it would make the record look stronger while distinguishing nothing.
+- **CODEOWNERS plus branch protection.** This one fails on a hard rule of the platform, not on judgement.
+  GitHub does not let the author of a pull request approve it. `.github/CODEOWNERS` assigns every path to
+  `@kinncj`; `@kinncj` is the sole maintainer and the author of every pull request. So
+  `require_code_owner_reviews: true` with one required approval is **unsatisfiable by construction**: the
+  only eligible approver is the only possible author. A rule in that state has exactly two behaviours —
+  block all work, or be bypassed — and this repository is in the second. Every landing in the session that
+  produced this ruling pushed straight to `main`, with the remote reporting *"Bypassed rule violations: At
+  least 1 approving review is required"*, which `enforce_admins: false` (runbook §3, a deliberate residue)
+  permits. **A control whose only two states are "stops everything" and "is routinely overridden by the one
+  person it would bind" establishes nothing about who verified a question.**
+- **A distinct GitHub App installation** — the fullest form of the header's option 3. The App is created,
+  installed and its credentials held by the same person. GitHub would assert "installation X pushed this",
+  and X is provisioned by the operator. It moves the trust root from *an agent's claim about itself* to *the
+  operator's claim about itself*. That is one step, and it is not the step the obligation wanted.
+
+The header's option 3 says it "is the only option on this list that is not ultimately a claim an agent makes
+about itself". **That sentence is true in general and false under this repository's conditions**, and it is
+the sentence that made the obligation read as dischargeable. It is corrected in place.
+
+### 4. What `scripts/content-roles.json` was designed to do, and why it stays absent
+
+Read from the code rather than inferred. `ROLE_IDENTITIES_FILE` defaults to `scripts/content-roles.json`,
+overridable with `--roles`. The file is a flat JSON object mapping a **lower-cased git author email** to the
+string `"author"` or `"verifier"`; any other value yields no role. When a commit's `%ae` resolves to a role,
+gate A applies ADR-0003's rule *as worded* instead of the one-commit-one-job substitute: an author-role
+commit may write a `verification` object only in the null form and may never change one that exists, and a
+verifier-role commit may not touch author-owned fields at all. That is strictly stronger, and it catches the
+one case the substitute cannot — a single actor making two well-formed commits.
+
+Its precondition is that the two roles commit under **different** emails, which is a property of each
+agent's process environment (`GIT_AUTHOR_EMAIL`) and lives outside this repository entirely.
+
+**The file cannot be populated today, and the reason is arithmetic.** The map is keyed by email and the
+content history holds exactly one:
+
+- map `kinncj@gmail.com` to `author` and every grant in history becomes an author-role commit that moved a
+  verification block out of the null form — 904 failures, permanently red;
+- map it to `verifier` and every authoring commit becomes a verifier-role commit touching author-owned
+  fields — also permanently red;
+- map the placeholder addresses the header suggests, which no commit carries, and `roleOf` returns `null`
+  for all 216 commits. Enforcement is then **identical to the file's absence**.
+
+That third option is a trap and is named here so nobody lands it as progress. With a non-empty map the
+summary stops printing *"commit AUTHORSHIP is not established here"* and starts printing *"role identities
+loaded"*. Both sentences would be accurate — the second goes on to say how many commits carried a role, and
+the number would be zero — but the headline reads as the strong rule being in force while nothing whatever
+is enforced. **A file that changes the wording of a warning without changing a single outcome is a net loss,
+and this ADR refuses it.**
+
+So the file stays absent, the wiring stays, and the honest note stays. If the day comes when two roles
+really do commit under two addresses, the map is one file and the gate needs no change — that is the wiring
+earning its keep. It would still be self-attested, and the summary would still say so.
+
+### 5. The ruling on the obligation
+
+Closed with `VOIDED`, and the keyword is chosen under ADR-0009's instruction to choose honestly.
+`DISCHARGED` would assert the work was done: **no work was done, no identity was landed, and nothing here
+claims otherwise.** What removed the premise is not a reversed decision or a dropped feature but a
+demonstration — §3 above — that the premise was never true: no identity mechanism available to a
+single-operator repository can establish that two parties did the work, because there is one party. The
+precedent for closing this way is the Peggy's Cove Tier 3 marker in `docs/content-review.md` §13, voided on
+the same grounds and with the same refusal to claim delivery.
+
+ADR-0009 warns that `VOIDED` is the easiest way to escape an obligation and that a closure naming no cause
+should fail review. Answering that head-on: the cause is named and it is checkable by anyone in two
+commands — `git log --format='%ae|%G?' -- content/ | sort -u` returns one row, and GitHub's own
+documentation says a pull request author may not approve it. The cost of the escape is stated in §6 rather
+than left to be discovered.
+
+### 6. Rule A3 stands, and what that costs
+
+`communityReview` keeps failing closed. No commit may move the status off `not-sought`, and since the
+identity that was supposed to replace that refusal is not coming, **the refusal is now the settled state
+rather than a placeholder.** Stated at full volume, because the 2026-09-08 amendment promised a way through
+and this amendment withdraws it: *this repository cannot record a community sign-off, and that is a real
+limit on shipping any Indigenous content, permanently as things stand.*
+
+No new dated obligation replaces the voided one — restating it in different words is precisely what this
+ruling refuses. What would reopen the question is a change in the world, not a mechanism: **a second party
+with their own credentials.** That precondition already exists, is already owned and is already dated
+elsewhere — `OQ-REVIEW-2` in `docs/content-review.md` §1 and §13, owner `po`, which asks whether a Tier 3
+reviewer will be engaged at all. Until somebody other than the operator can act, there is nobody for an
+identity mechanism to identify, and A3 has nothing to read.
+
+One correction of aim while withdrawing the promise. A git identity was always a poor proxy for the thing
+A3 needs to know, which is *did a person from the nation depicted actually say yes*. The artefact that
+answers that is the one this ADR already designed: `record`, pointing at a published statement or a
+committed letter. Whoever eventually replaces A3 should build the rule around **the artefact and the person**
+and not around the commit, because the commit was never where the answer lived.
 
 ## Alternatives considered
 - **One agent authoring and verifying** — rejected: a model that wrote an answer is the worst judge of it.

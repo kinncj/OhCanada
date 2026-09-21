@@ -195,6 +195,15 @@ ship (ADR-0003). The load-bearing rule is a **separation of duties**: the author
 may never set its verification status; the verifier grants or refuses status and may never edit the text.
 A single agent doing both would be marking its own homework, and the status would mean nothing.
 
+**What is mechanically enforced is narrower than that rule, and the difference is deliberate** (ADR-0003,
+amended 2026-09-20). `verify-content` establishes that no single commit both authors a claim and grants its
+verification, and that a grant stops binding a claim whose text changes under it. It does **not** establish
+that a second party made the grant: every commit touching `content/` carries one identity and no signature,
+so one agent committing twice is indistinguishable from two agents. The two-agent rule above is an operating
+instruction to whoever runs the agents, enforced by how this project is operated rather than by the
+repository. That limit was ruled permanent rather than pending — no identity mechanism can establish a
+second party where there is one maintainer — and ADR-0003's amendment carries the reasoning.
+
 Status is granted against a `sourceHash`. If canada.ca changes, the hash changes, the status no longer
 matches, and the question falls out of the build — automatically, without anyone noticing the edit.
 

@@ -36,7 +36,11 @@ Also available as `make verify-content`. This is the content-specific gate, and 
    contain.
 3. **Checks the wording is not copied** — no run of 14 or more consecutive words shared with the guide.
 4. **Checks the separation of duties over git history** — no single commit both authors a claim and grants
-   its verification.
+   its verification. That is the whole of it, and the run says so on every pass: it cannot tell one agent
+   committing twice from two agents, because every commit touching `content/` carries the same identity and
+   no signature. ADR-0003's amendment of 2026-09-20 ruled that this is the settled guarantee rather than a
+   gap waiting on a fix, so **read the NOTE at the bottom of the output as a statement of scope, not as a
+   to-do.**
 
 A green run prints its own numbers, including the ones that would let you tighten a threshold later:
 

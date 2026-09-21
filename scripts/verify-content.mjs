@@ -65,14 +65,25 @@
  * not assumed:
  *
  *     git log --format='%an|%ae|%cn|%ce|%G?' | sort -u
+ *     dependabot[bot]|49699333+dependabot[bot]@...|Kinn Coelho Juliao|kinncj@gmail.com|N
+ *     Kinn Coelho Juliao|kinncj@gmail.com|GitHub|noreply@github.com|E
  *     Kinn Coelho Juliao|kinncj@gmail.com|Kinn Coelho Juliao|kinncj@gmail.com|N
  *
- * Every commit in this repository — 58 of them at the time of writing — carries
- * one author identity, one committer identity, and no signature. CLAUDE.md
- * forbids attribution trailers, so the message carries nothing either. There is
- * no field, anywhere in the object graph, that separates a commit made by the
- * content-author agent from one made by the content-verifier agent from one
- * made by the repository owner at a keyboard.
+ * RE-MEASURED 2026-09-20 at 570 commits. The first version of this paragraph
+ * said "58 of them, one identity, no signature", and that has drifted in a
+ * direction which looks like progress and is not: TWO commits now carry a
+ * signature — both squash-merges made through the GitHub web UI and signed by
+ * GitHub's own key — and one author identity is Dependabot's.
+ *
+ * The restriction is the finding. OF THE 216 COMMITS THAT TOUCH content/, ALL
+ * 216 carry kinncj@gmail.com as author and a `%G?` of N: not one is signed, not
+ * one carries another identity. CLAUDE.md forbids attribution trailers, so the
+ * message carries nothing either. There is no field, anywhere in the object
+ * graph, that separates a commit made by the content-author agent from one made
+ * by the content-verifier agent from one made by the repository owner at a
+ * keyboard. And the two identities in this repository that the committer does
+ * NOT control — GitHub's merge key, Dependabot — exist ALREADY and have never
+ * authored or granted a claim, because neither is an actor that writes content.
  *
  * THEREFORE: AUTHORSHIP CANNOT BE ESTABLISHED FROM THIS REPOSITORY'S HISTORY,
  * and a gate claiming to fail "when a commit authored by an agent" does X would
@@ -107,7 +118,13 @@
  *   two commits, in that order". Non-zero, real, and not the rule.
  *
  * WHAT WOULD MAKE AUTHORSHIP ESTABLISHABLE, in increasing order of how much it
- * actually proves. This is the specification the architect asked for:
+ * actually proves. This was the specification the architect asked for, and it
+ * was RULED ON 2026-09-20 — see ADR-0003, "two-party authorship needs two
+ * parties, and this repository has one". None of the three is achievable while
+ * one person runs every agent, and the obligation that asked for option 3 is
+ * closed rather than pending. Each entry is annotated with why. The list stays,
+ * because it is the specification a DIFFERENTLY OPERATED repository would
+ * implement and because option 1's wiring below is still live:
  *
  *   1. DISTINCT GIT IDENTITIES PER ROLE. The author agent commits as
  *      `TrueNorth content-author <content-author@truenorth.invalid>`, the
@@ -135,10 +152,26 @@
  *      only through a pull request pushed by a distinct GitHub App installation,
  *      with `content/questions/**` under CODEOWNERS and branch protection
  *      refusing a self-approved change. GitHub asserts that identity, not the
- *      committer, so it is the only option on this list that is not ultimately
- *      a claim an agent makes about itself.
+ *      committer.
  *
- * Until one of those lands, this gate holds the one-commit-one-job rule, and
+ *      RULED UNACHIEVABLE HERE. This paragraph used to end "so it is the only
+ *      option on this list that is not ultimately a claim an agent makes about
+ *      itself". That is true in general and FALSE under this repository's
+ *      conditions, and it is the sentence that made the obligation read as
+ *      dischargeable, so it is corrected rather than quietly dropped. The App is
+ *      created and its credentials are held by the same operator who runs both
+ *      agents, so it moves the trust root from "an agent's claim about itself"
+ *      to "the operator's claim about itself" — one step, and not the step. The
+ *      CODEOWNERS half cannot be satisfied AT ALL: GitHub forbids a pull
+ *      request's author from approving it, `* @kinncj` owns every path, and
+ *      @kinncj authors every pull request, so "one approving review" is
+ *      unsatisfiable by construction. Its only two states are "blocks all work"
+ *      and "is bypassed" — and with `enforce_admins: false` (runbook §3) it is
+ *      bypassed on every landing, the remote saying so each time.
+ *
+ * None of those is landing, so the one-commit-one-job rule is THE GUARANTEE and
+ * not a stand-in for one that is coming (ADR-0003, amended 2026-09-20). This
+ * gate holds it, and
  * `communityReview` is handled by refusing every non-`not-sought` transition
  * outright (rule A3 in the history gate) — because there the correct answer to
  * "was this an agent?" is "we cannot tell", and the cost of guessing wrong is a
@@ -361,7 +394,9 @@ Usage: node scripts/verify-content.mjs [options]
   --no-history      skip the git separation-of-duties gate
   --roles <file>    a git-author-email to role map, enabling ADR-0003's rule as
                     worded. Default scripts/content-roles.json, which does not
-                    exist; see the header for why that is the honest state.
+                    exist and is not going to: every content commit carries the
+                    same author email, so the map has nothing to key on. Ruled
+                    2026-09-20, ADR-0003 amended; see the header.
   -h, --help
 
 Gate A  separation of duties, from git history
@@ -370,7 +405,9 @@ Gate A  separation of duties, from git history
         A claim is matched across commits by the id its schema requires, not
         by its position in a list.
         Read the header: authorship itself is NOT establishable in this
-        repository, and the header specifies what would make it so.
+        repository, and ADR-0003's amendment of 2026-09-20 ruled that it cannot
+        be made so while one person runs every agent. One commit, one job IS the
+        guarantee - not a placeholder for a stronger one that is coming.
 Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
         landmark blurb, a territory acknowledgement, wherever under content/ it
         lives - verified for the current sourceHash; four options and EN/FR
@@ -451,6 +488,24 @@ if (Number.isNaN(NOW.getTime())) {
  * today, and until each agent role commits under its own identity it should not:
  * a map that named this repository's single identity as one role would make the
  * gate confidently wrong rather than honestly weak.
+ *
+ * THE ARITHMETIC, because "not yet" reads as "soon" and this is neither
+ * (ADR-0003, amended 2026-09-20). The map is keyed by author email and the
+ * content history holds exactly one. Map it to "author" and every grant ever
+ * made becomes an author-role commit that moved a block out of the null form —
+ * 904 failures, permanently red. Map it to "verifier" and every authoring commit
+ * becomes a verifier touching author-owned fields — permanently red the other
+ * way. Map the placeholder addresses above, which no commit carries, and
+ * `roleOf` returns null for all 216 commits: enforcement IDENTICAL to the file's
+ * absence, while the summary stops saying "AUTHORSHIP is not established" and
+ * starts saying "role identities loaded". That third one is the trap. It is
+ * named here so nobody lands it as progress: a file that changes the wording of
+ * a warning and not one outcome is a net loss, and this gate refuses it.
+ *
+ * What would make the file worth writing is not a decision in this repository —
+ * it is two agent roles actually committing under two addresses, which lives in
+ * each agent's environment. The wiring stays for that day, and on that day the
+ * map is one file and this code needs no change.
  *
  * When it exists, gate A additionally enforces the rule as ADR-0003 words it —
  * a commit whose author is the AUTHOR role may write a verification object only
@@ -2650,11 +2705,14 @@ if (history.ran) {
   if (Object.keys(ROLE_IDENTITIES).length === 0) {
     console.log(
       `verify-content: NOTE — commit AUTHORSHIP is not established here. ` +
-        `${ROLE_IDENTITIES_FILE} does not exist, every commit in this repository carries one ` +
+        `${ROLE_IDENTITIES_FILE} does not exist, every commit touching content/ carries one ` +
         `identity and no signature, and CLAUDE.md forbids trailers. What is enforced is that no ` +
         `single commit both authors a claim and grants its verification. One agent committing twice ` +
-        `is indistinguishable from two agents; read the header of this file for what would change ` +
-        `that.`,
+        `is indistinguishable from two agents. THIS IS THE SETTLED GUARANTEE, NOT A GAP AWAITING A ` +
+        `FIX: ADR-0003's amendment of 2026-09-20 ruled that no identity mechanism establishes a ` +
+        `second party in a repository where one person runs every agent, and closed the obligation ` +
+        `that asked for one. The roles map stays absent because it is keyed by author email and ` +
+        `every content commit carries the same one — read the header for the measurement.`,
     );
   } else {
     console.log(

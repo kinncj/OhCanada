@@ -108,7 +108,10 @@ is live:
 2. Quarantine beats correction under time pressure. Removing or quarantining the item is a content change
    that ships through the normal PR → merge → deploy path; it does not need a rollback.
 3. The author and the verifier are different agents by rule (CLAUDE.md, ADR-0003). Do not shortcut that
-   during an incident — a hurried self-verified fix is how the wrong answer got there.
+   during an incident — a hurried self-verified fix is how the wrong answer got there. **Nothing will stop
+   you**: the gate proves only that no single commit does both jobs, and two commits in the right order look
+   the same whoever made them (ADR-0003, amended 2026-09-20). Under incident pressure that rule is held by
+   the person running the agents and by nothing else.
 
 ---
 
