@@ -110,7 +110,9 @@ copied verbatim, and reads git history for the separation of duties described be
 counts on every run, including how many questions it could **not** check — the cached guide is Crown
 copyright and is not in this repository, so in CI the text checks cannot run and the summary says so rather
 than printing a tick. Do not read a passing `verify-content` as "my question was verified": what it proves
-is stated in its output, and a verified status still comes from a second reader.
+is stated in its output. A verified status means a *separate commit* made the grant: the gate proves
+that no single commit both authored a claim and granted it, and that is the whole of what it proves.
+It cannot establish that a different person or agent made that commit — see ADR-0003.
 [`docs/guidelines/running-the-checks.md`](docs/guidelines/running-the-checks.md) explains each command, what
 a red run is telling you, and how to fetch the source locally.
 
@@ -162,7 +164,9 @@ worth understanding before you write a question, not after.
 - both English and French text, with the French a faithful translation;
 - wording that is **not verbatim** from the source — paraphrased, in plain language.
 
-**The author and the verifier are different, and neither may do the other's job.** An author writes
+**The author and the verifier are different roles, and neither may do the other's job in one commit.**
+That per-commit separation is enforced; that two *parties* were involved is the working practice and is
+not mechanically established (ADR-0003, amended 2026-09-20). An author writes
 questions, quests and dialogue and may *never* write a `verification` block. A verifier writes *only* the
 verification block and may never edit the text it is judging.
 
