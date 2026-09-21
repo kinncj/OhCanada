@@ -45,7 +45,7 @@
 
 import gameConfigDocument from '@content/game.config.json';
 
-import { bundledQuestionBank } from '@adapters/content';
+import { bundledLessonLibrary, bundledQuestionBank } from '@adapters/content';
 import { browserIndexedDb, browserLocalStorage, openProgressStore } from '@adapters/persistence';
 import { createSeededRandom } from '@adapters/random';
 import {
@@ -66,6 +66,8 @@ import { createStudySession, type StudySession } from '@application/use-cases/st
 import type {
   Clock,
   Connectivity,
+  LessonLibrary,
+  LessonPassageReference,
   LocalizedText,
   QuestDocument,
   ShippableQuestion,
@@ -99,6 +101,7 @@ import {
   type LevelCompleteContent,
   type LevelCompleteNext,
 } from '@ui/level-complete';
+import { createLessonReader, type LessonReader, type LessonReaderView } from '@ui/lesson-reader';
 import { createLevelError, createLevelLoading } from '@ui/level-screens';
 import { describeEntry, type MapEntry } from '@ui/level-select';
 import { announce, clearAnnouncements, mountLiveRegion } from '@ui/live-region';
@@ -126,6 +129,8 @@ import { creatorArt } from './creator-art';
 import { createTaskCue } from './task-cue';
 import { assetsBaseUrl, createScreenArt, type ScreenArt } from './screen-art';
 import { aboutThisPlaceView } from './about-this-place';
+import { lessonReaderView, resolveReading, type Reading } from './lesson-reading';
+import { grantsPassage } from './verified-passages';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
@@ -677,6 +682,17 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * stronger reason than tidiness — `ExamSession` has no `progress` in its
    * dependencies at all, so the draw *cannot* read a review record.
    */
+  /*
+   * The lesson catalogue, wired once (ADR-0063 §6).
+   *
+   * One library for the sitting and for every surface that reads prose, so a
+   * chapter fetched at a plaque is the chunk Learn reads later and a quarantined
+   * passage disappears from both in one edit. Nothing is fetched by building it:
+   * the index is read off module paths, and a chapter's chunk arrives when a
+   * `read` step names a lesson in it.
+   */
+  const lessonLibrary = bundledLessonLibrary();
+
   const examSource: ExamSession = createExamSession({
     bank: bundledQuestionBank,
     random: random.fork('exam'),
@@ -1470,6 +1486,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       /* One session for the sitting, shared with Study on the front door: see
          `LevelWiring.questions`. */
       questions: studySource,
+      /* One library for the sitting: a chapter fetched at a plaque is the same
+         chunk Learn will read (ADR-0063 §6). */
+      lessons: lessonLibrary,
       record: recordAnswer,
       /* One options stream for the sitting, shared with Study: see
          `LevelWiring.random` (ADR-0059). */
@@ -1839,6 +1858,18 @@ interface LevelWiring {
    * minute later.
    */
   readonly questions: StudySession;
+  /**
+   * The one lesson catalogue, behind `chapters()` and `lessons(chapter)`
+   * (ADR-0063 §6).
+   *
+   * Where a `read` step's `{ lesson, passage }` pairs are resolved, and the same
+   * catalogue ADR-0061's Learn surface will read a chapter from — one of it, so
+   * a passage ADR-0016's clock quarantines leaves the level and leaves Learn in
+   * one edit. Lazy by chapter: asking for the index costs nothing and only the
+   * chapter a step names is ever fetched, so the corpus stays off the ≤ 8 MB
+   * initial payload.
+   */
+  readonly lessons: LessonLibrary;
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   /**
@@ -2319,6 +2350,17 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   let pendingVisit: VisitedOutcome | null = null;
 
+  /**
+   * This level session has been closed.
+   *
+   * Read by the one thing here that can still be waiting when it happens: a
+   * lesson chapter downloading behind the reader. Everything else on the
+   * landmark chain is synchronous or already guarded by `learning` being
+   * nulled, and a screen mounted into a `<main>` that has been removed is a
+   * level's worth of DOM behind the map.
+   */
+  let torndown = false;
+
   /* A modal over a level pauses it, and closing resumes. The card takes focus
      and is read on arrival, which is why `SPEAKS['poi/engaged']` is `false` —
      announcing it as well would say everything twice. */
@@ -2359,9 +2401,118 @@ function openLevel(wiring: LevelWiring): LevelSession {
       void askAbout();
       return;
     }
-    visit.speak(() => {
-      void askAbout();
+    const thenSpeak = (): void => {
+      visit.speak(() => {
+        void askAbout();
+      });
+    };
+    /*
+     * A `read` step's passages, between the place's own card and whatever is
+     * said about it. One question — "is there anything to read here?" — and not
+     * a branch on the step kind: `VisitedOutcome.passages` is empty on every
+     * other kind, and a `read` step carries no `dialogue` (ADR-0063 §3), so the
+     * two surfaces never both open and the order below is a sequence rather
+     * than a choice.
+     */
+    if (visit.passages.length === 0) {
+      thenSpeak();
+      return;
+    }
+    void openReader(visit.passages, thenSpeak);
+  }
+
+  /**
+   * The lesson reader: the passages a `read` step named, in the language in
+   * force (ADR-0063, `TN-READ`).
+   *
+   * Built here and not at `openLevel`, like the About panel: most levels never
+   * open one, and the surface that draws prose is not worth mounting on every
+   * level for the one stop that reads.
+   *
+   * {@link reading} is held beside it because the screen cannot re-resolve what
+   * it was handed — it takes prose, and that is the whole seam — so a language
+   * change rebuilds the view from the resolution rather than from the words on
+   * the page.
+   */
+  let reader: LessonReader | null = null;
+  let reading: Reading | null = null;
+  /** The continuation the reader owes: the step's line, then the question. */
+  let afterReading: (() => void) | null = null;
+
+  function readerView(next: UiLocale): LessonReaderView | null {
+    return reading === null ? null : lessonReaderView(reading, next, localised);
+  }
+
+  /**
+   * Resolve a `read` step's references and open the reader on what may be read.
+   *
+   * `onClosed` is called **exactly once on every path**, which is
+   * `VisitedOutcome.speak`'s contract asked of this surface and for the same
+   * reason: the question after it must not be owed down one route and forgotten
+   * down the other. It is called immediately when the references will not
+   * resolve, when every passage they name is unreadable, and when the level went
+   * away while a chapter was downloading; otherwise it waits for the player.
+   *
+   * Nothing here is a player-facing failure. A reference that names nothing is a
+   * document defect a player cannot act on, and interrupting a level with it
+   * would be worse than the level carrying on — so it goes to the console, where
+   * a developer can act on it, exactly as a landmark with no question to ask
+   * does. The level stays finishable either way: the step advanced before this
+   * ran, because ADR-0063 says whether reading happened is not checkable.
+   */
+  async function openReader(
+    references: readonly LessonPassageReference[],
+    onClosed: () => void,
+  ): Promise<void> {
+    const resolved = await resolveReading(wiring.lessons, references, grantsPassage);
+    /* The chapter arrived after the level went: there is nothing to draw on and
+       nothing is owed, because `close()` has already dropped what was owed. */
+    if (torndown) return;
+
+    if (!resolved.ok) {
+      console.error(
+        `[bootstrap] a read step's passages could not be shown. ` +
+          `${resolved.error.code}: ${resolved.error.message}`,
+      );
+      onClosed();
+      return;
+    }
+    /* Each passage a verifier will not let a player read, named. Said here and
+       not shown: a quarantined paragraph leaves the level the way it leaves
+       Learn, by not being in the list (ADR-0063 §6). */
+    for (const refusal of resolved.value.refused) {
+      console.error(`[bootstrap] a lesson passage is left unread. ${refusal}`);
+    }
+
+    reading = resolved.value;
+    const view = readerView(locale);
+    if (view === null) {
+      /* Every passage was refused. Nothing opens — a sheet with a heading and no
+         words is a screen the player dismisses having been told nothing
+         (ADR-0024) — and the level carries straight on. */
+      reading = null;
+      onClosed();
+      return;
+    }
+
+    reader?.destroy();
+    reader = createLessonReader(hud.main, {
+      locale,
+      announce: wiring.announce,
+      singleSwitch: store.current.singleSwitch,
+      holdMs: store.current.holdToChooseMs,
+      onClose: () => {
+        reading = null;
+        const owed = afterReading;
+        afterReading = null;
+        owed?.();
+      },
+      /* The prompt, like the landmark card's: the plaque on the canvas is
+         `aria-hidden` and takes no focus, so the trap would restore to the body. */
+      restoreFocusTo: () => hud.prompt,
     });
+    afterReading = onClosed;
+    reader.show(view);
   }
 
   /*
@@ -3543,6 +3694,13 @@ function openLevel(wiring: LevelWiring): LevelSession {
         const level = renderer.level;
         if (level !== null) about.setLocale(next, aboutThisPlaceView(level.about, next, localised));
       }
+      /* The reader cannot re-resolve its prose either, and for a stronger
+         reason: it was handed words, never references (ADR-0063 §6). The view is
+         rebuilt from the resolution that is still held here, so the heading and
+         the paragraphs change language together — a French heading over English
+         prose is what an optional parameter ships (`TN-READ-03`). */
+      const reread = readerView(next);
+      if (reader !== null && reread !== null) reader.setLocale(next, reread);
       /* The prompt is a copy row, so it is drawn again in the new language rather
          than left in the old one. `announcer.inReach` is what is actually in
          reach, so nothing is invented and nothing is offered that is not there. */
@@ -3572,8 +3730,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
       quests.setSingleSwitch(enabled, holdMs);
       passport?.setSingleSwitch(enabled, holdMs);
       about?.setSingleSwitch(enabled, holdMs);
+      reader?.setSingleSwitch(enabled, holdMs);
     },
     close(): void {
+      torndown = true;
       offPause();
       offFailure();
       offEngaged();
@@ -3598,6 +3758,12 @@ function openLevel(wiring: LevelWiring): LevelSession {
       passport = null;
       about?.destroy();
       about = null;
+      /* And what a reader that will never be closed owed: the line and the
+         question that came after a passage on a level that is going. */
+      reader?.destroy();
+      reader = null;
+      reading = null;
+      afterReading = null;
       study?.destroy();
       study = null;
       card.destroy();

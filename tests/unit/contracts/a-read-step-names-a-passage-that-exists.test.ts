@@ -131,13 +131,14 @@ describe('every read step in the build names passages that exist', () => {
 
   it('reports how many references the build actually holds', () => {
     /*
-     * Zero today, and that is a legal answer rather than a silent one: no `read`
-     * step is authored yet (ADR-0063 dates that to content, 2027-02-20). Stated
-     * as an assertion so the day the first one lands, this number moves and the
-     * check above stops being a walk over nothing.
+     * It was zero, and it is not any more: `ottawa-parliament-hill` reads at the
+     * canal locks, which is ADR-0063's content obligation discharged. The number
+     * was asserted as `>= 0` while it was zero so that the day the first step
+     * landed it would move rather than pass quietly; now that it has moved, the
+     * floor is a real one and the walk above is a walk over something.
      */
     const found = quests.flatMap(({ document }) => referencesIn(document));
-    expect(found.length).toBeGreaterThanOrEqual(0);
+    expect(found.length).toBeGreaterThan(0);
     for (const reference of found) expect(reference.kind).toBe('read');
   });
 });

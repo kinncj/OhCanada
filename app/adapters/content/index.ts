@@ -4,6 +4,22 @@
  */
 
 export {
+  bundledLessonLibrary,
+  createLessonLibrary,
+  type LessonLibraryOptions,
+} from './bundled-lesson-library';
+export {
+  BUNDLED_LESSON_MODULES,
+  fetchChapterModules,
+  indexLessonModules,
+  lessonAddress,
+  type ChapterEntry,
+  type LessonAddress,
+  type LessonEntry,
+  type LessonModuleMap,
+} from './lesson-catalog';
+export { parseLessonDocument } from './lesson-document';
+export {
   bundledQuestionBank,
   createQuestionBank,
   type QuestionBankOptions,

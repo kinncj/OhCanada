@@ -894,18 +894,56 @@ export type ShippableQuestion = Shippable<QuestionDocument>;
  * interfaces below and compares them property by property and type by type. A
  * schema with no mirror type is the gap that rule closes.
  *
- * WHAT IS DELIBERATELY NOT HERE: the lesson-reading METHODS. ADR-0061 §8 names a
- * capability on this port — list the chapters, load one chapter's lessons — and
- * ADR-0008 says a port exists when something calls it. Nothing calls it: there is
- * no Learn screen, no lesson catalogue adapter and no task in the current or next
- * slice, so `chapters()` and `lessons(chapter)` would be dead members inside a
- * consumed file, which is precisely the case ADR-0015 says to prune rather than
- * mark. The seam is described in `docs/architecture.md` §6 instead, which is
- * where ADR-0008 sends a seam with no task, and the first implementer writes the
- * signatures against a real caller. A document TYPE and a CAPABILITY are
- * different claims: the type says "this is the shape a validated lesson has",
- * which is true today; a method would say "something answers this", which is not.
+ * THE LESSON-READING METHODS ARE NOW HERE, and the paragraph that stood in this
+ * place said exactly when they would be: ADR-0061 §8 named the capability — list
+ * the chapters, load one chapter's lessons — ADR-0008 kept it unwritten while
+ * nothing called it, and ADR-0063 §6 assigned the signatures to "the implementer
+ * in the change that first calls them". That change is the first authored `read`
+ * step (`content/quests/ottawa-parliament-hill.json`), which walks
+ * `app/bootstrap/lesson-reading.ts` -> {@link ContentRepository.chapters} ->
+ * {@link ContentRepository.lessons} -> the resolver in
+ * `app/application/content/lesson-passages.ts` -> `app/ui/lesson-reader.ts`. The
+ * capability is no longer a claim about the future, so it is no longer prose in
+ * `docs/architecture.md` §6.
  * ----------------------------------------------------------------------- */
+
+/**
+ * One chapter of `content/lessons/`, and which lesson documents it holds — the
+ * whole of it, addressed and **not one byte of it fetched**.
+ *
+ * This is the index that makes the per-chapter laziness ADR-0063 §6 requires
+ * actually work. A `{ lesson, passage }` reference names a lesson document, not
+ * a chapter, so something has to say which chunk to fetch; the alternative is
+ * loading all ten chapters to find out, which is the eager glob of 48 documents
+ * §6 exists to refuse and the ≤ 8 MB initial payload cannot pay for. An adapter
+ * reads both halves off the module path — `content/lessons/<chapter>/<id>.json`
+ * — so answering this costs no network and no parse.
+ *
+ * `lessons` carries ids and **not** `LessonDocument`s for the same reason: a
+ * summary a caller can hold cheaply, exactly as `LevelSummary` is to
+ * `LevelDocument`.
+ *
+ * It is a LIST of chapters holding a LIST of ids, and deliberately not a map
+ * keyed by either. A map keyed by lesson id silently keeps one of two documents
+ * that share one — last writer wins — and the ambiguity the resolver exists to
+ * catch would be gone before anything looked for it (ADR-0063 §4, ADR-0024).
+ * `scripts/lib/lesson-passages.mjs` reads the corpus as a flat list for the same
+ * reason, and says so at greater length.
+ */
+export interface LessonChapter {
+  /**
+   * The directory under `content/lessons/`, which is the chapter's ADDRESS.
+   *
+   * Not its printed title: `LessonDocument.chapter` carries that, exactly as
+   * `content/sources/discover-canada.json` prints it, and the two are joined by
+   * loading the document. The address is what a lazy fetch needs and the title
+   * is what a reader needs, and they are different strings on purpose —
+   * `canadas-history` is a path segment, "Canada's History" is a heading.
+   */
+  readonly chapter: string;
+  /** Every lesson document's own `id` in this chapter, in a stable order. */
+  readonly lessons: readonly string[];
+}
 
 /**
  * One paragraph of a lesson, and exactly one claim about Canada.
@@ -1352,6 +1390,39 @@ export interface ContentRepository {
    * counted.
    */
   questions(subject: SubjectId): Promise<Result<readonly ShippableQuestion[]>>;
+  /**
+   * Which chapters of `content/lessons/` this build ships, and which lesson
+   * documents are in each. Cheap: no document is fetched (ADR-0063 §6).
+   *
+   * The index a lazy chapter load needs. A `read` step names a lesson, so
+   * something has to turn that into the one chunk worth fetching, and doing it
+   * by loading every chapter is the eager glob §6 refuses.
+   *
+   * Refuses rather than answering `[]`, for `subjects()`'s reason: a build whose
+   * lesson corpus failed to glob is a build where every `read` step dangles, and
+   * an empty catalogue reads downstream as "this reference names nothing"
+   * (ADR-0024).
+   */
+  chapters(): Promise<Result<readonly LessonChapter[]>>;
+  /**
+   * Every lesson document in one chapter, in reading order.
+   *
+   * `LessonDocument`, not a filtered or localised shape: the shippable-passage
+   * rule is `app/application/content/lesson-passages.ts`'s and a language is the
+   * caller's, exactly as `questions()` returns both languages and lets the card
+   * choose. An adapter that filtered here would be a second place deciding what
+   * is readable, which is the thing ADR-0063 §6 is written to prevent.
+   *
+   * A LIST, not a map keyed by lesson id: two documents sharing an id must both
+   * arrive so the resolver can refuse the pair as `ambiguous` rather than
+   * silently keep whichever the map wrote last.
+   *
+   * Fails `not-found` for a chapter this build does not ship and `io` for a
+   * chunk that will not download — two different things, and a caller that
+   * showed one card for both would tell a player to retry something that can
+   * never succeed.
+   */
+  lessons(chapter: string): Promise<Result<readonly LessonDocument[]>>;
   character(id: CharacterId): Promise<Result<CharacterDocument>>;
   /**
    * The shared character rig, `content/characters/rig.json` (ADR-0022).
@@ -1385,3 +1456,15 @@ export interface ContentRepository {
  * The same derivation as `LevelSummary` above, for the same reason (ADR-0007).
  */
 export type QuestionBank = Pick<ContentRepository, 'subjects' | 'questions'>;
+
+/**
+ * The lesson half of `ContentRepository`, for the two things that read prose: a
+ * `read` step on the quest path, and the Learn surface when it is built.
+ *
+ * A `Pick` for `QuestionBank`'s reasons, and for one more that is specific to
+ * this pair. ADR-0063 §6 turns on there being **one catalogue** behind both
+ * readers, so that a passage ADR-0016's clock quarantines leaves the level and
+ * leaves Learn in one edit. A second interface here would be the beginning of a
+ * second catalogue; a `Pick` cannot become one.
+ */
+export type LessonLibrary = Pick<ContentRepository, 'chapters' | 'lessons'>;

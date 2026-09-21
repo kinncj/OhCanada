@@ -79,7 +79,7 @@
  * and the completion card takes its own reason (`'complete'`), never this one.
  */
 
-import type { QuestDocument } from '@application/ports';
+import type { LessonPassageReference, QuestDocument } from '@application/ports';
 import type { Clock } from '@application/ports/clock';
 import { startQuest, questIsOnOffer, offerQuest } from '@application/use-cases/start-quest';
 import {
@@ -255,6 +255,22 @@ export interface VisitedOutcome {
    * landmark's question from being owed down one route and not the other.
    */
   speak(onClosed: () => void): VisitSpeech;
+  /**
+   * What a `read` step named, captured at the same moment the lines were and for
+   * the same reason: `currentStep` answers with the *next* step the instant
+   * `progressQuest` succeeds, so a caller that came back for the references
+   * afterwards would be asking the `answer` step, which has none.
+   *
+   * **References, never words** (ADR-0063 §2). Nothing in this file resolves
+   * one: resolution is cross-document, it has to fail differently on zero
+   * matches and on two, and it fetches a chapter — all of which is
+   * `./lesson-reading.ts`'s, over the one catalogue both readers share.
+   *
+   * Empty on every other kind, which is what lets the caller ask one question
+   * — "is there anything to read here?" — rather than branch on the step kind it
+   * would otherwise have to be told.
+   */
+  readonly passages: readonly LessonPassageReference[];
 }
 
 /** An `answer` step in play, and how far through it the player is. */
@@ -270,6 +286,7 @@ export interface AnsweringStep {
 /** Nothing happened here: not this step's target, or no quest is running. */
 const NOT_THIS_STEP: VisitedOutcome = {
   advanced: false,
+  passages: [],
   speak(onClosed): VisitSpeech {
     onClosed();
     return 'no-step';
@@ -317,8 +334,9 @@ export interface QuestController {
    */
   engage(targetId: string): boolean;
   /**
-   * A landmark was engaged: advance a `visit` step if that is the current one,
-   * and hand back what that step had to say about the place.
+   * A landmark was engaged: advance a `visit`, `collect` or `read` step if that
+   * is the current one, and hand back what that step had to say about the place
+   * — its lines, or the passages it named.
    *
    * One call rather than two, and that is the whole of why it returns something.
    * A step's lines have to be read **before** the step advances — `currentStep`
@@ -344,7 +362,8 @@ export interface QuestController {
    */
   canEngage(targetId: string): boolean;
   /**
-   * Is the step the player is on a `visit` or `collect` step for this target?
+   * Is the step the player is on a `visit`, `collect` or `read` step for this
+   * target?
    *
    * The question the prompt needs about a landmark whose claim was refused: it
    * has no card, so it is worth offering only while a quest is waiting for the
@@ -912,6 +931,11 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
     return {
       advanced: true,
+      /* A `read` step carries these and no `dialogue`; every other kind carries
+         `dialogue` and no these. The schema's conditional and
+         `./quests.ts` both hold that, so reading both fields here is not a
+         branch on the kind — it is the one shape that covers all of them. */
+      passages: step.passages ?? [],
       speak(onClosed): VisitSpeech {
         if (lines === undefined || lines.length === 0) {
           /*
@@ -1036,7 +1060,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       if (state === undefined) return false;
       const step = currentStep(quest, state);
       if (step === undefined) return false;
-      if (step.kind !== 'visit' && step.kind !== 'collect') return false;
+      if (step.kind !== 'visit' && step.kind !== 'collect' && step.kind !== 'read') return false;
       return bareTargetId(step.targetId) === bareTargetId(targetId);
     },
 
@@ -1124,7 +1148,18 @@ export function createQuestController(wiring: QuestWiring): QuestController {
          engaged is the thing it names. Steps cannot be skipped (`TN-QUEST-04`),
          and a landmark on the far side of the level cannot close this one. */
       if (step === undefined) return NOT_THIS_STEP;
-      if (step.kind !== 'visit' && step.kind !== 'collect') return NOT_THIS_STEP;
+      /*
+       * `read` joins `visit` and `collect` here, and it behaves exactly as they
+       * do: the step completes on arrival, before anything is drawn. That is not
+       * a shortcut, it is ADR-0063 — *whether reading happened is not checkable
+       * and must not be gated* — so the step cannot wait for the reader to
+       * close, and a control that claimed to know the player had read would be a
+       * control that lies. `talk` stays out: it is completed by accepting the
+       * offer (`acceptQuest`), not by walking up.
+       */
+      if (step.kind !== 'visit' && step.kind !== 'collect' && step.kind !== 'read') {
+        return NOT_THIS_STEP;
+      }
       if (bareTargetId(step.targetId) !== bareTargetId(targetId)) return NOT_THIS_STEP;
 
       /*
