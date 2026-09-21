@@ -8,8 +8,8 @@
     "fr": "Patinez jusqu'à la Colline du Parlement"
   },
   "summary": {
-    "en": "Skate up the canal with the officer. You stop at the Library, at the Peace Tower and at the warming hut, and at each one the officer explains a piece of how Canada is governed and then asks you about it.",
-    "fr": "Patinez sur le canal avec l'agent. Vous vous arrêtez à la Bibliothèque, à la tour de la Paix et à la cabane chauffée; à chaque halte, l'agent vous explique un aspect de la façon dont le Canada est gouverné, puis vous pose des questions dessus."
+    "en": "Skate up the canal with the officer. You stop to read at the canal locks, and then at the Library, at the Peace Tower and at the warming hut, where the officer explains a piece of how Canada is governed and then asks you about it.",
+    "fr": "Patinez sur le canal avec l'agent. Vous vous arrêtez pour lire aux écluses du canal, puis à la Bibliothèque, à la tour de la Paix et à la cabane chauffée, où l'agent vous explique un aspect de la façon dont le Canada est gouverné, puis vous pose des questions dessus."
   },
   "declinedLine": {
     "speaker": "officer",
@@ -120,14 +120,37 @@
           "speaker": "officer",
           "expression": "neutral",
           "text": {
-            "en": "Skate up the canal with me. We stop three times, and each stop is a piece of how this country is run.",
-            "fr": "Patinez sur le canal avec moi. On fait trois haltes, et chacune porte sur un aspect de la gouvernance du pays."
+            "en": "Skate up the canal with me. We stop at the locks to read, and then three more times on the way up.",
+            "fr": "Patinez sur le canal avec moi. On s'arrête aux écluses pour lire, puis trois autres fois en remontant."
           },
           "fact": {
             "factual": false,
             "source": null,
             "verification": null
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-locks",
+      "kind": "read",
+      "targetId": "rideau-locks",
+      "prompt": {
+        "en": "Stop and read at the canal locks",
+        "fr": "Arr\u00eatez-vous et lisez aux \u00e9cluses du canal"
+      },
+      "passages": [
+        {
+          "lesson": "govern-03-the-royal-family-and-the-legislatures",
+          "passage": "g3-royal-family-lifelong-service"
+        },
+        {
+          "lesson": "govern-03-the-royal-family-and-the-legislatures",
+          "passage": "g3-other-constitutional-monarchies"
+        },
+        {
+          "lesson": "govern-03-the-royal-family-and-the-legislatures",
+          "passage": "g3-each-legislature-passes-its-own-laws"
         }
       ]
     },
