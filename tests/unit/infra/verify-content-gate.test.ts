@@ -2824,3 +2824,145 @@ describe('a claim is known by its id, not by its position in a list', () => {
     expect(result.status).toBe(1);
   });
 });
+
+/* -------------------------------------------------------------------------- */
+/* B10's two lists, and the one that may never fail a build (ADR-0064)         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * B10 reports TWO things about a threshold question, and they are not the same
+ * kind of thing:
+ *
+ * - **list 1** — the question records no `distractorsNotEntailed`. A fact the
+ *   machine knows on its own, and a genuine to-do. ADR-0064 carries a dated
+ *   obligation to flip THIS list from `note()` to `fail()`.
+ * - **list 2** — the arithmetic found a distractor whose stated lower bound is
+ *   larger than the answer's. An OBSERVATION, not a defect list. ADR-0064 §3
+ *   measured it: wrong three times in five, and blind to `gov-39` entirely.
+ *
+ * ADR-0064 rules that the flip covers **list 1 only** and that **list 2 may
+ * never fail on any corpus**. That ruling is prose in a document, and prose
+ * stops nobody: three separate readers have already taken list 2's flags for a
+ * list of defective questions, one of them reporting two already-repaired
+ * questions as live defects. An infra agent discharging the obligation could
+ * reasonably wrap the whole rule in `fail()` and turn `hist-65` — a question
+ * three checks have confirmed CORRECT — into a red build. That is the mistake
+ * the ruling exists to prevent, and until this case there was nothing but the
+ * document standing in its way.
+ *
+ * The fixture is `hist-65`'s shape, because that is the shape that settles it.
+ * The prompt asks a COUNT ("about how many volunteered?"), not a CONDITION, so a
+ * distractor naming a larger number is a false claim about the world rather than
+ * a stricter condition met by everyone the answer names. The arithmetic cannot
+ * see that difference — it compares two magnitudes and nothing else — so it
+ * flags an option that is merely wrong, and nothing is owed on it.
+ *
+ * Asserted on BEHAVIOUR — the exit code, and the gate's own locator for a
+ * flagged option — and never on the report's wording. The counters and what they
+ * find are the subject here; the sentences they are printed in are not, and a
+ * case pinned to those would break on the next rewording without a thing being
+ * wrong.
+ */
+describe('the arithmetic half of B10 is an observation and cannot fail a build (ADR-0064)', () => {
+  /**
+   * The trigger needs a source sentence stating a threshold, and the shared
+   * SOURCE_TEXT has none. Appending one leaves every existing fixture sentence
+   * exactly where it was, so no other case in this file changes meaning.
+   */
+  const THRESHOLD_SENTENCE =
+    'More than 4,000 volunteers sailed from this harbour in the spring of 1900.';
+  const THRESHOLD_TEXT = `${SOURCE_TEXT}\n${THRESHOLD_SENTENCE}`;
+  const THRESHOLD_SHA = createHash('sha256').update(THRESHOLD_TEXT).digest('hex');
+
+  /** The tree, with the extraction and the digest that certifies it in step. */
+  const thresholdTree = (label: string, doc: Json): string => {
+    const root = tree(label, [doc], manifest({ extractedTextSha256: THRESHOLD_SHA }));
+    write(root, 'content/sources/fixture-source.txt', THRESHOLD_TEXT);
+    return root;
+  };
+
+  /**
+   * The answer is a lower bound and two distractors name LARGER numbers, which
+   * is arithmetically "stricter than the answer" and factually just false. The
+   * verifier has recorded the judgement, so **list 1 is empty by construction**
+   * and the arithmetic flag is the only finding this corpus produces.
+   */
+  const countQuestion = (overrides: Json = {}): Json => ({
+    $schema: '../../schemas/question.schema.json',
+    id: 'fix-threshold',
+    subject: 'government',
+    prompt: {
+      en: 'About how many volunteers sailed from the harbour in the spring of 1900?',
+      fr: 'Environ combien de volontaires ont quitte le port au printemps de 1900?',
+    },
+    options: [
+      { en: 'More than 4,000.', fr: 'Plus de 4 000.' },
+      { en: 'More than 40,000.', fr: 'Plus de 40 000.' },
+      { en: 'More than 900,000.', fr: 'Plus de 900 000.' },
+      { en: 'Fewer than 200.', fr: 'Moins de 200.' },
+    ],
+    correctIndex: 0,
+    explanation: {
+      en: 'A few thousand went, not tens of thousands.',
+      fr: 'Quelques milliers sont partis, pas des dizaines de milliers.',
+    },
+    source: {
+      sourceId: 'fixture-source',
+      chapter: CHAPTER,
+      page: 55,
+      quote: THRESHOLD_SENTENCE,
+      url: 'https://example.invalid/fixture',
+      sourceHash: THRESHOLD_SHA,
+      asOf: daysAgo(3),
+      volatile: false,
+    },
+    verification: {
+      status: 'verified',
+      model: 'fixture-model',
+      checkedAt: daysAgo(2),
+      sourceHash: THRESHOLD_SHA,
+      evidence: 'More than 4,000 volunteers sailed from this harbour',
+      distractorsNotEntailed: true,
+    },
+    ...overrides,
+  });
+
+  /**
+   * B10's own locator for a flagged option, `${where} options[N]`, space-joined.
+   * The colon-joined `${where}: options[N].fr` belongs to the localisation rule,
+   * so the space is what makes this string B10's and no other rule's.
+   */
+  const FLAGGED = 'content/questions/government/fix-0.json options[';
+
+  it('exits 0 when the only B10 finding is an arithmetic flag', () => {
+    // THE RULING, MADE MECHANICAL. List 1 is empty because the verifier recorded
+    // the check; list 2 names two options. A future change that lets the
+    // arithmetic fail the build turns this red, which is the whole point.
+    const result = runFlat(thresholdTree('b10-flagged-and-recorded', countQuestion()));
+
+    expect(result.status).toBe(0);
+    // And not vacuously green: the flag really did fire on this corpus. Without
+    // these, the case would still pass if the fixture quietly stopped tripping
+    // B10 at all — pinning nothing while looking like it pinned the rule.
+    expect(result.out).toContain(`${FLAGGED}1]`);
+    expect(result.out).toContain(`${FLAGGED}2]`);
+  });
+
+  it('flags nothing when every distractor is an upper bound', () => {
+    // The control, and it is what makes the two `toContain`s above evidence
+    // rather than decoration: same trigger, same record, no arithmetic finding.
+    const unflagged = countQuestion({
+      options: [
+        { en: 'More than 4,000.', fr: 'Plus de 4 000.' },
+        { en: 'Fewer than 200.', fr: 'Moins de 200.' },
+        { en: 'Fewer than 50.', fr: 'Moins de 50.' },
+        { en: 'Fewer than 900.', fr: 'Moins de 900.' },
+      ],
+    });
+
+    const result = runFlat(thresholdTree('b10-recorded-not-flagged', unflagged));
+
+    expect(result.status).toBe(0);
+    expect(result.out).not.toContain(FLAGGED);
+  });
+});
