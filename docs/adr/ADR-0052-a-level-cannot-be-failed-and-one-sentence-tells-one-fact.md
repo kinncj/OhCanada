@@ -370,6 +370,14 @@ block says nothing about §3, because it never did (§4); and an under-count aft
   answering. Toronto's, the Alberta foothills' and the North's are known offenders from the audit's own
   screenshots; the other seven have not been read for this shape. The author rewrites and the verifier
   re-grants, in separate commits (ADR-0003).
+
+  **DISCHARGED 2026-09-21** — all ten `doneLine`s were read in one pass and rewritten to describe the route:
+  each now names its own quest's stops in step order, its own locomotion verb and a count of **stops** rather
+  than of questions, so the card states a route fact it cannot be wrong about. The gate at §4(a) goes from
+  **20 findings to 0** across all ten quests in both languages. Every `doneLine.fact` is `factual: false`
+  with `verification: null`, so no grant was invalidated and none is owed. The "about Canada's economy / the
+  law / …" tails were dropped rather than reworded, because naming what a stop taught is the nearest
+  neighbour of what was learned, which §4 records as the residual the gate cannot catch.
 - **OBLIGATION due=2026-11-17 owner=po** — ratify or replace the four copy rows in `TN-STANDING`'s
   "Player-facing copy" table, and adopt `quest-complete-coming-back` and `quest-complete-practise` into
   `TN-DONE`'s marker table under §5's ruling. Until both happen, four rows sit in `COPY_GAPS` and two markers
