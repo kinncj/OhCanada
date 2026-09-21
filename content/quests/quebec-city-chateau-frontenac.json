@@ -173,48 +173,6 @@
       ]
     },
     {
-      "id": "answer-at-the-top-of-the-hill",
-      "kind": "answer",
-      "targetId": "history",
-      "subject": "history",
-      "count": 4,
-      "questionPool": [
-        "hist-65-boer-war-volunteers",
-        "hist-66-600000-served-first-world-war",
-        "hist-67-vimy-ridge-1917",
-        "hist-68-internment-1914-1920",
-        "hist-69-armistice-1918",
-        "hist-70-arthur-currie",
-        "hist-71-maple-leaf-1850s",
-        "hist-72-who-could-vote-at-confederation",
-        "hist-73-emily-stowe",
-        "hist-74-manitoba-women-vote-1916",
-        "hist-75-women-federal-vote-1918",
-        "hist-76-agnes-macphail-1921",
-        "hist-77-quebec-women-vote-1940",
-        "hist-78-remembrance-day",
-        "hist-79-in-flanders-fields",
-        "hist-80-british-commonwealth",
-        "hist-81-great-depression-unemployment",
-        "hist-82-bank-of-canada-1934",
-        "hist-83-western-farmers-depression",
-        "hist-84-refugees-turned-away-1939",
-        "hist-85-second-world-war-began-1939",
-        "hist-86-million-served-second-world-war",
-        "hist-87-juno-beach",
-        "hist-88-liberation-of-the-netherlands",
-        "hist-89-air-training-plan",
-        "hist-90-third-largest-navy",
-        "hist-91-hong-kong-and-dieppe",
-        "hist-92-japan-surrendered-1945",
-        "hist-93-apology-1988"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about Canada in the twentieth century",
-        "fr": "Répondez à 4 questions sur le Canada au XXe siècle"
-      }
-    },
-    {
       "id": "slide-to-the-chateau",
       "kind": "visit",
       "targetId": "chateau-frontenac",
@@ -285,11 +243,15 @@
         "hist-10-kanata-means-village",
         "hist-11-first-settlement-1604",
         "hist-12-champlain-quebec-1608",
+        "hist-13-peace-with-iroquois-1701",
+        "hist-14-fur-trade-beaver-pelts",
+        "hist-15-hudsons-bay-company-1670",
+        "hist-16-voyageurs-and-coureurs-des-bois",
         "hist-50-leonard-tilley-dominion"
       ],
       "prompt": {
-        "en": "Answer 5 questions about the first peoples, the first explorers and the name of Canada",
-        "fr": "Répondez à 5 questions sur les premiers peuples, les premiers explorateurs et le nom du Canada"
+        "en": "Answer 5 questions about the beginnings of Canada",
+        "fr": "Répondez à 5 questions sur les débuts du Canada"
       }
     },
     {
@@ -351,10 +313,6 @@
       "subject": "history",
       "count": 5,
       "questionPool": [
-        "hist-13-peace-with-iroquois-1701",
-        "hist-14-fur-trade-beaver-pelts",
-        "hist-15-hudsons-bay-company-1670",
-        "hist-16-voyageurs-and-coureurs-des-bois",
         "hist-17-plains-of-abraham-1759",
         "hist-18-wolfe-and-montcalm",
         "hist-19-quebec-act-religious-freedom",
@@ -362,6 +320,9 @@
         "hist-21-loyalists-40000",
         "hist-22-joseph-brant",
         "hist-23-black-loyalists-3000",
+        "hist-24-first-assembly-halifax-1758",
+        "hist-25-constitutional-act-1791",
+        "hist-26-first-elected-assemblies-1791",
         "hist-27-upper-canada-abolition-1793",
         "hist-28-slavery-abolished-1833",
         "hist-29-underground-railroad",
@@ -386,8 +347,8 @@
         "hist-97-british-paid-for-defences"
       ],
       "prompt": {
-        "en": "Answer 5 questions about New France, the fall of Quebec and the years of British rule",
-        "fr": "Répondez à 5 questions sur la Nouvelle-France, la chute de Québec et les années de régime britannique"
+        "en": "Answer 5 questions about the years of British rule",
+        "fr": "Répondez à 5 questions sur le régime britannique"
       }
     },
     {
@@ -449,9 +410,6 @@
       "subject": "history",
       "count": 5,
       "questionPool": [
-        "hist-24-first-assembly-halifax-1758",
-        "hist-25-constitutional-act-1791",
-        "hist-26-first-elected-assemblies-1791",
         "hist-45-fathers-of-confederation",
         "hist-46-four-founding-provinces",
         "hist-47-two-levels-of-government",
@@ -470,11 +428,40 @@
         "hist-61-bc-joined-1871",
         "hist-62-last-spike-1885",
         "hist-63-head-tax-apology-2006",
-        "hist-64-wilfrid-laurier"
+        "hist-64-wilfrid-laurier",
+        "hist-65-boer-war-volunteers",
+        "hist-66-600000-served-first-world-war",
+        "hist-67-vimy-ridge-1917",
+        "hist-68-internment-1914-1920",
+        "hist-69-armistice-1918",
+        "hist-70-arthur-currie",
+        "hist-71-maple-leaf-1850s",
+        "hist-72-who-could-vote-at-confederation",
+        "hist-73-emily-stowe",
+        "hist-74-manitoba-women-vote-1916",
+        "hist-75-women-federal-vote-1918",
+        "hist-76-agnes-macphail-1921",
+        "hist-77-quebec-women-vote-1940",
+        "hist-78-remembrance-day",
+        "hist-79-in-flanders-fields",
+        "hist-80-british-commonwealth",
+        "hist-81-great-depression-unemployment",
+        "hist-82-bank-of-canada-1934",
+        "hist-83-western-farmers-depression",
+        "hist-84-refugees-turned-away-1939",
+        "hist-85-second-world-war-began-1939",
+        "hist-86-million-served-second-world-war",
+        "hist-87-juno-beach",
+        "hist-88-liberation-of-the-netherlands",
+        "hist-89-air-training-plan",
+        "hist-90-third-largest-navy",
+        "hist-91-hong-kong-and-dieppe",
+        "hist-92-japan-surrendered-1945",
+        "hist-93-apology-1988"
       ],
       "prompt": {
-        "en": "Answer 5 questions about the first assemblies, Confederation and the country that grew from it",
-        "fr": "Répondez à 5 questions sur les premières assemblées, la Confédération et le pays qui en est né"
+        "en": "Answer 5 questions about Confederation and after",
+        "fr": "Répondez à 5 questions sur la Confédération et la suite"
       }
     }
   ]

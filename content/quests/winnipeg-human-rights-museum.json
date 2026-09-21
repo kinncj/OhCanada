@@ -173,30 +173,6 @@
       ]
     },
     {
-      "id": "answer-by-the-river",
-      "kind": "answer",
-      "targetId": "justice",
-      "subject": "justice",
-      "count": 4,
-      "questionPool": [
-        "jus-10-what-the-courts-do",
-        "jus-15-highest-court",
-        "jus-16-federal-court",
-        "jus-17-appeal-and-trial-courts",
-        "jus-18-provincial-courts-lesser-offences",
-        "jus-19-small-claims-court",
-        "jus-32-role-of-prisons",
-        "jus-34-crimes-severely-punished",
-        "jus-35-what-the-law-does-not-tolerate",
-        "jus-37-what-a-provincial-trial-court-is-called",
-        "jus-38-family-and-traffic-courts"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about the courts, the prisons and what the law does not allow",
-        "fr": "Répondez à 4 questions sur les tribunaux, les prisons et ce que la loi ne tolère pas"
-      }
-    },
-    {
       "id": "walk-to-the-footbridge",
       "kind": "visit",
       "targetId": "footbridge",
@@ -259,11 +235,14 @@
         "jus-09-who-makes-the-laws",
         "jus-13-why-canada-has-laws",
         "jus-14-laws-express-values",
+        "jus-32-role-of-prisons",
+        "jus-34-crimes-severely-punished",
+        "jus-35-what-the-law-does-not-tolerate",
         "jus-36-oath-promise-about-the-laws"
       ],
       "prompt": {
-        "en": "Answer 3 questions about what laws are for, who makes them and the promise to obey them",
-        "fr": "Répondez à 3 questions sur le rôle des lois, sur qui les fait et sur la promesse de les respecter"
+        "en": "Answer 3 questions about what our laws are for",
+        "fr": "Répondez à 3 questions sur le rôle de nos lois"
       }
     },
     {
@@ -334,7 +313,9 @@
         "jus-07-lady-justice-blindfold",
         "jus-12-law-applies-to-judges-and-police",
         "jus-28-may-you-question-the-police",
-        "jus-29-police-complaint-process"
+        "jus-29-police-complaint-process",
+        "jus-30-what-lawyers-do",
+        "jus-31-legal-aid"
       ],
       "prompt": {
         "en": "Answer 5 questions about your rights before the law",
@@ -400,7 +381,13 @@
       "subject": "justice",
       "count": 3,
       "questionPool": [
+        "jus-10-what-the-courts-do",
         "jus-11-what-the-police-do",
+        "jus-15-highest-court",
+        "jus-16-federal-court",
+        "jus-17-appeal-and-trial-courts",
+        "jus-18-provincial-courts-lesser-offences",
+        "jus-19-small-claims-court",
         "jus-20-provincial-police-forces",
         "jus-21-municipal-police",
         "jus-22-who-enforces-federal-laws",
@@ -409,14 +396,14 @@
         "jus-25-what-the-police-are-for",
         "jus-26-when-to-ask-police-for-help",
         "jus-27-if-you-see-a-crime",
-        "jus-30-what-lawyers-do",
-        "jus-31-legal-aid",
+        "jus-37-what-a-provincial-trial-court-is-called",
+        "jus-38-family-and-traffic-courts",
         "jus-39-more-than-one-type-of-police",
         "jus-40-police-in-major-urban-centres"
       ],
       "prompt": {
-        "en": "Answer 3 questions about the police and getting legal help",
-        "fr": "Répondez à 3 questions sur la police et sur l'aide juridique"
+        "en": "Answer 3 questions about the courts and the police",
+        "fr": "Répondez à 3 questions sur les tribunaux et la police"
       }
     }
   ]

@@ -173,26 +173,6 @@
       ]
     },
     {
-      "id": "answer-by-the-harbour",
-      "kind": "answer",
-      "targetId": "rights",
-      "subject": "rights",
-      "count": 4,
-      "questionPool": [
-        "rights-22-rights-come-with-responsibilities",
-        "rights-26-jury-duty-is-required",
-        "rights-27-why-juries-matter",
-        "rights-28-voting-which-elections",
-        "rights-29-voting-right-and-responsibility",
-        "rights-32-protecting-heritage-and-environment",
-        "rights-33-heritage-includes-buildings"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about the responsibilities that come with your rights",
-        "fr": "Répondez à 4 questions sur les responsabilités qui accompagnent vos droits"
-      }
-    },
-    {
       "id": "find-the-town-clock",
       "kind": "visit",
       "targetId": "town-clock",
@@ -257,8 +237,8 @@
         "rights-06-ordered-liberty-tradition"
       ],
       "prompt": {
-        "en": "Answer 3 questions about where our rights and freedoms come from",
-        "fr": "Répondez à 3 questions sur l'origine de nos droits et libertés"
+        "en": "Answer 3 questions about where our rights come from",
+        "fr": "Répondez à 3 questions sur l'origine de nos droits"
       }
     },
     {
@@ -318,15 +298,22 @@
       "kind": "answer",
       "targetId": "rights",
       "subject": "rights",
-      "count": 2,
+      "count": 3,
       "questionPool": [
+        "rights-22-rights-come-with-responsibilities",
         "rights-23-rule-of-law-founding-principle",
         "rights-24-nobody-is-above-the-law",
-        "rights-25-responsibility-for-self-and-family"
+        "rights-25-responsibility-for-self-and-family",
+        "rights-26-jury-duty-is-required",
+        "rights-27-why-juries-matter",
+        "rights-28-voting-which-elections",
+        "rights-29-voting-right-and-responsibility",
+        "rights-32-protecting-heritage-and-environment",
+        "rights-33-heritage-includes-buildings"
       ],
       "prompt": {
-        "en": "Answer 2 questions about obeying the law and looking after your family",
-        "fr": "Répondez à 2 questions sur le respect de la loi et sur le soin de sa famille"
+        "en": "Answer 3 questions about your responsibilities",
+        "fr": "Répondez à 3 questions sur vos responsabilités"
       }
     },
     {

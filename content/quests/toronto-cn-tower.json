@@ -173,26 +173,6 @@
       ]
     },
     {
-      "id": "answer-on-the-curb",
-      "kind": "answer",
-      "targetId": "elections",
-      "subject": "elections",
-      "count": 4,
-      "questionPool": [
-        "elec-07-early-election",
-        "elec-14-minority-government",
-        "elec-15-who-appoints-the-prime-minister",
-        "elec-16-defeated-on-confidence",
-        "elec-17-support-of-most-mps",
-        "gov-50-who-forms-government",
-        "gov-51-majority-government"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about how a government is formed and how an election is called",
-        "fr": "Répondez à 4 questions sur la formation d'un gouvernement et sur le déclenchement d'une élection"
-      }
-    },
-    {
       "id": "ride-to-the-streetcar",
       "kind": "visit",
       "targetId": "streetcar",
@@ -254,7 +234,10 @@
         "elec-08-what-voters-choose-on-the-ballot",
         "elec-11-which-polling-station",
         "elec-18-no-card-received",
+        "gov-42-voter-information-card",
+        "gov-43-added-on-election-day",
         "gov-44-what-to-bring",
+        "gov-45-advance-poll",
         "gov-60-other-election-rules"
       ],
       "prompt": {
@@ -321,18 +304,18 @@
       "subject": "elections",
       "count": 5,
       "questionPool": [
-        "elec-03-another-name-for-a-riding",
-        "elec-04-whom-an-mp-represents",
-        "elec-05-what-candidates-are-called",
-        "elec-06-many-candidates-in-a-district",
+        "elec-07-early-election",
+        "elec-14-minority-government",
+        "elec-15-who-appoints-the-prime-minister",
+        "elec-16-defeated-on-confidence",
+        "elec-17-support-of-most-mps",
         "elec-21-where-to-see-results",
-        "gov-37-electoral-district",
-        "gov-38-who-may-run",
-        "gov-39-who-wins-the-seat"
+        "gov-50-who-forms-government",
+        "gov-51-majority-government"
       ],
       "prompt": {
-        "en": "Answer 5 questions about electoral districts, the candidates and the results",
-        "fr": "Répondez à 5 questions sur les circonscriptions, les candidats et les résultats"
+        "en": "Answer 5 questions about the results and the government",
+        "fr": "Répondez à 5 questions sur les résultats et le gouvernement"
       }
     },
     {
@@ -396,6 +379,10 @@
       "questionPool": [
         "elec-01-what-canadians-vote-for",
         "elec-02-re-elect-or-choose-new",
+        "elec-03-another-name-for-a-riding",
+        "elec-04-whom-an-mp-represents",
+        "elec-05-what-candidates-are-called",
+        "elec-06-many-candidates-in-a-district",
         "elec-09-federal-referendum",
         "elec-10-national-register-of-electors",
         "elec-12-what-secret-ballot-means",
@@ -403,18 +390,18 @@
         "elec-19-card-confirms-listing",
         "elec-20-behind-the-screen",
         "gov-35-fixed-election-date",
+        "gov-37-electoral-district",
+        "gov-38-who-may-run",
+        "gov-39-who-wins-the-seat",
         "gov-40-who-may-vote",
         "gov-41-elections-canada",
-        "gov-42-voter-information-card",
-        "gov-43-added-on-election-day",
-        "gov-45-advance-poll",
         "gov-46-marking-the-ballot",
         "gov-47-ballot-box",
         "gov-48-secret-ballot"
       ],
       "prompt": {
-        "en": "Answer 5 questions about voting across Canada",
-        "fr": "Répondez à 5 questions sur le vote partout au Canada"
+        "en": "Answer 5 questions about the federal election",
+        "fr": "Répondez à 5 questions sur l'élection fédérale"
       }
     }
   ]

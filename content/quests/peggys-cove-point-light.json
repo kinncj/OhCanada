@@ -272,8 +272,8 @@
         "wwa-45-black-loyalists-1780s"
       ],
       "prompt": {
-        "en": "Answer 5 questions about the peoples who built this country",
-        "fr": "Répondez à 5 questions sur les peuples qui ont bâti ce pays"
+        "en": "Answer 5 questions about the peoples who built Canada",
+        "fr": "Répondez à 5 questions sur les peuples qui ont bâti le Canada"
       }
     },
     {
@@ -347,8 +347,8 @@
         "wwa-48-non-official-languages-at-home"
       ],
       "prompt": {
-        "en": "Answer 3 questions about becoming Canadian and what Canadians share",
-        "fr": "Répondez à 3 questions sur le fait de devenir canadien et sur ce que les Canadiens partagent"
+        "en": "Answer 3 questions about what Canadians share",
+        "fr": "Répondez à 3 questions sur ce que les Canadiens partagent"
       }
     }
   ]

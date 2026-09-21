@@ -173,24 +173,6 @@
       ]
     },
     {
-      "id": "answer-before-the-ride",
-      "kind": "answer",
-      "targetId": "economy",
-      "subject": "economy",
-      "count": 4,
-      "questionPool": [
-        "eco-24-saint-john-port-and-manufacturing",
-        "eco-26-toronto-financial-centre",
-        "eco-36-halifax-deep-water-ice-free-port",
-        "eco-44-saskatoon-mining-headquarters",
-        "eco-47-port-of-vancouver-largest-and-busiest"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about Canada's cities and ports",
-        "fr": "Répondez à 4 questions sur les villes et les ports du Canada"
-      }
-    },
-    {
       "id": "ride-up-to-the-ranch-gate",
       "kind": "visit",
       "targetId": "ranch-gate",
@@ -253,14 +235,16 @@
         "eco-06-most-workers-in-services",
         "eco-07-service-industry-example",
         "eco-11-natural-resource-industries",
+        "eco-12-resources-in-history",
         "eco-19-industrialized-country",
+        "eco-26-toronto-financial-centre",
         "eco-49-work-contributes-to-prosperity",
         "eco-50-economy-built-on-farming-and-resources",
         "eco-51-strong-economy-1945-to-1970"
       ],
       "prompt": {
-        "en": "Answer 4 questions about the kinds of work in Canada and how the economy grew",
-        "fr": "Répondez à 4 questions sur les types de travail au Canada et sur la croissance de l'économie"
+        "en": "Answer 4 questions about work and the economy",
+        "fr": "Répondez à 4 questions sur le travail et l'économie"
       }
     },
     {
@@ -327,6 +311,7 @@
         "eco-20-atlantic-provinces-industries",
         "eco-21-pei-farming",
         "eco-23-nova-scotia-industries",
+        "eco-24-saint-john-port-and-manufacturing",
         "eco-25-ontario-quebec-manufacturing",
         "eco-31-bc-forestry-products",
         "eco-35-nova-scotia-shipbuilding-and-shipping",
@@ -338,8 +323,8 @@
         "eco-46-alberta-beef-producer"
       ],
       "prompt": {
-        "en": "Answer 5 questions about what Canada makes, grows and catches",
-        "fr": "Répondez à 5 questions sur ce que le Canada fabrique, cultive et pêche"
+        "en": "Answer 5 questions about what Canada makes and grows",
+        "fr": "Répondez à 5 questions sur ce que le Canada produit"
       }
     },
     {
@@ -401,7 +386,6 @@
       "subject": "economy",
       "count": 5,
       "questionPool": [
-        "eco-12-resources-in-history",
         "eco-22-labrador-hydro-electricity",
         "eco-27-prairies-energy-and-farmland",
         "eco-28-manitoba-economy",
@@ -411,12 +395,13 @@
         "eco-33-northern-oil-and-gas",
         "eco-34-newfoundland-offshore-oil-and-gas",
         "eco-39-quebec-hydro-electricity",
+        "eco-44-saskatoon-mining-headquarters",
         "eco-45-alberta-oil-sands",
         "eco-48-yukon-mining-today"
       ],
       "prompt": {
-        "en": "Answer 5 questions about oil, gas and other resources",
-        "fr": "Répondez à 5 questions sur le pétrole, le gaz et les autres ressources"
+        "en": "Answer 5 questions about energy and mining",
+        "fr": "Répondez à 5 questions sur l'énergie et les mines"
       }
     },
     {
@@ -489,11 +474,13 @@
         "eco-16-goods-canada-exports",
         "eco-17-longest-undefended-border",
         "eco-18-peace-arch",
-        "eco-41-ontario-exports-from-services-and-manufacturing"
+        "eco-36-halifax-deep-water-ice-free-port",
+        "eco-41-ontario-exports-from-services-and-manufacturing",
+        "eco-47-port-of-vancouver-largest-and-busiest"
       ],
       "prompt": {
-        "en": "Answer 5 questions about what Canada sells abroad and the border with the United States",
-        "fr": "Répondez à 5 questions sur ce que le Canada vend à l'étranger et sur la frontière avec les États-Unis"
+        "en": "Answer 5 questions about trade with other countries",
+        "fr": "Répondez à 5 questions sur le commerce avec l'étranger"
       }
     }
   ]

@@ -295,8 +295,8 @@
         "reg-54-mackenzie-river-system"
       ],
       "prompt": {
-        "en": "Answer 4 questions about Canada's regions, from the Yukon to the Atlantic",
-        "fr": "Répondez à 4 questions sur les régions du Canada, du Yukon à l'Atlantique"
+        "en": "Answer 4 questions about Canada's provinces and regions",
+        "fr": "Répondez à 4 questions sur les provinces et les régions"
       }
     }
   ]

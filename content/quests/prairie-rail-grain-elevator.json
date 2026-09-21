@@ -173,36 +173,6 @@
       ]
     },
     {
-      "id": "answer-in-the-carriage",
-      "kind": "answer",
-      "targetId": "modern-canada",
-      "subject": "modern-canada",
-      "count": 4,
-      "questionPool": [
-        "mc-09-nato-military-alliance",
-        "mc-10-norad-partner",
-        "mc-11-korean-war",
-        "mc-12-un-peacekeeping-missions",
-        "mc-15-la-francophonie",
-        "mc-20-hungarian-refugees-1956",
-        "mc-21-vietnamese-refugees-1975",
-        "mc-22-group-of-seven",
-        "mc-23-emily-carr",
-        "mc-24-les-automatistes",
-        "mc-25-kenojuak-ashevak",
-        "mc-26-denys-arcand",
-        "mc-28-chantal-petitclerc",
-        "mc-29-wayne-gretzky",
-        "mc-30-terry-fox",
-        "mc-31-rick-hansen",
-        "mc-32-paul-henderson-1972"
-      ],
-      "prompt": {
-        "en": "Answer 4 questions about Canada's artists and athletes and its place in the world",
-        "fr": "Répondez à 4 questions sur les artistes et les athlètes du Canada et sur sa place dans le monde"
-      }
-    },
-    {
       "id": "stop-at-the-grain-bins",
       "kind": "visit",
       "targetId": "grain-bins",
@@ -261,18 +231,24 @@
       "subject": "modern-canada",
       "count": 4,
       "questionPool": [
-        "mc-02-alberta-oil-1947",
         "mc-03-1951-food-shelter-clothing",
+        "mc-09-nato-military-alliance",
+        "mc-10-norad-partner",
+        "mc-11-korean-war",
+        "mc-12-un-peacekeeping-missions",
         "mc-13-quiet-revolution",
         "mc-14-royal-commission-1963",
+        "mc-15-la-francophonie",
         "mc-16-sovereignty-referendums",
         "mc-17-constitution-1982-and-quebec",
         "mc-18-japanese-canadians-gained-the-vote",
-        "mc-19-aboriginal-people-granted-the-vote"
+        "mc-19-aboriginal-people-granted-the-vote",
+        "mc-20-hungarian-refugees-1956",
+        "mc-21-vietnamese-refugees-1975"
       ],
       "prompt": {
-        "en": "Answer 4 questions about how Canada changed after the war",
-        "fr": "Répondez à 4 questions sur les changements au Canada après la guerre"
+        "en": "Answer 4 questions about Canada after the war",
+        "fr": "Répondez à 4 questions sur le Canada d'après-guerre"
       }
     },
     {
@@ -332,7 +308,7 @@
       "kind": "answer",
       "targetId": "modern-canada",
       "subject": "modern-canada",
-      "count": 4,
+      "count": 3,
       "questionPool": [
         "mc-04-canada-health-act",
         "mc-05-employment-insurance",
@@ -340,8 +316,8 @@
         "mc-07-pension-plans-1965"
       ],
       "prompt": {
-        "en": "Answer 4 questions about the programs that support people here",
-        "fr": "Répondez à 4 questions sur les programmes qui soutiennent les gens ici"
+        "en": "Answer 3 questions about Canada's social programs",
+        "fr": "Répondez à 3 questions sur les programmes sociaux"
       }
     },
     {
@@ -404,11 +380,12 @@
       "count": 2,
       "questionPool": [
         "mc-01-gatt-became-the-wto",
+        "mc-02-alberta-oil-1947",
         "mc-08-postwar-trade-partner"
       ],
       "prompt": {
-        "en": "Answer 2 questions about trade after the Depression",
-        "fr": "Répondez à 2 questions sur le commerce après la Dépression"
+        "en": "Answer 2 questions about oil and trade after the war",
+        "fr": "Répondez à 2 questions sur le pétrole et le commerce"
       }
     },
     {
@@ -470,7 +447,17 @@
       "subject": "modern-canada",
       "count": 5,
       "questionPool": [
+        "mc-22-group-of-seven",
+        "mc-23-emily-carr",
+        "mc-24-les-automatistes",
+        "mc-25-kenojuak-ashevak",
+        "mc-26-denys-arcand",
         "mc-27-james-naismith-basketball",
+        "mc-28-chantal-petitclerc",
+        "mc-29-wayne-gretzky",
+        "mc-30-terry-fox",
+        "mc-31-rick-hansen",
+        "mc-32-paul-henderson-1972",
         "mc-33-canadian-space-agency",
         "mc-34-alexander-graham-bell",
         "mc-35-bombardier-snowmobile",
@@ -481,8 +468,8 @@
         "mc-40-banting-and-best-insulin"
       ],
       "prompt": {
-        "en": "Answer 5 questions about Canadian discoveries and inventions",
-        "fr": "Répondez à 5 questions sur les découvertes et inventions canadiennes"
+        "en": "Answer 5 questions about Canadians who made their mark",
+        "fr": "Répondez à 5 questions sur des Canadiens marquants"
       }
     }
   ]
