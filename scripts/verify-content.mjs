@@ -380,8 +380,12 @@ Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
         ADR-0064, REPORTING ONLY: where a question's source states a threshold
         and two or more options are stated in comparable terms, a distractor can
         be stricter than the answer and therefore also TRUE. Those questions are
-        counted and named, with whether the verifier recorded
-        distractorsNotEntailed. No arithmetic here decides anything.
+        counted, and the report prints TWO SEPARATE LISTS that are read wrongly
+        when they are run together: (1) questions still waiting for a verifier
+        to record distractorsNotEntailed - a to-do, and the only actionable one
+        - and (2) options the arithmetic finds stricter than the answer, which
+        is an observation and NOT a defect list. No arithmetic here decides
+        anything, and neither list fails the build.
 Gate C  ADR-0016 §2's re-check table and §3's banned terms
         which 180-day clock binds — the question's source.asOf or the register's
         liveChecks[].checkedAt — depends on what the register establishes about
@@ -1163,10 +1167,12 @@ const tally = {
   namesChecked: 0,
   namesUnchecked: 0,
   nameFaults: 0,
+  thresholdExamined: 0,
   thresholdQuestions: 0,
   thresholdRecorded: 0,
   thresholdUnrecorded: [],
   thresholdTightened: [],
+  thresholdTightenedOnRecorded: 0,
   thresholdUnparsable: 0,
 };
 
@@ -1420,13 +1426,15 @@ for (const claim of claims) {
     // obligation to record the twelve and a second to flip this to fail().
     const quote = str(source?.quote) ?? '';
     const comparable = options.filter((option) => COMPARABLE_OPTION.test(str(option?.en) ?? ''));
+    if (status === 'verified') tally.thresholdExamined += 1;
     if (
       THRESHOLD_QUOTE.test(quote) &&
       comparable.length >= COMPARABLE_OPTIONS_NEEDED &&
       status === 'verified'
     ) {
       tally.thresholdQuestions += 1;
-      if (verification.distractorsNotEntailed === true) {
+      const recorded = verification.distractorsNotEntailed === true;
+      if (recorded) {
         tally.thresholdRecorded += 1;
       } else {
         tally.thresholdUnrecorded.push(where);
@@ -1445,6 +1453,11 @@ for (const claim of claims) {
           parsedAny = true;
           if (other.magnitude > answer.magnitude) {
             tally.thresholdTightened.push(`${where} options[${String(index)}]`);
+            // Whether the flag lands on a question a verifier has ALREADY read
+            // and passed. This is the one thing the report can say mechanically
+            // about the arithmetic's worth: a flag on a recorded question is a
+            // question already answered, not a finding. See the report below.
+            if (recorded) tally.thresholdTightenedOnRecorded += 1;
           }
         }
       }
@@ -2504,28 +2517,67 @@ console.log(
     `${String(tally.banFaults)} violation(s)` +
     `${tally.banClaims === 0 ? '. NOTHING WAS SEARCHED: no claim resolved to a flag with a bannedFromAnswers list, so this line is not evidence of anything' : ''}.`,
 );
-// ADR-0064. Printed on every run, including when it is zero, and saying in the
-// line itself what it does NOT establish. The arithmetic here is a reading aid:
-// it finds a distractor stricter than the answer, which is the commonest form of
-// the defect and not the only one. gov-39 shipped with "more than half of the
-// votes" against an answer of "the most votes" and carries no quantity at all —
-// `unparsable` counts exactly that class, so the number this line cannot see is
-// on the line.
+// ADR-0064, printed on every run including when the counts are zero.
+//
+// THREE LINES, BECAUSE ONE LINE WAS MISREAD THREE TIMES. This report used to be
+// a single sentence carrying two lists of different kinds separated by a
+// semicolon: questions with no record yet (a TO-DO) and options the arithmetic
+// found stricter than the answer (an OBSERVATION). Three separate readers took
+// the second for a list of defective questions, and one reported two questions
+// as unrepaired that had been repaired hours earlier. The lists are now
+// numbered, labelled with what they oblige, and the disclaimer sits beside the
+// numbers it qualifies instead of at the end of the sentence. "REPORTING ONLY"
+// alone did not do the job: it disambiguates whether the BUILD fails, which
+// nobody was confused about, and says nothing about whether a named file is
+// WRONG, which is what everybody read it for.
+//
+// The arithmetic is a reading aid and never a verdict. gov-39 shipped with "more
+// than half of the votes" against an answer of "the most votes" and carries no
+// quantity at all, so `unparsable` counts exactly what this screen cannot see,
+// and the count it cannot see is printed beside the count it can.
 console.log(
-  `verify-content: ADR-0064 threshold questions — ${String(tally.thresholdQuestions)} question(s) ` +
-    `whose source states a threshold and whose options are comparable; ` +
-    `${String(tally.thresholdRecorded)} recorded distractorsNotEntailed, ` +
-    `${String(tally.thresholdUnrecorded.length)} did NOT` +
+  `verify-content: ADR-0064 threshold questions, REPORTING ONLY — ` +
+    `${String(tally.thresholdQuestions)} of ${String(tally.thresholdExamined)} verified question(s) ` +
+    `state a threshold in source.quote and state two or more options in comparable terms. That names ` +
+    `WHERE a true distractor can live; it does not say any of them has one. Whether a distractor is ` +
+    `entailed by the answer is a judgement, and only a verifier makes it. The two lists below are ` +
+    `numbered because they mean different things, and NEITHER of them fails the build (ADR-0064).`,
+);
+console.log(
+  `verify-content: ADR-0064 list 1 of 2 — TO DO, and the only list here that asks anyone for ` +
+    `anything: ${String(tally.thresholdUnrecorded.length)} of ${String(tally.thresholdQuestions)} ` +
+    `are waiting for a verifier to record check 3 against the threshold, in both languages; ` +
+    `${String(tally.thresholdRecorded)} already carry verification.distractorsNotEntailed` +
     `${
-      tally.thresholdUnrecorded.length > 0
-        ? ` (${tally.thresholdUnrecorded.slice(0, 12).join(', ')}${tally.thresholdUnrecorded.length > 12 ? ', and more' : ''})`
-        : ''
-    }; ${String(tally.thresholdTightened.length)} option(s) state a bound STRICTER than the answer's ` +
-    `and are true whenever it is` +
-    `${tally.thresholdTightened.length > 0 ? ` — ${tally.thresholdTightened.slice(0, 8).join(', ')}` : ''}` +
-    `; ${String(tally.thresholdUnparsable)} carried no parsable quantity, which is gov-39's class and ` +
-    `is why the arithmetic alone is not the check. REPORTING ONLY — this line never fails the build, ` +
-    `and the judgement it asks for is the verifier's (ADR-0064).`,
+      tally.thresholdUnrecorded.length === 0
+        ? `. THIS LIST IS EMPTY — no file is named below, because no question is owed a record. ` +
+          `Nothing on this line is outstanding work`
+        : ` — ${tally.thresholdUnrecorded.slice(0, 12).join(', ')}${
+            tally.thresholdUnrecorded.length > 12 ? ', and more' : ''
+          }. A question named here is MISSING A RECORD. That is a job for the verifier, and it is ` +
+          `not a statement that anything about the question is wrong`
+    }.`,
+);
+console.log(
+  `verify-content: ADR-0064 list 2 of 2 — AN ARITHMETIC OBSERVATION, NOT A DEFECT LIST, and nothing ` +
+    `here is a job for anyone: ${String(tally.thresholdTightened.length)} option(s) state a lower ` +
+    `bound stricter than the answer's, which is the commonest shape of the defect and is equally the ` +
+    `shape of perfectly correct questions` +
+    `${
+      tally.thresholdTightened.length === 0
+        ? '. Nothing is flagged on this run'
+        : ` — ${tally.thresholdTightened.slice(0, 8).join(', ')}. ` +
+          `${String(tally.thresholdTightenedOnRecorded)} of ${String(tally.thresholdTightened.length)} ` +
+          `sit on questions a verifier has already checked and recorded, so for those the screen has ` +
+          `surfaced nothing a reader has not already read and passed${
+            tally.thresholdTightened.length > tally.thresholdTightenedOnRecorded
+              ? '; the rest sit on questions named in list 1 above, where the record is what is owed'
+              : ', and it has produced no finding on this corpus'
+          }`
+    }. Measured when it was built this screen was right twice in five, and blind to gov-39 altogether ` +
+    `(ADR-0064 §3); ${String(tally.thresholdUnparsable)} of the ${String(tally.thresholdQuestions)} ` +
+    `carry no parsable quantity at all, which is gov-39's class. A name on this line is a place to ` +
+    `look, never a finding.`,
 );
 console.log(
   `verify-content: text checks ran against a cached extraction for ` +

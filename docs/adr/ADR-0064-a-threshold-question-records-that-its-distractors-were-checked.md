@@ -186,6 +186,10 @@ worktree with no `content/sources/*.txt` present.
 - A `false` record that looks like a check and is not one (§3).
 - The gate claiming the arithmetic proved something: the report says "REPORTING ONLY" in its own text, and
   prints the count it **could not** parse beside the count it could.
+- A reader taking the arithmetic's flags for a list of defective questions — or so this section claimed
+  until three of them did. The report is now two **numbered** lists, one labelled a to-do and one labelled an
+  observation, each carrying its own disclaimer. See "Amendment, 2026-09-20" below for what the single-line
+  version actually made possible.
 
 ## Alternatives considered
 
@@ -245,6 +249,54 @@ been.
    obligation is worded to cover both languages so that the judgement, at least, is asked for.
 4. **Whether a single qualifying word rescues a distractor.** `gov-38`'s "Only" does. No gate reads that.
 
+## Amendment, 2026-09-20: the report is two numbered lists, and it says which one is a to-do
+
+**Measured, not suspected: three separate readers took B10's output for a list of defective questions.** One
+reported `gov-51` and `sym-32` as living on `main` and needing the author, when both had been repaired and
+deployed hours earlier — it had read "N did NOT record" as a defect list. A second flagged `hist-65` as
+"precisely the defect class", when `hist-65` is this ADR's own worked example of a **correct** question the
+arithmetic gets wrong (§3). A third repeated the second. The line already said `REPORTING ONLY` and already
+named its own blind spot. Three readers is a defect in the writing, not three careless readers.
+
+**What made one line unreadable, itemised, because the fix follows from it.**
+
+1. **Two kinds of claim at the same rank, joined by a semicolon.** A *to-do* ("nobody has recorded the
+   check") and an *observation* ("the arithmetic could compare two bounds") sat in one sentence with nothing
+   to say they were different kinds of thing. A skimming reader attaches the nearest file path to whatever
+   concept they last registered.
+2. **The only file paths in the line belonged to the half that is not actionable.** The record half printed
+   bare counts; the arithmetic half printed `hist-65 options[1], options[2]`. A reader looking for "what do I
+   do" finds the only thing that looks like work — a path — and it is attached to the correct question.
+3. **`REPORTING ONLY` answers a question nobody was asking.** It disambiguates whether the **build** fails.
+   Every one of the three misreadings was about whether a named file is **wrong**. Read naturally, "reporting
+   only" means "a real finding we have chosen not to block on", which is precisely the wrong inference and a
+   reasonable one.
+4. **The disclaimer sat beside the wrong number.** "which is gov-39's class and is why the arithmetic alone
+   is not the check" qualified the *unparsable* count at the end of the sentence, not the flags — so the
+   flags were printed with no caveat attached to them.
+5. **"are true whenever it is" states the defect as a finding.** It is the arithmetic's premise, and it reads
+   as a verdict about the named options. This ADR's own discharge note had copied the phrasing, which is how
+   far the wording travels.
+
+**The report now prints three lines.** A scope line; **list 1 of 2**, labelled `TO DO, and the only list here
+that asks anyone for anything`, which names files only when a record is missing and says `THIS LIST IS EMPTY`
+when none is; and **list 2 of 2**, labelled `AN ARITHMETIC OBSERVATION, NOT A DEFECT LIST, and nothing here is
+a job for anyone`, whose caveat sits with its own names and which ends `A name on this line is a place to
+look, never a finding`. Both lists are numbered so a reader can quote which one they mean.
+
+**List 2 states its own record mechanically.** The gate cannot know whether a flag is a true positive, so it
+does not claim to: it prints how many flagged options sit on questions a verifier has **already** recorded as
+checked. Today that is 2 of 2, which the line renders as "it has produced no finding on this corpus" — true
+by construction rather than by a sentence that would rot when the corpus moves. The static half, "right twice
+in five and blind to gov-39", is §3's measurement and does not change with content.
+
+**Ruling on the flip, and it binds the infra obligation below.** When B10 stops reporting and starts failing,
+**only list 1 may fail the build** — a missing record is a fact the machine knows. **List 2 may never fail**,
+on any corpus, and must not be quietly promoted along with it: it is 0-for-2 today, it was 2-for-5 when it
+was measured, and it is blind to `gov-39`. An infra agent who reads list 2 the way three readers already have
+would turn `hist-65`, a correct question, into a red build — which is the failure this amendment exists to
+prevent, one step further along.
+
 ## Obligations
 
 - **OBLIGATION due=2026-11-20 owner=content-verifier** — for each of the twelve questions `verify-content`
@@ -254,9 +306,12 @@ been.
   ("two thirds" is at least half), `sym-32` ("65 or over" is over 55) and `gov-39` ("more than half of the
   votes" is the most votes). `gov-38` is a near miss that turns on the word "Only" and should be recorded,
   not rejected, if that reading holds. Do not edit any question's text: that is the author's, per ADR-0003.
-  **DISCHARGED 2026-09-20** — `make verify-content` prints "ADR-0064 threshold questions — 12 question(s)
-  whose source states a threshold and whose options are comparable; 12 recorded distractorsNotEntailed, 0 did
-  NOT". Each of the twelve carries `verification.distractorsNotEntailed: true`; none was returned to the
+  **DISCHARGED 2026-09-20** — `make verify-content` prints "ADR-0064 list 1 of 2 — TO DO, and the only list
+  here that asks anyone for anything: 0 of 12 are waiting for a verifier to record check 3 against the
+  threshold, in both languages; 12 already carry verification.distractorsNotEntailed. THIS LIST IS EMPTY".
+  (The report was reworded later the same day — see "Amendment, 2026-09-20" — and this quotation is of the
+  current wording; the earlier single line said the same thing as "12 recorded distractorsNotEntailed, 0 did
+  NOT".) Each of the twelve carries `verification.distractorsNotEntailed: true`; none was returned to the
   author. This closes the content-verifier's half only — the infra marker below (rule B10 from `note()` to
   `fail()`) and the architect's re-measurement are untouched and still open.
 
@@ -265,9 +320,14 @@ been.
   `gov-39` are all `status: "verified"` with the flag set, as is `gov-38`, the near miss this marker predicted
   would hold. The five questions carrying `status: "rejected"` in `content/questions/` today are a different
   five, rejected for unrelated reasons. The marker asked for a record **or** a rejection on each of the twelve
-  and has one on each; a reader arriving expecting three rejections will not find them. Separately and as
-  reporting only, `verify-content` still names two options in `hist-65-boer-war-volunteers.json` that state a
-  bound stricter than the answer's and are true whenever it is.
+  and has one on each; a reader arriving expecting three rejections will not find them.
+
+  **The arithmetic screen still flags two options in `hist-65-boer-war-volunteers.json`, and `hist-65` is
+  correct.** It is §3's worked example: a point-count prompt, where "Over 70,000" and "Over 600,000" are
+  simply false and the arithmetic's agreement with the `sym-32` shape means nothing. Nothing is owed on it.
+  This sentence used to read that the two options "are true whenever it is" — which states the arithmetic's
+  premise as though it were a finding about `hist-65`, inside the very ADR that exists to say it is not one,
+  and is the same slip the report's wording invited three times over. See "Amendment, 2026-09-20".
 
 - **OBLIGATION due=2026-12-20 owner=infra** — once no question `verify-content` names is missing its record,
   change rule B10 in `scripts/verify-content.mjs` from `note()` to `fail()` and delete the staging paragraph
@@ -275,6 +335,13 @@ been.
   outstanding — re-dating with a reason is legitimate (ADR-0009); letting the date pass in silence is what
   the marker exists to prevent. A reporting gate that is still reporting a year later is a gate nobody
   believes.
+
+  **Scope of the flip, settled 2026-09-20 by the amendment above: `fail()` applies to list 1 only** — a
+  question with no `distractorsNotEntailed` record. **List 2, the arithmetic observation, must stay
+  reporting on every corpus** and is not part of this marker. Flipping it would fail the build on `hist-65`,
+  which is correct, and would put a check in CI that people learn to wave through. As of today list 1 is
+  empty — all twelve are recorded — so the flip is eligible; list 2 still names two options and that is not
+  an obstacle to it.
 
 - **OBLIGATION due=2027-03-20 owner=architect** — re-measure §"What the corpus looks like through the
   trigger" and §3 over the tree as it then stands, and record the numbers here. The trigger's precision is a
