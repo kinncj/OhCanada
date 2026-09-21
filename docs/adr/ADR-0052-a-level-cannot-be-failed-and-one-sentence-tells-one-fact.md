@@ -323,6 +323,48 @@ block says nothing about §3, because it never did (§4); and an under-count aft
   with quest id, pointer, language and matched term, with the three lines this ADR's Context quotes as
   fixtures asserted to fail. Until it lands, §3 is held by review alone on a field where review has already
   passed the defect three times.
+  **DISCHARGED 2026-09-20** — `tests/unit/contracts/a-done-line-describes-the-route.test.ts`, with the two
+  term families and the matching in `tests/unit/contracts/done-line-terms.ts` beside it. The gate walks all
+  ten documents under `content/quests/`, both languages of `doneLine.text`, and reports every offender as
+  quest id, JSON pointer, language, family and **every** term of that family the line holds — not only the
+  first. The three audited lines are fixtures quoted word for word and each is asserted to fail.
+
+  **This gate is RED on today's content, and that is the content obligation below, not a defect in the
+  gate.** All **20** (quest, language) pairs are refused: every one of the ten shipped `doneLine`s says
+  *answered … question* in English and « répondu … questions » in French. Nine say "answered every question
+  along the way"; the North's says "answered the questions each stop asked you". No shipped line matches the
+  *praise* family, which is why that family ships exercised only by fixtures. **It was not softened to go
+  green** — a gate that passes because it was weakened would re-open the defect it was built for.
+
+  **Three departures from this marker's letter, recorded rather than smoothed over.** (1) §4(a) asks for "the
+  normalisation the proposition gate already uses (`app/application/content/proposition.ts`)" **and** that
+  "French accents are significant and are not stripped". `normaliseQuote` strips diacritics, so the two
+  cannot both be obeyed by calling it. The carve-out wins: `done-line-terms.ts` holds `normaliseQuote`'s
+  folding **minus** the diacritic strip and imports nothing from `app/`. The residual — an unaccented
+  `repondu` is not matched — is recorded in that module's header and asserted in the gate, so it is a choice
+  on the record rather than an accident. (2) **The third fixture no longer ships.** The North's
+  « répondu à toutes les questions laissées ici » was rewritten to « répondu aux questions que chaque halte
+  vous a posées » by the slice that built
+  `tests/unit/contracts/a-closing-line-claims-only-what-was-asked.test.ts` — which removed the *laissées ici*
+  overclaim and left the claim about answering standing. It is kept as a fixture anyway: a fixture pins the
+  wording the rule was written against, and a gate that stopped refusing the sentence that caused it, because
+  content moved on, is a gate nobody can check. (3) **§4(a)'s French stem is misspelled and has been
+  corrected.** The list writes `répond*` and then names four forms under it — `répondu`, `répondez`,
+  `réponse`, `réponses`. The stem reaches only the first two: *réponse* is spelled with an `s` where
+  *répondu* has a `d`, so `répond` is not a prefix of it. Shipping the ADR's spelling alone would have
+  shipped a family that silently missed both noun forms — the forms *bonnes réponses* is built from. The gate
+  carries **both** stems, `répond*` and `répons*`, which is exactly the four forms this ADR asked for; the
+  wider `répon*` would cover the same French words and was not used, because it claims more than this ADR
+  decided. Each of the four is asserted separately, a loop over one stem being how the gap got past the ADR
+  in the first place. **This paragraph is the amendment**: a reader of §4(a)'s list should take `répond*` as
+  `répond*` and `répons*`.
+
+  **It is not a rename of `a-closing-line-claims-only-what-was-asked.test.ts`, and neither file replaces the
+  other.** That gate reads each quest's *arithmetic* — whether a line claiming the questions **of the place**
+  is entitled to, given what its `answer` steps ask out — and says of itself, correctly, "this gate is not a
+  word filter". It **permits** "answered every question along the way", because that claim is true whatever a
+  pool holds. This gate refuses that line regardless of the arithmetic, because §3 is about what the sentence
+  is *for*.
 - **OBLIGATION due=2026-10-17 owner=content** — read all ten shipped `doneLine`s against §3's permission, in
   both languages, in one pass rather than one at a time, and rewrite the ones that claim anything about
   answering. Toronto's, the Alberta foothills' and the North's are known offenders from the audit's own
