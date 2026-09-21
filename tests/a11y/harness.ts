@@ -36,6 +36,7 @@ import { mountLiveRegion, announce } from '../../app/ui/live-region';
 import { createPassport } from '../../app/ui/passport';
 import { createAboutThisPlace, type AboutThisPlaceView } from '../../app/ui/about-this-place';
 import { createPoiCard } from '../../app/ui/poi-card';
+import { createLessonReader, type LessonReaderView } from '../../app/ui/lesson-reader';
 import { createExamResult, type ExamReviewItem } from '../../app/ui/exam-result';
 import { createExamScreen, type ExamTimerView } from '../../app/ui/exam-screen';
 import { createExamStartScreen, type ExamStartState } from '../../app/ui/exam-start';
@@ -495,6 +496,64 @@ const aboutView = (): AboutThisPlaceView => {
   }
 };
 
+/**
+ * The lesson reader's prose (ADR-0063). **Fixtures, not content.**
+ *
+ * A passage is authored in `content/lessons/**`, carries one proposition, one
+ * contiguous quote and one verifier's grant, and reaches the screen already
+ * resolved and already localised. Nothing invented here has a grant and nothing
+ * here states a fact about Canada — the words are deliberately about a place
+ * that does not exist, so a screenshot of this harness can never be mistaken for
+ * the game teaching something.
+ *
+ * What they do imitate is *shape*: the mean shipped passage is 109 characters in
+ * English, the longest is 270 in English and 314 in French, and French runs
+ * longer than English almost everywhere, which is the pair a 200 % scan has to
+ * measure rather than one language twice.
+ */
+const LESSON_FIXTURE = {
+  title: {
+    en: 'A fixture lesson about a fixture river',
+    fr: 'Une leçon fictive au sujet d’une rivière fictive',
+  },
+  short: [
+    {
+      en: 'The fixture river runs east from the fixture hills and meets the sea at Fixture Town, where the first fixture wharf was built.',
+      fr: 'La rivière fictive coule vers l’est depuis les collines fictives et rejoint la mer à Fixture Town, où le premier quai fictif a été construit.',
+    },
+    {
+      en: 'Boats carried fixture timber down the river every spring, and the town grew around the place where they tied up.',
+      fr: 'Des bateaux descendaient la rivière chargés de bois fictif chaque printemps, et la ville a grandi autour de l’endroit où ils accostaient.',
+    },
+    {
+      en: 'People still walk the towpath beside the water, and the old lock gates are kept open for small boats.',
+      fr: 'Les gens marchent encore sur le chemin de halage au bord de l’eau, et les vieilles portes d’écluse restent ouvertes pour les petites embarcations.',
+    },
+  ],
+  long: [
+    {
+      en: 'In the fixture valley an elected member of the fixture assembly is called a Member of the Fixture Assembly, a Member of the Fixture Council, or a Member of the Fixture House, and which of the three titles is used depends on which fixture district a person lives in.',
+      fr: 'Dans la vallée fictive, un membre élu de l’assemblée fictive porte le titre de membre de l’Assemblée fictive, de membre du Conseil fictif ou de membre de la Chambre fictive, et le titre employé dépend du district fictif où la personne habite, ce qui surprend souvent les nouveaux arrivants dans la région.',
+    },
+    {
+      en: 'The fixture charter opens with a sentence that names two things together, and those opening words matter twice over: they say that fixture traditions have a place in fixture society, and that every fixture person has a dignity and a worth of their own.',
+      fr: 'La charte fictive s’ouvre sur une phrase qui nomme deux choses à la fois, et ces premiers mots comptent de deux façons : ils disent que les traditions fictives ont leur place dans la société fictive, et que chaque personne fictive a une dignité et une valeur qui lui sont propres.',
+    },
+    {
+      en: 'Every spring the fixture council meets in the fixture hall beside the river to set the year’s work, and anyone who lives in the valley may come, listen, and speak once the council has finished its own business for the day.',
+      fr: 'Chaque printemps, le conseil fictif se réunit dans la salle fictive au bord de la rivière pour fixer les travaux de l’année, et toute personne qui habite la vallée peut venir, écouter et prendre la parole une fois que le conseil a terminé ses propres affaires de la journée.',
+    },
+    {
+      en: 'The fixture museum keeps the wharf ledgers, the lock keeper’s notebooks and a model of the town as it stood two hundred fixture years ago, and admission is free on the first day of every fixture month.',
+      fr: 'Le musée fictif conserve les registres du quai, les carnets de l’éclusier et une maquette de la ville telle qu’elle était il y a deux cents années fictives, et l’entrée est gratuite le premier jour de chaque mois fictif.',
+    },
+  ],
+} as const satisfies Readonly<{
+  title: Readonly<Record<UiLocale, string>>;
+  short: readonly Readonly<Record<UiLocale, string>>[];
+  long: readonly Readonly<Record<UiLocale, string>>[];
+}>;
+
 const screen = params.get('screen') ?? 'settings';
 
 switch (screen) {
@@ -821,6 +880,41 @@ switch (screen) {
       onClose: () => undefined,
       singleSwitch: store.current.singleSwitch,
     }).show({ ...level.poi, ...withArt(art) });
+    break;
+  }
+
+  /*
+   * The lesson reader (ADR-0063), which a `read` step opens at a stop.
+   *
+   * The passages below are **fixtures, not content**. A real one is resolved
+   * from `content/lessons/**` by the composition root and reaches the screen as
+   * prose (`app/ui/lesson-reader.ts`); nothing in `app/ui` may read one, and
+   * nothing here may pretend to have been granted.
+   *
+   * `?passages=long` picks how much prose there is, because the thing this
+   * surface can fail at is *length*. The default is three passages of about the
+   * corpus mean (109 characters in English over 302 shipped passages), which is
+   * the shape ADR-0063 recommends for a first authored step. `long` is four
+   * passages at the corpus's own worst case — the longest shipped passage is
+   * 270 characters in English and 314 in French — which at 200 % text on a
+   * 390 px phone is the layout that finds a sideways scroll, a clipped line, or
+   * a Close button pushed off the sheet.
+   */
+  case 'lesson-reader': {
+    const many = params.get('passages') === 'long';
+    const view: LessonReaderView = {
+      title: LESSON_FIXTURE.title[locale],
+      passages: (many ? LESSON_FIXTURE.long : LESSON_FIXTURE.short).map((passage, at) => ({
+        id: `fixture-passage-${String(at + 1)}`,
+        text: passage[locale],
+      })),
+    };
+    createLessonReader(ui, {
+      locale,
+      announce,
+      onClose: () => undefined,
+      singleSwitch: store.current.singleSwitch,
+    }).show(view);
     break;
   }
 

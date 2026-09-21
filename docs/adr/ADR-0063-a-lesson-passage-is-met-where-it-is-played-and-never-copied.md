@@ -426,6 +426,34 @@ the contract only.
   move through a `read` step, and record it in the story that carries the reader. It is the same question
   ADR-0061 §8 owes for a chapter, asked of a shorter document, and answering it here first is cheaper;
   whichever is answered first, the two answers must be one design.
+  **DISCHARGED 2026-09-21** — `app/ui/lesson-reader.ts`, with
+  `docs/stories/TN-READ-reading-a-passage-at-a-stop.md` as the story that carries it, and one design for both
+  players rather than two.
+  **One switch: each passage is a stop in the ring.** A short press moves the highlight to the next passage,
+  scrolls it into view — the only way a switch player scrolls anything — and reads it aloud, so reading the
+  document is the same gesture as moving through it. A long press on a passage reads it again and does
+  nothing else (`confirm.ts`'s stop, asked of prose); only `Close` closes. It uses the **one** scanning
+  implementation, `createSwitchRing`, given to the surface by `app/ui/screen.ts`; no second scanning concept
+  was introduced. The rejected shape is the ring built from controls alone, which would highlight `Close` over
+  prose the player could neither hear nor scroll to.
+  **Screen reader: the prose is the dialog's own description.** Named by the lesson's title, described by the
+  whole body, so a reader that reads a dialog on arrival reads the title and then every passage in the order
+  the step named them; nothing is announced separately, because a live-region message as well would say it
+  twice. A second Tab stop over the prose was written and removed: it is a stop that does nothing on the way
+  to the only control there is, and a reading cursor already walks paragraphs. The switch scan speaks each
+  passage with its `lang`, so French prose is not read with English phonemes.
+  **The judgement §"Rules stated here that no gate can express" delegates is made:** a stop holds **three or
+  four** passages, and a passage taller than the phone does not go on one. Measured: 302 passages, mean 109
+  characters (EN), longest 270 (EN) / 314 (FR); a 314-character French passage at 200 % text is about 1 290 px
+  against an 844 px viewport. `TN-READ`'s `OQ-READ-2` records the one rough edge this could not fix from a
+  screen — the shared `focusAndReveal` shows such a paragraph's tail on the scan's wrap, and changing that is
+  a change to every screen in the game.
+  **What this does NOT discharge, and it is the reason the reader is still unreachable.** §6 assigns
+  `chapters()` / `lessons(chapter)` and the per-chapter lazy catalogue to "the implementer in the change that
+  first calls them", and **that change has not been made**: there is no port method, no lesson catalogue in
+  `app/adapters/content`, and nothing in `app/bootstrap` resolves a `{ lesson, passage }` pair. The screen is
+  written against prose precisely so that route can be built without touching it — but until it is built,
+  **passages reachable by playing is 0**, and this obligation's closure is not a claim otherwise.
 
 - **OBLIGATION due=2027-02-20 owner=content** — author the first `read` step on **one** level as a proving
   run, choosing passages by relevance to where the player is standing, and report what it cost and how it

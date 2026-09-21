@@ -1069,6 +1069,77 @@ const CSS = `
 }
 
 /* ------------------------------------------------------------------ *
+ * The lesson reader: a passage of the study guide, read at a stop.
+ *
+ * ADR-0063, and docs/stories/TN-READ-reading-a-passage-at-a-stop.md. Three
+ * things here are acceptance criteria rather than decoration.
+ *
+ *  1. THE PARAGRAPHS ARE SET TO BE READ, NOT SKIMMED. One step up from body
+ *     text and a looser line height. The measure is the sheet's own 34rem cap,
+ *     so nothing here fights the column the rest of the game is drawn in.
+ *  2. EACH PARAGRAPH IS A STOP IN THE SWITCH RING, so the highlight lands on
+ *     prose. The shared highlight rule sets a quarter-rem double border on every
+ *     side, and on a box with no border of its own that would grow the sheet and
+ *     shift the Close button under the player's thumb the instant the scan
+ *     arrived. So all four edges are the same quarter-rem, always drawn, and the
+ *     highlight changes only their STYLE and COLOUR -- not one pixel of layout.
+ *     That is .tn-screen__question's arithmetic, generalised to a box that also
+ *     wants a leading rule. scroll-margin leaves room above the paragraph the
+ *     switch has just brought into view, because a switch player cannot scroll
+ *     for themselves.
+ *  3. THE LEADING RULE IS A SHAPE. A passage is marked as study material by a
+ *     rule down its leading edge, which survives greyscale, a colour vision
+ *     difference and forced-colours mode: colour is never the only signal, and
+ *     here colour is not a signal at all.
+ * ------------------------------------------------------------------ */
+
+.tn-lesson-reader__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tn-lesson-reader__passage {
+  font-size: 1.1875rem;
+  line-height: 1.6;
+  /* Four edges of one width, so the highlight can never resize the box. */
+  border: 0.25rem double transparent;
+  border-inline-start-style: solid;
+  border-inline-start-color: var(--tn-accent);
+  border-radius: var(--tn-radius);
+  padding-inline-start: 0.875rem;
+  /* A switch user cannot scroll: leave room above when the highlight lands. */
+  scroll-margin-block: 1.5rem;
+}
+
+.tn-lesson-reader__passage[data-switch-highlight="true"] { border-color: var(--tn-focus); }
+
+/*
+  High contrast, where the brass rule would otherwise vanish.
+
+  --tn-accent is #ffffff under [data-tn-contrast="high"], and the sheet it is
+  drawn on is #ffffff too, so a leading rule painted in the accent is a rule
+  nobody can see -- the shape that was carrying "this is study material" when
+  colour could not. It is painted in the ink instead, which is the one colour
+  high contrast guarantees against the paper. Found by measuring the rendered
+  border rather than by reading the palette, which is how a vanished shape is
+  found at all.
+
+  .tn-about__statement has the same defect and is fixed in the same rule. It is
+  one selector and the same sentence of CLAUDE.md, and leaving a known invisible
+  shape on a neighbouring screen to keep a change tidy is how it stays invisible.
+*/
+[data-tn-contrast="high"] .tn-lesson-reader__passage,
+[data-tn-contrast="high"] .tn-about__statement {
+  border-inline-start-color: var(--tn-ink);
+}
+
+@media (forced-colors: active) {
+  .tn-lesson-reader__passage { border-inline-start-color: CanvasText; }
+  .tn-lesson-reader__passage[data-switch-highlight="true"] { border-color: Highlight; }
+}
+
+/* ------------------------------------------------------------------ *
  * Screens with art (ADR-0041).
  *
  * The live-site audit found the landmark card, the dialogue, the completion

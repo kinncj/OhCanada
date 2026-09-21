@@ -615,6 +615,20 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   application-side shippable-passage filter, so a passage quarantined by ADR-0016's clock disappears from
   the level and from Learn in one change. The second reader is what makes `lessons(chapter)` worth writing:
   until ADR-0063 the capability had no caller at all, which is why ADR-0008 kept it unwritten.
+  **The screen half of the second reader landed 2026-09-21** — `app/ui/lesson-reader.ts`,
+  `docs/stories/TN-READ-reading-a-passage-at-a-stop.md` — and **the rest of this seam is still unwritten**,
+  which is why no player can reach it. The screen is written against a view of already-resolved,
+  already-filtered, already-localised prose: `LessonReaderView` is a title and a list of `{ id, text }` and
+  has **no field** a `{ lesson, passage }` pair, a `fact` block or a `LocalizedText` fits into. That shape is
+  the seam stated from the consumer's end, and it is held by
+  `tests/unit/contracts/a-read-step-reaches-a-reader.test.ts`, which walks a `read` step through the loader,
+  the resolver and the readable-passage rule and then reads the screen's source to prove it did none of that
+  itself. What the first implementer of the catalogue therefore has to produce is exactly that view — nothing
+  more, and nothing about verification. **What the runtime may not do is reuse `scripts/lib/lesson-passages.mjs`
+  for it:** that module is the infra gate's resolver and readable-passage rule, it is tooling, and the
+  `no-tooling-in-runtime` dependency rule keeps `scripts/` out of the bundle. So the application-side filter
+  §6 requires is a *second implementation of one rule*, and whoever writes it owns keeping the two in step —
+  a cost worth stating before it is paid rather than after.
 - **Device tiers.** Which tier gets Rive and which gets the sprite atlas is a bootstrap policy; the
   detection rule is not written yet, and no port needs to know it.
 - **Save migration.** `SaveCodec` declares `version` and `minSupportedVersion`. The first migration is

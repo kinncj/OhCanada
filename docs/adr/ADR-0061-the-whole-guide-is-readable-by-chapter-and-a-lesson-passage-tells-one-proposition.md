@@ -573,6 +573,15 @@ here, because it is a design question for the story and the a11y owner.
 - **OBLIGATION due=2027-01-18 owner=ui-a11y** — decide how a single-switch player and a screen-reader player
   move through a chapter, and record it in the story that carries the Learn surface. "Tap anywhere advances"
   is a rule for cards; a chapter is not a card (§8).
+  **STILL OPEN, and half of it is now answered elsewhere.** ADR-0063's twin obligation asked the same question
+  of a *shorter* document — the handful of passages a `read` step names — and was discharged 2026-09-21 in
+  `docs/stories/TN-READ-reading-a-passage-at-a-stop.md` and `app/ui/lesson-reader.ts`. ADR-0063 requires the
+  two answers to be **one design**, so this obligation is discharged by extending that answer to a chapter,
+  not by inventing a second one: each passage is a stop in the one scanning ring, a short press moves,
+  scrolls and speaks, a long press on a passage repeats it, and the prose is the surface's own accessible
+  description rather than something behind a control. What a chapter adds and a `read` step does not is
+  **length** — tens of passages rather than three or four — so the open part is whether a ring that long
+  needs a way to skip a lesson, which is a question about scanning cost and not about the shape above.
 
 - **OBLIGATION due=2027-03-18 owner=architect** — re-run Context's measurement over the tree as it then
   stands and record, in an amendment to this ADR, the word coverage and the teachable remainder by chapter.
