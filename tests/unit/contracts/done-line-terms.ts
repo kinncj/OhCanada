@@ -123,18 +123,22 @@ const prefix = (label: string): Term => ({
 /**
  * *Answering* — the family the audit actually found, in both languages.
  *
- * Every member is §4(a)'s, in §4(a)'s order, with one correction.
+ * Every member is §4(a)'s, in §4(a)'s order.
  *
- * **§4(a)'s French stem is misspelled, and the fix is recorded rather than
- * silently widened.** The ADR writes the stem as `répond*` and then names four
- * forms under it — `répondu`, `répondez`, `réponse`, `réponses`. The last two
- * cannot be reached by that stem: *réponse* is spelled with an `s` where
- * *répondu* has a `d`, so `répond` is not a prefix of it. Carrying the ADR's
- * spelling alone would have shipped a family that silently missed the two
- * noun forms — the very forms *bonnes réponses* is built from. So **both stems
- * are carried**, `répond*` and `répons*`, which is exactly the set of four forms
- * the ADR asked for. A single wider `répon*` would cover the same French words
- * and was not used: it claims more than the ADR decided.
+ * **The French side carries two stems, `répond*` and `répons*`, and §4(a) now
+ * says so.** It did not always, and the history is worth keeping because it is
+ * why the list is written the way it is. The clause named a single stem,
+ * `répond*`, and then named four forms under it — `répondu`, `répondez`,
+ * `réponse`, `réponses`. A `d`-stem reaches only the first two: *réponse* is
+ * spelled with an `s` where *répondu* has a `d`, so `répond` is not a prefix of
+ * it. Implementing that line exactly as written would have shipped a family
+ * silently missing both noun forms — the very forms *bonnes réponses* is built
+ * from. This module carried both stems from the start; ADR-0052's amendment of
+ * 2026-09-20 corrected §4(a) itself, so the specification and this list now
+ * agree rather than this list being a correction of it.
+ *
+ * A single wider `répon*` would cover the same French words and was not used:
+ * it claims more than the ADR decided.
  *
  * The rest are whole words, so EN `right` does not fire on *rights and
  * responsibilities*, which is a subject name and not a claim about how the

@@ -246,12 +246,13 @@ describe('a done line describes the route, not how the player answered', () => {
     });
 
     it('reaches all four French forms §4(a) names, across both its stems', () => {
-      /* §4(a) writes the stem as `répond*` and then names `réponse` and
-         `réponses` among its forms — which that stem cannot reach, because those
-         two are spelled with an `s` where `répondu` has a `d`. Both stems are
-         carried, so the four forms the ADR asked for are the four that fire.
-         Asserted per form: a loop over a single stem is how the gap got past
-         the ADR in the first place. */
+      /* §4(a) now names both stems, `répond*` and `répons*`. It originally
+         wrote one, `répond*`, and named `réponse` and `réponses` among its
+         forms — which that stem cannot reach, because those two are spelled
+         with an `s` where `répondu` has a `d`. Both stems have always been
+         carried here, so the four forms the ADR asks for are the four that
+         fire. Asserted per form: a loop over a single stem is how the gap got
+         past the ADR in the first place. */
       expect(termsFound('Vous avez répondu ici.', 'answering', 'fr')).toContain('répond*');
       expect(termsFound('Répondez ici.', 'answering', 'fr')).toContain('répond*');
       expect(termsFound('Une réponse ici.', 'answering', 'fr')).toContain('répons*');
