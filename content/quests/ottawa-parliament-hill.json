@@ -132,6 +132,30 @@
       ]
     },
     {
+      "id": "answer-on-the-canal",
+      "kind": "answer",
+      "targetId": "government",
+      "subject": "government",
+      "count": 4,
+      "questionPool": [
+        "gov-01-three-features",
+        "gov-21-vote-right-and-responsibility",
+        "gov-22-head-of-state",
+        "gov-24-head-of-government",
+        "gov-25-governor-general-appointed",
+        "gov-27-lieutenant-governor",
+        "gov-28-head-of-commonwealth",
+        "gov-29-territorial-commissioner",
+        "gov-30-three-branches",
+        "gov-64-indigenous-organizations",
+        "gov-65-sovereign-guardian-of-freedoms"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about how Canada is governed and the Crown",
+        "fr": "Répondez à 4 questions sur la façon dont le Canada est gouverné et sur la Couronne"
+      }
+    },
+    {
       "id": "skate-to-the-library",
       "kind": "visit",
       "targetId": "library-of-parliament",
@@ -193,7 +217,9 @@
         "gov-18-what-a-bill-is",
         "gov-19-royal-assent",
         "gov-20-committee-stage",
-        "gov-20-first-reading"
+        "gov-20-first-reading",
+        "gov-20-second-reading",
+        "gov-20-senate-stage"
       ],
       "prompt": {
         "en": "Answer 4 questions about how a bill becomes law",
@@ -259,15 +285,26 @@
       "subject": "government",
       "count": 5,
       "questionPool": [
+        "gov-07-provincial-legislative-assembly",
+        "gov-10-who-voters-elect",
+        "gov-11-role-of-representatives",
+        "gov-12-non-confidence-vote",
         "gov-13-parts-of-parliament",
         "gov-14-provincial-legislature-parts",
+        "gov-15-who-selects-cabinet",
         "gov-16-house-of-commons-elected",
         "gov-17-senators-appointed",
-        "gov-23-sovereign-non-partisan"
+        "gov-23-sovereign-non-partisan",
+        "gov-31-provincial-member-titles",
+        "gov-32-premier-role",
+        "gov-52-matter-of-confidence",
+        "gov-53-what-cabinet-does",
+        "gov-54-official-opposition",
+        "gov-55-role-of-opposition"
       ],
       "prompt": {
-        "en": "Answer 5 questions about the parts of Parliament",
-        "fr": "Répondez à 5 questions sur les parties du Parlement"
+        "en": "Answer 5 questions about Parliament, Cabinet and the people Canadians elect",
+        "fr": "Répondez à 5 questions sur le Parlement, le Cabinet et les personnes que les Canadiens élisent"
       }
     },
     {
@@ -332,6 +369,8 @@
         "gov-03-constitution-act-1867",
         "gov-04-federal-responsibilities",
         "gov-05-provincial-responsibilities",
+        "gov-08-territories-not-provinces",
+        "gov-58-municipal-council",
         "gov-59-municipal-responsibilities",
         "gov-62-shared-responsibilities",
         "gov-63-band-chiefs"

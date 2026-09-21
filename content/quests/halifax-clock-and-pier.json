@@ -173,6 +173,26 @@
       ]
     },
     {
+      "id": "answer-by-the-harbour",
+      "kind": "answer",
+      "targetId": "rights",
+      "subject": "rights",
+      "count": 4,
+      "questionPool": [
+        "rights-22-rights-come-with-responsibilities",
+        "rights-26-jury-duty-is-required",
+        "rights-27-why-juries-matter",
+        "rights-28-voting-which-elections",
+        "rights-29-voting-right-and-responsibility",
+        "rights-32-protecting-heritage-and-environment",
+        "rights-33-heritage-includes-buildings"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about the responsibilities that come with your rights",
+        "fr": "Répondez à 4 questions sur les responsabilités qui accompagnent vos droits"
+      }
+    },
+    {
       "id": "find-the-town-clock",
       "kind": "visit",
       "targetId": "town-clock",
@@ -229,14 +249,16 @@
       "kind": "answer",
       "targetId": "rights",
       "subject": "rights",
-      "count": 2,
+      "count": 3,
       "questionPool": [
-        "rights-28-voting-which-elections",
-        "rights-29-voting-right-and-responsibility"
+        "rights-03-civil-code-of-france",
+        "rights-04-magna-carta-year",
+        "rights-05-magna-carta-other-name",
+        "rights-06-ordered-liberty-tradition"
       ],
       "prompt": {
-        "en": "Answer 2 questions about voting",
-        "fr": "Répondez à 2 questions sur le vote"
+        "en": "Answer 3 questions about where our rights and freedoms come from",
+        "fr": "Répondez à 3 questions sur l'origine de nos droits et libertés"
       }
     },
     {
@@ -299,11 +321,12 @@
       "count": 2,
       "questionPool": [
         "rights-23-rule-of-law-founding-principle",
-        "rights-24-nobody-is-above-the-law"
+        "rights-24-nobody-is-above-the-law",
+        "rights-25-responsibility-for-self-and-family"
       ],
       "prompt": {
-        "en": "Answer 2 questions about obeying the law",
-        "fr": "Répondez à 2 questions sur le respect de la loi"
+        "en": "Answer 2 questions about obeying the law and looking after your family",
+        "fr": "Répondez à 2 questions sur le respect de la loi et sur le soin de sa famille"
       }
     },
     {
@@ -448,9 +471,12 @@
       "questionPool": [
         "rights-30-helping-others-volunteering",
         "rights-31-what-volunteering-gives-back",
+        "rights-34-no-compulsory-military-service",
+        "rights-35-three-parts-of-canadian-forces",
         "rights-36-part-time-reserves",
         "rights-37-cadets",
-        "rights-38-coast-guard-and-emergency-services"
+        "rights-38-coast-guard-and-emergency-services",
+        "rights-39-protecting-your-community"
       ],
       "prompt": {
         "en": "Answer 5 questions about serving your community",

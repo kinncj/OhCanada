@@ -175,7 +175,11 @@
         "wwa-23-anglophones-and-francophones",
         "wwa-24-francophones-outside-quebec",
         "wwa-25-new-brunswick-bilingual",
-        "wwa-31-anglo-quebecers"
+        "wwa-27-great-upheaval",
+        "wwa-28-acadian-deportation-share",
+        "wwa-30-quebecois-nation-2006",
+        "wwa-31-anglo-quebecers",
+        "wwa-47-acadian-culture-today"
       ],
       "prompt": {
         "en": "Answer 5 questions about English and French in Canada",
@@ -240,15 +244,36 @@
       "count": 5,
       "questionPool": [
         "wwa-04-three-founding-peoples",
+        "wwa-06-migration-from-asia",
+        "wwa-07-established-before-europeans",
+        "wwa-08-treaty-rights-in-constitution",
+        "wwa-09-royal-proclamation-1763",
+        "wwa-10-treaties-not-always-respected",
+        "wwa-11-residential-schools-period",
+        "wwa-12-languages-prohibited",
+        "wwa-13-apology-2008",
+        "wwa-14-achievements-today",
+        "wwa-15-three-distinct-groups",
+        "wwa-16-first-nations-on-and-off-reserve",
+        "wwa-17-inuit-means-the-people",
+        "wwa-18-inuit-knowledge-of-the-land",
+        "wwa-19-metis-prairie-provinces",
+        "wwa-20-michif",
+        "wwa-21-shares-of-the-three-groups",
         "wwa-26-acadians-1604",
         "wwa-29-quebecers-8500-settlers",
         "wwa-33-settlers-of-english-speaking-canada",
+        "wwa-34-majority-born-in-canada",
         "wwa-35-why-english-canadians",
-        "wwa-36-land-of-immigrants"
+        "wwa-36-land-of-immigrants",
+        "wwa-37-largest-groups-list",
+        "wwa-38-immigrants-since-the-1970s",
+        "wwa-39-chinese-languages-at-home",
+        "wwa-45-black-loyalists-1780s"
       ],
       "prompt": {
-        "en": "Answer 5 questions about what built this country",
-        "fr": "Répondez à 5 questions sur ce qui a bâti ce pays"
+        "en": "Answer 5 questions about the peoples who built this country",
+        "fr": "Répondez à 5 questions sur les peuples qui ont bâti ce pays"
       }
     },
     {
@@ -306,13 +331,24 @@
       "kind": "answer",
       "targetId": "who-we-are",
       "subject": "who-we-are",
-      "count": 1,
+      "count": 3,
       "questionPool": [
-        "wwa-32-newcomers-embrace-rule-of-law"
+        "wwa-01-oldest-constitutional-tradition",
+        "wwa-02-only-constitutional-monarchy",
+        "wwa-03-peace-order-good-government",
+        "wwa-05-great-dominion",
+        "wwa-32-newcomers-embrace-rule-of-law",
+        "wwa-40-largest-religious-affiliation",
+        "wwa-41-state-and-faith-communities",
+        "wwa-42-growing-religious-groups",
+        "wwa-43-equal-treatment-civil-marriage",
+        "wwa-44-shared-canadian-identity",
+        "wwa-46-strong-and-free-country",
+        "wwa-48-non-official-languages-at-home"
       ],
       "prompt": {
-        "en": "Answer 1 question about becoming Canadian",
-        "fr": "Répondez à 1 question sur le fait de devenir canadien"
+        "en": "Answer 3 questions about becoming Canadian and what Canadians share",
+        "fr": "Répondez à 3 questions sur le fait de devenir canadien et sur ce que les Canadiens partagent"
       }
     }
   ]

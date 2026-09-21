@@ -173,6 +173,36 @@
       ]
     },
     {
+      "id": "answer-in-the-carriage",
+      "kind": "answer",
+      "targetId": "modern-canada",
+      "subject": "modern-canada",
+      "count": 4,
+      "questionPool": [
+        "mc-09-nato-military-alliance",
+        "mc-10-norad-partner",
+        "mc-11-korean-war",
+        "mc-12-un-peacekeeping-missions",
+        "mc-15-la-francophonie",
+        "mc-20-hungarian-refugees-1956",
+        "mc-21-vietnamese-refugees-1975",
+        "mc-22-group-of-seven",
+        "mc-23-emily-carr",
+        "mc-24-les-automatistes",
+        "mc-25-kenojuak-ashevak",
+        "mc-26-denys-arcand",
+        "mc-28-chantal-petitclerc",
+        "mc-29-wayne-gretzky",
+        "mc-30-terry-fox",
+        "mc-31-rick-hansen",
+        "mc-32-paul-henderson-1972"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about Canada's artists and athletes and its place in the world",
+        "fr": "Répondez à 4 questions sur les artistes et les athlètes du Canada et sur sa place dans le monde"
+      }
+    },
+    {
       "id": "stop-at-the-grain-bins",
       "kind": "visit",
       "targetId": "grain-bins",
@@ -233,12 +263,16 @@
       "questionPool": [
         "mc-02-alberta-oil-1947",
         "mc-03-1951-food-shelter-clothing",
+        "mc-13-quiet-revolution",
+        "mc-14-royal-commission-1963",
+        "mc-16-sovereignty-referendums",
+        "mc-17-constitution-1982-and-quebec",
         "mc-18-japanese-canadians-gained-the-vote",
         "mc-19-aboriginal-people-granted-the-vote"
       ],
       "prompt": {
-        "en": "Answer 4 questions about how life changed after the war",
-        "fr": "Répondez à 4 questions sur les changements d'après-guerre"
+        "en": "Answer 4 questions about how Canada changed after the war",
+        "fr": "Répondez à 4 questions sur les changements au Canada après la guerre"
       }
     },
     {

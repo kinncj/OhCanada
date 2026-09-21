@@ -173,6 +173,24 @@
       ]
     },
     {
+      "id": "answer-before-the-ride",
+      "kind": "answer",
+      "targetId": "economy",
+      "subject": "economy",
+      "count": 4,
+      "questionPool": [
+        "eco-24-saint-john-port-and-manufacturing",
+        "eco-26-toronto-financial-centre",
+        "eco-36-halifax-deep-water-ice-free-port",
+        "eco-44-saskatoon-mining-headquarters",
+        "eco-47-port-of-vancouver-largest-and-busiest"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about Canada's cities and ports",
+        "fr": "Répondez à 4 questions sur les villes et les ports du Canada"
+      }
+    },
+    {
       "id": "ride-up-to-the-ranch-gate",
       "kind": "visit",
       "targetId": "ranch-gate",
@@ -234,11 +252,15 @@
         "eco-05-three-types-of-industries",
         "eco-06-most-workers-in-services",
         "eco-07-service-industry-example",
-        "eco-11-natural-resource-industries"
+        "eco-11-natural-resource-industries",
+        "eco-19-industrialized-country",
+        "eco-49-work-contributes-to-prosperity",
+        "eco-50-economy-built-on-farming-and-resources",
+        "eco-51-strong-economy-1945-to-1970"
       ],
       "prompt": {
-        "en": "Answer 4 questions about the kinds of work in Canada",
-        "fr": "Répondez à 4 questions sur les types d'emplois au Canada"
+        "en": "Answer 4 questions about the kinds of work in Canada and how the economy grew",
+        "fr": "Répondez à 4 questions sur les types de travail au Canada et sur la croissance de l'économie"
       }
     },
     {
@@ -302,16 +324,22 @@
       "questionPool": [
         "eco-08-what-manufacturing-does",
         "eco-09-manufactured-product-example",
+        "eco-20-atlantic-provinces-industries",
+        "eco-21-pei-farming",
+        "eco-23-nova-scotia-industries",
         "eco-25-ontario-quebec-manufacturing",
         "eco-31-bc-forestry-products",
+        "eco-35-nova-scotia-shipbuilding-and-shipping",
+        "eco-37-new-brunswick-principal-industries",
         "eco-38-quebec-pulp-and-paper",
+        "eco-40-quebec-cutting-edge-industries",
         "eco-42-ontario-farm-products",
         "eco-43-saskatchewan-grains-and-oilseeds",
         "eco-46-alberta-beef-producer"
       ],
       "prompt": {
-        "en": "Answer 5 questions about what Canada makes and sells",
-        "fr": "Répondez à 5 questions sur ce que le Canada produit et vend"
+        "en": "Answer 5 questions about what Canada makes, grows and catches",
+        "fr": "Répondez à 5 questions sur ce que le Canada fabrique, cultive et pêche"
       }
     },
     {
@@ -459,11 +487,13 @@
         "eco-14-biggest-bilateral-relationship",
         "eco-15-supply-chains-compete",
         "eco-16-goods-canada-exports",
+        "eco-17-longest-undefended-border",
+        "eco-18-peace-arch",
         "eco-41-ontario-exports-from-services-and-manufacturing"
       ],
       "prompt": {
-        "en": "Answer 5 questions about what Canada sells to other countries",
-        "fr": "Répondez à 5 questions sur ce que le Canada vend à d'autres pays"
+        "en": "Answer 5 questions about what Canada sells abroad and the border with the United States",
+        "fr": "Répondez à 5 questions sur ce que le Canada vend à l'étranger et sur la frontière avec les États-Unis"
       }
     }
   ]

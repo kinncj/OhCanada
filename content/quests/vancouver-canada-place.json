@@ -173,6 +173,35 @@
       ]
     },
     {
+      "id": "answer-on-the-seawall",
+      "kind": "answer",
+      "targetId": "symbols",
+      "subject": "symbols",
+      "count": 4,
+      "questionPool": [
+        "sym-21-national-winter-sport",
+        "sym-22-ice-hockey-developed-1800s",
+        "sym-23-stanley-cup-donor",
+        "sym-24-clarkson-cup",
+        "sym-25-official-summer-sport",
+        "sym-26-curling-scottish-pioneers",
+        "sym-27-soccer-registered-players",
+        "sym-28-beaver-hudsons-bay-company",
+        "sym-29-beaver-st-jean-baptiste-1834",
+        "sym-30-beaver-five-cent-coin",
+        "sym-37-order-of-canada-1967",
+        "sym-38-honours-orders-decorations-medals",
+        "sym-39-victoria-cross-highest-honour",
+        "sym-40-first-canadian-victoria-cross",
+        "sym-41-william-hall-victoria-cross",
+        "sym-43-last-canadian-victoria-cross"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about our sports, the beaver and Canada's honours",
+        "fr": "Répondez à 4 questions sur nos sports, le castor et les distinctions honorifiques du Canada"
+      }
+    },
+    {
       "id": "skate-along-to-the-marina",
       "kind": "visit",
       "targetId": "marina",
@@ -233,11 +262,15 @@
       "questionPool": [
         "sym-07-union-jack-royal-flag",
         "sym-08-red-ensign-hundred-years",
-        "sym-12-quebec-flag-1948"
+        "sym-09-maple-leaf-best-known",
+        "sym-10-maple-leaf-french-canadians",
+        "sym-11-fleur-de-lys-lily",
+        "sym-12-quebec-flag-1948",
+        "sym-42-canada-day-july-1"
       ],
       "prompt": {
-        "en": "Answer 3 questions about Canada's flags",
-        "fr": "Répondez à 3 questions sur les drapeaux du Canada"
+        "en": "Answer 3 questions about Canada's flags, emblems and Canada Day",
+        "fr": "Répondez à 3 questions sur les drapeaux du Canada, ses emblèmes et la fête du Canada"
       }
     },
     {
@@ -299,6 +332,9 @@
       "subject": "symbols",
       "count": 5,
       "questionPool": [
+        "sym-01-what-symbols-do",
+        "sym-02-crown-and-government",
+        "sym-03-monarchy-since-1867",
         "sym-04-new-flag-1965",
         "sym-05-flag-pattern-origin",
         "sym-06-national-colours-1921",
@@ -307,8 +343,8 @@
         "sym-15-where-arms-appear"
       ],
       "prompt": {
-        "en": "Answer 5 questions about the flag and the coat of arms",
-        "fr": "Répondez à 5 questions sur le drapeau et les armoiries"
+        "en": "Answer 5 questions about the flag, the coat of arms and the Crown",
+        "fr": "Répondez à 5 questions sur le drapeau, les armoiries et la Couronne"
       }
     },
     {
@@ -370,13 +406,21 @@
       "subject": "symbols",
       "count": 3,
       "questionPool": [
+        "sym-16-parliament-completed-1860s",
+        "sym-17-centre-block-fire-1916",
+        "sym-18-library-only-original-part",
+        "sym-19-peace-tower-1927",
+        "sym-20-books-of-remembrance",
         "sym-31-language-for-citizenship",
         "sym-32-language-exemption-at-55",
-        "sym-33-official-languages-act-objectives"
+        "sym-33-official-languages-act-objectives",
+        "sym-34-anthem-proclaimed-1980",
+        "sym-35-anthem-first-sung",
+        "sym-36-royal-anthem-purpose"
       ],
       "prompt": {
-        "en": "Answer 3 questions about the two official languages",
-        "fr": "Répondez à 3 questions sur les deux langues officielles"
+        "en": "Answer 3 questions about the Parliament Buildings, our anthems and the two official languages",
+        "fr": "Répondez à 3 questions sur les édifices du Parlement, nos hymnes et les deux langues officielles"
       }
     }
   ]

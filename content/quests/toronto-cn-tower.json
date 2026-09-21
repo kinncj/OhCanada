@@ -173,6 +173,26 @@
       ]
     },
     {
+      "id": "answer-on-the-curb",
+      "kind": "answer",
+      "targetId": "elections",
+      "subject": "elections",
+      "count": 4,
+      "questionPool": [
+        "elec-07-early-election",
+        "elec-14-minority-government",
+        "elec-15-who-appoints-the-prime-minister",
+        "elec-16-defeated-on-confidence",
+        "elec-17-support-of-most-mps",
+        "gov-50-who-forms-government",
+        "gov-51-majority-government"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about how a government is formed and how an election is called",
+        "fr": "Répondez à 4 questions sur la formation d'un gouvernement et sur le déclenchement d'une élection"
+      }
+    },
+    {
       "id": "ride-to-the-streetcar",
       "kind": "visit",
       "targetId": "streetcar",
@@ -303,13 +323,16 @@
       "questionPool": [
         "elec-03-another-name-for-a-riding",
         "elec-04-whom-an-mp-represents",
+        "elec-05-what-candidates-are-called",
         "elec-06-many-candidates-in-a-district",
+        "elec-21-where-to-see-results",
         "gov-37-electoral-district",
+        "gov-38-who-may-run",
         "gov-39-who-wins-the-seat"
       ],
       "prompt": {
-        "en": "Answer 5 questions about electoral districts",
-        "fr": "Répondez à 5 questions sur les circonscriptions électorales"
+        "en": "Answer 5 questions about electoral districts, the candidates and the results",
+        "fr": "Répondez à 5 questions sur les circonscriptions, les candidats et les résultats"
       }
     },
     {
