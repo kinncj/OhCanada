@@ -358,7 +358,7 @@ Feature: The North says what it is getting ready
   Scenario: The HUD says a thing has something to offer, and does not name it
     Given the North level is playable
     When I come within reach of the landmark
-    Then "interact-prompt" reads "See what there is to do here", the row TN-REACH owns
+    Then "interact-prompt" reads "See what to do here", the row TN-REACH owns
     And it does not read "Look at this place", because pressing opens a task and not a card
     And it does not read "Talk to this person", because nobody is there
     And it names nothing

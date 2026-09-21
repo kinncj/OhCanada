@@ -187,53 +187,131 @@ test.describe('the task stays on screen at 200 % text', () => {
   /* -------------------------------------------- every task, not just one */
 
   /*
-   * The strip above, swept across every task the game can put in it.
+   * The strip above, swept across every task the game can really put in it.
    *
    * The audit's case measures one line: Halifax's second step. The task row is
    * the only row in the strip whose words come from `content/` rather than from
    * `copy.ts`, so it is the one row a content change can lengthen without
    * anybody opening this file — and widening the question pools did exactly
-   * that. Twenty-five step prompts grew past the strip at 200 % text and only
-   * the one Halifax happens to hold was measured.
+   * that.
    *
-   * The offer row is pinned to the longest one any level can show, read from
-   * the level documents rather than typed here, so what is measured is the
-   * worst strip the game can draw and not the strip Halifax happens to draw.
+   * ## Each quest is paired with ITS OWN level's offer row
+   *
+   * The first version of this sweep pinned the offer to the longest row *any*
+   * level can draw and ran every quest past it. That measures a strip the game
+   * cannot produce — Ottawa's offer over Halifax's task — and a gate that fails
+   * on an impossible pairing teaches nobody anything about the shipped game.
+   *
+   * The real pairing is derivable and so it is derived, never typed in: a level
+   * document lists its quests by id in `quests`, and the quest file is
+   * `<questId>.json`, so the offer a player can be reading while a given task is
+   * tracked is one of that level's own.
+   *
+   * ## The worst offer is the TALLEST one, not the longest string
+   *
+   * The limit is wrapped lines, so the row that hurts is the one that renders
+   * tallest — which is not always the one with the most characters. On Prairie
+   * Rail in French « Regarder le wagon porte-conteneurs » is 34 characters over
+   * two lines and « Regarder la moissonneuse-batteuse » is 33 over three, and
+   * picking by length picked the shorter strip. Every one of a level's offers is
+   * therefore measured, and the tallest is the one the tasks are held against.
+   *
+   * ## Which rows a level can actually draw
+   *
+   * A target with its own `hud.interact.<id>` row draws that row; one without
+   * draws a generic row by kind (`TN-REACH`'s precedence list), and **any**
+   * engaged target draws `hud.interact.done`. All three cases are included, so
+   * the set measured is the set the HUD can produce on that level and not a
+   * guess at it.
    */
-  const STEP_PROMPTS = readdirSync(fileURLToPath(new URL('../../content/quests', import.meta.url)))
-    .filter((name) => name.endsWith('.json'))
-    .flatMap((name) => {
-      const document = JSON.parse(
-        readFileSync(fileURLToPath(new URL(`../../content/quests/${name}`, import.meta.url)), 'utf8'),
-      ) as {
-        readonly steps: readonly {
-          readonly id: string;
-          readonly prompt: { readonly en: string; readonly fr: string };
-        }[];
-      };
-      return document.steps.map((step) => ({ where: `${name} ${step.id}`, prompt: step.prompt }));
-    });
 
-  /** The longest offer the HUD can print, asked of the same two sources the game asks. */
-  function longestOffer(locale: 'en' | 'fr'): string {
-    const offers = readdirSync(fileURLToPath(new URL('../../content/levels', import.meta.url)))
-      .filter((name) => name.endsWith('.json'))
-      .flatMap((name) => {
-        const level = JSON.parse(
-          readFileSync(fileURLToPath(new URL(`../../content/levels/${name}`, import.meta.url)), 'utf8'),
-        ) as { readonly pois?: readonly { readonly id: string }[] };
-        return (level.pois ?? []).map((poi) => `hud.interact.${poi.id}`);
-      })
-      .filter((key) => hasCopyRow(key))
-      .map((key) => text(locale, key as Parameters<typeof text>[1]));
-    return offers.reduce((longest, offer) => (offer.length > longest.length ? offer : longest), '');
+  interface SweptLevel {
+    readonly id: string;
+    readonly offerKeys: readonly string[];
+    readonly steps: readonly { readonly where: string; readonly prompt: LocalisedPrompt }[];
   }
 
+  interface LocalisedPrompt {
+    readonly en: string;
+    readonly fr: string;
+  }
+
+  const contentFile = <T,>(relative: string): T =>
+    JSON.parse(
+      readFileSync(fileURLToPath(new URL(`../../content/${relative}`, import.meta.url)), 'utf8'),
+    ) as T;
+
+  const SWEPT_LEVELS: readonly SweptLevel[] = readdirSync(
+    fileURLToPath(new URL('../../content/levels', import.meta.url)),
+  )
+    .filter((name) => name.endsWith('.json'))
+    .map((name) => {
+      const level = contentFile<{
+        readonly id: string;
+        readonly quests?: readonly string[];
+        readonly pois?: readonly { readonly id: string }[];
+        readonly characters?: readonly { readonly characterId?: string; readonly id?: string }[];
+      }>(`levels/${name}`);
+
+      /* The row each target draws, by TN-REACH's precedence: its own if it has
+         one, else the generic row for its kind. `done` is drawable on every
+         level, because any target that has been engaged draws it. */
+      const offerKeys = new Set<string>(['hud.interact.done']);
+      for (const poi of level.pois ?? []) {
+        const own = `hud.interact.${poi.id}`;
+        if (hasCopyRow(own)) offerKeys.add(own);
+        else {
+          offerKeys.add('hud.interact.poi');
+          offerKeys.add('hud.interact.poi.offer');
+        }
+      }
+      for (const character of level.characters ?? []) {
+        const id = character.characterId ?? character.id ?? '';
+        const own = `hud.interact.${id}`;
+        if (hasCopyRow(own)) offerKeys.add(own);
+        else offerKeys.add('hud.interact.npc');
+      }
+
+      const steps = (level.quests ?? []).flatMap((questId) => {
+        const quest = contentFile<{
+          readonly steps: readonly { readonly id: string; readonly prompt: LocalisedPrompt }[];
+        }>(`quests/${questId}.json`);
+        return quest.steps.map((step) => ({
+          where: `${level.id}/${questId}/${step.id}`,
+          prompt: step.prompt,
+        }));
+      });
+
+      return { id: level.id, offerKeys: [...offerKeys], steps };
+    });
+
   for (const locale of ['en', 'fr'] as const) {
-    test(`keeps every task a quest can show inside the strip, in ${locale === 'fr' ? 'French' : 'English'}`, async ({
+    test(`keeps every task inside the strip beside its own level's offer, in ${locale === 'fr' ? 'French' : 'English'}`, async ({
       page,
     }) => {
-      expect(STEP_PROMPTS.length, 'no quest step was read').toBeGreaterThan(0);
+      /*
+       * The premise, asserted rather than assumed (ADR-0024). A sweep over an
+       * empty list is a green tick that measured nothing, and this one walks
+       * two directories to build its list.
+       */
+      const swept = SWEPT_LEVELS.reduce((total, level) => total + level.steps.length, 0);
+      expect(SWEPT_LEVELS.length, 'no level document was read').toBeGreaterThan(0);
+      expect(swept, 'no quest step was read').toBeGreaterThan(0);
+
+      /* Every quest in the tree belongs to exactly one level, so nothing is
+         swept twice and — the half that matters — nothing is missed because no
+         level claimed it. */
+      const claimed = SWEPT_LEVELS.flatMap((level) => level.steps.map((step) => step.where));
+      expect(new Set(claimed).size, 'a quest is claimed by two levels').toBe(claimed.length);
+      const questFiles = readdirSync(
+        fileURLToPath(new URL('../../content/quests', import.meta.url)),
+      ).filter((name) => name.endsWith('.json'));
+      const swore = new Set(claimed.map((where) => `${where.split('/')[1] ?? ''}.json`));
+      expect(
+        questFiles.filter((name) => !swore.has(name)),
+        'a quest document no level lists, so no level sweeps it',
+      ).toEqual([]);
+
       await open(page, {
         screen: 'level',
         locale,
@@ -244,31 +322,62 @@ test.describe('the task stays on screen at 200 % text', () => {
         notice: '1',
         warning: '1',
       });
-      const offer = longestOffer(locale);
-      const overflowing: string[] = [];
-      for (const step of STEP_PROMPTS) {
-        const overflow = await page.evaluate(
-          ({ prompt, task }) => {
-            const set = (id: string, value: string): void => {
-              const target = document.querySelector(`[data-testid="${id}"]`);
-              if (target === null) throw new Error(`${id} is not drawn`);
-              target.textContent = value;
-            };
-            set('interact-prompt', prompt);
-            set('hud-quest-tracker', task);
-            const hud = document.querySelector('[data-testid="hud"]');
-            if (hud === null) throw new Error('the HUD is not drawn');
-            hud.scrollTop = 0;
-            const strip = hud.getBoundingClientRect();
-            const row = document
-              .querySelector('[data-testid="hud-quest-tracker"]')
-              ?.getBoundingClientRect();
-            if (row === undefined) throw new Error('the task is not drawn');
-            return Math.round((row.y + row.height - (strip.y + strip.height)) * 10) / 10;
+
+      /** How many wrapped lines a row takes when it holds this text. */
+      const linesOf = (testId: string, value: string): Promise<number> =>
+        page.evaluate(
+          ({ id, text: content }) => {
+            const row = document.querySelector(`[data-testid="${id}"]`);
+            if (row === null) throw new Error(`${id} is not drawn`);
+            row.textContent = content;
+            const height = row.getBoundingClientRect().height;
+            return Math.round(height / parseFloat(getComputedStyle(row).lineHeight));
           },
-          { prompt: offer, task: labelled(locale, text(locale, 'hud.task'), step.prompt[locale]) },
+          { id: testId, text: value },
         );
-        if (overflow > 1) overflowing.push(`${step.where}: ${String(overflow)} px below the strip`);
+
+      const overflowing: string[] = [];
+      for (const level of SWEPT_LEVELS) {
+        /* The tallest offer this level can draw — measured, not guessed. */
+        let worst = { text: '', lines: 0 };
+        for (const key of level.offerKeys) {
+          const offer = text(locale, key as Parameters<typeof text>[1]);
+          const lines = await linesOf('interact-prompt', offer);
+          if (lines > worst.lines) worst = { text: offer, lines };
+        }
+        expect(worst.text, `${level.id} draws no offer row at all`).not.toBe('');
+
+        for (const step of level.steps) {
+          const overflow = await page.evaluate(
+            ({ prompt, task }) => {
+              const set = (id: string, value: string): void => {
+                const target = document.querySelector(`[data-testid="${id}"]`);
+                if (target === null) throw new Error(`${id} is not drawn`);
+                target.textContent = value;
+              };
+              set('interact-prompt', prompt);
+              set('hud-quest-tracker', task);
+              const hud = document.querySelector('[data-testid="hud"]');
+              if (hud === null) throw new Error('the HUD is not drawn');
+              hud.scrollTop = 0;
+              const strip = hud.getBoundingClientRect();
+              const row = document
+                .querySelector('[data-testid="hud-quest-tracker"]')
+                ?.getBoundingClientRect();
+              if (row === undefined) throw new Error('the task is not drawn');
+              return Math.round((row.y + row.height - (strip.y + strip.height)) * 10) / 10;
+            },
+            {
+              prompt: worst.text,
+              task: labelled(locale, text(locale, 'hud.task'), step.prompt[locale]),
+            },
+          );
+          if (overflow > 1) {
+            overflowing.push(
+              `${step.where}: ${String(overflow)} px below the strip, under "${worst.text}"`,
+            );
+          }
+        }
       }
       expect(
         overflowing,

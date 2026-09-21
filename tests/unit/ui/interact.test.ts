@@ -89,7 +89,7 @@ describe('what the prompt says', () => {
     /* ADR-0039: the same rule, written for every landmark that opens a card and
        is not on the list — and written out, so French keeps its elision. */
     expect(interactPrompt('en', { id: 'town-clock', kind: 'poi' })).toBe(
-      'Look at the Halifax Town Clock',
+      'Look at the clock',
     );
     expect(interactPrompt('fr', { id: 'market-stall', kind: 'poi' })).toBe(
       "Regarder l'étal de marché",
@@ -136,7 +136,7 @@ describe('what the prompt says', () => {
      * so the generic row is what is drawn, and it has to be the right one.
      */
     const light = { id: 'peggys-point-light', kind: 'poi' as const, offersQuest: true };
-    expect(interactPrompt('en', light)).toBe('See what there is to do here');
+    expect(interactPrompt('en', light)).toBe('See what to do here');
     expect(interactPrompt('fr', light)).toBe("Voir ce qu'il y a à faire ici");
 
     for (const locale of UI_LOCALES) {
@@ -186,7 +186,7 @@ describe('what the prompt says', () => {
     ).toBe('Look at Parliament Hill');
     expect(
       interactPrompt('en', { id: 'peggys-point-light', kind: 'poi', offersQuest: true, done: true }),
-    ).toBe('Done. See this one again');
+    ).toBe('Done. See it again');
     expect(
       interactPrompt('fr', { id: 'peggys-point-light', kind: 'poi', offersQuest: true, done: true }),
     ).toBe('Terminé. Revoir');
@@ -199,10 +199,10 @@ describe('what the prompt says', () => {
      * back for nothing.
      */
     expect(interactPrompt('en', { id: 'officer', kind: 'npc', done: true })).toBe(
-      'Done. See this one again',
+      'Done. See it again',
     );
     expect(interactPrompt('en', { id: 'cn-tower', kind: 'poi', done: true })).toBe(
-      'Done. See this one again',
+      'Done. See it again',
     );
     expect(interactPrompt('fr', { id: 'parliament-hill', kind: 'poi', done: true })).toBe(
       'Terminé. Revoir',
@@ -211,7 +211,7 @@ describe('what the prompt says', () => {
        first, and "Talk to the guide" is not drawn instead of it
        (`TN-GUIDE-03`). */
     expect(interactPrompt('en', { id: 'guide', kind: 'npc', done: true })).toBe(
-      'Done. See this one again',
+      'Done. See it again',
     );
   });
 

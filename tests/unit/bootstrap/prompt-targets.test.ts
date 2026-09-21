@@ -55,7 +55,7 @@ describe('a point of interest is offered as a place, even when it offers a quest
     );
 
     /*
-     * `hud.interact.poi.offer` — "See what there is to do here" — because this
+     * `hud.interact.poi.offer` — "See what to do here" — because this
      * landmark offers the level's quest, and "Look at this place" promises a
      * card and opens a conversation (`TN-REACH`, amended 2026-09-13).
      *
@@ -134,7 +134,7 @@ describe('engaged is not the same as finished (ADR-0039)', () => {
 
   it('keeps a giver its own prompt while its quest is unfinished, and says done once it is finished', () => {
     /* The audit: right after accepting a quest, the guide's button read "Done.
-       See this one again", which reads as the task being complete. */
+       See it again", which reads as the task being complete. */
     const engaged = new Set(['officer']);
     const running = promptTargets(OTTAWA, 'en', {
       done: engaged,

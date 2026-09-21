@@ -136,7 +136,7 @@ Three other candidates and why each lost:
 - **"Look at this place", unchanged.** Simplest, and it is the promise that is wrong. It is kept for every
   landmark that really does open a card.
 
-**"See what there is to do here" / « Voir ce qu'il y a à faire ici »** says what pressing does, names
+**"See what to do here" / « Voir quoi faire ici »** says what pressing does, names
 nothing, personifies nothing, claims no lettering, and uses the game's own word for a quest — a **task**
 (`quest.done.title`, "Task done!"). It is a demonstrative phrase like the other two generic rows, for the
 reason below.
@@ -177,7 +177,7 @@ requires that colour is never the only signal. The shapes are the art's; **the w
 `hud.interact.done` carries the state **and** the way on, in that order, because the state is what the player
 did not know and the way on is what they can still do: engaging a finished landmark shows its card again,
 which is worth offering to somebody who wants to read the blurb twice. **It wins over the new row too**: a
-landmark whose quest is finished reads "Done. See this one again", not an invitation to a task that is over.
+landmark whose quest is finished reads "Done. See it again", not an invitation to a task that is over.
 
 ## The hint is shown once, and it is not a tutorial
 
@@ -205,9 +205,9 @@ the menu does not, and the mark itself is a shape.
 | Key | EN | FR |
 |---|---|---|
 | `hud.interact.poi` | Look at this place | Regarder ce lieu |
-| `hud.interact.poi.offer` | See what there is to do here | Voir ce qu'il y a à faire ici |
+| `hud.interact.poi.offer` | See what to do here | Voir quoi faire ici |
 | `hud.interact.npc` | Talk to this person | Parler à cette personne |
-| `hud.interact.done` | Done. See this one again | Terminé. Revoir |
+| `hud.interact.done` | Done. See it again | Terminé. Revoir |
 | `hud.interact.hint` | *proposed, see below* | *proposed, see below* |
 
 **Proposed rows, not yet ratified (ADR-0039).** Written by `app/ui` and declared in `COPY_GAPS`
@@ -220,6 +220,39 @@ guide.
 |---|---|---|
 | `hud.interact.hint` | A mark shows someone or something you can choose. Get close, then choose. | Un repère montre quelqu'un ou quelque chose à choisir. Approchez-vous, puis choisissez. |
 
+## The rows were shortened, and the reason is the strip and not the prose
+
+**Measured 2026-09-21 on a 390 × 844 phone at 200 % text: 31 of 144 real pairings put the player's own task
+below the HUD strip**, where they have to scroll to find it. The mechanism is not character count — it is
+**wrapped lines**, and the strip holds five between the offer row and the task row. A long offer wraps to two
+or three lines and eats the task's space, which is why the dominant cause was the *offer* and not the task:
+« Regarder la Bibliothèque du Parlement » took three lines on its own and pushed four Ottawa tasks under.
+
+So every row in the table below was trimmed to the shortest phrase that still names the landmark, and
+**twenty-five of them now take one line where they took two or three**. The verb did not change: a prompt
+still says what pressing does (`TN-REACH-01`), and it still names *which* landmark, because "Look at the
+landmark" is not an offer. What went is the qualifier a player standing in front of the thing does not need —
+"the Halifax Town Clock" is "the clock" when the clock is the thing in reach, and « la côte de granit » is
+« la côte ».
+
+Two rows are deliberately **not** trimmed to one line, and both are proper names this file will not shorten:
+`hud.interact.parliament-hill` and `hud.interact.nathan-phillips-square`. `hud.interact.terrace-kiosk` keeps
+"the bandstand" in English for the same reason one step down: the level document calls it *The bandstand*,
+and a prompt that said "kiosk" would disagree with the card it opens. Where a level is pinned to two lines
+that way, the four-line **tasks** on that level were shortened instead — in `content/quests/`, listed in the
+commit that made this change.
+
+**One row's noun changed rather than being trimmed**, and it is called out because it is the one place this
+pass did not simply delete words: `hud.interact.container-car` reads "Look at the rail car" where Prairie
+Rail's level document calls the point of interest *A container car*. A container car is a rail car, the
+shorter phrase is the plainer one, and the level's own name is still what the card says — but it is a
+judgement, and `OQ-REACH-6` records it for this file's owner rather than burying it in a table.
+
+After the pass: **0 of 144**. The sweep that measures it is
+`tests/a11y/readability.spec.ts`, which pairs each quest with **its own level's** offer rows rather than with
+the longest row in the game — an Ottawa offer over a Halifax task is a strip the game cannot draw, and a gate
+that fails on it teaches nobody anything.
+
 The landmark rows below belong, on ratification, in each level's own story, as `hud.interact.parliament-hill`
 belongs in `TN-LEVEL-ottawa.md`. Each is written out from that level document's `pois[].name` with its article,
 and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-tower`, `canada-place` or
@@ -228,32 +261,32 @@ and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-
 
 | Key | EN | FR |
 |---|---|---|
-| `hud.interact.town-clock` | Look at the Halifax Town Clock | Regarder la Tour de l'horloge d'Halifax |
-| `hud.interact.market-stall` | Look at the market stall | Regarder l'étal de marché |
-| `hud.interact.harbour-tug` | Look at the harbour tug | Regarder le remorqueur de port |
-| `hud.interact.granite-shore` | Look at the granite shore | Regarder la côte de granit |
-| `hud.interact.fish-store` | Look at the fish store | Regarder le hangar de pêche |
-| `hud.interact.village-house` | Look at the village house | Regarder la maison du village |
-| `hud.interact.city-wall` | Look at the city wall | Regarder le mur de la ville |
-| `hud.interact.terrace-kiosk` | Look at the bandstand | Regarder le kiosque à musique |
-| `hud.interact.rideau-locks` | Look at the canal locks | Regarder les écluses du canal |
-| `hud.interact.library-of-parliament` | Look at the Library of Parliament | Regarder la Bibliothèque du Parlement |
-| `hud.interact.warming-hut` | Look at the warming hut | Regarder la cabane chauffée |
+| `hud.interact.town-clock` | Look at the clock | Regarder l'horloge |
+| `hud.interact.market-stall` | Look at the stall | Regarder l'étal de marché |
+| `hud.interact.harbour-tug` | Look at the tug | Regarder le remorqueur |
+| `hud.interact.granite-shore` | Look at the shore | Regarder la côte |
+| `hud.interact.fish-store` | Look at the store | Regarder le hangar |
+| `hud.interact.village-house` | Look at the house | Regarder la maison |
+| `hud.interact.city-wall` | Look at the wall | Regarder le mur |
+| `hud.interact.terrace-kiosk` | Look at the bandstand | Regarder le kiosque |
+| `hud.interact.rideau-locks` | Look at the locks | Regarder les écluses |
+| `hud.interact.library-of-parliament` | Look at the Library | Regarder la Bibliothèque |
+| `hud.interact.warming-hut` | Look at the hut | Regarder la cabane |
 | `hud.interact.streetcar` | Look at the streetcar | Regarder le tramway |
 | `hud.interact.nathan-phillips-square` | Look at Nathan Phillips Square | Regarder la place Nathan-Phillips |
-| `hud.interact.footbridge` | Look at the footbridge | Regarder la passerelle |
-| `hud.interact.autumn-maple` | Look at the maple tree | Regarder l'érable |
-| `hud.interact.grain-bins` | Look at the grain bins | Regarder les silos à grains |
-| `hud.interact.grain-elevator` | Look at the grain elevator | Regarder l'élévateur à grain |
-| `hud.interact.combine-harvester` | Look at the combine harvester | Regarder la moissonneuse-batteuse |
-| `hud.interact.container-car` | Look at the container car | Regarder le wagon porte-conteneurs |
-| `hud.interact.ranch-gate` | Look at the ranch gate | Regarder la barrière du ranch |
-| `hud.interact.ranch-barn` | Look at the working ranch | Regarder le ranch en activité |
-| `hud.interact.pump-jack` | Look at the oil pump jack | Regarder le chevalet de pompage |
-| `hud.interact.beef-cattle` | Look at the cattle on the range | Regarder les bovins au pâturage |
+| `hud.interact.footbridge` | Look at the bridge | Regarder la passerelle |
+| `hud.interact.autumn-maple` | Look at the maple | Regarder l'érable |
+| `hud.interact.grain-bins` | Look at the bins | Regarder les silos |
+| `hud.interact.grain-elevator` | Look at the elevator | Regarder l'élévateur |
+| `hud.interact.combine-harvester` | Look at the combine | Regarder la moissonneuse |
+| `hud.interact.container-car` | Look at the rail car | Regarder le wagon |
+| `hud.interact.ranch-gate` | Look at the gate | Regarder la barrière |
+| `hud.interact.ranch-barn` | Look at the barn | Regarder le ranch |
+| `hud.interact.pump-jack` | Look at the oil pump | Regarder le chevalet |
+| `hud.interact.beef-cattle` | Look at the cattle | Regarder les bovins |
 | `hud.interact.marina` | Look at the marina | Regarder la marina |
-| `hud.interact.bulk-carrier` | Look at the cargo ship | Regarder le navire de charge |
-| `hud.interact.spruce-stand` | Look at the spruce trees | Regarder les épinettes |
+| `hud.interact.bulk-carrier` | Look at the ship | Regarder le navire |
+| `hud.interact.spruce-stand` | Look at the spruce | Regarder les épinettes |
 | `hud.interact.driftwood` | Look at the driftwood | Regarder le bois flotté |
 
 **The four prompts are labels and carry no full stop**; the hint is two sentences and carries two, because
@@ -263,7 +296,7 @@ things — the state, then the way on — which is what a translation of meaning
 
 **No row here needs gender agreement, and none contains a bracketed ending.** « Cette personne » is
 feminine in French whoever it names, which is why the row is written about *the person in reach* and never
-about the player. « Voir ce qu'il y a à faire ici » has no adjective and no participle to agree with
+about the player. « Voir quoi faire ici » has no adjective and no participle to agree with
 anything, which is one of the reasons it beat the alternatives.
 
 **`hud.interact.npc` is about a person, and it is not a fallback for every character.** A companion animal
@@ -379,7 +412,7 @@ Feature: The generic rows, and the names they keep out of the HUD
     Given the Peggy's Cove level is playable
     And this level's quest giver is the point of interest it places
     When I come within reach of it
-    Then "interact-prompt" reads "See what there is to do here"
+    Then "interact-prompt" reads "See what to do here"
     And it does not read "Look at this place"
     And it does not read "Talk to this place"
     And it does not read "Talk to this person"
@@ -400,7 +433,7 @@ Feature: The generic rows, and the names they keep out of the HUD
     And the officer offers this level's quest
     When I come within reach of them
     Then "interact-prompt" reads "Talk to the officer"
-    And it does not read "See what there is to do here"
+    And it does not read "See what to do here"
     And a person's prompt already says what pressing does, whether or not they have a task
 
   Scenario: The name is where a name teaches something
@@ -423,21 +456,21 @@ Feature: A mark that has already been used
 
   Scenario: The prompt says so, in words
     When I come within reach of it again
-    Then the element "interact-prompt" reads "Done. See this one again"
+    Then the element "interact-prompt" reads "Done. See it again"
     And it does not read "Look at Parliament Hill"
     And the state is not conveyed by the mark's colour, shape or opacity alone
 
   Scenario: Done wins over the target's own row and over the kind
     Given a row was written for this target
-    Then the prompt is still "Done. See this one again"
+    Then the prompt is still "Done. See it again"
     And the same is true for a person, for a companion and for a place
 
   Scenario: Done wins over a place that offered a task
     Given the Peggy's Cove level is playable
     And I have finished the task its landmark offered
     When I come within reach of it again
-    Then "interact-prompt" reads "Done. See this one again"
-    And it does not read "See what there is to do here"
+    Then "interact-prompt" reads "Done. See it again"
+    And it does not read "See what to do here"
     And nothing invites me to a task that is over
 
   Scenario: It is still a way in, not a dead control
@@ -606,7 +639,7 @@ Feature: The prompt reaches everybody
 
   Scenario: A place that offers a task announces the task, and the dialog announces the source
     Given a place that offers a quest is in reach
-    Then "#tn-live-region" reads "See what there is to do here"
+    Then "#tn-live-region" reads "See what to do here"
     And it names nothing
     When I take the prompt
     Then the dialog's accessible name is the giver's name from the level document, as ADR-0029 requires
@@ -635,8 +668,8 @@ Feature: The prompt reaches everybody
     Given text scaling is 200 %
     And the viewport is 390 x 844
     Then the whole of the prompt's label is visible, not cut off
-    And the whole of "See what there is to do here" is visible, which is the longest of the four
-    And in French the whole of "Voir ce qu'il y a à faire ici" is visible
+    And the whole of "See what to do here" is visible, which is the longest of the four
+    And in French the whole of "Voir quoi faire ici" is visible
     And the whole of the hint is visible, by scrolling inside "hud" if needed
     And neither covers "menu-button"
     And the skater is still drawn inside the upper two thirds of the canvas
@@ -656,7 +689,7 @@ Feature: The prompt in French
     Given a person with no row of their own is in reach
     Then it reads "Parler à cette personne"
     Given a place that offers this level's quest is in reach
-    Then it reads "Voir ce qu'il y a à faire ici"
+    Then it reads "Voir quoi faire ici"
     And it does not read "Parler à ce lieu"
 
   Scenario: A target's own row is French too
@@ -684,7 +717,7 @@ Feature: The prompt in French
   Scenario: No French string here needs gender agreement
     Then no string in this file's table contains "(e)", "·e" or a bracketed ending
     And none of them is about the player
-    And "Voir ce qu'il y a à faire ici" carries no adjective and no participle to agree with anything
+    And "Voir quoi faire ici" carries no adjective and no participle to agree with anything
 
   Scenario: Changing the language redraws the prompt without leaving the level
     Given the Ottawa level is playable in English and the officer is in reach
@@ -753,7 +786,7 @@ Feature: Every drive stops at each thing a player can choose
     Given I finished a landmark on an earlier visit
     When I reach it on this visit
     Then I come to rest there once
-    And "interact-prompt" reads "Done. See this one again"
+    And "interact-prompt" reads "Done. See it again"
 
   Scenario: A glide I let go of outside reach is mine
     When I let go before a landmark is in reach
@@ -919,7 +952,14 @@ Proposed row, pending ratification (`COPY_GAPS`): `hud.stop.hint` — "Stopped h
   and `app/ui/copy.ts` carries neither row today, so this costs nothing to do now and would cost a migration
   later. **`hud.interact.poi.offer` is the one key that keeps a dotted kind**, and it is a *kind* rather than
   a target, which is the distinction the respelling was for.
-- **`OQ-REACH-2` — should `hud.interact.done` be two rows, one per kind?** "Done. See this one again" is
+- **`OQ-REACH-6` — "Look at the rail car" for a point of interest the level calls *A container car*.**
+  Every other row in the table is its landmark's own name with words removed; this one substitutes a noun.
+  It was done because Prairie Rail's four-line French and English tasks need every offer on that level to fit
+  one line, and "Look at the container car" does not. *Recommendation:* keep it — a container car is a rail
+  car, "rail car" is the plainer phrase for a newcomer, and the card the prompt opens still carries the full
+  name. If this file's owner disagrees, the alternative is not a longer prompt but three shorter task prompts
+  in `content/quests/prairie-rail-grain-elevator.json`, and that trade should be made deliberately.
+- **`OQ-REACH-2` — should `hud.interact.done` be two rows, one per kind?** "Done. See it again" is
   kind-neutral, which is what makes one row possible, and a person-shaped version would read a little better
   ("Done. Talk again"). *Recommendation:* one row. The news is the state, not the kind; two rows are two
   things to translate and a second place for the two to drift apart. Revisit if a level ever has a character

@@ -956,7 +956,7 @@ describe('the copy table', () => {
      * lettering `make verify-art` refuses to draw, and "Stop here and read" is
      * the quest tracker's own step prompt said twice.
      */
-    expect(text('en', 'hud.interact.poi.offer')).toBe('See what there is to do here');
+    expect(text('en', 'hud.interact.poi.offer')).toBe('See what to do here');
     expect(text('fr', 'hud.interact.poi.offer')).toBe("Voir ce qu'il y a à faire ici");
 
     for (const locale of UI_LOCALES) {

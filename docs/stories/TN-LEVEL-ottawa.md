@@ -111,7 +111,7 @@ an empty heading are all defects, and `TN-QUEST-08` fails on them.
 **The two `hud.interact.*` rows above are per-target rows, and this level is allowed to write them** because
 neither name is on `TN-NAMES-naming-real-places.md`'s list. `TN-REACH-what-is-in-reach.md` owns the generic
 rows a level without them draws, and owns the rule that decides which is used: a target the player has
-already finished with says "Done. See this one again", whatever this table carries. The keys are
+already finished with says "Done. See it again", whatever this table carries. The keys are
 `hud.interact.<the id the level document gives the target>`, which is why the landmark's row is
 `hud.interact.parliament-hill` and not `hud.interact.poi.parliamentHill`.
 

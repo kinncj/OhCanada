@@ -238,7 +238,7 @@
       ],
       "prompt": {
         "en": "Answer 4 questions about how life changed after the war",
-        "fr": "Répondez à 4 questions sur les changements d'après-guerre"
+        "fr": "Répondez à 4 questions sur l'après-guerre"
       }
     },
     {
@@ -307,7 +307,7 @@
       ],
       "prompt": {
         "en": "Answer 4 questions about the programs that support people here",
-        "fr": "Répondez à 4 questions sur les programmes de soutien"
+        "fr": "Répondez à 4 questions sur les programmes sociaux"
       }
     },
     {
@@ -316,7 +316,7 @@
       "targetId": "combine-harvester",
       "prompt": {
         "en": "Stop by the combine harvester",
-        "fr": "Arrêtez-vous près de la moissonneuse-batteuse"
+        "fr": "Arrêtez-vous à la moissonneuse"
       },
       "dialogue": [
         {
@@ -373,8 +373,8 @@
         "mc-08-postwar-trade-partner"
       ],
       "prompt": {
-        "en": "Answer 2 questions about trade after the Depression",
-        "fr": "Répondez à 2 questions sur le commerce après la Dépression"
+        "en": "Answer 2 questions about trade and the Depression",
+        "fr": "Répondez à 2 questions sur le commerce et la Crise"
       }
     },
     {
@@ -448,7 +448,7 @@
       ],
       "prompt": {
         "en": "Answer 5 questions about Canadian discoveries and inventions",
-        "fr": "Répondez à 5 questions sur les découvertes et inventions"
+        "fr": "Répondez à 5 questions sur les découvertes d'ici"
       }
     }
   ]

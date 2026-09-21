@@ -204,8 +204,8 @@ any scale, including a silhouette**. Four things follow for this directory:
   type. `CLAUDE.md`'s own traversal rule already said otherwise — *"tap NPC or POI to engage"*.
 - **Six of the ten built levels now have a quest and four do not**, so `OQ-DONE-1`'s instance count drops
   from six levels to four. The defect is unchanged; two of its causes are gone.
-- **`TN-REACH` gains one generic row**, `hud.interact.poi.offer` — "See what there is to do here" / « Voir ce
-  qu'il y a à faire ici » — because "Look at this place" promises a card and opens a conversation, and this
+- **`TN-REACH` gains one generic row**, `hud.interact.poi.offer` — "See what to do here" / « Voir quoi
+  faire ici » — because "Look at this place" promises a card and opens a conversation, and this
   directory's rule is that the prompt says what pressing will do. **"Talk to this place" was refused**: a
   landmark giver is the named source of words and does not acquire a mouth, and a prompt that personified it
   would do one screen earlier exactly what ADR-0029 §5's voice rule exists to prevent.
