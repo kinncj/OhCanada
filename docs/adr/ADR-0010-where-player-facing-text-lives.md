@@ -133,6 +133,23 @@ would have to agree with the first.
     `reminderLine`, `afterLine`, `doneLine` or `steps[].dialogue[]` whose `speaker` is not a character the
     level places fails the build, naming the quest, the field and the speaker (`TN-DIALOGUE-03`), proved by
     a failing fixture.
+    **DISCHARGED 2026-09-20** — the three lines are `declinedLine`, `reminderLine` and `afterLine` in
+    `content/quests/ottawa-parliament-hill.json`, each `speaker: "officer"`, and no copy table holds them any
+    more: `app/ui/copy.ts` carries a comment where the rows were, naming `officer.greet`, `officer.offer`,
+    `officer.declined`, `officer.reminder` and `officer.afterStamp` as **not** rows there, because every word
+    the officer says is the quest document's.
+
+    **Two departures from this marker's letter, recorded rather than smoothed over.** (1) `afterLine` ships
+    `factual: true`, not the `factual: false` assumed here. It tells what the federal and provincial
+    governments each look after, which is a fact about Canada, so it carries a *Discover Canada* p. 54 source
+    and a verified grant instead of the flavour exemption. `declinedLine` and `reminderLine` are
+    `factual: false` as written. (2) The speaker check is **not** in `scripts/validate-content.mjs` — that
+    file has no speaker rule. It is `tests/unit/contracts/a-quest-giver-is-placed-on-its-level.test.ts`, which
+    resolves every `declinedLine`, `reminderLine`, `afterLine`, `doneLine` and `steps[].dialogue[]` speaker to
+    **exactly one** thing the level places, failing apart on a dangling giver and an ambiguous one, and
+    refusing a character speaker with no `content/characters/<id>.json`. That file's own header records that
+    it is holding this obligation. A reader sent to `validate-content.mjs` by the sentence above finds
+    nothing, which is why the actual file is named here.
 - **The rule a gate cannot express, stated so its silence is not read as compliance:** nothing mechanical can
   tell whether a sentence in a locale bundle states a fact about Canada. `verify-content` can be pointed at
   every `FactClaim` in the content documents and check each one; it cannot notice a factual claim that was

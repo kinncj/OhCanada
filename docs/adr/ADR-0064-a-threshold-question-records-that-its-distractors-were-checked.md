@@ -254,6 +254,20 @@ been.
   ("two thirds" is at least half), `sym-32` ("65 or over" is over 55) and `gov-39` ("more than half of the
   votes" is the most votes). `gov-38` is a near miss that turns on the word "Only" and should be recorded,
   not rejected, if that reading holds. Do not edit any question's text: that is the author's, per ADR-0003.
+  **DISCHARGED 2026-09-20** — `make verify-content` prints "ADR-0064 threshold questions — 12 question(s)
+  whose source states a threshold and whose options are comparable; 12 recorded distractorsNotEntailed, 0 did
+  NOT". Each of the twelve carries `verification.distractorsNotEntailed: true`; none was returned to the
+  author. This closes the content-verifier's half only — the infra marker below (rule B10 from `note()` to
+  `fail()`) and the architect's re-measurement are untouched and still open.
+
+  **The three this marker expected to be rejected were recorded instead**, which is the verifier's judgement
+  and not an oversight, and is written down so it can be re-opened on the record. `gov-51`, `sym-32` and
+  `gov-39` are all `status: "verified"` with the flag set, as is `gov-38`, the near miss this marker predicted
+  would hold. The five questions carrying `status: "rejected"` in `content/questions/` today are a different
+  five, rejected for unrelated reasons. The marker asked for a record **or** a rejection on each of the twelve
+  and has one on each; a reader arriving expecting three rejections will not find them. Separately and as
+  reporting only, `verify-content` still names two options in `hist-65-boer-war-volunteers.json` that state a
+  bound stricter than the answer's and are true whenever it is.
 
 - **OBLIGATION due=2026-12-20 owner=infra** — once no question `verify-content` names is missing its record,
   change rule B10 in `scripts/verify-content.mjs` from `note()` to `fail()` and delete the staging paragraph

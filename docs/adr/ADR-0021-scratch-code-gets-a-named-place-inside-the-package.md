@@ -42,6 +42,12 @@ Both files are infra's, so this ADR specifies rather than implements.
 - **OBLIGATION due=2026-10-08 owner=infra** — add `scratch/` to `.gitignore` and to `eslint.config.js`'s
   `ignores`, and create `scratch/.gitkeep` so the directory exists in a fresh clone. Until it does, this ADR
   describes a place that is not there and the next probe goes to the root again.
+  **DISCHARGED 2026-09-20** — `7ed9ef5`, the same commit that filed this ADR, carried all three. `.gitignore`
+  holds `/scratch/*` with `!/scratch/.gitkeep` beneath it; `eslint.config.js`'s `ignores` holds `'scratch/**'`
+  under a comment naming this ADR and why it is a directory rather than a filename pattern; `scratch/.gitkeep`
+  is tracked, so the directory is in `ls` on a fresh clone and its existence is the convention, as the
+  Decision asks. The work was written and met in one change, and this marker read as open only because
+  nothing struck it.
 
 ## Alternatives considered
 

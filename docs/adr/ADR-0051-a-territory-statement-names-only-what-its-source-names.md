@@ -338,11 +338,25 @@ statements "come unbound … until a verifier re-grants them".
   conclude from the list's heading. The two documents no longer say different things, and the ruling's cost
   stays visible in both. Recorded in full below under "The product owner's rulings, 2026-09-17".
 
-- **OBLIGATION due=2026-10-16 owner=content** — rewrite the ten territory statements to *Discover Canada*
+- ~~**OBLIGATION due=2026-10-16 owner=content** — rewrite the ten territory statements to *Discover Canada*
   under the shape this ADR sets out, and have a verifier re-grant them. Until that lands, five territorial
   grants are unbound and `make verify-content` fails on them by design (A4). If the date arrives with the
   work undone, re-date it with what was tried (ADR-0009) rather than letting a red gate become the normal
-  state — a failing gate that everybody has learned to ignore is worse than no gate.
+  state — a failing gate that everybody has learned to ignore is worse than no gate.~~
+  **DISCHARGED 2026-09-20** — `f045b5a` rewrote the ten statements from *Discover Canada*, and the verifier
+  granted them in its own commits, as ADR-0003 requires: `b111987` granted seven and refused three, `028feb1`
+  granted the last three. Four rounds of correction followed, each author commit paired with its own re-grant
+  — `6428241` dropped place names the guide does not print, `5658316` and `e9c4fc2` re-worded and re-verified
+  four locatives, `1bc2ffd` re-granted after the publisher split and `c73fb2b` after the French title fix. All
+  ten now cite `discover-canada` — eight *Canada's Regions*, Québec City and Winnipeg *Canada's History* —
+  and all ten carry `verification.status: "verified"`.
+
+  **The struck sentence above had stopped being true, and that is why this strike matters more than the
+  tidiness of the list.** `make verify-content` exits OK: 45 claims in `content/levels/` all verified, 904
+  grants bound to their own claim at HEAD under A4, and the three names in `nations` all found in the source
+  they cite. No territorial grant is unbound and nothing fails by design. A document that tells a reader to
+  expect a red gate which is in fact green teaches them to discount red gates — the exact habit the last
+  sentence of this marker was written to prevent.
 
 ## The product owner's rulings, 2026-09-17
 

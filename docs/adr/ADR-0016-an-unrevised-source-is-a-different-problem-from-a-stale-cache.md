@@ -172,6 +172,13 @@ Two details were settled by a failing fixture rather than by preference, which i
     `upstream: "does-not-revise"` with a `bannedFromAnswers` list on the flags it covers. Until that lands,
     this ADR describes a finding the register does not record and the answer gate has no terms to search
     for — the schema is armed and nothing has armed it.
+    **DISCHARGED 2026-09-20** — `content/sources/discover-canada.json` carries six `liveChecks` entries, and
+    the first is the 2026-09-08 check that produced this ADR: both chapters on the one entry — *How Canadians
+    Govern Themselves* (`Date modified` 2017-12-21) and *Federal Elections* (2025-08-08) — each with its URL,
+    its `agreesWithCache`, six compared claims, and `finding: "source-unrevised"` on the check. Thirteen
+    `knownStaleness` flags now carry `upstream: "does-not-revise"` with a `bannedFromAnswers` list. The answer
+    gate has terms and is firing: `make verify-content` prints "ADR-0016 §3 banned terms — 202 claim(s) sat
+    under a staleness flag naming 4166 term(s) to search for; 0 violation(s)". Something has armed it.
 - **A term list that over-fires is a build failure, and that is the accepted direction.** The fix is to
   refine the entry in the register, not to argue with the gate. A list that under-fires ships a wrong fact to
   somebody studying for a citizenship test.

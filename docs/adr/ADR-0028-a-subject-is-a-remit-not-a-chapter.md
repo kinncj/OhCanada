@@ -295,6 +295,21 @@ half of it.
 - **OBLIGATION due=2026-10-09 owner=content-verifier** — live-check *Canada's Regions* against canada.ca and
   record the finding in `content/sources/discover-canada.json#/liveChecks`, with page-grain `knownStaleness`
   entries for every point-in-time fact found, before any `economy` question cites that chapter.
+  **DISCHARGED 2026-09-20** — `content/sources/discover-canada.json#/liveChecks` carries the *Canada's
+  Regions* check: `checkedAt: "2026-09-10"`, `checkedBy: "content-verifier"`, 22 claims compared against a
+  page whose `Date modified` is 2025-05-12, `agreesWithCache: true`, `finding: "source-unrevised"`. Four
+  page-grain `knownStaleness` flags followed it, over pages 94 and 98–104, banning 42 terms between them: the
+  2011-era population counts printed in the present tense, the census-era output shares and point-in-time
+  rankings, page 94 dating the capital to "the great-great-grandmother of Queen Elizabeth II", and page 104's
+  19-member Nunavut Legislative Assembly.
+
+  **It landed out of order, which is recorded here rather than dropped.** "Before any `economy` question cites
+  that chapter" was not kept. `b9418a2` committed fourteen *Canada's Regions* questions — `eco-20` to
+  `eco-33`, pages 96–103 — at 21:15:11 on 2026-09-09, and the live check landed in `f3b2026` at 21:30:04, a
+  little under fifteen minutes later. The other fifteen (`eco-34` to `eco-48`, in `77e0752`) were authored on
+  2026-09-13, after both the check and its flags existed. The work is done and the corpus is clean —
+  `verify-content` reports 0 banned-term violations — but the precondition was met backwards, and a reader
+  comparing those two timestamps should find it said here rather than have to discover it.
 
 **The `government`/`elections` overlap is now recorded rather than tacit.** Eleven questions on pages 60–69
 stay where they are. They are re-described by this ADR, not moved: `government`'s remit includes how the
