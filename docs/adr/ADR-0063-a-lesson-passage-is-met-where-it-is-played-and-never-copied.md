@@ -448,12 +448,13 @@ the contract only.
   against an 844 px viewport. `TN-READ`'s `OQ-READ-2` records the one rough edge this could not fix from a
   screen — the shared `focusAndReveal` shows such a paragraph's tail on the scan's wrap, and changing that is
   a change to every screen in the game.
-  **What this does NOT discharge, and it is the reason the reader is still unreachable.** §6 assigns
-  `chapters()` / `lessons(chapter)` and the per-chapter lazy catalogue to "the implementer in the change that
-  first calls them", and **that change has not been made**: there is no port method, no lesson catalogue in
-  `app/adapters/content`, and nothing in `app/bootstrap` resolves a `{ lesson, passage }` pair. The screen is
-  written against prose precisely so that route can be built without touching it — but until it is built,
-  **passages reachable by playing is 0**, and this obligation's closure is not a claim otherwise.
+  **What this did NOT discharge, and it was the reason the reader was unreachable — closed 2026-09-21.** §6
+  assigns `chapters()` / `lessons(chapter)` and the per-chapter lazy catalogue to "the implementer in the
+  change that first calls them", and that change is the content obligation below: the port methods,
+  `app/adapters/content/lesson-catalog.ts` + `bundled-lesson-library.ts`,
+  `app/application/content/lesson-passages.ts` and `app/bootstrap/lesson-reading.ts` all landed with the
+  first authored step. The screen was written against prose precisely so that route could be built without
+  touching it, and it was: **not one line of `app/ui/lesson-reader.ts` changed.**
 
 - **OBLIGATION due=2027-02-20 owner=content** — author the first `read` step on **one** level as a proving
   run, choosing passages by relevance to where the player is standing, and report what it cost and how it
@@ -461,6 +462,32 @@ the contract only.
   material: ADR-0028's live-check of *Canada's Regions* is still open, and slice 10's Indigenous content
   review is unobtainable. `toronto` is the recommendation — 22 passages available, and the highest newly
   taught count (4) of any level.
+  **DISCHARGED 2026-09-21 — on `ottawa`, not `toronto`, and the reason is structural rather than editorial.**
+  `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks each level's POIs and
+  characters **once in x order** and advances **at most one non-`answer` step per stop** (plus the `answer`
+  step immediately after it, at the same stop). A `read` step is a non-`answer` step, so it needs a stop of
+  its own or a stop it shares with a following `answer` step — it may **not** share one with a `visit`.
+  Measured over the ten levels: seven place exactly as many non-`answer` steps as they have stops and have no
+  room at all, `toronto` among them (4 stops, 4 non-`answer` steps). The three with a spare stop —
+  `peggys-cove`, `ottawa`, `the-north` — all spend it the same way: a landmark standing **before** the quest
+  giver, which no step can use because a quest advances only once it is accepted. `the-north` is excluded by
+  this ADR. So the choice was `ottawa` (32 passages available in its empirical remit, against
+  `peggys-cove`'s 27), and the one number that moved is the **officer's x, 2400 -> 1350**, putting the giver
+  before the first landmark exactly as seven of the ten levels already do and freeing `rideau-locks` to read.
+  The ground height under the officer is 1240 at both, so nothing about the placement changed but the order
+  the player meets things in.
+  **What it reads.** `govern-03-the-royal-family-and-the-legislatures`, all three passages, at the canal
+  locks — whose own blurb already tells the Sovereign as a symbol of Canadian sovereignty (p. 57), so the
+  reader continues the plaque's own page rather than opening a second subject. **69 words EN / 84 FR**,
+  inside ADR-0065 §3.3's four-passages-and-120-words-per-stop ceiling.
+  **What it cost:** one integer in `content/levels/ottawa.json`, one step and two ungranted flavour
+  sentences in `content/quests/ottawa-parliament-hill.json`. **No `verification` block was written, edited or
+  read by an author** — every one of the three passages was already granted, which is the whole point of
+  §2 (ADR-0003 is not re-run to point at granted material).
+  **How it reads at phone width:** measured in Chromium at 390x844, 100 % text, by walking the level from
+  the title screen: the title, three passages and `Close` all fit **without scrolling**, and the player meets
+  the officer, is told the route, reads at the locks and carries on to the Library with the tracker correct
+  at every step. Passages reachable by playing: **0 -> 3**.
 
 - **OBLIGATION due=2027-03-20 owner=architect** — re-measure Context's four tables over the tree as it then
   stands and record the result in an amendment: passages reachable by playing, passages sharing a proposition

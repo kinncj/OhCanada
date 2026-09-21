@@ -15,12 +15,21 @@ walking up to something; `TN-QUEST-parliament-hill.md` owns what a quest step is
 owns the guide character. This file owns **only the surface**, and it owns no words: every sentence a player
 reads here is authored in `content/lessons/**`, verified there, and named by a `read` step.
 
-## What is built, and what is not
+## What is built, and how it is reached
 
-`app/ui/lesson-reader.ts` is the surface. **No quest ships a `read` step yet** — authoring the first one is
-content's obligation, dated 2027-02-20, `toronto` recommended — so on today's build the reader is reachable
-from nothing. **Passages reachable by playing is still 0.** Anyone quoting this file as having changed that
-number is quoting a surface, not a measurement, which is the same warning ADR-0063's consequences carry.
+`app/ui/lesson-reader.ts` is the surface, and since 2026-09-21 a player can get to it.
+`content/quests/ottawa-parliament-hill.json` reads three passages of
+`govern-03-the-royal-family-and-the-legislatures` at the canal locks — the stop whose own card already tells
+the Sovereign as a symbol of Canadian sovereignty, so the reader continues the plaque's page. **Passages
+reachable by playing: 3**, out of 302 authored. That is a measurement of one authored step, not of the
+surface: the surface can carry any step, and what makes the number bigger is more steps, which is ADR-0065
+§3.2's point that a level's reading is bounded by relevance rather than by room.
+
+**The stop a `read` step may stand on is not a free choice**, and it is worth knowing before authoring the
+second one. `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks a level's stops
+once in x order and advances at most one non-`answer` step per stop. So a `read` step needs a stop to itself,
+or a stop it shares with the `answer` step immediately after it — **it cannot share one with a `visit`** —
+and it has to stand after the quest's giver, because a quest advances only once it has been accepted.
 
 ## The words are content, and they arrive already chosen
 
@@ -425,8 +434,9 @@ Feature: The reader refuses rather than draws a blank
   *Recommendation:* no, and firmly. ADR-0063 says whether reading happened is not checkable, and a count of
   passages read is a score for a thing the game promised not to score. This is recorded as a question only
   because "how many have I read" is the first feature anybody will ask for.
-- **`OQ-READ-4` — who names the stop?** `targetId` is required on a `read` step and on a level with no
-  figure that something is a plaque (ADR-0029). What the HUD says when a plaque carrying a `read` step is
-  in reach is `TN-REACH`'s row to write, not this file's, and no row exists yet. *Recommendation:* route to
-  `TN-REACH` with the first authored step, so the words are written against a real plaque rather than an
-  imagined one.
+- ~~**`OQ-READ-4` — who names the stop?**~~ **Answered by the first authored step, and no row was needed.**
+  The locks at Ottawa are a landmark with a card of their own, so the HUD already offers them — "Look at the
+  canal locks" — and the tracker already says what to do, from the step's own `prompt`: "Stop and read at the
+  canal locks". Measured in the browser, walking the level. A row would only be owed on a stop that is
+  **nothing but** a plaque, with no card and no `visit` behind it; there is no such stop today, and the day
+  one is drawn it is `TN-REACH`'s row and not this file's.

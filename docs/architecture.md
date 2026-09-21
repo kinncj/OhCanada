@@ -622,40 +622,57 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   narrow the draw with an optional `questionPool`. The quest says *how many* and *from where*; the FSRS
   scheduler in the domain says *which*, from the player's own review state. A quest naming the ids outright
   would make the scheduler decorative; a scheduler ignoring the quest would make the step unbounded.
-- **Reading a lesson (ADR-0061).** `content/schemas/lesson.schema.json` exists and `LessonDocument` /
-  `LessonPassage` mirror it in `content-repository.ts`, because ADR-0007 binds a schema to a type the moment
-  the schema is written. **The capability is deliberately not written.** ADR-0061 §8 names it — list the
-  chapters, load one chapter's lessons — and ADR-0008 says a port exists when something calls it: there is no
-  Learn screen, no lesson catalogue and no task scheduled, so `chapters()` and `lessons(chapter)` would be
-  dead members in a *consumed* file, where the marker gate cannot see them and ADR-0015 says to prune rather
-  than mark. What the first implementer adds, so it is picked up on purpose: two `Result`-returning methods on
-  `ContentRepository` (never a second content port — an adapter that reads bundled JSON already exists), a
-  catalogue in `app/adapters/content` built from one `import.meta.glob` **per chapter, lazily imported**, so a
-  chapter is a chunk fetched on first open and the ≤ 8 MB initial payload does not move; the
-  shippable-passage filter in `app/application`, never in the screen, since only `verified` claims for the
-  current `sourceHash` are readable and a lesson that loses a passage to quarantine renders without it,
-  silently; and the screen in `app/ui`, DOM only. `app/domain` gets nothing: a lesson is data, not behaviour.
-  **There are now two readers of that one catalogue, and it is deliberately one catalogue (ADR-0063).** Learn
-  reads a chapter end to end; a `read` quest step reads a handful of passages named by
-  `questStep.passages[]`, on the path, while the level is being played. Both resolve a
-  `{ lesson, passage }` pair against the same `import.meta.glob` catalogue and both apply the same
-  application-side shippable-passage filter, so a passage quarantined by ADR-0016's clock disappears from
-  the level and from Learn in one change. The second reader is what makes `lessons(chapter)` worth writing:
-  until ADR-0063 the capability had no caller at all, which is why ADR-0008 kept it unwritten.
-  **The screen half of the second reader landed 2026-09-21** — `app/ui/lesson-reader.ts`,
-  `docs/stories/TN-READ-reading-a-passage-at-a-stop.md` — and **the rest of this seam is still unwritten**,
-  which is why no player can reach it. The screen is written against a view of already-resolved,
-  already-filtered, already-localised prose: `LessonReaderView` is a title and a list of `{ id, text }` and
-  has **no field** a `{ lesson, passage }` pair, a `fact` block or a `LocalizedText` fits into. That shape is
-  the seam stated from the consumer's end, and it is held by
-  `tests/unit/contracts/a-read-step-reaches-a-reader.test.ts`, which walks a `read` step through the loader,
-  the resolver and the readable-passage rule and then reads the screen's source to prove it did none of that
-  itself. What the first implementer of the catalogue therefore has to produce is exactly that view — nothing
-  more, and nothing about verification. **What the runtime may not do is reuse `scripts/lib/lesson-passages.mjs`
-  for it:** that module is the infra gate's resolver and readable-passage rule, it is tooling, and the
-  `no-tooling-in-runtime` dependency rule keeps `scripts/` out of the bundle. So the application-side filter
-  §6 requires is a *second implementation of one rule*, and whoever writes it owns keeping the two in step —
-  a cost worth stating before it is paid rather than after.
+- ~~**Reading a lesson (ADR-0061).**~~ **Closed 2026-09-21 by the first authored `read` step.** The seam
+  this bullet described — "what the first implementer adds, so it is picked up on purpose" — was built in one
+  change, against a real caller, exactly as ADR-0008 asks. What exists now, named so the next reader does not
+  have to rediscover it:
+  - **The port.** `ContentRepository.chapters()` and `.lessons(chapter)`, and `LessonLibrary` is the `Pick`
+    of the two (never a second content port — an adapter that reads bundled JSON already exists).
+    `chapters()` answers a `LessonChapter[]` — the directory each chapter lives under and the lesson ids in
+    it — and **fetches nothing**, because a `{ lesson, passage }` reference names a lesson and a chunk is a
+    chapter, so something has to say which single chunk is worth downloading.
+  - **The catalogue.** `app/adapters/content/lesson-catalog.ts` + `bundled-lesson-library.ts`: one
+    `import.meta.glob` over `content/lessons/*/*.json`, **lazy**, indexed by chapter off the module path, so
+    a chapter is a chunk fetched on first open and the ≤ 8 MB initial payload does not move. The index is a
+    **list of chapters holding a list of ids and never a map keyed by lesson id**, for the reason
+    `scripts/lib/lesson-passages.mjs` gives at length: a map keeps one of two documents that share an id and
+    the ambiguity the resolver exists to catch would be gone before anything looked for it.
+  - **The filter, in `app/application`, never in a screen.** `app/application/content/lesson-passages.ts`
+    resolves a pair to exactly one passage or a named failure (`dangling`, `ambiguous`, `malformed`) and
+    drops what a verifier will not let a player read, so the level reader and the Learn reader cannot
+    disagree about what is readable.
+  - **The wiring.** `app/bootstrap/lesson-reading.ts` (index -> one chapter -> resolve -> filter -> one
+    language) and `app/bootstrap/main.ts`, which opens `app/ui/lesson-reader.ts` between a landmark's own
+    card and the question after it. `app/domain` gets nothing: a lesson is data, not behaviour.
+
+  **One catalogue, two readers, and that is the load-bearing part (ADR-0063 §6).** Learn will read a chapter
+  end to end; a `read` quest step reads a handful of passages named by `questStep.passages[]`, on the path,
+  while the level is being played. Both go through the same catalogue and the same filter, so a passage
+  ADR-0016's clock quarantines disappears from the level and from Learn in one edit.
+
+  **The screen still takes prose and nothing else.** `LessonReaderView` is a title and a list of
+  `{ id, text }` with **no field** a `{ lesson, passage }` pair, a `fact` block or a `LocalizedText` fits
+  into, held by `tests/unit/contracts/a-read-step-reaches-a-reader.test.ts`, which walks the route and then
+  reads the screen's source to prove it did none of it itself.
+
+  **The cost this seam warned about was paid, and it is watched.** The runtime may not reuse
+  `scripts/lib/lesson-passages.mjs` — that module is tooling and `no-tooling-in-runtime` keeps `scripts/` out
+  of the bundle — so the resolver and the readable-passage rule are written twice, once for CI over
+  `content/**` and once for the browser.
+  `tests/unit/contracts/a-passage-is-readable-by-one-rule.test.ts` is what the second writer owes the first:
+  it drives both over one matrix of statuses, hashes, evidence and `factual` flags **and over all 302 shipped
+  passages**, and fails on any disagreement about `readable`, `why` or the resolution verdict. The refusal
+  vocabularies are the same five words on purpose, so a drift shows up as a different word rather than as a
+  different sentence.
+
+  **ADR-0003's three conditions are NOT the thing written twice, and that was deliberate.** The application
+  filter takes an `AdjudicateClaim` and the composition root supplies one
+  (`app/bootstrap/verified-passages.ts` -> `app/adapters/phaser/verified-claim.ts`), because
+  `one-rule-decides-what-may-be-drawn.test.ts` allows no third copy of that rule in `app/` and
+  `app/application` may import neither the adapter's copy nor an adapter at all. One rule, one wiring, and
+  the filter still lives where §6 puts it. The one condition the filter does own is the one ADR-0003 does not
+  state: a lesson passage with `factual: false` is refused (ADR-0061 §9.3), where the same flag exempts a
+  greeting in an NPC's mouth.
 - **Device tiers.** Which tier gets Rive and which gets the sprite atlas is a bootstrap policy; the
   detection rule is not written yet, and no port needs to know it.
 - **Save migration.** `SaveCodec` declares `version` and `minSupportedVersion`. The first migration is
