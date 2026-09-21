@@ -1,10 +1,10 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-import { labelled, text } from '../../app/ui/copy';
+import { hasCopyRow, labelled, text } from '../../app/ui/copy';
 import { HIGHLIGHT_ATTRIBUTE } from '../../app/ui/single-switch';
 
 import { HARNESS_URL } from './playwright.config';
@@ -181,6 +181,99 @@ test.describe('the task stays on screen at 200 % text', () => {
           `${testId} ends below the strip, where a player has to scroll to find it`,
         ).toBeLessThanOrEqual(bottom + 1);
       }
+    });
+  }
+
+  /* -------------------------------------------- every task, not just one */
+
+  /*
+   * The strip above, swept across every task the game can put in it.
+   *
+   * The audit's case measures one line: Halifax's second step. The task row is
+   * the only row in the strip whose words come from `content/` rather than from
+   * `copy.ts`, so it is the one row a content change can lengthen without
+   * anybody opening this file — and widening the question pools did exactly
+   * that. Twenty-five step prompts grew past the strip at 200 % text and only
+   * the one Halifax happens to hold was measured.
+   *
+   * The offer row is pinned to the longest one any level can show, read from
+   * the level documents rather than typed here, so what is measured is the
+   * worst strip the game can draw and not the strip Halifax happens to draw.
+   */
+  const STEP_PROMPTS = readdirSync(fileURLToPath(new URL('../../content/quests', import.meta.url)))
+    .filter((name) => name.endsWith('.json'))
+    .flatMap((name) => {
+      const document = JSON.parse(
+        readFileSync(fileURLToPath(new URL(`../../content/quests/${name}`, import.meta.url)), 'utf8'),
+      ) as {
+        readonly steps: readonly {
+          readonly id: string;
+          readonly prompt: { readonly en: string; readonly fr: string };
+        }[];
+      };
+      return document.steps.map((step) => ({ where: `${name} ${step.id}`, prompt: step.prompt }));
+    });
+
+  /** The longest offer the HUD can print, asked of the same two sources the game asks. */
+  function longestOffer(locale: 'en' | 'fr'): string {
+    const offers = readdirSync(fileURLToPath(new URL('../../content/levels', import.meta.url)))
+      .filter((name) => name.endsWith('.json'))
+      .flatMap((name) => {
+        const level = JSON.parse(
+          readFileSync(fileURLToPath(new URL(`../../content/levels/${name}`, import.meta.url)), 'utf8'),
+        ) as { readonly pois?: readonly { readonly id: string }[] };
+        return (level.pois ?? []).map((poi) => `hud.interact.${poi.id}`);
+      })
+      .filter((key) => hasCopyRow(key))
+      .map((key) => text(locale, key as Parameters<typeof text>[1]));
+    return offers.reduce((longest, offer) => (offer.length > longest.length ? offer : longest), '');
+  }
+
+  for (const locale of ['en', 'fr'] as const) {
+    test(`keeps every task a quest can show inside the strip, in ${locale === 'fr' ? 'French' : 'English'}`, async ({
+      page,
+    }) => {
+      expect(STEP_PROMPTS.length, 'no quest step was read').toBeGreaterThan(0);
+      await open(page, {
+        screen: 'level',
+        locale,
+        textScale: '200',
+        task: '1',
+        prompt: '1',
+        hint: '1',
+        notice: '1',
+        warning: '1',
+      });
+      const offer = longestOffer(locale);
+      const overflowing: string[] = [];
+      for (const step of STEP_PROMPTS) {
+        const overflow = await page.evaluate(
+          ({ prompt, task }) => {
+            const set = (id: string, value: string): void => {
+              const target = document.querySelector(`[data-testid="${id}"]`);
+              if (target === null) throw new Error(`${id} is not drawn`);
+              target.textContent = value;
+            };
+            set('interact-prompt', prompt);
+            set('hud-quest-tracker', task);
+            const hud = document.querySelector('[data-testid="hud"]');
+            if (hud === null) throw new Error('the HUD is not drawn');
+            hud.scrollTop = 0;
+            const strip = hud.getBoundingClientRect();
+            const row = document
+              .querySelector('[data-testid="hud-quest-tracker"]')
+              ?.getBoundingClientRect();
+            if (row === undefined) throw new Error('the task is not drawn');
+            return Math.round((row.y + row.height - (strip.y + strip.height)) * 10) / 10;
+          },
+          { prompt: offer, task: labelled(locale, text(locale, 'hud.task'), step.prompt[locale]) },
+        );
+        if (overflow > 1) overflowing.push(`${step.where}: ${String(overflow)} px below the strip`);
+      }
+      expect(
+        overflowing,
+        'a task ends below the strip at 200 % text, where a player has to scroll to find it',
+      ).toEqual([]);
     });
   }
 

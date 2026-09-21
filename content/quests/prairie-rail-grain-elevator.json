@@ -307,7 +307,7 @@
       ],
       "prompt": {
         "en": "Answer 4 questions about the programs that support people here",
-        "fr": "Répondez à 4 questions sur les programmes qui soutiennent les gens ici"
+        "fr": "Répondez à 4 questions sur les programmes de soutien"
       }
     },
     {
@@ -448,7 +448,7 @@
       ],
       "prompt": {
         "en": "Answer 5 questions about Canadian discoveries and inventions",
-        "fr": "Répondez à 5 questions sur les découvertes et inventions canadiennes"
+        "fr": "Répondez à 5 questions sur les découvertes et inventions"
       }
     }
   ]
