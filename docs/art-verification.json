@@ -1038,6 +1038,129 @@
       "whyThereIsNoVerdict": "NOT CHECKED AGAINST THE ARRANGEMENT THE GAME DRAWS. The composite handed over was built with its near tile 580 px from its far tile, and content/levels puts them 90 px apart (the level puts the far tile at y 1120 and the near tile at y 1210). The verifier was shown a picture this level does not compose, so whatever it said is not a statement about what the game draws. Which of the two files moved is not knowable from here. Reconcile the level document with the renderRecipe, then re-run and re-record."
     }
   ],
+  "subjectsVerifiedSinceThisRun": {
+    "why": [
+      "This subject is not in `results` above, and `make verify-art` still prints it NEVER CHECKED. Both are deliberate.",
+      "`derivedFrom`, `runIntegrity`, `scope`, `results` and `handoffRun` are derived by `verify-art record` from one run, 3c94cea374ae3269. This verdict is from run 5b613349f90cdc72. A row for one run written into the table of another is the mixed record docs/art-verification-method.md (\"One document, one run\") exists to refuse: it would read exactly like a derived row and nothing in the file would say otherwise.",
+      "`verify-art record` could not derive it either, and that is not a defect. It refuses a run `verify-art commit` has not frozen, `commit` refuses a run in which any render is unanswered, and the hand-off is built whole: 179 renders over 55 subjects. A committed run therefore means a blind pass over all 55 subjects, and this one could not be made - identifying this subject took opening the keymap and the contract, after which no further answer of mine is open-set.",
+      "So this is prose, in the row shape `results` uses, claiming nothing the harness checked. What is owed is the next full blind pass, by an identifier that has not read this file, which records `dows-lake` in `results` like every other subject."
+    ],
+    "runIntegrity": {
+      "handoffRunId": "5b613349f90cdc72",
+      "recordedAt": "2026-09-22",
+      "recordedBy": "art-verifier agent, via `make art-handoff-blind` then `verify-art answer`",
+      "blindnessHeld": false,
+      "commitmentProven": false,
+      "answersSha256": "e211b98633a2438cef8df59b0fd60c7598b6c9a056c331a5ed9b7ce169bc6aad",
+      "whatIsProven": [
+        "The three renders were handed over by `make art-handoff-blind` under opaque 16-hex names, with no filename, label, level document, contract or reference photograph in view. The hand-off built and its leak checks held: no render source drew text, no handed-over PNG carried metadata, no handed-over file carried a leaking token, and the keymap was written outside the working directory.",
+        "Which three renders to look at was found the way the tooling finds them: a scratch script joined this record to the live keymap and printed only the opaque names of renders whose subject this record covers with nothing. It printed no subject id. Knowing that three pictures had never been checked said nothing about what they show.",
+        "The three answers were written with `verify-art answer`, so each is filed against the artefact it is about rather than a hash typed by hand. The file was copied read-only and hashed at 2026-09-22T14:50:26Z, before the keymap or the contract was opened, and nothing in it was revised afterwards.",
+        "The feature audit and the neverAdd audit are sighted comparisons made after the reveal. That is step 4 of the method and is unaffected by any pre-image disclosure."
+      ],
+      "whatIsNotProven": [
+        "That the identification was OPEN-SET. It was not; see `leaks`. The hand-off held perfectly and the leak arrived through the brief that dispatched the verifier, which is a channel nothing in `tests/unit/infra/art-handoff-gate.test.ts` can assert clean.",
+        "That the commitment binds. `commit` refuses a run in which any render is unanswered, so the hash above is one this verifier took of its own file rather than one the harness froze before the reveal. The ordering is self-attested.",
+        "That the contract's measured claim for this subject - \"154 over 346 = 1 : 2.2\" - is what the SVG draws. It was not re-derived from geometry. The feature it sits under was audited on the picture, which is long and low and nowhere near 1 : 1."
+      ],
+      "leaks": [
+        {
+          "where": "the task brief this verifier was dispatched with",
+          "leaked": "that the subject is a single newly drawn LANDMARK on the OTTAWA level; the word PAVILION, twice; that what marks the place is \"the ice running unbroken to the foot of the deck, with no retaining wall and no stone coping in frame\"; that the building is a RESTAURANT whose wordmark is the only thing naming WHICH LAKE; that it carries no clock, spire, dome or ornament; and that a WARMING HUT stands 1 100 px away on the same level.",
+          "effect": "Between them these supply the building type, the setting, the city and the identifying absence - most of `expectedBlindAnswer` - before a pixel was seen. \"A pavilion on a frozen lake\" was not this verifier's to produce; it was handed over in prose. The brief said as much and asked for this declaration.",
+          "severity": "high"
+        },
+        {
+          "where": "the session's own git status and recent commit subjects",
+          "leaked": "the Ottawa level's lesson stops and the Rideau locks",
+          "effect": "Narrows the candidate set to one level's contents. Lower severity than the brief only because it names no building.",
+          "severity": "low"
+        }
+      ],
+      "consequence": "The identification is recorded `untrusted`. The feature audit and the neverAdd audit are recorded `trusted`. This is not a blind pass and may not be counted as one. What it does establish is that the drawing carries every feature the contract requires of it, carries nothing the contract forbids, and is not the warming hut."
+    },
+    "results": [
+      {
+        "subjectId": "dows-lake",
+        "verdict": "features-pass-identification-untrusted",
+        "whyThereIsNoPass": "scripts/lib/art-score.mjs, run over this subject's three renders with the audit below, scores it `pass`: the answer matched, 7/7 features present, nothing forbidden, no render stale. That is in `scorerSaid` and it is not the verdict. What the scorer cannot see is that the answer it matched was in the brief before the picture was, and the method's rule for a run whose blindness did not hold is to mark the identification untrusted rather than emit a pass.",
+        "identificationMatched": true,
+        "identificationVerdict": "untrusted",
+        "identificationCaveat": "The brief named the building type (\"pavilion\"), the setting (a lake, via \"which lake\"), the city (the Ottawa level) and the identifying absence (no retaining wall, no stone coping) before any image was opened. What was not in the brief and came from the picture: two storeys, the piles standing in the ice, the external stair, the ridge monitor, the continuous glazing band in white mullions, the three globe lamps, the three spruces on the ice and the skate scoring. Those are weak positive evidence of real recognition - the \"specificity beyond the label\" probe in the method - and they are the only part of this identification worth anything.",
+        "confidence": 0.72,
+        "blindIdentification": [
+          {
+            "render": "d17f414d3b43f086.png",
+            "answer": "A modern lakeside pavilion standing out over a frozen lake: a low, wide, glass-walled restaurant/clubhouse raised on dark timber piles that stand directly in the ice, with a white open deck and balustrade on the left, an external stair down from the deck towards ice level, three globe lamps along the deck, and a shallow overhanging hipped roof carrying a clerestory monitor box. The pale blue ice, streaked with drifting snow and dark skate lines, runs unbroken up to and under the piles - there is no retaining wall, quay edge or stone coping between the water and the building. Three conifers on a small snowbank at the left. If this is a real named place rather than a generic building, my best single guess is the Dow's Lake Pavilion on the Rideau Canal Skateway in Ottawa; my fallback reading is a winter lakeside pavilion / skate-rental and restaurant building at the end of a skating rink."
+          }
+        ],
+        "sizeLadder": [
+          {
+            "render": "6c66cc3370958bba.png",
+            "probe": "w300",
+            "answer": "The same picture as the larger one, smaller: a glass-walled lakeside pavilion on piles over frozen water, white deck and balustrade, external stair, globe lamps, shallow hipped roof with a clerestory box, ice running under the piles, conifers at left. Still identifiable at this size as a pavilion standing in a frozen lake; the proper-name guess stays Dow's Lake Pavilion, Rideau Canal Skateway, Ottawa.",
+            "confidence": 0.68
+          },
+          {
+            "render": "a1ec23c31d49cf71.png",
+            "probe": "w140",
+            "answer": "The same picture again, smaller still: a wide low building on piles over pale blue ice, dark window band under an overhanging roof with a box on top, white deck with a rail at the left and a diagonal stair, three small light-coloured lamp blobs, conifers at the far left. The reading 'pavilion standing over a frozen lake' survives at this size; the identification of a particular building rests on the shape rather than on detail, so the name is a weaker guess here - Dow's Lake Pavilion, Ottawa, if it is named at all.",
+            "confidence": 0.55
+          }
+        ],
+        "featuresRequired": 7,
+        "featuresPresent": 7,
+        "featuresUncheckable": 0,
+        "forbiddenPresent": [],
+        "diagnosticProbesMatched": "2/2",
+        "rendersNotCheckedAgainstCurrentArt": 0,
+        "findings": [],
+        "featureAudit": [
+          "PRESENT - long, low, two-storey building on piles over the water with its deck at ice level. Seven square piles stand in the ice under the deck edge, counted on the render at 267 px down; the block is long and low and nothing like 1 : 1. The 154 : 346 figure in the contract was not re-derived from the SVG.",
+          "PRESENT - broad shallow-pitched roof with deep overhanging eaves and a raised ridge monitor. Pitch about one in three, the eave oversails the terrace on a single slender white column, snow along both slopes and along the monitor, dark soffit under the eave edge.",
+          "PRESENT - continuous band of dark glass in a white frame across the upper storey, slim white mullions at an even pitch, closed by a white head and sill band, with pale reflections on three panes.",
+          "PRESENT - long external stair from the ice-level deck to the upper floor, and an open railed terrace at the near end. Single straight white flight with stringer, treads and a parallel handrail on balusters, landing on a small platform; terrace on its own posts with evenly spaced balusters and snow on the deck. No door leaf, gate or turnstile.",
+          "PRESENT - open ice scored by skates running unbroken to the foot of the deck, with no masonry wall and no stone coping anywhere in the frame. Flat ice band with a lit top edge, three sheen lozenges, six straight scoring bars and a swept snow windrow banked against the deck at the right. Nothing in the frame contains the ice.",
+          "PRESENT - a line of small spruces set into the ice, and globe lamps on the deck. Three trees of three different heights standing on the ice with short bare trunks, stacked tiers and shadow ellipses; three brass globe lamps with a white highlight on slim standards along the deck. The trees are drawn broader than the contract's \"narrow rather than conical\" gloss, which is a note on the gloss and not a missing feature.",
+          "PRESENT - snow on every upward surface and three flat tones per material: roof, monitor, terrace deck, deck boards and the windrow out on the ice; pine reads #154536 / #2C8055 / #45AB6D and slate #30384F / #44555F / #57647A. Key light from the upper left on the roof, the terrace posts and the tallest spruce. The piles themselves are one flat tone, which is a simplification at this size rather than a missing feature."
+        ],
+        "neverAddAudit": "None of the eleven present. No lettering or wordmark of any kind (also machine-checked: the hand-off refuses a render source that draws text); no flag, flagpole or maple leaf; no figure; no tulip or planting; no canoe, pedal boat, rack or dock; no marquee, dome, tent or stand; no hockey boards, nets or lines; no chimney or smoke; no clock, spire, bell stage or polygonal cone roof; no lock gate, balance beam, sluice or weir; no hill, bluff or mountain behind.",
+        "warmingHutFailureMode": "Not triggered. The render was read as a two-storey glazed building on piles with an external stair and a roof monitor, at 600 x 400. `warming-hut` is a 560 x 360 timber box with a shallow gable, two lit windows and a red panel. The two never came close, at any of the three sizes. The brief also named this failure mode in advance, so the \"no\" is itself primed - but the two drawings are far enough apart that the answer does not depend on having been warned.",
+        "scorerSaid": {
+          "by": "scripts/lib/art-score.mjs via scoreRun(), over this subject only, in a scratch script",
+          "identified": true,
+          "gatingRenders": 1,
+          "diagnosticRenders": 2,
+          "diagnosticMatched": 2,
+          "featuresRequired": 7,
+          "featuresPresent": 7,
+          "featuresUncheckable": 0,
+          "forbiddenFound": 0,
+          "staleRenders": 0,
+          "state": "pass"
+        },
+        "note": "Recognisable at 600 px, at 300 px and at 140 px: the stair diagonal, the piles, the mullion rhythm, the ridge monitor, the three lamps and the three spruces all survive the ladder, and the silhouette alone carries \"a building standing on piles in a frozen lake\". The art is not what is in doubt here; the blindness is."
+      }
+    ],
+    "forTheContractsOwner": [
+      "NOT EDITS. `assets/refs/references.json` is art's file and none of this was changed. Three things a scoring pass turned up:",
+      "1. `expectedBlindAnswer` contains the bare entry \"a boathouse\". Its only content word is \"boathouse\", so a verdict reading \"a boathouse on a summer afternoon\" matches, while `expectedBlindAnswerNote` says in the same breath that an answer \"with no water and no ice under it is a partial answer and does not pass\". The list can pass what the note forbids.",
+      "2. The note's heading - \"WHAT THE RENDER MUST STILL CARRY IS THAT IT IS A LAKE AND NOT THE CANAL\" - is not what the list enforces: \"a pavilion on a frozen canal\" and \"a pavilion on the Rideau Canal Skateway\" are both accepted answers. The operative requirement is water or ice under the building, and the heading overstates it.",
+      "3. The absence feature is auditable and it held, but it does no identifying work. See `onTheAbsenceFeature`."
+    ],
+    "onTheAbsenceFeature": [
+      "The drawing's author asked whether \"no retaining wall and no stone coping in frame\" survives contact with a scoring pass as a `mustBeRight` rather than a `neverAdd`. Half of it does.",
+      "AS SOMETHING TO AUDIT, it works, and it works because it is not a pure absence. The entry leads with \"open ice, scored by skates, running unbroken to the foot of the deck\" - a positive thing with a location - and the absence qualifies it. Auditing it meant checking one bounded frame for masonry, which is cheap and decidable. A `mustBeRight` phrased as absence alone, with no positive half, would not be: an auditor cannot sweep a frame for every wall that is not in it.",
+      "THE STATED REASON DOES NOT HOLD, THOUGH. \"A scorer can see a wall that should not be there but cannot see one that correctly is not\" is an argument for putting it in `neverAdd`, not against: `neverAdd` entries are audited too, and anything found there is reported in `forbiddenPresent`. A wall listed in `neverAdd` would have been caught exactly as well. What the `mustBeRight` placement actually buys is ATTENTION - the auditor must positively assert the absence, and an absence nobody is asked about never gets asserted. That is worth something. It is not what the author said it was.",
+      "AND IT CARRIES NO IDENTIFICATION. \"Half the pavilion and half an absence\" is not how the reading went. A blind identifier sees one frame at a time and has no contrast set; nothing in an empty stretch of ice says \"this is the stop where the containment stops\" unless you already know the other stops are walled. What produced the identification was entirely positive: piles standing in ice, a deck at ice level, a glazed two-storey block, an external stair, skate scoring. The absence is a guard against drawing the wrong thing, and a good one. It is not a cue."
+    ],
+    "onAskingForATypeAndNotAName": [
+      "The second question: is `expectedBlindAnswer` under-asking by wanting a building type and a setting rather than a proper name?",
+      "It is not. Nothing in the frame fixes a lake, a city or a country. The building has no clock, no spire, no dome, no tower, no ornament and no plan that is its own; the roof monitor is the only sculptural move and it belongs to a thousand 1970s pavilions. The skate scoring says \"somewhere that skates on its water\" and the spruces say \"somewhere cold\", and that is as far as the pixels go. Asking for \"Dow's Lake\" would be asking the render to carry a wordmark the project has decided never to draw, and then failing honest verifiers for not hallucinating it. The Pier-21 precedent is applied correctly here.",
+      "THE TEST OF THAT, from this run: the proper name was produced, and it was produced from the brief rather than from the picture. A leak is a bad experiment, but it is an experiment - the one identification that arrived at \"Dow's Lake\" needed to be told which lake to get there. That is the contract's own case, made by accident.",
+      "WHAT THE DRAWING COULD CARRY AND DOES NOT: nothing that would change this. A wider frame with the far bank, the Glebe skyline or the lane running off to the north would name the place, and `simplifyAway` rules each of them out for reasons that are about the level and not about this stop. The bar is right where it is."
+    ]
+  },
   "handoffRun": {
     "keymap": {
       "id": "truenorth-art-handoff-keymap",
