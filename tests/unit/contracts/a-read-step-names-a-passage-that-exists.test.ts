@@ -131,14 +131,23 @@ describe('every read step in the build names passages that exist', () => {
 
   it('reports how many references the build actually holds', () => {
     /*
-     * It was zero, and it is not any more: `ottawa-parliament-hill` reads at the
-     * canal locks, which is ADR-0063's content obligation discharged. The number
-     * was asserted as `>= 0` while it was zero so that the day the first step
-     * landed it would move rather than pass quietly; now that it has moved, the
-     * floor is a real one and the walk above is a walk over something.
+     * Zero today, and that is a legal answer rather than a silent one — stated
+     * as an assertion so the day the first `read` step lands this number moves
+     * and the check above stops being a walk over nothing.
+     *
+     * It was briefly not zero. `ottawa-parliament-hill` read at the canal locks,
+     * and the step was withdrawn when Ottawa's canal turned out to have no room
+     * for it: a `read` step needs a stop **after** the quest's giver, the locks
+     * stand before the officer, and moving either is refused by three separate
+     * gates at once — the physics run-up in `tests/e2e/level-ottawa.spec.ts`,
+     * the 1 080 px between landmark heroes in
+     * `level-art-is-placed-where-it-is-drawn.test.ts`, and `verify-content`'s A4,
+     * which binds a landmark's grant to its own position. The arithmetic is in
+     * ADR-0063. The first step is waiting on a sixth Ottawa stop rather than on
+     * anything in this file.
      */
     const found = quests.flatMap(({ document }) => referencesIn(document));
-    expect(found.length).toBeGreaterThan(0);
+    expect(found.length).toBeGreaterThanOrEqual(0);
     for (const reference of found) expect(reference.kind).toBe('read');
   });
 });

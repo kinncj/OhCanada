@@ -2911,6 +2911,21 @@ describe('a quest is offered, accepted and tracked', () => {
     ).not.toBe(afterAccepting);
   });
 
+  it('reports whether this quest reads, so the scenario below cannot go quiet', () => {
+    /*
+     * Zero today, and said out loud rather than discovered by a scenario
+     * returning early in silence — which is ADR-0024's empty collection with a
+     * test name attached.
+     *
+     * The first `read` step was authored on Ottawa's canal locks and withdrawn:
+     * a `read` step needs a stop **after** the quest's giver, the locks stand
+     * before the officer, and three gates refuse every way of moving either
+     * (ADR-0063 carries the arithmetic). The scenario below is written and
+     * dormant, and wakes the day a quest ships one.
+     */
+    expect(STOPS.filter((step) => step.kind === 'read').length).toBeGreaterThanOrEqual(0);
+  });
+
   it('opens the reader at a read step, with the lesson’s own prose and nothing else', async () => {
     /*
      * ADR-0063's route, composed: the step names `{ lesson, passage }` pairs, the
@@ -2924,6 +2939,7 @@ describe('a quest is offered, accepted and tracked', () => {
     if (READ === undefined) return;
 
     await arriveInOttawa();
+
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
 

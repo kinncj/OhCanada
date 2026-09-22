@@ -462,7 +462,15 @@ the contract only.
   material: ADR-0028's live-check of *Canada's Regions* is still open, and slice 10's Indigenous content
   review is unobtainable. `toronto` is the recommendation — 22 passages available, and the highest newly
   taught count (4) of any level.
-  **DISCHARGED 2026-09-21 — on `ottawa`, not `toronto`, and the reason is structural rather than editorial.**
+  **NOT DISCHARGED, AND NOW BLOCKED ON A STOP THAT DOES NOT EXIST — 2026-09-22.** It was written, measured
+  and withdrawn, and what the attempt bought is a bound nobody had: **a `read` step cannot be placed on any
+  level this project currently ships.** The route it would call is built and tested (§6 above); what is
+  missing is somewhere for it to stand. The owner has commissioned a sixth Ottawa stop — **Dow's Lake**, the
+  skateway's terminus, at about x 8 700, which clears the 1 080 px minimum from the warming hut at 7 600
+  inside a 9 000 px level — and this obligation is discharged when that stop and its `read` step land
+  together. Everything below is the measurement that forced it.
+
+  **Why not `toronto`, and why not anywhere: the reason is structural rather than editorial.**
   `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks each level's POIs and
   characters **once in x order** and advances **at most one non-`answer` step per stop** (plus the `answer`
   step immediately after it, at the same stop). A `read` step is a non-`answer` step, so it needs a stop of
@@ -497,20 +505,20 @@ the contract only.
     `level-art-is-placed-where-it-is-drawn.test.ts` allows between two landmark heroes, and the reason the
     locks cannot go any further right.
 
-  Re-measured after the move: speed at one second **622** of a 620 cruise, the coast runs 1 494 -> 2 630 px
-  without ever stopping (a glide begun outside reach passes everything, including both new stops), the turn
-  passes through zero 36 frames in, and the brake fires. The skater comes to rest at 1 927 for the officer and
-  2 496 for the locks, with **one** affordance ready at each — one job in the strip (ADR-0066).
+  Re-measured after that move: speed at one second **622** of a 620 cruise, the coast runs 1 494 -> 2 630 px
+  without ever stopping, the turn passes through zero 36 frames in, and the brake fires. The skater comes to
+  rest at 1 927 for the officer and 2 496 for the locks, with **one** affordance ready at each. The physics
+  was satisfiable — **and it cost two things that could not both be paid**, which is what the next paragraphs
+  are about. Ottawa's positions are back to what shipped.
 
-  **ONE VERIFIER COMMIT IS OWED, AND THIS IS THE ONLY THING BETWEEN THIS STEP AND GREEN.** `verify-content`'s
-  gate A4 binds a grant to *the whole authored unit*, and its own header says what that costs out loud: *"a
-  point of interest's `position`, `artKey` and `radiusPx` … are in the unit and WILL void that one grant if
-  they move. Accepted."* So moving `rideau-locks` voids the grant `6e1f06f3c` made over it, and the gate says
-  so precisely — two fields changed, `position.x` and `position.y`, with the prose, the quote, the page, the
-  chapter and the `sourceHash` byte-identical to what the verifier read. **The author half of the pair is
-  this commit; the verifier half is not the author's to write** (ADR-0003, and it is the rule this whole ADR
-  rests on), so the tree is red between the two exactly as `docs/plan/slices.md` records is normal for an
-  author/verifier pair. What is owed is one re-verification of a claim whose words did not change.
+  **A THIRD GATE, MET ON THE WAY, AND WORTH KNOWING BEFORE ANYONE MOVES A LANDMARK AGAIN.**
+  `verify-content`'s gate A4 binds a grant to *the whole authored unit*, and its own header says what that
+  costs out loud: *"a point of interest's `position`, `artKey` and `radiusPx` … are in the unit and WILL void
+  that one grant if they move. Accepted."* So moving `rideau-locks` voided the grant `6e1f06f3c` made over
+  it — two fields changed, `position.x` and `position.y`, with the prose, the quote, the page, the chapter
+  and the `sourceHash` byte-identical to what the verifier had read. **A landmark's position is part of its
+  claim**, which is why "just move a stop" is never free and why the corridor arithmetic below cannot be
+  escaped by rearranging the four landmarks Ottawa already has.
 
   **AND THE CANAL CANNOT HOLD THE SEQUENCE. This is the finding, and it is arithmetic rather than a
   judgement.** Three gates bound Ottawa's first 3 600 px and they do not leave room for what a `read` step
@@ -547,6 +555,34 @@ the contract only.
   wants a different level or a stop that does not exist yet, and that is a content-and-art decision (ADR-0065
   §2's "add a stop" tier) rather than a number anyone should nudge.
 
+  **The guard's example is restored by the revert, and the repository should know what it was hanging on.**
+  Measured over all twelve held modes on all ten levels, driving the real strategy through the real
+  `createAutoStop`:
+
+  | mode | first thing ahead | speed at let-go | stop line | already held? | glides through? |
+  |---|---|---:|---:|---|---|
+  | `ottawa/skate` | `rideau-locks` (landmark) | 622 | 205 | no — by 15 px | **yes** |
+  | `ottawa/walk` | `rideau-locks` (landmark) | 420 | 56 | no | no |
+  | `halifax/walk` | `guide` | 420 | 56 | no | no |
+  | `peggys-cove/walk` | `granite-shore` | 420 | 56 | no | no |
+  | `prairie-rail/walk` | `guide` | 420 | 56 | no | no |
+  | `the-north/walk` | `spruce-stand` | 420 | 56 | no | no |
+  | `vancouver/walk` | `officer` | 420 | 56 | no | no |
+  | `winnipeg/walk` | `officer` | 420 | 56 | no | no |
+  | `alberta-foothills/walk` | `guide` | 420 | 56 | no | no |
+  | `alberta-foothills/horse` | `guide` (character) | 537 | 133 | **yes** | — |
+  | `toronto/bike` | `guide` (character) | 329 | 82 | **yes** | — |
+  | `vancouver/skateboard` | `officer` (character) | 320 | 53 | **yes** | — |
+
+  **One row carries the property.** Every `walk` is un-held at the let-go point and glides nowhere; every
+  mode that meets a **character** first is already held, because `stand-off.ts` puts the rest point 173 px
+  short of a person and that moves the catch 178 px earlier. Only `ottawa/skate` meeting a **landmark** is
+  both un-held and gliding — and it is un-held by the 15 px between a 205 px stop line and a 220 px reach.
+  With the officer moved in front, the column read **no** for every row and the guard said so.
+
+  This is recorded because the next geometry change will erase it again and nobody will know why. It is not
+  a property the game meant to have at 15 px; it is where the property happened to be observable.
+
   **There was no way round it, and that is worth recording rather than re-deriving.** With point-of-interest
   positions frozen by A4, the full constraint set leaves **no level able to host a `read` step at all**:
   every quest's `visit` steps carry two granted lines each, so no step can be converted for free; the three
@@ -559,14 +595,19 @@ the contract only.
   locks — whose own blurb already tells the Sovereign as a symbol of Canadian sovereignty (p. 57), so the
   reader continues the plaque's own page rather than opening a second subject. **69 words EN / 84 FR**,
   inside ADR-0065 §3.3's four-passages-and-120-words-per-stop ceiling.
-  **What it cost:** four integers in `content/levels/ottawa.json` — two positions, no art — one step and two
-  ungranted flavour sentences in `content/quests/ottawa-parliament-hill.json`. **No `verification` block was written, edited or
+  **What it would have cost, had the canal had room:** four integers in `content/levels/ottawa.json` — two
+  positions, no art — one step and two ungranted flavour sentences in
+  `content/quests/ottawa-parliament-hill.json`. All four are reverted; the level and the quest are byte-equal
+  to what shipped, and the only edit that remains is the verifier's own re-grant, which widened the locks'
+  quoted evidence and is worth keeping on its own merits. **No `verification` block was written, edited or
   read by an author** — every one of the three passages was already granted, which is the whole point of
   §2 (ADR-0003 is not re-run to point at granted material).
-  **How it reads at phone width:** measured in Chromium at 390x844, 100 % text, by walking the level from
-  the title screen: the title, three passages and `Close` all fit **without scrolling**, and the player meets
-  the officer, is told the route, reads at the locks and carries on to the Library with the tracker correct
-  at every step. Passages reachable by playing: **0 -> 3**.
+  **How it read at phone width, while it existed:** measured in Chromium at 390x844, 100 % text, by walking
+  the level from the title screen in both languages: the title, three passages and `Close` all fit **without
+  scrolling**, and the player met the officer, was told the route, read at the locks and carried on to the
+  Library with the tracker correct at every step. So the route works end to end and the surface fits the
+  phone; what it lacks is a stop. **Passages reachable by playing: still 0**, and this ADR does not claim
+  otherwise until Dow's Lake lands.
 
 - **OBLIGATION due=2027-03-20 owner=architect** — re-measure Context's four tables over the tree as it then
   stands and record the result in an amendment: passages reachable by playing, passages sharing a proposition

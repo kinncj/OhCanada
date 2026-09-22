@@ -13,7 +13,7 @@
  * moved — and a stub cannot be wrong in those ways.
  */
 
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { bundledLessonLibrary, createLessonLibrary } from '@adapters/content';
 import type { LessonLibrary } from '@application/ports';
@@ -27,15 +27,52 @@ import { grantsPassage } from '../../../app/bootstrap/verified-passages';
 const localise = (value: LocalizedText, locale: UiLocale): string =>
   locale === 'fr' ? value.fr : value.en;
 
-/** The step `content/quests/ottawa-parliament-hill.json` ships. */
-const LESSON = 'govern-03-the-royal-family-and-the-legislatures';
-const REFERENCES = [
-  { lesson: LESSON, passage: 'g3-royal-family-lifelong-service' },
-  { lesson: LESSON, passage: 'g3-other-constitutional-monarchies' },
-  { lesson: LESSON, passage: 'g3-each-legislature-passes-its-own-laws' },
-];
+/**
+ * The references this route is walked with — **read out of the shipped corpus**,
+ * not typed in.
+ *
+ * No quest ships a `read` step: the first one was authored on Ottawa's canal
+ * locks and withdrawn when the canal turned out to have no room for it
+ * (ADR-0063 carries the arithmetic), so there is no document to derive them
+ * from. Taking them from the corpus instead is the same discipline
+ * `a-read-step-reaches-a-reader.test.ts` uses and for its reason: a hard-coded
+ * `{ lesson, passage }` pair rots the first time a passage is renamed, and
+ * `lesson.schema.json` says a rename is a **new identity** — so it would rot
+ * legitimately and fail this suite for a content edit that broke nothing here.
+ *
+ * The first chapter in address order, its first lesson, its first three
+ * passages. Which chapter that is, is the catalogue's business and not this
+ * file's, which is also what makes the laziness assertion below honest.
+ */
+let CHAPTER = '';
+let LESSON = '';
+let REFERENCES: { readonly lesson: string; readonly passage: string }[] = [];
+
+beforeAll(async () => {
+  const library = bundledLessonLibrary();
+  const catalogue = await library.chapters();
+  if (!catalogue.ok) throw new Error(`no lesson catalogue: ${catalogue.error.message}`);
+  const first = catalogue.value[0];
+  if (first === undefined) throw new Error('the lesson catalogue is empty');
+  const lessons = await library.lessons(first.chapter);
+  if (!lessons.ok) throw new Error(`chapter "${first.chapter}": ${lessons.error.message}`);
+  const lesson = lessons.value.find((candidate) => candidate.passages.length >= 3);
+  if (lesson === undefined) {
+    throw new Error(`no lesson in "${first.chapter}" carries three passages to read`);
+  }
+  CHAPTER = first.chapter;
+  LESSON = lesson.id;
+  REFERENCES = lesson.passages
+    .slice(0, 3)
+    .map((passage) => ({ lesson: lesson.id, passage: passage.id }));
+});
 
 describe('resolveReading', () => {
+  it('has a corpus to walk at all (ADR-0024)', () => {
+    expect(REFERENCES).toHaveLength(3);
+    expect(LESSON.length).toBeGreaterThan(0);
+  });
+
   it('resolves a shipped read step against the one catalogue', async () => {
     const reading = await resolveReading(bundledLessonLibrary(), REFERENCES, grantsPassage);
     expect(reading.ok, reading.ok ? '' : reading.error.message).toBe(true);
@@ -66,7 +103,7 @@ describe('resolveReading', () => {
 
     const reading = await resolveReading(library, REFERENCES, grantsPassage);
     expect(reading.ok).toBe(true);
-    expect([...fetched]).toEqual(['how-canadians-govern-themselves']);
+    expect([...fetched]).toEqual([CHAPTER]);
   });
 
   it('is not-found, naming the lesson, when no chapter holds it', async () => {
@@ -87,7 +124,7 @@ describe('resolveReading', () => {
        nothing and must fail rather than fall back to a position. */
     const reading = await resolveReading(
       bundledLessonLibrary(),
-      [{ lesson: LESSON, passage: 'g3-a-passage-that-was-renamed' }],
+      [{ lesson: LESSON, passage: 'a-passage-that-was-renamed' }],
       grantsPassage,
     );
     expect(reading.ok).toBe(false);
@@ -107,8 +144,8 @@ describe('resolveReading', () => {
     const reading = await resolveReading(
       library,
       [
-        { lesson: LESSON, passage: 'g3-royal-family-lifelong-service' },
-        { lesson: 'govern-01-a-federal-state', passage: 'g1-room-to-try-new-ideas' },
+        REFERENCES[0] as { lesson: string; passage: string },
+        { lesson: 'a-lesson-in-another-chapter', passage: 'a-passage' },
       ],
       grantsPassage,
     );

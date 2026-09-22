@@ -17,13 +17,15 @@ reads here is authored in `content/lessons/**`, verified there, and named by a `
 
 ## What is built, and how it is reached
 
-`app/ui/lesson-reader.ts` is the surface, and since 2026-09-21 a player can get to it.
-`content/quests/ottawa-parliament-hill.json` reads three passages of
-`govern-03-the-royal-family-and-the-legislatures` at the canal locks — the stop whose own card already tells
-the Sovereign as a symbol of Canadian sovereignty, so the reader continues the plaque's page. **Passages
-reachable by playing: 3**, out of 302 authored. That is a measurement of one authored step, not of the
-surface: the surface can carry any step, and what makes the number bigger is more steps, which is ADR-0065
-§3.2's point that a level's reading is bounded by relevance rather than by room.
+`app/ui/lesson-reader.ts` is the surface, and **the whole route behind it is built**: the port, the lazy
+per-chapter catalogue, the resolver and the shippable-passage filter, and the wiring that opens the reader
+between a landmark's card and the question after it (`docs/architecture.md` §6). It was walked end to end in
+Chromium at 390x844 in English and French — the title, three passages and `Close` fit without scrolling —
+against `govern-03-the-royal-family-and-the-legislatures` read at Ottawa's canal locks.
+
+**And that step has been withdrawn, so passages reachable by playing is still 0.** Not for want of the
+surface, and not for want of relevance: for want of **somewhere to stand**. See the next section. A sixth
+Ottawa stop is commissioned, and the first `read` step lands with it.
 
 **The stop a `read` step may stand on is not a free choice**, and it is worth knowing before authoring the
 second one. Three separate gates bound it, and two of them are geometry rather than content:

@@ -622,10 +622,18 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   narrow the draw with an optional `questionPool`. The quest says *how many* and *from where*; the FSRS
   scheduler in the domain says *which*, from the player's own review state. A quest naming the ids outright
   would make the scheduler decorative; a scheduler ignoring the quest would make the step unbounded.
-- ~~**Reading a lesson (ADR-0061).**~~ **Closed 2026-09-21 by the first authored `read` step.** The seam
-  this bullet described — "what the first implementer adds, so it is picked up on purpose" — was built in one
-  change, against a real caller, exactly as ADR-0008 asks. What exists now, named so the next reader does not
-  have to rediscover it:
+- **Reading a lesson (ADR-0061) — the seam is built, and it has no caller yet.** Everything this bullet
+  described as owed exists and is tested; what does not exist is a stop for a `read` step to stand on. The
+  first one was authored on Ottawa's canal locks, measured end to end in both languages, and **withdrawn**:
+  a `read` step needs a stop after the quest's giver, the locks stand before the officer, and three gates
+  refuse every way of moving either — the physics run-up in `tests/e2e/level-ottawa.spec.ts`, the 1 080 px
+  between landmark heroes in `level-art-is-placed-where-it-is-drawn.test.ts`, and `verify-content`'s A4,
+  which binds a landmark's grant to its own `position`. ADR-0063 carries the arithmetic; the short form is
+  that the corridor is 795 px and the sequence needs 1 080. A sixth Ottawa stop (Dow's Lake, ~x 8 700) is
+  commissioned, and the step lands with it. **Passages reachable by playing: 0.**
+
+  This bullet stays open for that reason and for no other — not because anything below is unwritten. What
+  exists now, named so the next reader does not have to rediscover it:
   - **The port.** `ContentRepository.chapters()` and `.lessons(chapter)`, and `LessonLibrary` is the `Pick`
     of the two (never a second content port — an adapter that reads bundled JSON already exists).
     `chapters()` answers a `LessonChapter[]` — the directory each chapter lives under and the lesson ids in
@@ -644,6 +652,11 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   - **The wiring.** `app/bootstrap/lesson-reading.ts` (index -> one chapter -> resolve -> filter -> one
     language) and `app/bootstrap/main.ts`, which opens `app/ui/lesson-reader.ts` between a landmark's own
     card and the question after it. `app/domain` gets nothing: a lesson is data, not behaviour.
+  - **What proves it, with no `read` step in `content/`.** `tests/unit/bootstrap/lesson-reading.test.ts`
+    walks the whole route over the **real** catalogue — references taken from the shipped corpus rather than
+    typed in — and asserts that exactly one chapter is fetched, which is the whole of the laziness.
+    `front-door.test.ts` proves the composition with the catalogue faked, and carries a dormant scenario that
+    wakes the day a quest ships a step.
 
   **One catalogue, two readers, and that is the load-bearing part (ADR-0063 §6).** Learn will read a chapter
   end to end; a `read` quest step reads a handful of passages named by `questStep.passages[]`, on the path,
