@@ -308,3 +308,38 @@ two cedars, gulls and four people, and `layer-30-inlet.svg` a ferry, a bulk carr
 The walkway nearest the viewer: scored concrete panels with a dashed `brass-base` lane line, a granite curb, and a planting bed of sword ferns and salal with a few river rocks.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
+
+---
+
+## 13. The marina read as a fishing fleet, and the two causes were both a spar and a stripe
+
+**2026-09-22.** A full blind pass read `prop-marina-boats@1x.svg` as **an inshore fishing fleet**. The contract
+was right on both counts and the drawing was wrong on both; nothing in `references.json.mustBeRight` had to be
+relaxed, only made harder to satisfy by accident.
+
+**1. The boom read as an outrigger.** `mustBeRight` asks for *"a horizontal boom at its foot running aft"*.
+The file drew the boom **crossing** the mast, and — because the boom rect was emitted *after* the mast — drawn
+over it, so the spar stood out on both sides of a vertical pole. That is a derrick or an outrigger, which is
+what a fishing boat carries. The boom now starts **at** the mast, runs aft only, and is emitted **before** the
+mast, so the mast paints over its forward end and crossing is not expressible.
+
+**2. Which end was the bow was legible backwards, and that is why "running aft" did not save it.** The old
+hull ended in a long sweeping overhang at the bow and a tight little round at the stern. **A long sweeping
+overhang is a counter STERN** in every yacht anyone has seen, so a reader taking the boat the wrong way round
+saw a correctly-aft boom pointing forward. The hull is now stated three ways at once: the stem **rakes
+forward** and is the furthest-forward point of the boat, the sheer **rises** to it, and the stern is a **short
+reverse transom about a third of the stem's run**. The asymmetry is the whole fix and it costs nothing.
+
+**3. The dark stripe was a sheer stripe, not a boot top.** `mustBeRight` says *"a narrow dark band at the
+waterline"*; the file drew it high across the topside, 6 to 30 px above the hull's bottom edge. **Three bare
+masts over white hulls with no boot top is a fishing boat**, and the reader said so. The stripe is now flush
+with the bottom of the hull at about a sixth of the freeboard.
+
+All three are now also in `references.json` — as detail on the two features that already existed, plus two new
+`neverAdd` entries naming the boom that crosses its mast and the stripe that sits high. A rule that was learned
+by failing is worth more written down than remembered.
+
+**Cost: none.** The canvas is unchanged at 760 × 620, the decoded texture is identical and `vancouver` stays
+at **29.61 MiB of 36.00 (82 %)**; the payload moved 0.60 → **0.59 MiB of 8.00**.
+
+**Unproven.** This is the author's account of what changed, not an identification. A fresh blind run scores it.

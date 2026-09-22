@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="620" viewBox="0 0 760 620" shape-rendering="geometricPrecision">
-  <title>Three moored sailing boats in a harbour marina: white hulls with a dark boot stripe and a sheer that rises to the bow, low cabin trunks with two dark windows each, a single bare mast on each with its boom LOW AT THE MAST FOOT RUNNING AFT over the cabin top, which is what separates a moored sloop from a fishing boat's derrick - a blind pass read the earlier drawing, whose boom floated halfway up the mast and pointed forward, as fishing boats; no shrouds, stays or rigging lines, lying at a floating timber dock with mooring cleats, over open water, with the stone edge of a seawall walk across the bottom of the frame. TYPES, not named vessels: no name, no sail number, no class insignia, no burgee, no flag and no lettering of any kind. Drawn from the marina in assets/refs/vancouver/coal-harbour-and-the-north-shore.jpg and seawall-path-and-harbour.jpg; see assets/refs/references.json, subject marina-boats. POI hero, present at every visual tier.</title>
+  <title>Three moored sailing boats in a harbour marina, all lying the same way with their BOWS TO THE LEFT: white hulls with a raked stem that is the furthest-forward point of each boat, a sheer that rises to it, and a SHORT reverse transom aft, so which end is the bow cannot be read backwards. A narrow dark boot stripe sits AT THE WATERLINE along the bottom of each hull, not up on the topside - a blind pass read the earlier drawing, whose dark band ran high across the hull like a sheer stripe over three bare masts, as an inshore FISHING FLEET, and a white hull with no boot stripe is exactly what a fishing boat has. Each carries one bare mast forward of amidships and ONE BOOM AT ITS FOOT RUNNING AFT ONLY, drawn under the mast so it cannot appear to cross it or project forward: the same pass read the earlier boom, which stood out on both sides of the mast, as an OUTRIGGER. No shrouds, no stays, no rigging lines. Low cabin trunks with two dark windows each, over open water, with two mooring buoys and the stone edge of a seawall walk across the bottom of the frame. TYPES, not named vessels: no name, no sail number, no class insignia, no burgee, no flag and no lettering of any kind, and no figure on any deck. Drawn from the marina in assets/refs/vancouver/coal-harbour-and-the-north-shore.jpg and seawall-path-and-harbour.jpg; see assets/refs/references.json, subject marina-boats. POI hero, present at every visual tier.</title>
 
   <rect x="0" y="404" width="760" height="162" fill="#6799d6"/>
   <rect x="0" y="404" width="760" height="14" fill="#5cbfd6"/>
@@ -8,44 +8,44 @@
   <rect x="420" y="470" width="190" height="6" fill="#5cbfd6"/>
   <rect x="230" y="546" width="170" height="6" fill="#6799d6"/>
 
-  <path d="M 40 416 L 310 397 Q 340 409 316 452 L 64 452 Q 37 438 40 416 Z" fill="#f0f2f5"/>
-  <path d="M 40 416 L 310 397 L 310 406 L 40 426 Z" fill="#ffffff"/>
-  <path d="M 58 438 L 316 431 L 316 441 L 58 448 Z" fill="#153f86"/>
-  <rect x="130" y="363" width="102" height="43" rx="13" fill="#f0f2f5"/>
-  <rect x="130" y="363" width="102" height="13" rx="6" fill="#ffffff"/>
-  <rect x="142" y="380" width="31" height="12" rx="4" fill="#30384f"/>
-  <rect x="186" y="380" width="31" height="12" rx="4" fill="#30384f"/>
-  <rect x="178" y="120" width="12" height="289" fill="#cbd2da"/>
-  <rect x="178" y="120" width="5" height="289" fill="#ffffff"/>
-  <rect x="56" y="350" width="134" height="14" rx="6" fill="#cbd2da"/>
-  <rect x="56" y="359" width="134" height="5" rx="2" fill="#7d8fa0"/>
-  <circle cx="183" cy="357" r="8" fill="#7d8fa0"/>
+  <rect x="154" y="365.6" width="102" height="11.5" rx="5.8" fill="#cbd2da"/>
+  <rect x="154" y="371.9" width="102" height="4" rx="2" fill="#7d8fa0"/>
+  <rect x="154" y="120" width="9" height="286.9" fill="#cbd2da"/>
+  <rect x="154" y="120" width="3.6" height="286.9" fill="#ffffff"/>
+  <rect x="139" y="375.2" width="93" height="31.7" rx="9.5" fill="#f0f2f5"/>
+  <rect x="139" y="375.2" width="93" height="9.5" rx="4.8" fill="#ffffff"/>
+  <rect x="151.1" y="388.5" width="27" height="8.9" rx="4" fill="#30384f"/>
+  <rect x="190.2" y="388.5" width="27" height="8.9" rx="4" fill="#30384f"/>
+  <path d="M 40 404 L 340 411.2 L 329.5 452 L 67 452 Z" fill="#f0f2f5"/>
+  <path d="M 40 404 L 340 411.2 L 340 420.8 L 49 413.6 Z" fill="#ffffff"/>
+  <path d="M 48.4 408.8 L 61.6 419.4 L 70 452 L 58.6 452 Z" fill="#cbd2da"/>
+  <path d="M 63.4 443.8 L 333.1 443.8 L 329.5 452 L 67 452 Z" fill="#153f86"/>
 
-  <path d="M 470 414 L 713 396 Q 740 407 718 446 L 492 446 Q 467 433 470 414 Z" fill="#f0f2f5"/>
-  <path d="M 470 414 L 713 396 L 713 405 L 470 422 Z" fill="#ffffff"/>
-  <path d="M 486 433 L 718 427 L 718 436 L 486 443 Z" fill="#153f86"/>
-  <rect x="551" y="366" width="92" height="39" rx="12" fill="#f0f2f5"/>
-  <rect x="551" y="366" width="92" height="12" rx="6" fill="#ffffff"/>
-  <rect x="562" y="381" width="28" height="11" rx="4" fill="#30384f"/>
-  <rect x="601" y="381" width="28" height="11" rx="4" fill="#30384f"/>
-  <rect x="594" y="150" width="12" height="257" fill="#cbd2da"/>
-  <rect x="594" y="150" width="5" height="257" fill="#ffffff"/>
-  <rect x="488" y="352" width="112" height="13" rx="6" fill="#cbd2da"/>
-  <rect x="488" y="360" width="112" height="5" rx="2" fill="#7d8fa0"/>
-  <circle cx="594" cy="358.5" r="7" fill="#7d8fa0"/>
+  <rect x="572.6" y="366.8" width="91.8" height="11" rx="5.5" fill="#cbd2da"/>
+  <rect x="572.6" y="372.8" width="91.8" height="3.9" rx="1.9" fill="#7d8fa0"/>
+  <rect x="572.6" y="150" width="9" height="254.6" fill="#cbd2da"/>
+  <rect x="572.6" y="150" width="3.6" height="254.6" fill="#ffffff"/>
+  <rect x="559.1" y="375.6" width="83.7" height="29" rx="8.7" fill="#f0f2f5"/>
+  <rect x="559.1" y="375.6" width="83.7" height="8.7" rx="4.4" fill="#ffffff"/>
+  <rect x="570" y="387.8" width="24.3" height="8.1" rx="4" fill="#30384f"/>
+  <rect x="605.1" y="387.8" width="24.3" height="8.1" rx="4" fill="#30384f"/>
+  <path d="M 470 402 L 740 408.6 L 730.6 446 L 494.3 446 Z" fill="#f0f2f5"/>
+  <path d="M 470 402 L 740 408.6 L 740 417.4 L 478.1 410.8 Z" fill="#ffffff"/>
+  <path d="M 477.6 406.4 L 489.4 416.1 L 497 446 L 486.7 446 Z" fill="#cbd2da"/>
+  <path d="M 491.1 438.5 L 733.8 438.5 L 730.6 446 L 494.3 446 Z" fill="#153f86"/>
 
-  <path d="M 150 464 L 537 437 Q 580 454 546 516 L 184 516 Q 146 495 150 464 Z" fill="#f0f2f5"/>
-  <path d="M 150 464 L 537 437 L 537 451 L 150 478 Z" fill="#ffffff"/>
-  <path d="M 176 495 L 546 486 L 546 501 L 176 510 Z" fill="#153f86"/>
-  <rect x="279" y="389" width="146" height="62" rx="19" fill="#f0f2f5"/>
-  <rect x="279" y="389" width="146" height="19" rx="9" fill="#ffffff"/>
-  <rect x="297" y="413" width="44" height="17" rx="4" fill="#30384f"/>
-  <rect x="359" y="413" width="44" height="17" rx="4" fill="#30384f"/>
-  <rect x="348" y="44" width="13" height="410" fill="#cbd2da"/>
-  <rect x="348" y="44" width="5" height="410" fill="#ffffff"/>
-  <rect x="196" y="372" width="160" height="16" rx="7" fill="#cbd2da"/>
-  <rect x="196" y="382" width="160" height="6" rx="2" fill="#7d8fa0"/>
-  <circle cx="350" cy="380" r="9" fill="#7d8fa0"/>
+  <rect x="313.4" y="397.2" width="146.2" height="15.8" rx="7.9" fill="#cbd2da"/>
+  <rect x="313.4" y="405.9" width="146.2" height="5.5" rx="2.7" fill="#7d8fa0"/>
+  <rect x="313.4" y="44" width="12" height="410" fill="#cbd2da"/>
+  <rect x="313.4" y="44" width="4.8" height="410" fill="#ffffff"/>
+  <rect x="291.9" y="410.4" width="133.3" height="43.6" rx="13.1" fill="#f0f2f5"/>
+  <rect x="291.9" y="410.4" width="133.3" height="13.1" rx="6.5" fill="#ffffff"/>
+  <rect x="309.2" y="428.7" width="38.7" height="12.2" rx="4" fill="#30384f"/>
+  <rect x="365.2" y="428.7" width="38.7" height="12.2" rx="4" fill="#30384f"/>
+  <path d="M 150 450 L 580 459.9 L 565 516 L 188.7 516 Z" fill="#f0f2f5"/>
+  <path d="M 150 450 L 580 459.9 L 580 473.1 L 162.9 463.2 Z" fill="#ffffff"/>
+  <path d="M 162 456.6 L 181 471.1 L 193 516 L 176.7 516 Z" fill="#cbd2da"/>
+  <path d="M 183.5 504.8 L 570.1 504.8 L 565 516 L 188.7 516 Z" fill="#153f86"/>
 
   <circle cx="96" cy="498" r="15" fill="#e1c368"/>
   <circle cx="96" cy="498" r="7" fill="#935a18"/>

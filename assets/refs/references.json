@@ -38,7 +38,8 @@
     "AMENDED 2026-09-13 while drawing Peggy's Cove (level 2). Two subjects added, and one entry in this file records a decision that is not an art decision: `peggys-cove-light` is the first hero on a level whose place sits on a named nation's territory, the level depicts no nation and no person, and the Tier 3 review that docs/content-review.md 1 leaves open is written as a dated obligation in assets/style/peggys-cove-level.md section 0. Licence was established through the Commons API before anything was downloaded, as on every level since slice 2.",
     "AMENDED AGAIN 2026-09-13 while drawing The North (level 10), which is the tenth and last level. Two more subjects, and the same shape as Peggy's Cove's: a non-repeating POI hero and a two-tile traversal composite, with `neverAdd` on BOTH carrying the docs/content-review.md 5.2 and 5.4 prohibitions and a ban on drawing any figure at all. THE HERO IS ASKED FOR A TYPE AND NEVER FOR A PLACE, because the vessel carries its own name in paint and this project draws no text; that makes this the third region in a row whose place rests on nothing in its art, which is OQ-SPINE-6's finding confirmed rather than a surprise.",
     "AMENDED 2026-09-22 while drawing Ottawa's sixth stop (ADR-0065 section 2). One subject added, `dows-lake`, and it is the SECOND subject in this file whose contract refuses to ask for a place name. `pier-21` established the rule for a shed with its name painted on it; this applies it to a building with its tenant's name hung on it, and the difference from the canal's amendment is that this one was decided BEFORE the drawing rather than after a verdict came back short. What the render is asked for instead is a building type and a setting - a pavilion on piles over open ice - and the identifying feature is an ABSENCE: no masonry retaining wall and no stone coping anywhere in the frame, which is what separates this end of the skateway from the walled canal that `rideau-canal-skateway` and `canal-lock` both draw.",
-    "AMENDED 2026-09-22, a second time, closing two defects an art-verifier found by SCORING THIS FILE rather than by looking at a picture - which is a kind of finding this note has no earlier example of and is worth the paragraph. Both were in `dows-lake` and both were the list and the note disagreeing. (1) `\"a boathouse\"` was an accepted answer with ONE content word, so an answer set on a summer afternoon matched it while the note said in the same breath that an answer with no water in it fails; the scorer reads the LIST, so the list was fixed. (2) The note was headed \"IT IS A LAKE AND NOT THE CANAL\" while two canal answers sat in the list as passes. The list was right: nothing in one frame fixes a lake rather than a wide reach of a canal, and the heading was asking the render for something it cannot show. THE GENERAL RULE, since this is the third subject to need it: an `expectedBlindAnswerNote` may explain the list, warn about it and record why it is drawn where it is - it may not add a bar the list does not enforce. A `neverAdd` and a `mustBeRight` are both audited; a note is read by people. The same pass also corrected a REASON rather than a rule, in `dows-lake.mustBeRight`: putting the absent retaining wall in `mustBeRight` was the right call for the wrong stated reason. `neverAdd` entries are audited too and surface as `forbiddenPresent`, so the choice does not buy detection - it buys ATTENTION, because an auditor has to positively assert an absence it is asked about. And an absence carries no identification to a reader with one frame and no contrast set."
+    "AMENDED 2026-09-22, a second time, closing two defects an art-verifier found by SCORING THIS FILE rather than by looking at a picture - which is a kind of finding this note has no earlier example of and is worth the paragraph. Both were in `dows-lake` and both were the list and the note disagreeing. (1) `\"a boathouse\"` was an accepted answer with ONE content word, so an answer set on a summer afternoon matched it while the note said in the same breath that an answer with no water in it fails; the scorer reads the LIST, so the list was fixed. (2) The note was headed \"IT IS A LAKE AND NOT THE CANAL\" while two canal answers sat in the list as passes. The list was right: nothing in one frame fixes a lake rather than a wide reach of a canal, and the heading was asking the render for something it cannot show. THE GENERAL RULE, since this is the third subject to need it: an `expectedBlindAnswerNote` may explain the list, warn about it and record why it is drawn where it is - it may not add a bar the list does not enforce. A `neverAdd` and a `mustBeRight` are both audited; a note is read by people. The same pass also corrected a REASON rather than a rule, in `dows-lake.mustBeRight`: putting the absent retaining wall in `mustBeRight` was the right call for the wrong stated reason. `neverAdd` entries are audited too and surface as `forbiddenPresent`, so the choice does not buy detection - it buys ATTENTION, because an auditor has to positively assert an absence it is asked about. And an absence carries no identification to a reader with one frame and no contrast set.",
+    "AMENDED 2026-09-22, a third time, after the first FULL blind pass over all 55 subjects. 52 passed and three did not, and the three splits cleanly into the two kinds of finding this file exists to tell apart. `marina-boats` was A DRAWING FAULT: the contract asked for a boom running aft and a boot stripe at the waterline, the file drew a boom crossing its mast and a stripe high on the topside, and the render read as a fishing fleet. Both features stand; their `detail` now names the wrong version so it cannot come back. `driftwood-pile` was A CONTRACT FAULT, and the sharpest one yet: `mustBeRight` asked for \"the shade tone for the END FACE\", a flat darker cap on a cylinder IS end grain, end grain is what a saw leaves, and the render was read as milled lumber in a sawmill yard. FOUR earlier redraws had failed on the same reading while faithfully obeying that clause - a contract can make a defect un-redrawable, and four attempts is what that costs before anybody looks at the contract. `ranch-barn` was A CONTRACT FAULT OF THE THIRD KIND, the one this file keeps making: 8 of 8 required features present and the identification still failed, because the list demanded the word RANCH and nothing a barnyard can show separates a ranch from a farm. That claim had been written down as a measurement and never measured. The word is no longer required, and the list also stopped insisting on ONE word - `corral` - for an object a reader will just as truthfully call a rail fence, a paddock or a pen. THE PATTERN, NAMED BECAUSE IT HAS NOW RECURRED THREE TIMES (`rideau-canal-skateway`, `pier-21`, `ranch-barn`): a contract writer who KNOWS what a render depicts predicts what a stranger will call it, and is wrong in the direction of their own knowledge. Two self-contradictions the same pass found were fixed without any render moving: `bulk-carrier` required \"nothing else above the deck line\" two entries above a required row of deck cranes, and `library-of-parliament` asked for \"three tall pointed-arch windows\" without saying per bay or in total while the render draws one per bay across five. A contract a scorer has to read charitably is a contract that can be read two ways."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -423,8 +424,8 @@
           "palette": "stone"
         },
         {
-          "feature": "three tall pointed-arch windows between the buttresses, dark against the stone",
-          "detail": "Two thirds the height of the wall, each with one mullion and one transom. Glazing bars beyond that cross are simplified away, the same substitution the Peace Tower made on its dial."
+          "feature": "one tall pointed-arch window in each bay of the drum: three across the face, and a narrower one in each turning bay",
+          "detail": "Two thirds the height of the wall, each with one mullion and one transom; glazing bars beyond that cross are simplified away, the same substitution the Peace Tower made on its dial. FIVE ARE VISIBLE AND THE COUNT IS DELIBERATE: the three bays square to the viewer carry them at 58 / 52 / 52 px, and the two bays TURNING away carry a visibly narrower 36 px window of the same shape, which is the strongest single statement that the wall continues around. AMENDED 2026-09-22: this read \"three tall pointed-arch windows between the buttresses\", which did not say whether three was per bay or in total, and a scorer facing a render with five had to choose a reading. Rhythm and the width ratio across the turn are what is graded; the number follows from how many bays the drum shows."
         },
         {
           "feature": "a small stone lantern with a dark cap and a plain spike finial at the apex",
@@ -3356,7 +3357,16 @@
         "a barn and a corral",
         "a barn and corral",
         "a stable and a corral",
-        "a farmyard and a corral"
+        "a farmyard and a corral",
+        "a barn and a fenced yard",
+        "a barn and a rail-fenced yard",
+        "a barn and a paddock",
+        "a barn and a horse pen",
+        "a stable and a paddock",
+        "a stable yard and a horse",
+        "a horse in a fenced yard beside a barn",
+        "a horse in a rail pen beside a barn",
+        "a farmyard and a horse pen"
       ],
       "expectedBlindAnswerNote": [
         "THIS SUBJECT MAY NOT DEMAND A PLACE NAME, and the reason is the one that governs `pier-21` and",
@@ -3365,11 +3375,33 @@
         "foothills` and any town name are NOT in the accepted list and the gate MUST NOT reward them. A",
         "verifier who names a province here has inferred it from project context, which is the mistake the",
         "Ottawa canal subject made and had to be amended for.",
-        "WHAT IT MAY DEMAND IS THE WORD RANCH, and that IS a measurement rather than a preference. The render",
-        "draws a barn AND a corral AND a horse inside the corral, and those three together are what separates",
-        "a ranch from a farm. So `a red barn`, `a barn` and `a farm` alone do NOT pass: an answer naming only",
-        "the building is a true report that the corral and the horse did not carry, which is information about",
-        "the drawing and is what this gate is for. Every accepted phrase names the enclosure or the word ranch.",
+        "THE WORD RANCH IS NO LONGER REQUIRED EITHER, AND THE CLAIM THAT USED TO STAND HERE IS WITHDRAWN.",
+        "This note said: \"WHAT IT MAY DEMAND IS THE WORD RANCH, and that IS a measurement rather than a",
+        "preference. The render draws a barn AND a corral AND a horse inside the corral, and those three together",
+        "are what separates a ranch from a farm.\" That was asserted as a measurement and had never been measured,",
+        "and on 2026-09-22 a blind pass falsified it: it named the red barn, the rail fence, the gate, the dirt",
+        "yard and the horse - EVERY ONE of the eight features this contract requires, 8 of 8 present - and landed",
+        "on a farmyard. A barn, a rail enclosure and a horse are completely ordinary on a mixed farm. The three",
+        "together do not separate a ranch from a farm, and a contract cannot make them.",
+        "AND THE PICTURE CANNOT BE MADE TO SAY IT, which is why this is a contract change and not a redraw. What",
+        "separates a ranch from a farm in one frame is cattle, rangeland, a brand or a saddle. `neverAdd` on this",
+        "subject forbids the brand and the saddle outright; the rangeland is `alberta-foothills-rangeland` and the",
+        "Rocky Mountain front is a parallax layer this hero is forbidden to carry; and the cattle are",
+        "`beef-cattle`, a separate subject judged in the SAME hand-off, so drawing them here would put one",
+        "subject's required features inside another's render. Everything left is a prop stuck on to force a word,",
+        "and CLAUDE.md's rule is simplified, NEVER INVENTED.",
+        "WHAT IT MAY STILL DEMAND IS THE ENCLOSURE AND THE ANIMAL IN IT - IN WHATEVER WORDS A READER USES FOR",
+        "THEM. That is the second half of the finding and it is a defect in the old list rather than in the",
+        "drawing: every accepted phrase named the enclosure `corral`, and a reader who truthfully reported a rail",
+        "fence, a paddock, a pen or a fenced yard failed a gate the picture had satisfied. Those words are in the",
+        "list now. A bare `a barn`, `a red barn` or `a farm` still does NOT pass, so the gate still detects a",
+        "render whose enclosure or whose horse did not read - which is the information it exists to produce.",
+        "THIS IS THE THIRD SUBJECT IN THIS FILE TO NEED THIS AMENDMENT. `rideau-canal-skateway` demanded a canal",
+        "the render carried no cue for; `pier-21` demanded a name the project never draws; this demanded a word",
+        "no barnyard can say. The pattern is always the same and is worth naming: a contract writer who KNOWS what",
+        "a render depicts predicts what a stranger will call it, and is wrong in the direction of their own",
+        "knowledge. The remedy is always the same too - ask the render for what it can carry, and let the level's",
+        "identification rest where it actually rests.",
         "THE CONSEQUENCE IS STRUCTURAL. Level 8 is a REGION and nothing in its art is asked to name a place -",
         "not this hero and not `alberta-foothills-rangeland`. The Rocky Mountain front IS in the level, on",
         "layer 20, and is not a graded subject: it repeats and the low preset drops it."
@@ -4106,13 +4138,13 @@
         },
         {
           "feature": "white hulls with a dark boot stripe, and a sheer that rises to the bow",
-          "detail": "MEASURED from the marina in vancouver/coal-harbour-and-the-north-shore.jpg, where forty-odd hulls fill the middle distance and every one of them is white: freeboard is about 0.16 of hull length and the bow is about 0.15 of the freeboard higher than the stern. The boot stripe is a narrow dark band at the waterline and is the only colour on the hull.",
+          "detail": "MEASURED from the marina in vancouver/coal-harbour-and-the-north-shore.jpg, where forty-odd hulls fill the middle distance and every one of them is white: freeboard is about 0.16 of hull length and the bow is about 0.15 of the freeboard higher than the stern. The boot stripe is a narrow dark band AT THE WATERLINE - flush with the bottom edge of the hull, about a sixth of the freeboard deep - and is the only colour on the hull. IT IS NOT A SHEER STRIPE, AND THE DIFFERENCE IS WHAT THIS ENTRY IS FOR: a blind pass read a build whose dark band ran high across the topside as AN INSHORE FISHING FLEET, because a white hull with a sheer stripe and no boot top is what a fishing boat has. AND THE BOW MUST BE READABLE AS THE BOW. The stem RAKES FORWARD and is the furthest-forward point of the boat; the stern is a SHORT reverse transom, about a third of the stem's run. A long sweeping overhang at the bow end reads as a counter STERN, which is how the same pass came to read the boom as pointing forward on a boat whose boom ran correctly aft.",
           "palette": "white, cobalt"
         },
         {
           "feature": "one mast and one boom on each, bare",
           "why": "It is what makes them sailing boats. A mastless hull is a motor launch and the reference marina is mostly sailing boats.",
-          "detail": "A single vertical mast forward of amidships, tapering, with a horizontal boom at its foot running aft. No shrouds, no stays, no rigging lines: at this size a 3 px line is noise, and art-bible section 1 sets the floor at 12 px."
+          "detail": "A single vertical mast forward of amidships, tapering, with a horizontal boom at its foot RUNNING AFT AND ONLY AFT. The boom starts at the mast and never crosses it, never projects forward of it, and is drawn UNDER it so that it cannot appear to: a spar standing out on both sides of a mast is an OUTRIGGER, and a blind pass read an earlier build as a fishing fleet for exactly that reason. No shrouds, no stays, no rigging lines: at this size a 3 px line is noise, and art-bible section 1 sets the floor at 12 px."
         },
         {
           "feature": "a low cabin trunk with two dark windows",
@@ -4137,7 +4169,9 @@
         "a sail set, a spinnaker, a wake or a bow wave: these boats are moored",
         "a totem pole or an inuksuk, in any form, including background, silhouette, icon and loading art. docs/content-review.md 5.2 and 5.4, and it is on BOTH of this level’s original subjects for the same reason: this level is the single most likely place in this game for those rules to be broken by accident",
         "the Lions Gate Bridge or Canada Place in the same frame. Scoped deliberately: the five sails are REQUIRED on five-sails and the bridge is the recorded fallback anchor, and neither may appear on a subject judged in the same hand-off",
-        "a figure on any deck"
+        "a figure on any deck",
+        "a boom that crosses the mast or projects forward of it: that is an outrigger or a fishing derrick, not a sloop's boom",
+        "a dark stripe high on the topside where the boot stripe belongs at the waterline"
       ],
       "notes": [
         "vancouver/coal-harbour-and-the-north-shore.jpg is the PRIMARY reference and it is an odd one: the",
@@ -4180,9 +4214,9 @@
       ],
       "mustBeRight": [
         {
-          "feature": "the superstructure is right AFT, over the stern, and there is nothing else above the deck line",
+          "feature": "the superstructure is right AFT, over the stern, and is the only BLOCK above the deck line",
           "why": "It is the single strongest silhouette cue for a cargo ship and the thing a passenger ship never does.",
-          "detail": "A white block of three or four storeys standing at one end of the hull with a funnel above it, and the whole of the rest of the ship flat. MEASURED loosely off the ships in the background of vancouver/canada-place-and-the-north-shore.jpg: the superstructure is about a fifth of the ship’s length.",
+          "detail": "A white block of three or four storeys standing at one end of the hull with a funnel above it, and the whole of the rest of the ship flat EXCEPT for the hatch covers and the pedestal deck cranes, which have their own entries below and are both REQUIRED. AMENDED 2026-09-22: this read \"and there is nothing else above the deck line\", which contradicted the cranes two entries down - they are above the deck line by definition. A scorer worked to the evident intent and should not have had to; a contract that has to be read charitably is a contract that can be read two ways. MEASURED loosely off the ships in the background of vancouver/canada-place-and-the-north-shore.jpg: the superstructure is about a fifth of the ship's length.",
           "palette": "white, slate"
         },
         {
@@ -5191,7 +5225,13 @@
         "of logs is one tidy arrangement away from any of them. The logs LIE. None is stood up, leaned against",
         "another, driven into the ground or set in a frame.",
         "A first build's root wad was drawn as an even radial fan and read as a SUNBURST DEVICE. It is now four",
-        "uneven roots on one side. An identifier who reports a symbol here has found a defect."
+        "uneven roots on one side. An identifier who reports a symbol here has found a defect.",
+        "AND THE FAILURE ARRIVED, 2026-09-22, in the form this note did not predict. A blind pass called the pile",
+        "\"a stack of freshly milled squared lumber ... a sawmill or logging yard prop\". That is not one of the",
+        "built things listed above and it is worse than any of them: the contract's own `mustBeRight` had asked",
+        "for a shade-toned END FACE, and a flat darker cap on a cylinder is end grain. The drawing followed the",
+        "contract and the contract was wrong. Both are fixed; the lesson is recorded here rather than in the",
+        "commit, because the next person to write 'darker ends' for a natural object needs to read it."
       ],
       "referenceFiles": [
         "the-north/yukon-river-bluff-and-aspen.jpg",
@@ -5201,18 +5241,18 @@
         {
           "feature": "seven barkless logs LYING across one another at different angles",
           "why": "Lying and crossing is what says the river put them there. Parallel logs read as stacked cordwood, which is something a person does.",
-          "detail": "Long capsules with rounded ends, no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log."
+          "detail": "Long bowed capsules with ROUNDED ENDS, no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log. THE ROUNDED END IS THE WHOLE OF IT AND IT IS NOT DECORATION: the shipped art draws each spar as a round-capped stroke along a bent centreline, so a flat terminus is not expressible."
         },
         {
           "feature": "bleached pale wood with darker ends",
           "why": "Driftwood is grey-white, not brown. Brown logs with bark are freshly cut timber and that is a different object with a different meaning.",
-          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, each log taking all three tones of ONE of them - the light tone for the body, the base tone along the belly, the shade tone for the end face - so every log reads as a lit cylinder rather than a flat lozenge. NO bark, NO green wood, NO axe or saw cuts. `stone` WAS ADDED 2026-09-17, and it is a saturation fix rather than a change of subject. Drawn from `path` and `limestone` alone the pile was six neutral greys end to end: `path` is the one ramp palette.json declares near-neutral and exempts from the saturation gain, so the render breached CLAUDE.md's saturated palette, and it also said less than the truth - sun-bleached driftwood is silver AND warm tan, and `stone` is the warm tan this palette already carries. It is NOT brown: `wood` is the bark-and-fresh-timber ramp, it stays forbidden here, and the reason is this subject's whole point - a brown log with bark is cut timber. A blind pass read the previous build as a stack of cut timber, and the cause was the ARRANGEMENT as much as the colour: all seven logs lay within nine degrees of horizontal in tidy tiers, which is a woodpile. They now span nineteen degrees either side.",
+          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, each log taking all three tones of ONE of them: the light tone for the upper body, the base tone for the lower half AND for the last tenth of each end, and the shade tone as a thin rim along the very bottom edge. NO END FACE, OF ANY TONE - AMENDED 2026-09-22 AND THIS CLAUSE IS WHY THE RENDER FAILED. This entry used to read 'the shade tone for the end face', and a build that followed it was read blind as A STACK OF FRESHLY MILLED SQUARED LUMBER in a sawmill yard. It was right to be: a flat darker cap across the end of a cylinder IS end grain, end grain is what a saw leaves, and an earlier build's attempt to escape the reading by slanting those caps only made them look more sawn. The darker end this feature asks for is a darker LENGTH of the same round-ended cylinder, never a face across it. NO bark, NO green wood, NO axe or saw cut, and NO whittled point - a tapered spar that ends in a point is a stake, which is a thing a person made. `stone` WAS ADDED 2026-09-17 as a saturation fix: drawn from `path` and `limestone` alone the pile was six neutral greys end to end, `path` is the one ramp palette.json exempts from the saturation gain, and sun-bleached driftwood is silver AND warm tan. It is NOT brown: `wood` is the bark-and-fresh-timber ramp and stays forbidden here, because a brown log with bark is cut timber and that is this subject's whole point.",
           "palette": "path, limestone, stone"
         },
         {
           "feature": "one short uneven root fan",
           "why": "It is what says these were trees the river tore out, rather than milled wood.",
-          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's end, spread over less than half a turn, with a small knob at the centre. Never an even radial star."
+          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's butt, spread over less than half a turn, over a small uneven knob. NEVER an even radial star, NEVER a disc, and NEVER a lighter shape centred inside a darker one: a blind pass read the previous knob - a near-circular blob with a concentric highlight - as A CIRCULAR SAW BLADE, which turned the one feature that says 'the river tore this out' into the one that says 'a mill cut it'. Nothing round-and-concentric may appear on this subject."
         },
         {
           "feature": "a gravel bar with rounded cobbles under it",
@@ -5235,7 +5275,10 @@
         "any arrangement that reads as built: a lean-to, a shelter, a raft, a frame, a fence, a weir, a stack of cordwood, a fire ring or a tripod",
         "a standing or leaning log. Every log lies",
         "an axe, a saw cut, a rope or any tool mark",
-        "an even radial root wad, which reads as a sunburst device"
+        "an even radial root wad, which reads as a sunburst device",
+        "a flat end face on any log, of any tone or at any angle: it is end grain, and end grain is a saw cut",
+        "a whittled or sharpened point on any log: a pointed spar is a stake, which is something a person made",
+        "any disc, ring or concentric shape anywhere in the frame, which is how a root knob became a saw blade"
       ],
       "notes": [
         "the-north/yukon-river-bluff-and-aspen.jpg carries the reference at its waterline: a continuous band of",

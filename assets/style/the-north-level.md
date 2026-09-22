@@ -612,7 +612,7 @@ The gravel bar nearest the viewer: rounded river cobbles in light grey, dark gre
 
 **The two spars were redrawn on 2026-09-17, and the cause was the played scene, not the file on its own.** Each was a straight constant-width quadrilateral carrying a cool `white-shade` highlight, and on the bar the player walks over, a pale straight rod with a cold highlight reads as a dropped pipe or a metal pole. Neither is straight or parallel-sided now: each is a five-point curve with a swelling belly that narrows toward both ends, each end is a torn splinter broken at its own angle, and each carries one snapped stub of a limb. The cool highlight is gone — one spar takes the warm `limestone` ramp and the other the warm `stone` ramp, off the neutral greys of the cobbles around them. The cobbles themselves were not touched: a live audit called this the best-looking ground in the game, and only the wood was wrong.
 
-### 8.1 OPEN: the POI card still reads as milled lumber, and four attempts did not fix it
+### 8.1 The POI card read as milled lumber for five builds, and the CONTRACT was half the cause
 
 **The subject on the card is unfixed and is left exactly as `origin/main` had it.** A live audit read
 `prop-driftwood-pile@1x.svg` as "straight, uniform, pale spars with square dark-cut ends — a timber stack",
@@ -639,6 +639,46 @@ limb still attached, a split running in from one end, a barked section against a
 a root flare — features a sawmill removes, drawn as shapes rather than as surface.
 
 Routed to the art owner as an open finding rather than absorbed. The **world** half of this defect — the two
-spars on the gravel bar the player walks over — is fixed, and is the section above.
+spars on the gravel bar the player walks over — was fixed then, and is the section above.
+
+#### The fifth attempt, 2026-09-22 — and the thing none of the first four could have fixed
+
+A full blind pass read the shipped file as *"a stack of freshly milled squared lumber — pale planks and beams
+piled criss-cross on a grey deck, with a circular saw blade at the left end… a sawmill or logging yard prop."*
+Two findings, and the first is the one that matters.
+
+**`references.json` was ASKING for the defect.** `driftwood-pile.mustBeRight` said, in as many words, *"the
+shade tone for the end face"*. **A flat darker cap across the end of a cylinder is end grain, and end grain is
+what a saw leaves.** Every one of attempts 1–4 obeyed that clause, so no amount of redrawing the bodies could
+have cleared the reading — attempt 1 correctly concluded "taper and torn ends are not what was doing it" and
+then kept the faces. An earlier build had already tried to escape by *slanting* the caps, which made them look
+more sawn, not less. The clause is gone, and `neverAdd` now forbids a flat end face of any tone at any angle.
+
+**The root fan was read as a circular saw blade, and it was a disc.** The knob at its centre was a
+near-circular ellipse with a smaller, lighter, concentric ellipse inside it. `neverAdd` now forbids any disc,
+ring or concentric shape anywhere on this subject — a rule worth having in general, because "an even radial
+fan reads as a sunburst" had already been learned here once and the replacement quietly re-introduced the
+geometry in a different place.
+
+**What attempt 5 draws.** Every spar is a **round-capped stroke along a bent centreline**, so a flat terminus
+is not expressible by construction rather than by care. The taper is three concentric round-capped strokes
+narrowing toward the tip, so a spar thins like a trunk and never ends in a whittled point — a point is a stake,
+and a stake is something a person made. The darker end is a darker **length** of the same cylinder, not a face
+across it. The tone split that produced attempt 2's canoes and attempt 3's straps is avoided the same way it
+was diagnosed: the base tone takes the lower half and the shade tone is a **thin rim on the bottom edge only**,
+never a band down the middle and never a lens wrapping the cap. The root wad is four roots of four lengths and
+thicknesses on one side over a small uneven knob, built from overlapping round-capped strokes, with nothing
+round-and-concentric in it.
+
+**The silhouette-incident hypothesis above was NOT taken up**, and that is deliberate rather than an oversight:
+a forked limb and a split are what §8.1 proposed, and `driftwood-pile.simplifyAway` forbids branches outright
+("one root fan on one log is the whole complication"). Two documents disagreed and the contract wins. If
+attempt 5 fails a blind pass on the same reading, that disagreement is the next thing to resolve, and it has
+to be resolved in `references.json` before it is drawn.
+
+**Cost: none.** The canvas is unchanged at 700 × 400, so the decoded texture is identical and `the-north`
+stays at **30.32 MiB of 36.00 (84 %)**; the payload moved 0.88 → **0.89 MiB of 8.00**.
+
+**Unproven.** This is the author's account of what changed, not an identification. A fresh blind run scores it.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

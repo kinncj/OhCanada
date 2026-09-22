@@ -539,3 +539,51 @@ Applied with this change, as the park car's was.
 The rangeland nearest the viewer in late summer: rough fescue in tufts with dry `felt-light` seed heads, `brass-light` gumweed and small fieldstones; the grass under the horse trail, which draws over it at world 1536; and taller, darker `pasture-shade` grass below.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
+
+---
+
+## 15. The barn drew 8 of 8 required features and still failed, and the contract is what changed
+
+**2026-09-22.** A full blind pass reported `landmark-ranch-barn@1x.svg` with **every one of the eight features
+`references.json` requires present** — the red board barn, the cupola, the flank windows, the sliding door, the
+shingle roof, the rail corral, the braced gate, the horse — and could not reach the word **ranch**. It named a
+farmyard. The identification failed on a render that had done everything asked of it.
+
+**The decision taken: the contract changes and the drawing does not.** Recorded here with the reasoning,
+because it is a judgement rather than a repair.
+
+**What the contract claimed, and why it is false.** `expectedBlindAnswerNote` said the word ranch *"IS a
+measurement rather than a preference"*, because *"the render draws a barn AND a corral AND a horse inside the
+corral, and those three together are what separates a ranch from a farm"*. **That was asserted as a
+measurement and had never been measured.** A barn, a rail enclosure and a horse are completely ordinary on a
+mixed farm anywhere in the country. The blind pass is the measurement, it was taken, and it says no.
+
+**Why the drawing cannot be made to say it either.** What separates a ranch from a farm in one frame is
+cattle, rangeland, a brand or a saddle, and every one of those is closed to this hero:
+
+| candidate | why it is not available |
+|---|---|
+| a brand, a gate sign | `neverAdd` forbids it outright — *"an approximated brand is worse than none"* |
+| a saddle, a wagon, a rancher | `neverAdd` forbids it: *"a hero is not where a character goes"* |
+| rangeland, the Rocky Mountain front | `neverAdd` forbids mountains inside this file, and the range is `layer-20`, a repeating tile |
+| cattle | they are **`beef-cattle`**, a separate subject judged in the SAME hand-off; drawing them here puts one subject's required features inside another's render |
+
+Everything that is left is a prop stuck on to force a word out of a reader, and CLAUDE.md's rule for a landmark
+is *simplified, **never invented***. A drawing that adds an object in order to pass its own gate has stopped
+being a drawing of the place.
+
+**And the list had a second, separable defect that IS worth fixing.** Every accepted phrase named the
+enclosure with one word — `corral`. The reader named it *"the rail fence"*, *"the gate"*, *"the dirt yard"*,
+which is the same object truthfully reported in the words an ordinary reader uses. **That is a vocabulary gap
+in the contract, not a failure of the picture**, and nine phrasings — a fenced yard, a rail-fenced yard, a
+paddock, a horse pen, a stable yard — are now accepted. A bare *a barn*, *a red barn* or *a farm* still fails,
+so the gate keeps doing the job it exists for: it still detects a render whose enclosure or whose horse did
+not read.
+
+**Third time in this file.** `rideau-canal-skateway` demanded a canal the render carried no cue for; `pier-21`
+demanded a name this project never draws; this demanded a word no barnyard can say. The pattern is worth
+naming because it will recur: **a contract writer who knows what a render depicts predicts what a stranger
+will call it, and is wrong in the direction of their own knowledge.**
+
+**Cost: none.** No pixel changed. `alberta-foothills` stays at **34.01 MiB of 40.00 (85 %)** and 0.87 MiB of
+payload.
