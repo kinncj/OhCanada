@@ -413,6 +413,43 @@
       },
       "artKey": "ottawa-prop-warming-hut",
       "radiusPx": 240
+    },
+    {
+      "id": "dows-lake",
+      "name": {
+        "en": "Dow's Lake",
+        "fr": "Le lac Dow"
+      },
+      "blurb": {
+        "en": "Take a moment out on the ice. Canada keeps its two top jobs apart. The Sovereign is the head of state. The Prime Minister is the head of government, and is the one who really directs how the country is governed.",
+        "fr": "Prenez un moment sur la glace. Le Canada sépare ses deux plus hautes fonctions. Le souverain ou la souveraine est le chef d'État. Le premier ministre est le chef du gouvernement : c'est la personne qui dirige vraiment la façon dont le pays est gouverné."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "There is a clear distinction in Canada between the head of state—the Sovereign—and the head of government—the Prime Minister, who actually directs the governing of the country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 8700,
+        "y": 1469
+      },
+      "artKey": "ottawa-prop-dows-lake-pavilion",
+      "radiusPx": 240
     }
   ],
   "characters": [
