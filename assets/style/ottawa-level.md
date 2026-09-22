@@ -637,14 +637,24 @@ external stair, and globe lamps along the deck. Drawn from `refs/ottawa/dows-lak
 `dows-lake-pavilion-deck-and-stair.jpg` (both CC0), with the ice and the lane trees from
 `dows-lake-skateway-lane.jpg`.
 
-**The identifying feature is half a building and half an absence, and that is unusual enough to record.**
-The pavilion carries the *object*: nothing else in this game is a glazed two-storey box standing on piles
-with a diagonal stair across its face. What carries the *place* is that the ice runs unbroken to the foot of
-that deck with **no masonry retaining wall and no stone coping anywhere in the frame**. Every other Ottawa
-subject in `references.json` is contained — `rideau-canal-skateway` by its retaining wall, `canal-lock` by
-its chamber walls — and Dow's Lake is precisely the stretch where that containment stops. `mustBeRight`
-states the absence as a required feature rather than leaving it to a `neverAdd`, because a verifier scoring
-features against a render can see a wall that should not be there and cannot see one that correctly is not.
+**The identification is carried entirely by positives, and the first version of this page said otherwise.**
+It said the read was "half a building and half an absence": the pavilion carrying the object, and the missing
+retaining wall carrying the place. The scoring pass found that is not how the reading goes. **A blind reader
+sees one frame and has no contrast set.** It cannot know that this game's other canal subjects are walled, so
+empty ice tells it nothing about where containment stops. What identified this render was the glazed
+two-storey box on piles, the deck at ice level, the diagonal stair, the ridge monitor, the lamps and the
+trees — the things that are *there*. Corrected here rather than quietly dropped, because the wrong version
+is the kind that reads plausibly and would be copied onto the next subject.
+
+**The missing wall is still a required feature, and its job is a different one.** The ice runs unbroken to
+the foot of the deck with **no masonry retaining wall and no stone coping anywhere in the frame**, because
+every other Ottawa subject in `references.json` is contained — `rideau-canal-skateway` by its retaining wall,
+`canal-lock` by its coursed chamber walls — and three stops on one level must not converge. It is in
+`mustBeRight` rather than `neverAdd`, and **not** because a `neverAdd` would go unchecked: `neverAdd` entries
+are audited too and surface as `forbiddenPresent`, so a wall listed there would have been caught just as
+well. What the placement buys is **attention** — an auditor working down `mustBeRight` has to *positively
+assert* the absence, feature by feature, rather than merely fail to notice a thing that is not in the
+picture. That is worth having, and it is the whole of the reason.
 
 **The contract does not ask for a place name, and that was decided before the drawing rather than after a
 verdict came back short.** The building has no clock, no spire, no dome and no ornament; the only thing on
@@ -653,6 +663,16 @@ lettering. `expectedBlindAnswer` therefore asks for a building type and a settin
 lake* — and keeps *the Dow's Lake pavilion* in the list as accepted rather than required. This is the
 `pier-21` answer applied a second time; the level's own identification still rests on
 `ottawa-landmark-parliament-hill`, which identified cold at 0.92.
+
+**What the list asks for is water, frozen — and NOT a lake rather than a canal.** Both bars were wrong on the
+first pass and both were found by scoring the contract rather than the picture. `"a boathouse"` was an
+accepted answer with one content word, so *a boathouse on a summer afternoon* matched it while the note said
+an answer with no water in it fails; it is now `"a boathouse on the ice"`, and every accepted answer names the
+frozen surface. And the note was headed *"IT IS A LAKE AND NOT THE CANAL"* while `a pavilion on a frozen
+canal` sat in the list as a pass — a contract disagreeing with itself, and **the scorer reads the list**. The
+list was right. Nothing in one frame fixes a lake rather than a wide reach of a canal, so the heading went and
+the lake-versus-canal distinction stays where it can actually be checked: in `mustBeRight`, as a drawing
+requirement, in front of an auditor that has the contract open.
 
 **The failure to watch for is "a warming hut".** This level already has a building on the ice 1 100 px away.
 That one is a 560 × 360 timber box with a shallow gable, two lit windows and a red panel; this is a 600 × 400
@@ -689,7 +709,7 @@ the hut's and the Library's.
     }
 ```
 
-### THE POI IS NOT IN `content/levels/ottawa.json`, AND THAT IS A FINDING RATHER THAN AN OMISSION
+### THE ART SHIPPED BEFORE THE STOP DID, AND THAT WAS A FINDING RATHER THAN AN OMISSION
 
 The block above is five keys. `content/schemas/level.schema.json` requires seven — `blurb` and `fact` as
 well — and ADR-0003 forbids one commit both authoring a claim and granting it, so art cannot write them.
@@ -704,10 +724,12 @@ as "an unchecked claim rather than an unclaimed one"), and a single invalid POI 
 partial sixth stop does not leave one landmark undrawn; **it stops Ottawa loading**. A red gate is a message;
 a dead level on `main` is a regression.
 
-So this branch lands the art, the contract, the credits and the builder, and leaves the level document
-byte-for-byte as it was. **The content author writes the block above with a `blurb` and a `fact`, a verifier
-grants it, and the stop appears in one commit that was always going to have to be theirs.** Nothing here
-needs to move when they do: the key, the size, the x, the y and the radius are all settled and measured.
+So the art commit landed the drawing, the contract, the credits and the builder, and left the level document
+byte-for-byte as it was. **The content author then wrote the block above with a `blurb` and a `fact`, a
+verifier granted it, and the stop appeared in the commits that were always going to have to be theirs.**
+Nothing here moved when they did: the key, the size, the x, the y and the radius all went in as measured.
+That is the whole of the argument for handing a file back rather than leaving a gate red — a red gate says
+"someone must finish this", and a level that will not load says nothing at all until a player finds it.
 
 ### Budgets, measured 2026-09-22
 
@@ -732,11 +754,19 @@ low block under a broad shallow roof with a raised ridge, an open railed terrace
 on a deck on piles over a flat surface, with three small conifers beside it — which is a pavilion on a lake and
 is not a hut. **Placement floor 300 px**, adopted from this level's floor rather than re-derived.
 
-**That is an author's self-check and it is not an identification.** `make verify-art` reports `dows-lake` as
-**NEVER CHECKED**: the hand-off builds it (55 subjects, 179 renders, anonymisation held), and nobody has yet
-named it from the image alone. It cannot be this pass — whoever drew a render has already seen it, and the
-protocol in `references.json` says a verdict from a party that found its own inputs is untrusted. A blind
-pass is owed and the contract is written to be scored by one.
+**That is an author's self-check and it is not an identification.** It cannot be: whoever drew a render has
+already seen it, and `verifyArtProtocol` says a verdict from a party that found its own inputs is untrusted.
+
+**A first verdict is now on record and it is marked untrusted, for a reason that is not about the pictures.**
+The feature audit was clean — 7/7 `mustBeRight` present, nothing from `neverAdd`, nothing uncheckable — and
+an independent reader described the render at 600, 300 and 140 px as a two-storey glazed building on piles
+standing in ice, with an external stair, a ridge monitor, three globe lamps and three spruces. **The hand-off
+held; the briefing given to the reader did not.** It named *pavilion*, *frozen lake*, *restaurant*, *which
+lake*, *Ottawa* and the missing coping — most of `expectedBlindAnswer`, in prose — so the run was not
+open-set and the verdict cannot count. That is the same failure `art-handoff.mjs` records twice already: the
+images were clean and the terminal was not. **A fresh blind run is owed**, from a reader that has seen
+neither the keymap nor this contract, and it will now score against a contract that does not contradict
+itself (the two defects that scoring found are fixed above).
 
 ### The builder patch `scripts/lib/art-handoff.mjs` needed, and has
 
