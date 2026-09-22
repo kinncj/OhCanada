@@ -42,7 +42,7 @@
   "verification": {
     "status": "verified",
     "model": "claude-opus-5",
-    "checkedAt": "2026-09-16T11:30:00Z",
+    "checkedAt": "2026-09-22T05:10:00Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Manitoba’s economy is based on agriculture, mining and hydro-electric power generation."
   }
