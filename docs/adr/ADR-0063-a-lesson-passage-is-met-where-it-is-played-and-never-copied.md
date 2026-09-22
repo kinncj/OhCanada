@@ -462,12 +462,12 @@ the contract only.
   material: ADR-0028's live-check of *Canada's Regions* is still open, and slice 10's Indigenous content
   review is unobtainable. `toronto` is the recommendation — 22 passages available, and the highest newly
   taught count (4) of any level.
-  **NOT DISCHARGED, AND NOW BLOCKED ON A STOP THAT DOES NOT EXIST — 2026-09-22.** It was written, measured
+  **STILL OPEN, AND NOW BLOCKED ON A STOP THAT DOES NOT EXIST — 2026-09-22.** It was written, measured
   and withdrawn, and what the attempt bought is a bound nobody had: **a `read` step cannot be placed on any
   level this project currently ships.** The route it would call is built and tested (§6 above); what is
   missing is somewhere for it to stand. The owner has commissioned a sixth Ottawa stop — **Dow's Lake**, the
   skateway's terminus, at about x 8 700, which clears the 1 080 px minimum from the warming hut at 7 600
-  inside a 9 000 px level — and this obligation is discharged when that stop and its `read` step land
+  inside a 9 000 px level — and this obligation closes when that stop and its `read` step land
   together. Everything below is the measurement that forced it.
 
   **Why not `toronto`, and why not anywhere: the reason is structural rather than editorial.**
