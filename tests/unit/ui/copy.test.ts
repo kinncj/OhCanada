@@ -184,6 +184,7 @@ describe('the copy table', () => {
       'hud.interact.rideau-locks',
       'hud.interact.library-of-parliament',
       'hud.interact.warming-hut',
+      'hud.interact.dows-lake',
       'hud.interact.streetcar',
       'hud.interact.nathan-phillips-square',
       'hud.interact.footbridge',

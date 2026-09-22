@@ -280,6 +280,7 @@ and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-
 | `hud.interact.rideau-locks` | Look at the locks | Regarder les écluses |
 | `hud.interact.library-of-parliament` | Look at the Library | Regarder la Bibliothèque |
 | `hud.interact.warming-hut` | Look at the hut | Regarder la cabane |
+| `hud.interact.dows-lake` | Look at the pavilion | Regarder le pavillon |
 | `hud.interact.streetcar` | Look at the streetcar | Regarder le tramway |
 | `hud.interact.nathan-phillips-square` | Look at Nathan Phillips Square | Regarder la place Nathan-Phillips |
 | `hud.interact.footbridge` | Look at the bridge | Regarder la passerelle |
