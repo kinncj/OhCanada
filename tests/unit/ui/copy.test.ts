@@ -259,8 +259,12 @@ describe('the copy table', () => {
      * halves of the sentence for a clear that did not finish. Removing an entry
      * is what a story file writing the row down looks like, and it is a green
      * change; the number moves with the list so neither can drift alone.
+     *
+     * 78 since 2026-09-22: Ottawa gained a sixth stop, and a landmark that
+     * opens a card needs a prompt of its own. TN-REACH carries the row as a
+     * proposal, so it is a gap like the nine Ottawa prompts before it.
      */
-    expect(COPY_GAPS).toHaveLength(77);
+    expect(COPY_GAPS).toHaveLength(78);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {
