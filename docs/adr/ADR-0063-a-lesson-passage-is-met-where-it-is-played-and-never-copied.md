@@ -501,6 +501,25 @@ the contract only.
   without ever stopping (a glide begun outside reach passes everything, including both new stops), the turn
   passes through zero 36 frames in, and the brake fires. The skater comes to rest at 1 927 for the officer and
   2 496 for the locks, with **one** affordance ready at each — one job in the strip (ADR-0066).
+
+  **ONE VERIFIER COMMIT IS OWED, AND THIS IS THE ONLY THING BETWEEN THIS STEP AND GREEN.** `verify-content`'s
+  gate A4 binds a grant to *the whole authored unit*, and its own header says what that costs out loud: *"a
+  point of interest's `position`, `artKey` and `radiusPx` … are in the unit and WILL void that one grant if
+  they move. Accepted."* So moving `rideau-locks` voids the grant `6e1f06f3c` made over it, and the gate says
+  so precisely — two fields changed, `position.x` and `position.y`, with the prose, the quote, the page, the
+  chapter and the `sourceHash` byte-identical to what the verifier read. **The author half of the pair is
+  this commit; the verifier half is not the author's to write** (ADR-0003, and it is the rule this whole ADR
+  rests on), so the tree is red between the two exactly as `docs/plan/slices.md` records is normal for an
+  author/verifier pair. What is owed is one re-verification of a claim whose words did not change.
+
+  **There was no way round it, and that is worth recording rather than re-deriving.** With point-of-interest
+  positions frozen by A4, the full constraint set leaves **no level able to host a `read` step at all**:
+  every quest's `visit` steps carry two granted lines each, so no step can be converted for free; the three
+  levels with a spare stop spend it on a landmark standing before the giver; `peggys-cove` and `the-north`
+  give that quest to a **landmark**, which cannot move without the same re-verification, and `the-north` is
+  excluded anyway; and `ottawa` gives it to a **character**, who can move freely — but only into the physics
+  run-up, which is the one place on that canal nothing may stand. Moving the landmark is therefore the only
+  change available, and a re-grant is its price.
   **What it reads.** `govern-03-the-royal-family-and-the-legislatures`, all three passages, at the canal
   locks — whose own blurb already tells the Sovereign as a symbol of Canadian sovereignty (p. 57), so the
   reader continues the plaque's own page rather than opening a second subject. **69 words EN / 84 FR**,
