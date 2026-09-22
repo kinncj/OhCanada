@@ -358,7 +358,7 @@ Feature: The North says what it is getting ready
   Scenario: The HUD says a thing has something to offer, and does not name it
     Given the North level is playable
     When I come within reach of the landmark
-    Then "interact-prompt" reads "See what there is to do here", the row TN-REACH owns
+    Then "interact-prompt" reads "See what to do here", the row TN-REACH owns
     And it does not read "Look at this place", because pressing opens a task and not a card
     And it does not read "Talk to this person", because nobody is there
     And it names nothing
@@ -499,7 +499,7 @@ Feature: The level in French
     Given the North level is playable
     Then "hud-mode-label" reads "Marche"
     And the level title reads "Le Nord" with the subtitle "Les régions du Canada"
-    And "interact-prompt" reads "Voir ce qu'il y a à faire ici" when the landmark is in reach
+    And "interact-prompt" reads "Voir quoi faire ici" when the landmark is in reach
 
   Scenario: The failure is French, with the article in lower case and the noun still capitalised
     Given requests for the North assets fail

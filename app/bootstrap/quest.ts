@@ -49,7 +49,7 @@
  *    dialogue closes; a dialog that said both would tell a returning player the
  *    same instruction twice, once as a label and once in a voice.
  *  - **The after-line is said every time a finished giver is engaged.** The HUD
- *    offers that giver as "Done. See this one again", which promises the same
+ *    offers that giver as "Done. See it again", which promises the same
  *    words again, and the line teaches a verified fact — hearing a fact twice is
  *    review, not noise. A landmark giver behaves identically: nothing on this
  *    path branches on the kind.
@@ -358,7 +358,7 @@ export interface QuestController {
    * Is this target a giver whose quest is not finished — on offer, declined, or
    * accepted and still running?
    *
-   * The question the prompt needs before it says "Done. See this one again"
+   * The question the prompt needs before it says "Done. See it again"
    * about somebody the player has just spoken to. Engaging a giver is not
    * finishing with it: the guide who has just handed over a task still has that
    * task, and a prompt calling them done read as the task being complete
@@ -1104,7 +1104,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
       /*
        * Finished: the quest's own `afterLine`, every time. The HUD offers this
-       * giver as "Done. See this one again", and a line that teaches a verified
+       * giver as "Done. See it again", and a line that teaches a verified
        * fact is worth hearing twice. Not the `summary`, which is an instruction
        * in the present tense about a finished thing. Nothing is earned a second
        * time: `earn` is not on this path at all.

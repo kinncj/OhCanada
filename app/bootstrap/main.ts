@@ -2077,7 +2077,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
   /**
    * What has been engaged in this sitting.
    *
-   * `TN-REACH-03`: a target already used says "Done. See this one again" rather
+   * `TN-REACH-03`: a target already used says "Done. See it again" rather
    * than inviting the player to do it again. Per sitting rather than per save,
    * which is `OQ-REACH-3` answered in the direction that needs no new field in
    * `progress.schema.json` — a document this task may not edit — and which is
@@ -3024,7 +3024,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * This one has been done.
    *
    * Two consequences, and they are the same fact seen from two sides: the prompt
-   * for it becomes "Done. See this one again" (`TN-REACH-03`), and the one-time
+   * for it becomes "Done. See it again" (`TN-REACH-03`), and the one-time
    * hint has served its purpose and goes for good (`TN-REACH-04`: "it goes as
    * soon as I engage anything, and does not come back in this sitting").
    */

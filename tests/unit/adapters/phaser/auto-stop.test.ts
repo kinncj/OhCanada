@@ -534,7 +534,7 @@ describe('it stops once per visit for each thing, and never twice', () => {
   it('a new visit stops for it again, however it was finished before', () => {
     /*
      * Finished subjects are not exempt. `TN-REACH-03` offers a done target as
-     * "Done. See this one again", and a train that must stop to engage, or a
+     * "Done. See it again", and a train that must stop to engage, or a
      * player on auto-move, can only take that offer up if the drive stops. The
      * latch lives in the watch and the scene builds one per level visit, so a
      * replay stops once at each thing and never twice.

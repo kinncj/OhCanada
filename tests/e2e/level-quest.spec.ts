@@ -376,7 +376,7 @@ const walkUntilThePromptReads = (page: Page, wanted: string): Promise<string | n
  *
  * The giver stands between the spawn and the first landmark, and once they have
  * been talked to their prompt keeps its own words while the task runs (ADR-0039)
- * and reads "Done. See this one again" once it is finished — so a walk that
+ * and reads "Done. See it again" once it is finished — so a walk that
  * stopped at the first mark stopped at the guide again, and engaging it opened
  * the reminder rather than the landmark. Saying what to ignore is how a walk
  * asks for "the next thing, not this one" without naming a landmark the level
@@ -719,7 +719,7 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(tracker).toContainText(FIRST_VISIT?.prompt.en ?? '');
 
     /* On past the giver — whose prompt keeps its own words while the task runs
-       (ADR-0039) and read "Done. See this one again" before — and up to the
+       (ADR-0039) and read "Done. See it again" before — and up to the
        first landmark the tracker names. */
     const offered = await walkPastAndOnTo(page, [GIVER_PROMPT, text('en', 'hud.interact.done')]);
     expect(
@@ -813,7 +813,7 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
        *
        *  - an **`answer`** step counts a question wherever it is asked, so the
        *    player stays where they are and engages the landmark again — even
-       *    though its prompt now reads "Done. See this one again", which is
+       *    though its prompt now reads "Done. See it again", which is
        *    about this sitting and not about the task. A three-answer step needs
        *    exactly that;
        *  - a **`visit`** step finishes only at the landmark it names, and one

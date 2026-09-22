@@ -615,9 +615,9 @@ const EN = {
      "Task" is the game's own word for a quest (`quest.done.title`), and "here"
      does the demonstrative's work the other generic rows give to "this place"
      and "this person". */
-  'hud.interact.poi.offer': 'See what there is to do here',
+  'hud.interact.poi.offer': 'See what to do here',
   'hud.interact.npc': 'Talk to this person',
-  'hud.interact.done': 'Done. See this one again',
+  'hud.interact.done': 'Done. See it again',
   /* Reworded 2026-09-14 and listed in {@link COPY_GAPS} until `TN-REACH`'s owner
      ratifies it. "A mark shows something to see" was drawn the first time
      anything came into reach — and on Halifax, the level the game opens on, the
@@ -643,7 +643,7 @@ const EN = {
   /* docs/stories/TN-GUIDE-the-guide.md — a per-target row whose target is on
      three levels, so the character's own story writes it once rather than three
      level stories writing it three times. It is an ordinary rule-2 row: `done`
-     still wins, so a finished guide reads "Done. See this one again". Its
+     still wins, so a finished guide reads "Done. See it again". Its
      absence was a live defect — the kind row calls the guide "this person", and
      the guide is a beaver. */
   'hud.interact.guide': 'Talk to the guide',
@@ -669,32 +669,32 @@ const EN = {
      sternwheeler), whose stories keep their names out of the HUD and whose
      prompt is `hud.interact.poi.offer`. `tests/unit/ui/copy.test.ts` holds both
      halves against the level and quest documents. */
-  'hud.interact.town-clock': 'Look at the Halifax Town Clock',
-  'hud.interact.market-stall': 'Look at the market stall',
-  'hud.interact.harbour-tug': 'Look at the harbour tug',
-  'hud.interact.granite-shore': 'Look at the granite shore',
-  'hud.interact.fish-store': 'Look at the fish store',
-  'hud.interact.village-house': 'Look at the village house',
-  'hud.interact.city-wall': 'Look at the city wall',
+  'hud.interact.town-clock': 'Look at the clock',
+  'hud.interact.market-stall': 'Look at the stall',
+  'hud.interact.harbour-tug': 'Look at the tug',
+  'hud.interact.granite-shore': 'Look at the shore',
+  'hud.interact.fish-store': 'Look at the store',
+  'hud.interact.village-house': 'Look at the house',
+  'hud.interact.city-wall': 'Look at the wall',
   'hud.interact.terrace-kiosk': 'Look at the bandstand',
-  'hud.interact.rideau-locks': 'Look at the canal locks',
-  'hud.interact.library-of-parliament': 'Look at the Library of Parliament',
-  'hud.interact.warming-hut': 'Look at the warming hut',
+  'hud.interact.rideau-locks': 'Look at the locks',
+  'hud.interact.library-of-parliament': 'Look at the Library',
+  'hud.interact.warming-hut': 'Look at the hut',
   'hud.interact.streetcar': 'Look at the streetcar',
   'hud.interact.nathan-phillips-square': 'Look at Nathan Phillips Square',
-  'hud.interact.footbridge': 'Look at the footbridge',
-  'hud.interact.autumn-maple': 'Look at the maple tree',
-  'hud.interact.grain-bins': 'Look at the grain bins',
-  'hud.interact.grain-elevator': 'Look at the grain elevator',
-  'hud.interact.combine-harvester': 'Look at the combine harvester',
-  'hud.interact.container-car': 'Look at the container car',
-  'hud.interact.ranch-gate': 'Look at the ranch gate',
-  'hud.interact.ranch-barn': 'Look at the working ranch',
-  'hud.interact.pump-jack': 'Look at the oil pump jack',
-  'hud.interact.beef-cattle': 'Look at the cattle on the range',
+  'hud.interact.footbridge': 'Look at the bridge',
+  'hud.interact.autumn-maple': 'Look at the maple',
+  'hud.interact.grain-bins': 'Look at the bins',
+  'hud.interact.grain-elevator': 'Look at the elevator',
+  'hud.interact.combine-harvester': 'Look at the combine',
+  'hud.interact.container-car': 'Look at the rail car',
+  'hud.interact.ranch-gate': 'Look at the gate',
+  'hud.interact.ranch-barn': 'Look at the barn',
+  'hud.interact.pump-jack': 'Look at the oil pump',
+  'hud.interact.beef-cattle': 'Look at the cattle',
   'hud.interact.marina': 'Look at the marina',
-  'hud.interact.bulk-carrier': 'Look at the cargo ship',
-  'hud.interact.spruce-stand': 'Look at the spruce trees',
+  'hud.interact.bulk-carrier': 'Look at the ship',
+  'hud.interact.spruce-stand': 'Look at the spruce',
   'hud.interact.driftwood': 'Look at the driftwood',
 
   /* docs/stories/TN-SAVE-save-and-reload.md — the storage warning these screens
@@ -1426,7 +1426,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
      the phrase names no task the player has not been offered yet and claims no
      count. Impersonal throughout, so the landmark acquires no voice
      (ADR-0029 §5). */
-  'hud.interact.poi.offer': "Voir ce qu'il y a à faire ici",
+  'hud.interact.poi.offer': 'Voir quoi faire ici',
   /* « Cette personne » is feminine whoever it names, so the row is written about
      the person in reach and never about the player: no agreement, no bracketed
      ending (`docs/content-review.md` §8.6). */
@@ -1450,31 +1450,31 @@ const FR: Readonly<Record<CopyRow, string>> = {
      majuscule de son document (« la Tour de l'horloge d'Halifax », « la
      Bibliothèque du Parlement ») et un générique la perd dans la phrase (« la
      place Nathan-Phillips »). */
-  'hud.interact.town-clock': "Regarder la Tour de l'horloge d'Halifax",
+  'hud.interact.town-clock': "Regarder l'horloge",
   'hud.interact.market-stall': "Regarder l'étal de marché",
-  'hud.interact.harbour-tug': 'Regarder le remorqueur de port',
-  'hud.interact.granite-shore': 'Regarder la côte de granit',
-  'hud.interact.fish-store': 'Regarder le hangar de pêche',
-  'hud.interact.village-house': 'Regarder la maison du village',
-  'hud.interact.city-wall': 'Regarder le mur de la ville',
-  'hud.interact.terrace-kiosk': 'Regarder le kiosque à musique',
-  'hud.interact.rideau-locks': 'Regarder les écluses du canal',
-  'hud.interact.library-of-parliament': 'Regarder la Bibliothèque du Parlement',
-  'hud.interact.warming-hut': 'Regarder la cabane chauffée',
+  'hud.interact.harbour-tug': 'Regarder le remorqueur',
+  'hud.interact.granite-shore': 'Regarder la côte',
+  'hud.interact.fish-store': 'Regarder le hangar',
+  'hud.interact.village-house': 'Regarder la maison',
+  'hud.interact.city-wall': 'Regarder le mur',
+  'hud.interact.terrace-kiosk': 'Regarder le kiosque',
+  'hud.interact.rideau-locks': 'Regarder les écluses',
+  'hud.interact.library-of-parliament': 'Regarder la Bibliothèque',
+  'hud.interact.warming-hut': 'Regarder la cabane',
   'hud.interact.streetcar': 'Regarder le tramway',
   'hud.interact.nathan-phillips-square': 'Regarder la place Nathan-Phillips',
   'hud.interact.footbridge': 'Regarder la passerelle',
   'hud.interact.autumn-maple': "Regarder l'érable",
-  'hud.interact.grain-bins': 'Regarder les silos à grains',
-  'hud.interact.grain-elevator': "Regarder l'élévateur à grain",
-  'hud.interact.combine-harvester': 'Regarder la moissonneuse-batteuse',
-  'hud.interact.container-car': 'Regarder le wagon porte-conteneurs',
-  'hud.interact.ranch-gate': 'Regarder la barrière du ranch',
-  'hud.interact.ranch-barn': 'Regarder le ranch en activité',
-  'hud.interact.pump-jack': 'Regarder le chevalet de pompage',
-  'hud.interact.beef-cattle': 'Regarder les bovins au pâturage',
+  'hud.interact.grain-bins': 'Regarder les silos',
+  'hud.interact.grain-elevator': "Regarder l'élévateur",
+  'hud.interact.combine-harvester': 'Regarder la moissonneuse',
+  'hud.interact.container-car': 'Regarder le wagon',
+  'hud.interact.ranch-gate': 'Regarder la barrière',
+  'hud.interact.ranch-barn': 'Regarder le ranch',
+  'hud.interact.pump-jack': 'Regarder le chevalet',
+  'hud.interact.beef-cattle': 'Regarder les bovins',
   'hud.interact.marina': 'Regarder la marina',
-  'hud.interact.bulk-carrier': 'Regarder le navire de charge',
+  'hud.interact.bulk-carrier': 'Regarder le navire',
   'hud.interact.spruce-stand': 'Regarder les épinettes',
   'hud.interact.driftwood': 'Regarder le bois flotté',
 

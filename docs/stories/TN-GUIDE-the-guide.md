@@ -238,7 +238,7 @@ Feature: The prompt says what pressing does, about the thing that is actually th
   Scenario: A finished character still says the state first
     Given I have finished this level's quest
     When I come within reach of the guide
-    Then "interact-prompt" reads "Done. See this one again", as TN-REACH-01 requires
+    Then "interact-prompt" reads "Done. See it again", as TN-REACH-01 requires
     And this file's row is not drawn instead of it
 
   Scenario: The generic row is still right for a person

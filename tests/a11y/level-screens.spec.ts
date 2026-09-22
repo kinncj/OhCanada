@@ -1114,7 +1114,7 @@ test.describe('what is in reach', () => {
   test('says a target is done rather than inviting it again', async ({ page }) => {
     await open(page, 'level', { prompt: true, done: true });
     await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText(
-      'Done. See this one again',
+      'Done. See it again',
     );
   });
 
@@ -1154,7 +1154,7 @@ test.describe('what is in reach', () => {
        file's row is not drawn instead of it. */
     await open(page, 'level', { prompt: true, who: 'guide', done: true });
     await expect(page.locator('[data-testid="interact-prompt"]')).toHaveText(
-      'Done. See this one again',
+      'Done. See it again',
     );
   });
 

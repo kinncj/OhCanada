@@ -141,7 +141,7 @@
  * level visit.
  *
  * Subjects the domain reports finished are stopped for too — once, like any
- * other. `TN-REACH-03` offers a done target as "Done. See this one again", and on
+ * other. `TN-REACH-03` offers a done target as "Done. See it again", and on
  * the train, whose `requiresStop` refuses an engagement in motion, or with
  * auto-move, which a player chose because they cannot hold, a landmark the drive
  * never stops at is one that offer can never be taken up from. The cost to

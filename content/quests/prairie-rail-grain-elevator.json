@@ -248,7 +248,7 @@
       ],
       "prompt": {
         "en": "Answer 4 questions about Canada after the war",
-        "fr": "Répondez à 4 questions sur le Canada d'après-guerre"
+        "fr": "Répondez à 4 questions sur l'après-guerre"
       }
     },
     {
@@ -326,7 +326,7 @@
       "targetId": "combine-harvester",
       "prompt": {
         "en": "Stop by the combine harvester",
-        "fr": "Arrêtez-vous près de la moissonneuse-batteuse"
+        "fr": "Arrêtez-vous à la moissonneuse"
       },
       "dialogue": [
         {
