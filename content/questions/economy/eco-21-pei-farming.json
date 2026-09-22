@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Its oil refineries.",
-      "fr": "Ses raffineries de pétrole."
+      "en": "Its oil refineries and its busy shipping port.",
+      "fr": "Ses raffineries de pétrole et son port maritime très actif."
     },
     {
       "en": "Its beaches, red soil and farming.",
@@ -20,8 +20,8 @@
       "fr": "Ses usines d'automobiles."
     },
     {
-      "en": "Its uranium mines.",
-      "fr": "Ses mines d'uranium."
+      "en": "Its uranium mines in the north of the island.",
+      "fr": "Ses mines d'uranium dans le nord de l'île."
     }
   ],
   "correctIndex": 1,

@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Only inside the Parliament Buildings.",
-      "fr": "Uniquement à l'intérieur des édifices du Parlement."
+      "en": "Only inside the Parliament Buildings, in Ottawa.",
+      "fr": "Uniquement à l'intérieur des édifices du Parlement, à Ottawa."
     },
     {
       "en": "Only on military uniforms.",
@@ -20,8 +20,8 @@
       "fr": "Sur les documents du gouvernement, les édifices publics et les billets de banque."
     },
     {
-      "en": "On the flag of every province.",
-      "fr": "Sur le drapeau de chaque province."
+      "en": "On the flag of every province and territory, without exception.",
+      "fr": "Sur le drapeau de chaque province et de chaque territoire, sans exception."
     }
   ],
   "correctIndex": 2,

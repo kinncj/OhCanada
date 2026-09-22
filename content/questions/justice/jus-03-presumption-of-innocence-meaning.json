@@ -12,16 +12,16 @@
       "fr": "Une personne est innocente tant que sa culpabilité n'est pas prouvée."
     },
     {
-      "en": "A person must prove that they are innocent.",
-      "fr": "Une personne doit prouver qu'elle est innocente."
+      "en": "A person must prove for themselves that they are innocent.",
+      "fr": "Une personne doit prouver elle-même qu'elle est innocente."
     },
     {
       "en": "The police decide who is guilty.",
       "fr": "Les policiers décident qui est coupable."
     },
     {
-      "en": "A person is guilty as soon as they are charged.",
-      "fr": "Une personne est coupable dès qu'elle est accusée."
+      "en": "A person is guilty as soon as they are charged with a crime.",
+      "fr": "Une personne est coupable dès qu'elle est accusée d'un crime."
     }
   ],
   "correctIndex": 0,

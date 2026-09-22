@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "The Governor General gives royal assent.",
-      "fr": "Le gouverneur général accorde la sanction royale."
+      "en": "The Governor General gives royal assent on behalf of the Sovereign.",
+      "fr": "Le gouverneur général accorde la sanction royale au nom du souverain ou de la souveraine."
     },
     {
       "en": "Members of a committee examine the bill one clause at a time.",
@@ -20,8 +20,8 @@
       "fr": "La population vote sur le projet de loi."
     },
     {
-      "en": "The bill is printed for the first time.",
-      "fr": "Le projet de loi est imprimé pour la première fois."
+      "en": "The bill is read for the first time and printed.",
+      "fr": "Le projet de loi est lu une première fois et imprimé."
     }
   ],
   "correctIndex": 1,

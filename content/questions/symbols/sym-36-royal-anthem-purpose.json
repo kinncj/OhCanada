@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Only on Canada Day.",
-      "fr": "Uniquement le jour de la fête du Canada."
+      "en": "Only on Canada Day, the first of July each year.",
+      "fr": "Uniquement le jour de la fête du Canada, le 1er juillet de chaque année."
     },
     {
       "en": "Whenever Canadians want to pay honour to the Sovereign.",
@@ -20,8 +20,8 @@
       "fr": "Uniquement à l'ouverture du Parlement."
     },
     {
-      "en": "Only at military funerals.",
-      "fr": "Uniquement lors de funérailles militaires."
+      "en": "Only at military funerals and remembrance services.",
+      "fr": "Uniquement lors de funérailles militaires et de cérémonies du souvenir."
     }
   ],
   "correctIndex": 1,

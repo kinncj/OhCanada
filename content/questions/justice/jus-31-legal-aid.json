@@ -12,16 +12,16 @@
       "fr": "Recourir à l'aide juridique, offerte gratuitement ou à faible coût dans la plupart des collectivités."
     },
     {
-      "en": "Nothing. You must pay the full cost.",
-      "fr": "Rien. Vous devez payer le plein montant."
+      "en": "Nothing. You must pay a lawyer the full cost yourself.",
+      "fr": "Rien. Vous devez payer vous-même le plein montant à un avocat."
     },
     {
       "en": "Ask the judge to pay for one.",
       "fr": "Demander au juge d'en payer un."
     },
     {
-      "en": "Ask the police to act for you in court.",
-      "fr": "Demander aux policiers d'agir pour vous devant le tribunal."
+      "en": "Ask the police officers on your case to stand in for you in court for free.",
+      "fr": "Demander aux policiers chargés de votre dossier de vous représenter gratuitement devant les tribunaux."
     }
   ],
   "correctIndex": 0,

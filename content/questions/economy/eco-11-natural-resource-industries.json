@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Banking, insurance and retail.",
-      "fr": "Les banques, l'assurance et le commerce de détail."
+      "en": "Banking, insurance and the retail stores on every main street.",
+      "fr": "Les banques, l'assurance et les commerces de détail de chaque rue principale."
     },
     {
       "en": "Forestry, fishing, agriculture, mining and energy.",
@@ -20,8 +20,8 @@
       "fr": "L'aérospatiale, l'automobile et la machinerie."
     },
     {
-      "en": "Tourism, education and health care.",
-      "fr": "Le tourisme, l'éducation et les soins de santé."
+      "en": "Tourism, education and health care services.",
+      "fr": "Le tourisme, l'éducation et les services de soins de santé."
     }
   ],
   "correctIndex": 1,

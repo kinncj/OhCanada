@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Fishing, shipbuilding and tourism.",
-      "fr": "La pêche, la construction navale et le tourisme."
+      "en": "Fishing, shipbuilding and tourism along the Hudson Bay shore.",
+      "fr": "La pêche, la construction navale et le tourisme le long du littoral de la baie d'Hudson."
     },
     {
       "en": "Banking, insurance and film.",
@@ -20,8 +20,8 @@
       "fr": "L'agriculture, l'exploitation minière et la production d'électricité hydroélectrique."
     },
     {
-      "en": "Oil sands, potash and uranium.",
-      "fr": "Les sables bitumineux, la potasse et l'uranium."
+      "en": "Oil sands, potash and uranium from the northern rock.",
+      "fr": "Les sables bitumineux, la potasse et l'uranium tirés de la roche du Nord."
     }
   ],
   "correctIndex": 2,

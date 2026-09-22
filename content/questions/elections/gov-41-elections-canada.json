@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "The political party in power.",
-      "fr": "Le parti politique au pouvoir."
+      "en": "The political party in power, through its own staff.",
+      "fr": "Le parti politique au pouvoir, avec son propre personnel."
     },
     {
       "en": "Elections Canada, a neutral agency of Parliament.",
@@ -20,8 +20,8 @@
       "fr": "Le bureau du premier ministre."
     },
     {
-      "en": "Each province's government.",
-      "fr": "Le gouvernement de chaque province."
+      "en": "Each province's government, for its own voters.",
+      "fr": "Le gouvernement de chaque province, pour ses propres électeurs."
     }
   ],
   "correctIndex": 1,

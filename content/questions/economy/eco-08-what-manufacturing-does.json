@@ -16,12 +16,12 @@
       "fr": "Elles offrent des services bancaires et d'assurance."
     },
     {
-      "en": "They dig up and ship raw ore only.",
-      "fr": "Elles extraient et expédient uniquement du minerai brut."
+      "en": "They dig up raw ore and ship it overseas without changing it.",
+      "fr": "Elles extraient du minerai brut et l'expédient outre-mer sans le transformer."
     },
     {
-      "en": "They run the country's schools and hospitals.",
-      "fr": "Elles gèrent les écoles et les hôpitaux du pays."
+      "en": "They run the country's schools, colleges and hospitals.",
+      "fr": "Elles gèrent les écoles, les collèges et les hôpitaux du pays."
     }
   ],
   "correctIndex": 0,

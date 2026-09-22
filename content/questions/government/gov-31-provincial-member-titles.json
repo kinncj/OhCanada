@@ -8,8 +8,8 @@
   },
   "options": [
     {
-      "en": "Members of Parliament (MPs), the same as in Ottawa.",
-      "fr": "Des députés fédéraux (MP), comme à Ottawa."
+      "en": "Members of Parliament (MPs), the same title as in the House of Commons.",
+      "fr": "Des députés fédéraux (MP), le même titre qu'à la Chambre des communes."
     },
     {
       "en": "Senators.",
@@ -20,8 +20,8 @@
       "fr": "MLA, MNA, MPP ou MHA; le titre dépend de l'endroit où ils siègent."
     },
     {
-      "en": "Councillors or aldermen.",
-      "fr": "Des conseillers ou des échevins."
+      "en": "Councillors or aldermen, as on a city council.",
+      "fr": "Des conseillers ou des échevins, comme à un conseil municipal."
     }
   ],
   "correctIndex": 2,

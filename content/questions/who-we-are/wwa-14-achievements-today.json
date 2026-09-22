@@ -12,16 +12,16 @@
       "fr": "L'agriculture, l'environnement, les affaires et les arts."
     },
     {
-      "en": "Mining and forestry only.",
-      "fr": "Les mines et la foresterie seulement."
+      "en": "Mining and forestry, and nothing beyond those two.",
+      "fr": "Les mines et la foresterie, et rien d'autre que ces deux domaines."
     },
     {
       "en": "Sport and music only.",
       "fr": "Le sport et la musique seulement."
     },
     {
-      "en": "Shipping and railways.",
-      "fr": "Le transport maritime et les chemins de fer."
+      "en": "Shipping and railways, above all.",
+      "fr": "Le transport maritime et les chemins de fer surtout."
     }
   ],
   "correctIndex": 0,
