@@ -603,10 +603,15 @@ describe('a level whose every claim is filtered out is not a level (ADR-0024)', 
 
   it('refuses it, and says how many were placed and how many may speak', () => {
     const silenced = clone(readLevel(OTTAWA));
-    for (const poi of silenced['pois'] as Record<string, unknown>[]) {
+    const pois = silenced['pois'] as Record<string, unknown>[];
+    for (const poi of pois) {
       (poi['fact'] as { verification: Record<string, unknown> }).verification['status'] =
         'quarantined';
     }
+    /* Read from the document rather than typed: the count is how many stops
+       Ottawa places today, and a level gaining one is not this test's subject. */
+    const placed = pois.length;
+    expect(placed, 'ottawa places no landmark, so nothing was silenced').toBeGreaterThan(0);
 
     const result = parse(silenced);
     expect(
@@ -619,7 +624,7 @@ describe('a level whose every claim is filtered out is not a level (ADR-0024)', 
       /* `admitSubjectBank` puts `offered` and `admitted` in its message for the
          same reason: "no landmarks" and "no landmark that may speak" need
          different fixes and look identical from outside. */
-      expect(result.error.details).toMatchObject({ placed: 4, teaching: 0 });
+      expect(result.error.details).toMatchObject({ placed, teaching: 0 });
     }
   });
 
