@@ -131,23 +131,25 @@ describe('every read step in the build names passages that exist', () => {
 
   it('reports how many references the build actually holds', () => {
     /*
-     * Zero today, and that is a legal answer rather than a silent one — stated
-     * as an assertion so the day the first `read` step lands this number moves
-     * and the check above stops being a walk over nothing.
+     * Two today — `read-at-dows-lake` on `ottawa-parliament-hill`, the last step
+     * of that quest, standing on the level's last stop. A floor rather than an
+     * equality, because authoring a second `read` step must not turn this red;
+     * but a floor of one rather than of zero, because the day this walk goes
+     * back to nothing it has stopped being a walk over anything and the `read`
+     * step has silently left the build.
      *
-     * It was briefly not zero. `ottawa-parliament-hill` read at the canal locks,
-     * and the step was withdrawn when Ottawa's canal turned out to have no room
-     * for it: a `read` step needs a stop **after** the quest's giver, the locks
-     * stand before the officer, and moving either is refused by three separate
-     * gates at once — the physics run-up in `tests/e2e/level-ottawa.spec.ts`,
-     * the 1 080 px between landmark heroes in
-     * `level-art-is-placed-where-it-is-drawn.test.ts`, and `verify-content`'s A4,
-     * which binds a landmark's grant to its own position. The arithmetic is in
-     * ADR-0063. The first step is waiting on a sixth Ottawa stop rather than on
-     * anything in this file.
+     * It reached zero once before, and the reason is worth keeping: the first
+     * attempt read at the canal locks and was withdrawn when Ottawa's canal
+     * turned out to have no room for it. A `read` step needs a stop the level
+     * does not already spend a `visit` on, the locks stand before the officer,
+     * and moving either is refused by three separate gates at once — the physics
+     * run-up in `tests/e2e/level-ottawa.spec.ts`, the 1 080 px between landmark
+     * heroes in `level-art-is-placed-where-it-is-drawn.test.ts`, and
+     * `verify-content`'s A4, which binds a landmark's grant to its own position.
+     * The arithmetic is in ADR-0063. The answer was the far end of the level.
      */
     const found = quests.flatMap(({ document }) => referencesIn(document));
-    expect(found.length).toBeGreaterThanOrEqual(0);
+    expect(found.length).toBeGreaterThanOrEqual(1);
     for (const reference of found) expect(reference.kind).toBe('read');
   });
 });
