@@ -240,6 +240,14 @@ const hoisted = vi.hoisted(() => {
     /** Every dialogue that was shown, as the content it was given. */
     dialoguesShown: Record<string, unknown>[];
     dialogueOptions: Record<string, unknown> | null;
+    /**
+     * What the mocked lesson catalogue serves, keyed by chapter.
+     *
+     * Set by the quest scenarios from the quest document's own `read` step, so
+     * the fixture cannot name a lesson the step does not, and empty everywhere
+     * else — a level with no `read` step asks the catalogue nothing.
+     */
+    lessonChapters: Record<string, unknown[]>;
   } = {
     calls: [],
     loadCalls: [],
@@ -306,8 +314,60 @@ const hoisted = vi.hoisted(() => {
     passportsDestroyed: 0,
     dialoguesShown: [],
     dialogueOptions: null,
+    lessonChapters: {},
   };
   return { state };
+});
+
+/*
+ * The lesson catalogue (ADR-0063 §6), faked — and only this half of the content
+ * adapter.
+ *
+ * This suite's rule is that the UI is faked and the composition is real, and a
+ * lazy per-chapter catalogue is neither: it is content **I/O**, the same class
+ * of thing as `@application/use-cases/study-session`, which is mocked here for
+ * the same reason. Left real it reaches for `content/lessons/**` through a
+ * dynamic import, and this file runs on fake timers (`vi.useFakeTimers()` in
+ * `beforeEach`) — so a helper that waited for that import was waiting on a clock
+ * nobody was winding, and five scenarios failed as 5 000 ms timeouts rather than
+ * as anything a reader could act on.
+ *
+ * What stays real is the part this file is about: `main.ts` asking the port,
+ * `lesson-reading.ts` resolving a `{ lesson, passage }` pair through the
+ * application-side filter, and prose reaching the screen. That the **shipped**
+ * corpus resolves is `tests/unit/bootstrap/lesson-reading.test.ts`'s claim, over
+ * the real `bundledLessonLibrary`, which is where it belongs.
+ *
+ * `importOriginal` keeps `bundledQuestionBank` and everything else exactly as it
+ * is: a whole-module mock here would silently replace the question bank too.
+ */
+vi.mock('@adapters/content', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    bundledLessonLibrary: (): unknown => ({
+      chapters: async (): Promise<unknown> => ({
+        ok: true,
+        value: Object.entries(hoisted.state.lessonChapters).map(([chapter, lessons]) => ({
+          chapter,
+          lessons: (lessons as { readonly id: string }[]).map((lesson) => lesson.id),
+        })),
+      }),
+      lessons: async (chapter: string): Promise<unknown> => {
+        const held = hoisted.state.lessonChapters[chapter];
+        return held === undefined
+          ? {
+              ok: false,
+              error: {
+                kind: 'not-found',
+                code: 'content.lessons.chapter.unknown',
+                message: `this build ships no lesson chapter "${chapter}".`,
+              },
+            }
+          : { ok: true, value: held };
+      },
+    }),
+  };
 });
 
 vi.mock('@adapters/phaser', () => ({
@@ -2627,27 +2687,54 @@ describe('a quest is offered, accepted and tracked', () => {
 
   const arriveInOttawa = async (): Promise<void> => {
     hoisted.state.level = OTTAWA_LEVEL;
+    hoisted.state.lessonChapters = lessonFixture();
     await boot('?level=ottawa');
     emit('level/ready');
   };
 
   /**
-   * Let the microtasks *and* the task queue drain.
+   * The lesson corpus the mocked catalogue serves, **built from the quest**.
    *
-   * `flush` drains microtasks, which is all the landmark chain needed while
-   * every step of it was synchronous. A `read` step is not: the composition root
-   * asks the lesson catalogue for its index and then fetches one chapter's
-   * chunk, and a dynamic import does not settle inside a microtask turn. This
-   * waits on the thing that is actually asynchronous rather than adding ticks to
-   * `flush` for every other suite to pay for.
+   * Derived rather than typed, for the reason the landmark fixture above is: a
+   * hand-written `{ lesson, passage }` pair would rot the first time a passage
+   * was renamed, and `lesson.schema.json` says a rename is a new identity — so
+   * it would rot legitimately, and fail this suite for a content edit that broke
+   * nothing here. Whatever the step names, the catalogue holds, with prose that
+   * is obviously the fixture's rather than the guide's.
+   *
+   * One chapter, because a `read` step names one lesson (`readingFor` refuses
+   * more, so that a sheet is named by one lesson's title).
    */
-  const settle = async (): Promise<void> => {
-    for (let turn = 0; turn < 12; turn += 1) {
-      await flush();
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
-    }
+  const CHAPTER = 'a-chapter';
+  const lessonFixture = (): Record<string, unknown[]> => {
+    const read = STOPS.find((step) => step.kind === 'read');
+    if (read === undefined) return {};
+    const references = read.passages ?? [];
+    const lessonId = references[0]?.lesson;
+    if (lessonId === undefined) return {};
+    return {
+      [CHAPTER]: [
+        {
+          $schema: '../../schemas/lesson.schema.json',
+          id: lessonId,
+          chapter: 'A Chapter Of The Guide',
+          order: 1,
+          title: { en: 'A fixture lesson', fr: 'Une leçon fictive' },
+          passages: references.map((reference, index) => ({
+            id: reference.passage,
+            text: {
+              en: `Fixture passage ${String(index + 1)} in English.`,
+              fr: `Passage fictif ${String(index + 1)} en français.`,
+            },
+            fact: {
+              factual: true,
+              source: { sourceId: 'discover-canada', sourceHash: 'hash' },
+              verification: { status: 'verified', sourceHash: 'hash', evidence: 'quoted' },
+            },
+          })),
+        },
+      ],
+    };
   };
 
   /**
@@ -2667,15 +2754,15 @@ describe('a quest is offered, accepted and tracked', () => {
 
     emit('poi/engaged', step.targetId);
     modalOption<{ onClose: () => void }>('poi-card').onClose();
-    await settle();
+    await flush();
 
     if (hoisted.state.readerShown.length > readerBefore) {
       modalOption<{ onClose?: () => void }>('lesson-reader').onClose?.();
-      await settle();
+      await flush();
     }
     if (hoisted.state.dialoguesShown.length > dialoguesBefore) {
       (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
-      await settle();
+      await flush();
     }
 
     const question = hoisted.state.questionOptions as {
@@ -2686,7 +2773,7 @@ describe('a quest is offered, accepted and tracked', () => {
     for (let index = 0; index < asked && question !== null; index += 1) {
       question.onAnswer(0, true);
       question.onNext();
-      await settle();
+      await flush();
     }
   };
 
@@ -2846,7 +2933,7 @@ describe('a quest is offered, accepted and tracked', () => {
       [],
     );
     modalOption<{ onClose: () => void }>('poi-card').onClose();
-    await settle();
+    await flush();
 
     expect(
       hoisted.state.readerShown,
@@ -2858,14 +2945,23 @@ describe('a quest is offered, accepted and tracked', () => {
       title: string;
       passages: readonly { id: string; text: string }[];
     };
-    expect(view.title.length, 'the reader was opened with no name').toBeGreaterThan(0);
-    expect(view.passages.length).toBeGreaterThan(0);
+    /* The lesson's own title, and the passages the step named, in its order. */
+    expect(view.title).toBe('A fixture lesson');
+    expect(view.passages.map((passage) => passage.id)).toEqual(
+      (READ.passages ?? []).map((reference) => reference.passage),
+    );
+    /* The catalogue's words, letter for letter: the route carried content and
+       did not invent any. */
+    expect(view.passages.map((passage) => passage.text)).toEqual(
+      (READ.passages ?? []).map(
+        (_reference, index) => `Fixture passage ${String(index + 1)} in English.`,
+      ),
+    );
     /* Prose and an id, and nothing a screen could adjudicate or localise:
        ADR-0063 §6, held here as well as by the screen's own type. */
     expect(JSON.stringify(view)).not.toContain('verification');
     expect(JSON.stringify(view)).not.toContain('sourceHash');
     expect(JSON.stringify(view)).not.toContain('"fr"');
-    for (const passage of view.passages) expect(passage.text.length).toBeGreaterThan(0);
   });
 
   it('ships a first landmark with something to teach, or this is about nothing', () => {
@@ -2952,6 +3048,7 @@ describe('a quest is offered, accepted and tracked', () => {
     const count = answerStep?.count ?? 1;
 
     hoisted.state.level = { ...OTTAWA_LEVEL, subject: 'government' };
+    hoisted.state.lessonChapters = lessonFixture();
     await boot('?level=ottawa');
     emit('level/ready');
     await acceptAndReachTheFirstVisit();

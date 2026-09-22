@@ -512,6 +512,41 @@ the contract only.
   rests on), so the tree is red between the two exactly as `docs/plan/slices.md` records is normal for an
   author/verifier pair. What is owed is one re-verification of a claim whose words did not change.
 
+  **AND THE CANAL CANNOT HOLD THE SEQUENCE. This is the finding, and it is arithmetic rather than a
+  judgement.** Three gates bound Ottawa's first 3 600 px and they do not leave room for what a `read` step
+  needs:
+
+  - **A floor at about x 1 725.** `tests/e2e/level-ottawa.spec.ts` holds a control for 1.4 s and 1.5 s from
+    the spawn and measures acceleration, the coast, the turn and the brake. A 1.5 s hold releases at x 1 494
+    (measured), and `auto-stop.ts` catches a held drive one stop line (~225 px at cruise) before what it is
+    driving at, so the first landmark must stand past **1 725** — and the first *character* past **1 898**,
+    because `stand-off.ts` puts a drive's rest point 173 px short of a person.
+  - **A ceiling at x 2 520.** `level-art-is-placed-where-it-is-drawn.test.ts` keeps 1 080 px between two
+    landmark heroes, and the Library of Parliament is fixed at 3 600 — fixed because moving it would void its
+    grant, exactly as moving the locks voided theirs.
+  - **795 px between them**, and the sequence needs three stops inside it: a landmark first (see below), then
+    the quest's giver, then the landmark the `read` step names. Two landmarks 1 080 px apart do not fit in
+    795 px. **Adding a stop does not help and neither does moving one**; the corridor is the constraint.
+
+  **What the third gate is, and it is the one that makes "put the giver first" cost something real.**
+  `tests/unit/adapters/phaser/auto-stop.test.ts` guards ADR-0037's property that *a glide let go outside
+  reach is still the player's*, and it is an anti-vacuum guard: it fails when no shipped mode exercises the
+  property. Measured over all twelve held modes on all ten levels, **before this change exactly one did** —
+  `ottawa/skate` against `rideau-locks` at 1 800. At the let-go point the skater is at cruise 622, its stop
+  line is 205 and its reach is 220, so ADR-0032 has **not** caught it by a **15 px sliver**, and the 0.9
+  glide carries it straight through. Every other mode is either a `walk`, whose stop line is 56 px and whose
+  glide is far too short to pass anything, or a mode that meets a **character** first and is already held.
+
+  Putting the officer in front destroys it, and not marginally: a character's 173 px stand-off moves the
+  catch 178 px before the let-go point, which swamps a 15 px sliver. So **the property's only carrier in the
+  game was a gliding mode meeting a landmark first on Ottawa**, and a `read` step requires a character — the
+  giver — to stand first on that same level. They are mutually exclusive, and no legal geometry reconciles
+  them.
+
+  **This is not fixable by loosening the guard**, and it is not fixable on this level. The first `read` step
+  wants a different level or a stop that does not exist yet, and that is a content-and-art decision (ADR-0065
+  §2's "add a stop" tier) rather than a number anyone should nudge.
+
   **There was no way round it, and that is worth recording rather than re-deriving.** With point-of-interest
   positions frozen by A4, the full constraint set leaves **no level able to host a `read` step at all**:
   every quest's `visit` steps carry two granted lines each, so no step can be converted for free; the three

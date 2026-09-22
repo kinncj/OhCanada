@@ -262,19 +262,6 @@ async function waitForIntent(page: Page, move: number): Promise<void> {
   );
 }
 
-/** Wait until the skater's world x passes `x`, or fail saying it never did. */
-async function waitForPlayerPast(page: Page, x: number): Promise<void> {
-  await page.waitForFunction(
-    (want: number) => {
-      const scene = (window as unknown as { __tnScene: { snapshot: () => { playerX?: number } } })
-        .__tnScene;
-      return (scene.snapshot().playerX ?? 0) >= want;
-    },
-    x,
-    { timeout: 45_000 },
-  );
-}
-
 /**
  * The first frame at or after `ms` of *simulated* time from the start of the
  * trace.
@@ -808,10 +795,24 @@ test.describe('TN-LEVEL-05 — coming into reach', () => {
     await openLevel(page);
     await clearTrace(page);
 
-    await page.keyboard.down('ArrowRight');
-    await waitForIntent(page, 1);
-    await waitForPlayerPast(page, LANDMARK_X - REACH + 40);
-    await page.keyboard.up('ArrowRight');
+    /*
+     * `walkWithProbe`, which presses again at every stop — the same traversal
+     * its sibling above does, and for the same reason it gives: a held drive
+     * comes to rest at every engageable it approaches (ADR-0032), and a key held
+     * down through a stop is not a new press, so it stays there.
+     *
+     * It used to hold `ArrowRight` and wait, which worked only because nothing
+     * stood between Ottawa's spawn and its first landmark. That was never a
+     * property of the game — Halifax places its guide before the Town Clock, and
+     * this scenario written this way would fail there too — and it stopped being
+     * a property of Ottawa when the officer moved in front of the canal locks so
+     * that ADR-0063's `read` step had a stop after the quest's giver. The claim
+     * is about the reach rule; how the skater got down the canal is not it.
+     */
+    expect(
+      await walkWithProbe(page, 'ArrowRight', { kind: 'past', x: LANDMARK_X - REACH + 40 }),
+      'the skater never got down the canal to the landmark',
+    ).toBe(true);
 
     const entered = (await events(page))
       .filter((event) => event.name === 'poi/entered')

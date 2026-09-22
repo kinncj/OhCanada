@@ -35,10 +35,17 @@ second one. Three separate gates bound it, and two of them are geometry rather t
 - `tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts` keeps **1 080 px between two
   landmarks**, which is what makes `peggys-cove` impossible and what fixes the canal locks at 2 520.
 - `tests/e2e/level-ottawa.spec.ts` reserves the stretch from Ottawa's spawn to its first stop as the physics
-  run-up: a hold of 1.5 s travels 770 px and `auto-stop.ts` catches a held drive a stop line (~225 px at
-  cruise) before whatever it is driving at, so **nothing may stand before about x 1 810 on that level**.
-  Putting the giver first there was tried and CI caught it: the skater stopped at 1 176 and four scenarios
-  measured a stationary player.
+  run-up: a hold of 1.5 s releases at x 1 494 and `auto-stop.ts` catches a held drive a stop line (~225 px at
+  cruise) before whatever it is driving at, so **no landmark may stand before about x 1 725 on that level,
+  and no character before 1 898** — a character's rest point is 173 px short of them. Putting the giver
+  first there was tried and CI caught it: the skater stopped at 1 176 and four scenarios measured a
+  stationary player.
+- `tests/unit/adapters/phaser/auto-stop.test.ts` guards ADR-0037's "a glide let go outside reach is still
+  the player's", and **Ottawa was its only example in the whole game**: a gliding mode meeting a *landmark*
+  first, where the stop line (205 px) is inside the reach (220 px) by a 15 px sliver. A character standing
+  first erases it. Since a `read` step needs its giver first, **Ottawa cannot host one** — its first 3 600 px
+  leave 795 px between the run-up floor and the art gate's 1 080 px landmark spacing, and the sequence needs
+  two landmarks and a character inside it.
 
 ## The words are content, and they arrive already chosen
 
