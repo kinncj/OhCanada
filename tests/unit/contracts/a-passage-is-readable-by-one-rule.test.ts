@@ -161,8 +161,40 @@ const MATRIX: readonly {
     why: 'unreadable',
   },
   {
+    /*
+     * The case that caught a real divergence on this branch's first CI run. The
+     * tooling read any non-`verified` string as `not-verified`; the runtime
+     * refuses a status no schema allows through `readFactClaim`. The runtime was
+     * right — `not-verified` means a verifier DECIDED something, and carries
+     * which — so `scripts/lib/lesson-passages.mjs` now reads before it
+     * adjudicates, in the runtime's own order.
+     */
     name: 'factual with a verification block nothing can read',
     fact: { factual: true, source: { sourceHash: HASH }, verification: { status: 'granted' } },
+    readable: false,
+    why: 'unreadable',
+  },
+  {
+    name: 'a status that is not even a string',
+    fact: withVerification({ status: 42 }),
+    readable: false,
+    why: 'unreadable',
+  },
+  {
+    name: 'a grant whose own sourceHash is not a string',
+    fact: withVerification({ sourceHash: 7 }),
+    readable: false,
+    why: 'unreadable',
+  },
+  {
+    name: 'a grant whose evidence is not a string',
+    fact: withVerification({ evidence: null }),
+    readable: false,
+    why: 'unreadable',
+  },
+  {
+    name: 'a source whose own sourceHash is not a string',
+    fact: claim({ source: { sourceHash: 9 } }),
     readable: false,
     why: 'unreadable',
   },

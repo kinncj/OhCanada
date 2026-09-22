@@ -296,8 +296,8 @@
         }
       },
       "position": {
-        "x": 1800,
-        "y": 1244
+        "x": 2520,
+        "y": 1239
       },
       "artKey": "ottawa-prop-rideau-locks",
       "radiusPx": 260
@@ -419,8 +419,8 @@
     {
       "characterId": "officer",
       "position": {
-        "x": 1350,
-        "y": 1240
+        "x": 2100,
+        "y": 1242
       },
       "facing": "left",
       "questId": "ottawa-parliament-hill"

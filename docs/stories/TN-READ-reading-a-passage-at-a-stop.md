@@ -26,10 +26,19 @@ surface: the surface can carry any step, and what makes the number bigger is mor
 §3.2's point that a level's reading is bounded by relevance rather than by room.
 
 **The stop a `read` step may stand on is not a free choice**, and it is worth knowing before authoring the
-second one. `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks a level's stops
-once in x order and advances at most one non-`answer` step per stop. So a `read` step needs a stop to itself,
-or a stop it shares with the `answer` step immediately after it — **it cannot share one with a `visit`** —
-and it has to stand after the quest's giver, because a quest advances only once it has been accepted.
+second one. Three separate gates bound it, and two of them are geometry rather than content:
+
+- `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks a level's stops once in x
+  order and advances at most one non-`answer` step per stop. So a `read` step needs a stop to itself, or a
+  stop it shares with the `answer` step immediately after it — **it cannot share one with a `visit`** — and
+  it has to stand after the quest's giver, because a quest advances only once it has been accepted.
+- `tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts` keeps **1 080 px between two
+  landmarks**, which is what makes `peggys-cove` impossible and what fixes the canal locks at 2 520.
+- `tests/e2e/level-ottawa.spec.ts` reserves the stretch from Ottawa's spawn to its first stop as the physics
+  run-up: a hold of 1.5 s travels 770 px and `auto-stop.ts` catches a held drive a stop line (~225 px at
+  cruise) before whatever it is driving at, so **nothing may stand before about x 1 810 on that level**.
+  Putting the giver first there was tried and CI caught it: the skater stopped at 1 176 and four scenarios
+  measured a stationary player.
 
 ## The words are content, and they arrive already chosen
 

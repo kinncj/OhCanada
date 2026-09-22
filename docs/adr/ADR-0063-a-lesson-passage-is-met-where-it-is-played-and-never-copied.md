@@ -471,17 +471,42 @@ the contract only.
   room at all, `toronto` among them (4 stops, 4 non-`answer` steps). The three with a spare stop —
   `peggys-cove`, `ottawa`, `the-north` — all spend it the same way: a landmark standing **before** the quest
   giver, which no step can use because a quest advances only once it is accepted. `the-north` is excluded by
-  this ADR. So the choice was `ottawa` (32 passages available in its empirical remit, against
-  `peggys-cove`'s 27), and the one number that moved is the **officer's x, 2400 -> 1350**, putting the giver
-  before the first landmark exactly as seven of the ten levels already do and freeing `rideau-locks` to read.
-  The ground height under the officer is 1240 at both, so nothing about the placement changed but the order
-  the player meets things in.
+  this ADR, and `peggys-cove` is geometrically impossible: its spare stop is the granite shore, and the only
+  span past its giver is 1 500 px wide while `level-art-is-placed-where-it-is-drawn.test.ts` requires
+  **1 080 px between two landmarks**, so the shore cannot be moved past the lighthouse and stay clear of the
+  fish store. So the choice was `ottawa` — 32 passages available in its empirical remit, against
+  `peggys-cove`'s 27 — and it is the only level that can host a `read` step at all today.
+
+  **Two numbers moved, and getting there took a wrong answer first, which is worth recording because the
+  constraint is not obvious.** The first attempt moved the **officer** to x 1350, putting the giver before
+  the first landmark as seven of the ten levels do. It read correctly and finished every quest — and it broke
+  four scenarios of `tests/e2e/level-ottawa.spec.ts`. **The stretch between Ottawa's spawn and its first stop
+  is the physics run-up**, and nothing may stand in it: TN-LEVEL-03 holds a control for 1.4 s and 1.5 s from
+  the spawn and then measures acceleration, the coast, the turn and the brake, and `auto-stop.ts` catches a
+  held drive **one stop line** (about 225 px at cruise) before a subject it is driving at. With the officer at
+  1350 the skater was caught at x 1176 and stopped: speed at one second read **430 against the 434** the
+  story requires, the coast never moved, and "the skater never went left" because there was nothing to turn
+  around from. Measured, reproduced and re-measured with a headless driver.
+
+  The run-up a hold of 1.5 s needs is **770 px of travel plus a stop line**, so the first subject on the
+  canal must stand past about x 1810 — which is why the officer was at 2400 in the first place. The answer is
+  therefore to move the **landmark** past the **giver** rather than the giver back before the landmark:
+
+  - **officer 2400 -> 2100**, ground height 1242 exactly, 291 px of extra run-up margin over what shipped;
+  - **`rideau-locks` 1800 -> 2520**, which is 1 080 px from the Library of Parliament — the exact minimum
+    `level-art-is-placed-where-it-is-drawn.test.ts` allows between two landmark heroes, and the reason the
+    locks cannot go any further right.
+
+  Re-measured after the move: speed at one second **622** of a 620 cruise, the coast runs 1 494 -> 2 630 px
+  without ever stopping (a glide begun outside reach passes everything, including both new stops), the turn
+  passes through zero 36 frames in, and the brake fires. The skater comes to rest at 1 927 for the officer and
+  2 496 for the locks, with **one** affordance ready at each — one job in the strip (ADR-0066).
   **What it reads.** `govern-03-the-royal-family-and-the-legislatures`, all three passages, at the canal
   locks — whose own blurb already tells the Sovereign as a symbol of Canadian sovereignty (p. 57), so the
   reader continues the plaque's own page rather than opening a second subject. **69 words EN / 84 FR**,
   inside ADR-0065 §3.3's four-passages-and-120-words-per-stop ceiling.
-  **What it cost:** one integer in `content/levels/ottawa.json`, one step and two ungranted flavour
-  sentences in `content/quests/ottawa-parliament-hill.json`. **No `verification` block was written, edited or
+  **What it cost:** four integers in `content/levels/ottawa.json` — two positions, no art — one step and two
+  ungranted flavour sentences in `content/quests/ottawa-parliament-hill.json`. **No `verification` block was written, edited or
   read by an author** — every one of the three passages was already granted, which is the whole point of
   §2 (ADR-0003 is not re-run to point at granted material).
   **How it reads at phone width:** measured in Chromium at 390x844, 100 % text, by walking the level from

@@ -663,7 +663,12 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   it drives both over one matrix of statuses, hashes, evidence and `factual` flags **and over all 302 shipped
   passages**, and fails on any disagreement about `readable`, `why` or the resolution verdict. The refusal
   vocabularies are the same five words on purpose, so a drift shows up as a different word rather than as a
-  different sentence.
+  different sentence. **It has already earned its place twice**, both times on a case the shipped corpus
+  cannot reach: once on an empty half of a pair (`dangling`, not `malformed`), and once on a `status` no
+  schema allows, where the tooling read any non-`verified` string as `not-verified`. The runtime was right —
+  `not-verified` means a verifier **decided** something and carries which, while `"granted"` or `42` is a
+  field that did not come from the schema — so `scripts/lib/lesson-passages.mjs` now **reads before it
+  adjudicates**, in `readFactClaim`-then-`adjudicateClaim` order.
 
   **ADR-0003's three conditions are NOT the thing written twice, and that was deliberate.** The application
   filter takes an `AdjudicateClaim` and the composition root supplies one

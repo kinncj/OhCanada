@@ -362,11 +362,17 @@ const walkUntilSomethingIsInReach = (page: Page): Promise<string | null> =>
  *
  * `walkUntilSomethingIsInReach` stops at the first mark, which is right for the
  * level the game opens on — Halifax places its giver first — and wrong for a
- * level that places scenery before its giver. Ottawa places the canal locks at
- * x 1800 and the officer at x 2400, so a walk that stopped at the first thing
- * opened a landmark's card and then failed for want of a dialogue, naming the
- * officer. **The level was right and the walk was short**, which is why this
+ * level that places scenery before its giver. Ottawa used to: the canal locks
+ * stood at x 1800 and the officer at x 2400, so a walk that stopped at the first
+ * thing opened a landmark's card and then failed for want of a dialogue, naming
+ * the officer. **The level was right and the walk was short**, which is why this
  * takes the prompt it is looking for rather than the first one it meets.
+ *
+ * Ottawa's order has since changed — the locks moved past the officer so that
+ * ADR-0063's `read` step had a stop after the giver — and this helper is kept
+ * exactly as it is. What it guards against is a level placing anything before
+ * its giver, which several still may and any of them may start doing; naming the
+ * order a level happens to have today is the mistake it was written to undo.
  */
 const walkUntilThePromptReads = (page: Page, wanted: string): Promise<string | null> =>
   walkRightWatching(page, { wanted });

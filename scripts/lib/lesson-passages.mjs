@@ -226,6 +226,22 @@ export function resolvePassage(corpus, reference) {
 }
 
 /**
+ * The four statuses `common.schema.json#/$defs/factVerification` allows.
+ *
+ * Listed so that a value outside them is `unreadable` rather than
+ * `not-verified`. Those are different things: `not-verified` is a verifier
+ * having decided something other than "verified", and it carries WHICH; a
+ * `status` of `"granted"`, or of `42`, is nobody having decided anything and a
+ * field that did not come from this schema. Reporting the second as the first
+ * would present a renamed field as an honest rejection, which is the failure
+ * ADR-0024 is about, and it is the one place this module and
+ * `app/adapters/phaser/verified-claim.ts` had drifted apart — caught by
+ * `tests/unit/contracts/a-passage-is-readable-by-one-rule.test.ts`, which is
+ * what that gate is for.
+ */
+const CLAIM_STATUSES = ['unverified', 'verified', 'quarantined', 'rejected'];
+
+/**
  * ADR-0003's three conditions, plus the one ADR-0061 §9.3 adds for a lesson.
  *
  * Every shippable passage declares `factual: true` — a passage that asserts
@@ -233,6 +249,12 @@ export function resolvePassage(corpus, reference) {
  * constant without breaking ADR-0007's rule against inline object shapes — so
  * `factual: false` is a refusal here rather than the exemption it is for a
  * greeting in an NPC's mouth.
+ *
+ * READ FIRST, THEN ADJUDICATE, which is `readFactClaim` followed by
+ * `adjudicateClaim` in the runtime and is the same order here. A block whose
+ * fields are the wrong type or the wrong value is refused as `unreadable`
+ * before any of the three conditions is asked, because a condition asked of a
+ * field nobody can read answers about something else.
  */
 export function passageVerdict(passage) {
   const fact = passage.fact;
@@ -242,19 +264,37 @@ export function passageVerdict(passage) {
   if (fact.factual !== true) {
     return { readable: false, why: 'not-factual', status: null };
   }
+
+  /* The read. Every branch below is a block this gate cannot adjudicate, and a
+     block it cannot adjudicate is never one it waves through (ADR-0024). */
   const source = isRecord(fact.source) ? fact.source : null;
   const verification = isRecord(fact.verification) ? fact.verification : null;
   if (source === null || verification === null) {
     return { readable: false, why: 'unreadable', status: null };
   }
-  const status = typeof verification.status === 'string' ? verification.status : null;
+  if (typeof source.sourceHash !== 'string') {
+    return { readable: false, why: 'unreadable', status: null };
+  }
+  if (!CLAIM_STATUSES.includes(verification.status)) {
+    return {
+      readable: false,
+      why: 'unreadable',
+      status: typeof verification.status === 'string' ? verification.status : null,
+    };
+  }
+  const status = verification.status;
+  if (typeof verification.sourceHash !== 'string' || typeof verification.evidence !== 'string') {
+    return { readable: false, why: 'unreadable', status };
+  }
+
+  /* The three conditions. */
   if (status !== 'verified') {
     return { readable: false, why: 'not-verified', status };
   }
   if (verification.sourceHash !== source.sourceHash) {
     return { readable: false, why: 'stale', status };
   }
-  if (typeof verification.evidence !== 'string' || verification.evidence.trim().length === 0) {
+  if (verification.evidence.trim().length === 0) {
     return { readable: false, why: 'unevidenced', status };
   }
   return { readable: true, why: null, status };

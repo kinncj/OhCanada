@@ -320,6 +320,33 @@ describe('a resolved passage still has to be readable', () => {
     expect(verdictOf({ factual: true, source: null, verification: null })).toBe('unreadable');
   });
 
+  it('refuses a status no schema allows as unreadable, not as a verifier’s verdict', () => {
+    // `not-verified` means a verifier decided something other than "verified",
+    // and it carries WHICH. A status of "granted", or of 42, is nobody having
+    // decided anything and a field that did not come from this schema; calling
+    // it `not-verified` would report a renamed field as an honest rejection.
+    // The runtime refuses these through `readFactClaim` and the two are driven
+    // over one matrix by `a-passage-is-readable-by-one-rule.test.ts`.
+    const hashed = (verification: unknown): unknown => ({
+      factual: true,
+      source: { sourceHash: 'hash' },
+      verification,
+    });
+    expect(verdictOf(hashed({ status: 'granted', sourceHash: 'hash', evidence: 'x' }))).toBe(
+      'unreadable',
+    );
+    expect(verdictOf(hashed({ status: 42, sourceHash: 'hash', evidence: 'x' }))).toBe('unreadable');
+    expect(verdictOf(hashed({ status: 'verified', sourceHash: 7, evidence: 'x' }))).toBe(
+      'unreadable',
+    );
+    expect(verdictOf(hashed({ status: 'verified', sourceHash: 'hash', evidence: null }))).toBe(
+      'unreadable',
+    );
+    expect(verdictOf({ factual: true, source: { sourceHash: 9 }, verification: {} })).toBe(
+      'unreadable',
+    );
+  });
+
   it('admits a passage that is verified for the hash it cites', () => {
     expect(
       verdictOf({

@@ -140,6 +140,8 @@ const hoisted = vi.hoisted(() => {
     paused: number;
     resumed: number;
     poiShown: unknown[];
+    /** Every view the lesson reader was shown, in order (ADR-0063). */
+    readerShown: unknown[];
     errorShown: number;
     /** Every option the error card was built or re-localised with. */
     errorTitles: string[];
@@ -262,6 +264,7 @@ const hoisted = vi.hoisted(() => {
     paused: 0,
     resumed: 0,
     poiShown: [],
+    readerShown: [],
     errorShown: 0,
     errorTitles: [],
     loadingShown: 0,
@@ -539,6 +542,32 @@ vi.mock('@ui/poi-card', () => ({
  * answer reaches `answerQuestion` and the save, which is a composition decision
  * and therefore this file's business.
  */
+/*
+ * The lesson reader (ADR-0063), mocked like every other screen here.
+ *
+ * It is on the landmark chain — card, then the passages, then the step's line,
+ * then the question — so a scenario that walks a quest through a `read` step
+ * has to be able to close it. What it is shown is recorded because the one
+ * thing this suite owns about it is the composition: prose reaches it already
+ * resolved, already filtered and already in one language, and the resolution
+ * itself is `tests/unit/bootstrap/lesson-reading.test.ts`'s.
+ */
+vi.mock('@ui/lesson-reader', () => ({
+  createLessonReader: (host: unknown, options: Record<string, unknown>): unknown => {
+    hoisted.state.modalHosts['lesson-reader'] = host;
+    hoisted.state.modalOptions['lesson-reader'] = options;
+    return {
+      element: {},
+      visible: false,
+      show: (view: unknown) => hoisted.state.readerShown.push(view),
+      hide: () => undefined,
+      setLocale: () => undefined,
+      setSingleSwitch: () => undefined,
+      destroy: () => undefined,
+    };
+  },
+}));
+
 vi.mock('@ui/question-card', () => ({
   createQuestionCard: (host: unknown, options: Record<string, unknown>): unknown => {
     hoisted.state.modalHosts['question-card'] = host;
@@ -996,6 +1025,7 @@ beforeEach(() => {
   hoisted.state.paused = 0;
   hoisted.state.resumed = 0;
   hoisted.state.poiShown = [];
+  hoisted.state.readerShown = [];
   hoisted.state.errorShown = 0;
   hoisted.state.errorTitles = [];
   hoisted.state.loadingShown = 0;
@@ -2534,6 +2564,29 @@ describe('a quest is offered, accepted and tracked', () => {
     );
   }
 
+  /**
+   * Every stop this quest sends the player to, in the order it does — **every
+   * kind that has a target the player walks to**, not only `visit`.
+   *
+   * Widened when ADR-0063's first `read` step landed, and widened rather than
+   * re-pinned on purpose. This block already derived its landmarks from the
+   * document because the fixture *"went stale exactly once already"*; it then
+   * went stale a second time in the same way, for a subtler reason — it read
+   * only the `visit` steps, so the level placed only those landmarks and the
+   * walk below assumed the step after `accept` was one of them. Ottawa now reads
+   * at the canal locks first, and every scenario that engaged the library was
+   * engaging a landmark the player was not standing on: steps cannot be skipped
+   * (`TN-QUEST-04`), so nothing advanced and the failures pointed at the wrong
+   * thing.
+   *
+   * Filtering by what a kind *is* rather than by naming the kinds keeps it
+   * honest for the sixth kind as well: `talk` is finished by accepting the
+   * offer and `answer` is finished by answering, and everything else is
+   * somewhere the player goes.
+   */
+  const STOPS = OTTAWA_QUEST.steps.filter(
+    (step) => step.kind !== 'talk' && step.kind !== 'answer',
+  );
   /** Every landmark this quest sends the player to, in the order it does. */
   const VISITS = OTTAWA_QUEST.steps.filter((step) => step.kind === 'visit');
   const FIRST_VISIT = VISITS[0];
@@ -2564,7 +2617,7 @@ describe('a quest is offered, accepted and tracked', () => {
   const OTTAWA_LEVEL = levelFixture({
     title: { en: 'Ottawa', fr: 'Ottawa' },
     locomotion: [{ labelKey: 'locomotion.skate.label' }],
-    pois: VISITS.map((step) => ({
+    pois: STOPS.map((step) => ({
       id: step.targetId,
       name: poiName(step.targetId),
       blurb: { en: 'A true, short thing.', fr: 'Une chose vraie et courte.' },
@@ -2576,6 +2629,79 @@ describe('a quest is offered, accepted and tracked', () => {
     hoisted.state.level = OTTAWA_LEVEL;
     await boot('?level=ottawa');
     emit('level/ready');
+  };
+
+  /**
+   * Let the microtasks *and* the task queue drain.
+   *
+   * `flush` drains microtasks, which is all the landmark chain needed while
+   * every step of it was synchronous. A `read` step is not: the composition root
+   * asks the lesson catalogue for its index and then fetches one chapter's
+   * chunk, and a dynamic import does not settle inside a microtask turn. This
+   * waits on the thing that is actually asynchronous rather than adding ticks to
+   * `flush` for every other suite to pay for.
+   */
+  const settle = async (): Promise<void> => {
+    for (let turn = 0; turn < 12; turn += 1) {
+      await flush();
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+    }
+  };
+
+  /**
+   * Walk the player past one stop, finishing whatever it puts on screen.
+   *
+   * The whole landmark chain in the order the composition root runs it (ADR-0036,
+   * ADR-0063): the place's own card, then the passages a `read` step names, then
+   * the step's line, then the question a stop draws even when no task is waiting
+   * (ADR-0048 rule 5). Each is dismissed only if it opened, so one helper walks a
+   * `visit`, a `collect` and a `read` without being told which it got — which is
+   * the property that kept this block honest the first time it went stale.
+   */
+  const walkPast = async (step: { readonly targetId: string }): Promise<void> => {
+    const dialoguesBefore = hoisted.state.dialoguesShown.length;
+    const readerBefore = hoisted.state.readerShown.length;
+    const questionsBefore = hoisted.state.questionsAsked.length;
+
+    emit('poi/engaged', step.targetId);
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await settle();
+
+    if (hoisted.state.readerShown.length > readerBefore) {
+      modalOption<{ onClose?: () => void }>('lesson-reader').onClose?.();
+      await settle();
+    }
+    if (hoisted.state.dialoguesShown.length > dialoguesBefore) {
+      (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
+      await settle();
+    }
+
+    const question = hoisted.state.questionOptions as {
+      onAnswer: (index: number, right: boolean) => void;
+      onNext: () => void;
+    } | null;
+    const asked = hoisted.state.questionsAsked.length - questionsBefore;
+    for (let index = 0; index < asked && question !== null; index += 1) {
+      question.onAnswer(0, true);
+      question.onNext();
+      await settle();
+    }
+  };
+
+  /**
+   * Accept the offer and bring the player to the first `visit` step.
+   *
+   * On today's document that is one `read` step at the canal locks; on a quest
+   * that opens straight onto its first landmark it is nothing at all. Derived
+   * from the document either way, so the scenarios below are about what happens
+   * *at a landmark* rather than about which step Ottawa happens to put first.
+   */
+  const acceptAndReachTheFirstVisit = async (): Promise<void> => {
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    for (const step of STOPS.slice(0, STOPS.indexOf(FIRST_VISIT))) await walkPast(step);
   };
 
   it('offers the quest when the player engages its giver', async () => {
@@ -2686,8 +2812,7 @@ describe('a quest is offered, accepted and tracked', () => {
 
   it('advances the visit step when the landmark it names is engaged', async () => {
     await arriveInOttawa();
-    emit('npc/engaged', 'officer');
-    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    await acceptAndReachTheFirstVisit();
     const afterAccepting = hoisted.state.tasks.at(-1);
 
     /* The landmark the *current* step names, read from the document. */
@@ -2697,6 +2822,50 @@ describe('a quest is offered, accepted and tracked', () => {
       `engaging "${FIRST_VISIT.targetId}", which ${String(OTTAWA_QUEST.id)} step ` +
         `"${FIRST_VISIT.id}" names, changed nothing`,
     ).not.toBe(afterAccepting);
+  });
+
+  it('opens the reader at a read step, with the lesson’s own prose and nothing else', async () => {
+    /*
+     * ADR-0063's route, composed: the step names `{ lesson, passage }` pairs, the
+     * composition root resolves them against the one lesson catalogue, filters
+     * them and picks a language, and the screen is handed a title and prose. What
+     * is asserted here is the composition — that the reader is reached at all,
+     * between the landmark's card and the question — and never the resolution,
+     * which is `tests/unit/bootstrap/lesson-reading.test.ts`'s.
+     */
+    const READ = STOPS.find((step) => step.kind === 'read');
+    if (READ === undefined) return;
+
+    await arriveInOttawa();
+    emit('npc/engaged', 'officer');
+    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+
+    emit('poi/engaged', READ.targetId);
+    /* The place first, in its own words, exactly as at any other stop. */
+    expect(hoisted.state.readerShown, 'the reader opened over the landmark’s own card').toEqual(
+      [],
+    );
+    modalOption<{ onClose: () => void }>('poi-card').onClose();
+    await settle();
+
+    expect(
+      hoisted.state.readerShown,
+      `${String(OTTAWA_QUEST.id)} step "${READ.id}" names ` +
+        `${String(READ.passages?.length ?? 0)} passage(s) and the reader was never opened`,
+    ).toHaveLength(1);
+
+    const view = hoisted.state.readerShown[0] as {
+      title: string;
+      passages: readonly { id: string; text: string }[];
+    };
+    expect(view.title.length, 'the reader was opened with no name').toBeGreaterThan(0);
+    expect(view.passages.length).toBeGreaterThan(0);
+    /* Prose and an id, and nothing a screen could adjudicate or localise:
+       ADR-0063 §6, held here as well as by the screen's own type. */
+    expect(JSON.stringify(view)).not.toContain('verification');
+    expect(JSON.stringify(view)).not.toContain('sourceHash');
+    expect(JSON.stringify(view)).not.toContain('"fr"');
+    for (const passage of view.passages) expect(passage.text.length).toBeGreaterThan(0);
   });
 
   it('ships a first landmark with something to teach, or this is about nothing', () => {
@@ -2716,9 +2885,11 @@ describe('a quest is offered, accepted and tracked', () => {
 
   it('teaches at the landmark: the card, then the step’s line, then the question', async () => {
     await arriveInOttawa();
-    emit('npc/engaged', 'officer');
-    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    await acceptAndReachTheFirstVisit();
     const afterTheOffer = hoisted.state.dialoguesShown.length;
+    /* Measured from here rather than from zero: the stops before this one have
+       already asked what they ask, and the claim below is about THIS landmark. */
+    const questionsBefore = hoisted.state.questionsAsked.length;
 
     emit('poi/engaged', FIRST_VISIT.targetId);
 
@@ -2754,14 +2925,16 @@ describe('a quest is offered, accepted and tracked', () => {
 
     /* And the question waits behind it, so the player is taught before being
        asked rather than over the top of it. */
-    expect(hoisted.state.questionsAsked, 'the question arrived over the line').toEqual([]);
+    expect(hoisted.state.questionsAsked.length, 'the question arrived over the line').toBe(
+      questionsBefore,
+    );
 
     line.next?.onSelect();
     await flush();
     expect(
-      hoisted.state.questionsAsked,
+      hoisted.state.questionsAsked.length - questionsBefore,
       'the landmark’s question was owed after the line and never came',
-    ).toHaveLength(1);
+    ).toBe(1);
   });
 
   it('asks every question the answer step has left, and the card counts the step (ADR-0036)', async () => {
@@ -2781,8 +2954,7 @@ describe('a quest is offered, accepted and tracked', () => {
     hoisted.state.level = { ...OTTAWA_LEVEL, subject: 'government' };
     await boot('?level=ottawa');
     emit('level/ready');
-    emit('npc/engaged', 'officer');
-    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    await acceptAndReachTheFirstVisit();
 
     emit('poi/engaged', FIRST_VISIT.targetId);
     const beforeTheLine = hoisted.state.dialoguesShown.length;
@@ -2871,10 +3043,10 @@ describe('a quest is offered, accepted and tracked', () => {
    */
   const finishTheTaskByAnswering = async (): Promise<void> => {
     await arriveInOttawa();
-    emit('npc/engaged', 'officer');
-    (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    await acceptAndReachTheFirstVisit();
 
     /* The landmark the task names first, which moves it on to an answer step. */
+    const questionsBefore = hoisted.state.questionsAsked.length;
     emit('poi/engaged', FIRST_VISIT.targetId);
     const beforeTheLine = hoisted.state.dialoguesShown.length;
     modalOption<{ onClose: () => void }>('poi-card').onClose();
@@ -2892,7 +3064,11 @@ describe('a quest is offered, accepted and tracked', () => {
     };
     /* Every question the landmark asks: an answer step asks all it has left in
        one go (ADR-0036), and the card waits for the last of them to be done. */
-    for (let asked = 0; asked < hoisted.state.questionsAsked.length; asked += 1) {
+    for (
+      let asked = questionsBefore;
+      asked < hoisted.state.questionsAsked.length;
+      asked += 1
+    ) {
       question.onAnswer(0, true);
       question.onNext();
       await flush();

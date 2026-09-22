@@ -103,10 +103,35 @@ function sourceFiles(directory: string): readonly string[] {
   });
 }
 
-const FILES = sourceFiles(APP).map((path) => ({
-  relative: path.slice(REPO_ROOT.length),
-  text: readFileSync(path, 'utf8'),
-}));
+/**
+ * A file's source, and the same source **with its comments taken out**.
+ *
+ * Every check below reads `code`, not `text`, and that distinction is the one
+ * this file got wrong the first time it was asked a new question. The scan is
+ * about what a layer *does*; a comment is what it *says*. The gate as written
+ * failed `app/application/content/lesson-passages.ts`, whose header exists
+ * entirely to explain that it does **not** hold the rule and takes
+ * `adjudicateClaim`'s verdict as a parameter instead — the most useful sentence
+ * in the file, and the one thing this gate punished.
+ *
+ * That is the same trap `ports-are-provisional.test.ts` documents for the
+ * `PROVISIONAL` marker, in its own words: "a check that punishes explaining
+ * yourself teaches people to explain themselves less." It is also how
+ * `a-read-step-reaches-a-reader.test.ts` already reads a screen's source. The
+ * line-level filter is deliberately crude and cannot see a trailing comment
+ * after code — which fails in the safe direction, because a file with
+ * `adjudicateClaim(…)  // …` still reports.
+ */
+const withoutComments = (source: string): string =>
+  source
+    .split('\n')
+    .filter((line) => !/^\s*(\/\*|\*|\/\/)/.test(line))
+    .join('\n');
+
+const FILES = sourceFiles(APP).map((path) => {
+  const text = readFileSync(path, 'utf8');
+  return { relative: path.slice(REPO_ROOT.length), text, code: withoutComments(text) };
+});
 
 describe('the rule that decides whether a claim may be drawn', () => {
   it('is read from a source tree that is not empty', () => {
@@ -118,14 +143,15 @@ describe('the rule that decides whether a claim may be drawn', () => {
 
   it('is named only in the rule\u2019s own directory and by the listed callers', () => {
     const holders = FILES.filter((file) =>
-      RULE_NAMES.some((name) => new RegExp(`\\b${name}\\b`).test(file.text)),
+      RULE_NAMES.some((name) => new RegExp(`\\b${name}\\b`).test(file.code)),
     ).map((file) => file.relative);
 
     /*
-     * `app/adapters/phaser/index.ts` names them in a comment explaining why they
-     * are not exported, and `level-document.ts` calls `readFactClaim` because it
-     * is the level's own parser inside the same directory. Both are inside the
-     * enclosure; what this check is about is a *third directory*.
+     * `level-document.ts` calls `readFactClaim` because it is the level's own
+     * parser inside the same directory, which is inside the enclosure; what this
+     * check is about is a *third directory*. (`app/adapters/phaser/index.ts`
+     * names them only in a comment saying why they are not exported, so it no
+     * longer appears here at all — see `withoutComments` above.)
      */
     const outside = holders.filter(
       (path) => THE_CALLERS[path] === undefined && !path.startsWith('app/adapters/phaser/'),
@@ -149,10 +175,10 @@ describe('the rule that decides whether a claim may be drawn', () => {
     for (const caller of Object.keys(THE_CALLERS)) {
       const file = FILES.find((candidate) => candidate.relative === caller);
       expect(file, `${caller} is listed as a caller and does not exist`).toBeDefined();
-      expect(file?.text).toContain("from '@adapters/phaser/verified-claim'");
+      expect(file?.code).toContain("from '@adapters/phaser/verified-claim'");
       /* Not through the index: that would be a Phaser import on the boot path
          for a module that touches no canvas. */
-      expect(file?.text, `${caller} imports the phaser barrel`).not.toContain(
+      expect(file?.code, `${caller} imports the phaser barrel`).not.toContain(
         "from '@adapters/phaser'",
       );
     }
@@ -188,7 +214,7 @@ describe('the rule that decides whether a claim may be drawn', () => {
         file.relative !== THE_RULE &&
         file.relative !== THE_SECOND_HOLDER &&
         file.relative !== THE_DOMAIN_RULE &&
-        /status\s*(!==|===)\s*'verified'/.test(file.text),
+        /status\s*(!==|===)\s*'verified'/.test(file.code),
     ).map((file) => file.relative);
     /* A caller is allowed to NAME the rule and not to restate it, which is the
        distinction this pair of checks is made of: `verified-passages.ts` is in
@@ -204,7 +230,7 @@ describe('the rule that decides whether a claim may be drawn', () => {
     /* The two that are allowed still say it, so this check is about something. */
     const allowed = FILES.filter(
       (file) => file.relative === THE_RULE || file.relative === THE_DOMAIN_RULE,
-    ).filter((file) => /status\s*(!==|===)\s*'verified'/.test(file.text));
+    ).filter((file) => /status\s*(!==|===)\s*'verified'/.test(file.code));
     expect(allowed).toHaveLength(2);
   });
 });

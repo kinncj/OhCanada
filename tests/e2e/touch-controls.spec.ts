@@ -603,7 +603,9 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
   });
 
   test('a tap on an NPC engages them and does not jump', async ({ page }) => {
-    /* A traversal: the walk to the officer now stops at rideau-locks first (ADR-0032). */
+    /* A traversal: the walk to the officer is clear of every stop now that the
+       canal locks stand past them (ADR-0063's read step needed a stop after the
+       giver, and `level-ottawa.spec.ts` reserves the run-up before one). */
     test.slow();
     await openLevel(page);
     const box = await canvasBox(page);
@@ -618,9 +620,10 @@ test.describe('a tap means the thing under it, and a jump when there is nothing'
      * a scenario that only waited to arrive would tap at a position it had
      * already left.
      */
-    /* Ottawa places the canal locks before the officer, and a held skate comes to
-       rest at them (ADR-0032): the walk presses on from there, and lets go the
-       moment it arrives, still at speed, exactly as before. */
+    /* The officer is now the first thing on the canal, so the walk meets nothing
+       on the way: it drives, and lets go the moment it arrives, still at speed,
+       exactly as before. `walkWithProbe` presses on from any stop it does meet,
+       so this reads the same whichever order the level document puts them in. */
     expect(
       await walkWithProbe(
         page,
