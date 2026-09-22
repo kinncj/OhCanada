@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400" shape-rendering="geometricPrecision">
+  <title>The pavilion at Dow's Lake, the wide southern end of the Rideau Canal Skateway in Ottawa: a long, low, two-storey building standing on piles over the water, under a broad shallow metal roof with a raised ridge monitor and deep overhanging eaves, with a continuous band of dark glass, an open raised terrace at its near end, a long external stair from the ice-level deck to the upper floor, globe lamps along the deck, and the skateway's own line of small spruces set into the open ice in front of it. A BUILDING TYPE, not an operated business: no sign, no wordmark, no emblem, no lettering and no figure. Drawn from assets/refs/ottawa/dows-lake-pavilion-elevation.jpg, dows-lake-pavilion-deck-and-stair.jpg and dows-lake-skateway-lane.jpg; see assets/refs/references.json, subject dows-lake. POI hero, present at every visual tier.</title>
+
+  <!-- The open ice of the lake. The file's bottom edge IS the level ground line. -->
+  <rect x="0" y="340" width="600" height="60" fill="#a9d0e5"/>
+  <rect x="0" y="340" width="600" height="12" fill="#e4f2f6"/>
+  <rect x="36" y="368" width="228" height="16" rx="8" fill="#e4f2f6"/>
+  <rect x="330" y="384" width="204" height="14" rx="7" fill="#e4f2f6"/>
+  <rect x="16" y="360" width="146" height="4" fill="#6799d6"/>
+  <rect x="96" y="392" width="186" height="4" fill="#6799d6"/>
+  <rect x="204" y="376" width="150" height="4" fill="#6799d6"/>
+  <rect x="300" y="360" width="128" height="4" fill="#6799d6"/>
+  <rect x="398" y="374" width="164" height="4" fill="#6799d6"/>
+  <rect x="452" y="392" width="128" height="4" fill="#6799d6"/>
+
+  <!-- Raised ridge monitor over the main roof. -->
+  <rect x="388" y="72" width="136" height="11" fill="#e6eff7"/>
+  <rect x="388" y="72" width="136" height="4" fill="#ffffff"/>
+  <rect x="396" y="80" width="120" height="32" fill="#57647a"/>
+  <rect x="396" y="80" width="40" height="32" fill="#7d8fa0"/>
+  <rect x="406" y="88" width="100" height="12" fill="#0f121a"/>
+
+  <!-- The upper storey: a continuous band of dark glass in a white frame. -->
+  <rect x="254" y="158" width="316" height="70" fill="#0f121a"/>
+  <rect x="264" y="168" width="52" height="46" fill="#44555f"/>
+  <rect x="490" y="168" width="36" height="46" fill="#44555f"/>
+  <rect x="286" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="326" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="366" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="406" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="486" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="526" y="158" width="6" height="70" fill="#f0f2f5"/>
+  <rect x="418" y="162" width="34" height="58" fill="#f0f2f5"/>
+  <rect x="423" y="167" width="24" height="48" fill="#0f121a"/>
+  <rect x="254" y="158" width="316" height="9" fill="#f0f2f5"/>
+  <rect x="254" y="158" width="316" height="3" fill="#ffffff"/>
+  <rect x="254" y="219" width="316" height="9" fill="#f0f2f5"/>
+
+  <!-- The lower storey, in the shade of the deck above the ice. -->
+  <rect x="262" y="228" width="300" height="84" fill="#242b33"/>
+  <rect x="262" y="228" width="300" height="6" fill="#7d8fa0"/>
+  <rect x="274" y="242" width="276" height="58" fill="#0f121a"/>
+  <rect x="300" y="242" width="9" height="70" fill="#30384f"/>
+  <rect x="368" y="242" width="9" height="70" fill="#30384f"/>
+  <rect x="436" y="242" width="9" height="70" fill="#30384f"/>
+  <rect x="504" y="242" width="9" height="70" fill="#30384f"/>
+  <rect x="464" y="250" width="36" height="62" fill="#44555f"/>
+  <rect x="464" y="250" width="36" height="5" fill="#7d8fa0"/>
+  <rect x="262" y="234" width="300" height="4" fill="#30384f"/>
+
+  <!-- The roof: broad, shallow, deep overhanging eaves, snow on every upward face. -->
+  <polygon points="224,166 380,110 520,110 586,152 586,168 520,126 380,126 224,182" fill="#57647a"/>
+  <polygon points="224,166 380,110 380,126 224,182" fill="#7d8fa0"/>
+  <polygon points="224,175 380,119 380,126 224,182" fill="#30384f"/>
+  <polygon points="216,162 380,102 520,102 594,148 594,156 520,112 380,112 216,172" fill="#e6eff7"/>
+  <polygon points="216,162 380,102 380,112 216,172" fill="#ffffff"/>
+
+  <!-- Slender column carrying the eave over the terrace. -->
+  <rect x="236" y="178" width="9" height="56" fill="#f0f2f5"/>
+  <rect x="236" y="178" width="3" height="56" fill="#ffffff"/>
+
+  <!-- The open raised terrace at the near end, on its own posts. -->
+  <rect x="100" y="246" width="11" height="66" fill="#f0f2f5"/>
+  <rect x="100" y="246" width="4" height="66" fill="#ffffff"/>
+  <rect x="150" y="246" width="11" height="66" fill="#f0f2f5"/>
+  <rect x="150" y="246" width="4" height="66" fill="#ffffff"/>
+  <rect x="200" y="246" width="11" height="66" fill="#f0f2f5"/>
+  <rect x="200" y="246" width="4" height="66" fill="#ffffff"/>
+  <rect x="246" y="246" width="11" height="66" fill="#f0f2f5"/>
+  <rect x="246" y="246" width="4" height="66" fill="#ffffff"/>
+  <rect x="90" y="246" width="174" height="7" fill="#16203a" opacity="0.18"/>
+  <rect x="90" y="232" width="174" height="14" fill="#57647a"/>
+  <rect x="90" y="227" width="174" height="6" fill="#e6eff7"/>
+  <rect x="90" y="227" width="174" height="2" fill="#ffffff"/>
+  <rect x="96" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="115" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="134" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="153" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="172" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="191" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="210" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="229" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="248" y="204" width="4" height="24" fill="#ffffff"/>
+  <rect x="90" y="196" width="174" height="8" fill="#f0f2f5"/>
+  <rect x="90" y="196" width="174" height="3" fill="#ffffff"/>
+
+  <!-- The external stair from the ice-level deck to the upper floor. -->
+  <rect x="410" y="220" width="44" height="12" fill="#f0f2f5"/>
+  <rect x="410" y="220" width="44" height="4" fill="#ffffff"/>
+  <polygon points="276,312 414,228 414,246 276,330" fill="#f0f2f5"/>
+  <rect x="280" y="300" width="15" height="4" fill="#ffffff"/>
+  <rect x="296" y="294" width="15" height="4" fill="#ffffff"/>
+  <rect x="313" y="284" width="15" height="4" fill="#ffffff"/>
+  <rect x="329" y="274" width="15" height="4" fill="#ffffff"/>
+  <rect x="346" y="264" width="15" height="4" fill="#ffffff"/>
+  <rect x="362" y="254" width="15" height="4" fill="#ffffff"/>
+  <rect x="379" y="244" width="15" height="4" fill="#ffffff"/>
+  <rect x="395" y="234" width="15" height="4" fill="#ffffff"/>
+  <rect x="288" y="278" width="4" height="26" fill="#f0f2f5"/>
+  <rect x="314" y="262" width="4" height="26" fill="#f0f2f5"/>
+  <rect x="340" y="246" width="4" height="26" fill="#f0f2f5"/>
+  <rect x="366" y="231" width="4" height="26" fill="#f0f2f5"/>
+  <rect x="392" y="215" width="4" height="26" fill="#f0f2f5"/>
+  <polygon points="276,280 414,196 414,203 276,287" fill="#ffffff"/>
+
+  <!-- The deck at ice level, on piles standing in the lake. -->
+  <ellipse cx="330" cy="354" rx="228" ry="9" fill="#16203a" opacity="0.22"/>
+  <rect x="104" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="184" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="264" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="344" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="424" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="504" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="552" y="329" width="14" height="27" fill="#30384f"/>
+  <rect x="84" y="322" width="488" height="7" fill="#30384f"/>
+  <rect x="84" y="309" width="488" height="13" fill="#57647a"/>
+  <rect x="84" y="309" width="488" height="4" fill="#7d8fa0"/>
+  <rect x="84" y="302" width="488" height="7" fill="#e6eff7"/>
+  <rect x="84" y="302" width="488" height="3" fill="#ffffff"/>
+
+  <!-- Cleared snow banked against the deck, out on the ice. -->
+  <path d="M 430 364 C 482 350 530 344 600 346 L 600 370 L 430 372 Z" fill="#e6eff7"/>
+  <path d="M 430 364 C 482 350 530 344 600 346 L 600 352 C 530 350 482 356 430 370 Z" fill="#ffffff"/>
+
+  <!-- Globe lamps along the deck. -->
+  <rect x="197" y="240" width="6" height="66" fill="#7d8fa0"/>
+  <rect x="195" y="240" width="10" height="6" fill="#30384f"/>
+  <circle cx="200" cy="232" r="11" fill="#e1c368"/>
+  <circle cx="196" cy="228" r="4" fill="#ffffff"/>
+  <rect x="369" y="240" width="6" height="66" fill="#7d8fa0"/>
+  <rect x="367" y="240" width="10" height="6" fill="#30384f"/>
+  <circle cx="372" cy="232" r="11" fill="#e1c368"/>
+  <circle cx="368" cy="228" r="4" fill="#ffffff"/>
+  <rect x="541" y="240" width="6" height="66" fill="#7d8fa0"/>
+  <rect x="539" y="240" width="10" height="6" fill="#30384f"/>
+  <circle cx="544" cy="232" r="11" fill="#e1c368"/>
+  <circle cx="540" cy="228" r="4" fill="#ffffff"/>
+
+  <!-- The skateway's lane spruces, set into the open ice. -->
+  <ellipse cx="24" cy="398" rx="24" ry="5" fill="#16203a" opacity="0.28"/>
+  <ellipse cx="56" cy="390" rx="18" ry="4" fill="#16203a" opacity="0.28"/>
+  <ellipse cx="86" cy="388" rx="15" ry="4" fill="#16203a" opacity="0.28"/>
+  <rect x="21" y="382" width="6" height="16" fill="#5a2d19"/>
+  <polygon points="24,356 4,382 44,382" fill="#154536"/>
+  <polygon points="24,356 4,382 24,382" fill="#2c8055"/>
+  <polygon points="24,338 7,364 41,364" fill="#154536"/>
+  <polygon points="24,338 7,364 24,364" fill="#2c8055"/>
+  <polygon points="24,320 10,348 38,348" fill="#154536"/>
+  <polygon points="24,320 10,348 24,348" fill="#2c8055"/>
+  <polygon points="24,320 15,338 24,338" fill="#41b76b"/>
+  <rect x="53" y="380" width="5" height="10" fill="#5a2d19"/>
+  <polygon points="56,358 39,380 73,380" fill="#154536"/>
+  <polygon points="56,358 39,380 56,380" fill="#2c8055"/>
+  <polygon points="56,344 42,366 70,366" fill="#154536"/>
+  <polygon points="56,344 42,366 56,366" fill="#2c8055"/>
+  <polygon points="56,328 45,350 67,350" fill="#154536"/>
+  <polygon points="56,328 45,350 56,350" fill="#2c8055"/>
+  <rect x="84" y="382" width="4" height="6" fill="#5a2d19"/>
+  <polygon points="86,362 71,382 101,382" fill="#154536"/>
+  <polygon points="86,362 71,382 86,382" fill="#2c8055"/>
+  <polygon points="86,350 74,370 98,370" fill="#154536"/>
+  <polygon points="86,350 74,370 86,370" fill="#2c8055"/>
+  <polygon points="86,336 77,356 95,356" fill="#154536"/>
+  <polygon points="86,336 77,356 86,356" fill="#2c8055"/>
+</svg>

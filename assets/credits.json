@@ -155,6 +155,33 @@
       "modifications": "Downscaled to 1600 px long edge; metadata stripped."
     },
     {
+      "path": "refs/ottawa/dows-lake-pavilion-elevation.jpg",
+      "kind": "reference",
+      "title": "The pavilion at Dow's Lake, Ottawa - elevation from the skateway ice",
+      "author": "Ahunt",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rideau_Canal_skating_6968.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/dows-lake-pavilion-deck-and-stair.jpg",
+      "kind": "reference",
+      "title": "The pavilion at Dow's Lake, Ottawa - deck on piles, external stair and raised terrace",
+      "author": "Ahunt",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rideau_Canal_1479.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
+      "path": "refs/ottawa/dows-lake-skateway-lane.jpg",
+      "kind": "reference",
+      "title": "Dow's Lake, Ottawa - the open lake ice, the lane spruces and the pavilion on the shore",
+      "author": "Ahunt",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Rideau_Canal_-_Dow%27s_Lake_1556.jpg",
+      "modifications": "Downscaled to 1600 px long edge; metadata stripped."
+    },
+    {
       "path": "src/svg/ottawa/landmark-parliament-hill@1x.svg",
       "kind": "shipped",
       "title": "Parliament Hill, Ottawa - Centre Block, the Peace Tower and the Library of Parliament",
@@ -270,6 +297,15 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/prop-warming-hut@1x.svg",
       "modifications": "Original work. Drawn from the change hut in assets/refs/ottawa/rideau-canal-skateway-portrait.jpg and the ice in rideau-canal-skateway-ice.jpg under the rules in assets/style/art-bible.md; never traced. A TYPE and not a named or operated building: the hut in the reference carries wordmarks and an operator's livery and neither is drawn. The @1x suffix pins the source to one scale; the key ottawa-prop-warming-hut carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 360 and passed at both probes; at 2x it would cost 3.08 MiB of decoded texture instead of 0.77 MiB."
+    },
+    {
+      "path": "src/svg/ottawa/prop-dows-lake-pavilion@1x.svg",
+      "kind": "shipped",
+      "title": "The pavilion at Dow's Lake - a level 4 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/ottawa/prop-dows-lake-pavilion@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/ottawa/dows-lake-pavilion-elevation.jpg and dows-lake-pavilion-deck-and-stair.jpg, with the open ice and the lane spruces from dows-lake-skateway-lane.jpg, under the rules in assets/style/art-bible.md; never traced. A BUILDING and not a business: every reference shows the pavilion under a restaurant tenant's wordmarks, livery and awnings, and none of that is drawn. The @1x suffix pins the source to one scale; the key ottawa-prop-dows-lake-pavilion carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 600 x 400 and passed at both probes; at 2x it would cost 3.66 MiB of decoded texture instead of 0.92 MiB."
     },
     {
       "path": "src/svg/shared/character/arm-lower-parka.svg",

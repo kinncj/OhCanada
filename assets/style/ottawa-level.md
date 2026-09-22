@@ -614,3 +614,132 @@ three more failures and says why.
 The near bank of the Skateway: the lit `ice-light` edge of the ice sheet, a rounded snowbank crest with `snow-shade` shadow, red-osier dogwood stems in `oxide-base` standing out of the snow, and drifts crossed by footprints. It starts at world 1470 because that is the lowest point of this level's ground (ADR-0042 §2). On the high stretch the 230 rows between the walking line and the bank are the ice fill, which reads as the lane between two banks.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
+
+---
+
+## 13. Dow's Lake, the sixth stop's art — and the one thing this task could not land
+
+**Added 2026-09-22, ADR-0065 §2.** Ottawa's five stops were full: every non-`answer` quest step holds one, and
+the first 3 600 px of the canal are boxed in between a hold-release floor at x 1 725 and 1 080 px of mandatory
+landmark spacing below the Library at x 2 520. 795 px for three stops is not a level that can host the game's
+first lesson-reading step, so ADR-0065 §2 authorises a sixth, and this is its art.
+
+| key | source | authored px | what it is |
+|---|---|---|---|
+| `ottawa-prop-dows-lake-pavilion` | `prop-dows-lake-pavilion@1x.svg` | 600 × 400 | **POI hero**: the pavilion at Dow's Lake, on piles over the lake ice, with the skateway's lane spruces in front of it |
+
+### What is drawn, and why each piece is there
+
+Dow's Lake is where the Rideau Canal opens out into an artificial lake and the skateway reaches its widest
+and its southern end. What actually stands there is one building — a long, low, two-storey steel-and-glass
+pavilion on piles over the water, with a deck at ice level, a raised open terrace at one end, a single long
+external stair, and globe lamps along the deck. Drawn from `refs/ottawa/dows-lake-pavilion-elevation.jpg` and
+`dows-lake-pavilion-deck-and-stair.jpg` (both CC0), with the ice and the lane trees from
+`dows-lake-skateway-lane.jpg`.
+
+**The identifying feature is half a building and half an absence, and that is unusual enough to record.**
+The pavilion carries the *object*: nothing else in this game is a glazed two-storey box standing on piles
+with a diagonal stair across its face. What carries the *place* is that the ice runs unbroken to the foot of
+that deck with **no masonry retaining wall and no stone coping anywhere in the frame**. Every other Ottawa
+subject in `references.json` is contained — `rideau-canal-skateway` by its retaining wall, `canal-lock` by
+its chamber walls — and Dow's Lake is precisely the stretch where that containment stops. `mustBeRight`
+states the absence as a required feature rather than leaving it to a `neverAdd`, because a verifier scoring
+features against a render can see a wall that should not be there and cannot see one that correctly is not.
+
+**The contract does not ask for a place name, and that was decided before the drawing rather than after a
+verdict came back short.** The building has no clock, no spire, no dome and no ornament; the only thing on
+the real one that says *which* lake is the restaurant tenant's wordmark, and this project never draws
+lettering. `expectedBlindAnswer` therefore asks for a building type and a setting — *a pavilion on a frozen
+lake* — and keeps *the Dow's Lake pavilion* in the list as accepted rather than required. This is the
+`pier-21` answer applied a second time; the level's own identification still rests on
+`ottawa-landmark-parliament-hill`, which identified cold at 0.92.
+
+**The failure to watch for is "a warming hut".** This level already has a building on the ice 1 100 px away.
+That one is a 560 × 360 timber box with a shallow gable, two lit windows and a red panel; this is a 600 × 400
+glass pavilion on piles with a stair. Nothing is shared but the surface, and `references.json` says so under
+both subjects so a verifier who sees the two does not report a duplication.
+
+**Refused:** the tenant's signage, awnings and string lights (most of what the references show); the flag on
+the mast at the far end (`OQ-ART-04` is open); a Winterlude dome, marquee or ice sculpture, which is kit put
+up for two weeks; the towers of the Glebe behind the lake, because the skyline tile repeats; and **tulips**,
+which are the first thing anybody who knows this lake reaches for and are in Commissioners Park in May.
+
+### Placement — the numbers the level document should use
+
+The warming hut is the current last stop at x 7 600 and the level's `size.x` is 9 000, so a sixth stop has
+exactly 320 px of room between the 1 080 px landmark minimum
+(`tests/unit/contracts/level-art-is-placed-where-it-is-drawn.test.ts`) and the end of the world. **x = 8 700**
+takes 1 100 px of clearance and leaves the 600 px hero spanning 8 400 … 9 000 — flush with the world edge and
+entirely inside the camera's last frame (7 920 … 9 000). That pair of constraints is why the canvas is 600 px
+and not the 640 the composition wanted: at 640 the art would hang 20 px past a bound the camera never
+crosses.
+
+`y` is the ground polyline sampled at x 8 700 — 1 466 + 0.7 × 4 = **1 468.8, written 1 469** — which is the
+same rounding the hut took at 1 467.6 → 1 468. It is **on the ice**, past the canal step at x 6 400, so the
+file's bottom band is `ice` with skate scoring and a cleared snow windrow, not a snow bank. `radiusPx` 240,
+the hut's and the Library's.
+
+```json
+    {
+      "id": "dows-lake",
+      "name": { "en": "Dow's Lake", "fr": "Le lac Dow" },
+      "position": { "x": 8700, "y": 1469 },
+      "artKey": "ottawa-prop-dows-lake-pavilion",
+      "radiusPx": 240
+    }
+```
+
+### THE POI IS NOT IN `content/levels/ottawa.json`, AND THAT IS A FINDING RATHER THAN AN OMISSION
+
+The block above is five keys. `content/schemas/level.schema.json` requires seven — `blurb` and `fact` as
+well — and ADR-0003 forbids one commit both authoring a claim and granting it, so art cannot write them.
+The expectation going in was that `make validate-content` would go red on the two missing keys and be left
+red for the content author to close.
+
+**It is worse than that, and the extra fact is why the POI was taken back out.**
+`app/adapters/phaser/level-document.ts` is the *runtime* reading of a level, and its own header calls itself
+"the refusal that keeps a level from being loaded at all". `readPois` returns `invalid` on a POI with no
+`blurb` (`readLocalizedText`) and again on one with no `fact` (`readFactClaim`, which rejects an absent block
+as "an unchecked claim rather than an unclaimed one"), and a single invalid POI fails the whole document. A
+partial sixth stop does not leave one landmark undrawn; **it stops Ottawa loading**. A red gate is a message;
+a dead level on `main` is a regression.
+
+So this branch lands the art, the contract, the credits and the builder, and leaves the level document
+byte-for-byte as it was. **The content author writes the block above with a `blurb` and a `fact`, a verifier
+grants it, and the stop appears in one commit that was always going to have to be theirs.** Nothing here
+needs to move when they do: the key, the size, the x, the y and the radius are all settled and measured.
+
+### Budgets, measured 2026-09-22
+
+The source is charged to this level by its directory, so the cost is already paid and is not waiting on the
+level document:
+
+```
+level-payload:  OK - ottawa 0.72 MiB of 8.00 MiB over 20 file(s)
+texture-memory: OK - ottawa 40.09 MiB of 48.00 MiB (84%, 8 293 520 B spare) over 20 file(s)
+```
+
+**The drawing costs 12 342 B of payload and 960 000 B = 0.92 MiB of decoded texture** — 600 × 400 × 4, at
+`@1x` because the filename pins it. Ottawa moved 0.71 → 0.72 MiB of payload (9 %) and 39.18 → 40.09 MiB of
+texture (82 % → 84 %), leaving 8.29 MiB spare. At `@2x` the same drawing would cost 3.66 MiB and take the
+level to 87 %; nothing on it was drawn to need 2×, and the two-size test is why.
+
+### The two-size test, and what is still owed
+
+Run at the shipping size of 600 × 400. At 180 px wide the stair, the terrace railing, the mullion rhythm, the
+three lamps, the piles and the three trees all survive. As a flat silhouette 120 px tall the subject is a long
+low block under a broad shallow roof with a raised ridge, an open railed terrace on posts at one end, standing
+on a deck on piles over a flat surface, with three small conifers beside it — which is a pavilion on a lake and
+is not a hut. **Placement floor 300 px**, adopted from this level's floor rather than re-derived.
+
+**That is an author's self-check and it is not an identification.** `make verify-art` reports `dows-lake` as
+**NEVER CHECKED**: the hand-off builds it (55 subjects, 179 renders, anonymisation held), and nobody has yet
+named it from the image alone. It cannot be this pass — whoever drew a render has already seen it, and the
+protocol in `references.json` says a verdict from a party that found its own inputs is untrusted. A blind
+pass is owed and the contract is written to be scored by one.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needed, and has
+
+```js
+  'dows-lake': singleSource(),
+```

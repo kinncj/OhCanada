@@ -52,7 +52,11 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
 ## Directories
 
 - `ottawa/` — the slice-1 Level 4 subjects: the Peace Tower and Centre Block, Parliament Hill as a skyline,
-  and the Rideau Canal Skateway.
+  and the Rideau Canal Skateway. **Three files added 2026-09-22** for `dows-lake`, the level's sixth stop
+  (ADR-0065 §2): the pavilion square on from the ice, the same building obliquely for its deck and stair, and
+  the open lake with the skateway's lane spruces. All three are CC0 by one photographer, licences checked
+  against the Commons API on **2026-09-22** before anything was fetched, and all three show the building
+  wearing a restaurant tenant's wordmarks — the drawing takes the form and none of the branding.
 - `quebec-city/` — the slice-2 Level 3 subjects: the Château Frontenac (four views), the Dufferin Terrace and
   its toboggan run (two historical photographs and one modern), and the river, the far bank and the ramparts
   in winter. Ten files, licence-checked against the Commons API on **2026-09-08** before any was downloaded:

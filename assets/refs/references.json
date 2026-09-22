@@ -36,7 +36,8 @@
     "AMENDED 2026-09-09 while drawing The Alberta foothills (level 8) and Vancouver (level 9). Four subjects added, and the PAIR of levels is the point once more. `five-sails` IS allowed to demand a place name and `ranch-barn` IS NOT, on the test that separated town-clock from pier-21 and human-rights-museum from grain-elevator: Canada Place is one specific building whose five white fabric sails over a long low pier are shared by nothing else this game will draw, and a ranch barn with a corral is a TYPE - the candidates that would have identified the place, Head-Smashed-In Buffalo Jump above all, are a docs/content-review.md section 1 depiction question and not an art question, so they are not here. Level 8's list asks for a RANCH and never for Alberta, and the consequence is stated rather than left to be discovered: THE ALBERTA FOOTHILLS AS A PLACE REST ON NOTHING IN THAT LEVEL'S ART, exactly as the Prairies do, because the level is a region and its honest anchor is the type. The Rocky Mountain front IS drawn, on layer 20, and is deliberately not a graded subject: it repeats, the low preset drops it, and a landform spanning two countries identifies a landform and not a province.",
     "AND ONE ANSWER CANNOT BE WRITTEN DOWN, WHICH IS THE OTHER FINDING OF THIS AMENDMENT. The correct unprompted answer to `five-sails` is the building's own name, and it contains a common noun that the hand-off's own briefing also contains. `leakTokens` takes every word of four letters or more out of `id` and `expectedBlindAnswer` and refuses any handed-over text containing one, so listing the name would turn make verify-art red on a hand-off that leaks nothing - and the subject id is `five-sails` rather than the building's name for the same reason. The answer is scored on `Vancouver` and on `five sails`, both of which the same sentence almost always carries, and the one-line fix is routed rather than worked around. Every list below was checked MECHANICALLY against the real `leakTokens` and the real BRIEFING before shipping, which is how `open`, `part`, `size` and `paint` were kept out of them as well.",
     "AMENDED 2026-09-13 while drawing Peggy's Cove (level 2). Two subjects added, and one entry in this file records a decision that is not an art decision: `peggys-cove-light` is the first hero on a level whose place sits on a named nation's territory, the level depicts no nation and no person, and the Tier 3 review that docs/content-review.md 1 leaves open is written as a dated obligation in assets/style/peggys-cove-level.md section 0. Licence was established through the Commons API before anything was downloaded, as on every level since slice 2.",
-    "AMENDED AGAIN 2026-09-13 while drawing The North (level 10), which is the tenth and last level. Two more subjects, and the same shape as Peggy's Cove's: a non-repeating POI hero and a two-tile traversal composite, with `neverAdd` on BOTH carrying the docs/content-review.md 5.2 and 5.4 prohibitions and a ban on drawing any figure at all. THE HERO IS ASKED FOR A TYPE AND NEVER FOR A PLACE, because the vessel carries its own name in paint and this project draws no text; that makes this the third region in a row whose place rests on nothing in its art, which is OQ-SPINE-6's finding confirmed rather than a surprise."
+    "AMENDED AGAIN 2026-09-13 while drawing The North (level 10), which is the tenth and last level. Two more subjects, and the same shape as Peggy's Cove's: a non-repeating POI hero and a two-tile traversal composite, with `neverAdd` on BOTH carrying the docs/content-review.md 5.2 and 5.4 prohibitions and a ban on drawing any figure at all. THE HERO IS ASKED FOR A TYPE AND NEVER FOR A PLACE, because the vessel carries its own name in paint and this project draws no text; that makes this the third region in a row whose place rests on nothing in its art, which is OQ-SPINE-6's finding confirmed rather than a surprise.",
+    "AMENDED 2026-09-22 while drawing Ottawa's sixth stop (ADR-0065 section 2). One subject added, `dows-lake`, and it is the SECOND subject in this file whose contract refuses to ask for a place name. `pier-21` established the rule for a shed with its name painted on it; this applies it to a building with its tenant's name hung on it, and the difference from the canal's amendment is that this one was decided BEFORE the drawing rather than after a verdict came back short. What the render is asked for instead is a building type and a setting - a pavilion on piles over open ice - and the identifying feature is an ABSENCE: no masonry retaining wall and no stone coping anywhere in the frame, which is what separates this end of the skateway from the walled canal that `rideau-canal-skateway` and `canal-lock` both draw."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -552,6 +553,143 @@
         "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px the two lit windows,",
         "the doorway, the red panels, the snow load, the bench and the spruce all survive; the 120 px",
         "silhouette is a long low gabled box with a small conifer beside it."
+      ]
+    },
+    {
+      "id": "dows-lake",
+      "subject": "The pavilion at Dow's Lake, Ottawa: the building on piles over the wide southern end of the Rideau Canal Skateway",
+      "renders": [
+        "src/svg/ottawa/prop-dows-lake-pavilion@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a pavilion on a frozen lake",
+        "a lakeside pavilion",
+        "a boathouse",
+        "a boathouse on a frozen lake",
+        "a building standing on piles in a frozen lake",
+        "a clubhouse or restaurant on a frozen lake",
+        "a pavilion on a skating lake",
+        "a pavilion on a frozen canal",
+        "a pavilion on the Rideau Canal Skateway",
+        "the Dow's Lake pavilion",
+        "Dow's Lake, Ottawa"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY BE ASKED FOR A BUILDING AND FOR WHAT IT STANDS ON. IT MAY NOT BE ASKED FOR A PLACE",
+        "NAME, and that is a decision taken before the drawing was made rather than a concession made after a",
+        "verdict came back short. The pavilion at Dow's Lake is a low 1970s steel-and-glass building over the",
+        "water. It has no clock, no spire, no dome, no tower and no ornament of any kind; nothing in its shape",
+        "belongs to it alone, and the only thing on the real building that says WHICH lake is the tenant's",
+        "wordmark, which this project never draws. An identification of \"Dow's Lake\" from this render would be",
+        "an identification made from project context and not from the picture. Both specific answers are kept in",
+        "the list above because a verifier who does name the place is not wrong - it is just not required to.",
+        "THIS IS THE PIER-21 ANSWER, APPLIED A SECOND TIME AND ON PURPOSE. That subject is a brick shed whose",
+        "one unmistakable feature is the name painted on it; this is a pavilion whose one unmistakable feature is",
+        "the name hung on it. In both cases the honest contract asks the render for what the render can carry,",
+        "and the LEVEL's identification rests elsewhere: Ottawa is carried by `parliament-hill`, a separate",
+        "non-repeating hero that identified cold at 0.92, exactly as Halifax's rests on `town-clock`.",
+        "WHAT THE RENDER MUST STILL CARRY IS THAT IT IS A LAKE AND NOT THE CANAL. \"A house\", \"a shed\", \"a",
+        "cabin\" or \"a modern building\" with no water and no ice under it is a partial answer and does not pass.",
+        "The ice running unbroken to the foot of a deck on piles, with no masonry wall anywhere in the frame, is",
+        "what separates this stop from `rideau-canal-skateway` and from `canal-lock`, both of which are walled.",
+        "THE FAILURE TO WATCH FOR IS \"a warming hut\" or \"a cabin on the ice\". This level already has one of",
+        "those, 1100 px away, and it is `warming-hut`: a small timber box with a shallow gable, two lit windows",
+        "and a red panel. This is a 300 px two-storey glass building on piles with an external stair. If a",
+        "verifier reads this render as a hut, the two heroes have collapsed into one and that is a fail."
+      ],
+      "referenceFiles": [
+        "ottawa/dows-lake-pavilion-elevation.jpg",
+        "ottawa/dows-lake-pavilion-deck-and-stair.jpg",
+        "ottawa/dows-lake-skateway-lane.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a long, low, two-storey building standing on piles over the water, with its deck at ice level",
+          "why": "It is the whole silhouette and it is the one thing about this building that is not ordinary. A pavilion drawn standing on a bank is a restaurant beside a lake; a pavilion drawn on piles with the ice passing under its deck is a building ON the water, which is what this one is and what makes the stop worth stopping at.",
+          "detail": "MEASURED on ottawa/dows-lake-pavilion-elevation.jpg, in the band through the building: the two storeys together are about 175 px on a 500 px length, so HEIGHT : LENGTH is close to 1 : 2.9. The shipped art draws 154 over 346 = 1 : 2.2, shortened because a side-scroller's frame is 600 px wide and the deck has to be in it too. Anything at 1 : 1 or taller stops being this building and becomes an apartment block. Six or seven square piles stand in the ice under the deck edge; rhythm, not count.",
+          "palette": "slate"
+        },
+        {
+          "feature": "a broad, shallow-pitched metal roof with deep overhanging eaves and a raised ridge monitor",
+          "why": "The roof is the only sculptural thing on the building and it is what reads at 120 px. The overhang is genuinely deep - it runs out over the terrace with a single slender column under it - and the raised box along the ridge is the one break in an otherwise flat roofline.",
+          "detail": "Pitch about one in three, much shallower than a house and much shallower than the warming hut's gable. The eave oversails the wall by about a fifth of the building's length at the near end. Snow lies along the whole ridge and along the monitor; the roof's own edge reads dark underneath it, which is the soffit in shadow."
+        },
+        {
+          "feature": "a continuous band of dark glass in a white frame across the upper storey",
+          "why": "It is what makes the building a pavilion rather than a shed: it is glazed end to end, facing the ice.",
+          "detail": "Glass darker than anything else in the frame, divided by slim white mullions at an even pitch and closed top and bottom by a white head and sill band. Two pale reflections on the glass. Rhythm, not count: the real building has more bays and the number may differ, the pitch-to-height ratio may not. Glazing bars finer than 12 px are simplified away, the same substitution the Library made on its windows."
+        },
+        {
+          "feature": "a long external stair from the ice-level deck up to the upper floor, and an open railed terrace at the near end",
+          "why": "Together they are the second half of the read. A skater arriving on the ice climbs to the building, and the stair says so in one diagonal across a facade that is otherwise all horizontals. The terrace is the summer patio and is the reason the near end of the building has no walls.",
+          "detail": "The stair is a single straight flight in white, with a stringer, treads and a parallel handrail on balusters, landing on a small platform at the upper floor. The terrace is a raised open deck on its own posts, with a railing of evenly spaced balusters along its edge and snow lying on it. No door leaf, no gate, no turnstile."
+        },
+        {
+          "feature": "open ice, scored by skates, running unbroken to the foot of the deck, with no masonry wall and no stone coping anywhere in the frame",
+          "why": "This is what makes the render a LAKE rather than another point on the canal. Every other Ottawa subject in this contract is contained: the skateway by a retaining wall, the lock by coursed chamber walls. Dow's Lake is where that containment stops and the ice opens out, and the ABSENCE is the identifying feature - which is unusual enough to be worth saying out loud rather than leaving to be inferred from a `neverAdd`.",
+          "detail": "A flat band of the `ice` ramp across the bottom of the file with a lit top edge, two or three sheen lozenges and six straight scoring bars, plus a low swept snow windrow where the ice has been cleared against the deck. The file's bottom edge IS the level ground line, which on this stretch is world y 1469, on the ice.",
+          "palette": "ice"
+        },
+        {
+          "feature": "a line of small spruces set into the ice, and globe lamps on the deck",
+          "why": "The spruces are the skateway's own lane markers - cut trees stood up in the ice to edge the cleared lane - and they are in every winter photograph of this lake. They also give the building its scale, which a 600 px frame with no figure in it otherwise has no way to state.",
+          "detail": "Three trees of three different heights standing ON the ice in front of the deck, each with a short bare trunk and stacked drooping tiers, narrow rather than conical. Globe lamps are a flat `brass-light` disc with a `white-light` highlight on a slim standard, three of them along the deck; the same lamp the level's canal wall carries.",
+          "palette": "pine, brass"
+        },
+        {
+          "feature": "snow on every upward surface, and three flat tones per material",
+          "detail": "On the roof, on the monitor, on the terrace deck, on the deck boards and banked against the deck out on the ice. This level is winter and `theme.ground` is snow-base. Key light from the upper left: the near end of the roof and the left faces of the posts, the piles and the trees take the light tone.",
+          "palette": "snow"
+        }
+      ],
+      "simplifyAway": [
+        "the restaurant tenant's signage, awnings, string lights, patio umbrellas, furniture and livery, which is most of what is visible in both pavilion references",
+        "the third, lower annexe wing at the far end of the real building and its separate flight of steps",
+        "the corrugation of the metal roof and of the wall panels: art-bible section 1 forbids a surface pattern, and the roof reads by its shape and its snow",
+        "the downpipes, roof-top plant, aerials and every fitting below 12 px",
+        "the towers of the Glebe standing behind the lake in `dows-lake-skateway-lane.jpg`: the level's skyline tile carries the city, and it repeats, so a recognisable building may never be drawn on it",
+        "the crowd on the ice, the skate-change benches and the kilometre marker post",
+        "the summer boat racks, the canoe dock and the launch ramp: they are hauled out before the ice comes"
+      ],
+      "neverAdd": [
+        "any lettering, wordmark, logo, menu board, price or house number in either language. This is the single most likely wrong addition here: every photograph of this building shows it wearing a tenant's name across the terrace, and the name is the only thing in the reference that says which lake it is",
+        "a national flag, a flagpole or a maple leaf device (OQ-ART-04 is open). The primary reference carries a flag on a mast at the far end and it is not drawn",
+        "a figure, on the ice, on the deck or on the terrace",
+        "a tulip, a tulip bed, a flower bed or any planting. Dow's Lake is the Canadian Tulip Festival's main site and it is the first thing anybody who knows the place reaches for; the beds are in Commissioners Park, they are in bloom in May, and this level is winter",
+        "a canoe, a pedal boat, a rowing shell, a boat rack or a floating dock: all of them are summer and all of them are out of the water in February",
+        "a Winterlude marquee, a geodesic dome, a tent, a beavertail stand or an ice sculpture. The references carry event kit that is put up for two weeks and taken down; a building is what this subject is",
+        "hockey boards, nets or line markings: the skateway is not a rink",
+        "a chimney with smoke drawn as a plume: smoke is a filter effect in cartoon shorthand and ADR-0011 wants every effect to have a plain path",
+        "a clock face, a spire, a bell stage or a polygonal cone roof. Scoped deliberately: a clock is REQUIRED of `peace-tower` and a steep polygonal roof of `library-of-parliament`, and this level must not grow a third silhouette that borrows from either",
+        "a lock gate, a balance beam, a sluice or a weir: those belong to `canal-lock`, 6 900 px away, and a gate drawn here would put this stop back on the canal it exists to be distinct from",
+        "a hill, a bluff or a mountain behind it: this end of the canal is flat and the level's escarpment tile is a repeating layer"
+      ],
+      "notes": [
+        "ottawa/dows-lake-pavilion-elevation.jpg is the PRIMARY reference: the pavilion square on from the ice,",
+        "in bright winter sun, with the deck, the piles, the stair, the terrace and the roof all legible in one",
+        "frame. ottawa/dows-lake-pavilion-deck-and-stair.jpg is the same building from an oblique angle and is",
+        "the reference for the deck structure and the lamp standards. Both are CC0 and both are heavily branded;",
+        "the drawing takes only the FORM. ottawa/dows-lake-skateway-lane.jpg is the reference for the open ice,",
+        "the lane spruces and the way the pavilion sits low and long on its shore.",
+        "WHY A BUILDING NOBODY CAN NAME IS A POINT OF INTEREST. ADR-0065 section 2 authorises a sixth stop on",
+        "this level because the level's five were full and the game's first lesson-reading step needs one to",
+        "stand at. A stop has to be somewhere real, and Dow's Lake is the southern terminus of the skateway the",
+        "whole level is set on - the place the ice the player has been skating for 8 700 px runs out. That is a",
+        "true fact about the geography and it is drawable; that it is not a famous silhouette is a fact about",
+        "the building, not a defect in the choice.",
+        "THIS LEVEL ALREADY HAS A BUILDING ON THE ICE, AND IT IS NOT THIS ONE. `warming-hut` is a 560 x 360",
+        "timber box at world x 7 600; this is a 600 x 400 two-storey steel-and-glass pavilion at world x 8 700.",
+        "They are 1 100 px apart, they share a surface and they share nothing else - one is a shelter you stand",
+        "in for five minutes and the other is the end of the line. The relationship is recorded here so a",
+        "verifier who sees both does not report a duplication, and the failure mode is recorded in",
+        "`expectedBlindAnswerNote` because reading one as the other is the way this render can fail.",
+        "PLACEMENT FLOOR: do not draw it below 300 px wide anywhere the player is meant to recognise it, adopted",
+        "from the Ottawa floor rather than re-derived. DRAWING OBSERVATION, not an identification: at 180 px the",
+        "stair, the terrace railing, the mullion rhythm, the three lamps, the piles and the three trees all",
+        "survive; the 120 px silhouette is a long low block with a broad shallow roof and a raised ridge, an",
+        "open railed terrace on posts at one end, standing on a deck on piles over a flat surface, with three",
+        "small conifers beside it."
       ]
     },
     {

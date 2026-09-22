@@ -1559,6 +1559,15 @@ const RECIPES = {
   'warming-hut': singleSource(),
 
   /**
+   * Ottawa's fourth, and the same builder again. Worth one line rather than
+   * none, because it is the first subject in this table whose contract REFUSES
+   * to ask for a place name: its `expectedBlindAnswerNote` says so and says why,
+   * and a reader who arrives here expecting a landmark should be sent there
+   * rather than left to wonder whether a recipe is missing.
+   */
+  'dows-lake': singleSource(),
+
+  /**
    * "The quayside placed 160 px below the town tile's top edge (world y 860
    * against 700)."
    *
