@@ -16,7 +16,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { bundledLessonLibrary, createLessonLibrary } from '@adapters/content';
-import type { LessonLibrary } from '@application/ports';
+import type { LessonDocument, LessonLibrary } from '@application/ports';
 import type { LocalizedText } from '@domain/entities/values';
 import type { UiLocale } from '@ui/copy';
 
@@ -40,37 +40,88 @@ const localise = (value: LocalizedText, locale: UiLocale): string =>
  * `lesson.schema.json` says a rename is a **new identity** — so it would rot
  * legitimately and fail this suite for a content edit that broke nothing here.
  *
- * The first chapter in address order, its first lesson, its first three
- * passages. Which chapter that is, is the catalogue's business and not this
- * file's, which is also what makes the laziness assertion below honest.
+ * **It asks the corpus what it offers; it does not tell the corpus what to
+ * have.** The first draft took the first chapter in address order and then
+ * demanded a lesson of three passages in it — and the first chapter in address
+ * order is `canadas-economy`, which ships one lesson of two. That is not a
+ * defect in the corpus: `rights-and-responsibilities-of-citizenship` and
+ * `the-justice-system` hold lessons of one, because ADR-0061 measured those
+ * chapters as nearly exhausted. A fixture that requires a shape the corpus is
+ * allowed not to have fails on content that is doing nothing wrong.
+ *
+ * So the search is over **every** chapter, in address order, for the first
+ * lesson that carries {@link WANTED} passages; and if no lesson anywhere carries
+ * that many, the scenario takes the longest one there is and walks with however
+ * many that holds — a different number, not a different chapter. Which lesson it
+ * settled on, and what it searched, are in every message below, so the next
+ * person reading a red run is not guessing.
  */
+
+/**
+ * How many passages the walk would like.
+ *
+ * Three because that is what a stop holds (`TN-READ`, ADR-0065 §3.3) and what a
+ * `read` step will name, not because anything here breaks with fewer. Nothing
+ * below asserts this number; they all count {@link REFERENCES}.
+ */
+const WANTED = 3;
+
 let CHAPTER = '';
 let LESSON = '';
+let SEARCHED = '';
 let REFERENCES: { readonly lesson: string; readonly passage: string }[] = [];
 
 beforeAll(async () => {
   const library = bundledLessonLibrary();
   const catalogue = await library.chapters();
   if (!catalogue.ok) throw new Error(`no lesson catalogue: ${catalogue.error.message}`);
-  const first = catalogue.value[0];
-  if (first === undefined) throw new Error('the lesson catalogue is empty');
-  const lessons = await library.lessons(first.chapter);
-  if (!lessons.ok) throw new Error(`chapter "${first.chapter}": ${lessons.error.message}`);
-  const lesson = lessons.value.find((candidate) => candidate.passages.length >= 3);
-  if (lesson === undefined) {
-    throw new Error(`no lesson in "${first.chapter}" carries three passages to read`);
+
+  let chapters = 0;
+  let lessons = 0;
+  /* The longest lesson met so far, which is the answer when nothing reaches
+     WANTED. Kept as the search runs so one pass serves both outcomes. */
+  let best: { chapter: string; lesson: LessonDocument } | null = null;
+
+  for (const entry of catalogue.value) {
+    const held = await library.lessons(entry.chapter);
+    if (!held.ok) throw new Error(`chapter "${entry.chapter}": ${held.error.message}`);
+    chapters += 1;
+    for (const lesson of held.value) {
+      lessons += 1;
+      if (best === null || lesson.passages.length > best.lesson.passages.length) {
+        best = { chapter: entry.chapter, lesson };
+      }
+    }
+    /* Stop at the first chapter that offers enough: the search is a fixture,
+       not a survey, and loading all ten to prove one is waste. */
+    if (best !== null && best.lesson.passages.length >= WANTED) break;
   }
-  CHAPTER = first.chapter;
-  LESSON = lesson.id;
-  REFERENCES = lesson.passages
-    .slice(0, 3)
-    .map((passage) => ({ lesson: lesson.id, passage: passage.id }));
+
+  SEARCHED = `${String(lessons)} lesson(s) in ${String(chapters)} chapter(s)`;
+  if (best === null) {
+    throw new Error(
+      `the lesson catalogue offers no lesson at all (searched ${SEARCHED}), so this route has ` +
+        'nothing to walk. ADR-0024: an empty corpus is a failure, not a quiet pass.',
+    );
+  }
+
+  CHAPTER = best.chapter;
+  LESSON = best.lesson.id;
+  REFERENCES = best.lesson.passages
+    .slice(0, Math.min(WANTED, best.lesson.passages.length))
+    .map((passage) => ({ lesson: best?.lesson.id ?? '', passage: passage.id }));
 });
 
 describe('resolveReading', () => {
-  it('has a corpus to walk at all (ADR-0024)', () => {
-    expect(REFERENCES).toHaveLength(3);
-    expect(LESSON.length).toBeGreaterThan(0);
+  it('has a corpus to walk at all, and says what it walked (ADR-0024)', () => {
+    const chose = `"${CHAPTER}/${LESSON}" with ${String(REFERENCES.length)} passage(s), ` +
+      `after searching ${SEARCHED}`;
+    expect(LESSON.length, `no lesson was chosen: ${chose}`).toBeGreaterThan(0);
+    expect(REFERENCES.length, `the chosen lesson has no passages: ${chose}`).toBeGreaterThan(0);
+    /* Not an assertion that the corpus holds WANTED — it is allowed not to, and
+       two of its chapters do not. A number is reported so a reader of a red run
+       below knows how long the walk was. */
+    expect(REFERENCES.length).toBeLessThanOrEqual(WANTED);
   });
 
   it('resolves a shipped read step against the one catalogue', async () => {
