@@ -1,145 +1,145 @@
 {
   "$schema": "../../schemas/lesson.schema.json",
-  "id": "who-06-diversity-in-canada",
-  "chapter": "Who We Are",
-  "order": 6,
+  "id": "economy-02-a-trading-nation",
+  "chapter": "Canada's Economy",
+  "order": 1,
   "title": {
-    "en": "Diversity in Canada",
-    "fr": "La diversité au Canada"
+    "en": "A trading nation",
+    "fr": "Une nation commerçante"
   },
   "passages": [
     {
-      "id": "w6-a-land-of-immigrants",
+      "id": "e2-always-a-trading-nation",
       "text": {
-        "en": "People often call Canada a land of immigrants.",
-        "fr": "On appelle souvent le Canada une terre d'immigration."
+        "en": "Canada has always traded with other countries, and trade is still what drives its economy to grow.",
+        "fr": "Le Canada a toujours fait du commerce avec d'autres pays, et c'est encore le commerce qui fait croître son économie."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "Canada's Economy",
+          "page": 90,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Canada is often referred to as a land of immigrants"
-        },
-        "verification": {
-          "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "However, Canada is often referred to as a land of immigrants because, over the past 200 years, millions of newcomers have helped to build and defend our way of life."
-        }
-      }
-    },
-    {
-      "id": "w6-most-identify-as-christian",
-      "text": {
-        "en": "Most Canadians say they are Christians.",
-        "fr": "La plupart des Canadiens se disent chrétiens."
-      },
-      "fact": {
-        "factual": true,
-        "source": {
-          "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
-          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "The great majority of Canadians identify as Christians."
+          "quote": "Canada has always been a trading nation and commerce remains the engine of economic growth."
         },
         "verification": {
           "status": "verified",
           "model": "claude-opus-5-5",
           "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The great majority of Canadians identify as Christians."
+          "evidence": "Canada has always been a trading nation and commerce remains the engine of economic growth."
         }
       }
     },
     {
-      "id": "w6-catholic-then-protestant",
+      "id": "e2-trade-keeps-our-standard-of-living",
       "text": {
-        "en": "The Catholic Church is the largest religious group in Canada. Next come the different Protestant churches.",
-        "fr": "L'Église catholique est le plus grand groupe religieux au Canada. Viennent ensuite les différentes Églises protestantes."
+        "en": "Without trade with other countries, Canadians could not keep the standard of living they have.",
+        "fr": "Sans le commerce avec d'autres pays, les Canadiens ne pourraient pas garder le niveau de vie qu'ils ont."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "Canada's Economy",
+          "page": 90,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "The largest religious affiliation is Catholic, followed by various Protestant churches."
+          "volatile": false,
+          "quote": "As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
         },
         "verification": {
           "status": "verified",
           "model": "claude-opus-5-5",
           "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The largest religious affiliation is Catholic, followed by various Protestant churches."
+          "evidence": "As Canadians, we could not maintain our standard of living without engaging in trade with other nations."
         }
       }
     },
     {
-      "id": "w6-state-and-faith-communities",
+      "id": "e2-free-trade-in-1988",
       "text": {
-        "en": "In Canada, government and faith communities have a long habit of working together.",
-        "fr": "Au Canada, l'État et les communautés religieuses ont depuis longtemps l'habitude de travailler ensemble."
+        "en": "In 1988, Canada brought in free trade with the United States.",
+        "fr": "En 1988, le Canada a instauré le libre-échange avec les États-Unis."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "Canada's Economy",
+          "page": 90,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "In Canada the state has traditionally partnered with faith communities"
+          "quote": "In 1988, Canada enacted free trade with the United States."
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "In Canada the state has traditionally partnered with faith communities to promote social welfare, harmony and mutual respect; to provide schools and health care; to resettle refugees; and to uphold religious freedom, religious expression and freedom of conscience."
+          "evidence": "In 1988, Canada enacted free trade with the United States."
         }
       }
     },
     {
-      "id": "w6-gay-and-lesbian-canadians",
+      "id": "e2-mexico-joins-in-1994",
       "text": {
-        "en": "Gay and lesbian Canadians are part of the country's diversity.",
-        "fr": "Les Canadiennes et les Canadiens gais et lesbiennes font partie de la diversité du pays."
+        "en": "In 1994, Mexico became a partner too, in a wider free trade agreement.",
+        "fr": "En 1994, le Mexique est lui aussi devenu partenaire, dans le cadre d'un accord de libre-échange plus large."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 22,
+          "chapter": "Canada's Economy",
+          "page": 90,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Canada’s diversity includes gay and lesbian Canadians"
+          "quote": "Mexico became a partner in 1994 in the broader North American Free Trade Agreement (NAFTA)"
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Canada’s diversity includes gay and lesbian Canadians, who enjoy the full protection of and equal treatment under the law, including access to civil marriage."
+          "evidence": "In 1988, Canada enacted free trade with the United States. Mexico became a partner in 1994 in the broader North American Free Trade Agreement (NAFTA)"
+        }
+      }
+    },
+    {
+      "id": "e2-one-of-ten-largest-economies",
+      "text": {
+        "en": "Today, Canada's economy is one of the ten biggest in the world.",
+        "fr": "Aujourd'hui, l'économie du Canada est l'une des dix plus grandes du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 90,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Today, Canada has one of the ten largest economies in the world"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Today, Canada has one of the ten largest economies in the world"
         }
       }
     }

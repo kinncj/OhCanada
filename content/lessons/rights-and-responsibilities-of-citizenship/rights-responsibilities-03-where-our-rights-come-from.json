@@ -1,0 +1,255 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "rights-responsibilities-03-where-our-rights-come-from",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "order": 1,
+  "title": {
+    "en": "Where our rights come from",
+    "fr": "D'où viennent nos droits"
+  },
+  "passages": [
+    {
+      "id": "rr3-rights-and-responsibilities",
+      "text": {
+        "en": "Canadian citizens have rights, and they also have responsibilities.",
+        "fr": "Les citoyens canadiens ont des droits, et ils ont aussi des responsabilités."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian citizens have rights and responsibilities."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian citizens have rights and responsibilities."
+        }
+      }
+    },
+    {
+      "id": "rr3-history-law-and-values",
+      "text": {
+        "en": "These rights and responsibilities come to us from Canada's history. Canadian law protects them, and they reflect the traditions, identity and values Canadians share.",
+        "fr": "Ces droits et ces responsabilités nous viennent de l'histoire du Canada. Les lois canadiennes les protègent, et ils reflètent les traditions, l'identité et les valeurs que partagent les Canadiens."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "These come to us from our history, are secured by Canadian law, and reflect our shared traditions, identity, and values."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian citizens have rights and responsibilities. These come to us from our history, are secured by Canadian law, and reflect our shared traditions, identity, and values."
+        }
+      }
+    },
+    {
+      "id": "rr3-sources-of-canadian-law",
+      "text": {
+        "en": "Canadian law comes from several places. They include laws made by Parliament and by the provincial legislatures, English common law, France's civil code, and the unwritten constitution Canada received from Great Britain.",
+        "fr": "Le droit canadien a plusieurs sources. On y trouve les lois adoptées par le Parlement et par les assemblées législatives des provinces, la common law anglaise, le code civil de la France et la constitution non écrite que le Canada a reçue de la Grande-Bretagne."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canadian law has several sources, including laws passed by Parliament and the provincial legislatures, English common law, the civil code of France and the unwritten constitution that we have inherited from Great Britain."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian law has several sources, including laws passed by Parliament and the provincial legislatures, English common law, the civil code of France and the unwritten constitution that we have inherited from Great Britain."
+        }
+      }
+    },
+    {
+      "id": "rr3-magna-carta",
+      "text": {
+        "en": "Together, these sources give Canadians a tradition of ordered liberty that is 800 years old. It goes back to Magna Carta, also called the Great Charter of Freedoms, which was signed in England in 1215.",
+        "fr": "Ensemble, ces sources donnent aux Canadiens une tradition de liberté ordonnée vieille de 800 ans. Elle remonte à la Magna Carta, aussi appelée la Grande Charte des libertés, signée en Angleterre en 1215."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms)"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian law has several sources, including laws passed by Parliament and the provincial legislatures, English common law, the civil code of France and the unwritten constitution that we have inherited from Great Britain. Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms), including:"
+        }
+      }
+    },
+    {
+      "id": "rr3-freedom-of-conscience-and-religion",
+      "text": {
+        "en": "One of the freedoms in this tradition is freedom of conscience and religion.",
+        "fr": "L'une des libertés de cette tradition est la liberté de conscience et de religion."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Freedom of conscience and religion;"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms), including: • Freedom of conscience and religion;"
+        }
+      }
+    },
+    {
+      "id": "rr3-freedom-of-expression",
+      "text": {
+        "en": "Another is freedom of thought, belief, opinion and expression. It includes freedom of speech and freedom of the press.",
+        "fr": "Une autre est la liberté de pensée, de croyance, d'opinion et d'expression. Elle comprend la liberté de parole et la liberté de la presse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Freedom of thought, belief, opinion and expression, including freedom of speech and of the press;"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms), including: … • Freedom of thought, belief, opinion and expression, including freedom of speech and of the press;"
+        }
+      }
+    },
+    {
+      "id": "rr3-freedom-of-peaceful-assembly",
+      "text": {
+        "en": "Canadians also have freedom of peaceful assembly.",
+        "fr": "Les Canadiens ont aussi la liberté de réunion pacifique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Freedom of peaceful assembly; and"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms), including: … • Freedom of peaceful assembly; and"
+        }
+      }
+    },
+    {
+      "id": "rr3-freedom-of-association",
+      "text": {
+        "en": "The last freedom on this list is freedom of association.",
+        "fr": "La dernière liberté de cette liste est la liberté d'association."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Freedom of association."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Together, these secure for Canadians an 800-year old tradition of ordered liberty, which dates back to the signing of Magna Carta in 1215 in England (also known as the Great Charter of Freedoms), including: … • Freedom of peaceful assembly; and • Freedom of association."
+        }
+      }
+    },
+    {
+      "id": "rr3-habeas-corpus",
+      "text": {
+        "en": "Habeas corpus is the right to challenge the state when it holds a person against the law. This right comes from English common law.",
+        "fr": "L'habeas corpus est le droit de contester l'État lorsqu'il détient une personne illégalement. Ce droit vient de la common law anglaise."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 11,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Habeas corpus, the right to challenge unlawful detention by the state, comes from English common law."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Habeas corpus, the right to challenge unlawful detention by the state, comes from English common law."
+        }
+      }
+    }
+  ]
+}

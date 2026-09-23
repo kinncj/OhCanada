@@ -438,3 +438,117 @@ Québec City has taken its tier 2 stops.** Decide city 12 when a second bank cro
    - ADR-0065 §2 could record the read-only stop, which PR #137 introduced, in its price list.
    - ADR-0061 §3 could decide whether the two caption-only facts (King George V's colours, Phil Edwards)
      may be taught from the caption.
+
+## 7. Progress on the lesson programme
+
+Authored 2026-09-23. Every passage below is in the null verification form and waits for the verifier.
+Nothing in this section is a measurement: `make guide-coverage` counts only verified carriers, so the
+Headline table above does not move until the grants land. Re-run it then.
+
+**The owner's rule since 2026-09-23: a player is taught before being asked.** Every verified question gets a
+lesson passage that carries the same proposition: its `source.quote` and the passage's contain one another
+under `sharesProposition`. Work runs in this order: (1) the §3 teach rows, (2) the questions in each
+level's `answer` pools, level by level in `journey` order, (3) the remaining verified questions, then the
+ceilings of §5(a).
+
+### 7.1 The §3 teach rows: done
+
+24 passages carry the 25 teach sentences of §3. §3's own tally says 24. Counted row by row it lists 25
+(Who We Are 3, History 13, Govern 1, Elections 6, Symbols 1, Regions 1). The difference is the p. 69 row:
+it is one row but four sentences.
+
+| Chapter | Passages | Where |
+|---|---|---|
+| Who We Are | 3 | `who-05` (the Buchan quotation, taught about and not reproduced), `who-06` (Christian majority and Catholic-then-Protestant, both `volatile`, "great majority" routed around) |
+| Canada's History | 12 for 13 sentences | `history-02` (the war that sent the Loyalists north, with "North America was again divided by war" folded in; democratic institutions), `history-03` (the 1812 invasion with "The Americans were mistaken" folded in; Durham on assimilation), `history-04` (the sea-to-sea vision; 1867; 1871), `history-05` (Cartier; Canada's future at risk; ribbons of steel), `history-06` (tough, innovative soldiers with the Western Front folded in; Remembrance Day) |
+| How Canadians Govern Themselves | 1 | `govern-01` |
+| Federal Elections | 6 | `elections-01` (MPs), `elections-04` (by-laws), `elections-05` (snow removal, policing, firefighting, emergency services) |
+| Canadian Symbols | 1 | `symbols-04` (anyone may nominate) |
+| Canada's Regions | 1 | `regions-01` (know your capitals) |
+
+Two decisions an auditor should see:
+
+- **"Canada's future was in jeopardy" crosses the page 35/36 break**, so no contiguous quote holds all of
+  it. `h5-future-at-risk` quotes the page-36 part and the rhetorical question after it: "future was in
+  jeopardy. How could the Dominion reach from sea to sea if it could not control the interior?" The
+  question is excluded as a unit in §3, and it is not taught as a unit here. It is the reason the future
+  was at risk, and it is folded in the way §3 folds a connective.
+- **Canada's Regions is marked blocked in §5(a), but the register records a first-hand live check** of the
+  chapter (`liveChecks`, 2026-09-10, `source-unrevised`, with four page-grain flags). `regions-01` already
+  holds passages on p. 94. The p. 94 study-advice passage names no figure and no monarch.
+
+### 7.2 Answer pools by level
+
+| Level (journey order) | Subject | Pool questions | Already taught by a lesson | Newly taught | Status |
+|---|---|---|---|---|---|
+| halifax | `rights` | 38 (`rights-02` is in no pool, and shares its passage with `rights-03`) | 1 (`rights-14`) | 37 | **Authored** |
+| peggys-cove | | | | | Next |
+| quebec-city, ottawa, toronto, winnipeg, prairie-rail, alberta-foothills, vancouver, the-north | | | | | Not started |
+
+### 7.3 Question to passage (halifax)
+
+Every passage is in `content/lessons/rights-and-responsibilities-of-citizenship/`. The lesson prefix
+`rr1` is `rights-responsibilities-01-what-the-charter-opens-with`, `rr2` is `-02-ways-people-volunteer`,
+`rr3` is `-03-where-our-rights-come-from`, `rr4` is `-04-equality-of-women-and-men`, `rr5` is
+`-05-responsibilities-of-citizenship` and `rr6` is `-06-defending-canada`.
+
+| Question | Passage |
+|---|---|
+| `rights-01-where-rights-come-from` | `rr3-rights-and-responsibilities`, `rr3-history-law-and-values` |
+| `rights-02-sources-of-canadian-law` | `rr3-sources-of-canadian-law` |
+| `rights-03-civil-code-of-france` | `rr3-sources-of-canadian-law` |
+| `rights-04-magna-carta-year` | `rr3-magna-carta` |
+| `rights-05-magna-carta-other-name` | `rr3-magna-carta` |
+| `rights-06-ordered-liberty-tradition` | `rr3-magna-carta` |
+| `rights-07-freedom-of-conscience-and-religion` | `rr3-freedom-of-conscience-and-religion` |
+| `rights-08-freedom-of-expression-includes-press` | `rr3-freedom-of-expression` |
+| `rights-09-freedom-of-peaceful-assembly` | `rr3-freedom-of-peaceful-assembly` |
+| `rights-10-freedom-of-association` | `rr3-freedom-of-association` |
+| `rights-11-habeas-corpus-meaning` | `rr3-habeas-corpus` |
+| `rights-12-habeas-corpus-origin` | `rr3-habeas-corpus` |
+| `rights-13-charter-entrenched-1982` | `rr1-charter-added-in-1982` |
+| `rights-14-charter-opening-principles` | `rr1-charter-opening-words` (verified before this pass) |
+| `rights-15-what-the-charter-does` | `rr1-freedoms-and-other-rights` |
+| `rights-16-mobility-rights` | `rr1-mobility-rights` |
+| `rights-17-passport-is-a-mobility-right` | `rr1-mobility-rights` |
+| `rights-18-charter-and-treaty-rights` | `rr1-aboriginal-peoples-rights` |
+| `rights-19-official-language-rights` | `rr1-official-language-rights` |
+| `rights-20-multiculturalism-in-the-charter` | `rr1-multiculturalism` |
+| `rights-21-equality-of-women-and-men` | `rr4-equal-under-the-law` |
+| `rights-22-rights-come-with-responsibilities` | `rr5-rights-bring-responsibilities` |
+| `rights-23-rule-of-law-founding-principle` | `rr5-rule-of-law-is-a-founding-principle` |
+| `rights-24-nobody-is-above-the-law` | `rr5-laws-not-whims`, `rr5-no-one-above-the-law` |
+| `rights-25-responsibility-for-self-and-family` | `rr5-work-and-family` |
+| `rights-26-jury-duty-is-required` | `rr5-jury-duty-is-required` |
+| `rights-27-why-juries-matter` | `rr5-juries-make-justice-work` |
+| `rights-28-voting-which-elections` | `rr5-responsibility-to-vote` |
+| `rights-29-voting-right-and-responsibility` | `rr5-responsibility-to-vote` |
+| `rights-30-helping-others-volunteering` | `rr2-volunteers-give-their-time` |
+| `rights-31-what-volunteering-gives-back` | `rr2-what-volunteering-gives-you` |
+| `rights-32-protecting-heritage-and-environment` | `rr2-protect-heritage-and-environment` |
+| `rights-33-heritage-includes-buildings` | `rr2-protect-heritage-and-environment` |
+| `rights-34-no-compulsory-military-service` | `rr6-no-compulsory-service` |
+| `rights-35-three-parts-of-canadian-forces` | `rr6-the-regular-forces` |
+| `rights-36-part-time-reserves` | `rr6-part-time-reserves` |
+| `rights-37-cadets` | `rr6-cadets` |
+| `rights-38-coast-guard-and-emergency-services` | `rr6-coast-guard-and-emergency-services` |
+| `rights-39-protecting-your-community` | `rr6-in-their-footsteps` |
+
+### 7.4 Ceilings (§5(a))
+
+A chapter's ceiling is authored when every in-scope body sentence has a passage, in guide order, and the
+chapter's lessons are numbered by `order` in guide order. File names keep their old numbers, because a
+lesson `id` is its identity and renaming it voids its grants. `order` binds no grant, so it was renumbered.
+
+| Chapter | Ceiling | Passages now | Lessons, in reading order | Not taught, and why |
+|---|---|---|---|---|
+| Rights and Responsibilities | **Authored** | 39 (37 new) | `-03` where our rights come from, `-01` the Charter, `-04` equality of women and men, `-05` responsibilities, `-02` helping others and our heritage, `-06` defending Canada | The lead-ins "The most important of these include:" and "These include:"; the caption of the 1982 proclamation (ADR-0061 §3). |
+| The Justice System | **Authored** | 27 (26 new) | `justice-02` due process, `-03` what laws are for, `-04` the courts, `-01` the police, `-05` legal help | The four captions (Lady Justice, the border inspection, the jury benches and the Ottawa constable, prisons), ADR-0061 §3. The trial court's other names, Queen's Bench and Supreme Court: the first is a banned term on p. 76 and the register sources neither, so `j4-appeal-and-trial-courts` quotes only the appeal-court and trial-court clause. |
+| Canada's Economy | **Authored** | 21 (19 new) | `economy-02` a trading nation, `-03` three kinds of industry, `-01` trading with our neighbour | The G8 membership clause (p. 90): G8, G7 and Russia are all banned, and the list cannot be taught without the group's name. NAFTA's name and the 2008 figures (banned); Mexico's 1994 entry is taught as "a wider free trade agreement". The four captions. |
+| How Canadians Govern Themselves | Not yet | 11 (1 new) | | About 33 passages remain. |
+
+**What remains, as of this pass:** the ceilings of How Canadians Govern Themselves (~33), Canada's History
+(~87), Canada's Regions (~67), Modern Canada (~40), Canadian Symbols (~48), Federal Elections (~59), Who We
+Are (~34) and the Oath (1, `volatile`). That is about 369 passages: §5(a)'s ~472, less the 78 ceiling
+sentences of Rights, Justice and Economy (82 passages) and the 25 teach sentences authored here. Under the owner's rule these wait until every
+level's pools and then every other verified question are taught.

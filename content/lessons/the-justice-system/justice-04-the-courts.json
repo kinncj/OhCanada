@@ -1,145 +1,145 @@
 {
   "$schema": "../../schemas/lesson.schema.json",
-  "id": "who-06-diversity-in-canada",
-  "chapter": "Who We Are",
-  "order": 6,
+  "id": "justice-04-the-courts",
+  "chapter": "The Justice System",
+  "order": 3,
   "title": {
-    "en": "Diversity in Canada",
-    "fr": "La diversité au Canada"
+    "en": "The courts",
+    "fr": "Les tribunaux"
   },
   "passages": [
     {
-      "id": "w6-a-land-of-immigrants",
+      "id": "j4-supreme-court-is-highest",
       "text": {
-        "en": "People often call Canada a land of immigrants.",
-        "fr": "On appelle souvent le Canada une terre d'immigration."
+        "en": "The Supreme Court of Canada is the highest court in the country.",
+        "fr": "La Cour suprême du Canada est le plus haut tribunal du pays."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "The Justice System",
+          "page": 76,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Canada is often referred to as a land of immigrants"
-        },
-        "verification": {
-          "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "However, Canada is often referred to as a land of immigrants because, over the past 200 years, millions of newcomers have helped to build and defend our way of life."
-        }
-      }
-    },
-    {
-      "id": "w6-most-identify-as-christian",
-      "text": {
-        "en": "Most Canadians say they are Christians.",
-        "fr": "La plupart des Canadiens se disent chrétiens."
-      },
-      "fact": {
-        "factual": true,
-        "source": {
-          "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
-          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "The great majority of Canadians identify as Christians."
+          "quote": "The Supreme Court of Canada is our country’s highest court."
         },
         "verification": {
           "status": "verified",
           "model": "claude-opus-5-5",
           "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The great majority of Canadians identify as Christians."
+          "evidence": "The Supreme Court of Canada is our country’s highest court."
         }
       }
     },
     {
-      "id": "w6-catholic-then-protestant",
+      "id": "j4-federal-court",
       "text": {
-        "en": "The Catholic Church is the largest religious group in Canada. Next come the different Protestant churches.",
-        "fr": "L'Église catholique est le plus grand groupe religieux au Canada. Viennent ensuite les différentes Églises protestantes."
+        "en": "The Federal Court of Canada handles cases that involve the federal government.",
+        "fr": "La Cour fédérale du Canada s'occupe des affaires qui concernent le gouvernement fédéral."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "The Justice System",
+          "page": 76,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": true,
-          "quote": "The largest religious affiliation is Catholic, followed by various Protestant churches."
+          "volatile": false,
+          "quote": "The Federal Court of Canada deals with matters concerning the federal government."
         },
         "verification": {
           "status": "verified",
           "model": "claude-opus-5-5",
           "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "The largest religious affiliation is Catholic, followed by various Protestant churches."
+          "evidence": "The Federal Court of Canada deals with matters concerning the federal government."
         }
       }
     },
     {
-      "id": "w6-state-and-faith-communities",
+      "id": "j4-appeal-and-trial-courts",
       "text": {
-        "en": "In Canada, government and faith communities have a long habit of working together.",
-        "fr": "Au Canada, l'État et les communautés religieuses ont depuis longtemps l'habitude de travailler ensemble."
+        "en": "Most provinces have a court of appeal and a trial court.",
+        "fr": "La plupart des provinces ont une cour d'appel et un tribunal de première instance."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 21,
+          "chapter": "The Justice System",
+          "page": 76,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "In Canada the state has traditionally partnered with faith communities"
+          "quote": "In most provinces there is an appeal court and a trial court"
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "In Canada the state has traditionally partnered with faith communities to promote social welfare, harmony and mutual respect; to provide schools and health care; to resettle refugees; and to uphold religious freedom, religious expression and freedom of conscience."
+          "evidence": "In most provinces there is an appeal court and a trial court"
         }
       }
     },
     {
-      "id": "w6-gay-and-lesbian-canadians",
+      "id": "j4-provincial-family-and-traffic-courts",
       "text": {
-        "en": "Gay and lesbian Canadians are part of the country's diversity.",
-        "fr": "Les Canadiennes et les Canadiens gais et lesbiennes font partie de la diversité du pays."
+        "en": "There are other courts too. Provincial courts deal with less serious offences, and there are also family courts and traffic courts.",
+        "fr": "Il existe aussi d'autres tribunaux. Les cours provinciales traitent les infractions moins graves, et il y a aussi des tribunaux de la famille et des tribunaux de la circulation."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "Who We Are",
-          "page": 22,
+          "chapter": "The Justice System",
+          "page": 76,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Canada’s diversity includes gay and lesbian Canadians"
+          "quote": "There are also provincial courts for lesser offences, family courts, traffic courts"
         },
         "verification": {
           "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T20:05:00Z",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Canada’s diversity includes gay and lesbian Canadians, who enjoy the full protection of and equal treatment under the law, including access to civil marriage."
+          "evidence": "There are also provincial courts for lesser offences, family courts, traffic courts and small claims courts for civil cases involving small sums of money."
+        }
+      }
+    },
+    {
+      "id": "j4-small-claims-courts",
+      "text": {
+        "en": "Small claims courts hear civil cases about small amounts of money.",
+        "fr": "Les cours des petites créances entendent les causes civiles qui portent sur de petites sommes d'argent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "small claims courts for civil cases involving small sums of money."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "There are also provincial courts for lesser offences, family courts, traffic courts and small claims courts for civil cases involving small sums of money."
         }
       }
     }
