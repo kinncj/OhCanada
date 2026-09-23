@@ -53,7 +53,7 @@ import { text, type UiLocale } from '@ui/copy';
 import { createStudyScreen, type StudyScreen, type StudyState } from '@ui/study-screen';
 import type { SettingsStore } from '@ui/settings';
 
-import { createDrillRunner, type DrillRunner } from './quiz';
+import { createDrillRunner, type DrillRunner, type DrillRunnerOptions } from './quiz';
 
 export interface StudyControllerDeps {
   /**
@@ -85,6 +85,11 @@ export interface StudyControllerDeps {
    * write that may still be in flight.
    */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => void;
+  /**
+   * "Read about this" on the card, once an answer is judged (ADR-0070). Passed
+   * to the drill runner and used nowhere else here. Absent offers no control.
+   */
+  readonly readAbout?: DrillRunnerOptions['readAbout'];
   /** Study now owns the page: the surface underneath stands its switch ring down. */
   readonly onOpen?: () => void;
   /** Study is gone. The level resumes, or the shell's ring comes back. */
@@ -156,6 +161,7 @@ export function createStudyController(deps: StudyControllerDeps): StudyControlle
       singleSwitch: store.current.singleSwitch,
       holdMs: store.current.holdToChooseMs,
       random: deps.random,
+      ...(deps.readAbout === undefined ? {} : { readAbout: deps.readAbout }),
       onAnswer: (question, chosenIndex) => {
         /* `chosenIndex` is already back in authored space: the runner converts
            it at the card's edge (ADR-0059), so this recorder is unchanged. */

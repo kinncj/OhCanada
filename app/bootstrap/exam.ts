@@ -53,6 +53,7 @@ import {
   withRemaining,
 } from '@application/use-cases/exam-attempt';
 import type { ExamSession } from '@application/use-cases/exam-session';
+import type { QuestionReading } from '@application/content/question-passages';
 import {
   authoredAt,
   inOptionOrder,
@@ -77,6 +78,7 @@ import { createExamStartScreen, type ExamStartScreen } from '@ui/exam-start';
 import type { SettingsStore } from '@ui/settings';
 
 import type { ExamEventLog } from './exam-events';
+import { questionReaderView } from './lesson-reading';
 import type { SubjectIndex } from './subjects';
 
 export interface ExamControllerDeps {
@@ -134,6 +136,12 @@ export interface ExamControllerDeps {
   readonly onClose?: () => void;
   /** An exam started, was left, finished or was discarded: relabel the way in. */
   readonly onAttemptChanged?: () => void;
+  /**
+   * The lesson passage(s) that tell what a question asks, for "Read about this"
+   * in the review after the exam (ADR-0070). Never asked during the exam: a live
+   * question stays unaided. Absent offers no control.
+   */
+  readonly readAbout?: (question: ShippableQuestion) => Promise<QuestionReading | null>;
   /** Injected so a hidden tab is testable without hiding a tab. */
   readonly document?: Document;
 }
@@ -196,6 +204,8 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
   let startScreen: ExamStartScreen | null = null;
   let examScreen: ExamScreen | null = null;
   let resultScreen: ExamResult | null = null;
+  /** What each review item's "Read about this" opens, in the result's order (ADR-0070). */
+  let reviewReadings: readonly (QuestionReading | null)[] = [];
   let newExamConfirm: Confirm | null = null;
   let clock: ExamClock | null = null;
   let running: Running | null = null;
@@ -214,6 +224,7 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
       startScreen?.setLocale(next.locale);
       examScreen?.setLocale(next.locale);
       resultScreen?.setLocale(next.locale);
+      if (reviewReadings.length > 0) paintReviewReadings();
       newExamConfirm?.setLocale(next.locale);
     }
     if (changed === 'singleSwitch' || changed === 'holdToChooseMs') {
@@ -767,6 +778,39 @@ export function createExamController(deps: ExamControllerDeps): ExamController {
       review: answers.map((answer) => reviewItem(current, answer)),
     });
     running = null;
+    void readAboutReview(current, screen);
+  }
+
+  /**
+   * "Read about this" for each review item (ADR-0070), found after the result
+   * is on screen so the verdict is never kept waiting on the lesson catalogue.
+   * Only now: nothing during the exam asks, so a live question stays unaided.
+   */
+  async function readAboutReview(current: Running, screen: ExamResult): Promise<void> {
+    const readAbout = deps.readAbout;
+    reviewReadings = [];
+    if (readAbout === undefined) return;
+    const found = await Promise.all(
+      current.exam.answers.map(async (answer) => {
+        const question = current.byId.get(answer.questionId);
+        if (question === undefined) return null;
+        try {
+          return await readAbout(question);
+        } catch {
+          return null;
+        }
+      }),
+    );
+    /* A newer result, or none, is on screen now: this one is not the player's. */
+    if (screen !== resultScreen || !showing) return;
+    reviewReadings = found;
+    paintReviewReadings();
+  }
+
+  function paintReviewReadings(): void {
+    resultScreen?.setReadings(
+      reviewReadings.map((reading) => questionReaderView(reading, locale(), localised)),
+    );
   }
 
   /**

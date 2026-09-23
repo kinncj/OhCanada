@@ -73,6 +73,9 @@
  *     matches the manifest, and their sum is inside the budget — so the number
  *     the RUNTIME refuses on (level-document.ts `refuseOverBudget`) and the
  *     number CI refuses on cannot drift apart.
+ *  9. A level that declares characters has a resolvable rig, and its files
+ *     PLUS its character surfaces fit the budget at every device scale. See
+ *     "CHARACTER SURFACES" below.
  *
  * HOW A LEVEL'S DECODED FOOTPRINT IS ADDED UP
  *
@@ -100,34 +103,40 @@
  * — which is the safe direction for it to be wrong in, and it is why the budget
  * is 64 MiB and not the device's limit.
  *
- * THE SHARPEST INSTANCE OF THAT, NAMED: RIVE IS INVISIBLE HERE.
+ * CHARACTER SURFACES: CHARGED, BUT ON THEIR OWN LINE (ADR-0013)
  *
  * scripts/assets.mjs records `decodedBytes: 0` for every `.riv`, and that is
- * correct — a Rive artboard is vector and renders to a canvas surface sized by
- * the display, so no number derived from the file would be true. The
- * consequence is that THIS GATE STRUCTURALLY CANNOT SEE CHARACTER SURFACES.
+ * correct — a Rive artboard is vector and renders to a canvas surface, so no
+ * number derived from the FILE would be true. For a long time that made this
+ * gate structurally blind to character surfaces. It no longer is: the surface
+ * size is a property of the RIG and the DEVICE SCALE, both declared, so every
+ * level is charged
  *
- * It is worse than "a file whose cost is recorded as zero", and it is worth
- * being exact about why: as of 2026-09-08 `assets/src/rive/` holds no files at
- * all, so there is not even a manifest entry to hang the caveat on, and the
- * surfaces exist regardless — `ICharacterRenderer` allocates them at runtime.
- * Art measured about 1.54 MiB per surface, six on Ottawa, roughly 9.2 MiB. That
- * is 20% of a 46 MiB level, invisible here by construction rather than by
- * oversight.
+ *     characters.length x characterSpace.width x characterSpace.height x scale^2 x 4
  *
- * So: do not read a green run as "this level fits in VRAM". Read it as "the
- * textures that come from files fit, and the character surfaces are on top of
- * that, unmeasured". Two things follow. Any budget derived from this gate's
- * number must RESERVE headroom for the surfaces rather than spend it, and
- * measuring them needs the renderer's real allocation at runtime. That
- * instrument exists since 2026-09-13: the GL census in tests/perf/gl-census.ts,
- * asserted by tests/perf/budgets.spec.ts on every CI run, counts every byte a
- * level actually uploads to the GPU and reconciles the total against THIS
- * manifest, naming what no build gate priced. It is a different instrument from
- * a build-time gate over a manifest, and it measures only the tier and scale the
- * runner settles at. This gate deliberately does not quote art's figure: a
- * number it cannot re-derive is exactly what it refuses to trust everywhere
- * else, and printing one here would make it look checked.
+ * per device scale — the artboard, not `heightPx` (ADR-0013's second
+ * amendment). It is printed on a SEPARATE line from the file total and never
+ * folded into it, because the file total is re-derived from bytes on disk and
+ * this one is derived from a declaration; one number would launder an estimate
+ * into a measurement. The CHARGED line (files + surfaces) is what the budget
+ * refuses on. A level that declares characters when no rig document can be
+ * resolved FAILS rather than charging zero.
+ *
+ * It is still a floor: Engine measured 1.72 MiB per surface on an EMPTY
+ * artboard, and real artboards will not be cheaper. The GL census
+ * (tests/perf/gl-census.ts, asserted by tests/perf/budgets.spec.ts) measures
+ * what a level actually uploads at the tier the runner settles at; this gate
+ * does not quote its figures, because a number it cannot re-derive is exactly
+ * what it refuses to trust everywhere else.
+ *
+ * THE BASELINE MODEL, REPORTED BESIDE THE CHARGE (ADR-0013)
+ *
+ * Shared art is charged in full to every level (the conservative double
+ * charge), and that is still what the gate refuses on. Beside it, each level
+ * prints the BASELINE MODEL figure: shared files resident once, charged to no
+ * level and subtracted from the ceiling. It is labelled "REPORTED ONLY" and
+ * refuses nothing until the engine obligation in ADR-0013 — unload before
+ * fetch, the baseline survives, measured — has landed.
  */
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -156,6 +165,79 @@ const TEXTURE_KINDS = new Set(['image', 'atlas']);
 const NON_TEXTURE_KINDS = new Set(['atlas-data', 'rive']);
 
 const ROLES = new Set(['layer', 'sprite']);
+
+// ----------------------------------------------------- character surfaces ---
+
+/**
+ * Where the character rig document may live, in order of preference.
+ *
+ * `content/characters/rig.json` is the home CLAUDE.md names (ADR-0017);
+ * `assets/style/rig-contract.json` is where art authors it. Today both exist and
+ * one mirrors the other, and ADR-0017 may retire the second. The gate reads
+ * EVERY one that exists and refuses when they disagree on the two terms it
+ * charges for, so "reads whichever it finds" can never mean "cannot tell which
+ * is stale" — the objection tests/unit/contracts/rig-is-coherent.test.ts raises
+ * against a silent two-path fallback.
+ */
+export const RIG_DOCUMENTS = ['content/characters/rig.json', 'assets/style/rig-contract.json'];
+
+/**
+ * The rig's `characterSpace.width` x `characterSpace.height` — the ARTBOARD,
+ * not the crown-to-sole `heightPx` (ADR-0013's second amendment: that
+ * substitution under-reported the surface by 12 %).
+ *
+ * Returns `{ ok: true, width, height, from: [rel...] }` or `{ ok: false, reason }`.
+ */
+export function resolveRig(root) {
+  const found = [];
+  for (const rel of RIG_DOCUMENTS) {
+    const full = join(root, ...rel.split('/'));
+    if (!existsSync(full)) continue;
+    let doc;
+    try {
+      doc = JSON.parse(readFileSync(full, 'utf8'));
+    } catch (error) {
+      return { ok: false, reason: `${rel} is not valid JSON (${error.message})` };
+    }
+    const space = doc?.characterSpace;
+    const width = space?.width;
+    const height = space?.height;
+    if (!Number.isInteger(width) || width <= 0 || !Number.isInteger(height) || height <= 0) {
+      return {
+        ok: false,
+        reason:
+          `${rel} declares characterSpace ${JSON.stringify({ width, height })}; the surface is sized ` +
+          'to the artboard, so both must be positive integers',
+      };
+    }
+    found.push({ rel, width, height });
+  }
+  if (found.length === 0) return { ok: false, reason: `none of ${RIG_DOCUMENTS.join(', ')} exists` };
+  const [first, ...rest] = found;
+  const disagree = rest.find((r) => r.width !== first.width || r.height !== first.height);
+  if (disagree !== undefined) {
+    return {
+      ok: false,
+      reason:
+        `${first.rel} declares a ${first.width}x${first.height} artboard and ${disagree.rel} declares ` +
+        `${disagree.width}x${disagree.height}; one of them is stale and the gate will not guess which`,
+    };
+  }
+  return { ok: true, width: first.width, height: first.height, from: found.map((r) => r.rel) };
+}
+
+/**
+ * ADR-0013, "The decision that follows":
+ *
+ *     surfaceBytes(level, scale) = level.characters.length
+ *                                x rig.characterSpace.width
+ *                                x rig.characterSpace.height
+ *                                x scale^2 x 4
+ *
+ * `[[deviceScale, bytes], ...]`, in the same shape as the file totals.
+ */
+export const surfaceBytesByDeviceScale = (characters, rig, deviceScales) =>
+  deviceScales.map((s) => [s, characters * rig.width * rig.height * s * s * BYTES_PER_PIXEL]);
 
 // ------------------------------------------------------------ dimensions ---
 
@@ -540,6 +622,24 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
   }
 
   // --------------------------------------------------- per-level totals ---
+
+  /**
+   * The rig is resolved once, and only when some level declares a character:
+   * a tree with no characters owes no rig. `undefined` = not yet asked.
+   */
+  let rig;
+
+  /**
+   * BASELINE, for the baseline-model figure only (ADR-0013, "How a shared
+   * texture is charged"). A `shared/` source is the one thing scripts/assets.mjs
+   * charges to EVERY level (`chargedTo`), and the manifest records no owner, so
+   * "charged to every level" is the test. With a single level a shared file and
+   * a level's own are indistinguishable, and the baseline is reported as empty —
+   * the conservative reading.
+   */
+  const isBaseline =
+    levelIds.length >= 2 ? (f) => levelIds.every((id) => f.levels.includes(id)) : () => false;
+
   const report = [];
   for (const id of levelIds) {
     const own = measured.filter((f) => f.levels.includes(id));
@@ -547,6 +647,52 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
     const worst = worstDeviceScale(perScale);
 
     const doc = docById.get(id);
+
+    // --------------------------------------------- character surfaces ---
+    // ADR-0013: one render surface per declared character, sized to the rig's
+    // artboard, charged per device scale and reported on its own line. It is a
+    // DERIVED figure — from declarations, not from bytes on disk — which is why
+    // it is never folded into the file total above.
+    let characters = 0;
+    if (doc !== undefined && doc.characters !== undefined) {
+      if (Array.isArray(doc.characters)) {
+        characters = doc.characters.length;
+      } else {
+        fail(
+          `${doc.file} declares characters ${JSON.stringify(doc.characters)}; it must be an array. Each ` +
+            'character is a render surface charged to this level, and a list the gate cannot count would ' +
+            'charge nothing.',
+        );
+      }
+    }
+    let surfaces = scales.map((s) => [s, 0]);
+    let rigFrom = null;
+    if (characters > 0) {
+      if (rig === undefined) rig = resolveRig(root);
+      if (rig.ok) {
+        surfaces = surfaceBytesByDeviceScale(characters, rig, scales);
+        rigFrom = rig;
+      } else {
+        fail(
+          `level "${id}" declares ${characters} character(s) in ${doc.file}, and no rig document can be ` +
+            `resolved: ${rig.reason}. Each character is a render surface sized to the rig's artboard ` +
+            "(ADR-0013); without the rig the gate would charge them zero, and a level whose characters " +
+            'cost nothing is not a level that fits. Restore the rig document.',
+        );
+      }
+    }
+    const surfaceAt = new Map(surfaces);
+    const charged = perScale.map(([s, b]) => [s, b + (surfaceAt.get(s) ?? 0)]);
+    const worstCharged = worstDeviceScale(charged);
+    const worstSurfaces = worstDeviceScale(surfaces);
+
+    // --------------------------------------------- baseline model, reported ---
+    const ownPerScale = decodedByDeviceScale(
+      own.filter((f) => !isBaseline(f)),
+      scales,
+    );
+    const baselinePerScale = decodedByDeviceScale(own.filter(isBaseline), scales);
+    const baselineModel = ownPerScale.map(([s, b]) => [s, b + (surfaceAt.get(s) ?? 0)]);
     let declared = null;
     if (doc === undefined) {
       fail(
@@ -617,6 +763,16 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
           'can still lose the WebGL context. Shrink the source pixels, drop a layer, or split it into ' +
           'tiles that repeat — turning the compression up saves nothing here.',
       );
+    } else if (worstCharged > budget) {
+      fail(
+        `level "${id}" is charged ${mib(worstCharged)} (${worstCharged} B) at the worst device scale: ` +
+          `${mib(worst)} of texture files plus ${mib(worstSurfaces)} of character surfaces ` +
+          `(${characters} character(s), derived from the rig's artboard). The budget is ${mib(budget)} ` +
+          `(${budget} B, from ${source_}), so it is ${worstCharged - budget} B over. Per device scale: ` +
+          `${charged.map(([s, b]) => `${s}x ${mib(b)}`).join(', ')}. The files fit on their own; the ` +
+          'characters do not fit on top of them. Place fewer simultaneous characters, or shrink the art ' +
+          '(ADR-0013: the answer is fewer characters, not a blanket quality cut).',
+      );
     }
 
     /**
@@ -636,6 +792,15 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
       .slice()
       .sort((a, b) => b.decodedBytes - a.decodedBytes)[0];
 
+    /**
+     * The baseline model's budget: the level's own, never looser than what the
+     * 64 MiB ceiling leaves once the shared baseline is resident. Reported
+     * only — the gate refuses on `charged` until ADR-0013's engine obligation
+     * (unload before fetch, baseline survives, measured) has landed.
+     */
+    const worstBaseline = worstDeviceScale(baselinePerScale);
+    const baselineBudget = Math.min(budget, MAX_DECODED_TEXTURE_BYTES - worstBaseline);
+
     report.push({
       id,
       worst,
@@ -644,6 +809,20 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
       perScale,
       fileCount: own.length,
       heaviest: heaviest === undefined ? null : heaviest,
+      characters,
+      rig: rigFrom === null ? null : { width: rigFrom.width, height: rigFrom.height, from: rigFrom.from },
+      surfaces,
+      worstSurfaces,
+      charged,
+      worstCharged,
+      baselineModel: {
+        perScale: baselineModel,
+        worst: worstDeviceScale(baselineModel),
+        baselinePerScale,
+        worstBaseline,
+        baselineFileCount: own.filter(isBaseline).length,
+        budget: baselineBudget,
+      },
     });
   }
 
@@ -680,20 +859,52 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
 
   if (failures.length > 0) return { failures, summary: null, levels: report };
 
+  const pct = (part, whole) => `${((part / whole) * 100).toFixed(0)}%`;
+  const byScale = (perScale) => perScale.map(([s, b]) => `${s}x device ${mib(b)}`).join(' / ');
+
+  /**
+   * Four lines per level, each labelled, because they are differently
+   * trustworthy (ADR-0013):
+   *
+   *   FILES     re-derived from bytes on disk — a measurement.
+   *   SURFACES  derived from the level's characters[] and the rig's artboard —
+   *             an estimate from declarations, and a floor (Engine measured
+   *             1.72 MiB per surface on an EMPTY artboard at 2x).
+   *   CHARGED   files + surfaces, per device scale: what the gate REFUSES on.
+   *   BASELINE MODEL  the same level with shared art resident once and charged
+   *             to no level. REPORTED ONLY until the engine obligation lands.
+   */
   const perLevel = report
     .map((r) => {
       const heaviest =
         r.heaviest === null || r.heaviest.decodedBytes === 0
           ? ''
           : `, heaviest ${r.heaviest.path} ${r.heaviest.width}x${r.heaviest.height} ` +
-            `${mib(r.heaviest.decodedBytes)} = ${((r.heaviest.decodedBytes / r.budget) * 100).toFixed(0)}% of budget`;
-      return (
-        `${r.id} ${mib(r.worst)} of ${mib(r.budget)} (${((r.worst / r.budget) * 100).toFixed(0)}%, ` +
-        `${r.budget - r.worst} B spare, budget from ${r.budgetSource}) over ${r.fileCount} file(s) ` +
-        `[${r.perScale.map(([s, b]) => `${s}x device ${mib(b)}`).join(' / ')}]${heaviest}`
-      );
+            `${mib(r.heaviest.decodedBytes)} = ${pct(r.heaviest.decodedBytes, r.budget)} of budget`;
+      const files =
+        `  ${r.id} ${mib(r.worst)} of ${mib(r.budget)} (${pct(r.worst, r.budget)}, budget from ` +
+        `${r.budgetSource}) FILES, measured from ${r.fileCount} file(s) on disk ` +
+        `[${byScale(r.perScale)}]${heaviest}`;
+      const surfaces =
+        r.characters === 0
+          ? `    SURFACES 0 B: ${r.id} declares no characters`
+          : `    SURFACES ${mib(r.worstSurfaces)}: ${r.characters} character(s) x ${r.rig.width}x${r.rig.height} ` +
+            `artboard (${r.rig.from.join(' = ')}), DERIVED from declarations, not measured ` +
+            `[${byScale(r.surfaces)}]`;
+      const charged =
+        `    CHARGED ${mib(r.worstCharged)} of ${mib(r.budget)} (${pct(r.worstCharged, r.budget)}, ` +
+        `${r.budget - r.worstCharged} B spare) = files + surfaces, what this gate refuses on ` +
+        `[${byScale(r.charged)}]`;
+      const bm = r.baselineModel;
+      const baseline =
+        `    BASELINE MODEL ${mib(bm.worst)} of ${mib(bm.budget)} (${pct(bm.worst, bm.budget)}) = own files + ` +
+        `surfaces, with ${bm.baselineFileCount} shared file(s) (${mib(bm.worstBaseline)}) resident once, ` +
+        'charged to no level and taken off the 64 MiB ceiling; REPORTED ONLY, not enforced until ' +
+        "ADR-0013's engine obligation lands " +
+        `[${bm.perScale.map(([s, b], i) => `${s}x device ${mib(b)} + baseline ${mib(bm.baselinePerScale[i][1])}`).join(' / ')}]`;
+      return [files, surfaces, charged, baseline].join('\n');
     })
-    .join('; ');
+    .join('\n');
 
   const layerFiles = measured.filter((f) => f.role === 'layer');
   const pinned = measured.filter((f) => f.scalePin !== null);
@@ -702,25 +913,20 @@ export function checkTextureMemory({ root, dir, source = 'assets/dist' }) {
    * The caveat is UNCONDITIONAL, and that is a correction.
    *
    * It used to print only when the manifest contained a `.riv`, on the reasoning
-   * that there was nothing to caveat otherwise. That was exactly backwards.
-   * assets/src/rive/ holds no files at all today, and the character surfaces
-   * exist anyway: `ICharacterRenderer` allocates them at runtime, sized by the
-   * display, from an artboard that need never have been a file in this manifest.
-   * So the sentence disappeared precisely in the case where the number is most
-   * misleading -- 33.3 MiB counted against roughly 42.5 MiB real, on a 64 MiB
-   * ceiling (art's measurement, 2026-09-08: about 1.54 MiB per surface, six on
-   * Ottawa).
-   *
-   * A caveat that vanishes when it is most needed is worse than no caveat, so it
-   * is always printed. No figure is quoted here: this gate measures files and
-   * that number came from an instrument it does not own.
+   * that there was nothing to caveat otherwise. That was exactly backwards: the
+   * character surfaces exist whether or not a `.riv` does. Since ADR-0013's
+   * infra obligation they are CHARGED, on their own SURFACES line, from the
+   * rig's artboard — but that is a derivation from declarations, the FILES line
+   * still excludes them, and mipmaps and render targets are still counted by
+   * nobody. A caveat that vanishes when it is most needed is worse than none.
    */
   const summary =
-    `${report.length} level(s) — ${perLevel}. ` +
+    `${report.length} level(s):\n${perLevel}\n` +
     `${layerFiles.length} full-screen layer file(s), all at 1x; ${pinned.length} source-pinned to 1x. ` +
     `${measured.length} file(s) measured from their own headers at ${BYTES_PER_PIXEL} B/px. ` +
-    'EXCLUDES character render surfaces, which are allocated at runtime and are not files: ' +
-    'this total is a floor, not what the GPU will hold.';
+    'The FILES total EXCLUDES character render surfaces, which are allocated at runtime and are not files; ' +
+    'they are charged on the SURFACES line, derived from the rig. Mipmaps and render targets are counted ' +
+    'nowhere: this total is a floor, not what the GPU will hold.';
 
   return { failures, summary, levels: report };
 }

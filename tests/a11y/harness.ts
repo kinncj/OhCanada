@@ -554,6 +554,17 @@ const LESSON_FIXTURE = {
   long: readonly Readonly<Record<UiLocale, string>>[];
 }>;
 
+/** The reader's view a card is handed for "Read about this" (ADR-0070): fixture prose. */
+function fixtureReading(): LessonReaderView {
+  return {
+    title: LESSON_FIXTURE.title[locale],
+    passages: LESSON_FIXTURE.short.map((passage, at) => ({
+      id: `fixture-passage-${String(at + 1)}`,
+      text: passage[locale],
+    })),
+  };
+}
+
 const screen = params.get('screen') ?? 'settings';
 
 switch (screen) {
@@ -686,9 +697,19 @@ switch (screen) {
      * default is a *wrong* answer, because that is the card at its busiest: two
      * fills, two marks, two state words, the explanation and "Next".
      */
+    /*
+     * `?read=1` hands the card a reading, as the composition root does when a
+     * lesson passage shares the question's proposition (ADR-0070); `?read=open`
+     * also opens it once answered. Fixture prose, never content.
+     */
+    const read = params.get('read');
+    if (read !== null) card.setReading(fixtureReading());
     const answered = params.get('answered');
     if (answered !== null) {
       ui.querySelector<HTMLElement>(`[data-testid="option-${answered}"]`)?.click();
+      if (read === 'open') {
+        ui.querySelector<HTMLElement>('[data-testid="question-read-about"]')?.click();
+      }
     }
     break;
   }
@@ -944,7 +965,9 @@ switch (screen) {
     });
 
     hud.setMode(level.mode);
-    if (params.get('task') === '1') hud.setTask(level.task);
+    /* Step 3 of Ottawa's 7: the count the bounded indicator draws while an
+       offer is up (ADR-0066 §2). */
+    if (params.get('task') === '1') hud.setTask(level.task, { position: { number: 3, of: 7 } });
     /* `?behind=1`: the stop the task names is behind the player, so "Behind you"
        follows the task line. */
     if (params.get('behind') === '1') hud.setTaskCue('behind');
@@ -1296,7 +1319,15 @@ switch (screen) {
          the whole accessibility question here. */
       review: [item(0, 0), item(2, 1), item(null, 3), item(null, 0, true)],
     });
+    /* `?read=1`: "Read about this" on the review items that have a reading
+       (ADR-0070) — every item but the second, and the gone one offers none. */
+    if (params.get('read') !== null) {
+      result.setReadings([fixtureReading(), null, fixtureReading(), fixtureReading()]);
+    }
     if (params.get('over') === 'review') result.openReview();
+    if (params.get('read') === 'open') {
+      ui.querySelector<HTMLElement>('[data-testid="exam-review-read-about-0"]')?.click();
+    }
     break;
   }
 

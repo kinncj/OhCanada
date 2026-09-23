@@ -251,6 +251,11 @@ describe('the copy table', () => {
          cue after the task when its stop is behind the player. */
       'level.complete.nextOpen',
       'hud.task.behind',
+      /* ADR-0066 §2: the strip's bounded task indicator, drawn and spoken, and
+         the menu's line for the task in full. Proposed rows in TN-HUD. */
+      'hud.task.indicator',
+      'hud.task.indicator.spoken',
+      'hud.menu.task',
     ]);
     /*
      * 80 until 2026-09-17, when `TN-STUDY` and `TN-SAVE` ratified five of them
@@ -263,8 +268,11 @@ describe('the copy table', () => {
      * 78 since 2026-09-22: Ottawa gained a sixth stop, and a landmark that
      * opens a card needs a prompt of its own. TN-REACH carries the row as a
      * proposal, so it is a gap like the nine Ottawa prompts before it.
+     *
+     * 81 since ADR-0066 §2: the task indicator's two rows and the menu's task
+     * line, proposed in TN-HUD.
      */
-    expect(COPY_GAPS).toHaveLength(78);
+    expect(COPY_GAPS).toHaveLength(81);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

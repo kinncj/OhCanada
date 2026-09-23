@@ -399,12 +399,24 @@ Named so that nobody mistakes the suite's silence for compliance:
 Written in ADR-0009's format. Owners are single tokens; the dates are the ones that matter, not the ones that
 are comfortable.
 
-- **OBLIGATION due=2026-10-19 owner=ui-a11y** — land §2: the offer and the task take turns in the strip, the
+- ~~**OBLIGATION due=2026-10-19 owner=ui-a11y** — land §2: the offer and the task take turns in the strip, the
   bounded indicator with its accessible name, the level menu drawing the task in full, and `hud-task-cue`
   attached to the full row. Rewrite `TN-HUD-hud-and-menu.md` (`TN-HUD-01`, `TN-HUD-08`) and
   `TN-REACH-what-is-in-reach.md` (the offer replaces the task; the open defect at the end of that file is
   answered by this ADR) in the same change, and declare the new copy rows in `COPY_GAPS`. Until this lands,
-  ten of ten built levels put the player's task below the strip at 200 % text in at least one language.
+  ten of ten built levels put the player's task below the strip at 200 % text in at least one language.~~
+  **DISCHARGED 2026-09-23** — in the commit that carries this line. `app/ui/hud.ts` draws the task in full as
+  `hud-quest-tracker` only while no offer is up; with one up it draws `hud-task-indicator`, "Task 3/5" /
+  « Mission 3/5 », whose visible words are `aria-hidden` beside a visually hidden twin reading "Task 3 of 5" /
+  « Mission 3 sur 5 » — no `aria-label`, and no task sentence anywhere in it. The count is the quest's own step
+  number and step total (`QuestController.taskPosition`). `hud-task-cue` is drawn only beside the full row. A
+  new task is still announced in full, and the offer coming and going says nothing. `app/ui/menu.ts` draws
+  `menu-task`, "Your task: …", whenever there is a task. `TN-HUD-01`, `TN-HUD-07`, `TN-HUD-08` and
+  `TN-REACH` are rewritten; `hud.task.indicator`, `hud.task.indicator.spoken` and `hud.menu.task` are in
+  `COPY_GAPS` (81 rows). `tests/unit/ui/hud.test.ts` holds the turn-taking, the name, the cue, the menu line
+  and the switch ring; `tests/a11y/level-screens.spec.ts` holds the one line, the name as read from the
+  accessibility tree and a clean axe scan at 100 % and 200 %, EN and FR, dyslexia and high contrast, strip and
+  menu; `tests/a11y/readability.spec.ts` measures both strips the game can now draw.
 
 - **OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
   within the 200 KB ceiling; remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,

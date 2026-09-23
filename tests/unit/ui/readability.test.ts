@@ -118,9 +118,13 @@ describe('menus hug what they offer', () => {
     menu.open();
     expect(menu.element.className.split(' ')).toContain('tn-screen--sheet');
     expect(page.doc.byTestId('menu-close')?.getAttribute('data-tn-action')).toBe('quiet');
-    /* The items are directly under the title, in the one actions column. */
+    /* The items are under the title, in the one actions column. Between them
+       is the task's line (ADR-0066 §2), hidden while there is no task, so a
+       menu opened with none still hugs its items. */
     const card = (menu.element as unknown as FakeElement).children[0];
-    expect(card?.children.map((child) => child.tagName)).toEqual(['H1', 'DIV']);
+    expect(card?.children.map((child) => child.tagName)).toEqual(['H1', 'P', 'DIV']);
+    expect(card?.children[1]?.getAttribute('data-testid')).toBe('menu-task');
+    expect(card?.children[1]?.hidden).toBe(true);
   });
 
   it('draws the exam menu hugging its items, with the night kept behind it', () => {

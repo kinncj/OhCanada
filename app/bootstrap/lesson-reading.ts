@@ -53,6 +53,7 @@ import {
   readingFor,
   type Reading,
 } from '@application/content/lesson-passages';
+import type { QuestionReading } from '@application/content/question-passages';
 import { appErr, type Result } from '@common/result';
 import type { LocalizedText } from '@domain/entities/values';
 import type { UiLocale } from '@ui/copy';
@@ -133,4 +134,22 @@ export function lessonReaderView(
       text: localise(passage.text, locale),
     })),
   };
+}
+
+/**
+ * The passage(s) a question card's "Read about this" opens, as the reader's
+ * view, in one language (ADR-0070).
+ *
+ * The same mapping as {@link lessonReaderView} — title and prose, nothing a
+ * verifier wrote — because the card opens the same reader a `read` step does.
+ * `null` in, or nothing readable, is `null` out, and the card then offers no
+ * control at all.
+ */
+export function questionReaderView(
+  reading: QuestionReading | null,
+  locale: UiLocale,
+  localise: (value: LocalizedText, locale: UiLocale) => string,
+): LessonReaderView | null {
+  if (reading === null) return null;
+  return lessonReaderView({ ...reading, refused: [] }, locale, localise);
 }
