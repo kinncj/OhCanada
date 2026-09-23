@@ -70,12 +70,27 @@ This ADR's schema change is **necessary and not sufficient**, and saying so is t
 outside it. Until that list comes from the config, a level declaring `toboggan` passes `validate-content` and
 then fails at load — which is a worse failure than the one being fixed.
 
-- **OBLIGATION due=2026-10-08 owner=engine** — read the mode vocabulary from
+- ~~**OBLIGATION due=2026-10-08 owner=engine** — read the mode vocabulary from
   `GameConfigDocument.locomotionModes` in `app/adapters/phaser/level-document.ts` and
   `app/adapters/phaser/locomotion.ts`, delete the hard-coded `LOCOMOTION_MODES` literal and the fourth copy
   in `tests/unit/adapters/phaser/level-is-data-only.test.ts`, and add a contract test asserting every level's
   `locomotion[].mode` appears in the config. **Slice 2 cannot honestly claim "no engine changes" until this
-  lands**, because until then adding a mode still requires editing an adapter.
+  lands**, because until then adding a mode still requires editing an adapter.~~
+  **DISCHARGED 2026-09-23** — three of the four parts were already in the tree and the marker read as open
+  only because nothing struck it: `LOCOMOTION_MODES` is gone, `level-document.ts` takes the vocabulary as a
+  `modes` parameter, `createLocomotionFactory(modes)` in `locomotion.ts` takes it the same way, both are fed
+  `config.locomotionModes` from `boot-config.ts` through the bootstrap and `GameRenderer`, and
+  `level-is-data-only.test.ts` reads its forbidden names from `content/game.config.json`. The commit that
+  strikes this marker lands the rest. `tests/unit/contracts/a-level-moves-only-by-a-configured-mode.test.ts`
+  reads every file in `content/levels/` and fails on any `locomotion[].mode` the config does not name, with
+  fixtures proving it refuses a misspelling (`tobogan`), a mode real elsewhere but absent from the
+  vocabulary, and a missing mode. It also removes a **fifth** copy this ADR did not count, in
+  `tests/unit/adapters/phaser/locomotion.test.ts`, which had already drifted: it listed the original eight
+  and not `toboggan`, so the strategy gate could not have caught a `'toboggan'` branch in the code.
+  **One correction to the Decision's wording.** "A level's `locomotion[].mode` is validated against
+  `game.config.json#/locomotionModes`" is true of `make test`, not of `make validate-content`: the schema
+  holds the mode to an `id` and no content script reads the config's vocabulary. A typo is still a failing
+  build, which is the guarantee this ADR keeps, but it fails in the test gate.
 
 ## Alternatives considered
 
