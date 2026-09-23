@@ -1,6 +1,7 @@
 # ADR-0066: The strip shows one job at a time, and the game brings its own font
 
-- Status: Accepted (2026-09-21)
+- Status: Accepted (2026-09-21). **Amended by ADR-0071 (2026-09-23):** the bundled faces' ceiling in §1 is
+  ≤ 300 KB, not ≤ 200 KB, by the product owner's decision. Nothing else here moves.
 - Settles the residual ADR-0045 §1 left to the product owner — "a three-line French prompt with a long task
   does not fit in a third of the screen at true 200 %" — and the second, larger defect found while trying to
   settle it by copy: **the game does not control the font its layout is measured against**.
@@ -158,6 +159,8 @@ font the game did not choose, and pinning alone cannot make it.** That is §2.
   and a Latin legibility face with the French accents this game needs is small enough that the saving is not
   worth the licence question. **Ceiling: the bundled faces together add ≤ 200 KB to the initial payload**,
   against a budget of 8 MB. If a candidate cannot meet that unmodified, it is not the candidate.
+  **Amended by ADR-0071 (2026-09-23): ≤ 300 KB** (300 000 B). The owner chose to ship Atkinson Hyperlegible and
+  OpenDyslexic at 400 and 700, all four unmodified, 258 376 B together.
 - The face must not be **wider** than what the game is measured on today. Stated mechanically so it can be
   checked rather than eyeballed: the pinned face's advance width for the sweep's reference strings, at the
   same size, must be **no greater than the current CI runner's** for the same strings. A pin that loses
@@ -344,7 +347,7 @@ answer, and that independence is the test of whether the decision is any good:
 
 | cost | size |
 |---|---|
-| Bundled UI face, unmodified `woff2`, 2 weights | ceiling 200 KB for **all** bundled faces together |
+| Bundled UI face, unmodified `woff2`, 2 weights | ceiling 200 KB for **all** bundled faces together — **300 KB since ADR-0071** |
 | Bundled dyslexia face, unmodified `woff2` | included in the same ceiling |
 | Initial payload | 8 MB budget; the ceiling above is 2.5 % of it |
 | Level payloads, decoded texture memory | unchanged — fonts are initial-path assets, not level assets |
@@ -419,7 +422,7 @@ are comfortable.
   menu; `tests/a11y/readability.spec.ts` measures both strips the game can now draw.
 
 - **OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
-  within the 200 KB ceiling; remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,
+  within the 200 KB ceiling (300 KB since ADR-0071); remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,
   `Verdana` and `Tahoma` from the stacks in `app/ui/screen-styles.ts` and the stack in
   `app/adapters/phaser/boot-scene.ts`; declare the metrics-adjusted fallback; credit both faces in
   `assets/credits.json` with `kind: "shipped"`. Record in the commit body: the family, its licence, its
