@@ -27,11 +27,11 @@
           "quote": "Helping others in the community — Millions of volunteers freely donate their time to help others without pay"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada, rights come with responsibilities. These include: … • Helping others in the community — Millions of volunteers freely donate their time to help others without pay"
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Volunteering is an excellent way to gain useful skills and develop friends and contacts."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Volunteering is an excellent way to gain useful skills and develop friends and contacts."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Protecting and enjoying our heritage and environment — Every citizen has a role to play in avoiding waste and pollution while protecting Canada’s natural, cultural and architectural heritage for future generations."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Protecting and enjoying our heritage and environment — Every citizen has a role to play in avoiding waste and pollution while protecting Canada’s natural, cultural and architectural heritage for future generations."
         }
       }
     }
