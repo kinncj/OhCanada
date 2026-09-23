@@ -8,8 +8,8 @@
     "fr": "Patinez jusqu'à la Colline du Parlement"
   },
   "summary": {
-    "en": "Skate up the canal with the officer. You stop at the Library, at the Peace Tower and at the warming hut, and at each one the officer explains a piece of how Canada is governed and then asks you about it.",
-    "fr": "Patinez sur le canal avec l'agent. Vous vous arrêtez à la Bibliothèque, à la tour de la Paix et à la cabane chauffée; à chaque halte, l'agent vous explique un aspect de la façon dont le Canada est gouverné, puis vous pose des questions dessus."
+    "en": "Skate up the canal with the officer. You stop at the Library, at the Peace Tower and at the warming hut, and at each one the officer explains a piece of how Canada is governed and then asks you about it. Out at Dow's Lake there is a little more to read.",
+    "fr": "Patinez sur le canal avec l'agent. Vous vous arrêtez à la Bibliothèque, à la tour de la Paix et à la cabane chauffée; à chaque halte, l'agent vous explique un aspect de la façon dont le Canada est gouverné, puis vous pose des questions dessus. Au lac Dow, il y a encore un peu de lecture."
   },
   "declinedLine": {
     "speaker": "officer",
@@ -69,8 +69,8 @@
     "speaker": "officer",
     "expression": "happy",
     "text": {
-      "en": "You skated up the canal with me, to the Library of Parliament and on to the Peace Tower, and made your last stop at the warming hut. Three stops on the Hill, and the errand is over.",
-      "fr": "Vous avez patiné sur le canal avec moi, jusqu'à la Bibliothèque du Parlement, puis à la tour de la Paix, et vous avez fait votre dernière halte à la cabane chauffée. Trois haltes sur la colline, et la tâche est terminée."
+      "en": "You skated up the canal with me, to the Library of Parliament and on to the Peace Tower, then stopped at the warming hut and read out at Dow's Lake. Four stops, and the errand is over.",
+      "fr": "Vous avez patiné sur le canal avec moi, jusqu'à la Bibliothèque du Parlement, puis à la tour de la Paix; ensuite vous avez fait halte à la cabane chauffée et vous avez lu au lac Dow. Quatre haltes, et la tâche est terminée."
     },
     "fact": {
       "factual": false,
@@ -120,8 +120,8 @@
           "speaker": "officer",
           "expression": "neutral",
           "text": {
-            "en": "Skate up the canal with me. We stop three times, and each stop is a piece of how this country is run.",
-            "fr": "Patinez sur le canal avec moi. On fait trois haltes, et chacune porte sur un aspect de la gouvernance du pays."
+            "en": "Skate up the canal with me. We stop three times, and each stop is a piece of how this country is run. Out at Dow's Lake there is something to read.",
+            "fr": "Patinez sur le canal avec moi. On fait trois haltes, et chacune porte sur un aspect de la gouvernance du pays. Au lac Dow, il y aura quelque chose à lire."
           },
           "fact": {
             "factual": false,
@@ -366,6 +366,25 @@
         "en": "Answer 5 questions about who looks after what",
         "fr": "Répondez à 5 questions sur qui s'occupe de quoi"
       }
+    },
+    {
+      "id": "read-at-dows-lake",
+      "kind": "read",
+      "targetId": "dows-lake",
+      "prompt": {
+        "en": "Stop and read at Dow's Lake",
+        "fr": "Arrêtez-vous pour lire au lac Dow"
+      },
+      "passages": [
+        {
+          "lesson": "govern-03-the-royal-family-and-the-legislatures",
+          "passage": "g3-royal-family-lifelong-service"
+        },
+        {
+          "lesson": "govern-03-the-royal-family-and-the-legislatures",
+          "passage": "g3-other-constitutional-monarchies"
+        }
+      ]
     }
   ]
 }

@@ -40,6 +40,7 @@ import { newProgress } from '@domain/entities/progress';
 import type { Progress } from '@domain/entities/progress';
 import type { EpochMillis, LocaleCode, QuestionId, SubjectId } from '@domain/ids';
 
+import { stepsFinishedOnArrival } from '../../../app/bootstrap/arrival';
 import { landmarkDraw, rememberAnswered } from '../../../app/bootstrap/landmark-questions';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
@@ -103,6 +104,45 @@ const stopsOf = (level: LevelFile): readonly Stop[] =>
       quote: undefined,
     })),
   ].sort((a, b) => a.x - b.x);
+
+/**
+ * The step a quest is on once the player has engaged `stopId`.
+ *
+ * Accepting an offer completes the opening `talk` step and nothing more
+ * (`acceptQuest`): the giver's question is asked straight after it. A `visit`,
+ * `collect` or `read` step completes on arrival — `quests.visited()` runs before
+ * the card — and one engagement finishes **every** such step in a row that
+ * names this stop (ADR-0067). The rule is `app/bootstrap/arrival.ts`'s, the one
+ * the controller advances by, so this walk cannot model another game.
+ */
+const arrive = (steps: readonly StepFile[], stepIndex: number, stopId: string): number => {
+  const here = steps[stepIndex];
+  if (here?.kind === 'talk') return here.targetId === stopId ? stepIndex + 1 : stepIndex;
+  return (
+    stepIndex +
+    stepsFinishedOnArrival(
+      steps.map((step) => ({ kind: step.kind, targetId: step.targetId ?? '' })),
+      stepIndex,
+      stopId,
+    )
+  );
+};
+
+/**
+ * The walk's step rule, over a quest and its stops alone: arrive, then fill at
+ * most the one `answer` step that arrival left current. The bank is left out on
+ * purpose — the test below measures it — so this answers one question only:
+ * can this *shape* of quest be finished in one pass?
+ */
+const stepsFinishedWalking = (stops: readonly string[], steps: readonly StepFile[]): number => {
+  let stepIndex = 0;
+  for (const stop of stops) {
+    stepIndex = arrive(steps, stepIndex, stop);
+    if (steps[stepIndex]?.kind === 'answer') stepIndex += 1;
+  }
+  return stepIndex;
+};
+
 interface ConfigFile {
   readonly scheduler: SchedulerTuning;
   readonly study: { readonly drillSize: number };
@@ -278,17 +318,10 @@ describe('every answer step fills its count in one sitting (ADR-0054)', () => {
       let stepProgress = 0;
 
       for (const stop of stopsOf(level)) {
-        /* A `talk`, `visit` or `collect` step whose target this is completes on
-           arrival, before anything is asked — `quests.visited()` runs before the
-           card, and accepting an offer completes the opening `talk` step in the
-           same move (`acceptQuest`). */
-        const arrivedAt = quest.steps[stepIndex];
-        if (
-          arrivedAt !== undefined &&
-          arrivedAt.kind !== 'answer' &&
-          arrivedAt.targetId === stop.id
-        ) {
-          stepIndex += 1;
+        /* What arriving here finishes, before anything is asked (`arrive`). */
+        const arrived = arrive(quest.steps, stepIndex, stop.id);
+        if (arrived !== stepIndex) {
+          stepIndex = arrived;
           stepProgress = 0;
         }
 
@@ -374,5 +407,68 @@ describe('every answer step fills its count in one sitting (ADR-0054)', () => {
           `earned and every level after it stays locked (ADR-0036, ADR-0054).`,
       ).toBe(quest.steps.length);
     }
+  });
+});
+
+/**
+ * A `read` step may share a stop with a `visit` (ADR-0067).
+ *
+ * The first attempt at a `read` step put it at the Rideau Locks, after the
+ * locks' `visit`, and this walk left Ottawa's quest on it: one engagement
+ * finished one step. So the first `read` step had to be given a stop of its own
+ * — Dow's Lake, drawn for it — and ADR-0065's tier 1, reading at the 43 stops
+ * that already exist, had nowhere to go. These are that quest's shapes.
+ */
+describe('a read step sharing a stop with a visit is finished in the same pass', () => {
+  const step = (id: string, kind: string, targetId: string): StepFile => ({ id, kind, targetId });
+  const OTTAWA_STOPS = ['officer', 'peace-tower', 'rideau-locks', 'dows-lake'];
+
+  it('finishes a quest that reads at the Rideau Locks after visiting them', () => {
+    const steps = [
+      step('meet-the-officer', 'talk', 'officer'),
+      step('see-the-tower', 'visit', 'peace-tower'),
+      step('answer-at-the-tower', 'answer', 'government'),
+      step('see-the-locks', 'visit', 'rideau-locks'),
+      step('read-at-the-locks', 'read', 'rideau-locks'),
+      step('answer-at-the-locks', 'answer', 'government'),
+      step('see-the-lake', 'visit', 'dows-lake'),
+      step('answer-at-the-lake', 'answer', 'government'),
+    ];
+    expect(stepsFinishedWalking(OTTAWA_STOPS, steps)).toBe(steps.length);
+  });
+
+  it('finishes a read before the visit, and two reads at one stop', () => {
+    const steps = [
+      step('meet-the-officer', 'talk', 'officer'),
+      step('read-at-the-tower', 'read', 'peace-tower'),
+      step('see-the-tower', 'visit', 'peace-tower'),
+      step('answer-at-the-tower', 'answer', 'government'),
+      step('see-the-locks', 'visit', 'rideau-locks'),
+      step('read-one', 'read', 'rideau-locks'),
+      step('read-two', 'read', 'rideau-locks'),
+      step('answer-at-the-locks', 'answer', 'government'),
+    ];
+    expect(stepsFinishedWalking(OTTAWA_STOPS, steps)).toBe(steps.length);
+  });
+
+  it('still cannot finish a read that comes back to a stop after its question', () => {
+    /* The run ends at an `answer` step, so the question is asked before the
+       next step and nothing is skipped: a quest that returns to a passed stop
+       is still stuck, and this gate still says so. */
+    const steps = [
+      step('meet-the-officer', 'talk', 'officer'),
+      step('see-the-locks', 'visit', 'rideau-locks'),
+      step('answer-at-the-locks', 'answer', 'government'),
+      step('read-at-the-locks', 'read', 'rideau-locks'),
+    ];
+    expect(stepsFinishedWalking(OTTAWA_STOPS, steps)).toBe(3);
+  });
+
+  it('never lets arriving at a giver finish anything but its talk step', () => {
+    const steps = [
+      step('meet-the-officer', 'talk', 'officer'),
+      step('see-the-officer', 'visit', 'officer'),
+    ];
+    expect(arrive(steps, 0, 'officer')).toBe(1);
   });
 });

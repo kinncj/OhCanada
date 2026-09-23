@@ -68,7 +68,7 @@ Three other currencies are sometimes quoted for this and none of them is the com
 | Verified questions in the bank | 493 | Reachable in Study and in the exam, in full, since before this ADR |
 | Questions **pooled** by a quest step | 187 of 493 | What the scheduler may ever draw inside a level |
 | Questions **asked** in one playthrough | 130 | What one sitting actually puts on a card |
-| **Passages reachable by playing** | **0 of 302** | ADR-0063's measurement, unchanged |
+| **Passages reachable by playing** | **0 of 302** | ADR-0063's measurement, unchanged. **2 of 302 since 2026-09-22**, when `read-at-dows-lake` landed on `ottawa` — ADR-0063's content obligation |
 
 A player who opens Study meets every one of the 493. A player who only plays meets 130 questions and 94
 told sentences. The owner plays.
@@ -109,8 +109,10 @@ Three branches exist off `main` that bear on this, and none of them is this deci
   verified questions are pooled. Measured on `reach-pass2`: pooled ids 187 → **493**, questions asked in a
   playthrough 130 → **137**, propositions told **105, unchanged**. A pool is not teaching. §Alternatives
   takes this seriously and §Consequences records what it does to ADR-0057.
-- **`read-step-surface`** carries the reader card ADR-0063 needs. Passages reachable is still 0 until a
-  quest names one.
+- **`read-step-surface`** carries the reader card ADR-0063 needs. Passages reachable was 0 until a quest
+  named one; `read-step-at-dows-lake` (2026-09-22) is the quest that did, with **two** passages and **48
+  words EN / 59 FR** against §3.3's four-and-120 — the first measurement of this ADR's tier 1, and the first
+  evidence for §3.2's "relevance does not distribute": the budget was not what ran out.
 - **`task-fits-the-strip`** sweeps every step prompt through the HUD task strip at 390×844 and 200% text,
   where the limit is **three wrapped lines**. Every new step this ADR authorises pays that gate.
 

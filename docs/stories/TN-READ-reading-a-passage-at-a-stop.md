@@ -19,13 +19,17 @@ reads here is authored in `content/lessons/**`, verified there, and named by a `
 
 `app/ui/lesson-reader.ts` is the surface, and **the whole route behind it is built**: the port, the lazy
 per-chapter catalogue, the resolver and the shippable-passage filter, and the wiring that opens the reader
-between a landmark's card and the question after it (`docs/architecture.md` §6). It was walked end to end in
-Chromium at 390x844 in English and French — the title, three passages and `Close` fit without scrolling —
-against `govern-03-the-royal-family-and-the-legislatures` read at Ottawa's canal locks.
+between a landmark's card and the question after it (`docs/architecture.md` §6).
 
-**And that step has been withdrawn, so passages reachable by playing is still 0.** Not for want of the
-surface, and not for want of relevance: for want of **somewhere to stand**. See the next section. A sixth
-Ottawa stop is commissioned, and the first `read` step lands with it.
+**A player reaches it at Dow's Lake, the last stop of `ottawa`.** `read-at-dows-lake` is the last step of
+`content/quests/ottawa-parliament-hill.json` and reads two passages of
+`govern-03-the-royal-family-and-the-legislatures` — the page-57 sentences either side of the stop's own
+blurb about the head of state and the head of government. **Passages reachable by playing: 2 of 302**, where
+this file said 0. Walked in Chromium at 390x844 against a dev server in **English and French** at **100 %
+and 200 %** text: the title and both passages fit without scrolling at 100 %, scroll once at 200 %, never
+scroll sideways, and `Close` measures 55.5 px tall at 100 % and 111 px at 200 %. An earlier attempt at
+Ottawa's canal locks was withdrawn for want of **somewhere to stand**; the next section is why, and it still
+governs the second step.
 
 **The stop a `read` step may stand on is not a free choice**, and it is worth knowing before authoring the
 second one. Three separate gates bound it, and two of them are geometry rather than content:
@@ -43,11 +47,20 @@ second one. Three separate gates bound it, and two of them are geometry rather t
   first there was tried and CI caught it: the skater stopped at 1 176 and four scenarios measured a
   stationary player.
 - `tests/unit/adapters/phaser/auto-stop.test.ts` guards ADR-0037's "a glide let go outside reach is still
-  the player's", and **Ottawa was its only example in the whole game**: a gliding mode meeting a *landmark*
+  the player's", and **Ottawa is its only example in the whole game**: a gliding mode meeting a *landmark*
   first, where the stop line (205 px) is inside the reach (220 px) by a 15 px sliver. A character standing
-  first erases it. Since a `read` step needs its giver first, **Ottawa cannot host one** — its first 3 600 px
-  leave 795 px between the run-up floor and the art gate's 1 080 px landmark spacing, and the sequence needs
-  two landmarks and a character inside it.
+  first erases it, which is why the officer may not be moved in front of the canal locks.
+
+**The way through all four is a stop AFTER the quest's last `answer` step, not a stop before its giver**, and
+that is what Dow's Lake is. A `read` step on the level's **last** stop takes its single non-`answer` advance
+from a stop nothing else spends, needs no landmark moved, needs no giver moved, and cannot stall a later
+step because there is no later step. The canal-locks attempt failed because it tried to put the reading
+*inside* the corridor the run-up and the 1 080 px landmark spacing between them leave 795 px of; the answer
+was the far end of the level, where there is room. **One consequence, measured and worth knowing before the
+second step is authored:** a level's end-of-level card fires at `bounds.right - view/2` (`exitLineX`), which
+on Ottawa is about x 8 400, so a stop at 8 700 is met *after* that card rather than before it. The card names
+the step it is still waiting for and the latch fires once, so the player dismisses it and reads — but a stop
+placed past the arrival line will always be introduced by that card.
 
 ## The words are content, and they arrive already chosen
 
@@ -163,7 +176,16 @@ which is the phone this game is designed for:
 **The judgement: a `read` step holds three or four passages, and never more than four.** Three at the mean
 is about 330 characters, which is a sheet a player reads without scrolling at 100 % and scrolls once at
 200 %. It is also the shape ADR-0063 recommends for the first authored step, so this agrees with it rather
-than second-guessing it.
+than second-guessing it. ADR-0065 §3.3 has since turned the ceiling into a number counted **per stop**:
+four passages and 120 words in either language, over every `read` step sharing a `targetId`.
+
+**And the first authored step holds two, which is this judgement working rather than failing.** Dow's Lake
+reads 48 words EN / 59 FR — two passages of the four allowed and 48 words of the 120. The third passage of
+the same lesson is on the next page of the guide, under a different heading, and teaches the provincial
+legislature, which the Peace Tower stop already told the same player; and a step may name only **one**
+lesson, so there was no fourth passage to reach for. **Relevance ran out before the budget did.** Three or
+four is the shape a stop takes when the material is there; it is not a quota, and padding a sheet to reach
+it would be the wall of text this section exists to prevent.
 
 **And a known, measured rough edge, recorded rather than hidden.** A passage taller than the viewport cannot
 be shown whole. The shared reveal (`app/ui/focus-scroll.ts`) scrolls **as little as possible**, which going
@@ -453,8 +475,10 @@ Feature: The reader refuses rather than draws a blank
   passages read is a score for a thing the game promised not to score. This is recorded as a question only
   because "how many have I read" is the first feature anybody will ask for.
 - ~~**`OQ-READ-4` — who names the stop?**~~ **Answered by the first authored step, and no row was needed.**
-  The locks at Ottawa are a landmark with a card of their own, so the HUD already offers them — "Look at the
-  canal locks" — and the tracker already says what to do, from the step's own `prompt`: "Stop and read at the
-  canal locks". Measured in the browser, walking the level. A row would only be owed on a stop that is
-  **nothing but** a plaque, with no card and no `visit` behind it; there is no such stop today, and the day
-  one is drawn it is `TN-REACH`'s row and not this file's.
+  Dow's Lake is a landmark with a card of its own, so the HUD already offers it — "Look at the pavilion" /
+  "Regarder le pavillon", the `hud.interact.dows-lake` row that already shipped — and the tracker already
+  says what to do, from the step's own `prompt`: "Task: Stop and read at Dow's Lake" / "Mission :
+  Arrêtez-vous pour lire au lac Dow", **two wrapped lines at 200 % text in both languages**. Measured in the
+  browser, walking the level. A row would only be owed on a stop that is **nothing but** a plaque, with no
+  card and no `visit` behind it; there is no such stop today, and the day one is drawn it is `TN-REACH`'s row
+  and not this file's.
