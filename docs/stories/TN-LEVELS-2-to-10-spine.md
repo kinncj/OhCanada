@@ -867,3 +867,7 @@ Feature: The floor every level story stands on
   drawn are not all the same for a plaque as for a person, and `TN-PEGGYS-06` and `TN-NORTH-06` have already
   had to write the difference down twice. Two level stories carrying a rule that belongs to the screen is the
   shape this directory keeps correcting.
+  **Resolved 2026-09-23, by the first route.** `TN-DIALOGUE` now has *Two kinds of giver* (every scenario
+  applies to both, with a table of the five differences) and `TN-DIALOGUE-07` (the landmark case). Its
+  `TN-DIALOGUE-03` name scenario reads the giver's own document, not `npc.<giver>.name`. `TN-PEGGYS-06` and
+  `TN-NORTH-06` are unchanged and still hold each level's own rules.

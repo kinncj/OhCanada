@@ -107,7 +107,7 @@ const DESIGN_WIDTH = 1080;
 const DESIGN_HEIGHT = 1920;
 
 /**
- * Character space, from `assets/style/rig-contract.json`: 240 x 470 design
+ * Character space, from `content/characters/rig.json`: 240 x 470 design
  * pixels, a six-head figure 420 px tall. Both modes draw at this size, because
  * a per-character cost measured at a different size is a measurement of a
  * different character.

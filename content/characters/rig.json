@@ -3,11 +3,11 @@
   "$comment": [
     "The TrueNorth character rig contract, task 1.11. NORMATIVE: assets/style/rig-contract.md is the prose;",
     "this file is the same contract as data, and it is what the contract tests load.",
-    "It is authored under assets/ because assets/** is the art agent boundary. content/schemas/rig.schema.json",
-    "(ADR-0017) validates this shape and tests/unit/contracts/rig-is-coherent.test.ts reads it from here.",
-    "content/characters/rig.json - the path CLAUDE.md names - EXISTS and is a byte-for-byte mirror of this",
-    "file except for its $schema, which is relative to content/. The two are edited together, in the same",
-    "commit, or the rig has two live copies and no gate can tell you which one is stale.",
+    "This is the one copy, at the path CLAUDE.md names. It was authored as assets/style/rig-contract.json and",
+    "mirrored here until ADR-0017 7 moved it; that copy is deleted, so there is nothing to keep in step.",
+    "content/schemas/rig.schema.json (ADR-0017) validates this shape in make validate-content, and",
+    "tests/unit/contracts/rig-is-coherent.test.ts and the art hand-off (scripts/lib/art-handoff.mjs) read it",
+    "from here.",
     "Every name here appears IDENTICALLY in the Rive file and in the sprite atlas. That identity is the",
     "whole point of ICharacterRenderer: gameplay code must not be able to tell which backend it got.",
     "The `{mode}` brace on four parts, and every state named `<mode>/<state>`, are the LEVEL's locomotion mode made visible. `mode` is NOT a slot: it joins `expression` as a brace naming something the character does not choose, which is what app/adapters/phaser/locomotion-pose.ts binds and what keeps the slot-independence product a statement about player choices. rig-contract.md 11 is the prose and carries what is deliberately not here - a horse, a train seat, a brake."
