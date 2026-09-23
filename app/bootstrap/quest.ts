@@ -102,6 +102,7 @@ import { createDialogue, type Dialogue } from '@ui/dialogue';
 import { bareTargetId } from '@ui/interact';
 import type { SettingsStore } from '@ui/settings';
 
+import { stepsFinishedOnArrival } from './arrival';
 import { placeOfStep } from './task-cue';
 
 import {
@@ -292,6 +293,42 @@ const NOT_THIS_STEP: VisitedOutcome = {
     return 'no-step';
   },
 };
+
+/**
+ * The outcomes of several steps finished by one engagement, as one (ADR-0067).
+ *
+ * Passages are gathered in step order, so the landmark chain stays one
+ * sequence — card, every passage, every line, the question — rather than
+ * interleaving surfaces. Lines are said step by step, each step's in its own
+ * dialogue because a dialogue has one speaker, and the caller's continuation is
+ * paid once, after the last. `speak` answers `'spoken'` if any step spoke, and
+ * otherwise the last step's silence. A single outcome is returned as it is.
+ */
+function inTurn(outcomes: readonly VisitedOutcome[]): VisitedOutcome {
+  const [only] = outcomes;
+  if (outcomes.length === 1 && only !== undefined) return only;
+  const speakFrom = (index: number, onClosed: () => void): VisitSpeech => {
+    const outcome = outcomes[index];
+    if (outcome === undefined) {
+      onClosed();
+      return 'no-step';
+    }
+    if (index === outcomes.length - 1) return outcome.speak(onClosed);
+    let rest: VisitSpeech | null = null;
+    const here = outcome.speak(() => {
+      rest = speakFrom(index + 1, onClosed);
+    });
+    if (here === 'spoken') return 'spoken';
+    /* A silent step pays its continuation at once, so the rest has already
+       answered by the time this line runs. */
+    return rest ?? here;
+  };
+  return {
+    advanced: outcomes.some((outcome) => outcome.advanced),
+    passages: outcomes.flatMap((outcome) => outcome.passages),
+    speak: (onClosed) => speakFrom(0, onClosed),
+  };
+}
 
 export interface QuestController {
   /**
@@ -1058,10 +1095,7 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       if (quest === null) return false;
       const state = stateOf(quest);
       if (state === undefined) return false;
-      const step = currentStep(quest, state);
-      if (step === undefined) return false;
-      if (step.kind !== 'visit' && step.kind !== 'collect' && step.kind !== 'read') return false;
-      return bareTargetId(step.targetId) === bareTargetId(targetId);
+      return stepsFinishedOnArrival(quest.steps, state.stepIndex, targetId) > 0;
     },
 
     canEngage(targetId): boolean {
@@ -1143,12 +1177,11 @@ export function createQuestController(wiring: QuestWiring): QuestController {
       if (quest === null) return NOT_THIS_STEP;
       const state = stateOf(quest);
       if (state === undefined) return NOT_THIS_STEP;
-      const step = currentStep(quest, state);
-      /* Only the step the player is actually on, and only when the thing they
-         engaged is the thing it names. Steps cannot be skipped (`TN-QUEST-04`),
-         and a landmark on the far side of the level cannot close this one. */
-      if (step === undefined) return NOT_THIS_STEP;
       /*
+       * Only the step the player is actually on, and only when the thing they
+       * engaged is the thing it names. Steps cannot be skipped (`TN-QUEST-04`),
+       * and a landmark on the far side of the level cannot close this one.
+       *
        * `read` joins `visit` and `collect` here, and it behaves exactly as they
        * do: the step completes on arrival, before anything is drawn. That is not
        * a shortcut, it is ADR-0063 — *whether reading happened is not checkable
@@ -1156,51 +1189,67 @@ export function createQuestController(wiring: QuestWiring): QuestController {
        * close, and a control that claimed to know the player had read would be a
        * control that lies. `talk` stays out: it is completed by accepting the
        * offer (`acceptQuest`), not by walking up.
-       */
-      if (step.kind !== 'visit' && step.kind !== 'collect' && step.kind !== 'read') {
-        return NOT_THIS_STEP;
-      }
-      if (bareTargetId(step.targetId) !== bareTargetId(targetId)) return NOT_THIS_STEP;
-
-      /*
-       * Read before the step moves. `currentStep` answers with the *next* step
-       * the moment `progressQuest` succeeds, so a caller that came back for the
-       * lines afterwards would be handed the `answer` step's — which carries
-       * none, and the 27 lines authored to teach at a landmark would be dropped
-       * on the floor while everything went on passing.
-       */
-      /*
-       * The branded step, recovered by identity from the quest's own array.
        *
-       * `currentStep` is the domain's rule for which step the player is on and
-       * is typed for the domain's `Quest`, so what it answers has lost the
-       * receipt `./verified-dialogue.ts` attached. `spokenStep` gives it back
-       * without re-deriving the index: the value is an element of `quest.steps`,
-       * and a step that is not one of this quest's own answers `undefined`
-       * rather than being cast back into one.
+       * And one engagement is one arrival, so it finishes **every** such step in
+       * a row that names this target (ADR-0067, `./arrival.ts`), each by its own
+       * `progressQuest` event and in order. Before that, a `read` step written
+       * after a `visit` to the same landmark was left current while the player
+       * stood in front of it, and the quest waited for a second tap on a card
+       * just read.
        */
-      const spoken = spokenStep(quest, step);
-      if (spoken === undefined) return NOT_THIS_STEP;
+      const run = stepsFinishedOnArrival(quest.steps, state.stepIndex, targetId);
 
-      const speech = speechFor(quest, spoken);
+      let at: QuestState = state;
+      let questCompleted = false;
+      const finished: VisitedOutcome[] = [];
+      for (let taken = 0; taken < run; taken += 1) {
+        const step = currentStep(quest, at);
+        if (step === undefined) break;
+        /*
+         * The branded step, recovered by identity from the quest's own array.
+         *
+         * `currentStep` is the domain's rule for which step the player is on and
+         * is typed for the domain's `Quest`, so what it answers has lost the
+         * receipt `./verified-dialogue.ts` attached. `spokenStep` gives it back
+         * without re-deriving the index: the value is an element of `quest.steps`,
+         * and a step that is not one of this quest's own answers `undefined`
+         * rather than being cast back into one.
+         */
+        const spoken = spokenStep(quest, step);
+        if (spoken === undefined) break;
 
-      const advance = progressQuest(
-        quest,
-        state,
-        { kind: step.kind, targetId: step.targetId },
-        wiring.clock.now(),
-      );
-      if (!advance.ok) {
-        console.error(
-          `[bootstrap] "${String(quest.id)}" refused a ${step.kind} step. ` +
-            `${advance.error.code}: ${advance.error.message}`,
+        /*
+         * Read before the step moves. `currentStep` answers with the *next* step
+         * the moment `progressQuest` succeeds, so a caller that came back for the
+         * lines afterwards would be handed the `answer` step's — which carries
+         * none, and the 27 lines authored to teach at a landmark would be dropped
+         * on the floor while everything went on passing.
+         */
+        const speech = speechFor(quest, spoken);
+
+        const advance = progressQuest(
+          quest,
+          at,
+          { kind: step.kind, targetId: step.targetId },
+          wiring.clock.now(),
         );
-        return NOT_THIS_STEP;
+        if (!advance.ok) {
+          console.error(
+            `[bootstrap] "${String(quest.id)}" refused a ${step.kind} step. ` +
+              `${advance.error.code}: ${advance.error.message}`,
+          );
+          break;
+        }
+        at = advance.value.state;
+        questCompleted = advance.value.questCompleted;
+        finished.push(speech);
       }
-      wiring.commit(withQuestState(wiring.progress(), quest.levelId, advance.value.state));
+      if (finished.length === 0) return NOT_THIS_STEP;
+
+      wiring.commit(withQuestState(wiring.progress(), quest.levelId, at));
       refresh();
-      if (advance.value.questCompleted) earn(quest);
-      return speech;
+      if (questCompleted) earn(quest);
+      return inTurn(finished);
     },
 
     refresh,
