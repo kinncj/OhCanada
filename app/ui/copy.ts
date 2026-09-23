@@ -600,6 +600,16 @@ const EN = {
      listed in `COPY_GAPS`. A label, so no full stop; "behind" and not "left",
      because it is about the way the player has come, not a screen direction. */
   'hud.task.behind': 'Behind you',
+  /* ADR-0066 §2: while an offer is up the strip draws the task as a word and a
+     count, never the sentence. Written by app/ui and listed in `COPY_GAPS`; the
+     shape is the ADR's (one line in both languages, digits only after the word),
+     the words are TN-HUD's to ratify. The indicator's visible text, and its
+     accessible name — the same thing, expanded for speech, because "3/5" is read
+     aloud as a date or a fraction. */
+  'hud.task.indicator': 'Task {{n}}/{{total}}',
+  'hud.task.indicator.spoken': 'Task {{n}} of {{total}}',
+  /* The menu's line for the task in full, its permanent home (ADR-0066 §2). */
+  'hud.menu.task': 'Your task',
 
   /* docs/stories/TN-REACH-what-is-in-reach.md — what `interact-prompt` says,
      and the one-time explanation of the marks beside it.
@@ -1471,6 +1481,11 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.task': 'Mission',
   /* « Derrière vous » agrees with nobody, and names the way the player came. */
   'hud.task.behind': 'Derrière vous',
+  /* « sur » and not « de » for the spoken count, as the tracker's own
+     « (0 sur 3) » already reads. */
+  'hud.task.indicator': 'Mission {{n}}/{{total}}',
+  'hud.task.indicator.spoken': 'Mission {{n}} sur {{total}}',
+  'hud.menu.task': 'Votre mission',
 
   'hud.interact.poi': 'Regarder ce lieu',
   /* « Ce qu'il y a à faire » rather than « vos missions » or « les tâches ici »:
@@ -1913,6 +1928,12 @@ export const COPY_GAPS: readonly CopyKey[] = [
      Proposed rows in `TN-DONE` and `TN-HUD`. */
   'level.complete.nextOpen',
   'hud.task.behind',
+  /* ADR-0066 §2: the strip shows one job at a time. The indicator's two rows —
+     what is drawn, and what is said — and the menu's line for the task in full.
+     Proposed rows in `TN-HUD`. */
+  'hud.task.indicator',
+  'hud.task.indicator.spoken',
+  'hud.menu.task',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

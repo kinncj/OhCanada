@@ -126,6 +126,10 @@ test.describe('the task stays on screen at 200 % text', () => {
    * The audit's own case: Halifax, the task accepted, the landmark's offer in
    * reach. The words are the game's: the landmark's prompt row and the quest
    * step the tracker draws, read from the quest document.
+   *
+   * ADR-0066 §2: the offer and the task take turns. With the offer up the task
+   * is the one-line indicator; with nothing in reach it is the sentence. Both
+   * strips are measured, because both are strips the game draws.
    */
   const quest = JSON.parse(
     readFileSync(
@@ -135,11 +139,26 @@ test.describe('the task stays on screen at 200 % text', () => {
   ) as { readonly steps: readonly { readonly prompt: { readonly en: string; readonly fr: string } }[] };
   const step = quest.steps[1]?.prompt;
 
+  const insideTheStrip = async (page: Page, testIds: readonly string[]): Promise<void> => {
+    const strip = await page.getByTestId('hud').boundingBox();
+    expect(strip).not.toBeNull();
+    const bottom = (strip?.y ?? 0) + (strip?.height ?? 0);
+    for (const testId of testIds) {
+      const box = await page.getByTestId(testId).boundingBox();
+      expect(box, `${testId} is not drawn`).not.toBeNull();
+      expect(
+        (box?.y ?? 0) + (box?.height ?? Number.POSITIVE_INFINITY),
+        `${testId} ends below the strip, where a player has to scroll to find it`,
+      ).toBeLessThanOrEqual(bottom + 1);
+    }
+  };
+
   for (const locale of ['en', 'fr'] as const) {
-    test(`keeps the offer, Settings, Menu and the task inside the strip, in ${locale === 'fr' ? 'French' : 'English'}`, async ({
+    const language = locale === 'fr' ? 'French' : 'English';
+
+    test(`keeps the offer, Settings, Menu and the task's count inside the strip, in ${language}`, async ({
       page,
     }) => {
-      expect(step, 'the Halifax quest has no second step to track').toBeDefined();
       await open(page, {
         screen: 'level',
         locale,
@@ -150,51 +169,60 @@ test.describe('the task stays on screen at 200 % text', () => {
         notice: '1',
         warning: '1',
       });
-      /* The harness draws Ottawa's officer and task; the audit's words replace
-         them in the same elements, so what is measured is the layout. */
-      await page.evaluate(
-        ({ prompt, task }) => {
-          const set = (id: string, value: string): void => {
-            const target = document.querySelector(`[data-testid="${id}"]`);
-            if (target === null) throw new Error(`${id} is not drawn`);
-            target.textContent = value;
-          };
-          set('interact-prompt', prompt);
-          set('hud-quest-tracker', task);
-          const hud = document.querySelector('[data-testid="hud"]');
-          if (hud !== null) hud.scrollTop = 0;
-        },
-        {
-          prompt: text(locale, 'hud.interact.town-clock'),
-          task: labelled(locale, text(locale, 'hud.task'), step?.[locale] ?? ''),
-        },
-      );
+      /* The harness draws Ottawa's officer; the audit's offer replaces it in the
+         same element, so what is measured is the layout. */
+      await page.evaluate((prompt) => {
+        const target = document.querySelector('[data-testid="interact-prompt"]');
+        if (target === null) throw new Error('interact-prompt is not drawn');
+        target.textContent = prompt;
+        const hud = document.querySelector('[data-testid="hud"]');
+        if (hud !== null) hud.scrollTop = 0;
+      }, text(locale, 'hud.interact.town-clock'));
 
-      const strip = await page.getByTestId('hud').boundingBox();
-      expect(strip).not.toBeNull();
-      const bottom = (strip?.y ?? 0) + (strip?.height ?? 0);
-      for (const testId of ['interact-prompt', 'hud-settings-button', 'menu-button', 'hud-quest-tracker']) {
-        const box = await page.getByTestId(testId).boundingBox();
-        expect(box, `${testId} is not drawn`).not.toBeNull();
-        expect(
-          (box?.y ?? 0) + (box?.height ?? Number.POSITIVE_INFINITY),
-          `${testId} ends below the strip, where a player has to scroll to find it`,
-        ).toBeLessThanOrEqual(bottom + 1);
-      }
+      await expect(page.getByTestId('hud-quest-tracker')).toHaveCount(0);
+      await insideTheStrip(page, ['interact-prompt', 'hud-settings-button', 'menu-button', 'hud-task-indicator']);
+    });
+
+    test(`keeps Settings, Menu and the whole task inside the strip with nothing in reach, in ${language}`, async ({
+      page,
+    }) => {
+      expect(step, 'the Halifax quest has no second step to track').toBeDefined();
+      await open(page, {
+        screen: 'level',
+        locale,
+        textScale: '200',
+        task: '1',
+        hint: '1',
+        notice: '1',
+        warning: '1',
+      });
+      await page.evaluate((task) => {
+        const target = document.querySelector('[data-testid="hud-quest-tracker"]');
+        if (target === null) throw new Error('hud-quest-tracker is not drawn');
+        target.textContent = task;
+        const hud = document.querySelector('[data-testid="hud"]');
+        if (hud !== null) hud.scrollTop = 0;
+      }, labelled(locale, text(locale, 'hud.task'), step?.[locale] ?? ''));
+
+      await insideTheStrip(page, ['hud-settings-button', 'menu-button', 'hud-quest-tracker']);
     });
   }
 
   test('draws the task straight after Settings and Menu, before every paragraph', async ({ page }) => {
-    await open(page, { screen: 'level', task: '1', prompt: '1', hint: '1', notice: '1', warning: '1' });
-    const order = await page.evaluate(() =>
-      [...document.querySelectorAll('[data-testid="hud"] [data-testid]')].map(
-        (element) => element.getAttribute('data-testid') ?? '',
-      ),
-    );
-    const at = (id: string): number => order.indexOf(id);
-    expect(at('menu-button')).toBeLessThan(at('hud-quest-tracker'));
-    for (const id of ['storage-warning', 'hud-notice', 'hud-mode-label', 'interact-hint']) {
-      expect(at('hud-quest-tracker'), `${id} is drawn before the task`).toBeLessThan(at(id));
+    for (const prompt of ['1', '0']) {
+      await open(page, { screen: 'level', task: '1', prompt, hint: '1', notice: '1', warning: '1' });
+      const task = prompt === '1' ? 'hud-task-indicator' : 'hud-quest-tracker';
+      const order = await page.evaluate(() =>
+        [...document.querySelectorAll('[data-testid="hud"] [data-testid]')].map(
+          (element) => element.getAttribute('data-testid') ?? '',
+        ),
+      );
+      const at = (id: string): number => order.indexOf(id);
+      expect(at(task), `${task} is not drawn`).toBeGreaterThanOrEqual(0);
+      expect(at('menu-button')).toBeLessThan(at(task));
+      for (const id of ['storage-warning', 'hud-notice', 'hud-mode-label']) {
+        expect(at(task), `${id} is drawn before the task`).toBeLessThan(at(id));
+      }
     }
   });
 });

@@ -357,6 +357,14 @@ export interface QuestController {
    */
   readonly task: string | null;
   /**
+   * Which step of how many the tracker's line is — step `number` of `of`,
+   * counted from one — or `null` when no quest is being played. What the HUD's
+   * bounded indicator draws while an offer holds the strip, "Task 3/5"
+   * (ADR-0066 §2): the quest's own steps, so the count is the same one the
+   * quest document declares and nothing the HUD works out.
+   */
+  readonly taskPosition: { readonly number: number; readonly of: number } | null;
+  /**
    * Where the step being played sends the player — a target id the level
    * places — or `null` when no quest is being played. An `answer` step is asked
    * where the step before it sent the player, so it names that place. What the
@@ -1066,6 +1074,15 @@ export function createQuestController(wiring: QuestWiring): QuestController {
 
     get task(): string | null {
       return trackerLine();
+    },
+
+    get taskPosition(): { readonly number: number; readonly of: number } | null {
+      const quest = active();
+      if (quest === null) return null;
+      const state = stateOf(quest);
+      if (state === undefined) return null;
+      if (currentStep(quest, state) === undefined) return null;
+      return { number: state.stepIndex + 1, of: quest.steps.length };
     },
 
     get taskPlace(): string | null {

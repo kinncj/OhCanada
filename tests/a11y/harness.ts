@@ -944,7 +944,9 @@ switch (screen) {
     });
 
     hud.setMode(level.mode);
-    if (params.get('task') === '1') hud.setTask(level.task);
+    /* Step 3 of Ottawa's 7: the count the bounded indicator draws while an
+       offer is up (ADR-0066 §2). */
+    if (params.get('task') === '1') hud.setTask(level.task, { position: { number: 3, of: 7 } });
     /* `?behind=1`: the stop the task names is behind the player, so "Behind you"
        follows the task line. */
     if (params.get('behind') === '1') hud.setTaskCue('behind');

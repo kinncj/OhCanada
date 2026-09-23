@@ -3061,7 +3061,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
     progress: wiring.progressNow,
     commit: wiring.commitProgress,
     setTask: (step) => {
-      hud.setTask(step);
+      /* Read after the controller has moved, so the count is the step the line
+         names. The indicator draws it while an offer is up (ADR-0066 §2). */
+      const position = questsBuilt?.taskPosition ?? null;
+      hud.setTask(step, position === null ? {} : { position });
       refreshTaskCue();
     },
     onOpen: () => {
@@ -3678,7 +3681,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
      */
     const task = quests.task;
     if (task !== null) {
-      hud.setTask(task, { announce: false });
+      const position = quests.taskPosition;
+      hud.setTask(task, { announce: false, ...(position === null ? {} : { position }) });
       /*
        * And the cue that belongs with it. The resume draw goes straight to the
        * HUD rather than through the controller's `setTask`, which is what
