@@ -171,7 +171,7 @@ test.describe('one switch, in the level (TN-HUD-06)', () => {
     expect([...seen].join(' | ')).toContain('menu-button');
     /* And nothing that is not a control was ever stopped on: the task, the cue,
        the notice and `interact-hint` are paragraphs (`TN-HUD-06`, `TN-REACH-06`). */
-    for (const words of ['hud-quest-tracker', 'hud-task-cue', 'hud-notice', 'interact-hint']) {
+    for (const words of ['hud-quest-tracker', 'hud-task-indicator', 'hud-task-cue', 'hud-notice', 'interact-hint']) {
       expect([...seen]).not.toContain(words);
     }
   });
