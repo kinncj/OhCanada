@@ -202,6 +202,8 @@ const EN = {
   'card.finish': 'Finish',
   'card.close': 'Close',
   'card.closedNotice': 'No problem. We will ask again later.',
+  /* docs/stories/TN-TEACHBACK-read-about-this.md (ADR-0070) */
+  'card.readAbout': 'Read about this',
 
   /* docs/stories/TN-STUDY-study-mode.md */
   'study.open': 'Study',
@@ -1207,6 +1209,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'card.finish': 'Terminer',
   'card.close': 'Fermer',
   'card.closedNotice': 'Pas de problème. Nous reposerons la question plus tard.',
+  /* docs/stories/TN-TEACHBACK-read-about-this.md (ADR-0070) */
+  'card.readAbout': 'Lire à ce sujet',
 
   'study.open': 'Réviser',
   'study.title': 'Révision',
