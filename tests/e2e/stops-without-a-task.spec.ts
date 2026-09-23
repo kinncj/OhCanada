@@ -6,6 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { sharesProposition } from '@application/content/proposition';
 import { hasCopyRow, text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { holdToMove } from './held-drive';
 import { walkInLegs } from './walk';
 
@@ -156,6 +157,7 @@ async function engageAgain(page: Page): Promise<boolean> {
     if (!(await poi.isVisible())) return false;
   }
   await page.getByTestId('poi-card-close').click();
+  await closeTheReaderIfItOpens(page);
   return true;
 }
 
@@ -231,6 +233,7 @@ test.describe('a stop with no task running asks only what it told (ADR-0048)', (
       await prompt.click();
       await expect(poi).toBeVisible({ timeout: 15_000 });
       await page.getByTestId('poi-card-close').click();
+      await closeTheReaderIfItOpens(page);
 
       const outcome = await whatFollows(page);
       expect(outcome, `${stop.id}: neither a question nor the level came back`).not.toBeNull();
