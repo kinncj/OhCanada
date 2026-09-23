@@ -87,6 +87,8 @@ interface LevelDoc {
   readonly textureBudgetBytes?: number | string | null;
   readonly omitBudget?: boolean;
   readonly assets?: readonly { key: string; url: string; bytes?: number; decodedBytes?: number }[];
+  /** How many characters[] entries to place. Omitted means no `characters` field at all. */
+  readonly characters?: number;
 }
 
 interface Fixture {
@@ -98,7 +100,14 @@ interface Fixture {
   readonly manifestLevels?: Record<string, unknown>;
   readonly version?: unknown;
   readonly scales?: readonly number[] | null;
+  /** Repository-relative path -> rig document contents, written as JSON. */
+  readonly rigs?: Record<string, unknown>;
 }
+
+/** A rig document carrying only the part the gate reads: the artboard. */
+const rigDoc = (width: number, height: number): Record<string, unknown> => ({
+  characterSpace: { width, height, heightPx: height - 50 },
+});
 
 let caseId = 0;
 
@@ -129,7 +138,20 @@ async function run(fixture: Fixture): Promise<Run> {
       assets: doc.assets ?? [],
     };
     if (doc.omitBudget !== true) document.textureBudgetBytes = doc.textureBudgetBytes ?? 8 * MIB;
+    if (doc.characters !== undefined) {
+      document.characters = Array.from({ length: doc.characters }, (_, i) => ({
+        characterId: `npc-${i}`,
+        position: { x: 100 * i, y: 0 },
+        facing: 'left',
+      }));
+    }
     writeFileSync(join(root, 'content', 'levels', `${id}.json`), JSON.stringify(document), 'utf8');
+  }
+
+  for (const [rel, contents] of Object.entries(fixture.rigs ?? {})) {
+    const full = join(root, ...rel.split('/'));
+    mkdirSync(dirname(full), { recursive: true });
+    writeFileSync(full, JSON.stringify(contents), 'utf8');
   }
 
   const entries: Record<string, unknown>[] = [];
@@ -804,6 +826,161 @@ describe('the decoded-texture gate passes', () => {
     });
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('ottawa 0.25 MiB of 8.00 MiB');
+  });
+});
+
+/**
+ * ADR-0013's two infra obligations (due 2026-11-08): character surfaces are
+ * CHARGED against each level's budget per device scale, on a line of their own,
+ * and the baseline-model figure is reported beside the charged one without
+ * changing what the gate refuses.
+ *
+ * The surface is the rig's ARTBOARD (`characterSpace.width x height`), not the
+ * crown-to-sole `heightPx`, which is why every fixture rig below carries a
+ * `heightPx` that differs from `height`: charging the wrong term would change
+ * every number asserted here.
+ */
+describe('character surfaces are charged from the rig, on their own line', () => {
+  const CONTENT_RIG = 'content/characters/rig.json';
+  const ART_RIG = 'assets/style/rig-contract.json';
+
+  /** wholesome() with `characters` placed, and a budget to choose. */
+  const withCharacters = (characters: number, budget: number, rigs: Record<string, unknown> | undefined): Fixture => {
+    const base = wholesome(budget);
+    return {
+      ...base,
+      levels: { ottawa: { ...base.levels.ottawa, characters } },
+      ...(rigs === undefined ? {} : { rigs }),
+    };
+  };
+
+  it('prints files, surfaces, the charged sum and the baseline model as separate labelled lines', async () => {
+    // Two characters x 240x470 artboard x 4 B: 902400 B at 1x, x4 = 3609600 B
+    // at 2x. Files are 2.89 MiB at 2x (see wholesome), so the charge is 6.34.
+    const result = await run(withCharacters(2, 8 * MIB, { [CONTENT_RIG]: rigDoc(240, 470) }));
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe('');
+    const lines = result.stdout.split('\n');
+    const files = lines.find((l) => l.includes('ottawa 2.89 MiB of 8.00 MiB')) ?? '';
+    const surfaces = lines.find((l) => l.includes('SURFACES')) ?? '';
+    const charged = lines.find((l) => l.includes('CHARGED')) ?? '';
+    // The file total is still the file total: nothing derived was folded in.
+    expect(files).toContain('FILES, measured from 3 file(s) on disk [1x device 2.21 MiB / 2x device 2.89 MiB]');
+    expect(files).not.toContain('SURFACES');
+    expect(surfaces).toContain('SURFACES 3.44 MiB: 2 character(s) x 240x470 artboard (content/characters/rig.json)');
+    expect(surfaces).toContain('DERIVED from declarations, not measured [1x device 0.86 MiB / 2x device 3.44 MiB]');
+    expect(charged).toContain('CHARGED 6.34 MiB of 8.00 MiB (79%, 1745408 B spare)');
+    expect(charged).toContain('[1x device 3.07 MiB / 2x device 6.34 MiB]');
+    expect(result.stdout).toContain('BASELINE MODEL');
+    expect(result.stdout).toContain('REPORTED ONLY');
+  });
+
+  it('FAILS when a level declares characters and no rig document can be resolved, rather than charging zero', async () => {
+    const result = await run(withCharacters(2, 8 * MIB, undefined));
+    expect(result.status).toBe(1);
+    expect(result.output).toContain(
+      'level "ottawa" declares 2 character(s) in content/levels/ottawa.json, and no rig document can be resolved: ' +
+        'none of content/characters/rig.json, assets/style/rig-contract.json exists.',
+    );
+    expect(result.output).toContain('without the rig the gate would charge them zero');
+    expect(result.stdout).not.toContain('texture-memory: OK');
+  });
+
+  it('does not ask for a rig when no level declares a character', async () => {
+    const result = await run(withCharacters(0, 8 * MIB, undefined));
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('SURFACES 0 B: ottawa declares no characters');
+    expect(result.stdout).toContain('CHARGED 2.89 MiB of 8.00 MiB');
+  });
+
+  it('fails when the files fit on their own and the characters do not fit on top of them', async () => {
+    // 2.89 MiB of files is under 4 MiB; 6.34 MiB charged is not. Before this
+    // obligation the gate passed this level.
+    const result = await run(withCharacters(2, 4 * MIB, { [CONTENT_RIG]: rigDoc(240, 470) }));
+    expect(result.status).toBe(1);
+    expect(result.output).toContain(
+      'level "ottawa" is charged 6.34 MiB (6643200 B) at the worst device scale: 2.89 MiB of texture files ' +
+        'plus 3.44 MiB of character surfaces (2 character(s)',
+    );
+    expect(result.output).toContain('2448896 B over');
+    expect(result.output).toContain('Per device scale: 1x 3.07 MiB, 2x 6.34 MiB');
+    expect(result.output).not.toContain('level "ottawa" holds');
+  });
+
+  it("resolves the rig from art's location when content/ does not hold one", async () => {
+    const result = await run(withCharacters(1, 8 * MIB, { [ART_RIG]: rigDoc(240, 470) }));
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('SURFACES 1.72 MiB: 1 character(s) x 240x470 artboard (assets/style/rig-contract.json)');
+  });
+
+  it('reads both rig locations when both exist, and refuses when they disagree on the artboard', async () => {
+    const agree = await run(
+      withCharacters(1, 8 * MIB, { [CONTENT_RIG]: rigDoc(240, 470), [ART_RIG]: rigDoc(240, 470) }),
+    );
+    expect(agree.status).toBe(0);
+    expect(agree.stdout).toContain('(content/characters/rig.json = assets/style/rig-contract.json)');
+
+    const disagree = await run(
+      withCharacters(1, 8 * MIB, { [CONTENT_RIG]: rigDoc(240, 470), [ART_RIG]: rigDoc(240, 420) }),
+    );
+    expect(disagree.status).toBe(1);
+    expect(disagree.output).toContain(
+      'content/characters/rig.json declares a 240x470 artboard and assets/style/rig-contract.json declares 240x420',
+    );
+  });
+
+  it('refuses a rig whose artboard is not a positive size, rather than charging zero', async () => {
+    const result = await run(withCharacters(1, 8 * MIB, { [CONTENT_RIG]: { characterSpace: { width: 240 } } }));
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('no rig document can be resolved: content/characters/rig.json declares characterSpace');
+  });
+});
+
+describe('the baseline model is reported beside the charge, and refuses nothing', () => {
+  /** 5 MiB of shared art held by both levels, and 1 MiB of ottawa's own. */
+  const sharedFixture = (ottawaBudget: number): Fixture => ({
+    levels: {
+      ottawa: { pois: ['ottawa-bench'], textureBudgetBytes: ottawaBudget },
+      vancouver: { textureBudgetBytes: 8 * MIB },
+    },
+    files: [
+      {
+        path: 'img/hud@1x.aaaaaaaa.webp',
+        group: 'img:hud',
+        scale: 1,
+        keys: ['hud'],
+        levels: ['ottawa', 'vancouver'],
+        pixels: { w: 1024, h: 1280 }, // 5 MiB
+      },
+      {
+        path: 'img/ottawa-bench@1x.bbbbbbbb.webp',
+        group: 'img:ottawa-bench',
+        scale: 1,
+        keys: ['ottawa-bench'],
+        levels: ['ottawa'],
+        pixels: { w: 512, h: 512 }, // 1 MiB
+      },
+    ],
+  });
+
+  it('labels the baseline-model figure and keeps the charged one beside it', async () => {
+    const result = await run(sharedFixture(8 * MIB));
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('CHARGED 6.00 MiB of 8.00 MiB');
+    expect(result.stdout).toContain(
+      'BASELINE MODEL 1.00 MiB of 8.00 MiB (13%) = own files + surfaces, with 1 shared file(s) (5.00 MiB) resident once',
+    );
+    expect(result.stdout).toContain("REPORTED ONLY, not enforced until ADR-0013's engine obligation lands");
+    expect(result.stdout).toContain('BASELINE MODEL 0.00 MiB of 8.00 MiB (0%)');
+  });
+
+  it('still refuses on the charged figure when the baseline model would fit', async () => {
+    // Baseline model: 1 MiB of 5. Charged: 6 MiB of 5. The gate refuses, as
+    // ADR-0013 requires until unload-before-fetch is real and measured.
+    const result = await run(sharedFixture(5 * MIB));
+    expect(result.status).toBe(1);
+    expect(result.output).toContain('level "ottawa" holds 6.00 MiB');
+    expect(result.output).toContain('1048576 B over');
   });
 });
 

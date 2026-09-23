@@ -148,6 +148,9 @@ export function readLevelDocuments(root, fail) {
       // Raw, not validated here: the texture gate owns the rules for it and
       // says so by name when it is missing or impossible.
       textureBudgetBytes: doc.textureBudgetBytes,
+      // Raw as well, for the same reason: the texture gate charges one render
+      // surface per entry (ADR-0013) and names a malformed list itself.
+      characters: doc.characters,
     });
   }
   return docs;
