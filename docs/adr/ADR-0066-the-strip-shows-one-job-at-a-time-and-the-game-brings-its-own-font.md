@@ -431,11 +431,17 @@ are comfortable.
   chosen face is not OFL-1.1 or more permissive, say so — the ADR-0004 amendment is permission, not an
   instruction.
 
-- **OBLIGATION due=2026-11-02 owner=infra** — add `OFL-1.1` to the `licence` enum in
+- ~~**OBLIGATION due=2026-11-02 owner=infra** — add `OFL-1.1` to the `licence` enum in
   `content/schemas/credits.schema.json`, with a description restricting it to font assets and pointing at
   ADR-0004 as amended here. This must land before or with the obligation above; a font with no expressible
   licence is the ADR-0004 enum defect repeating itself, and that one already cost this project six
-  reference photographs.
+  reference photographs.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line, ahead of the faces themselves.
+  `OFL-1.1` is in the enum of `content/schemas/credits.schema.json`, and the `licence` description names ADR-0004
+  as amended by this ADR. The restriction is enforced by the schema, not just described: an `if`/`then` on the
+  credited-asset definition holds an `OFL-1.1` entry to a `path` ending in `.woff2`, `.woff`, `.otf` or
+  `.ttf`. `tests/unit/infra/credit-gate.test.ts` drives the real gate both ways: an OFL font with its
+  `OFL.txt` beside it passes, and an OFL `.png` fails.
 
 - **OBLIGATION due=2026-11-09 owner=ui-a11y** — land §4: the sweep asserts the pinned face is rendering
   before it measures, asserts **lines** against the 4-line and 5-line budgets in §4b rather than a decimal
