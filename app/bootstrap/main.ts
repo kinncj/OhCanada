@@ -135,6 +135,10 @@ import { assetsBaseUrl, createScreenArt, type ScreenArt } from './screen-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { lessonReaderView, resolveReading, type Reading } from './lesson-reading';
 import { grantsPassage } from './verified-passages';
+import {
+  createQuestionReadings,
+  type QuestionReading,
+} from '@application/use-cases/read-about-question';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
@@ -697,6 +701,14 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * `read` step names a lesson in it.
    */
   const lessonLibrary = bundledLessonLibrary();
+  /*
+   * "Read about this" on the question card (ADR-0070): the passages that share a
+   * question's proposition, found in the same catalogue through the same filter
+   * as a `read` step's, and fetched on the first card rather than at boot.
+   */
+  const questionReadings = createQuestionReadings(lessonLibrary, grantsPassage);
+  const readAbout = (question: ShippableQuestion): Promise<QuestionReading | null> =>
+    questionReadings.about(question);
 
   const examSource: ExamSession = createExamSession({
     bank: bundledQuestionBank,
@@ -1227,6 +1239,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       random: optionsRandom,
+      readAbout,
       record: (question, chosenIndex) => {
         recordAnswer(question, chosenIndex);
       },
@@ -1284,6 +1297,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       clock,
+      /* The review after the exam only; the exam itself never asks (ADR-0070). */
+      readAbout,
       /* Option order only, and seeded per *attempt* rather than per sitting, so
          an exam picked back up is the paper the player left rather than the
          same questions rearranged (ADR-0059 §3). Never the exam's own draw,
@@ -1528,6 +1543,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       /* One library for the sitting: a chapter fetched at a plaque is the same
          chunk Learn will read (ADR-0063 §6). */
       lessons: lessonLibrary,
+      readAbout,
       record: recordAnswer,
       /* One options stream for the sitting, shared with Study: see
          `LevelWiring.random` (ADR-0059). */
@@ -1909,6 +1925,12 @@ interface LevelWiring {
    * initial payload.
    */
   readonly lessons: LessonLibrary;
+  /**
+   * The passage(s) a question card's "Read about this" opens once an answer is
+   * judged, found in {@link LevelWiring.lessons} by the proposition rule
+   * (ADR-0070). One for the sitting, shared with the front door's Study.
+   */
+  readonly readAbout: (question: ShippableQuestion) => Promise<QuestionReading | null>;
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   /**
@@ -2333,6 +2355,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       session: wiring.questions,
       store,
       announce: wiring.announce,
+      readAbout: wiring.readAbout,
       /* The level's own options stream, which is the front door's: a drill taken
          on the canal and a question asked at the Peace Tower share one sitting
          (ADR-0059). */
@@ -2572,6 +2595,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     random: wiring.random,
     /* A sheet over the level, as the landmark card before it is (ADR-0045). */
     overLevel: true,
+    readAbout: wiring.readAbout,
     onAnswer: (question, chosenIndex) => {
       /* Asked before the answer is recorded: once it completes the last step,
          no quest is answering any more, and the card needs to know which did. */
