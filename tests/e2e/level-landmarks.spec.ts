@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { expect, test } from '@playwright/test';
 
 /**
@@ -31,6 +34,16 @@ import { expect, test } from '@playwright/test';
  */
 
 const LEVEL_ID = 'ottawa';
+
+/** The budget the level declares, read from the document the build shipped. */
+const TEXTURE_BUDGET_BYTES = (
+  JSON.parse(
+    readFileSync(
+      fileURLToPath(new URL(`../../content/levels/${LEVEL_ID}.json`, import.meta.url)),
+      'utf8',
+    ),
+  ) as { textureBudgetBytes: number }
+).textureBudgetBytes;
 
 test.describe('the page a level is played on', () => {
   test('has exactly one <main>, with the canvas inside it', async ({ page }) => {
@@ -164,6 +177,48 @@ test.describe('the page a level is played on', () => {
     await expect(page.locator('main').getByTestId('level-error')).toHaveCount(1);
     /* And the waiting screen is gone rather than sitting behind it. */
     await expect(page.getByTestId('level-loading')).toBeHidden();
+  });
+
+  test('refuses a level whose art will not fit its texture budget, before fetching its art', async ({
+    page,
+  }) => {
+    /*
+     * `TN-LEVEL-02`, "a level that cannot fit the texture budget is refused, not
+     * crashed into", and ADR-0020 §4's demand that a test show it FIRING.
+     *
+     * The refusal is weighed from `manifest.json`, because every level document
+     * declares `"assets": []` and the sum over that was zero. So the manifest is
+     * the thing made heavy: the real one, fetched from the build, with each of
+     * this level's own images priced at the level's whole budget. Two of them
+     * are over it. Nothing else about the page is touched.
+     */
+    await page.route('**/manifest.json', async (route) => {
+      const response = await route.fetch();
+      const manifest = (await response.json()) as {
+        files: { kind: string; levels: string[]; decodedBytes: number }[];
+      };
+      const heavy = manifest.files.filter(
+        (file) => file.kind === 'image' && file.levels.includes(LEVEL_ID),
+      );
+      expect(heavy.length, 'the manifest lists no image for the level').toBeGreaterThan(1);
+      for (const file of heavy) file.decodedBytes = TEXTURE_BUDGET_BYTES;
+      await route.fulfill({ response, json: manifest });
+    });
+    /* The parallax layers are loaded by the level scene and nothing else, so a
+       request for one is the loader having got past the refusal. */
+    const layerRequests: string[] = [];
+    page.on('request', (request) => {
+      if (request.url().includes(`/img/${LEVEL_ID}-layer-`)) layerRequests.push(request.url());
+    });
+
+    await page.goto(`./?level=${LEVEL_ID}`);
+    await page.waitForSelector('html[data-tn-level="failed"]');
+
+    const card = page.getByTestId('level-error');
+    await expect(card).toBeVisible();
+    await expect(card).toHaveAccessibleName('We could not load Ottawa.');
+    await expect(page.getByTestId('playable')).toHaveCount(0);
+    expect(layerRequests, 'the level fetched its art before refusing it').toEqual([]);
   });
 
   test('takes a link to a level with no document to the level select', async ({ page }) => {

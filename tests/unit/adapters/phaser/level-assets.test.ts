@@ -233,8 +233,8 @@ describe('selectLevelAssets', () => {
  * at one scale only (the landmark, `scalePin: 1` — the pin that recovered 12.85
  * MiB), a layer image, an atlas at two scales, and the `atlas-data` files whose
  * `atlas` back-reference is what pairs a sheet with its frames. Fields the
- * parser ignores (`role`, `group`, `bytes`, `decodedBytes`) are kept exactly as
- * the pipeline writes them, so this reads as the thing it stands in for rather
+ * parser ignores (`role`, `group`, `bytes`) are kept exactly as the pipeline
+ * writes them, so this reads as the thing it stands in for rather
  * than as a minimal shape someone hand-tuned until the test passed.
  */
 const PIPELINE_EXCERPT = {
@@ -324,6 +324,34 @@ describe('against real pipeline output', () => {
     expect(real.ok, real.ok ? '' : real.error.message).toBe(true);
     if (!real.ok) return;
     expect(real.value.files).toHaveLength(PIPELINE_EXCERPT.files.length);
+  });
+
+  /*
+   * `decodedBytes` is TN-LEVEL-02's only input (ADR-0020 §4, `texture-budget.ts`),
+   * so it is read, per file, exactly as written — including the zero on frame
+   * data, which is a real weight and not a missing one.
+   */
+  it('keeps every decoded weight the pipeline recorded', () => {
+    if (!real.ok) return;
+    expect(real.value.files.map((file) => file.decodedBytes)).toEqual(
+      PIPELINE_EXCERPT.files.map((file) => file.decodedBytes),
+    );
+  });
+
+  it('leaves a missing or unusable weight absent rather than calling it zero', () => {
+    const [sheet] = PIPELINE_EXCERPT.files;
+    const result = parseAssetManifest({
+      version: 2,
+      files: [
+        { ...sheet, decodedBytes: undefined },
+        { ...sheet, decodedBytes: '178416' },
+        { ...sheet, decodedBytes: -1 },
+      ],
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.files).toHaveLength(3);
+    for (const file of result.value.files) expect(file).not.toHaveProperty('decodedBytes');
   });
 
   it.each([1, 2])('resolves every key the excerpt provides, at scale %i', (scale) => {
