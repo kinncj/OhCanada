@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-15-what-the-north-produces",
+  "chapter": "Canada's Regions",
+  "order": 15,
+  "title": {
+    "en": "What the North produces",
+    "fr": "Ce que produit le Nord"
+  },
+  "passages": [
+    {
+      "id": "r15-northern-mines",
+      "text": {
+        "en": "In the three northern territories, there are mines for gold, lead, copper, diamonds and zinc.",
+        "fr": "Dans les trois territoires du Nord, il y a des mines d'or, de plomb, de cuivre, de diamants et de zinc."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There are gold, lead, copper, diamond and zinc mines."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r15-northern-oil-and-gas",
+      "text": {
+        "en": "Deposits of oil and gas in the northern territories are being developed.",
+        "fr": "Dans les territoires du Nord, des gisements de pétrole et de gaz sont en cours de mise en valeur."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Oil and gas deposits are being developed."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r15-yukon-mining-today",
+      "text": {
+        "en": "In Yukon, mining is still an important part of the economy.",
+        "fr": "Au Yukon, l'exploitation minière demeure une part importante de l'économie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Mining remains a significant part of the economy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

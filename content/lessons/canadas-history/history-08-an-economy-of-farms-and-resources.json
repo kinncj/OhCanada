@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-08-an-economy-of-farms-and-resources",
+  "chapter": "Canada's History",
+  "order": 8,
+  "title": {
+    "en": "An economy of farms and natural resources",
+    "fr": "Une économie de fermes et de ressources naturelles"
+  },
+  "passages": [
+    {
+      "id": "h8-farming-and-exporting-resources",
+      "text": {
+        "en": "For hundreds of years, Canada's economy rested mostly on farming and on selling natural resources, such as fur, fish and wood, to other countries. These goods moved by road, lake, river and canal.",
+        "fr": "Pendant des siècles, l'économie du Canada a surtout reposé sur l'agriculture et sur l'exportation de ressources naturelles comme la fourrure, le poisson et le bois. Ces marchandises circulaient par les routes, les lacs, les rivières et les canaux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "For centuries Canada’s economy was based mainly on farming and on exporting natural resources such as fur, fish and timber, transported by roads, lakes, rivers and canals."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

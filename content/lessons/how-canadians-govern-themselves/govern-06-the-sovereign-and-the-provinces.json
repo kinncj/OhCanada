@@ -1,0 +1,309 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-06-the-sovereign-and-the-provinces",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 6,
+  "title": {
+    "en": "The Sovereign, the Crown's representatives and the provinces",
+    "fr": "Le souverain, les représentants de la Couronne et les provinces"
+  },
+  "passages": [
+    {
+      "id": "g6-head-of-state",
+      "text": {
+        "en": "Canada is a constitutional monarchy. Its Head of State is a Sovereign, a Queen or King who inherits the role and reigns under the Constitution: the rule of law.",
+        "fr": "Le Canada est une monarchie constitutionnelle. Son chef d'État est un souverain, une reine ou un roi qui hérite de ce rôle et règne selon la Constitution : la primauté du droit."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "As a constitutional monarchy, Canada’s Head of State is a hereditary Sovereign (Queen or King), who reigns in accordance with the Constitution: the rule of law."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-sovereign-is-part-of-parliament",
+      "text": {
+        "en": "The Sovereign is part of Parliament and has an important role that takes no side in party politics. The Sovereign is the focus of citizenship and loyalty. People see this most during royal visits to Canada.",
+        "fr": "Le souverain fait partie du Parlement et joue un rôle important et non partisan. Le souverain est au cœur de la citoyenneté et de l'allégeance. Cela se voit surtout lors des visites royales au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Sovereign is a part of Parliament, playing an important, non-partisan role as the focus of citizenship and allegiance, most visibly during royal visits to Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-symbol-and-guardian",
+      "text": {
+        "en": "The Sovereign is a symbol of Canada's sovereignty. The Sovereign also protects the freedoms set out in our Constitution and reflects our history.",
+        "fr": "Le souverain est un symbole de la souveraineté du Canada. Le souverain protège aussi les libertés garanties par notre Constitution et reflète notre histoire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Her Majesty is a symbol of Canadian sovereignty, a guardian of constitutional freedoms, and a reflection of our history."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-head-of-the-commonwealth",
+      "text": {
+        "en": "As Head of the Commonwealth, the Sovereign links Canada to other nations that work together for social, economic and cultural progress.",
+        "fr": "À titre de chef du Commonwealth, le souverain relie le Canada à d'autres pays qui collaborent au progrès social, économique et culturel."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "As Head of the Commonwealth, the Sovereign links Canada to 53 other nations that cooperate to advance social, economic and cultural progress."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-head-of-state-and-head-of-government",
+      "text": {
+        "en": "Canada keeps the head of state and the head of government clearly apart. The Sovereign is the head of state. The Prime Minister is the head of government and is the one who really directs how the country is governed.",
+        "fr": "Au Canada, le chef d'État et le chef du gouvernement sont clairement distincts. Le souverain est le chef d'État. Le premier ministre est le chef du gouvernement : c'est lui qui dirige vraiment la conduite des affaires du pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "There is a clear distinction in Canada between the head of state—the Sovereign—and the head of government—the Prime Minister, who actually directs the governing of the country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-the-governor-general",
+      "text": {
+        "en": "The Governor General represents the Sovereign in Canada. The Sovereign appoints the Governor General on the Prime Minister's advice, usually for five years.",
+        "fr": "Le gouverneur général représente le souverain au Canada. Le souverain nomme le gouverneur général sur l'avis du premier ministre, habituellement pour cinq ans."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Sovereign is represented in Canada by the Governor General, who is appointed by the Sovereign on the advice of the Prime Minister, usually for five years."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-lieutenant-governors",
+      "text": {
+        "en": "In each of the ten provinces, a Lieutenant Governor represents the Sovereign. The Governor General appoints the Lieutenant Governor on the Prime Minister's advice, also usually for five years.",
+        "fr": "Dans chacune des dix provinces, un lieutenant-gouverneur représente le souverain. Le gouverneur général nomme le lieutenant-gouverneur sur l'avis du premier ministre, habituellement pour cinq ans, lui aussi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 57,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "In each of the ten provinces, the Sovereign is represented by the Lieutenant Governor, who is appointed by the Governor General on the advice of the Prime Minister, also normally for five years."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-territorial-commissioners",
+      "text": {
+        "en": "In each of the three territories, a Commissioner stands for the federal government and has a ceremonial role.",
+        "fr": "Dans chacun des trois territoires, un commissaire représente le gouvernement fédéral et joue un rôle protocolaire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 58,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the three territories, the Commissioner represents the federal government and plays a ceremonial role."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-names-for-provincial-members",
+      "text": {
+        "en": "What members of a legislature are called depends on the province or territory: members of the Legislative Assembly (MLAs), of the National Assembly (MNAs), of the Provincial Parliament (MPPs) or of the House of Assembly (MHAs).",
+        "fr": "Le titre des membres d'une assemblée législative dépend de la province ou du territoire : députés à l'Assemblée législative (MLA), à l'Assemblée nationale (MNA), au Parlement provincial (MPP) ou à la Chambre d'assemblée (MHA)."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 58,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The members of the legislature are called members of the Legislative Assembly (MLAs), members of the National Assembly (MNAs), members of the Provincial Parliament (MPPs) or members of the House of Assembly (MHAs), depending on the province or territory."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-the-premier",
+      "text": {
+        "en": "In a province, the Premier's role is like the Prime Minister's role in the federal government. In the same way, the Lieutenant Governor's role is like the Governor General's.",
+        "fr": "Dans une province, le rôle du premier ministre provincial ressemble à celui du premier ministre fédéral. De la même façon, le rôle du lieutenant-gouverneur ressemble à celui du gouverneur général."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 58,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In each province, the Premier has a role similar to that of the Prime Minister in the federal government, just as the Lieutenant Governor has a role similar to that of the Governor General."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g6-three-branches-of-government",
+      "text": {
+        "en": "Government has three branches: the executive, the legislative and the judicial. They work together, and sometimes pull against each other in a creative way. This helps protect the rights and freedoms of Canadians.",
+        "fr": "Le gouvernement compte trois pouvoirs : l'exécutif, le législatif et le judiciaire. Ils travaillent ensemble, et parfois se font contrepoids de façon créative. Cela aide à protéger les droits et libertés des Canadiens."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 58,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The interplay between the three branches of government—the Executive, Legislative and Judicial—which work together but also sometimes in creative tension, helps to secure the rights and freedoms of Canadians."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

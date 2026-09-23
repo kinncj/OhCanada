@@ -63,6 +63,60 @@
       }
     },
     {
+      "id": "m2-nato-a-military-alliance",
+      "text": {
+        "en": "Canada and other democratic countries in the West formed a military alliance together. It is called the North Atlantic Treaty Organization (NATO).",
+        "fr": "Le Canada et d'autres pays démocratiques de l'Occident ont formé ensemble une alliance militaire. Elle s'appelle l'Organisation du Traité de l'Atlantique Nord (OTAN)."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada joined with other democratic countries of the West to form the North Atlantic Treaty Organization (NATO), a military alliance"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m2-norad-with-the-united-states",
+      "text": {
+        "en": "Canada also teamed up with the United States in NORAD, the North American Aerospace Defence Command.",
+        "fr": "Le Canada s'est aussi associé aux États-Unis au sein du NORAD, le Commandement de la défense aérospatiale de l'Amérique du Nord."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and with the United States in the North American Aerospace Defence Command (NORAD)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
       "id": "m2-joined-the-united-nations",
       "text": {
         "en": "Canada also became a member of international bodies. The United Nations, or UN, is one of them.",
@@ -86,6 +140,60 @@
           "checkedAt": "2026-09-19T14:12:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Canada joined international organizations such as the United Nations (UN)."
+        }
+      }
+    },
+    {
+      "id": "m2-korean-war",
+      "text": {
+        "en": "In the Korean War, from 1950 to 1953, Canada was part of the UN operation that defended South Korea.",
+        "fr": "Pendant la guerre de Corée, de 1950 à 1953, le Canada a participé à l'opération de l'ONU qui défendait la Corée du Sud."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "It participated in the UN operation defending South Korea in the Korean War (1950–53)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "m2-un-peacekeeping-missions",
+      "text": {
+        "en": "Canada has been part of many UN peacekeeping missions. They were in very different places, such as Egypt, Cyprus and Haiti.",
+        "fr": "Le Canada a participé à de nombreuses missions de maintien de la paix de l'ONU. Elles se sont déroulées dans des endroits très différents, comme l'Égypte, Chypre et Haïti."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada has taken part in numerous UN peacekeeping missions in places as varied as Egypt, Cyprus and Haiti"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
         }
       }
     }

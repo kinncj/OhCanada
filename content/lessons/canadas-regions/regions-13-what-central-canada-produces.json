@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-13-what-central-canada-produces",
+  "chapter": "Canada's Regions",
+  "order": 13,
+  "title": {
+    "en": "What Central Canada produces",
+    "fr": "Ce que produit le Centre du Canada"
+  },
+  "passages": [
+    {
+      "id": "r13-ontario-and-quebec-manufacturing",
+      "text": {
+        "en": "Ontario and Quebec make most of the manufactured goods in Canada.",
+        "fr": "L'Ontario et le Québec fabriquent la plupart des produits manufacturés du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Together, Ontario and Quebec produce more than three-quarters of all Canadian manufactured goods"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-quebec-hydro-electricity",
+      "text": {
+        "en": "Quebec has a huge supply of fresh water. Because of it, Quebec produces more hydro-electricity than any other province.",
+        "fr": "Le Québec a d'énormes réserves d'eau douce. Grâce à elles, il produit plus d'hydroélectricité que toute autre province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The province’s huge supply of freshwater has made it Canada’s largest producer of hydro-electricity."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-quebec-pulp-and-paper",
+      "text": {
+        "en": "Quebec is the main producer of pulp and paper in Canada.",
+        "fr": "Le Québec est le principal producteur de pâtes et papiers au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebec is Canada’s main producer of pulp and paper."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-quebec-cutting-edge-industries",
+      "text": {
+        "en": "Quebecers are leaders in new, advanced industries such as pharmaceuticals (medicines) and aeronautics (aircraft).",
+        "fr": "Les Québécois sont des chefs de file dans des industries de pointe comme les produits pharmaceutiques et l'aéronautique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebecers are leaders in cutting-edge industries such as pharmaceuticals and aeronautics."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-toronto-financial-centre",
+      "text": {
+        "en": "Toronto is Canada's biggest city and its main centre for finance.",
+        "fr": "Toronto est la plus grande ville du Canada et son principal centre financier."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Toronto is the largest city in Canada and the country’s main financial centre"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-ontario-services-and-manufacturing",
+      "text": {
+        "en": "In Ontario, many people work in service or manufacturing industries. These industries make a large share of what Canada exports.",
+        "fr": "En Ontario, beaucoup de gens travaillent dans les industries de services ou de fabrication. Ces industries produisent une grande part des exportations du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Many people work in the service or manufacturing industries, which produce a large percentage of Canada’s exports."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r13-ontario-farms",
+      "text": {
+        "en": "Farmers in Ontario raise dairy cattle, beef cattle and poultry, and they grow vegetables and grain.",
+        "fr": "En Ontario, les agriculteurs élèvent des bovins laitiers, des bovins de boucherie et de la volaille, et ils cultivent des légumes et des céréales."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Ontario farmers raise dairy and beef cattle, poultry, and vegetable and grain crops."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

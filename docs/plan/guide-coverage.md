@@ -483,7 +483,13 @@ Two decisions an auditor should see:
 |---|---|---|---|---|---|
 | halifax | `rights` | 38 (`rights-02` is in no pool, and shares its passage with `rights-03`) | 1 (`rights-14`) | 37 | **Authored** |
 | peggys-cove | | | | | Next |
-| quebec-city, ottawa, toronto, winnipeg, prairie-rail, alberta-foothills, vancouver, the-north | | | | | Not started |
+| quebec-city | | | | | Not started |
+| ottawa | `government` | 41 | 0 (`gov-18` matched `g2-both-chambers-study-a-bill` by containment, but that passage stops before "(proposals for new laws)", so it got a passage of its own) | 41 | **Authored** (§7.6) |
+| toronto | | | | | Not started |
+| winnipeg | `justice` | 40 | 36, from the batch-1 ceiling and `rr4`, `elections-05` | 2 | **Authored** (§7.7). 2 cannot be taught, because they are captions |
+| prairie-rail | `modern-canada` | 40 | 0 | 40 | **Authored** (§7.5) |
+| alberta-foothills | `economy` | 51 | 20, from the batch-1 ceiling and `rr5` | 31 | **Authored** (§7.8) |
+| vancouver, the-north | | | | | Not started |
 
 ### 7.3 Question to passage (halifax)
 
@@ -552,3 +558,202 @@ lesson `id` is its identity and renaming it voids its grants. `order` binds no g
 Are (~34) and the Oath (1, `volatile`). That is about 369 passages: §5(a)'s ~472, less the 78 ceiling
 sentences of Rights, Justice and Economy (82 passages) and the 25 teach sentences authored here. Under the owner's rule these wait until every
 level's pools and then every other verified question are taught.
+
+### 7.5 Question to passage (prairie-rail, `modern-canada`)
+
+Authored 2026-09-23, batch 2. The passages were added to the existing `modern-01`…`modern-07` lessons, in
+guide order. A grant binds by passage `id`, so an insertion voids no verified passage. The prefix `mN` is
+`modern-0N`. One Alberta foothills question, `eco-51`, also cites p. 45, so its passage sits in `modern-01`
+and is listed in §7.8.
+
+| Question | Passage |
+|---|---|
+| `mc-01-gatt-became-the-wto` | `m1-gatt-opened-up-trade` |
+| `mc-02-alberta-oil-1947` | `m1-oil-found-in-alberta-1947` |
+| `mc-03-1951-food-shelter-clothing` | `m1-1951-food-shelter-and-clothing` |
+| `mc-04-canada-health-act` | `m1-canada-health-act` |
+| `mc-05-employment-insurance` | `m1-unemployment-insurance-1940` |
+| `mc-06-old-age-security-1927` | `m1-old-age-security-1927` |
+| `mc-07-pension-plans-1965` | `m1-pension-plans-1965` |
+| `mc-08-postwar-trade-partner` | `m1-hard-work-and-trade` |
+| `mc-09-nato-military-alliance` | `m2-nato-a-military-alliance`, `m2-norad-with-the-united-states` |
+| `mc-10-norad-partner` | `m2-norad-with-the-united-states` |
+| `mc-11-korean-war` | `m2-korean-war` |
+| `mc-12-un-peacekeeping-missions` | `m2-un-peacekeeping-missions` |
+| `mc-13-quiet-revolution` | `m3-the-quiet-revolution` |
+| `mc-14-royal-commission-1963` | `m3-royal-commission-led-to-official-languages-act` |
+| `mc-15-la-francophonie` | `m3-la-francophonie-1970` |
+| `mc-16-sovereignty-referendums` | `m3-first-referendum-1980`, `m3-second-referendum-1995` |
+| `mc-17-constitution-1982-and-quebec` | `m3-constitution-amended-1982` |
+| `mc-18-japanese-canadians-gained-the-vote` | `m4-asian-canadians-won-the-vote` |
+| `mc-19-aboriginal-people-granted-the-vote` | `m4-aboriginal-people-vote-1960` |
+| `mc-20-hungarian-refugees-1956` | `m4-hungarian-refugees-1956` |
+| `mc-21-vietnamese-refugees-1975` | `m4-vietnamese-refugees-1975` |
+| `mc-22-group-of-seven` | `m5-group-of-seven` |
+| `mc-23-emily-carr` | `m5-emily-carr` |
+| `mc-24-les-automatistes` | `m5-les-automatistes` |
+| `mc-25-kenojuak-ashevak` | `m5-kenojuak-ashevak` |
+| `mc-26-denys-arcand` | `m6-denys-arcand` |
+| `mc-27-james-naismith-basketball` | `m6-naismith-invented-basketball` |
+| `mc-28-chantal-petitclerc` | `m6-chantal-petitclerc` |
+| `mc-29-wayne-gretzky` | `m6-wayne-gretzky` |
+| `mc-30-terry-fox` | `m6-terry-fox-marathon-of-hope` |
+| `mc-31-rick-hansen` | `m6-rick-hansen` |
+| `mc-32-paul-henderson-1972` | `m6-paul-henderson-1972` |
+| `mc-33-canadian-space-agency` | `m7-canadian-space-agency` |
+| `mc-34-alexander-graham-bell` | `m7-bell-and-the-telephone` |
+| `mc-35-bombardier-snowmobile` | `m7-bombardier-and-the-snowmobile` |
+| `mc-36-sandford-fleming-time-zones` | `m7-fleming-and-time-zones` |
+| `mc-37-evans-and-woodward-light-bulb` | `m7-evans-and-woodward-light-bulb` |
+| `mc-38-fessenden-radio` | `m7-fessenden-and-radio` |
+| `mc-39-hopps-pacemaker` | `m7-hopps-and-the-pacemaker` |
+| `mc-40-banting-and-best-insulin` | `m7-banting-and-best-insulin` |
+
+Decisions an auditor should see:
+
+- **Split quotes.** `mc-06` and `mc-07` share one sentence, so each got the clause it grades:
+  "Old Age Security was devised as early as 1927" and "and the Canada and Quebec Pension Plans in
+  1965.". `mc-16`'s quote spans three sentences, and the middle one is `mc-17`'s proposition. So the two
+  referendums are taught in two passages, and 1982 in a third. `mc-09`'s quote holds NATO and NORAD,
+  and `mc-10` grades NORAD alone, so each clause has its own passage.
+- **`mc-28`.** The passage quotes from "Chantal Petitclerc" onward. The words before that in the question's
+  quote, "double Olympic gold medallist", describe Donovan Bailey in the guide's sentence, so the passage
+  does not give them to Petitclerc.
+- **`mc-40`.** The text says "millions of lives" and does not repeat the guide's "16 million".
+
+### 7.6 Question to passage (ottawa, `government`)
+
+`g2` is `govern-02`, and 7 passages were added to it. `g4`, `g5` and `g6` are the new `govern-04-three-key-facts-and-who-does-what`,
+`govern-05-parliament-and-the-cabinet` and `govern-06-the-sovereign-and-the-provinces`. Eight pooled questions
+cite *Federal Elections* (pp. 62–69). A passage's page must fall inside its lesson's chapter, so those
+passages cannot sit in a `govern-*` file. They are in two new lessons, `e6` = `elections-06-confidence-cabinet-and-opposition`
+and `e7` = `elections-07-local-government-and-first-nations`. `govern-01`, `govern-03` and `elections-01…05` were not
+touched.
+
+| Question | Passage |
+|---|---|
+| `gov-01-three-features` | `g4-three-key-facts` |
+| `gov-03-constitution-act-1867` | `g4-constitution-act-1867` |
+| `gov-04-federal-responsibilities` | `g4-national-and-international-matters`, `g4-federal-responsibilities` |
+| `gov-05-provincial-responsibilities` | `g4-provincial-responsibilities` |
+| `gov-07-provincial-legislative-assembly` | `g4-each-province-elects-an-assembly` |
+| `gov-08-territories-not-provinces` | `g4-the-three-territories` |
+| `gov-10-who-voters-elect` | `g5-the-people-elect-members` |
+| `gov-11-role-of-representatives` | `g5-what-elected-members-do` |
+| `gov-12-non-confidence-vote` | `g5-confidence-of-the-house` |
+| `gov-13-parts-of-parliament` | `g5-three-parts-of-parliament` |
+| `gov-14-provincial-legislature-parts` | `g5-parts-of-a-provincial-legislature` |
+| `gov-15-who-selects-cabinet` | `g5-prime-minister-chooses-the-cabinet` |
+| `gov-16-house-of-commons-elected` | `g5-house-of-commons-is-elected` |
+| `gov-17-senators-appointed` | `g5-senators-are-appointed` |
+| `gov-18-what-a-bill-is` | `g2-what-a-bill-is` (and `g2-both-chambers-study-a-bill`, verified before this pass) |
+| `gov-19-royal-assent` | `g2-no-law-without-royal-assent` |
+| `gov-20-first-reading` | `g2-first-reading` |
+| `gov-20-second-reading` | `g2-second-reading` |
+| `gov-20-committee-stage` | `g2-committee-stage` |
+| `gov-20-senate-stage` | `g2-senate-stage` |
+| `gov-21-vote-right-and-responsibility` | `g2-right-and-responsibility-to-take-part` |
+| `gov-22-head-of-state` | `g6-head-of-state` |
+| `gov-23-sovereign-non-partisan` | `g6-sovereign-is-part-of-parliament` |
+| `gov-24-head-of-government` | `g6-head-of-state-and-head-of-government` |
+| `gov-25-governor-general-appointed` | `g6-the-governor-general` |
+| `gov-27-lieutenant-governor` | `g6-lieutenant-governors` |
+| `gov-28-head-of-commonwealth` | `g6-head-of-the-commonwealth` |
+| `gov-29-territorial-commissioner` | `g6-territorial-commissioners` |
+| `gov-30-three-branches` | `g6-three-branches-of-government` |
+| `gov-31-provincial-member-titles` | `g6-names-for-provincial-members` |
+| `gov-32-premier-role` | `g6-the-premier` |
+| `gov-52-matter-of-confidence` | `e6-a-matter-of-confidence` |
+| `gov-53-what-cabinet-does` | `e6-what-the-cabinet-is`, `e6-cabinet-prepares-the-budget` |
+| `gov-54-official-opposition` | `e6-the-official-opposition` |
+| `gov-55-role-of-opposition` | `e6-what-the-opposition-does` |
+| `gov-58-municipal-council` | `e7-who-sits-on-a-council` |
+| `gov-59-municipal-responsibilities` | `e7-what-municipalities-look-after` |
+| `gov-62-shared-responsibilities` | `e7-shared-responsibilities` |
+| `gov-63-band-chiefs` | `e7-band-chiefs-and-councillors` |
+| `gov-64-indigenous-organizations` | `e7-aboriginal-organizations` |
+| `gov-65-sovereign-guardian-of-freedoms` | `g6-symbol-and-guardian` |
+
+Every passage on p. 57 or p. 63 copies its question's `volatile: true`. The monarch flag's banned terms
+("Her Majesty", "53 other nations", "Her Majesty's Loyal Opposition" and the rest) appear only in
+`source.quote`, where the gate does not search. The text says "the Sovereign" and "other nations".
+
+### 7.7 Question to passage (winnipeg, `justice`)
+
+Batch 1's ceiling already teaches 36 of the 40 pooled questions: `jus-01`…`06`, `08`…`31`, `37`…`39` from
+`justice-01`…`05`, `jus-34` and `jus-35` from `rr4`, and `jus-33` from `elections-05`'s federal column.
+Nothing batch 1 wrote was edited. The two new passages are in new files:
+
+| Question | Passage |
+|---|---|
+| `jus-36-oath-promise-about-the-laws` | `o1-promise-to-observe-the-laws` in the new chapter directory `the-oath-of-citizenship/oath-01-what-new-citizens-promise`. It is `volatile`, because pp. 2–3 are on row 1. It says what the Oath promises and does not reproduce its words (§5(a)). |
+| `jus-40-police-in-major-urban-centres` | `e7-city-police-forces` (p. 66, *Federal Elections*, so it is in `elections-07`) |
+
+**Not taught, and why:**
+
+- `jus-07-lady-justice-blindfold` and `jus-32-role-of-prisons` rest on picture captions, and ADR-0061 §3
+  says a caption may not be a lesson. Unless ADR-0061 §3 is amended (§6.3 already asks this for two other
+  captions), these two stay untaught.
+- `jus-37-what-a-provincial-trial-court-is-called` passes containment through `j4-appeal-and-trial-courts`,
+  but it grades the other name, "the Supreme Court", and batch 1 left that out on purpose (§7.4). The
+  register sources no province's current name for its trial court. So the proposition the question
+  grades is not taught, even though the mechanical check passes.
+
+### 7.8 Question to passage (alberta-foothills, `economy`)
+
+Batch 1's ceiling already teaches 20 of the 51 pooled questions: `eco-01`…`19` from `economy-01`…`03`, and
+`eco-49` from `rr5`. The other 31 cite *Canada's Regions* (29), *Canada's History* (1) and *Modern
+Canada* (1). They are in new files, `r12`…`r15` = `regions-12-what-the-atlantic-provinces-produce`,
+`regions-13-what-central-canada-produces`, `regions-14-what-the-prairies-and-british-columbia-produce` and
+`regions-15-what-the-north-produces`, and `h8` = `history-08-an-economy-of-farms-and-resources`, except
+for `eco-51`, which sits in `modern-01` beside its page.
+
+| Question | Passage |
+|---|---|
+| `eco-20-atlantic-provinces-industries` | `r12-atlantic-coasts-and-resources` |
+| `eco-21-pei-farming` | `r12-prince-edward-island` |
+| `eco-22-labrador-hydro-electricity` | `r12-labrador-hydro-electricity` |
+| `eco-23-nova-scotia-industries` | `r12-nova-scotia-mining-forestry-farming` |
+| `eco-24-saint-john-port-and-manufacturing` | `r12-saint-john` |
+| `eco-25-ontario-quebec-manufacturing` | `r13-ontario-and-quebec-manufacturing` |
+| `eco-26-toronto-financial-centre` | `r13-toronto-financial-centre` |
+| `eco-27-prairies-energy-and-farmland` | `r14-prairies-energy-and-farmland` |
+| `eco-28-manitoba-economy` | `r14-manitoba-economy` |
+| `eco-29-saskatchewan-uranium-and-potash` | `r14-saskatchewan-uranium-and-potash` |
+| `eco-30-alberta-oil-and-gas` | `r14-alberta-oil-and-gas` |
+| `eco-31-bc-forestry-products` | `r14-bc-forestry-products` |
+| `eco-32-northern-mines` | `r15-northern-mines` |
+| `eco-33-northern-oil-and-gas` | `r15-northern-oil-and-gas` |
+| `eco-34-newfoundland-offshore-oil-and-gas` | `r12-newfoundland-offshore-oil-and-gas` |
+| `eco-35-nova-scotia-shipbuilding-and-shipping` | `r12-nova-scotia-ships-and-fisheries` |
+| `eco-36-halifax-deep-water-ice-free-port` | `r12-halifax-port` |
+| `eco-37-new-brunswick-principal-industries` | `r12-new-brunswick-industries` |
+| `eco-38-quebec-pulp-and-paper` | `r13-quebec-pulp-and-paper` |
+| `eco-39-quebec-hydro-electricity` | `r13-quebec-hydro-electricity` |
+| `eco-40-quebec-cutting-edge-industries` | `r13-quebec-cutting-edge-industries` |
+| `eco-41-ontario-exports-from-services-and-manufacturing` | `r13-ontario-services-and-manufacturing` |
+| `eco-42-ontario-farm-products` | `r13-ontario-farms` |
+| `eco-43-saskatchewan-grains-and-oilseeds` | `r14-saskatchewan-grains-and-oilseeds` |
+| `eco-44-saskatoon-mining-headquarters` | `r14-saskatoon` |
+| `eco-45-alberta-oil-sands` | `r14-alberta-oil-sands` |
+| `eco-46-alberta-beef-producer` | `r14-alberta-cattle-ranches` |
+| `eco-47-port-of-vancouver-largest-and-busiest` | `r14-port-of-vancouver` |
+| `eco-48-yukon-mining-today` | `r15-yukon-mining-today` |
+| `eco-50-economy-built-on-farming-and-resources` | `h8-farming-and-exporting-resources` |
+| `eco-51-strong-economy-1945-to-1970` | `m1-strong-economy-1945-to-1970` |
+
+Decisions an auditor should see:
+
+- **Containment is not teaching.** `eco-32` and `eco-33` already pass containment through `regions-09`'s
+  "one-third of Canada's land mass" passage, and `eco-21` overlaps `regions-02`'s red-soil passage
+  without either quote containing the other. Neither existing passage teaches the mines, the oil and gas,
+  or the smallest province, so each question got a passage of its own.
+- **Flagged shares are routed around.** The flagged shares on pp. 98, 100 and 102 stay in `source.quote`
+  only, where the gate does not search. The text says "most" for `eco-25`'s three-quarters and "a large share" for
+  `eco-31`'s one-half, and leaves out `eco-43`'s 40 %. The quote for `eco-43` is the clause "is the
+  country's largest producer of grains and oilseeds.", which the question's quote contains.
+
+**Batch 2 totals:** 117 new passages in the null verification form. By level: prairie-rail 41 for 40
+questions, ottawa 43 for 41 questions, winnipeg 2 for 2 questions (the Oath passage and `e7-city-police-forces`),
+and alberta-foothills 31 for 31 questions (`m1-strong-economy-1945-to-1970` counted here, not under
+prairie-rail). Pools left untaught: `jus-07`, `jus-32` and `jus-37`, explained in §7.7.

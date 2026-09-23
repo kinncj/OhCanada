@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-04-three-key-facts-and-who-does-what",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 4,
+  "title": {
+    "en": "Three key facts, and who is responsible for what",
+    "fr": "Trois faits clés, et qui est responsable de quoi"
+  },
+  "passages": [
+    {
+      "id": "g4-three-key-facts",
+      "text": {
+        "en": "Three key facts describe how Canada is governed. Canada is a federal state, a parliamentary democracy and a constitutional monarchy.",
+        "fr": "Trois faits clés décrivent la façon dont le Canada est gouverné. Le Canada est un État fédéral, une démocratie parlementaire et une monarchie constitutionnelle."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There are three key facts about Canada’s system of government: our country is a federal state, a parliamentary democracy and a constitutional monarchy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-constitution-act-1867",
+      "text": {
+        "en": "In 1867, the British North America Act set out what the federal government and the provinces are each responsible for. Today that law is called the Constitution Act, 1867.",
+        "fr": "En 1867, l'Acte de l'Amérique du Nord britannique a établi les responsabilités du gouvernement fédéral et celles des provinces. Aujourd'hui, cette loi s'appelle la Loi constitutionnelle de 1867."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The responsibilities of the federal and provincial governments were defined in 1867 in the British North America Act, now known as the Constitution Act, 1867."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-national-and-international-matters",
+      "text": {
+        "en": "In Canada's federal state, the federal government looks after matters that concern the whole country and matters that concern other countries.",
+        "fr": "Dans l'État fédéral canadien, le gouvernement fédéral s'occupe des questions qui concernent l'ensemble du pays et de celles qui concernent les autres pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In our federal state, the federal government takes responsibility for matters of national and international concern."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-federal-responsibilities",
+      "text": {
+        "en": "Federal responsibilities include defence, foreign policy, citizenship, criminal law, currency, navigation, and trade and communications between provinces.",
+        "fr": "Les responsabilités fédérales comprennent la défense, la politique étrangère, la citoyenneté, le droit criminel, la monnaie, la navigation, ainsi que le commerce et les communications entre les provinces."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "These include defence, foreign policy, interprovincial trade and communications, currency, navigation, criminal law and citizenship."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-provincial-responsibilities",
+      "text": {
+        "en": "The provinces are in charge of education, health, highways, natural resources, municipal government, and property and civil rights.",
+        "fr": "Les provinces sont responsables de l'éducation, de la santé, des routes, des ressources naturelles, des administrations municipales, ainsi que de la propriété et des droits civils."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The provinces are responsible for municipal government, education, health, natural resources, property and civil rights, and highways."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-each-province-elects-an-assembly",
+      "text": {
+        "en": "Each province elects its own Legislative Assembly, much like the House of Commons in Ottawa.",
+        "fr": "Chaque province élit sa propre Assemblée législative, un peu comme la Chambre des communes à Ottawa."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Every province has its own elected Legislative Assembly, like the House of Commons in Ottawa."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "g4-the-three-territories",
+      "text": {
+        "en": "The three northern territories have small populations and are not provinces. Still, their governments and assemblies do many of the same jobs.",
+        "fr": "Les trois territoires du Nord ont une petite population et ne sont pas des provinces. Pourtant, leurs gouvernements et leurs assemblées remplissent bon nombre des mêmes fonctions."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The three northern territories, which have small populations, do not have the 54 status of provinces, but their governments and assemblies carry out many of the same functions."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

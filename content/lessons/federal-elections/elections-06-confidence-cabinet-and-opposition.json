@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-06-confidence-cabinet-and-opposition",
+  "chapter": "Federal Elections",
+  "order": 6,
+  "title": {
+    "en": "Confidence, the Cabinet and the Opposition",
+    "fr": "La confiance, le Cabinet et l'opposition"
+  },
+  "passages": [
+    {
+      "id": "e6-a-matter-of-confidence",
+      "text": {
+        "en": "When the House of Commons votes on a big issue, such as the budget, the vote is treated as a matter of confidence.",
+        "fr": "Quand la Chambre des communes vote sur une question importante, comme le budget, ce vote est considéré comme une question de confiance."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 62,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "When the House of Commons votes on a major issue such as the budget, this is considered a matter of confidence."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e6-what-the-cabinet-is",
+      "text": {
+        "en": "The Prime Minister and the ministers together form the Cabinet. The Cabinet makes important decisions about how Canada is governed.",
+        "fr": "Le premier ministre et les ministres forment ensemble le Cabinet. Le Cabinet prend des décisions importantes sur la façon dont le Canada est gouverné."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Prime Minister and the Cabinet ministers are called the Cabinet and they make important decisions about how the country is governed."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e6-cabinet-prepares-the-budget",
+      "text": {
+        "en": "The Cabinet prepares the budget and puts forward most new laws.",
+        "fr": "Le Cabinet prépare le budget et propose la plupart des nouvelles lois."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "They prepare the budget and propose most new laws."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e6-the-official-opposition",
+      "text": {
+        "en": "Of the opposition parties, the one with the most members in the House of Commons is called the Official Opposition.",
+        "fr": "Parmi les partis de l'opposition, celui qui compte le plus de députés à la Chambre des communes s'appelle l'opposition officielle."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The opposition party with the most members of the House of Commons is the Official Opposition"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e6-what-the-opposition-does",
+      "text": {
+        "en": "Opposition parties have a job: to oppose the government's proposals peacefully, or to try to make them better.",
+        "fr": "Les partis de l'opposition ont un rôle : s'opposer pacifiquement aux propositions du gouvernement, ou essayer de les améliorer."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 63,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The role of opposition parties is to peacefully oppose or try to improve government proposals."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

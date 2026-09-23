@@ -1,0 +1,255 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-12-what-the-atlantic-provinces-produce",
+  "chapter": "Canada's Regions",
+  "order": 12,
+  "title": {
+    "en": "What the Atlantic Provinces produce",
+    "fr": "Ce que produisent les provinces de l'Atlantique"
+  },
+  "passages": [
+    {
+      "id": "r12-atlantic-coasts-and-resources",
+      "text": {
+        "en": "In Atlantic Canada, the coasts and the natural resources, such as fishing, farming, forestry and mining, have shaped the region's place in Canada's history.",
+        "fr": "Au Canada atlantique, les côtes et les ressources naturelles, comme la pêche, l'agriculture, la foresterie et les mines, ont façonné la place de la région dans l'histoire du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Atlantic Canada’s coasts and natural resources, including fishing, farming, forestry and mining"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-newfoundland-offshore-oil-and-gas",
+      "text": {
+        "en": "Today, in Newfoundland and Labrador, taking oil and gas from under the sea makes up a large part of the economy.",
+        "fr": "Aujourd'hui, à Terre-Neuve-et-Labrador, l'extraction du pétrole et du gaz en mer représente une part importante de l'économie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today off-shore oil and gas extraction contributes a substantial part of the economy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-labrador-hydro-electricity",
+      "text": {
+        "en": "Labrador also has a huge supply of hydro-electric power.",
+        "fr": "Le Labrador possède aussi d'immenses ressources hydroélectriques."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Labrador also has immense hydro-electric resources"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-prince-edward-island",
+      "text": {
+        "en": "Prince Edward Island (P.E.I.) is the smallest province. It is known for its beaches, its red soil and its farming.",
+        "fr": "L'Île-du-Prince-Édouard (Î.-P.-É.) est la plus petite province. Elle est connue pour ses plages, sa terre rouge et son agriculture."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Prince Edward Island (P.E.I.) is the smallest province, known for its beaches, red soil and agriculture"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-nova-scotia-mining-forestry-farming",
+      "text": {
+        "en": "For a long time, Nova Scotia's economy has included coal mining, forestry and farming.",
+        "fr": "Depuis longtemps, l'économie de la Nouvelle-Écosse comprend l'extraction du charbon, la foresterie et l'agriculture."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Nova Scotia has a long history of coal mining, forestry and agriculture"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-nova-scotia-ships-and-fisheries",
+      "text": {
+        "en": "Nova Scotia's identity is tied to building ships, to fishing and to shipping.",
+        "fr": "L'identité de la Nouvelle-Écosse est liée à la construction navale, aux pêches et au transport maritime."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the province’s identity is linked to shipbuilding, fisheries and shipping"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-halifax-port",
+      "text": {
+        "en": "Halifax, the capital of Nova Scotia, is Canada's biggest port on the east coast. Its waters are deep and do not freeze.",
+        "fr": "Halifax, la capitale de la Nouvelle-Écosse, est le plus grand port de la côte est du Canada. Ses eaux sont profondes et ne gèlent pas."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "As Canada’s largest east coast port, deep-water and ice-free, the capital, Halifax"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-new-brunswick-industries",
+      "text": {
+        "en": "In New Brunswick, the main industries are forestry, farming, fisheries, mining, food processing and tourism.",
+        "fr": "Au Nouveau-Brunswick, les principales industries sont la foresterie, l'agriculture, les pêches, les mines, la transformation des aliments et le tourisme."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Forestry, agriculture, fisheries, mining, food processing and tourism are the principal industries."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r12-saint-john",
+      "text": {
+        "en": "Saint John is New Brunswick's biggest city. It is also the province's largest port and its largest centre for manufacturing.",
+        "fr": "Saint John est la plus grande ville du Nouveau-Brunswick. C'est aussi le plus grand port et le plus grand centre manufacturier de la province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Saint John is the largest city, port and manufacturing centre"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
