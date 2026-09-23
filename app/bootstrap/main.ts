@@ -44,6 +44,10 @@
  */
 
 import gameConfigDocument from '@content/game.config.json';
+/* The register's chapter list alone — a named import, so the bundler keeps the
+   eleven titles and page ranges Learn orders its chapters by and drops the rest
+   of the manifest (ADR-0061 §7: Learn must not move the initial payload). */
+import { chapters as guideChapters } from '@content/sources/discover-canada.json';
 
 import { bundledLessonLibrary, bundledQuestionBank } from '@adapters/content';
 import { browserIndexedDb, browserLocalStorage, openProgressStore } from '@adapters/persistence';
@@ -168,6 +172,7 @@ import {
 } from './verified-dialogue';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
+import { createLearnController, type LearnController } from './learn';
 import { readSubjectIndex } from './subjects';
 import { watchPortraitFit, type PortraitWatch } from './portrait-notice';
 import { watchForUpdates, workerContainerOf, type UpdateWatch } from './update-notice';
@@ -1161,6 +1166,12 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     },
     onOpenStudy: openShellStudy,
     /*
+     * Learn, from the title screen (`TN-LEARN-01`, ADR-0061 §1). The same seam as
+     * Study: `./learn.ts` owns the screens because it needs the lesson catalogue
+     * and the grant, mounted into `shell.main` and bracketed with `setModalOpen`.
+     */
+    onOpenLearn: openShellLearn,
+    /*
      * Exam mode, from the title screen (`TN-EXAM-01`) — and the way back to an
      * exam the player left, because `title-exam` is one control with two labels
      * (`OQ-ATTEMPT-4`).
@@ -1229,6 +1240,34 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       },
     });
     shellStudy.open();
+  }
+
+  /*
+   * Learn, kept for the session like Study: the chapters it has fetched stay in
+   * the one catalogue either way, but rebuilding the screen on every open would
+   * lose the chapter the player was in. The catalogue and the grant are the
+   * level reader's own (ADR-0063 §6: one catalogue, one filter).
+   */
+  let shellLearn: LearnController | null = null;
+
+  function openShellLearn(): void {
+    shellLearn ??= createLearnController({
+      host: shell.main,
+      library: lessonLibrary,
+      grant: grantsPassage,
+      guide: guideChapters,
+      store,
+      announce,
+      onOpen: () => {
+        shell.setModalOpen(true);
+        deps.updates.block('learn');
+      },
+      onClose: () => {
+        shell.setModalOpen(false);
+        deps.updates.unblock('learn');
+      },
+    });
+    shellLearn.open();
   }
 
   /*

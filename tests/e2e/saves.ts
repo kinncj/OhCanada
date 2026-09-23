@@ -197,6 +197,31 @@ export function activeQuestSave(quest: SeededQuest, saved: SavedTask): string {
   return encodeSave(progress, now);
 }
 
+/** What a reading scenario sets before the game boots (`TN-LEARN`). */
+export interface ReadingSettings {
+  readonly locale?: 'en' | 'fr';
+  /** 1 is 100 %, 2 is 200 %. */
+  readonly textScale?: number;
+  readonly singleSwitch?: boolean;
+  readonly highContrast?: boolean;
+  readonly dyslexiaFont?: boolean;
+  readonly reducedMotion?: boolean;
+}
+
+/**
+ * A save with a character and settings and nothing else: a returning player on
+ * the title screen, in the language and at the text size a scenario needs.
+ */
+export function settingsSave(settings: ReadingSettings = {}): string {
+  const now = Date.now() as EpochMillis;
+  const { locale = 'en', ...rest } = settings;
+  const progress = withCharacter(
+    newProgress({ ...seededSettings(locale), ...rest }),
+    seededCharacter(),
+  );
+  return encodeSave(progress, now);
+}
+
 /** The save as the game writes one: snapshot, then the JSON codec. */
 function encodeSave(progress: ReturnType<typeof newProgress>, now: EpochMillis): string {
   const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });

@@ -737,6 +737,19 @@ const CSS = `
 .tn-screen ul.tn-screen__options { padding-inline-start: 0; }
 
 /*
+  Learn's chapter and lesson lists are ORDERED lists -- the guide's order is
+  part of what they say -- and .tn-screen ul above never reached an ol, so the
+  buttons sat edge to edge with the default indent. Same shape as the option
+  lists, without the numbers (the order is the reading order, not a label).
+*/
+.tn-screen ol.tn-screen__options {
+  margin: 0;
+  padding-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
   An option's words share the first line with its mark, and wrap beside it.
 
   With a basis of auto the words were one flex item as wide as their whole
