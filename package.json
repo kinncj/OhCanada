@@ -21,6 +21,7 @@
     "validate-content": "node scripts/validate-content.mjs",
     "verify-content": "node scripts/verify-content.mjs",
     "sources": "node scripts/sources.mjs",
+    "guide-coverage": "node scripts/guide-coverage.mjs",
     "verify-art": "node scripts/verify-art.mjs",
     "assets": "node scripts/assets.mjs",
     "check-level-payload": "node scripts/check-level-payload.mjs",
