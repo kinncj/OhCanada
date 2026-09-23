@@ -55,14 +55,15 @@ const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 /**
  * Where the rig lives, as ONE path.
  *
- * Its home is `content/characters/rig.json` (CLAUDE.md, Characters) and it is
- * authored under `assets/` because `assets/**` is the art agent's boundary and
- * `content/**` is not. Moving it is a copy with no key changes and a one-line
- * edit here. Deliberately not a two-path fallback: two live paths for one
- * document is the drift the art bible's own open-question table exists to catch,
- * and a gate that reads whichever it finds cannot tell you which one is stale.
+ * `content/characters/rig.json` (CLAUDE.md, Characters). It was authored under
+ * `assets/style/rig-contract.json` and mirrored here until ADR-0017 §7's
+ * obligation moved it; the `assets/` copy is gone, so `make validate-content`
+ * and this file now read the same document. Deliberately not a two-path
+ * fallback: two live paths for one document is the drift the art bible's own
+ * open-question table exists to catch, and a gate that reads whichever it finds
+ * cannot tell you which one is stale.
  */
-const RIG_FILE = 'assets/style/rig-contract.json';
+const RIG_FILE = 'content/characters/rig.json';
 
 const ajv = new Ajv2020({ allErrors: true, strict: true, allowUnionTypes: true });
 addFormats(ajv);

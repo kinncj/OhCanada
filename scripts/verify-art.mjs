@@ -317,7 +317,7 @@ function printHandoffSummary(keymap, { where = null } = {}) {
   if (builtFromRig.length > 0) {
     console.log(
       `verify-art: ${builtFromRig.length} subject(s) were BUILT FROM THE RIG CONTRACT with an ` +
-        `empty \`renders\` - the picture is composed from assets/style/rig-contract.json, so ` +
+        `empty \`renders\` - the picture is composed from content/characters/rig.json, so ` +
         `the file list is documentation and not an input. The renders are real and were ` +
         `handed over.` +
         (quiet ? '' : ` (${builtFromRig.join(', ')})`),

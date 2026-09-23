@@ -249,7 +249,7 @@ const svg = (width: number, height: number, fill: string): string =>
   `<circle cx="${width / 2}" cy="${height / 2}" r="${Math.min(width, height) / 4}" fill="#ffffff"/>` +
   `</svg>`;
 
-/** The minimum rig-contract.json shape `loadContract` insists on parsing. */
+/** The minimum `content/characters/rig.json` shape `loadContract` insists on parsing. */
 const RIG = {
   characterSpace: { width: 240, height: 470 },
   expressions: { names: ['neutral'] },
@@ -295,7 +295,7 @@ const UNRENDERED = {
 const fixture = (name: string, options: FixtureOptions = {}): string => {
   const root = scratch(name);
   mkdirSync(join(root, 'assets', 'refs'), { recursive: true });
-  mkdirSync(join(root, 'assets', 'style'), { recursive: true });
+  mkdirSync(join(root, 'content', 'characters'), { recursive: true });
   mkdirSync(join(root, 'assets', 'src', 'svg', 'ottawa'), { recursive: true });
 
   const sources = options.sources ?? {
@@ -313,7 +313,7 @@ const fixture = (name: string, options: FixtureOptions = {}): string => {
     JSON.stringify({ subjects: options.subjects ?? [PEACE_TOWER, UNRENDERED] }, null, 2),
   );
   writeFileSync(
-    join(root, 'assets', 'style', 'rig-contract.json'),
+    join(root, 'content', 'characters', 'rig.json'),
     JSON.stringify(options.rig ?? RIG, null, 2),
   );
   for (const [name, document] of Object.entries(options.levels ?? {})) {
@@ -485,7 +485,7 @@ interface Rig {
  * listed today's is a case that stops describing the rig without failing.
  */
 const rigOf = (root: string): Rig =>
-  JSON.parse(readFileSync(join(root, 'assets', 'style', 'rig-contract.json'), 'utf8')) as Rig;
+  JSON.parse(readFileSync(join(root, 'content', 'characters', 'rig.json'), 'utf8')) as Rig;
 
 describe('the gate over the repository as it stands', () => {
   const gate = run(['--root', REPO]);
@@ -3613,8 +3613,8 @@ describe('a mounted subject is a person DOING something', () => {
     // changes what the verifier is looking at while every SVG digest holds -
     // the silent green this harness exists to refuse, one file further up.
     for (const entry of posed) {
-      expect(entry.sources).toContain('style/rig-contract.json');
-      expect(entry.sourceSha256['style/rig-contract.json']).toMatch(/^[0-9a-f]{64}$/);
+      expect(entry.sources).toContain('../content/characters/rig.json');
+      expect(entry.sourceSha256['../content/characters/rig.json']).toMatch(/^[0-9a-f]{64}$/);
     }
   });
 
@@ -3879,7 +3879,7 @@ describe('a slot declared NOT APPLICABLE has to still be invisible', () => {
   const bentRig = (name: string, bend: (rig: Rig) => void): string => {
     const root = scratch(name);
     mkdirSync(join(root, 'assets', 'refs'), { recursive: true });
-    mkdirSync(join(root, 'assets', 'style'), { recursive: true });
+    mkdirSync(join(root, 'content', 'characters'), { recursive: true });
     // Symlinked, not copied: these cases are about the rig, and rasterising the
     // real art is the point of running them against it.
     symlinkSync(join(REPO, 'assets', 'src'), join(root, 'assets', 'src'));
@@ -3906,7 +3906,7 @@ describe('a slot declared NOT APPLICABLE has to still be invisible', () => {
     );
     const rig = rigOf(REPO);
     bend(rig);
-    writeFileSync(join(root, 'assets', 'style', 'rig-contract.json'), JSON.stringify(rig, null, 2));
+    writeFileSync(join(root, 'content', 'characters', 'rig.json'), JSON.stringify(rig, null, 2));
     return root;
   };
 

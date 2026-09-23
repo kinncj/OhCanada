@@ -947,15 +947,6 @@
       "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
-      "path": "style/rig-contract.json",
-      "kind": "shipped",
-      "title": "TrueNorth character rig contract (machine-readable)",
-      "author": "TrueNorth contributors",
-      "licence": "CC-BY-4.0",
-      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. The data form of assets/style/rig-contract.md: artboards, state-machine inputs, skin slots, expressions, events, parts and part windows. Its home is content/characters/rig.json once a rig schema exists; the schema fields it needs are listed in section 9 of rig-contract.md and are requested, not assumed."
-    },
-    {
       "path": "style/rig-contract.riv",
       "kind": "shipped",
       "title": "TrueNorth character rig contract fixture (Rive)",

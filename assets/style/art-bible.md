@@ -743,7 +743,7 @@ record of what was measured and offered.
   cannot be a frame. Each part is authored in the **shared 240 × 470 character space** and its `viewBox` is
   its window in that space, so the window origin is the part's offset and no placement number is written
   twice. `assets/style/rig-contract.md` is the contract — parts, draw order, pivots, slots, state-machine
-  inputs, expressions and events — and `rig-contract.json` is the same thing as data. Sprite-sheet fallbacks
+  inputs, expressions and events — and `content/characters/rig.json` is the same thing as data. Sprite-sheet fallbacks
   use the identical slot names so content JSON never changes.
 - `make assets` rasterises and packs, at 1× and 2×, and runs the per-level payload gate; a failure there
   fails the build. Per-level payload ≤ 8 MB, atlas page ≤ 2048 px, standalone texture ≤ 4096 px, decoded

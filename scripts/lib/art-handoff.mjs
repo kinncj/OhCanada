@@ -253,7 +253,8 @@ const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
 export function loadContract({ root }) {
   const assets = join(root, 'assets');
   const references = readJson(join(assets, 'refs', 'references.json'));
-  const rig = readJson(join(assets, 'style', 'rig-contract.json'));
+  // content/, not assets/: ADR-0017 §7 moved the rig to its CLAUDE.md home.
+  const rig = readJson(join(root, 'content', 'characters', 'rig.json'));
   return { assets, references, rig };
 }
 
@@ -311,7 +312,7 @@ function refuseDrawnText(svg, rel, failures) {
 /**
  * The path a logical render name resolves to on disk.
  *
- * `references.json` and `rig-contract.json` name the LOGICAL asset. A source may
+ * `references.json` and the rig (`content/characters/rig.json`) name the LOGICAL asset. A source may
  * pin itself to 1x by ending its name `@1x`, and scripts/assets.mjs STRIPS that
  * suffix when it forms the asset key -- "the pin is a suffix on a name, not a
  * name". So the two spellings are the same asset, and this resolves through the
@@ -944,7 +945,7 @@ const characterFigure = (plan) => {
     };
   };
   build.distinctFigures = (rig) => distinctFigures(rig, plan);
-  // The picture comes out of `rig-contract.json`, not out of `subject.renders`.
+  // The picture comes out of `content/characters/rig.json`, not out of `subject.renders`.
   // See `checkContract`: that is what lets a subject whose `renders` is empty
   // still be built, and what keeps a FILE-driven builder refusing to.
   build.rigDriven = true;
@@ -1381,7 +1382,7 @@ const onScreenProbe = (rig, window) => {
  * THE RIG CONTRACT IS A SOURCE OF THIS PICTURE, and it is recorded as one. Every
  * other render's `sourceSha256` covers the SVG bytes it was drawn from, which is
  * enough when the SVGs decide the picture. Here they do not: the pose lives in
- * `rig-contract.json`, and re-timing `skate/walk` changes what the verifier is
+ * `content/characters/rig.json`, and re-timing `skate/walk` changes what the verifier is
  * looking at while every SVG digest holds. So the contract file is listed beside
  * the parts, and a verdict about a pose goes stale when the pose moves. It also
  * goes stale when anything else in that file moves, which is a false stale in
@@ -1394,8 +1395,13 @@ const onScreenProbe = (rig, window) => {
  * moving either. It is a smaller hole -- those tables change far less often than
  * a pose -- and closing it touches three subjects that already have verdicts on
  * file. Written down rather than fixed quietly.
+ *
+ * `assets`-relative like every other source, so it climbs out of `assets/`:
+ * ADR-0017 §7 moved the rig to `content/characters/rig.json`. Verdicts recorded
+ * against the old `style/rig-contract.json` key go stale on the move -- the file
+ * they digested is gone -- which is the safe direction and is not papered over.
  */
-const RIG_CONTRACT_SOURCE = 'style/rig-contract.json';
+const RIG_CONTRACT_SOURCE = '../content/characters/rig.json';
 
 const mountedCharacter = (subjectId) => {
   const build = async ({ assets, rig, subject, failures, rng, memo }) => {
@@ -2051,7 +2057,7 @@ const RECIPES = {
 };
 
 /**
- * One figure on one character-space canvas, from `rig-contract.json` alone.
+ * One figure on one character-space canvas, from `content/characters/rig.json` alone.
  *
  * Everything this needs is in that file: `parts` in `z` order, `{brace}`
  * templates resolved against the slot choices, each part drawn at its own
@@ -2411,7 +2417,7 @@ async function probesFor({ subjectId, base, sizeLadder, masks, sizeProbes = null
  * a landmark or a parallax pair it is also the builder's input: `singleSource()`
  * rasterises `renders[0]` and `twoParallaxTiles` matches two of them by name. A
  * CHARACTER SUBJECT'S BUILDER READS NONE OF IT. `characterFigure` and
- * `mountedCharacter` compose from `rig-contract.json` -- `parts` in z order,
+ * `mountedCharacter` compose from `content/characters/rig.json` -- `parts` in z order,
  * `{brace}` templates against the slot choices, `states` for the pose -- and the
  * thirteen paths `player` lists have never been an input to a single pixel of
  * it. They are documentation of what that artboard draws from.
