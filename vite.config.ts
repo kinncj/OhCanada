@@ -87,10 +87,18 @@ export default defineConfig({
          * subject is taken from the path, not from a list, so a new
          * `content/questions/<subject>/` directory chunks itself with no edit
          * here — the same "a subject is a directory" rule the adapter runs on.
+         *
+         * **The lessons, by chapter**, for the same reason and ADR-0061 §7's:
+         * `app/adapters/content/lesson-catalog.ts` globs
+         * `content/lessons/<chapter>/*.json` lazily, and Learn opens a chapter
+         * at a time, so a chapter is one request and nothing is on the title
+         * screen. Without this line a chapter of eleven lessons was eleven.
          */
         manualChunks(id: string): string | undefined {
           const bank = /[/\\]content[/\\]questions[/\\]([^/\\]+)[/\\][^/\\]+\.json$/.exec(id);
           if (bank !== null) return `questions-${bank[1]}`;
+          const chapter = /[/\\]content[/\\]lessons[/\\]([^/\\]+)[/\\][^/\\]+\.json$/.exec(id);
+          if (chapter !== null) return `lessons-${chapter[1]}`;
           if (!id.includes('node_modules')) return undefined;
           if (id.includes('phaser')) return 'phaser';
           if (id.includes('@rive-app')) return 'rive';

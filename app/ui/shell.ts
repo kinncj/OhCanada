@@ -10,6 +10,7 @@
  * cold load ─► title ─┬─ first run ──► creator ──► level select ──► level
  *                     ├─ returning ──► Continue ─────────────────► level
  *                     ├─ returning ──► Choose a level ──────────► level select ──► level
+ *                     ├─ Learn
  *                     ├─ Study
  *                     └─ Settings
  *
@@ -159,6 +160,12 @@ export interface ShellOptions {
    * Absent hides the item rather than offering a control that does nothing.
    */
   readonly onOpenStudy?: () => void;
+  /**
+   * Learn, from the title screen (`TN-LEARN-01`, ADR-0061 §1). The same seam as
+   * {@link ShellOptions.onOpenStudy}: the composition root owns the screens,
+   * because it holds the lesson catalogue and the grant. Absent draws no control.
+   */
+  readonly onOpenLearn?: () => void;
   /**
    * The practice exam, from the title screen (`TN-EXAM-01`).
    *
@@ -609,6 +616,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
     title = createTitleScreen(main, {
       locale: store.current.locale,
       routes: routesOf(),
+      ...(options.onOpenLearn === undefined ? {} : { onOpenLearn: options.onOpenLearn }),
       ...(options.onOpenStudy === undefined ? {} : { onOpenStudy: options.onOpenStudy }),
       ...(options.onOpenExam === undefined ? {} : { onOpenExam: options.onOpenExam }),
       examUnfinished,

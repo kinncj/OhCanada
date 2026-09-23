@@ -236,6 +236,31 @@ const EN = {
   'study.leave': 'Leave',
   'study.leaveKept': 'Your answers so far are saved.',
 
+  /* docs/stories/TN-LEARN-reading-the-guide-by-chapter.md — the Learn surface
+     (ADR-0061). "Learn" and not "Read the guide": "the guide" is the beaver
+     (`TN-GUIDE`). One row per directory of `content/lessons/`, keyed by the
+     directory, holding the chapter's title as the source register prints it. */
+  'learn.open': 'Learn',
+  'learn.title': 'Learn',
+  'learn.intro':
+    'Read the citizenship study guide, one chapter at a time. There is no test here.',
+  'learn.lessons.intro': 'Choose a lesson to read.',
+  'learn.loading': 'Getting the chapter ready.',
+  'learn.error': 'We could not load this chapter. Check your connection and try again.',
+  'learn.error.retry': 'Try again',
+  'learn.chapter.empty': 'There is nothing to read in this chapter right now.',
+  'learn.chapter.rights-and-responsibilities-of-citizenship':
+    'Rights and Responsibilities of Citizenship',
+  'learn.chapter.who-we-are': 'Who We Are',
+  'learn.chapter.canadas-history': "Canada's History",
+  'learn.chapter.modern-canada': 'Modern Canada',
+  'learn.chapter.how-canadians-govern-themselves': 'How Canadians Govern Themselves',
+  'learn.chapter.federal-elections': 'Federal Elections',
+  'learn.chapter.the-justice-system': 'The Justice System',
+  'learn.chapter.canadian-symbols': 'Canadian Symbols',
+  'learn.chapter.canadas-economy': "Canada's Economy",
+  'learn.chapter.canadas-regions': "Canada's Regions",
+
   /* docs/stories/TN-EXAM-starting-and-answering.md */
   /* The practice exam, and it says **practice** on every screen that names it:
      this game is not from IRCC (`title.notOfficial`), and a screen that says
@@ -1244,6 +1269,31 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.exit': 'Retour au jeu',
   'study.leave': 'Quitter',
   'study.leaveKept': 'Vos réponses sont enregistrées.',
+
+  /* docs/stories/TN-LEARN-reading-the-guide-by-chapter.md. The chapter names
+     are *Découvrir le Canada*'s own, pending the check `OQ-LEARN-1` asks for;
+     they are not the level subtitles, which name subjects (ADR-0028). */
+  'learn.open': 'Apprendre',
+  'learn.title': 'Apprendre',
+  'learn.intro':
+    "Lisez le guide d'étude pour la citoyenneté, un chapitre à la fois. Il n'y a pas de test ici.",
+  'learn.lessons.intro': 'Choisissez une leçon à lire.',
+  'learn.loading': 'Préparation du chapitre.',
+  'learn.error':
+    "Nous n'avons pas pu charger ce chapitre. Vérifiez votre connexion et réessayez.",
+  'learn.error.retry': 'Réessayer',
+  'learn.chapter.empty': "Il n'y a rien à lire dans ce chapitre pour le moment.",
+  'learn.chapter.rights-and-responsibilities-of-citizenship':
+    'Les droits et responsabilités liés à la citoyenneté',
+  'learn.chapter.who-we-are': 'Qui sommes-nous?',
+  'learn.chapter.canadas-history': "L'histoire du Canada",
+  'learn.chapter.modern-canada': 'Le Canada moderne',
+  'learn.chapter.how-canadians-govern-themselves': 'Comment les Canadiens se gouvernent-ils?',
+  'learn.chapter.federal-elections': 'Les élections fédérales',
+  'learn.chapter.the-justice-system': 'Le système judiciaire',
+  'learn.chapter.canadian-symbols': 'Les symboles canadiens',
+  'learn.chapter.canadas-economy': "L'économie canadienne",
+  'learn.chapter.canadas-regions': 'Les régions du Canada',
 
   'exam.open': 'Examen pratique',
   'exam.title': 'Examen pratique',
