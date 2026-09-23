@@ -136,11 +136,23 @@ contract test reads **one** path, `assets/style/rig-contract.json` — deliberat
 live paths for one document is precisely the drift the art bible's own open-question table exists to catch,
 and a gate that reads whichever it finds cannot tell you which one is stale.
 
-- **OBLIGATION due=2026-11-08 owner=content** — copy `assets/style/rig-contract.json` to
+- ~~**OBLIGATION due=2026-11-08 owner=content** — copy `assets/style/rig-contract.json` to
   `content/characters/rig.json` with `"$schema": "./../schemas/rig.schema.json"` added and no other key
   change, delete the original, and update `RIG_FILE` in `tests/unit/contracts/rig-is-coherent.test.ts`. Until
   then the rig is validated where it sits and `make validate-content` does not see it, because that gate
-  walks `content/`.
+  walks `content/`.~~
+  **DISCHARGED 2026-09-23** — the copy already existed: `content/characters/rig.json` had been kept as a
+  hand-maintained mirror (`rig-contract.md` §9) since ADR-0022 made it the document `ContentRepository.rig()`
+  loads, carrying `"$schema": "../schemas/rig.schema.json"` — the same path as its siblings in
+  `content/characters/`, without the redundant `./`. It was confirmed identical to the `assets/` copy
+  below its `$comment`, the `assets/` copy was deleted along with its `assets/credits.json` entry, and
+  `RIG_FILE` now reads `content/characters/rig.json`. The obligation undercounted the readers:
+  `a-joint-bends-the-way-a-body-does.test.ts`, `a-rider-stays-on-the-ride.test.ts`,
+  `scripts/lib/art-handoff.mjs` (`loadContract` and `RIG_CONTRACT_SOURCE`) and its gate test
+  also read the old path and were moved with it. One consequence is owned rather than hidden: the
+  mounted-figure verdicts in `docs/art-verification.json` digested `style/rig-contract.json`, which no
+  longer exists, so `make verify-art` reports them as STALE ART until a fresh blind run is recorded — the
+  safe direction, and the one the scorer was built to take. `make validate-content` now walks the only copy.
 
 ## Alternatives considered
 

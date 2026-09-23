@@ -277,10 +277,19 @@ gate documented as unheld.
   `canEngage` is true for a landmark giver and the dialog's accessible name is the landmark's own, in the
   player's language. Held by `tests/unit/bootstrap/a-landmark-giver-opens-a-dialog.test.ts` on a synthesised
   lighthouse and by `front-door.test.ts` end to end on the shipped one. `npc.<id>.name` is read by nothing.
-- **OBLIGATION due=2026-11-13 owner=content** — `docs/stories/TN-DIALOGUE-what-a-quest-giver-says.md` is
+- ~~**OBLIGATION due=2026-11-13 owner=content** — `docs/stories/TN-DIALOGUE-what-a-quest-giver-says.md` is
   written throughout as *what a character says*. Add the landmark case, or record that the story's existing
   scenarios are read as applying to both. A story that names only one kind of giver is the sentence this ADR
-  removed from the schema, surviving in the document that specifies the screen.
+  removed from the schema, surviving in the document that specifies the screen.~~
+  **DISCHARGED 2026-09-23** — both, as `OQ-SPINE-10` recommended. The story now opens with *Two kinds of
+  giver*. It records that every existing scenario applies to both kinds, with "the guide" read as "the
+  giver", and tables the five things that differ: where the giver is placed, where the dialog's name comes
+  from, the portrait, `expression`, and voice. New `TN-DIALOGUE-07` holds the landmark case on the shipped
+  `peggys-point-light`: the four moments, the dialog named from `pois[].name` in both languages, no portrait, a
+  failing build on `expression`, second person only (marked as held by review, per §5), and the
+  exactly-one-placement failure. Three sentences that still assumed a person were corrected in the same
+  change: the naming principle, the schema target's speaker rule, and `TN-DIALOGUE-03`'s name scenario. That
+  scenario asserted `npc.<giver>.name`, which §6 and the engine obligation above retired.
 
 ## References
 

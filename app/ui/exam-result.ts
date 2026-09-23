@@ -30,12 +30,27 @@
  * numbers to survive a build that has moved on, and forbids "TBD", "???" and an
  * empty box in the name's place.
  *
+ * ## "Read about this" in the review (ADR-0070, `TN-TEACHBACK`)
+ *
+ * The review is after the exam, so it is where the exam may teach: an item whose
+ * question has a lesson passage telling its proposition offers "Read about this",
+ * which opens the lesson reader over the review. The views arrive from the
+ * composition root through {@link ExamResult.setReadings}, already resolved,
+ * filtered and in one language, and an item with none offers no control. The
+ * live exam question (`app/ui/exam-screen.ts`) never offers one.
+ *
+ * Because the items can now carry controls, the way out of the review is drawn
+ * **above** the list rather than below it: `TN-RESULT-09` requires that a switch
+ * reach a control that leaves the review without visiting every item first, and
+ * with twenty items that is only true of a control that comes first.
+ *
  * DOM only (ADR-0005). Nothing here counts down and nothing animates: a pass is
  * a line of text, not a firework (`TN-RESULT-11`).
  */
 
 import { count, text, type UiLocale } from './copy';
 import { button, element, mark, replaceChildren } from './dom';
+import { createLessonReader, type LessonReader, type LessonReaderView } from './lesson-reader';
 import { createScreen, type Screen } from './screen';
 
 /** One question of the exam, as the review draws it. */
@@ -107,6 +122,12 @@ export interface ExamResult {
   /** `TN-RESULT-04`, opened from `exam.result.review`. */
   openReview(): void;
   closeReview(): void;
+  /**
+   * What "Read about this" opens for each review item, by the item's position,
+   * or `null` for none (ADR-0070). Already in one language, so the caller sets
+   * them again after a language change. Missing positions are `null`.
+   */
+  setReadings(readings: readonly (LessonReaderView | null)[]): void;
   setLocale(locale: UiLocale): void;
   setSingleSwitch(enabled: boolean, holdMs?: number): void;
   destroy(): void;
@@ -119,6 +140,16 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
   /* The review is a second surface over this one, so the result stands its trap
      and its ring down while the review owns the page (`Screen.setCovered`). */
   let holdMs = options.holdMs ?? 600;
+  let switchEnabled = options.singleSwitch === true;
+  /** Per review item, what "Read about this" opens (ADR-0070). */
+  let readings: readonly (LessonReaderView | null)[] = [];
+  /** Per review item, the slot its control is drawn in, and the control. */
+  let readSlots: HTMLElement[] = [];
+  let readButtons: (HTMLElement | null)[] = [];
+  /** Which item's reading is open, or `-1`. */
+  let reading = -1;
+  /** Built on first use. */
+  let reader: LessonReader | null = null;
 
   const screen: Screen = createScreen(host, {
     id: 'tn-exam-result',
@@ -211,7 +242,8 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
     attrs: { role: 'list' },
   });
   const reviewActions = element(doc, 'div', { className: 'tn-screen__actions' });
-  review.card.append(reviewTitle, reviewList, reviewActions);
+  /* The way out first: see "Read about this in the review" above (`TN-RESULT-09`). */
+  review.card.append(reviewTitle, reviewActions, reviewList);
 
   return {
     element: screen.element,
@@ -236,6 +268,7 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
     },
 
     hide(): void {
+      closeReading(false);
       review.hide();
       screen.hide();
     },
@@ -243,6 +276,19 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
     openReview: openReview,
 
     closeReview,
+
+    setReadings(next): void {
+      readings = next;
+      if (reading >= 0 && reader?.visible === true) {
+        const sheet = readingAt(reading);
+        if (sheet === null) closeReading(true);
+        else reader.setLocale(locale, sheet);
+      }
+      if (review.visible) {
+        paintReadSlots();
+        review.refreshSwitch();
+      }
+    },
 
     setLocale(nextLocale): void {
       locale = nextLocale;
@@ -256,15 +302,96 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
 
     setSingleSwitch(enabled, nextHoldMs): void {
       if (nextHoldMs !== undefined) holdMs = nextHoldMs;
+      switchEnabled = enabled;
       screen.setSwitchEnabled(enabled, holdMs);
       review.setSwitchEnabled(enabled, holdMs);
+      reader?.setSingleSwitch(enabled, holdMs);
     },
 
     destroy(): void {
+      reader?.destroy();
+      reader = null;
       review.destroy();
       screen.destroy();
     },
   };
+
+  /** The view for one item, or `null`: none set, an empty one, or a question gone. */
+  function readingAt(index: number): LessonReaderView | null {
+    const sheet = readings[index] ?? null;
+    if (sheet === null || sheet.passages.length === 0) return null;
+    return sheet;
+  }
+
+  /** Draw "Read about this" into each item that has something to read, and nothing into the rest. */
+  function paintReadSlots(): void {
+    readButtons = readSlots.map((slot, index) => {
+      const offered = view?.review[index]?.prompt !== null && readingAt(index) !== null;
+      if (!offered) {
+        replaceChildren(slot, []);
+        slot.hidden = true;
+        return null;
+      }
+      const control = button(doc, {
+        testId: `exam-review-read-about-${String(index)}`,
+        text: text(locale, 'card.readAbout'),
+        onClick: () => {
+          openReading(index);
+        },
+      });
+      replaceChildren(slot, [control]);
+      slot.hidden = false;
+      return control;
+    });
+  }
+
+  function openReading(index: number): void {
+    const sheet = readingAt(index);
+    if (sheet === null || !review.visible) return;
+    reader ??= createLessonReader(host, {
+      locale,
+      ...(options.announce === undefined ? {} : { announce: options.announce }),
+      onClose: () => {
+        backToReview();
+      },
+      restoreFocusTo: () => (reading >= 0 ? (readButtons[reading] ?? null) : null),
+      singleSwitch: switchEnabled,
+      holdMs,
+      ...(options.now === undefined ? {} : { now: options.now }),
+    });
+    reader.setSingleSwitch(switchEnabled, holdMs);
+    reading = index;
+    review.setCovered(true);
+    reader.setLocale(locale, sheet);
+    reader.show(sheet);
+  }
+
+  function closeReading(back: boolean): void {
+    if (reader?.visible !== true) {
+      reading = -1;
+      return;
+    }
+    reader.hide();
+    if (back) backToReview();
+    else {
+      reading = -1;
+      review.setCovered(false);
+    }
+  }
+
+  /** The reader has gone: the review takes its trap and ring back, on the control that opened it. */
+  function backToReview(): void {
+    const opener = reading >= 0 ? (readButtons[reading] ?? null) : null;
+    reading = -1;
+    review.setCovered(false);
+    if (!review.visible || opener === null) return;
+    if (switchEnabled) {
+      review.ring.refresh();
+      const at = review.ring.items.indexOf(opener);
+      if (at >= 0) review.ring.highlight(at);
+    }
+    if (opener.isConnected) opener.focus({ preventScroll: true });
+  }
 
   function openReview(): void {
     if (review.visible) return;
@@ -277,6 +404,7 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
 
   function closeReview(): void {
     if (!review.visible) return;
+    closeReading(false);
     review.hide();
     screen.setCovered(false);
   }
@@ -462,6 +590,7 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
   function renderReview(): void {
     if (view === null) return;
     reviewTitle.textContent = text(locale, 'exam.result.review');
+    readSlots = [];
 
     replaceChildren(
       reviewList,
@@ -549,6 +678,13 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
           }
         }
 
+        /* "Read about this" (ADR-0070), filled by `paintReadSlots`: empty and
+           hidden for an item with nothing to read. */
+        const slot = element(doc, 'div', { className: 'tn-screen__actions' });
+        slot.hidden = true;
+        readSlots[index] = slot;
+        parts.push(slot);
+
         const row = element(doc, 'li', {
           testId: `exam-review-item-${String(index)}`,
           className: 'tn-screen__row',
@@ -569,5 +705,6 @@ export function createExamResult(host: HTMLElement, options: ExamResultOptions):
         },
       }),
     ]);
+    paintReadSlots();
   }
 }

@@ -30,12 +30,26 @@
  * behind it. When the answer arrives the result gets focus, as it always did, and
  * the way on is scrolled into view with it, so "Next" is never below the fold.
  *
+ * ## "Read about this" (ADR-0070, `TN-TEACHBACK`)
+ *
+ * Once an answer is judged, and only then, the card may offer the lesson
+ * passage that tells what the question asked. The caller hands it over as the
+ * lesson reader's own view — a title and prose, already resolved, filtered and
+ * in one language — through {@link QuestionCard.setReading}; this file resolves
+ * nothing and decides nothing about what is readable. No view, no control: a
+ * question with nothing to read offers nothing, not a disabled button.
+ *
+ * The reader opens as its own dialog beside this one, the card stands its trap
+ * and switch ring down while it is there (`Screen.setCovered`), and closing it
+ * puts focus — and the switch highlight — back on the control that opened it.
+ *
  * DOM only (ADR-0005). Study mode reuses this card exactly (`TN-STUDY`).
  */
 
 import { text, type UiLocale } from './copy';
 import { button, element, mark, replaceChildren } from './dom';
 import { motionIsReduced } from './focus-scroll';
+import { createLessonReader, type LessonReader, type LessonReaderView } from './lesson-reader';
 import { createScreen, type Screen } from './screen';
 
 export interface QuestionView {
@@ -82,7 +96,8 @@ export interface QuestionView {
 
 export interface QuestionCardOptions {
   readonly locale: UiLocale;
-  readonly announce?: (message: string) => void;
+  /** The one live region. `lang` is passed only for prose the lesson reader speaks. */
+  readonly announce?: (message: string, lang?: string) => void;
   /** Emitted once per question, never twice (`question/answered`). */
   readonly onAnswer?: (chosenIndex: number, correct: boolean) => void;
   /** "Next" or "Finish" was chosen. The caller presents the next question or hides. */
@@ -109,6 +124,16 @@ export interface QuestionCard {
   present(question: QuestionView): void;
   hide(): void;
   setLocale(locale: UiLocale): void;
+  /**
+   * The passage(s) "Read about this" opens for the question on screen, or
+   * `null` for none (ADR-0070). Cleared by every {@link QuestionCard.present},
+   * so a reading can never outlive its question; the caller sets it again after
+   * a language change, because the view is already in one language.
+   *
+   * The control is drawn only once the answer is judged and only while a view
+   * is set. An empty view is treated as `null`.
+   */
+  setReading(view: LessonReaderView | null): void;
   setSingleSwitch(enabled: boolean, holdMs?: number): void;
   destroy(): void;
 }
@@ -123,6 +148,12 @@ export function createQuestionCard(
   let answered = false;
   /** Which option the player took, or `-1` before they have. */
   let chosenIndex = -1;
+  /** What "Read about this" opens for the question on screen, if anything. */
+  let reading: LessonReaderView | null = null;
+  /** Built on first use: most cards are never read about. */
+  let reader: LessonReader | null = null;
+  let switchEnabled = options.singleSwitch === true;
+  let switchHoldMs = options.holdMs ?? 600;
 
   const screen: Screen = createScreen(host, {
     id: 'tn-question-card',
@@ -183,6 +214,19 @@ export function createQuestionCard(
   });
   nextButton.hidden = true;
 
+  /*
+   * "Read about this" (ADR-0070). After "Next" and before "Close", so the way on
+   * stays the first control a keyboard or a switch meets after the result, and
+   * this is a side door that comes back to the card rather than a second way on
+   * (ADR-0036 §3).
+   */
+  const readButton = button(doc, {
+    testId: 'question-read-about',
+    text: text(locale, 'card.readAbout'),
+    onClick: openReading,
+  });
+  readButton.hidden = true;
+
   const closeButton = button(doc, {
     testId: 'question-close',
     text: text(locale, 'card.close'),
@@ -192,7 +236,7 @@ export function createQuestionCard(
 
   const actions = element(doc, 'div', {
     className: 'tn-screen__actions',
-    children: [nextButton, closeButton],
+    children: [nextButton, readButton, closeButton],
   });
 
   screen.card.append(place, head, prompt, optionList, feedback, actions);
@@ -221,9 +265,12 @@ export function createQuestionCard(
     },
 
     present(question): void {
+      closeReading(false);
       current = question;
       answered = false;
       chosenIndex = -1;
+      reading = null;
+      readButton.hidden = true;
       notice.hidden = true;
       notice.textContent = '';
 
@@ -247,6 +294,7 @@ export function createQuestionCard(
     },
 
     hide(): void {
+      closeReading(false);
       screen.hide();
     },
 
@@ -254,6 +302,7 @@ export function createQuestionCard(
       locale = next;
       screen.setLocale(next);
       closeButton.textContent = text(next, 'card.close');
+      readButton.textContent = text(next, 'card.readAbout');
       /* Switching language mid-question keeps the question and the answer state
          (`TN-CARD-11`); only the words are redrawn. */
       if (current !== null) {
@@ -262,15 +311,87 @@ export function createQuestionCard(
       }
     },
 
+    setReading(view): void {
+      reading = view !== null && view.passages.length > 0 ? view : null;
+      paintReadButton();
+      if (reader?.visible === true) {
+        /* The language changed under an open reader, or its passage went away. */
+        if (reading === null) closeReading(true);
+        else reader.setLocale(locale, reading);
+      }
+    },
+
     setSingleSwitch(enabled, holdMs): void {
+      switchEnabled = enabled;
+      if (holdMs !== undefined) switchHoldMs = holdMs;
       screen.setSwitchEnabled(enabled, holdMs);
+      reader?.setSingleSwitch(enabled, holdMs);
     },
 
     destroy(): void {
+      reader?.destroy();
+      reader = null;
       notice.remove();
       screen.destroy();
     },
   };
+
+  /** Offered once the answer is judged, and only while there is something to read. */
+  function paintReadButton(): void {
+    const offered = answered && reading !== null && screen.visible;
+    if (readButton.hidden === !offered) return;
+    readButton.hidden = !offered;
+    screen.refreshSwitch();
+  }
+
+  function openReading(): void {
+    if (!answered || reading === null || !screen.visible) return;
+    reader ??= createLessonReader(host, {
+      locale,
+      ...(options.announce === undefined ? {} : { announce: options.announce }),
+      onClose: () => {
+        backToCard();
+      },
+      /* Back to the control that opened it, or — when the reading was
+         withdrawn under it — to the way on. */
+      restoreFocusTo: () => (readButton.hidden ? nextButton : readButton),
+      singleSwitch: switchEnabled,
+      holdMs: switchHoldMs,
+      ...(options.now === undefined ? {} : { now: options.now }),
+    });
+    reader.setSingleSwitch(switchEnabled, switchHoldMs);
+    /* The reader is a dialog of its own, mounted beside this one: an active
+       trap here would mark it inert and a live ring here would answer its
+       presses (`Screen.setCovered`). */
+    screen.setCovered(true);
+    reader.setLocale(locale, reading);
+    reader.show(reading);
+  }
+
+  /** Close the reader, if open. `back` gives the card its focus and ring again. */
+  function closeReading(back: boolean): void {
+    if (reader?.visible !== true) return;
+    reader.hide();
+    if (back) backToCard();
+    else screen.setCovered(false);
+  }
+
+  /**
+   * The reader has gone: the card takes its trap and ring back, and the
+   * highlight lands on "Read about this" rather than on the first control, so
+   * a switch player is where they were (`TN-TEACHBACK-04`).
+   */
+  function backToCard(): void {
+    screen.setCovered(false);
+    if (!screen.visible) return;
+    const back = readButton.hidden ? nextButton : readButton;
+    if (switchEnabled) {
+      screen.ring.refresh();
+      const at = screen.ring.items.indexOf(back);
+      if (at >= 0) screen.ring.highlight(at);
+    }
+    if (back.isConnected && !back.hidden) back.focus({ preventScroll: true });
+  }
 
   /** What the counter counts: the caller's count, or this set. */
   function counted(question: QuestionView): { readonly n: number; readonly of: number } {
@@ -374,6 +495,7 @@ export function createQuestionCard(
      * `TN-STUDY-05`), so both stay. Escape still leaves the card.
      */
     closeButton.hidden = current.index + 1 >= current.total;
+    readButton.hidden = reading === null;
     screen.refreshSwitch();
     /* Focus the result so it is read, rather than left behind on the option
        the player just pressed (`TN-CARD-06`). The scroll is `revealWayOn`'s. */
@@ -514,6 +636,7 @@ export function createQuestionCard(
 
   function dismiss(): void {
     if (!screen.visible) return;
+    closeReading(false);
     const message = text(locale, 'card.closedNotice');
     screen.hide();
     notice.textContent = message;

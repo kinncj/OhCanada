@@ -421,7 +421,9 @@ test.describe('the HUD', () => {
     ];
     for (const options of cases) {
       const label = JSON.stringify(options);
-      await open(page, 'level', { task: true, prompt: true, behind: true, ...options });
+      /* No offer: the cue belongs to the full task row, and with an offer up the
+         task is its indicator and draws no cue (ADR-0066 §2, the next test). */
+      await open(page, 'level', { task: true, behind: true, ...options });
       const tracker = page.locator('[data-testid="hud-quest-tracker"]');
       const cue = page.locator('[data-testid="hud-task-cue"]');
 
@@ -451,6 +453,73 @@ test.describe('the HUD', () => {
 
     await open(page, 'level', { task: true });
     await expect(page.locator('[data-testid="hud-task-cue"]')).toHaveCount(0);
+
+    await open(page, 'level', { task: true, prompt: true, behind: true });
+    await expect(
+      page.locator('[data-testid="hud-task-cue"]'),
+      'the cue was drawn beside the indicator',
+    ).toHaveCount(0);
+  });
+
+  test('draws the task as one line, "Task 3/7", while an offer is up, and in full in the menu (ADR-0066)', async ({
+    page,
+  }) => {
+    /*
+     * ADR-0066 §2: at 200 % text on a 390 x 844 phone an offer and a task
+     * sentence together did not fit a third of the screen. So they take turns:
+     * with an offer up the task is a fixed word and a count, one line in either
+     * language, and its accessible name says the same thing expanded for speech
+     * — never the task sentence hidden in a name. The menu holds the sentence.
+     */
+    const cases = [
+      { locale: 'en' as const },
+      { locale: 'fr' as const },
+      { locale: 'en' as const, textScale: 200 },
+      { locale: 'fr' as const, textScale: 200, font: 'dyslexia' as const },
+      { locale: 'fr' as const, textScale: 200, contrast: 'high' as const },
+    ];
+    for (const options of cases) {
+      const label = JSON.stringify(options);
+      const french = options.locale === 'fr';
+      await open(page, 'level', { task: true, prompt: true, behind: true, ...options });
+      const indicator = page.locator('[data-testid="hud-task-indicator"]');
+
+      await expect(page.locator('[data-testid="hud-quest-tracker"]'), label).toHaveCount(0);
+      await expect(page.locator('[data-testid="hud-task-indicator-text"]'), label).toHaveText(
+        french ? 'Mission 3/7' : 'Task 3/7',
+      );
+      /* What a screen reader reads for the paragraph: the expanded count, and
+         nothing of the sentence a sighted player cannot see here either. */
+      const spoken = await page
+        .locator('[data-testid="hud"]')
+        .ariaSnapshot();
+      expect(spoken, label).toContain(french ? 'Mission 3 sur 7' : 'Task 3 of 7');
+      expect(spoken, label).not.toContain(french ? 'Mission 3/7' : 'Task 3/7');
+      expect(spoken, label).not.toContain(french ? 'Répondez' : 'Answer 3 questions');
+      await expect(indicator, label).not.toHaveAttribute('aria-label', /.*/u);
+      await expect(indicator, label).not.toHaveAttribute('aria-live', /.*/u);
+
+      /* One line, at every scale, in both languages. */
+      const lines = await indicator.evaluate((node) => {
+        const style = getComputedStyle(node);
+        return Math.round(node.getBoundingClientRect().height / Number.parseFloat(style.lineHeight));
+      });
+      expect(lines, `${label}: the indicator wrapped`).toBe(1);
+      expect(await scrollsSideways(page), label).toBe(false);
+
+      const results = await pageScan(page).analyze();
+      expect(results.violations, `${label}: ${violationsOf(results)}`).toEqual([]);
+
+      /* The sentence's permanent home: the menu, one press away. */
+      await page.locator('[data-testid="menu-button"]').click();
+      await expect(page.locator('[data-testid="menu-task"]'), label).toHaveText(
+        french
+          ? 'Votre mission : Répondez à 3 questions (0 sur 3)'
+          : 'Your task: Answer 3 questions (0 of 3)',
+      );
+      const menuScan = await pageScan(page).analyze();
+      expect(menuScan.violations, `${label}, menu: ${violationsOf(menuScan)}`).toEqual([]);
+    }
   });
 
   test('keeps every control at 44 CSS px, at 100 % and at 200 % text', async ({ page }) => {

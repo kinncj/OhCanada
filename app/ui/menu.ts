@@ -1,6 +1,6 @@
 /**
- * The menu the HUD's Menu button opens: Settings, Study, the passport,
- * "About this place", leaving, and Close.
+ * The menu the HUD's Menu button opens: the task in full, then Settings, Study,
+ * the passport, "About this place", leaving, and Close.
  *
  * `TN-HUD-02` is the acceptance criteria. Two of its scenarios decide the shape
  * of this file:
@@ -24,7 +24,7 @@
  * DOM only (ADR-0005).
  */
 
-import { text, type CopyKey, type UiLocale } from './copy';
+import { labelled, text, type CopyKey, type UiLocale } from './copy';
 import { button, element, replaceChildren } from './dom';
 import { createScreen, type Screen } from './screen';
 
@@ -76,6 +76,14 @@ export interface Menu {
   open(): void;
   close(): void;
   setLocale(locale: UiLocale): void;
+  /**
+   * `menu-task`: the task sentence in full, or `null` for none (ADR-0066 §2).
+   *
+   * The strip draws the task as a count while an offer is up, and this is where
+   * the sentence always is — a sheet that scrolls, one press away and already in
+   * the single-switch ring. A paragraph, never an item: it is read, not chosen.
+   */
+  setTask(step: string | null): void;
   setSingleSwitch(enabled: boolean, holdMs?: number): void;
   destroy(): void;
 }
@@ -98,6 +106,7 @@ interface Item {
 export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
   const doc = host.ownerDocument;
   let locale = options.locale;
+  let task: string | null = null;
 
   const screen: Screen = createScreen(host, {
     id: 'tn-menu',
@@ -126,7 +135,15 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
   screen.labelledBy(title);
 
   const actions = element(doc, 'div', { className: 'tn-screen__actions' });
-  screen.card.append(title, actions);
+  /* The task's permanent home (ADR-0066 §2), between the title and the items so
+     it is read before the ways out. Hidden, not merely empty, while there is no
+     task: an empty paragraph is a box with nothing in it. */
+  const taskLine = element(doc, 'p', {
+    testId: 'menu-task',
+    className: 'tn-screen__menu-task',
+  });
+  taskLine.hidden = true;
+  screen.card.append(title, taskLine, actions);
 
   const items = (): readonly Item[] =>
     (
@@ -154,8 +171,14 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
          true over a level, and an unwired one of those is not drawn. */
     ).filter((item) => item.onlyWithHandler !== true || item.handler !== undefined);
 
+  const renderTask = (): void => {
+    taskLine.hidden = task === null;
+    taskLine.textContent = task === null ? '' : labelled(locale, text(locale, 'hud.menu.task'), task);
+  };
+
   const render = (): void => {
     title.textContent = text(locale, 'hud.menu.title');
+    renderTask();
     replaceChildren(actions, [
       ...items().map((item) =>
         button(doc, {
@@ -205,6 +228,11 @@ export function createMenu(host: HTMLElement, options: MenuOptions): Menu {
       screen.setLocale(next);
       render();
       screen.refreshSwitch();
+    },
+    setTask(step): void {
+      if (step === task) return;
+      task = step;
+      renderTask();
     },
     setSingleSwitch(enabled, holdMs): void {
       screen.setSwitchEnabled(enabled, holdMs);

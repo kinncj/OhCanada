@@ -298,9 +298,12 @@ test.describe('a quest giver speaks at the moments a step cannot', () => {
     await page.getByTestId('dialogue-accept').click();
     await expect(page.getByTestId('dialogue')).toBeHidden();
 
-    const tracker = page.getByTestId('hud-quest-tracker');
+    /* Still at the giver, so the strip draws the count and the menu holds the
+       sentence (ADR-0066 §2). */
+    const tracker = page.getByTestId('menu-task');
     const stepStem = (step.prompt.en.split('(')[0] ?? step.prompt.en).trim();
     await expect(tracker).toContainText(stepStem);
+    await expect(page.getByTestId('hud-task-indicator')).toBeVisible();
 
     /* Still standing by the giver, whose prompt now says it was engaged. */
     await page.getByTestId('interact-prompt').click();

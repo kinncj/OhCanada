@@ -74,6 +74,11 @@ export type TitleScreenRoutes =
 export interface TitleScreenOptions {
   readonly locale: UiLocale;
   readonly routes: TitleScreenRoutes;
+  /**
+   * `learn.open`: the guide, by chapter (ADR-0061 §1, `TN-LEARN-01`). Drawn
+   * just before Study — read, then practise, then the exam. Absent hides it.
+   */
+  readonly onOpenLearn?: () => void;
   /** `study.open`. Absent hides the item rather than drawing a dead control. */
   readonly onOpenStudy?: () => void;
   /**
@@ -305,6 +310,16 @@ export function createTitleScreen(host: HTMLElement, options: TitleScreenOptions
              red action. */
           ...(resume === undefined ? { attrs: { 'data-tn-action': 'primary' } } : {}),
           onClick: routes.onChooseLevel,
+        }),
+      );
+    }
+
+    if (options.onOpenLearn !== undefined) {
+      items.push(
+        button(doc, {
+          testId: 'title-learn',
+          text: text(locale, 'learn.open'),
+          onClick: options.onOpenLearn,
         }),
       );
     }

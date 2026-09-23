@@ -605,15 +605,15 @@ describe('walk and skate differ by data only', () => {
     /* The structural half of the claim, and the one that survives a future
        author. Comments are stripped first, because the header explains the modes
        and must be allowed to: what must not exist is a mode name the *code* can
-       branch on. `LOCOMOTION_MODES` lives in `level-document.ts`, where naming
-       the schema's enum is the job. */
+       branch on. The names are `MODES`, read from `content/game.config.json`:
+       a literal here was a fifth copy of the vocabulary, and it had already
+       drifted, missing `toboggan` (ADR-0023). */
     const source = readFileSync(`${REPO_ROOT}app/adapters/phaser/locomotion.ts`, 'utf8');
     const code = source
       .replace(/\/\*[\s\S]*?\*\//gu, '')
       .replace(/^\s*\/\/.*$/gmu, '');
 
-    const offenders = ['walk', 'canoe', 'skate', 'bike', 'train', 'horse', 'skateboard', 'dogsled']
-      .filter((mode) => new RegExp(`['"\`]${mode}['"\`]`, 'u').test(code));
+    const offenders = MODES.filter((mode) => new RegExp(`['"\`]${mode}['"\`]`, 'u').test(code));
 
     expect(
       offenders,

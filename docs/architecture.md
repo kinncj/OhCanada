@@ -344,6 +344,21 @@ control is the scrolling card list, which is why the level count stays a content
 screen-geometry one. A stop's reading is capped at **four passages and 120 words**, counted per stop rather
 than per step, derived from a 17-word median passage against ADR-0061 §1's rejected 155 words per landmark.
 
+**The first tier 3 case is Kingston, from a split of `history` (ADR-0068), and the map gains insets as an
+array (ADR-0069).** Neither has landed yet. The split is by remit and is listed by question id. Québec City
+keeps `history`: the First Peoples to the end of slavery, **32** verified (`hist-01` to `hist-31`, and
+`hist-96`). The new subject `building-canada` takes the War of 1812 to 1945, **65** (`hist-32` to `hist-95`,
+and `hist-97`). No two history questions share a proposition, so any partition passes the ADR-0028 gate. Ids
+do not change, so saved FSRS cards follow their questions. The larger half is the one re-filed, so the half
+at the floor's edge is never re-verified. That voids **65** grants and nothing else. Commit order is forced by
+two rules: the author-role null-form rule, and the pool-in-subject rule. The exam goes from 2 of 20 for every
+subject to 1 or 2, with history's two subjects together at 3.64 on average. Inserting a level into
+`unlockRules.order` must never re-lock a stamped level, and the domain owes that before Kingston lands.
+Kingston sits 18.3 viewBox units from Ottawa and 30.4 from Toronto, against a 45.4-unit pin, so it joins
+Ottawa and Toronto in a second inset. `inset` becomes `insets[]`, each entry with its own affine, and
+`validate-content` gains checks across insets and a pin-separation check. The separation check would fail on
+the shipped Ottawa–Toronto pair at 44.4.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]
@@ -622,18 +637,23 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   narrow the draw with an optional `questionPool`. The quest says *how many* and *from where*; the FSRS
   scheduler in the domain says *which*, from the player's own review state. A quest naming the ids outright
   would make the scheduler decorative; a scheduler ignoring the quest would make the step unbounded.
-- **Reading a lesson (ADR-0061) — the seam is built, and it has no caller yet.** Everything this bullet
-  described as owed exists and is tested; what does not exist is a stop for a `read` step to stand on. The
-  first one was authored on Ottawa's canal locks, measured end to end in both languages, and **withdrawn**:
-  a `read` step needs a stop after the quest's giver, the locks stand before the officer, and three gates
-  refuse every way of moving either — the physics run-up in `tests/e2e/level-ottawa.spec.ts`, the 1 080 px
-  between landmark heroes in `level-art-is-placed-where-it-is-drawn.test.ts`, and `verify-content`'s A4,
-  which binds a landmark's grant to its own `position`. ADR-0063 carries the arithmetic; the short form is
-  that the corridor is 795 px and the sequence needs 1 080. A sixth Ottawa stop (Dow's Lake, ~x 8 700) is
-  commissioned, and the step lands with it. **Passages reachable by playing: 0.**
+- **Reading a lesson (ADR-0061) — the seam is built and it has a caller.** `read-at-dows-lake` in
+  `content/quests/ottawa-parliament-hill.json` is the first `read` step a player can reach: the last step of
+  Ottawa's quest, standing on **Dow's Lake** (x 8 700), reading two passages of
+  `govern-03-the-royal-family-and-the-legislatures`. **Passages reachable by playing: 2 of 302**, where this
+  bullet said 0.
 
-  This bullet stays open for that reason and for no other — not because anything below is unwritten. What
-  exists now, named so the next reader does not have to rediscover it:
+  **Where a `read` step may stand is still not a free choice**, and the reason the first one is last rather
+  than anywhere earlier: `a-quests-answer-steps-fill-in-one-sitting.test.ts` advances at most one
+  non-`answer` step per stop, so a `read` step may not share a stop with a `visit`. Ottawa's canal locks were
+  tried and **withdrawn** — a `read` step needs a stop after the quest's giver, the locks stand before the
+  officer, and three gates refuse every way of moving either (the physics run-up in
+  `tests/e2e/level-ottawa.spec.ts`, the 1 080 px between landmark heroes in
+  `level-art-is-placed-where-it-is-drawn.test.ts`, and `verify-content`'s A4, which binds a landmark's grant
+  to its own `position`). ADR-0063 carries that arithmetic. Dow's Lake is the level's last stop, so the step
+  is the quest's last step and nothing after it can stall.
+
+  What the route is made of, named so the next reader does not have to rediscover it:
   - **The port.** `ContentRepository.chapters()` and `.lessons(chapter)`, and `LessonLibrary` is the `Pick`
     of the two (never a second content port — an adapter that reads bundled JSON already exists).
     `chapters()` answers a `LessonChapter[]` — the directory each chapter lives under and the lesson ids in
@@ -652,11 +672,19 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   - **The wiring.** `app/bootstrap/lesson-reading.ts` (index -> one chapter -> resolve -> filter -> one
     language) and `app/bootstrap/main.ts`, which opens `app/ui/lesson-reader.ts` between a landmark's own
     card and the question after it. `app/domain` gets nothing: a lesson is data, not behaviour.
-  - **What proves it, with no `read` step in `content/`.** `tests/unit/bootstrap/lesson-reading.test.ts`
-    walks the whole route over the **real** catalogue — references taken from the shipped corpus rather than
-    typed in — and asserts that exactly one chapter is fetched, which is the whole of the laziness.
-    `front-door.test.ts` proves the composition with the catalogue faked, and carries a dormant scenario that
-    wakes the day a quest ships a step.
+  - **What proves it.** `tests/unit/bootstrap/lesson-reading.test.ts` walks the whole route over the
+    **real** catalogue — references taken from the shipped corpus rather than typed in — and asserts that
+    exactly one chapter is fetched, which is the whole of the laziness. `front-door.test.ts` proves the
+    composition with the catalogue faked, and its dormant scenario now has a real step to wake on.
+  - **Driven end to end in the browser** (Chromium, 390x844, against a dev server, EN and FR, 100 % and
+    200 % text): from the title screen, up the canal, through the three `answer` steps, to Dow's Lake, where
+    the pavilion's card is followed by the reader — `role="dialog"`, `aria-modal="true"`, named by the
+    lesson's title, both passages letter-for-letter from `content/lessons/`, `Close` at 55.5 px tall at
+    100 % and 111 px at 200 %, no sideways scroll at either size, and the head-of-government question after
+    it. **The end-of-level card opens just before the stop, not after it**, because `exitLineX` puts the
+    arrival line at `right - view/2` (about x 8 400) and Dow's Lake stands past it at 8 700. It says the
+    right thing — "Your task here is not finished yet. Next: Stop and read at Dow's Lake" — and it is
+    geometry that shipped with the stop, not something the step introduced.
 
   **One catalogue, two readers, and that is the load-bearing part (ADR-0063 §6).** Learn will read a chapter
   end to end; a `read` quest step reads a handful of passages named by `questStep.passages[]`, on the path,

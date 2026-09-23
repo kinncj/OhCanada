@@ -29,6 +29,7 @@
  */
 
 import type { ShippableQuestion } from '@application/ports';
+import type { QuestionReading } from '@application/content/question-passages';
 import type { StudyQuestion } from '@application/use-cases/study-session';
 import {
   authoredAt,
@@ -42,6 +43,7 @@ import type { UiLocale } from '@ui/copy';
 import { createQuestionCard, type QuestionCard, type QuestionView } from '@ui/question-card';
 
 import type { DrillCounter } from './landmark-questions';
+import { questionReaderView } from './lesson-reading';
 
 /** How a drill ended, and everything the summary needs to draw itself. */
 export interface DrillResult {
@@ -96,6 +98,13 @@ export interface DrillRunnerOptions {
    * and wrong when the level did.
    */
   readonly onFinished: (result: DrillResult) => void;
+  /**
+   * The lesson passage(s) that tell what a question asks, for the card's "Read
+   * about this" once the answer is judged (ADR-0070). Asked when the card goes
+   * up, so the answer is usually in hand by the time the player has answered.
+   * `null`, or absent, offers no control.
+   */
+  readonly readAbout?: (question: ShippableQuestion) => Promise<QuestionReading | null>;
 }
 
 export interface DrillRunner {
@@ -201,6 +210,10 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
    * the exact order that produced the buttons the player was looking at.
    */
   let showing: OptionOrder | null = null;
+  /** The reading for the question on screen, once it has been found. */
+  let reading: QuestionReading | null = null;
+  /** Bumped with every card, so a slow answer about the last one cannot land on this one. */
+  let presented = 0;
 
   const card: QuestionCard = createQuestionCard(options.host, {
     locale,
@@ -260,8 +273,22 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
      * scheduler.
      */
     showing = shuffledOptionOrder(options.random);
+    reading = null;
+    const mine = (presented += 1);
     card.present(
       questionView(selected, showing, locale, at, queue.length, counting, placing?.(locale) ?? []),
+    );
+    if (options.readAbout === undefined) return;
+    options.readAbout(selected.question).then(
+      (found) => {
+        if (mine !== presented || !live) return;
+        reading = found;
+        card.setReading(questionReaderView(found, locale, localised));
+      },
+      () => {
+        /* Nothing to read is the answer for a catalogue that would not load:
+           the card offers no control, and the drill goes on (ADR-0070 §2). */
+      },
     );
   }
 
@@ -302,6 +329,7 @@ export function createDrillRunner(options: DrillRunnerOptions): DrillRunner {
     setLocale(next): void {
       locale = next;
       card.setLocale(next);
+      if (reading !== null) card.setReading(questionReaderView(reading, next, localised));
     },
 
     setSingleSwitch(enabled, holdMs): void {

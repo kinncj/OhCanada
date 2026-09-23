@@ -63,15 +63,42 @@ if (STEP === undefined) {
   throw new Error(`content/quests/${QUEST.id}.json has no step after its offer.`);
 }
 
-/** The tracker's whole line for that step, labelled and filled as the HUD draws it. */
+/** The step's sentence, filled as the HUD fills it. */
+const sentence = (locale: 'en' | 'fr'): string =>
+  STEP.prompt[locale]
+    .replace(/\{\{done\}\}/gu, '0')
+    .replace(/\{\{count\}\}/gu, String(STEP.count ?? 1));
+
+/** The tracker's whole line for that step, labelled as the HUD draws it. */
 const trackerLine = (locale: 'en' | 'fr'): string =>
-  labelled(
-    locale,
-    text(locale, 'hud.task'),
-    STEP.prompt[locale]
-      .replace(/\{\{done\}\}/gu, '0')
-      .replace(/\{\{count\}\}/gu, String(STEP.count ?? 1)),
+  labelled(locale, text(locale, 'hud.task'), sentence(locale));
+
+/**
+ * The task is on screen, in whichever of its two forms the strip is drawing.
+ *
+ * The offer and the task take turns (ADR-0066 §2): with nothing in reach the
+ * strip draws the sentence, and with something in reach — the guide stands by
+ * the spawn — it draws "Task 2/9". Either way the menu holds the sentence in
+ * full, and that is asserted every time.
+ */
+async function expectTheTask(page: Page, locale: 'en' | 'fr', why: string): Promise<void> {
+  const tracker = page.getByTestId('hud-quest-tracker');
+  const indicator = page.getByTestId('hud-task-indicator-text');
+  await expect(tracker.or(indicator), why).toBeVisible();
+  if (await tracker.isVisible()) {
+    await expect(tracker).toHaveText(trackerLine(locale));
+  } else {
+    await expect(indicator).toHaveText(
+      text(locale, 'hud.task.indicator', {
+        n: STEP_INDEX + 1,
+        total: QUEST?.steps.length ?? 0,
+      }),
+    );
+  }
+  await expect(page.getByTestId('menu-task'), why).toHaveText(
+    labelled(locale, text(locale, 'hud.menu.task'), sentence(locale)),
   );
+}
 
 test.describe.configure({ mode: 'serial', timeout: 240_000 });
 
@@ -103,18 +130,16 @@ test.describe('a level opens with the task the save was left on', () => {
       await expect(html).toHaveAttribute('lang', variant.locale);
       await expect(html).toHaveAttribute('data-tn-text-scale', String(variant.textScale * 100));
 
-      const tracker = page.getByTestId('hud-quest-tracker');
-      await expect(
-        tracker,
+      await expectTheTask(
+        page,
+        variant.locale,
         `the save has ${QUEST.id} on "${STEP.prompt.en}", and the level opened with no task line`,
-      ).toBeVisible();
-      await expect(tracker).toHaveText(trackerLine(variant.locale));
+      );
 
       /* A reload reads the same save back, out of the store it was carried into. */
       await page.reload();
       await levelIsReady(page);
-      await expect(tracker, 'the task line was gone after a reload').toBeVisible();
-      await expect(tracker).toHaveText(trackerLine(variant.locale));
+      await expectTheTask(page, variant.locale, 'the task line was gone after a reload');
     });
   }
 
@@ -124,28 +149,25 @@ test.describe('a level opens with the task the save was left on', () => {
     await seed(page, activeQuestSave(QUEST, { stepIndex: STEP_INDEX, locale: 'en' }));
     await page.goto(`./?level=${START_LEVEL}`);
     await levelIsReady(page);
-    const tracker = page.getByTestId('hud-quest-tracker');
-    await expect(tracker).toHaveText(trackerLine('en'));
+    await expectTheTask(page, 'en', 'the level opened with no task line');
 
     /* Settings opens over the level and closes back into it. */
     await page.getByTestId('hud-settings-button').click();
     await page.getByTestId('setting-language-fr').click();
     await page.getByTestId('settings-close').click();
-    await expect(tracker, 'the task did not follow the language').toHaveText(trackerLine('fr'));
+    await expectTheTask(page, 'fr', 'the task did not follow the language');
 
     await page.getByTestId('hud-settings-button').click();
     await page.getByTestId('setting-language-en').click();
     await page.getByTestId('settings-close').click();
-    await expect(tracker).toHaveText(trackerLine('en'));
+    await expectTheTask(page, 'en', 'the task did not follow the language back');
 
     /* Out to the map and back in: a new HUD, the same task. */
     await page.getByTestId('menu-button').click();
     await page.getByTestId('menu-leave').click();
     await page.getByTestId(`level-card-${START_LEVEL}`).click();
     await levelIsReady(page);
-    await expect(tracker, 'the task line was gone after coming back from the map').toHaveText(
-      trackerLine('en'),
-    );
+    await expectTheTask(page, 'en', 'the task line was gone after coming back from the map');
 
     /* The front door: the title, the creator a save with no character opens,
        and the map. */
@@ -154,15 +176,13 @@ test.describe('a level opens with the task the save was left on', () => {
     await reachLevelSelect(page);
     await page.getByTestId(`level-card-${START_LEVEL}`).click();
     await levelIsReady(page);
-    await expect(tracker, 'the task line was gone after the title and the map').toHaveText(
-      trackerLine('en'),
-    );
+    await expectTheTask(page, 'en', 'the task line was gone after the title and the map');
 
     /* And Continue, one tap from the title. */
     await page.goto('./');
     await expect(page.getByTestId('title-continue')).toBeVisible();
     await page.getByTestId('title-continue').click();
     await levelIsReady(page);
-    await expect(tracker, 'the task line was gone after Continue').toHaveText(trackerLine('en'));
+    await expectTheTask(page, 'en', 'the task line was gone after Continue');
   });
 });

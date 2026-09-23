@@ -737,6 +737,19 @@ const CSS = `
 .tn-screen ul.tn-screen__options { padding-inline-start: 0; }
 
 /*
+  Learn's chapter and lesson lists are ORDERED lists -- the guide's order is
+  part of what they say -- and .tn-screen ul above never reached an ol, so the
+  buttons sat edge to edge with the default indent. Same shape as the option
+  lists, without the numbers (the order is the reading order, not a label).
+*/
+.tn-screen ol.tn-screen__options {
+  margin: 0;
+  padding-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
   An option's words share the first line with its mark, and wrap beside it.
 
   With a basis of auto the words were one flex item as wide as their whole
@@ -2333,6 +2346,38 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   border-inline-end: 0.6em solid currentColor;
   forced-color-adjust: none;
 }
+
+/*
+  The task while an offer holds the strip (ADR-0066 §2): a word and a count,
+  "Task 3/5". One line in either language, and nothing a content author can
+  lengthen, so the strip's height stops depending on a quest file while an offer
+  is up.
+*/
+.tn-hud__task--indicator { font-weight: 800; }
+
+/*
+  The indicator's name, said and not drawn: "Task 3 of 5" beside the visible
+  "Task 3/5", which is hidden from assistive technology instead. The standard
+  visually-hidden recipe, and a declared colour so axe never has to guess the
+  contrast of clipped text.
+*/
+.tn-hud__spoken {
+  position: absolute;
+  inline-size: 0.0625rem;
+  block-size: 0.0625rem;
+  margin: -0.0625rem;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  color: var(--tn-on-night);
+}
+
+/* The menu's line for the task in full, its permanent home (ADR-0066 §2). */
+.tn-screen__menu-task { font-weight: 600; }
+.tn-screen__menu-task[hidden] { display: none; }
 
 .tn-hud__slot {
   display: flex;

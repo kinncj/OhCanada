@@ -63,7 +63,7 @@ import { describe, expect, it } from 'vitest';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 /** The same single path `rig-is-coherent.test.ts` reads. */
-const RIG_FILE = 'assets/style/rig-contract.json';
+const RIG_FILE = 'content/characters/rig.json';
 
 interface RigPart {
   readonly name: string;

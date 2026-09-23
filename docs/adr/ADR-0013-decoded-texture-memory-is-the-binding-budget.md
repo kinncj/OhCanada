@@ -183,12 +183,22 @@ surfaceBytes(level, scale) = level.characters.length
                            × 4
 ```
 
-- **OBLIGATION due=2026-11-08 owner=infra** — charge that figure against each level's budget in
+- ~~**OBLIGATION due=2026-11-08 owner=infra** — charge that figure against each level's budget in
   `scripts/lib/texture-memory.mjs`, per device scale, **reported as a separate line** from the file total.
   Separate because they are differently trustworthy: the file total is re-derived from bytes on disk, and
   this one is derived from a declaration, so folding them into one number would launder an estimate into a
   measurement. The gate must also fail when a level declares characters and no rig document can be resolved,
-  rather than charging zero — a level whose characters cost nothing is the vacuum this project keeps closing.
+  rather than charging zero — a level whose characters cost nothing is the vacuum this project keeps closing.~~
+  **DISCHARGED 2026-09-23** — `scripts/lib/texture-memory.mjs` charges `characters.length ×
+  characterSpace.width × characterSpace.height × scale² × 4` per device scale and prints it on its own
+  `SURFACES` line, labelled *derived from declarations, not measured*; the `FILES` line is unchanged and
+  still re-derived from disk. The gate refuses on a separate `CHARGED` line (files + surfaces) at the worst
+  device scale, with its own failure message naming both terms. The rig is read from
+  `content/characters/rig.json` and `assets/style/rig-contract.json` — every one that exists, refusing if
+  they disagree on the artboard, so the ADR-0017 move needs no edit here. A level that declares characters
+  when no rig resolves fails by name. `tests/unit/infra/texture-memory-gate.test.ts` proves the charge, the
+  separate line, the files-fit-but-characters-do-not refusal, and that the missing-rig failure fires. On
+  the shipped tree every level still passes; the tightest is Winnipeg at 33.32 MiB charged of 36 (93 %).
 
 ### Scale is a per-asset authoring decision, not a rule about a category
 
@@ -339,9 +349,15 @@ number that ships and the number that would ship, so the difference is visible r
   `unload` completes before the next fetch, the shared baseline survives it, and the "back to baseline" check
   fires. A test must show the peak during a transition, not only the steady state — the swap is the moment the
   double charge exists to protect, and it is the one moment no gate observes.
-- **OBLIGATION due=2026-11-08 owner=infra** — in `scripts/lib/texture-memory.mjs`, report the baseline-model
+- ~~**OBLIGATION due=2026-11-08 owner=infra** — in `scripts/lib/texture-memory.mjs`, report the baseline-model
   figure per level alongside the charged one, and label which is which. Do not change what the gate refuses
-  until the obligation above lands.
+  until the obligation above lands.~~
+  **DISCHARGED 2026-09-23** — every level prints a `BASELINE MODEL` line under its `CHARGED` one: own files +
+  surfaces, with the shared files (those `scripts/assets.mjs` charges to every level) resident once and taken
+  off the 64 MiB ceiling, labelled *REPORTED ONLY, not enforced until ADR-0013's engine obligation lands*. The
+  gate still refuses on the charged figure; a test holds a level whose baseline model fits (1 of 5 MiB) to
+  the refusal its charged figure earns (6 of 5 MiB). On the shipped tree the gap is the 10.00 MiB `shared@2x`
+  atlas on every level — Ottawa 41.81 MiB charged vs 31.81 MiB baseline model, of 48.
 
 ## Alternatives considered
 

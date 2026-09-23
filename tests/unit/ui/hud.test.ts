@@ -201,7 +201,9 @@ describe('what the player can do comes first (ADR-0039)', () => {
     };
     expect(index('interact-prompt')).toBeLessThan(index('hud-settings-button'));
     expect(index('hud-settings-button')).toBeLessThan(index('menu-button'));
-    for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'hud-quest-tracker', 'interact-hint']) {
+    /* With an offer up the task is its bounded indicator (ADR-0066 §2), in the
+       task's own slot. */
+    for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'hud-task-indicator', 'interact-hint']) {
       expect(index('menu-button'), `${words} is drawn before Menu`).toBeLessThan(index(words));
     }
     /*
@@ -210,10 +212,11 @@ describe('what the player can do comes first (ADR-0039)', () => {
      * and ended below the screen. The hint is still last.
      */
     for (const words of ['storage-warning', 'hud-notice', 'hud-mode-label', 'interact-hint']) {
-      expect(index('hud-quest-tracker'), `${words} is drawn before the task`).toBeLessThan(
+      expect(index('hud-task-indicator'), `${words} is drawn before the task`).toBeLessThan(
         index(words),
       );
     }
+    expect(order, 'the sentence and the indicator were both drawn').not.toContain('hud-quest-tracker');
     expect(index('hud-mode-label')).toBeLessThan(index('interact-hint'));
     expect(order.at(-1)).toBe('interact-hint');
   });
@@ -309,6 +312,149 @@ describe('the one-time hint, and the notice', () => {
     pressSwitch(page, clock, 100);
     expect(page.doc.byTestId('interact-hint')?.getAttribute('data-switch-highlight')).toBeNull();
     expect(page.doc.byTestId('hud-notice')?.getAttribute('data-switch-highlight')).toBeNull();
+  });
+});
+
+/**
+ * ADR-0066 §2: the strip shows one job at a time. At 200 % text on a 390 px
+ * phone an offer and a task sentence together did not fit a third of the
+ * screen on ten of ten levels, so while an offer is up the task is a word and a
+ * count, and the sentence lives in the menu. Line geometry is `tests/a11y`'s;
+ * what is drawn, what is said and what is announced is proved here.
+ */
+describe('the offer and the task take turns (ADR-0066)', () => {
+  const clock = 'Find the Town Clock';
+  const position = { number: 3, of: 9 };
+  const highlighted = (page: FakePage): string | null =>
+    page.doc.querySelector('[data-switch-highlight="true"]')?.getAttribute('data-testid') ?? null;
+
+  it('draws the task in full while nothing is in reach', () => {
+    const { hud, at } = mount();
+    hud.setTask(clock, { position });
+    expect(at('hud-quest-tracker')?.textContent).toBe('Task: Find the Town Clock');
+    expect(at('hud-task-indicator')).toBeNull();
+  });
+
+  it('collapses the task to "Task 3/9" while an offer is up, and gives it back after', () => {
+    const { hud, at } = mount();
+    hud.setTask(clock, { position });
+    hud.setPrompt('Look at the clock');
+
+    expect(at('hud-quest-tracker'), 'the sentence was drawn beside the offer').toBeNull();
+    const indicator = at('hud-task-indicator');
+    expect(indicator?.tagName).toBe('P');
+    expect(at('hud-task-indicator-text')?.textContent).toBe('Task 3/9');
+
+    hud.setPrompt(null);
+    expect(at('hud-task-indicator')).toBeNull();
+    expect(at('hud-quest-tracker')?.textContent).toBe('Task: Find the Town Clock');
+  });
+
+  it('names the indicator with the same thing expanded, never the hidden sentence', () => {
+    /*
+     * The visible words are hidden from assistive technology and a visually
+     * hidden twin says them for speech. What must not happen is the full task
+     * sentence reaching a screen reader while a sighted player sees a count:
+     * two different strips for two different players (ADR-0066 §2, TN-REACH).
+     */
+    const { hud, at } = mount();
+    hud.setTask(clock, { position });
+    hud.setPrompt('Look at the clock');
+
+    const indicator = at('hud-task-indicator');
+    expect(indicator?.getAttribute('aria-label'), 'a name on a paragraph').toBeNull();
+    expect(at('hud-task-indicator-text')?.getAttribute('aria-hidden')).toBe('true');
+    const name = at('hud-task-indicator-name');
+    expect(name?.getAttribute('aria-hidden')).toBeNull();
+    expect(name?.className).toBe('tn-hud__spoken');
+    expect(name?.textContent).toBe('Task 3 of 9');
+    expect(indicator?.textContent ?? '').not.toContain(clock);
+    expect(indicator?.getAttribute('aria-live')).toBeNull();
+  });
+
+  it('is French, with the colon rule and « sur » for speech', () => {
+    const { hud, at } = mount({ locale: 'fr' });
+    hud.setTask("Trouvez la tour de l'horloge", { position });
+    hud.setPrompt("Regarder l'horloge");
+    expect(at('hud-task-indicator-text')?.textContent).toBe('Mission 3/9');
+    expect(at('hud-task-indicator-name')?.textContent).toBe('Mission 3 sur 9');
+
+    const english = mount();
+    english.hud.setTask(clock, { position });
+    english.hud.setPrompt('Look at the clock');
+    english.hud.setLocale('fr');
+    expect(english.at('hud-task-indicator-text')?.textContent).toBe('Mission 3/9');
+  });
+
+  it('draws the word alone when no position was given, still one bounded line', () => {
+    const { hud, at } = mount();
+    hud.setTask(clock);
+    hud.setPrompt('Look at the clock');
+    expect(at('hud-task-indicator-text')?.textContent).toBe('Task');
+    expect(at('hud-task-indicator-name')?.textContent).toBe('Task');
+  });
+
+  it('keeps "Behind you" with the full row and never beside the indicator', () => {
+    const { hud, at, announce } = mount();
+    hud.setTask(clock, { position });
+    hud.setTaskCue('behind');
+    expect(at('hud-task-cue')?.textContent).toBe('Behind you');
+
+    announce.mockClear();
+    hud.setPrompt('Look at the clock');
+    expect(at('hud-task-cue'), 'the cue was drawn beside the indicator').toBeNull();
+
+    hud.setPrompt(null);
+    const slot = (at('hud-quest-tracker')?.parentElement?.children ?? []).map((child) =>
+      child.getAttribute('data-testid'),
+    );
+    expect(slot).toEqual(['hud-quest-tracker', 'hud-task-cue']);
+    /* Said once when it became true, and not again for the offer coming and
+       going: the task did not change. */
+    expect(announce).not.toHaveBeenCalled();
+  });
+
+  it('still announces a new task in full, whatever is in reach', () => {
+    const { hud, announce } = mount();
+    hud.setPrompt('Look at the clock');
+    hud.setTask('Answer 3 questions (0 of 3)', { position: { number: 3, of: 9 } });
+    expect(announce).toHaveBeenCalledWith('Task: Answer 3 questions (0 of 3)', 'en');
+
+    announce.mockClear();
+    /* The same line, moved by nothing but its count, is redrawn and not said. */
+    hud.setTask('Answer 3 questions (0 of 3)', { position: { number: 4, of: 9 } });
+    expect(announce).not.toHaveBeenCalled();
+  });
+
+  it('draws the task in full in the menu, whatever is in reach', () => {
+    const { hud, at } = mount();
+    expect(at('menu-task')?.hidden, 'a task line with no task').toBe(true);
+
+    hud.setTask(clock, { position });
+    hud.setPrompt('Look at the clock');
+    hud.openMenu();
+    expect(at('menu-task')?.hidden).toBe(false);
+    expect(at('menu-task')?.textContent).toBe('Your task: Find the Town Clock');
+    expect(at('menu-task')?.tagName).toBe('P');
+
+    hud.setLocale('fr');
+    expect(at('menu-task')?.textContent).toBe('Votre mission : Find the Town Clock');
+
+    hud.setTask(null);
+    expect(at('menu-task')?.hidden).toBe(true);
+    expect(at('menu-task')?.textContent).toBe('');
+  });
+
+  it('keeps the indicator and the menu line out of the switch ring', () => {
+    const { hud, page, clock: time } = mount({ singleSwitch: true, holdMs: 600 });
+    hud.setTask(clock, { position });
+    hud.setPrompt('Look at the clock');
+    const seen = new Set<string | null>();
+    for (let press = 0; press < 6; press += 1) {
+      seen.add(highlighted(page));
+      pressSwitch(page, time, 100);
+    }
+    expect([...seen].sort()).toEqual(['hud-settings-button', 'interact-prompt', 'menu-button'].sort());
   });
 });
 

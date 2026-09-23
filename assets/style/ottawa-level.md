@@ -460,7 +460,7 @@ first and Ottawa would become a sky with a tower floating in it. Worth a test ra
 reported from the live site. The fix is in the shared rig, not in this level's tiles:
 `content/levels/ottawa.json` sets no art key for it, and this sheet lists no new source, because the skates
 are `{mode}` equipment in `assets/src/svg/shared/character/` and the glide is a state in
-`assets/style/rig-contract.json`. `rig-contract.md` §11 is the contract.
+`content/characters/rig.json`. `rig-contract.md` §11 is the contract.
 
 What this level owes the rig, and what the rig owes it:
 

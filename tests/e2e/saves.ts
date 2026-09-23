@@ -8,8 +8,15 @@ import { toProgressSnapshot } from '@application/persistence/progress-document';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import type { PlayerCharacter } from '@domain/entities/character';
 import { defaultSettings } from '@domain/entities/player';
-import { newProgress, withCharacter, withQuestState, withStamp } from '@domain/entities/progress';
-import type { CharacterId, EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
+import {
+  newProgress,
+  withCharacter,
+  withQuestState,
+  withReview,
+  withStamp,
+} from '@domain/entities/progress';
+import type { CharacterId, EpochMillis, LevelId, LocaleCode, QuestId, QuestionId } from '@domain/ids';
+import { recordAnswer } from '@domain/scheduling/review-record';
 
 /**
  * Saves a scenario starts from, written by the game's own functions.
@@ -194,6 +201,62 @@ export function activeQuestSave(quest: SeededQuest, saved: SavedTask): string {
     stepProgress: saved.stepProgress ?? 0,
     updatedAt: now,
   });
+  return encodeSave(progress, now);
+}
+
+/** What a reading scenario sets before the game boots (`TN-LEARN`). */
+export interface ReadingSettings {
+  readonly locale?: 'en' | 'fr';
+  /** 1 is 100 %, 2 is 200 %. */
+  readonly textScale?: number;
+  readonly singleSwitch?: boolean;
+  readonly highContrast?: boolean;
+  readonly dyslexiaFont?: boolean;
+  readonly reducedMotion?: boolean;
+}
+
+/**
+ * A save with a character and settings and nothing else: a returning player on
+ * the title screen, in the language and at the text size a scenario needs.
+ */
+export function settingsSave(settings: ReadingSettings = {}): string {
+  const now = Date.now() as EpochMillis;
+  const { locale = 'en', ...rest } = settings;
+  const progress = withCharacter(
+    newProgress({ ...seededSettings(locale), ...rest }),
+    seededCharacter(),
+  );
+  return encodeSave(progress, now);
+}
+
+/** One question the player missed some days ago, and how the save was set up. */
+export interface MissedQuestion {
+  readonly questionId: string;
+  readonly locale?: 'en' | 'fr';
+  /** 1 to 2, the way the save keeps text size (100 % to 200 %). */
+  readonly textScale?: number;
+}
+
+/**
+ * A save whose only history is one question answered wrongly three days ago.
+ *
+ * The scheduler puts a due, missed question in a hard tier above everything
+ * else (`question-scheduler.ts`), so the first card of a Study drill from this
+ * save is that question — which is how a scenario asks a question it chose,
+ * through the shipped draw, without a hook in the game (ADR-0070's e2e).
+ */
+export function missedQuestionSave(missed: MissedQuestion): string {
+  const now = Date.now() as EpochMillis;
+  const answeredAt = (now - 3 * 24 * 60 * 60 * 1000) as EpochMillis;
+  const settings = {
+    ...seededSettings(missed.locale ?? 'en'),
+    textScale: missed.textScale ?? 1,
+  };
+  let progress = withCharacter(newProgress(settings), seededCharacter());
+  progress = withReview(
+    progress,
+    recordAnswer(null, missed.questionId as QuestionId, false, answeredAt).record,
+  );
   return encodeSave(progress, now);
 }
 

@@ -302,6 +302,24 @@ describe('the way into the practice exam', () => {
     expect(order.slice(-3)).toEqual(['title-study', 'title-exam', 'title-settings']);
   });
 
+  it('offers Learn just before Study, beside the exam (TN-LEARN-01)', () => {
+    const onOpenLearn = vi.fn();
+    const { page } = open({
+      onOpenLearn,
+      onOpenStudy: () => undefined,
+      onOpenExam: () => undefined,
+      onOpenSettings: () => undefined,
+    });
+    const order = page.ui
+      .querySelectorAll('button')
+      .map((control) => control.getAttribute('data-testid'));
+    expect(order.slice(-4)).toEqual(['title-learn', 'title-study', 'title-exam', 'title-settings']);
+    const learn = page.ui.byTestId('title-learn');
+    expect(learn?.textContent).toBe(text('en', 'learn.open'));
+    learn?.click();
+    expect(onOpenLearn).toHaveBeenCalledTimes(1);
+  });
+
   it('never takes focus from the primary control', () => {
     /* An exam is the wrong first click for somebody who has answered nothing,
        so it is offered and never the thing focus lands on. */

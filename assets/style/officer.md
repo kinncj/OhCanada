@@ -137,7 +137,7 @@ name. The copy is the PO's; this is the constraint the copy has to satisfy.
 
 ## 6. Rig notes for task 1.11 — SUPERSEDED by `assets/style/rig-contract.md`
 
-**Task 1.11 has landed and the contract is `assets/style/rig-contract.md` plus `rig-contract.json`.** The
+**Task 1.11 has landed and the contract is `assets/style/rig-contract.md` plus `content/characters/rig.json`.** The
 part list below was this sheet's guess and the shipped rig differs from it in three ways worth knowing:
 
 - **Twenty parts, not twenty-one.** There is no separate `hat-band`, `pouch`, `collar`, `cross-strap` or

@@ -29,6 +29,16 @@ the timer control and "Leave the exam", specified in `TN-TIMER` and `TN-ATTEMPT`
 put "CN Tower" inside `hud`, a surface `TN-NAMES-04` fails the build for. This file still owns the strip, its
 region name and its landmarks; it does not own the words in the prompt.
 
+**Amended 2026-09-23 — ADR-0066 §2: the strip shows one job at a time.** At 200 % text on a 390 × 844 phone
+the strip could not hold a landmark's offer and an "Answer N questions about …" task at once: ten of ten built
+levels put the player's task below the strip in at least one language, and no copy pass could fix it. So the
+offer and the task **take turns**. With nothing in reach the strip draws the task in full, as before. With
+something in reach it draws the offer in full and the task **collapses to a bounded indicator** — a fixed word
+and a count, "Task 3/5" / « Mission 3/5 », one line in either language — and the sentence comes back the moment
+the offer is withdrawn. The **level menu** draws the task in full whenever there is one, so the sentence always
+has a home one press away. The rule is the same at 100 % and at 200 %, in both languages: a player at large
+text loses nothing a player at 100 % keeps (ADR-0066 §3). `TN-HUD-01` and `TN-HUD-08` below carry it.
+
 Read `README.md` in this directory first. `TN-COPY-strings-and-counts.md` fixes the plural and state-word
 rules this file uses.
 
@@ -80,12 +90,32 @@ Everything else the HUD and the menu draw is defined elsewhere and is referenced
 | `hud.interact.hint` | `TN-REACH-what-is-in-reach.md` | `interact-hint` |
 | `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` | `storage-warning` |
 | `hud.task.behind` | *proposed, see below* | `hud-task-cue` |
+| `hud.task.indicator`, `hud.task.indicator.spoken` | *proposed, see below* | `hud-task-indicator` |
+| `hud.menu.task` | *proposed, see below* | `menu-task` |
 
 **Proposed row, pending ratification (`COPY_GAPS`), second live-site audit:** `hud.task.behind` — "Behind you" /
 « Derrière vous ». Drawn after `hud-quest-tracker`, in the task's slot, while the stop the task names is behind
 the player: the composition root takes the player to stand where the last thing they reached stands, from the
 spawn on (`app/bootstrap/task-cue.ts`). Said once, as "Behind you: Find the Town Clock", when it appears. After
 the task and never before it, so the task line stays where ADR-0045 measured it at 200 %.
+
+**Proposed rows, pending ratification (`COPY_GAPS`), ADR-0066 §2.** The shape is the ADR's — a fixed word and
+a count, one line in both languages, and nothing a content author can lengthen — and the words are this file's
+to ratify or replace:
+
+| Key | EN | FR |
+|---|---|---|
+| `hud.task.indicator` | Task {{n}}/{{total}} | Mission {{n}}/{{total}} |
+| `hud.task.indicator.spoken` | Task {{n}} of {{total}} | Mission {{n}} sur {{total}} |
+| `hud.menu.task` | Your task | Votre mission |
+
+`{{n}}` is the step of the quest the task is on and `{{total}}` is how many steps the quest has, both counted
+from one and both from the quest document. The first row is what a sighted player sees; the second is what a
+screen reader reads for the same paragraph, because "3/5" is read aloud as a date or a fraction depending on
+the reader. They say the same thing. **Neither carries the task sentence**: a name holding a sentence the
+sighted player cannot see would make two different strips for two different players (ADR-0066 §2,
+`TN-REACH`). « sur » rather than « de » in the spoken French, as the tracker's own « (0 sur 3) » already reads.
+`hud.menu.task` labels the menu's line — "Your task: Find the Town Clock" — the task's permanent home.
 
 A string is written down in exactly one copy table. If a word is needed in two places, the second place
 names the key and the file, as above. Two tables carrying the same words is how they stop being the same
@@ -171,9 +201,51 @@ Feature: The lower-third HUD
 
   Scenario: The tracker appears only when there is a task
     Given I have not accepted a quest
-    Then the element "hud-quest-tracker" is not shown
+    Then neither "hud-quest-tracker" nor "hud-task-indicator" is shown
+    And "menu-task" is not shown in the menu
     When I accept the quest
-    Then "hud-quest-tracker" is shown, as described in TN-QUEST-02
+    Then the task is shown in the strip, in one of the two forms below, as TN-QUEST-02 describes
+    And "menu-task" shows the task in full
+
+  Scenario: The strip shows one job at a time (ADR-0066)
+    Given I have accepted the quest
+    When nothing is in reach
+    Then "hud-quest-tracker" shows the task in full, after its label "Task"
+    And "hud-task-indicator" is not present
+    When something comes within reach
+    Then "interact-prompt" is shown in full
+    And "hud-quest-tracker" is not present
+    And "hud-task-indicator" reads "Task 3/5", a fixed word and a count, on one line
+    When the offer is withdrawn
+    Then "hud-quest-tracker" shows the task in full again
+    And the rule is the same at 100 % and at 200 % text, in both languages
+
+  Scenario: The indicator says the same thing to everybody
+    Given "hud-task-indicator" is shown
+    Then a screen reader reads it as "Task 3 of 5"
+    And it does not read the task sentence
+    And the task sentence is not carried in an "aria-label", or anywhere else hidden from sight
+    And the indicator is text, with no "aria-live" attribute of its own, and is not in the Tab order or the switch ring
+
+  Scenario: The task always has a home one press away
+    Given I have accepted the quest
+    When I open the menu
+    Then "menu-task" shows "Your task:" followed by the task in full
+    And it is shown whether or not anything is in reach
+    And it is a paragraph, not an item that can be chosen
+
+  Scenario: The cue belongs to the full row
+    Given the stop the task names is behind me
+    When nothing is in reach
+    Then "hud-task-cue" follows "hud-quest-tracker"
+    When something comes within reach
+    Then "hud-task-cue" is not present beside "hud-task-indicator"
+    And it is not announced again: it was said once when it became true
+
+  Scenario: A new task is still said in full
+    When the task changes while something is in reach
+    Then "#tn-live-region" reads "Task:" followed by the new task in full, once
+    And the strip draws the indicator, not the sentence
 
   Scenario: The prompt says what pressing will do, not what is there
     When something comes within reach
@@ -409,7 +481,8 @@ Feature: Announcing the HUD
     And the rest of the page is inert while it is open
 
   Scenario: The tracker and the mode are readable at any time
-    Then "hud-mode-label" and "hud-quest-tracker" are in the accessibility tree as text
+    Then "hud-mode-label" and whichever of "hud-quest-tracker" and "hud-task-indicator" is drawn are in the accessibility tree as text
+    And "menu-task" carries the task in full whenever there is one
     And neither carries an "aria-live" attribute of its own
     And a change to either is announced once through "#tn-live-region"
 
@@ -439,6 +512,26 @@ Feature: The HUD honours the settings it opens
     And the page does not scroll sideways
     And the skater is still drawn inside the upper two thirds of the canvas
 
+  Scenario: The task is on screen at 200 %, whatever is in reach (ADR-0066)
+    Given text scaling is 200 %
+    And the viewport is 390 x 844
+    And I have accepted a quest on any built level, in either language
+    When a landmark's offer is in reach
+    Then "interact-prompt", "hud-settings-button", "menu-button" and "hud-task-indicator" all end inside "hud"
+    And "hud-task-indicator" takes one line
+    And the player does not have to scroll inside "hud" to find what they are doing
+    When nothing is in reach
+    Then "hud-settings-button", "menu-button" and the whole of "hud-quest-tracker" end inside "hud"
+    And the task is drawn at 200 %, the size the Settings slider says, never smaller
+    And the word "Task" is drawn, never hidden from sight while kept for a screen reader
+    And the strip is not allowed to grow past a third of the viewport to make room
+
+  Scenario: What a player at 200 % loses is what every player loses
+    Given something is in reach
+    Then the task sentence is replaced by a count, at 100 % exactly as at 200 %
+    And I get the sentence back by stepping out of reach, by opening the menu, or by listening
+    And nothing on the strip at 100 % is missing from the strip at 200 %
+
   Scenario: The warning and the tracker at 200 % together
     Given "storage-warning" is visible
     And the quest is accepted
@@ -449,7 +542,7 @@ Feature: The HUD honours the settings it opens
   Scenario: The action stays on screen at 200 % (ADR-0039)
     Given text scaling is 200 %
     And the viewport is 390 x 844
-    And "interact-prompt", "hud-quest-tracker", "hud-notice", "interact-hint" and "storage-warning" are all shown
+    And "interact-prompt", "hud-task-indicator", "hud-notice", "interact-hint" and "storage-warning" are all shown
     Then "interact-prompt", "hud-settings-button" and "menu-button" are inside the visible part of "hud"
     And the strip draws them before the mode, the task, the notice, the hint and the warning
     And only the words after them need scrolling inside "hud"
@@ -595,7 +688,13 @@ Feature: Guarding the green tick on the landmark rules
   menu owned by the exam screen instead, because this one belongs to a level and offers a level's way out.
   *Recommendation:* two menus, one behaviour: modal, named, focus-trapping, escape closes, nothing counts
   down. If they end up sharing a component, the items are still the screen's to decide.
-- **`OQ-HUD-10` — how many things may the strip hold at once?** At 200 % text on a 390 × 844 viewport the
+- **`OQ-HUD-11` — a player who wants the task while standing at a landmark has to step away or open the
+  menu.** That is ADR-0066's stated cost, the same at every text size, and it is written here rather than
+  discovered. Whether players actually find their task is a question for play-testing, not for CI.
+  *Recommendation:* put it in front of the first play-test with the rest of the level, and if players do not
+  find the sentence, replace ADR-0066's rule rather than patching it.
+- **`OQ-HUD-10` — how many things may the strip hold at once?** *Partly answered by ADR-0066:* the offer and the
+  task no longer share it, so the tallest pair is an offer and a one-line indicator. At 200 % text on a 390 × 844 viewport the
   lower third can be carrying the mode label, the quest tracker, the storage warning, the interact prompt and
   — the first time — `interact-hint`. `TN-HUD-08` and `TN-REACH-07` both assert that everything fits by
   scrolling inside `hud`, which is a real answer and not an obviously comfortable one.
