@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "justice-03-what-laws-are-for",
+  "chapter": "The Justice System",
+  "order": 2,
+  "title": {
+    "en": "What laws are for",
+    "fr": "À quoi servent les lois"
+  },
+  "passages": [
+    {
+      "id": "j3-a-system-of-laws",
+      "text": {
+        "en": "Canada is governed by laws, and those laws fit together into one organized system.",
+        "fr": "Le Canada est gouverné par des lois, et ces lois forment ensemble un système organisé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada is governed by an organized system of laws."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-laws-are-written-rules",
+      "text": {
+        "en": "Laws are rules that are written down. They are there to guide how people live together in society.",
+        "fr": "Les lois sont des règles écrites. Elles servent à guider la façon dont les gens vivent ensemble en société."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "These laws are the written rules intended to guide people in our society."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-elected-people-make-laws",
+      "text": {
+        "en": "Our laws are made by the people we elect to represent us.",
+        "fr": "Nos lois sont faites par les personnes que nous élisons pour nous représenter."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "They are made by elected representatives."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-courts-and-police",
+      "text": {
+        "en": "Courts settle disagreements, and the police make sure people obey the laws.",
+        "fr": "Les tribunaux règlent les différends, et la police veille à ce que les gens respectent les lois."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The courts settle disputes and the police enforce the laws."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-the-law-is-for-everyone",
+      "text": {
+        "en": "Every person in Canada must follow the law. That includes judges, politicians and police officers.",
+        "fr": "Toute personne au Canada doit respecter la loi. Cela comprend les juges, les politiciens et les policiers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The law in Canada applies to everyone, including judges, politicians and the police."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-order-and-peace",
+      "text": {
+        "en": "Laws help keep order in society. They also give people a peaceful way to settle their disagreements.",
+        "fr": "Les lois aident à maintenir l'ordre dans la société. Elles donnent aussi aux gens un moyen pacifique de régler leurs désaccords."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Our laws are intended to provide order in society and a peaceful way to settle disputes"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j3-laws-show-our-values",
+      "text": {
+        "en": "Laws also show what Canadians value and what they believe.",
+        "fr": "Les lois montrent aussi ce qui compte pour les Canadiens et ce en quoi ils croient."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and to express the values and beliefs of Canadians."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

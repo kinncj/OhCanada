@@ -1,30 +1,30 @@
 {
   "$schema": "../../schemas/lesson.schema.json",
-  "id": "justice-01-the-police-are-there-for-you",
-  "chapter": "The Justice System",
-  "order": 4,
+  "id": "economy-03-three-kinds-of-industry",
+  "chapter": "Canada's Economy",
+  "order": 2,
   "title": {
-    "en": "The police are there for you",
-    "fr": "La police est là pour vous"
+    "en": "Three main kinds of industry",
+    "fr": "Trois grands types d'industries"
   },
   "passages": [
     {
-      "id": "j1-keep-people-safe",
+      "id": "e3-service-industries",
       "text": {
-        "en": "The job of the police is to keep people safe and to make sure the law is followed.",
-        "fr": "Le travail de la police est d'assurer la sécurité des gens et de veiller au respect de la loi."
+        "en": "Canada's economy has three main kinds of industry. The first is service industries. They give people thousands of different jobs, for example in transportation, education, health care, construction, banking, communications, stores, tourism and government.",
+        "fr": "L'économie du Canada compte trois grands types d'industries. Le premier est celui des industries de services. Elles offrent des milliers d'emplois différents, par exemple dans les transports, l'éducation, les soins de santé, la construction, les banques, les communications, le commerce de détail, le tourisme et l'administration publique."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "The police are there to keep people safe and to enforce the law."
+          "quote": "CANADA’S ECONOMY INCLUDES THREE MAIN TYPES OF INDUSTRIES: • Service industries provide thousands of different jobs in areas like transportation, education, health care, construction, banking, communications, retail services, tourism and government."
         },
         "verification": {
           "status": "unverified",
@@ -36,22 +36,22 @@
       }
     },
     {
-      "id": "j1-when-to-ask-for-help",
+      "id": "e3-most-workers-in-services",
       "text": {
-        "en": "You can go to the police for help in many situations: after an accident, if something is stolen from you, if someone attacks you, if you see a crime happening, or if a person you know is missing.",
-        "fr": "Vous pouvez demander l'aide de la police dans bien des situations : après un accident, si on vous a volé quelque chose, si quelqu'un vous agresse, si vous voyez un crime se produire ou si une personne que vous connaissez a disparu."
+        "en": "More than three out of every four Canadians who have a job work in a service industry.",
+        "fr": "Plus de trois Canadiens sur quatre qui ont un emploi travaillent dans une industrie de services."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
-          "volatile": false,
-          "quote": "You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you, if you are a victim of assault, if you see a crime taking place or if someone you know has gone missing."
+          "volatile": true,
+          "quote": "More than 75% of working Canadians now have jobs in service industries."
         },
         "verification": {
           "status": "unverified",
@@ -63,22 +63,22 @@
       }
     },
     {
-      "id": "j1-more-than-one-kind-of-police",
+      "id": "e3-manufacturing-industries",
       "text": {
-        "en": "Canada has more than one kind of police.",
-        "fr": "Le Canada compte plus d'un type de police."
+        "en": "The second kind is manufacturing. These industries make products to sell both in Canada and in other countries.",
+        "fr": "Le deuxième type est celui de la fabrication. Ces industries produisent des biens à vendre au Canada comme dans d'autres pays."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "There are different types of police in Canada."
+          "quote": "Manufacturing industries make products to sell in Canada and around the world."
         },
         "verification": {
           "status": "unverified",
@@ -90,22 +90,22 @@
       }
     },
     {
-      "id": "j1-provincial-and-municipal-police",
+      "id": "e3-what-canada-manufactures",
       "text": {
-        "en": "Ontario and Quebec each have a provincial police force. Every province also has police departments run by its cities and towns.",
-        "fr": "L'Ontario et le Québec ont chacun une police provinciale. Chaque province a aussi des services de police gérés par ses villes et municipalités."
+        "en": "Canada makes many kinds of goods, such as paper, high-tech equipment, aerospace technology, cars, machines, food and clothing.",
+        "fr": "Le Canada fabrique toutes sortes de biens, comme du papier, du matériel de haute technologie, de la technologie aérospatiale, des automobiles, des machines, des aliments et des vêtements."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "There are provincial police forces in Ontario and Quebec and municipal police departments in all provinces."
+          "quote": "Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
         },
         "verification": {
           "status": "unverified",
@@ -117,22 +117,22 @@
       }
     },
     {
-      "id": "j1-rcmp-enforce-federal-laws",
+      "id": "e3-largest-trading-partner",
       "text": {
-        "en": "The Royal Canadian Mounted Police, or RCMP, enforce federal laws everywhere in Canada.",
-        "fr": "La Gendarmerie royale du Canada, ou GRC, fait respecter les lois fédérales partout au Canada."
+        "en": "The United States is the country Canada trades with the most.",
+        "fr": "Les États-Unis sont le pays avec lequel le Canada fait le plus de commerce."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "The Royal Canadian Mounted Police (RCMP) enforce federal laws throughout Canada"
+          "quote": "Our largest international trading partner is the United States."
         },
         "verification": {
           "status": "unverified",
@@ -144,22 +144,22 @@
       }
     },
     {
-      "id": "j1-rcmp-as-provincial-police",
+      "id": "e3-natural-resources-industries",
       "text": {
-        "en": "Outside Ontario and Quebec, the RCMP also work as the provincial police in every province and territory. They police some cities and towns as well.",
-        "fr": "En dehors de l'Ontario et du Québec, la GRC sert aussi de police provinciale dans toutes les provinces et tous les territoires. Elle assure également le service de police dans certaines municipalités."
+        "en": "The third kind is natural resources. These industries include forestry, fishing, farming, mining and energy.",
+        "fr": "Le troisième type est celui des ressources naturelles. Ces industries comprennent la foresterie, la pêche, l'agriculture, les mines et l'énergie."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+          "quote": "Natural resources industries include forestry, fishing, agriculture, mining and energy."
         },
         "verification": {
           "status": "unverified",
@@ -171,49 +171,22 @@
       }
     },
     {
-      "id": "j1-police-are-there-for-you",
+      "id": "e3-resources-built-the-country",
       "text": {
-        "en": "In Canada, the police are on your side. If you need them, ask for their help — that is what they are for.",
-        "fr": "Au Canada, la police est de votre côté. Si vous avez besoin d'elle, demandez son aide : c'est à cela qu'elle sert."
+        "en": "Natural resource industries have played a big part in Canada's history and in how the country grew.",
+        "fr": "Les industries des ressources naturelles ont joué un grand rôle dans l'histoire du Canada et dans son développement."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 76,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Remember, the police are there to help you."
-        },
-        "verification": {
-          "status": "verified",
-          "model": "claude-opus-5",
-          "checkedAt": "2026-09-19T18:30:00Z",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "evidence": "Remember, the police are there to help you."
-        }
-      }
-    },
-    {
-      "id": "j1-question-the-police",
-      "text": {
-        "en": "If you feel you need to, you may also ask questions about how the police served you or how they behaved.",
-        "fr": "Si vous en ressentez le besoin, vous pouvez aussi poser des questions sur le service que la police vous a rendu ou sur sa conduite."
-      },
-      "fact": {
-        "factual": true,
-        "source": {
-          "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 77,
-          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
-          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
-          "asOf": "2026-09-08T00:00:00Z",
-          "volatile": false,
-          "quote": "You can also question the police about their service or conduct if you feel you need to."
+          "quote": "These industries have played an important part in the country’s history and development."
         },
         "verification": {
           "status": "unverified",
@@ -225,22 +198,49 @@
       }
     },
     {
-      "id": "j1-raise-your-concerns",
+      "id": "e3-regions-that-rely-on-resources",
       "text": {
-        "en": "Nearly every police force in Canada has a way for you to raise a concern with them and ask for something to be done.",
-        "fr": "Presque tous les corps policiers du Canada offrent une façon de leur faire part d'une préoccupation et de demander que des mesures soient prises."
+        "en": "Even today, the economy of many parts of the country still relies on developing natural resources.",
+        "fr": "Encore aujourd'hui, l'économie de bien des régions du pays dépend toujours de la mise en valeur des ressources naturelles."
       },
       "fact": {
         "factual": true,
         "source": {
           "sourceId": "discover-canada",
-          "chapter": "The Justice System",
-          "page": 77,
+          "chapter": "Canada's Economy",
+          "page": 91,
           "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Almost all police forces in Canada have a process by which you can bring your concerns to the police and seek action."
+          "quote": "Today, the economy of many areas of the country still depends on developing natural resources"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e3-resource-exports",
+      "text": {
+        "en": "A large share of what Canada sells to other countries is natural resource products.",
+        "fr": "Une grande part de ce que le Canada vend à l'étranger est faite de produits tirés des ressources naturelles."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 91,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "a large percentage of Canada’s exports are natural resources commodities."
         },
         "verification": {
           "status": "unverified",

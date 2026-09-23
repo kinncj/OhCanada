@@ -1,0 +1,93 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "rights-responsibilities-04-equality-of-women-and-men",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "order": 3,
+  "title": {
+    "en": "The equality of women and men",
+    "fr": "L'égalité des femmes et des hommes"
+  },
+  "passages": [
+    {
+      "id": "rr4-equal-under-the-law",
+      "text": {
+        "en": "In Canada, the law treats men and women as equals.",
+        "fr": "Au Canada, la loi traite les hommes et les femmes comme des égaux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In Canada, men and women are equal under the law."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "rr4-no-room-for-gender-violence",
+      "text": {
+        "en": "Canada is open and generous, but not toward barbaric cultural practices that accept violence based on gender. That includes abuse of a husband or wife, so-called \"honour killings\", female genital mutilation and forced marriage.",
+        "fr": "Le Canada est ouvert et généreux, mais pas envers les pratiques culturelles barbares qui acceptent la violence fondée sur le sexe. Cela comprend la violence envers un conjoint, les soi-disant « crimes d'honneur », la mutilation génitale des femmes et le mariage forcé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s openness and generosity do not extend to barbaric cultural practices that tolerate spousal abuse, “honour killings,” female genital mutilation, forced marriage or other gender-based violence."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "rr4-severe-punishment",
+      "text": {
+        "en": "People found guilty of these crimes face severe punishment under Canada's criminal laws.",
+        "fr": "Les personnes reconnues coupables de ces crimes sont sévèrement punies en vertu des lois pénales du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Those guilty of these crimes are severely punished under Canada’s criminal laws."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

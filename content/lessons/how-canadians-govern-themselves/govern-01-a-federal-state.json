@@ -9,6 +9,33 @@
   },
   "passages": [
     {
+      "id": "g1-four-kinds-of-government",
+      "text": {
+        "en": "Canada has four kinds of government: federal, provincial, territorial and municipal.",
+        "fr": "Le Canada compte quatre sortes de gouvernements : fédéral, provinciaux, territoriaux et municipaux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 54,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There are federal, provincial, territorial and municipal governments in Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
       "id": "g1-policies-that-fit-each-province",
       "text": {
         "en": "Under federalism, a province can shape its policies to suit the people who live there.",

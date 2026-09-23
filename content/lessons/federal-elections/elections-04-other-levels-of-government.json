@@ -36,6 +36,33 @@
       }
     },
     {
+      "id": "e4-councils-pass-by-laws",
+      "text": {
+        "en": "A city or town usually has a council. The council makes local laws called by-laws, and these apply only in that community.",
+        "fr": "Une ville ou un village a habituellement un conseil. Le conseil adopte des lois locales appelées règlements municipaux, qui ne s'appliquent que dans cette collectivité."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 66,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal governments usually have a council that passes laws called “by-laws” that affect only the local community."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
       "id": "e4-learn-the-rules-where-you-live",
       "text": {
         "en": "Find out how voting works where you live: in your province or territory, and in your city or town. Those rules are what let you use your right to vote there.",

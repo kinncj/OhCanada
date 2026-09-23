@@ -2,7 +2,7 @@
   "$schema": "../../schemas/lesson.schema.json",
   "id": "economy-01-trade-with-the-united-states",
   "chapter": "Canada's Economy",
-  "order": 1,
+  "order": 3,
   "title": {
     "en": "Trading with our closest neighbour",
     "fr": "Le commerce avec notre plus proche voisin"
@@ -59,6 +59,141 @@
           "checkedAt": "2026-09-19T18:30:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Over three-quarters of Canadian exports are destined for the U.S.A."
+        }
+      }
+    },
+    {
+      "id": "e1-biggest-two-way-trade",
+      "text": {
+        "en": "The trade between Canada and the United States is the largest trade between any two countries in the world.",
+        "fr": "Les échanges entre le Canada et les États-Unis sont les plus importants entre deux pays dans le monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In fact we have the biggest bilateral trading relationship in the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-shared-supply-chains",
+      "text": {
+        "en": "Businesses in Canada and the United States are joined in shared supply chains. Together, they compete with the rest of the world.",
+        "fr": "Les entreprises du Canada et des États-Unis sont liées par des chaînes d'approvisionnement communes. Ensemble, elles font concurrence au reste du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Integrated Canada-U.S.A. supply chains compete with the rest of the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-what-canada-exports",
+      "text": {
+        "en": "Every year, Canada sells billions of dollars of goods to other countries. They include energy, industrial goods, machines, equipment, automotive products, farm, fish and forest products, and consumer goods.",
+        "fr": "Chaque année, le Canada vend à d'autres pays des biens valant des milliards de dollars. On y trouve de l'énergie, des biens industriels, des machines, de l'équipement, des produits de l'automobile, des produits agricoles, de la pêche et de la forêt, ainsi que des biens de consommation."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada exports billions of dollars worth of energy products, industrial goods, machinery, equipment, automotive, agricultural, fishing and forestry products, and consumer goods every year."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-longest-undefended-border",
+      "text": {
+        "en": "Every year, millions of Canadians and Americans cross the border between the two countries in safety. People have long called it the world's longest undefended border.",
+        "fr": "Chaque année, des millions de Canadiens et d'Américains traversent en toute sécurité la frontière entre les deux pays. On l'appelle depuis longtemps la plus longue frontière non défendue du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Millions of Canadians and Americans cross every year and in safety what is traditionally known as “the world’s longest undefended border.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e1-the-peace-arch",
+      "text": {
+        "en": "The Peace Arch stands at Blaine, in the State of Washington. Its words call the two peoples children of one mother, and brothers who live together in unity. The arch stands for the close ties and shared interests of Canada and the United States.",
+        "fr": "L'Arche de la paix se dresse à Blaine, dans l'État de Washington. Ses inscriptions présentent les deux peuples comme les enfants d'une même mère et comme des frères qui vivent ensemble dans l'unité. L'arche symbolise les liens étroits et les intérêts communs du Canada et des États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Economy",
+          "page": 92,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "At Blaine in the State of Washington, the Peace Arch, inscribed with the words “children of a common mother” and “brethren dwelling together in unity,” symbolizes our close ties and common interests."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
         }
       }
     }

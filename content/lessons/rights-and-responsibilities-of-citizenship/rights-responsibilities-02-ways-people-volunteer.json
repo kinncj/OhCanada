@@ -2,12 +2,39 @@
   "$schema": "../../schemas/lesson.schema.json",
   "id": "rights-responsibilities-02-ways-people-volunteer",
   "chapter": "Rights and Responsibilities of Citizenship",
-  "order": 2,
+  "order": 5,
   "title": {
-    "en": "Ways people volunteer",
-    "fr": "Des façons de faire du bénévolat"
+    "en": "Helping others and caring for our heritage",
+    "fr": "Aider les autres et prendre soin de notre patrimoine"
   },
   "passages": [
+    {
+      "id": "rr2-volunteers-give-their-time",
+      "text": {
+        "en": "Helping others in your community is also a responsibility. Millions of volunteers give their time to help other people, and they are not paid for it.",
+        "fr": "Aider les autres dans votre collectivité est aussi une responsabilité. Des millions de bénévoles donnent de leur temps pour aider les autres, sans être payés pour le faire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 14,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Helping others in the community — Millions of volunteers freely donate their time to help others without pay"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
     {
       "id": "rr2-ways-to-volunteer",
       "text": {
@@ -32,6 +59,60 @@
           "checkedAt": "2026-09-19T18:30:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Helping others in the community — Millions of volunteers freely donate their time to help others without pay—helping people in need, assisting at your child’s school, volunteering at a food bank or other charity, or encouraging newcomers to integrate."
+        }
+      }
+    },
+    {
+      "id": "rr2-what-volunteering-gives-you",
+      "text": {
+        "en": "Volunteering is a great way to learn useful skills, make friends and meet people who can help you.",
+        "fr": "Le bénévolat est un excellent moyen d'acquérir des compétences utiles, de se faire des amis et de rencontrer des gens qui peuvent vous aider."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 14,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Volunteering is an excellent way to gain useful skills and develop friends and contacts."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "rr2-protect-heritage-and-environment",
+      "text": {
+        "en": "Every citizen also has a part to play in protecting our heritage and environment. That means avoiding waste and pollution. It also means caring for Canada's natural, cultural and architectural heritage so that it is there for the generations to come.",
+        "fr": "Chaque citoyen a aussi un rôle à jouer dans la protection de notre patrimoine et de notre environnement. Cela veut dire éviter le gaspillage et la pollution. Cela veut aussi dire prendre soin du patrimoine naturel, culturel et architectural du Canada pour qu'il soit encore là pour les générations à venir."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 14,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Protecting and enjoying our heritage and environment — Every citizen has a role to play in avoiding waste and pollution while protecting Canada’s natural, cultural and architectural heritage for future generations."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
         }
       }
     }

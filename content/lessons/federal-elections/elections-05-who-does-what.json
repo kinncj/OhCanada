@@ -277,6 +277,114 @@
           "evidence": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities"
         }
       }
+    },
+    {
+      "id": "e5-snow-removal",
+      "text": {
+        "en": "Clearing snow is a job for the municipal government.",
+        "fr": "Le déneigement relève du gouvernement municipal."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities • Snow Removal"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-municipal-policing",
+      "text": {
+        "en": "Policing is also on the list of things a municipal government takes care of.",
+        "fr": "Le maintien de l'ordre figure aussi parmi les tâches dont s'occupe le gouvernement municipal."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities • Snow Removal • Policing"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-firefighting",
+      "text": {
+        "en": "Fighting fires is a municipal responsibility.",
+        "fr": "La lutte contre les incendies est une responsabilité municipale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities • Snow Removal • Policing • Firefighting"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "e5-emergency-services",
+      "text": {
+        "en": "Emergency services are run by the municipal government too.",
+        "fr": "Les services d'urgence sont eux aussi gérés par le gouvernement municipal."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 69,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Municipal • Mayor or Reeve • Social and (local) Community Health • Councillors or Aldermen • Recycling Programs • Transportation and Utilities • Snow Removal • Policing • Firefighting • Emergency Services"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
     }
   ]
 }

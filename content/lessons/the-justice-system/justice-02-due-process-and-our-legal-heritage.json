@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "justice-02-due-process-and-our-legal-heritage",
+  "chapter": "The Justice System",
+  "order": 1,
+  "title": {
+    "en": "Fair treatment under the law",
+    "fr": "Un traitement équitable devant la loi"
+  },
+  "passages": [
+    {
+      "id": "j2-due-process-for-everyone",
+      "text": {
+        "en": "Canada's justice system promises every person due process under the law.",
+        "fr": "Le système de justice du Canada garantit à chaque personne l'application régulière de la loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Canadian justice system guarantees everyone due process under the law."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j2-innocent-until-proven-guilty",
+      "text": {
+        "en": "In a criminal case, the courts start from the idea that the accused person is innocent. A person is treated as innocent until it is proven that they are guilty.",
+        "fr": "Dans une affaire criminelle, les tribunaux partent de l'idée que la personne accusée est innocente. Une personne est considérée comme innocente tant que sa culpabilité n'a pas été prouvée."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Our judicial system is founded on the presumption of innocence in criminal matters, meaning everyone is innocent until proven guilty."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j2-our-legal-heritage",
+      "text": {
+        "en": "Canada's legal system grows out of a long heritage. Four ideas from that heritage shape it: democratic principles, the rule of law, due process, and freedom under the law.",
+        "fr": "Le système juridique du Canada repose sur un long héritage. Quatre idées tirées de cet héritage le façonnent : les principes démocratiques, la primauté du droit, l'application régulière de la loi et la liberté dans le cadre de la loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "j2-what-due-process-means",
+      "text": {
+        "en": "Due process means the government has to respect every legal right that a person has under the law.",
+        "fr": "L'application régulière de la loi veut dire que le gouvernement doit respecter tous les droits qu'une personne possède selon la loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 75,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Due process is the principle that the government must respect all of legal rights a person is entitled to under the law."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

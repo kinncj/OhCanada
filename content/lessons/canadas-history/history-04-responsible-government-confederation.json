@@ -225,6 +225,33 @@
       }
     },
     {
+      "id": "h4-sea-to-sea-vision",
+      "text": {
+        "en": "The words \"from sea to sea\" stood for a big plan. The goal was one country, strong, united, rich and free, that would reach across a whole continent.",
+        "fr": "Les mots « d'un océan à l'autre » représentaient un grand projet. Le but était de bâtir un seul pays, fort, uni, riche et libre, qui s'étendrait sur tout un continent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 33,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "This phrase embodied the vision of building a powerful, united, wealthy and free country that spanned a continent."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
       "id": "h4-dominion-title-and-our-heritage",
       "text": {
         "en": "The title Dominion was written into the Constitution. It was used officially for about a hundred years and is still part of Canada's heritage.",
@@ -252,6 +279,33 @@
       }
     },
     {
+      "id": "h4-1867-four-founding-provinces",
+      "text": {
+        "en": "Canada began in 1867 with four provinces: Ontario, Quebec, Nova Scotia and New Brunswick.",
+        "fr": "Le Canada a commencé en 1867 avec quatre provinces : l'Ontario, le Québec, la Nouvelle-Écosse et le Nouveau-Brunswick."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1867 – Ontario, Quebec, Nova Scotia, New Brunswick"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
       "id": "h4-1870-manitoba-and-northwest-territories",
       "text": {
         "en": "The new country soon grew. Manitoba and the Northwest Territories came into Canada in 1870.",
@@ -275,6 +329,33 @@
           "checkedAt": "2026-09-19T00:00:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Expansion of the Dominion 1867 – Ontario, Quebec, Nova Scotia, New Brunswick 1870 – Manitoba, Northwest Territories"
+        }
+      }
+    },
+    {
+      "id": "h4-1871-british-columbia",
+      "text": {
+        "en": "British Columbia joined Canada in 1871.",
+        "fr": "La Colombie-Britannique s'est jointe au Canada en 1871."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 34,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "1871 – British Columbia"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
         }
       }
     },
