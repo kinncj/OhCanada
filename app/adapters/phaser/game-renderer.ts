@@ -15,6 +15,7 @@ import {
 } from './level-assets';
 import { bundledLevelCatalog, type LevelCatalog } from './level-catalog';
 import type { SceneLevel } from './level-document';
+import { refuseOverManifestBudget } from './texture-budget';
 import { censusIsRemarkable, describeCensus } from './verified-claim';
 import type { SceneEventListener, SceneMilestoneListener } from './level-events';
 import { dayPhase, tintPalette } from './time-of-day';
@@ -476,6 +477,20 @@ export class GameRenderer {
      * fails when it is short of `data-layers`.
      */
     const assets = await this.#resolveAssets(id);
+
+    /*
+     * TN-LEVEL-02: "a level that cannot fit the texture budget is refused, not
+     * crashed into", before any asset is fetched and before the level the player
+     * is in is torn down.
+     *
+     * Weighed here, from the manifest, and not in the parser: the parser can
+     * only sum the document's own `assets[]`, which every level leaves empty
+     * because a level names its art by key (ADR-0020). That sum was zero, and a
+     * refusal comparing a budget to zero never fired (ADR-0020 §4).
+     */
+    const refusal = await this.#refuseOverBudget(document.value, assets);
+    if (refusal !== null) return refusal;
+
     const rig = await this.#resolveRig();
 
     const marker = this.#marker;
@@ -563,6 +578,25 @@ export class GameRenderer {
       );
     }
     return requests.value;
+  }
+
+  /**
+   * The texture-budget refusal for the load list `#resolveAssets` just built, or
+   * `null` when it fits.
+   *
+   * An empty list is decoded as nothing and fits: that is a level with no
+   * manifest opening on placeholder bands, which holds no texture memory to
+   * refuse. A non-empty list came from the session's manifest, so it is there.
+   */
+  async #refuseOverBudget(
+    level: SceneLevel,
+    requests: readonly LoadRequest[],
+  ): Promise<Result<never> | null> {
+    if (requests.length === 0) return null;
+    const manifest = await this.#manifest;
+    if (manifest === null || !manifest.ok) return null;
+    /* Not logged here: the caller reports a failed load with its code and message. */
+    return refuseOverManifestBudget(level, manifest.value, requests);
   }
 
   /**
