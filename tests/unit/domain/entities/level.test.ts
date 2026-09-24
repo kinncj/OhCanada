@@ -17,8 +17,17 @@ import {
   unreachableLevelIds,
 } from '@domain/entities/level';
 import type { Journey, Level, UnlockRules } from '@domain/entities/level';
+import type { LevelId } from '@domain/ids';
+import gameConfig from '@content/game.config.json';
 
-import { characterId, levelId, makeLevel, poiId, questId } from '../../support/fixtures';
+import {
+  characterId,
+  levelId,
+  makeLevel,
+  poiId,
+  questId,
+  seededRandomSource,
+} from '../../support/fixtures';
 
 const level: Level = makeLevel();
 
@@ -67,8 +76,10 @@ describe('unlocking (game.config unlockRules)', () => {
 
   it('does not open a later level before an earlier one', () => {
     // A stamp for a level that is not open yet cannot happen in play; if a save
-    // claims it, the order still holds rather than opening the map.
-    expect(unlockedLevelIds(rules, [levelId('victoria')])).toEqual(['ottawa']);
+    // claims it, the stamped level stays open — a stamp is proof it was played
+    // (ADR-0068 §9) — and the order still holds for everything else rather than
+    // opening the map.
+    expect(unlockedLevelIds(rules, [levelId('victoria')])).toEqual(['ottawa', 'victoria']);
   });
 
   it('charges the full price for each unlock', () => {
@@ -167,5 +178,182 @@ describe('the chain and the map are the same ten places (TN-MAP-01)', () => {
     /* Levels 2 and 10 have no id (`TN-LEVELS`, `docs/content-review.md` §1).
        A slot with no id is a place, not a level, and names nothing. */
     expect(journeyLevelIds(journey)).toEqual(['halifax', 'quebec-city', 'ottawa']);
+  });
+});
+
+/**
+ * ADR-0068 §9: inserting a level into `order` never re-locks a level a save
+ * could already open.
+ *
+ * `legacyWalk` is the walk as it stood before the obligation, kept here as the
+ * counterfactual: each fixture below is asserted to fail on it, so the fixture
+ * is known to bite and not merely to pass.
+ */
+describe('the unlock walk is monotone under insertion (ADR-0068 §9)', () => {
+  const legacyWalk = (rules: UnlockRules, stampedIds: readonly LevelId[]): readonly LevelId[] => {
+    const stamped = new Set(stampedIds);
+    const unlocked = new Set(rules.initialLevels);
+    const cost = Math.max(1, Math.floor(rules.stampsToUnlockNext));
+    let credit = 0;
+    for (const id of rules.order) {
+      if (!unlocked.has(id)) {
+        if (credit < cost) break;
+        credit -= cost;
+        unlocked.add(id);
+      }
+      if (stamped.has(id)) credit += 1;
+    }
+    return [...unlocked];
+  };
+
+  const insertBefore = (rules: UnlockRules, inserted: LevelId, before: LevelId): UnlockRules => {
+    const at = rules.order.indexOf(before);
+    if (at < 0) throw new Error(`${String(before)} is not in order`);
+    return { ...rules, order: [...rules.order.slice(0, at), inserted, ...rules.order.slice(at)] };
+  };
+
+  const includesAll = (outer: readonly LevelId[], inner: readonly LevelId[]): boolean =>
+    inner.every((id) => outer.includes(id));
+
+  describe("with content/game.config.json's own order, and kingston before ottawa", () => {
+    const shipped: UnlockRules = {
+      initialLevels: gameConfig.unlockRules.initialLevels.map((id) => levelId(id)),
+      order: gameConfig.unlockRules.order.map((id) => levelId(id)),
+      stampsToUnlockNext: gameConfig.unlockRules.stampsToUnlockNext,
+    };
+    const withKingston = insertBefore(shipped, levelId('kingston'), levelId('ottawa'));
+    const upToQuebec = [levelId('halifax'), levelId('peggys-cove'), levelId('quebec-city')];
+
+    it('is the shipped chain this fixture assumes', () => {
+      expect(shipped.stampsToUnlockNext).toBe(1);
+      expect(shipped.order.slice(0, 5)).toEqual([
+        'halifax',
+        'peggys-cove',
+        'quebec-city',
+        'ottawa',
+        'toronto',
+      ]);
+    });
+
+    it('keeps Ottawa open when the stamps that opened it now reach Kingston first', () => {
+      const before = unlockedLevelIds(shipped, upToQuebec);
+      expect(before).toContain('ottawa');
+
+      /* The defect, on the old walk: the credit goes to Kingston and Ottawa locks. */
+      expect(legacyWalk(withKingston, upToQuebec)).not.toContain('ottawa');
+
+      const after = unlockedLevelIds(withKingston, upToQuebec, before);
+      expect(includesAll(after, before)).toBe(true);
+      expect(after).toContain('kingston');
+      expect(after).toContain('ottawa');
+      expect(after).not.toContain('toronto');
+    });
+
+    it('keeps a stamped Ottawa, and what its stamp opened, even with nothing remembered', () => {
+      const stamps = [...upToQuebec, levelId('ottawa')];
+      const before = unlockedLevelIds(shipped, stamps);
+      expect(before).toContain('toronto');
+
+      /* Worse on the old walk: it stops at the first level it cannot open, so a
+         level the player has finished locks, and so does the one after it. */
+      const legacy = legacyWalk(withKingston, stamps);
+      expect(legacy).not.toContain('ottawa');
+      expect(legacy).not.toContain('toronto');
+
+      expect(includesAll(unlockedLevelIds(withKingston, stamps, before), before)).toBe(true);
+      expect(unlockedLevelIds(withKingston, stamps)).toEqual(
+        expect.arrayContaining(['kingston', 'ottawa', 'toronto']),
+      );
+    });
+
+    it('lets play carry on past the inserted level', () => {
+      const remembered = unlockedLevelIds(
+        withKingston,
+        upToQuebec,
+        unlockedLevelIds(shipped, upToQuebec),
+      );
+      const stamps = [...upToQuebec, levelId('kingston'), levelId('ottawa')];
+      expect(unlockedLevelIds(withKingston, stamps, remembered)).toContain('toronto');
+    });
+  });
+
+  it('spends credit on a remembered level it can pay for, so memory opens nothing extra', () => {
+    /* Were a remembered level passed free, each reload would leave one stamp
+       unspent and open one more level: one stamp would open the map. */
+    const rules: UnlockRules = {
+      initialLevels: [levelId('a')],
+      order: ['a', 'b', 'c', 'd'].map((id) => levelId(id)),
+      stampsToUnlockNext: 1,
+    };
+    const once = unlockedLevelIds(rules, [levelId('a')]);
+    expect(once).toEqual(['a', 'b']);
+    expect(unlockedLevelIds(rules, [levelId('a')], once)).toEqual(['a', 'b']);
+  });
+
+  it('holds over random orders, stamps, costs and chained insertions (seeded)', () => {
+    const random = seededRandomSource(0x0068_0009);
+    const pool = Array.from({ length: 14 }, (_unused, index) => levelId(`place-${String(index)}`));
+    let insertions = 0;
+    let legacyBroken = 0;
+
+    for (let trial = 0; trial < 400; trial += 1) {
+      const size = random.int(2, 10);
+      const shuffled = random.shuffle(pool);
+      const order = shuffled.slice(0, size);
+      const spare = shuffled.slice(size);
+      const first = order[0] as LevelId;
+      const initialLevels =
+        random.next() < 0.2 ? [first, random.pick(order) as LevelId] : [first];
+      let rules: UnlockRules = { initialLevels, order, stampsToUnlockNext: random.int(1, 4) };
+
+      /* A save, played: each stamp lands on a level that is open, and the set the
+         rules open is persisted and fed back after every one. */
+      const stamps: LevelId[] = [];
+      let remembered = unlockedLevelIds(rules, stamps, []);
+      const play = (turns: number): void => {
+        for (let turn = 0; turn < turns; turn += 1) {
+          const next = random.pick(remembered.filter((id) => !stamps.includes(id)));
+          if (next === undefined) return;
+          stamps.push(next);
+          const opened = unlockedLevelIds(rules, stamps, remembered);
+          /* Persisting and feeding back is a fixed point: memory opens nothing. */
+          expect(unlockedLevelIds(rules, stamps, opened)).toEqual(opened);
+          remembered = opened;
+        }
+      };
+      play(random.int(0, 12));
+
+      /* Before any insertion, memory changes nothing for a save played in order. */
+      expect(new Set(remembered)).toEqual(new Set(legacyWalk(rules, stamps)));
+
+      for (let chained = random.int(1, 4); chained > 0 && spare.length > 0; chained -= 1) {
+        const inserted = spare.shift() as LevelId;
+        const at = random.int(1, rules.order.length + 1);
+        const longer: UnlockRules = {
+          ...rules,
+          order: [...rules.order.slice(0, at), inserted, ...rules.order.slice(at)],
+        };
+
+        if (!includesAll(legacyWalk(longer, stamps), legacyWalk(rules, stamps))) legacyBroken += 1;
+
+        const before = remembered;
+        const after = unlockedLevelIds(longer, stamps, before);
+        expect(
+          includesAll(after, before),
+          `trial ${String(trial)}: inserting ${String(inserted)} at ${String(at)} into ` +
+            `[${rules.order.join(', ')}] at cost ${String(rules.stampsToUnlockNext)} with stamps ` +
+            `[${stamps.join(', ')}] locked [${before.filter((id) => !after.includes(id)).join(', ')}]`,
+        ).toBe(true);
+        insertions += 1;
+
+        rules = longer;
+        remembered = after;
+        play(random.int(0, 4));
+      }
+    }
+
+    expect(insertions).toBeGreaterThan(400);
+    /* The loop has teeth: the walk it replaces fails the same property. */
+    expect(legacyBroken).toBeGreaterThan(0);
   });
 });

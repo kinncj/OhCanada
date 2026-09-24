@@ -91,8 +91,10 @@ import { reachLevelEnd } from '@domain/entities/level-end';
 import type { Randomness } from '@domain/scheduling/question-scheduler';
 import {
   newProgress,
+  savedUnlockedLevelIds,
   stampedLevelIds,
   withCharacter,
+  withRulesUnlocked,
   type Progress,
 } from '@domain/entities/progress';
 import type { EpochMillis, LevelId, LocaleCode, QuestionId } from '@domain/ids';
@@ -812,6 +814,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
          `@domain/entities/level`. */
       journey: rules.journey,
       stamped: stampedLevelIds(progress),
+      /* What the save has already opened (ADR-0068 §9): a level inserted into
+         `order` never locks one of these again. */
+      unlocked: savedUnlockedLevelIds(progress),
       /* The catalogue's answer, derived from `content/levels/*.json` by a
          bundler glob — never a list anybody maintains, which is what makes
          dropping a level document in enough to make it playable. */
@@ -830,6 +835,9 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   /** Write the game down. Nothing waits for it and a failure never stops play. */
   const persist = (): void => {
     if (writesHeld) return;
+    /* Every level the rules open now is written into the save with it, so the
+       set outlives the order that opened it (ADR-0068 §9). */
+    progress = withRulesUnlocked(progress, rules.unlockRules);
     void saveProgress(save, progress).then((written) => {
       if (written.ok) {
         examEvents.emit('progress/saved');
@@ -845,6 +853,12 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       shellExam?.setStorageBlocked(true);
     });
   };
+
+  /* A save from a build that did not remember what it had opened learns it on
+     its first boot here, under the order it was opened by — before any level is
+     inserted into that order (ADR-0068 §9). A save with nothing new is not
+     written. */
+  if (withRulesUnlocked(progress, rules.unlockRules) !== progress) persist();
 
   /**
    * One answer, and everything it changes.

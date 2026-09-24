@@ -60,6 +60,12 @@ export interface JourneyState {
   readonly journey: Journey;
   /** The stamps in the passport — `stampedLevelIds(progress)`. */
   readonly stamped: readonly LevelId[];
+  /**
+   * The levels the save has marked open — `savedUnlockedLevelIds(progress)`.
+   * Required, not defaulted: without it a level inserted into `order` takes the
+   * credit that opened a later one, and the later one locks again (ADR-0068 §9).
+   */
+  readonly unlocked: readonly LevelId[];
   /** The catalogue's answer: `hasLevel(id)`. Never a list anybody maintains. */
   readonly isBuilt: (id: LevelId) => boolean;
 }
@@ -75,7 +81,9 @@ export interface JourneyState {
  * copy rows are keyed on.
  */
 export function journeyEntries(state: JourneyState): readonly MapEntry[] {
-  const unlocked = new Set<LevelId>(unlockedLevelIds(state.rules, state.stamped));
+  const unlocked = new Set<LevelId>(
+    unlockedLevelIds(state.rules, state.stamped, state.unlocked),
+  );
   const stamped = new Set<LevelId>(state.stamped);
   const places = Math.max(JOURNEY_LENGTH, state.journey.length);
 

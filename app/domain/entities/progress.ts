@@ -25,6 +25,7 @@ import type { ReviewRecord } from '@domain/scheduling/review-record';
 import type { Player, Settings } from '@domain/entities/player';
 import type { PlayerCharacter } from '@domain/entities/character';
 import type { QuestState } from '@domain/entities/quest';
+import { unlockedLevelIds, type UnlockRules } from '@domain/entities/level';
 import { withCharacter as setCharacter, withSettings as setSettings } from '@domain/entities/player';
 
 /**
@@ -200,6 +201,31 @@ export const withUnlockedLevels = (
   progress: Progress,
   levelIds: readonly LevelId[],
 ): Progress => levelIds.reduce(withLevelUnlocked, progress);
+
+/** Every level this save has marked open — `LevelProgress.unlocked`, codec field 4 (ADR-0026). */
+export const savedUnlockedLevelIds = (progress: Progress): readonly LevelId[] =>
+  progress.levels.filter((level) => level.unlocked).map((level) => level.levelId);
+
+/**
+ * Write down every level the unlock rules open for this save now.
+ *
+ * The memory half of ADR-0068 §9. {@link unlockedLevelIds} can only promise
+ * that inserting a level into `order` never re-locks one if the levels a save
+ * has opened are remembered, and they are remembered here, in the flag the save
+ * already carries — no schema or codec change. A save written by a build that
+ * calls this before an insertion lands keeps every level it had open after it.
+ *
+ * Returns the very same value when nothing new opens, so a caller can tell a
+ * change from none by identity and not write a save that did not move.
+ */
+export const withRulesUnlocked = (progress: Progress, rules: UnlockRules): Progress => {
+  const remembered = savedUnlockedLevelIds(progress);
+  const opened = new Set(remembered);
+  const fresh = unlockedLevelIds(rules, stampedLevelIds(progress), remembered).filter(
+    (levelId) => !opened.has(levelId),
+  );
+  return fresh.length === 0 ? progress : withUnlockedLevels(progress, fresh);
+};
 
 export const hasStamp = (progress: Progress, levelId: LevelId): boolean =>
   (levelProgressFor(progress, levelId)?.stampEarnedAt ?? null) !== null;
