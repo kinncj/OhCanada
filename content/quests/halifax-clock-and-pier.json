@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-town-clock",
+      "kind": "read",
+      "targetId": "town-clock",
+      "prompt": {
+        "en": "Stop and read at the Town Clock",
+        "fr": "Arrêtez-vous pour lire à la tour de l'horloge"
+      },
+      "passages": [
+        {
+          "lesson": "rights-responsibilities-03-where-our-rights-come-from",
+          "passage": "rr3-sources-of-canadian-law"
+        },
+        {
+          "lesson": "rights-responsibilities-03-where-our-rights-come-from",
+          "passage": "rr3-magna-carta"
+        },
+        {
+          "lesson": "rights-responsibilities-03-where-our-rights-come-from",
+          "passage": "rr3-freedom-of-conscience-and-religion"
+        },
+        {
+          "lesson": "rights-responsibilities-03-where-our-rights-come-from",
+          "passage": "rr3-habeas-corpus"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-clock",
       "kind": "answer",
       "targetId": "rights",
@@ -290,6 +317,33 @@
               "evidence": "In Canada, rights come with responsibilities. These include: Obeying the law — One of Canada’s founding principles is the rule of law. Individuals and governments are regulated by laws and not by arbitrary actions. No person or group is above the law. … The law in Canada applies to everyone, including judges, politicians and the police."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-market-stall",
+      "kind": "read",
+      "targetId": "market-stall",
+      "prompt": {
+        "en": "Stop and read at the market stall",
+        "fr": "Arrêtez-vous pour lire à l'étal de marché"
+      },
+      "passages": [
+        {
+          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
+          "passage": "rr5-rights-bring-responsibilities"
+        },
+        {
+          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
+          "passage": "rr5-work-and-family"
+        },
+        {
+          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
+          "passage": "rr5-jury-duty-is-required"
+        },
+        {
+          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
+          "passage": "rr5-juries-make-justice-work"
         }
       ]
     },
@@ -365,6 +419,33 @@
               "evidence": "The Charter attempts to summarize fundamental freedoms while also setting out additional rights. The most important of these include: … Multiculturalism — A fundamental characteristic of the Canadian heritage and identity. Canadians celebrate the gift of one another’s presence and work hard to respect pluralism and live in harmony."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-pier-21",
+      "kind": "read",
+      "targetId": "pier-21",
+      "prompt": {
+        "en": "Stop and read at Pier 21",
+        "fr": "Arrêtez-vous pour lire au quai 21"
+      },
+      "passages": [
+        {
+          "lesson": "rights-responsibilities-01-what-the-charter-opens-with",
+          "passage": "rr1-charter-added-in-1982"
+        },
+        {
+          "lesson": "rights-responsibilities-01-what-the-charter-opens-with",
+          "passage": "rr1-freedoms-and-other-rights"
+        },
+        {
+          "lesson": "rights-responsibilities-01-what-the-charter-opens-with",
+          "passage": "rr1-mobility-rights"
+        },
+        {
+          "lesson": "rights-responsibilities-01-what-the-charter-opens-with",
+          "passage": "rr1-official-language-rights"
         }
       ]
     },
@@ -446,6 +527,33 @@
               "evidence": "Defending Canada … You may also serve in the Coast Guard or emergency services in your community such as a police force or fire department. By helping to protect your community, you follow in the footsteps of Canadians before you who made sacrifices in the service of our country."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-harbour-tug",
+      "kind": "read",
+      "targetId": "harbour-tug",
+      "prompt": {
+        "en": "Stop and read at the harbour tug",
+        "fr": "Arrêtez-vous pour lire au remorqueur"
+      },
+      "passages": [
+        {
+          "lesson": "rights-responsibilities-06-defending-canada",
+          "passage": "rr6-no-compulsory-service"
+        },
+        {
+          "lesson": "rights-responsibilities-06-defending-canada",
+          "passage": "rr6-the-regular-forces"
+        },
+        {
+          "lesson": "rights-responsibilities-06-defending-canada",
+          "passage": "rr6-part-time-reserves"
+        },
+        {
+          "lesson": "rights-responsibilities-06-defending-canada",
+          "passage": "rr6-cadets"
         }
       ]
     },

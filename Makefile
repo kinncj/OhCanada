@@ -6,7 +6,7 @@ SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-perf-device record-perf-device test-a11y \
         assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
-        check-obligations sources guide-coverage dist-digest verify-dist
+        check-obligations sources source-coverage dist-digest verify-dist
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -189,15 +189,15 @@ sources: ## Re-derive each cached extraction from its document and check the dig
 # A MEASUREMENT, NOT A GATE, and not in CI, for the same reason as `sources`: it
 # reads the git-ignored extraction. It prints, per chapter of Discover Canada,
 # how many sentences a verified question, lesson passage or level-told claim
-# carries and how many nothing carries, and what a player who only plays meets.
-# ADR-0061 §9 and ADR-0065 say coverage of the guide can only be held by a
-# repeated local measurement; this is that measurement, written down once.
-# `docs/plan/guide-coverage.md` records a run and the method.
+# carries, how many nothing carries, and how many a playthrough alone reaches.
+# ADR-0061 §9 and ADR-0065 hold that coverage of the source can only be kept by
+# a repeated local measurement; this is that measurement, written down once.
+# The coverage plan under docs/plan/ records a run and the method.
 #
-#     npm run guide-coverage -- --list    every uncovered sentence, by chapter
-#     npm run guide-coverage -- --units   every unit with its class (audit)
-guide-coverage: ## Per-chapter coverage of Discover Canada by surface (local, non-gating)
-	npm run --silent guide-coverage
+#     npm run source-coverage -- --list    every uncovered sentence, by chapter
+#     npm run source-coverage -- --units   every unit with its class (audit)
+source-coverage: ## Per-chapter coverage of Discover Canada by surface (local, non-gating)
+	npm run --silent source-coverage
 
 # THE SEPARATION-OF-DUTIES GATE LIVES HERE, and it reads git history, so this
 # target needs the history to be present. Both workflows set `fetch-depth: 0` on

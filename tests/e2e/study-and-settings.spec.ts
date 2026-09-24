@@ -6,6 +6,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { sharesProposition } from '@application/content/proposition';
 import { hasCopyRow, text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { START_LEVEL } from './start-level';
 import { holdToMove } from './held-drive';
 import { letGo } from './walk';
@@ -412,6 +413,8 @@ test.describe('reaching a landmark teaches, then asks', () => {
     await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
 
     await page.locator('[data-testid="poi-card-close"]').click();
+    /* The passages a `read` step names here, when one is waiting (ADR-0067). */
+    await closeTheReaderIfItOpens(page);
 
     /* And then the assessment half, which is what makes this a study tool. */
     const card = page.locator('[data-testid="question-card"]');
