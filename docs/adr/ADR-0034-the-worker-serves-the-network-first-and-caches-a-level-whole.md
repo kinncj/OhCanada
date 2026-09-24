@@ -150,6 +150,10 @@ first visit that stays downloads both; a build whose art outgrows it fails, and 
 rather than made expensive by accident. It also fails a worker that does not carry the `everyLevel` literal
 the page sends.
 
+*(ADR-0075, 2026-09-24: reopened as this paragraph said it would be. At 8,157,092 B against 8,388,608 an
+eleventh level failed the build. The precache stays under `budgets.initialPayloadBytes`, and every level's art
+is now held separately under `budgets.backgroundCacheBytes`, 5 MiB. The combined check is retired.)*
+
 **What the other kinds of art are.** Ground dressing strips (ADR-0042) and ride frames (ADR-0035) are
 `image` entries in `dist/manifest.json` owned by their level, so they are level art under every rule above;
 `deploy-check` already fails a manifest file the worker would never cache. Screen art (ADR-0041) —
@@ -198,7 +202,8 @@ is offline, reloads the level and opens the title.
 The worker's install is not the initial payload: it starts after `load`, and most of what it stores is the bytes the
 page just fetched. It gets the same ceiling anyway — `deploy-check` fails if the precache exceeds
 `budgets.initialPayloadBytes` — so it cannot become a second, uncounted first-visit download. The level caches are
-bounded by the art the build ships, which is inside `budgets.totalPayloadBytes`.
+bounded by the art the build ships, which is inside `budgets.totalPayloadBytes`. *(ADR-0075, 2026-09-24: and, since
+the background cache of every level, inside `budgets.backgroundCacheBytes`, 5 MiB.)*
 
 ## Alternatives considered
 

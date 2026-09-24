@@ -279,6 +279,12 @@ export interface PerformanceBudgets {
   readonly initialPayloadBytes: number;
   readonly levelPayloadBytes: number;
   readonly totalPayloadBytes: number;
+  /**
+   * Every level's art, both scales, each file once: what the service worker
+   * caches in the background once it controls a page (ADR-0034). Held apart
+   * from the precache, which stays under `initialPayloadBytes` (ADR-0075).
+   */
+  readonly backgroundCacheBytes: number;
   readonly textureMemoryMbPerLevel: number;
   readonly timeToPlayMs: number;
   readonly frameTimeMs: number;

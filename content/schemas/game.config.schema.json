@@ -240,6 +240,11 @@
         "initialPayloadBytes": { "type": "integer", "minimum": 1 },
         "levelPayloadBytes": { "type": "integer", "minimum": 1 },
         "totalPayloadBytes": { "type": "integer", "minimum": 1 },
+        "backgroundCacheBytes": {
+          "description": "Ceiling on every level's art, both scales, each file once, that the service worker caches in the background (ADR-0034). Separate from the precache, which stays under initialPayloadBytes (ADR-0075).",
+          "type": "integer",
+          "minimum": 1
+        },
         "textureMemoryMbPerLevel": { "type": "integer", "minimum": 1 },
         "timeToPlayMs": { "type": "integer", "minimum": 1 },
         "frameTimeMs": { "type": "number", "exclusiveMinimum": 0 }
@@ -248,6 +253,7 @@
         "initialPayloadBytes",
         "levelPayloadBytes",
         "totalPayloadBytes",
+        "backgroundCacheBytes",
         "textureMemoryMbPerLevel",
         "timeToPlayMs",
         "frameTimeMs"

@@ -107,6 +107,7 @@
     "initialPayloadBytes": 8388608,
     "levelPayloadBytes": 8388608,
     "totalPayloadBytes": 104857600,
+    "backgroundCacheBytes": 5242880,
     "textureMemoryMbPerLevel": 64,
     "timeToPlayMs": 6000,
     "frameTimeMs": 16.7
