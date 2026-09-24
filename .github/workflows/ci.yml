@@ -80,8 +80,17 @@ jobs:
       # it cannot see, so removing this line turns the gate red, not silent.
       # That is on purpose. The repository is small; a full fetch costs seconds.
       #
-      # No other job runs it, and `git log` is the only git any script here
-      # touches, so every other job below takes the default shallow clone.
+      # `fetch-depth: 0` also fetches EVERY BRANCH (all heads and tags), which
+      # ADR-0073 relies on: a squash-merge recorded in
+      # scripts/content-squash-merges.json is judged by its pre-squash head's
+      # commits, so that head must be in the clone. `make verify-content` runs
+      # `make squash-heads` first, which fetches a recorded head by sha, then by
+      # `refs/pull/<N>/head`, once its branch has been deleted; a head already
+      # present costs nothing. The token checkout persists is `contents: read`,
+      # which is all a fetch needs.
+      #
+      # No other job runs it, and only this job's scripts touch git history,
+      # so every other job below takes the default shallow clone.
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0

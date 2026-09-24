@@ -68,6 +68,19 @@ level's task". The passport's promise won. Read everything below with these four
 - **Finishing the task after reaching the end still draws "Task done!"**, with the stamp and the level that
   opened. The unfinished card and the finished card are two cards, one each per sitting.
 
+**Amended a sixth time, 2026-09-24, by ADR-0074: the end of a finished level leads on.** From the owner's
+playtest: "Hitting the end of the wall should send you to the next level". The scene now reports **every
+arrival**, and re-arms once the player walks back behind the line. Read everything below with these changes:
+
+- **The "not finished yet" card is drawn once per arrival**, not once per sitting. A player who presses Keep
+  playing, walks back and comes to the end again is told again.
+- **The end of a level whose stamp is already held opens the next level in `journey` order directly.** This
+  covers a stamp earned by the task in this sitting (where "Task done!" was already drawn) and one earned in
+  an earlier sitting. No card is drawn. The live region says "Level finished!", then the next level's
+  waiting sentence. `TN-DONE-10` is that route.
+- **The finished card at the end is still drawn** when this arrival wrote the stamp, or when there is
+  nowhere to go: the last level, or a next level that is not open. It is still drawn once per sitting.
+
 Read `README.md` in this directory first. This file owns the **completion card**: when it appears, what it
 may say, and the two rows that are the same on every level. It owns none of the following and points at all
 of them:
@@ -691,7 +704,8 @@ Feature: The card is honest about what this build actually has
     When I reach the end of it again
     Then no second "stamp/earned" event is emitted
     And the passport still contains exactly one stamp for it
-    And any line the card draws about my answers is the current count, not the old one
+    And, when the next level is open, it opens (TN-DONE-10, ADR-0074)
+    And, when it is not, any line the card draws about my answers is the current count, not the old one
 
   Scenario: Finishing the task after already reaching the end earns nothing twice either
     Given I reached the end of a level with a quest and earned its stamp
@@ -894,7 +908,9 @@ Feature: The end of a level earns the stamp only for the task
     And "quest-complete-map" reads "Choose a level"
     When I tap "Keep playing"
     Then the card is gone and the level accepts input again
-    And the card does not come back in this sitting, however often I cross the end
+    And the card does not come back while I stay at the end
+    When I walk back from the end and reach it again
+    Then the card is drawn again, once for that arrival (ADR-0074)
 
   Scenario: Finishing the task afterwards is still finishing it
     Given I reached the end and kept playing
@@ -911,6 +927,52 @@ Feature: The end of a level earns the stamp only for the task
 
 The three new rows are `COPY_GAPS` entries in `app/ui/copy.ts`, written by `app/ui` and pending the product
 owner's ratification.
+
+## TN-DONE-10 — The end of a finished level leads on (ADR-0074)
+
+```gherkin
+Feature: Reaching the end of a level I have finished takes me to the next one
+  As a player who has finished a level's task
+  I want walking to the end of the level to take me on
+  So that the end of the world is a way forward, not a wall
+
+  Background:
+    Given the Ottawa level is playable
+    And the level after it on the journey is open
+
+  Scenario: I finished the task here, kept playing, and walked to the end
+    Given I finished the level's task and "Task done!" was drawn
+    And I tapped "Keep playing"
+    When I reach the end of the level
+    Then the next level on the journey starts loading
+    And no completion card is drawn again
+    And the level select is not shown on the way
+
+  Scenario: I finished this level in an earlier sitting
+    Given the level's stamp is already in my passport
+    When I reach the end of the level
+    Then the next level on the journey starts loading, with no card first
+
+  Scenario: The move is said, not only shown
+    When I reach the end of a finished level and the next one starts loading
+    Then #tn-live-region reads "Level finished!"
+    And then it reads the next level's own waiting sentence
+    And nothing on the way animates, with or without "Less movement"
+
+  Scenario: Every way of moving gets me there
+    Given I move with the keyboard, with one switch, by touch or with auto-move
+    When I reach the end of a finished level
+    Then the next level starts loading
+
+  Scenario: There is nowhere to go
+    Given this is the last level, or the next level is not open
+    When I reach the end of the level with its stamp in my passport
+    Then the finished card is drawn, as in TN-DONE-01, once in this sitting
+
+  Scenario: The last stop comes before the end
+    Given any built level
+    Then every landmark and every character can be engaged before I reach the level's end
+```
 
 ## Open questions
 
