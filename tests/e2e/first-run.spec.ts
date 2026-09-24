@@ -21,13 +21,16 @@ import { START_LEVEL } from './start-level';
 
 const SLOT_SKIN = '[data-testid="slot-skin"]';
 
-/** A browser that has never played: no save, so no character, so a first run. */
-async function coldLoad(page: Page): Promise<void> {
-  await page.goto('./');
+/**
+ * A browser that has never played: no save, so no character, so a first run.
+ * `url` is `./?e2e=1` where a test reads the event trace.
+ */
+async function coldLoad(page: Page, url = './'): Promise<void> {
+  await page.goto(url);
   await page.evaluate(() => {
     window.localStorage.clear();
   });
-  await page.goto('./');
+  await page.goto(url);
   await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');
 }
 
@@ -116,11 +119,13 @@ test.describe('a first run', () => {
 
     await page.getByTestId('start-playing').click();
 
-    /* `character/created` — not `character/changed` — and the save written. */
+    /* `character/created` — not `character/changed` — and the save written.
+       The write is fire-and-forget (`persist` in `app/bootstrap/main.ts`:
+       "Nothing waits for it"), so its event is polled for, not read at once. */
+    await expect.poll(() => events(page)).toContain('progress/saved');
     const trace = await events(page);
     expect(trace).toContain('character/created');
     expect(trace).not.toContain('character/changed');
-    expect(trace).toContain('progress/saved');
 
     await expect(page.getByTestId('level-select')).toBeVisible();
     await page.getByTestId(`level-card-${START_LEVEL}`).click();
@@ -152,10 +157,14 @@ test.describe('a first run', () => {
   });
 
   test('never offers Play again once a character exists', async ({ page }) => {
-    await coldLoad(page);
+    await coldLoad(page, './?e2e=1');
     await page.getByTestId('title-play').click();
     await page.getByTestId('start-playing').click();
     await expect(page.getByTestId('level-select')).toBeVisible();
+    /* The character exists once it is written down, and nothing waits for that
+       write (`persist`, `app/bootstrap/main.ts`): a reload that beats it is a
+       reload of a first run. */
+    await expect.poll(() => events(page)).toContain('progress/saved');
 
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-tn-boot', 'ready');

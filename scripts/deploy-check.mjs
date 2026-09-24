@@ -149,7 +149,11 @@ if (!existsSync(DIST_DIR)) {
  *   - every same-origin resource the HTML statically references through
  *     `<script src>`, `<link rel="modulepreload">`, `<link rel="preload">` and
  *     `<link rel="stylesheet">`;
- *   - every chunk those chunks reach by *static* ES import, transitively.
+ *   - every chunk those chunks reach by *static* ES import, transitively;
+ *   - every bundled font file (ADR-0066 §1, ADR-0071), all four of them, the
+ *     dyslexia face included: it is fetched only when that toggle is on, but it
+ *     is precached with the shell, and charging it here is the conservative
+ *     reading.
  *
  * Deliberately NOT counted:
  *
@@ -166,7 +170,7 @@ if (!existsSync(DIST_DIR)) {
  *     enforced; it exists now (slice 1, task 1.10).
  *   - Anything reached only at runtime (fetched JSON, atlases, audio). Those
  *     are level payload too.
- *   - Images or fonts referenced by `<link rel="icon">` and friends: not on the
+ *   - Images referenced by `<link rel="icon">` and friends: not on the
  *     critical path to first frame. The web app manifest and its icons are in
  *     this group: a browser reads them to offer an install, not to start.
  *   - What the service worker precaches when it installs (ADR-0034). It
@@ -252,6 +256,9 @@ function staticImportsOf(source) {
 
 const INDEX_HTML = join(DIST_DIR, 'index.html');
 
+/** ADR-0071: the bundled faces together weigh at most 300 KB, read as 300 000 B. */
+const BUNDLED_FACE_CEILING_BYTES = 300_000;
+
 if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
   const basePath = typeof config.basePath === 'string' ? config.basePath : '/';
   const budgets = config.budgets ?? {};
@@ -289,6 +296,29 @@ if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
       'dist/sw.js is in the initial payload: something in dist/index.html or a chunk ' +
         'statically references it. Nothing may import the service worker - it is registered ' +
         'by URL, see ADR-0034 and infra/pages/sw.js.',
+    );
+  }
+
+  // THE BUNDLED FACES ARE THE SHELL (ADR-0066 §1, ADR-0071). They are reached
+  // through `new URL(..., import.meta.url)` in app/ui/type-faces.ts, which the
+  // static-import walk above does not follow, so they are charged here by
+  // extension: every font the build emitted is initial payload, whoever
+  // references it. Their total is also held to ADR-0071's ceiling, read as
+  // 300 000 B, so a fifth face or a heavier release fails the build rather than
+  // a review. A build with no font at all fails too: that is the ADR-0066 defect
+  // (a stack of names and no file), and it would pass every other check here.
+  const fontFiles = distFiles.filter((file) => /\.(woff2|woff|otf|ttf)$/i.test(file));
+  for (const file of fontFiles) reachable.add(file);
+  const fontBytes = fontFiles.reduce((sum, file) => sum + statSync(file).size, 0);
+  if (fontFiles.length === 0) {
+    fail(
+      'dist/ carries no font file. The game brings its own faces (ADR-0066 §1): app/ui/type-faces.ts ' +
+        'resolves them through Vite, so a build without them has lost that import.',
+    );
+  } else if (fontBytes > BUNDLED_FACE_CEILING_BYTES) {
+    fail(
+      `the bundled faces are ${fontBytes} B over ${fontFiles.length} file(s); ADR-0071's ceiling is ` +
+        `${BUNDLED_FACE_CEILING_BYTES} B for all of them together.`,
     );
   }
 
@@ -343,6 +373,8 @@ if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
   payloadSummary =
     `initial payload ${kb(initialBytes)} raw / ${kb(initialGzipBytes)} gzip ` +
     `across ${initialFiles.length} file(s) against ${mib(initialBudget ?? 0)}, ` +
+    `of which bundled faces ${kb(fontBytes)} over ${fontFiles.length} file(s) against ` +
+    `${kb(BUNDLED_FACE_CEILING_BYTES)}, ` +
     `${mib(totalBytes)} fetchable in dist/`;
 } else if (distFiles.length > 0) {
   fail('dist/index.html is missing or the config is unreadable; the payload budget was not checked.');

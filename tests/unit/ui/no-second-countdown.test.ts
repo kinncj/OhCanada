@@ -69,6 +69,14 @@ const ALLOWED: Readonly<Record<string, string>> = {
    */
   'adapters/phaser/character-preview.ts':
     "the creator picture repaints its idle pose; nothing expires, and it requests no frame under reduced motion",
+  /*
+   * A load budget, like the stalled-load escape above (ADR-0066 §1). The boot
+   * title and the front door wait for the bundled face and, after at most three
+   * seconds, are drawn in the fallback instead. Nothing is shown counting down, nothing expires,
+   * and the player chooses nothing and loses nothing either way.
+   */
+  'adapters/phaser/font-ready.ts':
+    "the wait for the UI face gives up after a load budget and draws in the fallback; nothing expires",
 };
 
 const sourceFiles = (directory: string): readonly string[] =>

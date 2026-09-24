@@ -57,6 +57,36 @@ export default tseslint.config(
     },
   },
 
+  /*
+   * ADR-0066 §1: the game brings its own faces, and no stack names a device
+   * family. The seven names that ADR took out of the stacks may not come back
+   * in any string the app or common/ builds, which is where every stylesheet
+   * and the canvas' fontFamily are written. The positive half of the rule (every
+   * declared font-family is exactly a bundled stack) is
+   * tests/unit/ui/type-stacks.test.ts, which also reads index.html, which this
+   * linter never sees.
+   */
+  {
+    files: ['app/**/*.ts', 'common/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'Literal[value=/system-ui|-apple-system|Segoe UI|Roboto|Comic Sans|Verdana|Tahoma/i]',
+          message:
+            'A device font family in a string. The game brings its own faces (ADR-0066 §1): use UI_STACK or DYSLEXIA_STACK from @common/type-faces.',
+        },
+        {
+          selector:
+            'TemplateElement[value.raw=/system-ui|-apple-system|Segoe UI|Roboto|Comic Sans|Verdana|Tahoma/i]',
+          message:
+            'A device font family in a template. The game brings its own faces (ADR-0066 §1): use UI_STACK or DYSLEXIA_STACK from @common/type-faces.',
+        },
+      ],
+    },
+  },
+
   {
     files: ['**/*.cjs'],
     languageOptions: {

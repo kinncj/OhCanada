@@ -66,7 +66,10 @@
  *     difference and forced-colours mode.
  */
 
+import { DYSLEXIA_STACK, UI_STACK } from '@common/type-faces';
+
 import { PALETTE } from './palette';
+import { injectTypeFaces } from './type-faces';
 
 const STYLE_ID = 'tn-screen-style';
 
@@ -146,7 +149,7 @@ const CSS = `
 
 [data-tn-font="dyslexia"] .tn-screen,
 [data-tn-font="dyslexia"] .tn-hud {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -163,7 +166,7 @@ const CSS = `
   /* Flat, and opaque. See the note at the top about axe and gradients. */
   background: var(--tn-night);
   color: var(--tn-on-night);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: ${UI_STACK};
   font-size: 1.0625rem;
   line-height: 1.5;
   overscroll-behavior: contain;
@@ -399,8 +402,16 @@ const CSS = `
 
   Two colours because there are two surfaces -- the paper sheet and the night
   behind it -- and one ring cannot be visible on both. The border also changes
-  shape and weight, so the indicator survives greyscale, a colour-vision
-  difference and forced-colours mode, where an outline colour may be replaced.
+  shape, so the indicator survives greyscale, a colour-vision difference and
+  forced-colours mode, where an outline colour may be replaced.
+
+  Shape and never WIDTH. It used to thicken to 0.25rem as well, which narrows
+  the content box by a few pixels, and with the bundled face (ADR-0066 §1)
+  "Choisir un niveau" at 200 % text fits one line only without that border. So
+  the focused primary wrapped to two lines, and pressing the next button, which
+  moves focus, unwrapped it: everything below rose 58 px between the finger
+  going down and coming up, and the tap landed on the gap. A focus style may not
+  move anything.
 */
 .tn-screen :focus-visible,
 .tn-screen [data-switch-highlight="true"],
@@ -410,7 +421,6 @@ const CSS = `
   outline-offset: 0.1875rem;
   box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
   border-style: double;
-  border-width: 0.25rem;
 }
 
 /*
@@ -2298,7 +2308,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: ${UI_STACK};
   font-size: 1rem;
   line-height: 1.2;
   color: var(--tn-on-night);
@@ -2411,9 +2421,10 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   The two controls a player needs while a level is running, on one row: the way
   to Settings and the way to everything else. Each is as wide as its word and the
   row's spare width is shared between them, so at 200 % text "Settings" and
-  "Menu" -- and « Réglages » and « Menu » in the dyslexia font -- still share a
-  390 px line. They wrap to two rows only if a label ever cannot, rather than
-  shrinking a word into pieces.
+  "Menu" -- and « Réglages » and « Menu » -- still share a 390 px line. They
+  wrap to two rows only if a label ever cannot, rather than shrinking a word
+  into pieces. In the bundled dyslexia face (OpenDyslexic) at 200 % they
+  cannot, and do wrap: ADR-0071 §5 records that and what it costs the strip.
 */
 .tn-hud__controls {
   display: flex;
@@ -2544,6 +2555,15 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   color: var(--tn-ink);
 }
 
+/* Each reading may shrink below its longest word. In the dyslexia face at 200 %
+   text, « Chronomètre » alone is wider than the clock, and a flex item never
+   shrinks below its longest word unless told to (the few boxes in the header
+   note that must, do). */
+.tn-exam__clock > * {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
 /* "Timer paused" reads as a state word, in the same place every other state
    word on this screen sits -- and the time left stays beside it, because a
    player who opened a menu still wants to know what they are coming back to. */
@@ -2588,6 +2608,11 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   inline-size: 1.25rem;
   text-align: center;
   line-height: 1;
+  /* A drawn mark, not a word, and aria-hidden: always the UI face's circle.
+     OpenDyslexic's circles are wider than this box at every size, so under the
+     dyslexia toggle they spilled out of it (ADR-0071). The words beside the
+     mark still take the dyslexia face. */
+  font-family: ${UI_STACK};
 }
 
 /* The review's marked options: a list item, not a control, so the option rules
@@ -2656,7 +2681,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 
 [data-tn-font="dyslexia"] .tn-update-notice {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -2760,7 +2785,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 
 [data-tn-font="dyslexia"] .tn-portrait-notice {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -2854,8 +2879,14 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 `;
 
+/** The sheet's text, for the tests that read what it declares (tests/unit/ui/type-stacks.test.ts). */
+export const SCREEN_STYLES_CSS: string = CSS;
+
 /** Idempotent: a second screen on the page reuses the first one's stylesheet. */
 export function injectScreenStyles(doc: Document): HTMLStyleElement {
+  /* The faces first: a sheet that names a family nobody declared would draw the
+     fallback until something else happened to declare it. */
+  injectTypeFaces(doc);
   const existing = doc.getElementById(STYLE_ID);
   if (existing !== null) return existing as HTMLStyleElement;
 

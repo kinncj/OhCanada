@@ -43,8 +43,8 @@ and a title, a lesson is an id and a title, and the reader is `TN-READ`'s `Lesso
 **The chapters are in the guide's own order**, read from the source register's page ranges
 (`content/sources/discover-canada.json`), not in file-system order — so *Rights and Responsibilities of
 Citizenship* comes before *Who We Are*, as it does in the booklet. Only the register's `chapters` array reaches
-the bundle — a named import the bundler tree-shakes out of the 47 KB manifest. *The Oath of Citizenship* has no lessons (ADR-0061 §3 excludes the recitation) and is
-therefore not listed: a chapter with nothing to read is not offered.
+the bundle — a named import the bundler tree-shakes out of the 47 KB manifest. *The Oath of Citizenship* is listed first: ADR-0061 §3 excludes the recitation itself, but
+the chapter holds a lesson on what new citizens promise. A chapter with nothing to read is not offered.
 
 **What Learn is not.** It asks no question, counts nothing, remembers nothing and changes no save, no
 schedule and no exam (ADR-0061 §5, §6). There is no "you have read this", no progress bar and no "Next
@@ -160,7 +160,6 @@ Feature: Reading the guide by chapter
     Then the element "learn" has role "dialog" and its accessible name is "Learn"
     And "learn-chapters" lists one button per chapter that has something to read
     And the first is "The Oath of Citizenship" and the last is "Canada's Regions"
-    And "The Oath of Citizenship" is not listed
     And no lesson document has been downloaded
 
   Scenario: A chapter lists its lessons

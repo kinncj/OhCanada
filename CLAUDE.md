@@ -13,7 +13,7 @@ Portrait-first 2D side-scrolling game teaching the official IRCC Canadian citize
 | Orientation | Portrait always. Design resolution 1080×1920. Desktop centres the portrait canvas; side panels extend the level's sky/ground. |
 | Traversal | One-thumb: hold to move, tap to jump/interact, tap NPC or POI to engage. No trick system. Auto-move option. |
 | Art | Casual cartoon: bold rounded shapes, saturated palette, 3-tone cel shading, outline on characters only. Landmarks and NPCs are reference-accurate, simplified — never invented. |
-| Type | The game brings its own faces: one bundled UI text face and one bundled dyslexia face, ≤ 200 KB together, precached. No stack names `system-ui` or any device font — a layout measured against a face nobody chose is not measured (ADR-0066). |
+| Type | The game brings its own faces: one bundled UI text face and one bundled dyslexia face, ≤ 300 KB together, precached, shipped exactly as upstream made them. No stack names `system-ui` or any device font — a layout measured against a face nobody chose is not measured (ADR-0066, ADR-0071). |
 | Licence | Code MIT. Original art CC-BY-4.0. Question data CC0. Third-party assets CC0/CC-BY only, attributed — and, for fonts alone, OFL-1.1 as well (ADR-0066). No dependency that restricts open-source redistribution (excludes Spine runtimes). |
 | Facts | Paraphrased from Discover Canada on canada.ca, chapter-referenced, agentically verified before shipping. |
 | Language | EN and FR from the first commit. |

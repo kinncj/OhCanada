@@ -1,20 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="680" height="440" viewBox="0 0 680 440" shape-rendering="geometricPrecision">
-  <title>A canal lock in winter: a masonry chamber between two coursed stone walls with snow lying on their copings and a black iron handrail along each, a pair of closed white timber gates meeting at a mitre across the chamber with three rails on each leaf, the long white balance beams swung out over the walls on their pivot posts, ice in the chamber below the gates and a snow bank along the near coping. No lettering, no plaque, no flag, no figure, no boat. Drawn from assets/refs/ottawa/rideau-canal-ottawa-locks.jpg; see assets/refs/references.json, subject canal-lock. POI hero, present at every visual tier.</title>
+  <title>A canal lock in winter: a masonry chamber between two coursed stone walls with snow lying on their copings and a black iron handrail along each, a pair of closed white timber gates meeting at a mitre across the chamber with three rails on each leaf, the long white balance beams swung out over the walls on their pivot posts, a band of pale frozen ice with straight sheen bars filling the chamber below the gates, and a low snow bank along the near edge. No lettering, no plaque, no flag, no figure, no boat. Drawn from assets/refs/ottawa/rideau-canal-ottawa-locks.jpg; see assets/refs/references.json, subject canal-lock. POI hero, present at every visual tier.</title>
 
-  <rect x="150" y="236" width="380" height="164" fill="#6799d6"/>
-  <rect x="150" y="236" width="380" height="16" fill="#a9d0e5"/>
-  <rect x="176" y="268" width="120" height="7" fill="#e4f2f6"/>
-  <rect x="380" y="256" width="110" height="7" fill="#e4f2f6"/>
+  <rect x="150" y="236" width="380" height="190" fill="#a9d0e5"/>
+  <polygon points="150,300 340,330 530,300 530,312 340,342 150,312" fill="#e4f2f6"/>
+  <rect x="176" y="356" width="118" height="6" fill="#e4f2f6"/>
+  <rect x="372" y="372" width="132" height="6" fill="#e4f2f6"/>
+  <rect x="222" y="386" width="70" height="5" fill="#ffffff" opacity="0.7"/>
+  <rect x="150" y="398" width="380" height="10" fill="#6799d6" opacity="0.45"/>
+  <path d="M 150 404 L 150 364 Q 196 368 238 404 Z" fill="#e6eff7"/>
+  <path d="M 150 364 Q 196 368 238 404 L 226 404 Q 190 374 150 372 Z" fill="#ffffff"/>
+  <path d="M 530 404 L 530 368 Q 486 372 448 404 Z" fill="#c2d6e8"/>
+  <path d="M 530 368 Q 486 372 448 404 L 460 404 Q 492 378 530 376 Z" fill="#e6eff7"/>
 
-  <polygon points="150,200 340,244 340,392 150,392" fill="#f0f2f5"/>
-  <polygon points="530,200 340,244 340,392 530,392" fill="#cbd2da"/>
-  <polygon points="150,236 340,278 340,292 150,250" fill="#cbd2da"/>
-  <polygon points="150,292 340,332 340,346 150,306" fill="#cbd2da"/>
-  <polygon points="530,236 340,278 340,292 530,250" fill="#f0f2f5"/>
-  <polygon points="530,292 340,332 340,346 530,306" fill="#f0f2f5"/>
-  <rect x="330" y="238" width="20" height="154" fill="#ffffff"/>
+  <polygon points="150,200 340,244 340,334 150,304" fill="#f0f2f5"/>
+  <polygon points="530,200 340,244 340,334 530,304" fill="#cbd2da"/>
+  <polygon points="150,228 340,268 340,277 150,237" fill="#cbd2da"/>
+  <polygon points="150,254 340,290 340,299 150,263" fill="#cbd2da"/>
+  <polygon points="150,280 340,313 340,322 150,289" fill="#cbd2da"/>
+  <polygon points="530,228 340,268 340,277 530,237" fill="#f0f2f5"/>
+  <polygon points="530,254 340,290 340,299 530,263" fill="#f0f2f5"/>
+  <polygon points="530,280 340,313 340,322 530,289" fill="#f0f2f5"/>
+  <rect x="330" y="238" width="20" height="98" fill="#ffffff"/>
 
-  <rect x="0" y="176" width="152" height="224" fill="#c8c1b6"/>
+  <rect x="0" y="176" width="152" height="250" fill="#c8c1b6"/>
   <rect x="0" y="176" width="152" height="16" fill="#a99789"/>
   <rect x="0" y="232" width="152" height="7" fill="#a99789"/>
   <rect x="0" y="288" width="152" height="7" fill="#a99789"/>
@@ -25,7 +33,7 @@
   <rect x="0" y="158" width="152" height="22" fill="#e6eff7"/>
   <rect x="0" y="158" width="152" height="9" fill="#ffffff"/>
 
-  <rect x="528" y="176" width="152" height="224" fill="#c8c1b6"/>
+  <rect x="528" y="176" width="152" height="250" fill="#c8c1b6"/>
   <rect x="528" y="176" width="152" height="16" fill="#a99789"/>
   <rect x="528" y="232" width="152" height="7" fill="#a99789"/>
   <rect x="528" y="288" width="152" height="7" fill="#a99789"/>
@@ -51,8 +59,8 @@
   <polygon points="348,204 628,164 628,174 348,214" fill="#f0f2f5"/>
   <rect x="320" y="196" width="40" height="20" rx="6" fill="#57647a"/>
 
-  <ellipse cx="340" cy="404" rx="320" ry="14" fill="#16203a" opacity="0.28"/>
-  <path d="M 0 440 L 0 396 Q 170 372 340 392 Q 510 412 680 388 L 680 440 Z" fill="#e6eff7"/>
-  <path d="M 0 396 Q 170 372 340 392 Q 510 412 680 388 L 680 400 Q 510 424 340 404 Q 170 384 0 408 Z" fill="#ffffff"/>
-  <path d="M 0 440 L 0 426 Q 340 440 680 422 L 680 440 Z" fill="#c2d6e8"/>
+  <ellipse cx="340" cy="420" rx="320" ry="10" fill="#16203a" opacity="0.22"/>
+  <path d="M 0 440 L 0 418 Q 170 408 340 416 Q 510 424 680 412 L 680 440 Z" fill="#e6eff7"/>
+  <path d="M 0 418 Q 170 408 340 416 Q 510 424 680 412 L 680 420 Q 510 432 340 424 Q 170 416 0 426 Z" fill="#ffffff"/>
+  <path d="M 0 440 L 0 434 Q 340 442 680 432 L 680 440 Z" fill="#c2d6e8"/>
 </svg>

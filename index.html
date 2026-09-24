@@ -150,8 +150,11 @@
         background-color: var(--tn-page);
 
         color: #e9f1f8;
-        font-family:
-          system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        /* The UI face's stack, character for character (common/type-faces.ts,
+           ADR-0066 §1): the faces are declared by the script, and anything
+           drawn before it runs falls to the generic. No device family is
+           named; tests/unit/ui/type-stacks.test.ts holds this line to that. */
+        font-family: "Atkinson Hyperlegible", "TrueNorth Text Fallback", sans-serif;
 
         /* One-thumb play: the browser must not claim the gesture. `none` also
            removes the 300 ms double-tap-to-zoom delay on the playfield. */

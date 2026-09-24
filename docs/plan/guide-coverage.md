@@ -499,14 +499,15 @@ Two decisions an auditor should see:
 | Level (journey order) | Subject | Pool questions | Already taught by a lesson | Newly taught | Status |
 |---|---|---|---|---|---|
 | halifax | `rights` | 38 (`rights-02` is in no pool, and shares its passage with `rights-03`) | 1 (`rights-14`) | 37 | **Authored** |
-| peggys-cove | | | | | Next |
-| quebec-city | | | | | Not started |
+| peggys-cove | `who-we-are` | 48 | 4 (`wwa-03`, `wwa-04` from `who-01`, `wwa-16` from `who-03`, `wwa-25` from `regions-04`) | 43 | **Authored** (§7.9). 1 cannot be taught, because it is a caption |
+| quebec-city | `history` | 97 | 2 (`hist-21` from `history-02`, `hist-33` from `history-03`) | 91 | **Authored** (§7.12). 4 cannot be taught, because they are captions |
 | ottawa | `government` | 41 | 0 (`gov-18` matched `g2-both-chambers-study-a-bill` by containment, but that passage stops before "(proposals for new laws)", so it got a passage of its own) | 41 | **Authored** (§7.6) |
-| toronto | | | | | Not started |
+| toronto | `elections` | 37 | 0 (`elec-18`, `elec-20`, `gov-42` and `gov-47` pass containment through `elections-01` and `-03`, but those passages teach a neighbouring clause, so each got a passage of its own) | 37 | **Authored** (§7.10) |
 | winnipeg | `justice` | 40 | 36, from the batch-1 ceiling and `rr4`, `elections-05` | 2 | **Authored** (§7.7). 2 cannot be taught, because they are captions |
 | prairie-rail | `modern-canada` | 40 | 0 | 40 | **Authored** (§7.5) |
 | alberta-foothills | `economy` | 51 | 20, from the batch-1 ceiling and `rr5` | 31 | **Authored** (§7.8) |
-| vancouver, the-north | | | | | Not started |
+| vancouver | `symbols` | 43 | 0 | 42 | **Authored** (§7.11). 1 cannot be taught, because it is a caption |
+| the-north | `regions` | 59 | 0 | 58 | **Authored** (§7.13). 1 cannot be taught, because it is a caption |
 
 ### 7.3 Question to passage (halifax)
 
@@ -973,3 +974,432 @@ passages. That still reads 8 across the two stops.
 questions, ottawa 43 for 41 questions, winnipeg 2 for 2 questions (the Oath passage and `e7-city-police-forces`),
 and alberta-foothills 31 for 31 questions (`m1-strong-economy-1945-to-1970` counted here, not under
 prairie-rail). Pools left untaught: `jus-07`, `jus-32` and `jus-37`, explained in §7.7.
+
+### 7.9 Question to passage (peggys-cove, `who-we-are`)
+
+Authored 2026-09-24, batch 3, for the five remaining levels in `journey` order. Every batch-3 passage is in a
+new lesson file, so no existing lesson was edited and no file the verifier had open was touched. Each
+passage copies its question's `page`, `asOf` and `volatile`, and its `source.quote` is the question's quote
+or a stretch of it. The new Who We Are lessons are `w7` = `who-07-a-strong-and-free-country`,
+`w8` = `who-08-aboriginal-rights-and-residential-schools`, `w9` = `who-09-the-three-aboriginal-peoples`,
+`w10` = `who-10-francophones-acadians-and-quebecers`, `w11` = `who-11-newcomers-and-english-canada` and
+`w12` = `who-12-a-diverse-people`.
+
+| Question | Passage |
+|---|---|
+| `wwa-01-oldest-constitutional-tradition` | `w7-oldest-constitutional-tradition` |
+| `wwa-02-only-constitutional-monarchy` | `w7-only-constitutional-monarchy` |
+| `wwa-03-peace-order-good-government` | `w1-institutions-and-good-government` (already taught; the prompt asks for the phrase, which that passage teaches) |
+| `wwa-04-three-founding-peoples` | `w1-three-founding-peoples` (already taught) |
+| `wwa-05-great-dominion` | `w7-the-great-dominion` |
+| `wwa-06-migration-from-asia` | `w8-ancestors-came-from-asia` |
+| `wwa-07-established-before-europeans` | `w8-here-long-before-european-explorers` |
+| `wwa-08-treaty-rights-in-constitution` | `w8-rights-in-the-constitution` |
+| `wwa-09-royal-proclamation-1763` | `w8-royal-proclamation-of-1763` |
+| `wwa-10-treaties-not-always-respected` | `w8-treaties-not-always-respected` |
+| `wwa-11-residential-schools-period` | `w8-residential-schools-1800s-to-1980s` |
+| `wwa-12-languages-prohibited` | `w8-languages-and-practices-forbidden` |
+| `wwa-13-apology-2008` | `w8-apology-in-2008` |
+| `wwa-14-achievements-today` | `w8-achievements-today` |
+| `wwa-15-three-distinct-groups` | `w9-three-distinct-groups` |
+| `wwa-16-first-nations-on-and-off-reserve` | `w3-on-reserve-and-off-reserve` (already taught) |
+| `wwa-17-inuit-means-the-people` | `w9-inuit-means-the-people` |
+| `wwa-18-inuit-knowledge-of-the-land` | `w9-inuit-knowledge-of-the-land` |
+| `wwa-19-metis-prairie-provinces` | `w9-most-metis-live-on-the-prairies` |
+| `wwa-20-michif` | `w9-michif` |
+| `wwa-21-shares-of-the-three-groups` | `w9-first-nations-the-largest-group` (`volatile`) |
+| `wwa-22-official-languages-services` | `w10-federal-services-in-both-languages` |
+| `wwa-23-anglophones-and-francophones` | `w10-anglophones-and-francophones` (`volatile`) |
+| `wwa-24-francophones-outside-quebec` | `w10-francophones-outside-quebec` (`volatile`) |
+| `wwa-25-new-brunswick-bilingual` | `r4-the-only-bilingual-province` (already taught, same sentence) |
+| `wwa-26-acadians-1604` | `w10-acadians-settled-from-1604` |
+| `wwa-27-great-upheaval` | `w10-the-great-upheaval` |
+| `wwa-28-acadian-deportation-share` | `w10-acadians-deported` |
+| `wwa-29-quebecers-8500-settlers` | `w10-quebecers-descend-from-8500-settlers` |
+| `wwa-30-quebecois-nation-2006` | `w10-the-quebecois-a-nation` |
+| `wwa-31-anglo-quebecers` | `w10-anglo-quebecers` (`volatile`) |
+| `wwa-32-newcomers-embrace-rule-of-law` | `w11-newcomers-embrace-the-rule-of-law` |
+| `wwa-33-settlers-of-english-speaking-canada` | `w11-who-built-english-speaking-canada` |
+| `wwa-34-majority-born-in-canada` | `w12-most-born-in-canada` |
+| `wwa-35-why-english-canadians` | `w11-why-english-canadians` |
+| `wwa-36-land-of-immigrants` | `w12-newcomers-built-and-defended` |
+| `wwa-37-largest-groups-list` | `w12-the-largest-groups` (`volatile`) |
+| `wwa-38-immigrants-since-the-1970s` | `w12-immigrants-from-asia-since-the-1970s` (`volatile`) |
+| `wwa-39-chinese-languages-at-home` | `w12-chinese-languages-at-home` (`volatile`) |
+| `wwa-40-largest-religious-affiliation` | `w12-groups-live-and-work-in-peace` (`volatile`, copied from the question) |
+| `wwa-41-state-and-faith-communities` | `w12-state-and-faith-communities-as-partners` |
+| `wwa-42-growing-religious-groups` | `w12-no-religion-is-growing` (`volatile`) |
+| `wwa-43-equal-treatment-civil-marriage` | `w12-equal-under-the-law-and-civil-marriage` |
+| `wwa-44-shared-canadian-identity` | `w12-a-shared-canadian-identity` |
+| `wwa-45-black-loyalists-1780s` | **Not taught**: its quote is the p. 22 caption of Marjorie Turner-Bailey (ADR-0061 §3) |
+| `wwa-46-strong-and-free-country` | `w7-strong-and-free` |
+| `wwa-47-acadian-culture-today` | `w10-acadian-culture-today` |
+| `wwa-48-non-official-languages-at-home` | `w12-other-languages-at-home` |
+
+Decisions an auditor should see:
+
+- **Containment is not teaching, again.** `wwa-11`, `wwa-17`, `wwa-19`, `wwa-20`, `wwa-29` and `wwa-41` all
+  overlap a batch-1 passage (`w2`, `w3`, `w4`, `w6`), but the older passage teaches the neighbouring clause, not
+  the one graded (the period, "the people", the Prairies, Michif, 8,500 settlers, what the partnership does).
+  Each got a passage whose quote is the graded stretch.
+- **Flagged shares routed around (pp. 17, 18, 19, 21).** `wwa-21` is taught as an order (First Nations, then
+  Métis, then Inuit), with no percentage. `wwa-23` is taught as the two definitions, without "18 million
+  Anglophones". `wwa-39` says "two of Canada's biggest cities" and does not name Vancouver and Toronto, because
+  the city names sit in the next sentence beside the banned 13 %. `wwa-42` teaches the "no religion" clause only,
+  because the question's quote begins there.
+- **`wwa-37`'s list** is broken into three runs so that no 14-word run of the guide's list survives.
+
+### 7.10 Question to passage (toronto, `elections`)
+
+New lessons: `e8` = `elections-08-electing-your-member-of-parliament` (p. 60), `e9` =
+`elections-09-who-may-vote-and-the-voters-list` (p. 61), `e10` =
+`elections-10-the-secret-ballot-and-forming-a-government` (p. 62), `e11` = `elections-11-voting-step-by-step`
+(pp. 64–66). Every p. 60 passage copies its question's `volatile: true`, and "308" appears in no text.
+
+| Question | Passage |
+|---|---|
+| `elec-01-what-canadians-vote-for` | `e8-what-canadians-vote-for` |
+| `elec-02-re-elect-or-choose-new` | `e8-re-elect-or-choose-new` |
+| `elec-03-another-name-for-a-riding` | `e8-ridings-and-constituencies` |
+| `elec-04-whom-an-mp-represents` | `e8-whom-an-mp-represents` |
+| `elec-05-what-candidates-are-called` | `e8-candidates` |
+| `elec-06-many-candidates-in-a-district` | `e8-many-candidates-in-a-district` |
+| `elec-07-early-election` | `e8-an-earlier-election` |
+| `elec-08-what-voters-choose-on-the-ballot` | `e8-choose-a-candidate-and-a-party` |
+| `elec-09-federal-referendum` | `e9-federal-referendums` |
+| `elec-10-national-register-of-electors` | `e9-the-national-register-of-electors` |
+| `elec-11-which-polling-station` | `e9-your-polling-station` |
+| `elec-12-what-secret-ballot-means` | `e10-what-a-secret-ballot-means` |
+| `elec-13-counting-the-ballots` | `e10-counting-the-ballots` |
+| `elec-14-minority-government` | `e10-minority-government` |
+| `elec-15-who-appoints-the-prime-minister` | `e10-the-governor-general-appoints-the-prime-minister` |
+| `elec-16-defeated-on-confidence` | `e10-defeated-on-a-major-decision` |
+| `elec-17-support-of-most-mps` | `e10-governing-with-the-confidence-of-mps` |
+| `elec-18-no-card-received` | `e11-no-card-call-your-local-office` |
+| `elec-19-card-confirms-listing` | `e11-the-card-confirms-you-are-listed` |
+| `elec-20-behind-the-screen` | `e11-behind-the-screen` |
+| `elec-21-where-to-see-results` | `e11-where-to-see-the-results` |
+| `gov-35-fixed-election-date` | `e8-fixed-election-date` |
+| `gov-37-electoral-district` | `e8-what-an-electoral-district-is` |
+| `gov-38-who-may-run` | `e8-who-may-run` |
+| `gov-39-who-wins-the-seat` | `e8-most-votes-wins-the-seat` |
+| `gov-40-who-may-vote` | `e9-who-may-vote` |
+| `gov-41-elections-canada` | `e9-elections-canada-makes-the-lists` |
+| `gov-42-voter-information-card` | `e9-the-voter-information-card` |
+| `gov-43-added-on-election-day` | `e9-added-to-the-list-on-election-day` |
+| `gov-44-what-to-bring` | `e11-what-to-bring` |
+| `gov-45-advance-poll` | `e11-advance-polls-and-special-ballots` |
+| `gov-46-marking-the-ballot` | `e11-marking-an-x` |
+| `gov-47-ballot-box` | `e11-into-the-ballot-box` |
+| `gov-48-secret-ballot` | `e10-no-one-can-make-you-tell` |
+| `gov-50-who-forms-government` | `e10-who-forms-the-government` |
+| `gov-51-majority-government` | `e10-majority-government` |
+| `gov-60-other-election-rules` | `e11-other-elections-have-other-rules` |
+
+Decisions an auditor should see:
+
+- **Multi-sentence quotes are split by what each question grades.** `gov-37`, `gov-38`, `gov-39`, `gov-50`
+  and `gov-51` quote two or three sentences whose other sentences are `elec-04`, `elec-05`/`06`, `elec-08`,
+  `elec-15` and `elec-14`. Each passage quotes the one sentence it teaches, so each stretch is contained in
+  both questions' quotes. `gov-44` is taught by its last sentence ("Bring this card…"), the one it grades.
+- **Four containment passes that do not teach.** `e1-no-number-call-elections-canada` contains `elec-18`'s
+  sentence but teaches the fallback number; `e1-card-gives-a-number-for-special-help` is inside `gov-42`'s quote
+  but omits when and where; `e3-fold-your-ballot-and-hand-it-over` and `e3-the-ballot-number-is-torn-off` are
+  inside `elec-20`'s and `gov-47`'s quotes but teach neither the screen nor the ballot box. Batch 1's files were
+  not edited; the four questions got passages in `e9`/`e11`.
+
+### 7.11 Question to passage (vancouver, `symbols`)
+
+New lessons: `s6` = `symbols-06-the-crown-the-flag-and-the-maple-leaf` (pp. 78–79), `s7` =
+`symbols-07-the-coat-of-arms-and-the-parliament-buildings` (p. 80), `s8` = `symbols-08-hockey-lacrosse-and-the-beaver`
+(pp. 81–82) and `s9` = `symbols-09-languages-anthems-and-honours` (pp. 82–89).
+
+| Question | Passage |
+|---|---|
+| `sym-01-what-symbols-do` | `s6-what-symbols-do` |
+| `sym-02-crown-and-government` | `s6-the-crown-and-government` |
+| `sym-03-monarchy-since-1867` | `s6-monarchy-since-1867` |
+| `sym-04-new-flag-1965` | `s6-new-flag-1965` |
+| `sym-05-flag-pattern-origin` | `s6-red-white-red-pattern` |
+| `sym-06-national-colours-1921` | `s6-national-colours-since-1921` |
+| `sym-07-union-jack-royal-flag` | `s6-the-royal-flag` |
+| `sym-08-red-ensign-hundred-years` | **Not taught**: its quote is the p. 79 caption of the Red Ensign (ADR-0061 §3). The body sentence on the same page ("served as the Canadian flag for about 100 years") carries the same fact, but a passage quoting it would not contain, nor be contained in, the question's quote. Re-quoting the question onto the body sentence would let it be taught; that is an author-and-verifier change to the question, not a lesson change. |
+| `sym-09-maple-leaf-best-known` | `s6-the-maple-leaf-best-known` |
+| `sym-10-maple-leaf-french-canadians` | `s6-maple-leaves-since-the-1700s` |
+| `sym-11-fleur-de-lys-lily` | `s6-the-fleur-de-lys` |
+| `sym-12-quebec-flag-1948` | `s6-quebec-flag-1948` |
+| `sym-13-motto-from-sea-to-sea` | `s7-motto-from-sea-to-sea` |
+| `sym-14-coat-of-arms-symbols` | `s7-symbols-on-the-arms` |
+| `sym-15-where-arms-appear` | `s7-where-the-arms-appear` |
+| `sym-16-parliament-completed-1860s` | `s7-parliament-completed-in-the-1860s` |
+| `sym-17-centre-block-fire-1916` | `s7-centre-block-fire-1916` |
+| `sym-18-library-only-original-part` | `s7-the-library-survived` |
+| `sym-19-peace-tower-1927` | `s7-the-peace-tower` |
+| `sym-20-books-of-remembrance` | `s7-the-books-of-remembrance` |
+| `sym-21-national-winter-sport` | `s8-hockey-the-national-winter-sport` |
+| `sym-22-ice-hockey-developed-1800s` | `s8-ice-hockey-developed-in-the-1800s` |
+| `sym-23-stanley-cup-donor` | `s8-the-stanley-cup` |
+| `sym-24-clarkson-cup` | `s8-the-clarkson-cup` |
+| `sym-25-official-summer-sport` | `s8-lacrosse-the-summer-sport` |
+| `sym-26-curling-scottish-pioneers` | `s8-curling` |
+| `sym-27-soccer-registered-players` | `s8-soccer-most-registered-players` (`volatile`) |
+| `sym-28-beaver-hudsons-bay-company` | `s8-beaver-and-the-hudsons-bay-company` |
+| `sym-29-beaver-st-jean-baptiste-1834` | `s8-beaver-and-the-st-jean-baptiste-society` |
+| `sym-30-beaver-five-cent-coin` | `s8-where-the-beaver-appears` |
+| `sym-31-language-for-citizenship` | `s9-language-for-citizenship` |
+| `sym-32-language-exemption-at-55` | `s9-language-exemption-at-55` (`volatile`) |
+| `sym-33-official-languages-act-objectives` | `s9-official-languages-act-1969` (the three objectives are already `symbols-03`'s passages) |
+| `sym-34-anthem-proclaimed-1980` | `s9-anthem-proclaimed-1980` |
+| `sym-35-anthem-first-sung` | `s9-anthem-first-sung-in-quebec-city` |
+| `sym-36-royal-anthem-purpose` | `s9-the-royal-anthem` |
+| `sym-37-order-of-canada-1967` | `s9-order-of-canada-1967` |
+| `sym-38-honours-orders-decorations-medals` | `s9-honours-orders-decorations-medals` |
+| `sym-39-victoria-cross-highest-honour` | `s9-the-victoria-cross` |
+| `sym-40-first-canadian-victoria-cross` | `s9-dunn-first-canadian-victoria-cross` |
+| `sym-41-william-hall-victoria-cross` | `s9-william-hall-victoria-cross` |
+| `sym-42-canada-day-july-1` | `s9-canada-day` |
+| `sym-43-last-canadian-victoria-cross` | `s9-robert-hampton-gray-last-victoria-cross` (`volatile`) |
+
+Decisions an auditor should see:
+
+- **p. 78 and p. 84 flags.** `sym-01`…`03` cite p. 78; the text names Queen Victoria only (the quote's own words)
+  and no living or recent Sovereign. The O Canada passages (p. 84) teach 1980 and Québec City and quote
+  neither English line. `sym-34` and `sym-35` share a sentence, so each passage quotes only its own sentence.
+- **`sym-40` names Dunn.** The question's quote begins at "served in the British Army"; the subject, Alexander
+  Roberts Dunn, is the same bullet's first clause. The passage names him as the referent of the quoted
+  predicate. A verifier who reads that as a claim outside the quote should say so.
+- **`sym-33`** is taught as "three main objectives"; the three are not restated, because they are
+  `symbols-03`'s three passages and a restatement would put four propositions in one passage.
+
+### 7.12 Question to passage (quebec-city, `history`)
+
+New lessons, in guide order: `h9` = `history-09-first-peoples-and-first-explorers` (pp. 23–24), `h10` =
+`history-10-new-france-and-the-fur-trade` (pp. 24–25), `h11` = `history-11-the-quebec-act-and-the-loyalists`
+(pp. 26–27), `h12` = `history-12-ending-slavery-and-early-trade` (pp. 28–29), `h13` =
+`history-13-defending-canada-in-1812` (pp. 29–30), `h14` = `history-14-rebellion-and-responsible-government`
+(pp. 31–32), `h15` = `history-15-building-the-dominion` (pp. 33–34), `h16` =
+`history-16-macdonald-riel-and-the-railway` (pp. 35–37), `h17` = `history-17-the-great-war-and-votes-for-women`
+(pp. 38–41) and `h18` = `history-18-the-depression-and-the-second-world-war` (pp. 42–44). ADR-0068's split at
+`hist-32` changes none of this, because lessons are filed by chapter. `history-08` was not touched.
+
+| Question | Passage |
+|---|---|
+| `hist-01-why-called-indians` | `h9-why-called-indians` |
+| `hist-02-sioux-followed-the-bison` | `h9-the-sioux-followed-the-bison` |
+| `hist-03-huron-wendat-farmers` | `h9-huron-wendat-farmers-and-hunters` |
+| `hist-04-west-coast-preserved-fish` | `h9-west-coast-fish-dried-and-smoked` |
+| `hist-05-european-diseases` | `h9-european-diseases` |
+| `hist-06-first-200-years-of-bonds` | `h9-bonds-that-laid-the-foundations` |
+| `hist-07-john-cabot-1497` | `h9-john-cabot-1497` (partly; see below) |
+| `hist-08-lanse-aux-meadows` | `h9-lanse-aux-meadows` |
+| `hist-09-cartier-three-voyages` | `h9-cartier-three-voyages` |
+| `hist-10-kanata-means-village` | `h9-kanata-means-village` |
+| `hist-11-first-settlement-1604` | `h10-first-settlement-1604` |
+| `hist-12-champlain-quebec-1608` | `h10-champlain-quebec-1608` |
+| `hist-13-peace-with-iroquois-1701` | `h10-peace-with-the-iroquois-1701` |
+| `hist-14-fur-trade-beaver-pelts` | `h10-beaver-pelts-drove-the-fur-trade` |
+| `hist-15-hudsons-bay-company-1670` | `h10-hudsons-bay-company-1670` |
+| `hist-16-voyageurs-and-coureurs-des-bois` | `h10-voyageurs-and-coureurs-des-bois` |
+| `hist-17-plains-of-abraham-1759` | `h10-plains-of-abraham-1759` |
+| `hist-18-wolfe-and-montcalm` | `h10-wolfe-and-montcalm` |
+| `hist-19-quebec-act-religious-freedom` | `h11-quebec-act-religious-freedom` |
+| `hist-20-quebec-act-two-legal-systems` | `h11-quebec-act-two-legal-systems` |
+| `hist-21-loyalists-40000` | `history-02`'s Loyalists passage (already taught; its quote contains the question's) |
+| `hist-22-joseph-brant` | `h11-joseph-brant` |
+| `hist-23-black-loyalists-3000` | `h11-black-loyalists` |
+| `hist-24-first-assembly-halifax-1758` | `h11-first-assembly-halifax-1758` |
+| `hist-25-constitutional-act-1791` | `h11-constitutional-act-1791` |
+| `hist-26-first-elected-assemblies-1791` | `h11-first-elected-assemblies-1791` |
+| `hist-27-upper-canada-abolition-1793` | `h12-upper-canada-moves-toward-abolition` |
+| `hist-28-slavery-abolished-1833` | `h12-slavery-abolished-1833` |
+| `hist-29-underground-railroad` | `h12-the-underground-railroad` |
+| `hist-30-mary-ann-shadd-carey` | **Not taught**: p. 28 caption (ADR-0061 §3) |
+| `hist-31-trading-posts-became-cities` | `h12-trading-posts-became-cities` |
+| `hist-32-montreal-stock-exchange-1832` | `h12-montreal-stock-exchange-1832` |
+| `hist-33-us-invasion-june-1812` | `history-03`'s invasion passage (already taught; its quote contains the question's) |
+| `hist-34-tecumseh-and-the-shawnee` | `h13-volunteers-first-nations-and-tecumseh` |
+| `hist-35-isaac-brock` | `h13-isaac-brock` |
+| `hist-36-chateauguay-1813` | `h13-chateauguay` |
+| `hist-37-war-of-1812-outcome` | `h13-the-war-kept-canada-independent` |
+| `hist-38-burning-of-york-1813` | `h13-burning-of-york-1813` |
+| `hist-39-wellington-and-bytown` | **Not taught**: p. 30 caption (ADR-0061 §3) |
+| `hist-40-laura-secord` | **Not taught**: p. 31 caption (ADR-0061 §3) |
+| `hist-41-what-responsible-government-means` | `h14-what-responsible-government-means` |
+| `hist-42-nova-scotia-responsible-government` | `h14-nova-scotia-first-with-responsible-government` |
+| `hist-43-la-fontaine` | `h14-la-fontaine-first-leader` |
+| `hist-44-province-of-canada-1840` | `h14-province-of-canada-1840` |
+| `hist-45-fathers-of-confederation` | `h15-fathers-of-confederation` |
+| `hist-46-four-founding-provinces` | `h15-ontario-and-quebec-created` (the four are also `history-04`'s "1867 –" passage) |
+| `hist-47-two-levels-of-government` | `h15-two-levels-of-government` |
+| `hist-48-july-1-1867` | `h15-born-on-july-1-1867` |
+| `hist-49-dominion-day-canada-day` | `h15-dominion-day` |
+| `hist-50-leonard-tilley-dominion` | `h15-tilley-and-the-word-dominion` |
+| `hist-51-newfoundland-1949` | `h15-newfoundland-and-labrador-1949` |
+| `hist-52-nunavut-1999` | `h15-nunavut-1999` |
+| `hist-53-alberta-saskatchewan-1905` | `h15-alberta-and-saskatchewan-1905` |
+| `hist-54-first-prime-minister` | `h16-first-prime-minister` |
+| `hist-55-cartier-architect-from-quebec` | `h16-cartier-led-quebec-in` |
+| `hist-56-red-river-not-consulted` | `h16-red-river-metis-not-consulted` |
+| `hist-57-manitoba-created-1870` | `h16-manitoba-created` |
+| `hist-58-how-riel-is-seen` | `h16-how-riel-is-seen` |
+| `hist-59-nwmp-1873` | `h16-north-west-mounted-police-1873` |
+| `hist-60-rcmp-national-police-force` | `h16-the-rcmp-today` (`volatile`) |
+| `hist-61-bc-joined-1871` | `h16-british-columbia-and-the-railway-promise` |
+| `hist-62-last-spike-1885` | `h16-the-last-spike-1885` |
+| `hist-63-head-tax-apology-2006` | `h16-head-tax-and-the-apology` |
+| `hist-64-wilfrid-laurier` | `h16-wilfrid-laurier` |
+| `hist-65-boer-war-volunteers` | `h17-boer-war-volunteers` |
+| `hist-66-600000-served-first-world-war` | `h17-600000-served` |
+| `hist-67-vimy-ridge-1917` | `h17-vimy-ridge` |
+| `hist-68-internment-1914-1920` | `h17-internment-of-enemy-aliens` |
+| `hist-69-armistice-1918` | `h17-armistice-1918` |
+| `hist-70-arthur-currie` | `h17-arthur-currie` |
+| `hist-71-maple-leaf-1850s` | **Not taught**: p. 39 caption (ADR-0061 §3) |
+| `hist-72-who-could-vote-at-confederation` | `h17-who-could-vote-in-1867` |
+| `hist-73-emily-stowe` | `h17-emily-stowe` |
+| `hist-74-manitoba-women-vote-1916` | `h17-manitoba-first-1916` |
+| `hist-75-women-federal-vote-1918` | `h17-federal-vote-for-women-1918` |
+| `hist-76-agnes-macphail-1921` | `h17-agnes-macphail` (the p. 40 body sentence, not the p. 39 caption) |
+| `hist-77-quebec-women-vote-1940` | `h17-quebec-women-vote-1940` |
+| `hist-78-remembrance-day` | `h17-the-poppy-and-the-silence` |
+| `hist-79-in-flanders-fields` | `h17-in-flanders-fields` |
+| `hist-80-british-commonwealth` | `h18-the-british-commonwealth-of-nations` (`volatile`) |
+| `hist-81-great-depression-unemployment` | `h18-unemployment-in-1933` |
+| `hist-82-bank-of-canada-1934` | `h18-bank-of-canada-1934` |
+| `hist-83-western-farmers-depression` | `h18-western-farmers-hit-hardest` |
+| `hist-84-refugees-turned-away-1939` | `h18-refugees-turned-away` |
+| `hist-85-second-world-war-began-1939` | `h18-the-war-began-in-1939` |
+| `hist-86-million-served-second-world-war` | `h18-a-million-served` |
+| `hist-87-juno-beach` | `h18-juno-beach` |
+| `hist-88-liberation-of-the-netherlands` | `h18-liberating-the-netherlands` |
+| `hist-89-air-training-plan` | `h18-air-training-plan` |
+| `hist-90-third-largest-navy` | `h18-third-largest-navy` |
+| `hist-91-hong-kong-and-dieppe` | `h18-hong-kong-and-dieppe` |
+| `hist-92-japan-surrendered-1945` | `h18-japan-surrendered` |
+| `hist-93-apology-1988` | `h18-apology-to-japanese-canadians` |
+| `hist-94-durham-assimilation` | `h14-durham-misunderstood-french-canadians` |
+| `hist-95-rebellions-1837-38` | `h14-why-the-rebellions-failed` |
+| `hist-96-habitants-and-canadiens` | `h11-habitants-or-canadiens` |
+| `hist-97-british-paid-for-defences` | `h13-britain-paid-for-the-defences` |
+
+Decisions an auditor should see:
+
+- **Four captions.** `hist-30` (Mary Ann Shadd Carey), `hist-39` (Wellington and Bytown), `hist-40` (Laura
+  Secord) and `hist-71` (the maple-leaf cap badge) quote picture captions, so ADR-0061 §3 keeps them out of the
+  lessons. Unless §3 is amended (§6.3 already asks this for two captions), they stay untaught.
+- **`hist-07` is taught only in part.** The question asks who first drew a map of Canada's East Coast, but its
+  quote stops at "the expedition of John Cabot" and leaves out the clause "who was the first to draw a map of
+  Canada's East Coast". A passage must quote the question's quote or a stretch of it, so `h9-john-cabot-1497`
+  teaches that exploration began in earnest in 1497 with Cabot, and says nothing about the map. Re-quoting the
+  question to take in the whole sentence would let a passage teach the map; that is a question change.
+- **`hist-46` is taught in two places.** Its quote holds only the split of the Province of Canada into Ontario
+  and Quebec; the four founding provinces are `history-04`'s "1867 – Ontario, Quebec, Nova Scotia, New
+  Brunswick" passage.
+- **Referents named outside the quote.** A few quotes open mid-sentence, and the passage names what the
+  quote refers to: the HBC forts (`hist-31`), "the last hundred days" for Currie's command (`hist-70`),
+  "Canadians of Japanese origin" for the 1988 apology (`hist-93`), the three delegations behind "These men"
+  (`hist-45`), "the King of England" for 1670 (`hist-15`, avoiding the monarch's name). `hist-36`'s passage
+  states only the 4,000 invaders at Châteauguay, because de Salaberry and his 460 soldiers are `history-03`'s
+  passage and sit on the previous page.
+
+### 7.13 Question to passage (the-north, `regions`)
+
+New lessons: `r16` = `regions-16-the-country-and-its-capitals` (pp. 93–95), `r17` =
+`regions-17-the-atlantic-provinces-up-close` (pp. 96–97), `r18` = `regions-18-central-canada-up-close`
+(pp. 98–99), `r19` = `regions-19-the-prairies-and-the-west-coast-up-close` (pp. 100–102) and `r20` =
+`regions-20-the-northern-territories-up-close` (pp. 103–104). `regions-12`…`15` were not touched.
+
+| Question | Passage |
+|---|---|
+| `reg-01-second-largest-country` | `r16-second-largest-country` |
+| `reg-02-three-oceans` | `r16-three-oceans` |
+| `reg-03-five-distinct-regions` | `r16-five-distinct-regions` |
+| `reg-04-ten-provinces-three-territories` | `r16-ten-provinces-three-territories` |
+| `reg-05-ottawa-chosen-in-1857` | `r16-ottawa-chosen-in-1857` |
+| `reg-06-capital-of-newfoundland-and-labrador` | `r16-capital-of-newfoundland-and-labrador` |
+| `reg-07-capital-of-prince-edward-island` | `r16-capital-of-prince-edward-island` |
+| `reg-08-halifax-is-the-capital-of-nova-scotia` | `r16-capital-of-nova-scotia` |
+| `reg-09-capital-of-new-brunswick` | `r16-capital-of-new-brunswick` |
+| `reg-10-capital-of-quebec` | `r16-capital-of-quebec` |
+| `reg-11-toronto-is-the-capital-of-ontario` | `r16-capital-of-ontario` |
+| `reg-12-capital-of-manitoba` | `r16-capital-of-manitoba` |
+| `reg-13-regina-is-the-capital-of-saskatchewan` | `r16-capital-of-saskatchewan` |
+| `reg-14-capital-of-alberta` | `r16-capital-of-alberta` |
+| `reg-15-capital-of-british-columbia` | `r16-capital-of-british-columbia` |
+| `reg-16-capital-of-nunavut` | `r16-capital-of-nunavut` |
+| `reg-17-yellowknife-is-the-capital-of-the-northwest-territories` | `r16-capital-of-the-northwest-territories` |
+| `reg-18-capital-of-yukon` | `r16-capital-of-yukon` |
+| `reg-19-most-easterly-point-in-north-america` | `r17-most-easterly-point` |
+| `reg-20-province-with-its-own-time-zone` | `r17-its-own-time-zone` |
+| `reg-21-birthplace-of-confederation` | `r17-birthplace-of-confederation` |
+| `reg-22-confederation-bridge` | `r17-confederation-bridge` |
+| `reg-23-atlantic-ocean-climate` | `r17-atlantic-climate` |
+| `reg-24-bay-of-fundy-tides` | `r17-bay-of-fundy-tides` |
+| `reg-25-halifax-naval-base` | `r17-halifax-naval-base` |
+| `reg-26-nova-scotia-celtic-and-gaelic-traditions` | `r17-celtic-and-gaelic-traditions` |
+| `reg-27-moncton-acadian-centre` | `r17-moncton-acadian-centre` |
+| `reg-28-oldest-colony-of-the-british-empire` | `r17-oldest-colony-of-the-british-empire` |
+| `reg-29-anne-of-green-gables-setting` | `r17-anne-of-green-gables-set-in-pei` |
+| `reg-30-where-most-canadians-live` | `r18-where-most-canadians-live` |
+| `reg-31-southern-ontario-and-quebec-climate` | `r18-central-canada-climate` |
+| `reg-32-first-language-in-quebec` | `r18-french-first-language-in-quebec` |
+| `reg-33-quebec-culture-abroad` | `r18-quebec-culture-abroad` |
+| `reg-34-niagara-vineyards-and-fruit` | `r18-niagara-vineyards-and-fruit` |
+| `reg-35-lake-superior-largest-fresh-water-lake` | `r18-lake-superior-the-largest` |
+| `reg-36-lake-michigan-in-the-united-states` | `r18-lake-michigan-in-the-united-states` |
+| `reg-37-the-three-prairie-provinces` | `r19-the-three-prairie-provinces` |
+| `reg-38-portage-and-main` | `r19-portage-and-main` |
+| `reg-39-st-boniface-french-quarter` | `r19-st-boniface` |
+| `reg-40-manitoba-ukrainian-culture` | `r19-manitoba-ukrainian-culture` |
+| `reg-41-breadbasket-and-wheat-province` | `r19-breadbasket-of-the-world` |
+| `reg-42-rcmp-training-academy-in-regina` | `r19-rcmp-training-academy` |
+| `reg-43-who-alberta-is-named-after` | `r19-named-after-princess-louise` |
+| `reg-44-banff-national-park-province` | `r19-banff-national-park` |
+| `reg-45-badlands-dinosaur-fossils` | `r19-the-badlands` |
+| `reg-46-pacific-gateway` | `r19-pacific-gateway` |
+| `reg-47-bc-coast-temperate-climate` | `r19-mild-climate-on-the-bc-coast` |
+| `reg-48-navy-pacific-fleet-headquarters` | `r19-victoria-and-the-pacific-fleet` |
+| `reg-49-land-of-the-midnight-sun` | `r20-land-of-the-midnight-sun` |
+| `reg-50-what-the-tundra-is-like` | `r20-the-tundra` |
+| `reg-51-gold-rush-of-the-1890s` | `r20-the-gold-rush` |
+| `reg-52-mount-logan` | **Not taught**: its quote is the p. 104 caption of Mount Logan (ADR-0061 §3) |
+| `reg-53-diamond-capital-of-north-america` | `r20-diamond-capital-of-north-america` |
+| `reg-54-mackenzie-river-system` | `r20-the-mackenzie-river` |
+| `reg-55-nunavut-made-from-the-northwest-territories` | `r20-nunavut-made-from-the-northwest-territories` |
+| `reg-56-what-nunavut-means` | `r20-what-nunavut-means` |
+| `reg-57-iqaluit-formerly-frobisher-bay` | `r20-iqaluit-formerly-frobisher-bay` |
+| `reg-58-nunavut-consensus-government` | `r20-government-by-consensus` |
+| `reg-59-northern-winters-and-summers` | `r20-northern-winters-and-summers` |
+
+Decisions an auditor should see:
+
+- **The register's flags, followed.** Canada's Regions has a live check (`liveChecks`, 2026-09-10,
+  `source-unrevised`), so it is authored like any other chapter. No banned term is in any text, in either
+  language: `reg-32` says "most" for "more than three-quarters", `reg-53` omits Yellowknife's population,
+  `reg-58`'s quote is the stretch after "19-member", `reg-05` names no monarch (p. 94), and `reg-30`'s French
+  says « la majorité » because « la moitié » is banned on p. 98. No passage states a figure that a
+  `knownStaleness` entry lists, so every passage copies its question's `volatile: false`. The figures that are
+  stated (10 million km², 4,200 km, 24 hours of daylight, five national parks, 1857, 1885, 1999) are geography
+  or dates that no flag lists.
+- **Containment is not teaching.** `reg-28`, `reg-29`, `reg-32`, `reg-43` and `reg-48` each contain a batch-1
+  passage's quote (`regions-02`, `-05`, `-07`, `-08`), but those passages teach the sea heritage, the orphan girl,
+  where Quebecers live, Lake Louise and Victoria as a tourist centre. Each question got the stretch it grades.
+- **Shared sentences split.** `reg-19`/`reg-20` (easterly point, time zone), `reg-21`/`reg-22` (birthplace,
+  bridge), `reg-35`/`reg-36` (Superior, Michigan), `reg-44`/`reg-45` (Banff, Badlands) and `reg-55`…`reg-58`
+  (Nunavut's name, origin, capital, consensus) each get one passage per graded stretch.
+
+### 7.14 Batch 3 totals
+
+| Level | Subject | Pool questions | Already taught | Newly taught | Passages added | Not taught (caption) |
+|---|---|---|---|---|---|---|
+| peggys-cove | `who-we-are` | 48 | 4 | 43 | 43 | 1 (`wwa-45`) |
+| toronto | `elections` | 37 | 0 | 37 | 37 | 0 |
+| vancouver | `symbols` | 43 | 0 | 42 | 42 | 1 (`sym-08`) |
+| quebec-city | `history` | 97 | 2 | 91 | 91 | 4 (`hist-30`, `hist-39`, `hist-40`, `hist-71`) |
+| the-north | `regions` | 59 | 0 | 58 | 58 | 1 (`reg-52`) |
+| **Total** | | **284** | **6** | **271** | **271** | **7** |
+
+271 new passages in the null verification form, in 29 new lesson files. Together with batches 1 and 2, every
+level's answer pools are now taught except for 10 caption questions (`jus-07`, `jus-32`, and the 7 above) and
+two partial teaches (`jus-37` in §7.7, `hist-07` in §7.12). Next under the owner's rule: the verified
+questions in no pool, then the ceilings of §5(a).
