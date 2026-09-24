@@ -181,6 +181,9 @@ describe('the copy table', () => {
       'hud.interact.village-house',
       'hud.interact.city-wall',
       'hud.interact.terrace-kiosk',
+      'hud.interact.wolfe-montcalm-monument',
+      'hud.interact.martello-tower',
+      'hud.interact.hotel-du-parlement',
       'hud.interact.rideau-locks',
       'hud.interact.library-of-parliament',
       'hud.interact.warming-hut',
@@ -271,8 +274,12 @@ describe('the copy table', () => {
      *
      * 81 since ADR-0066 §2: the task indicator's two rows and the menu's task
      * line, proposed in TN-HUD.
+     *
+     * 84 since 2026-09-24: Québec City gained three read-stops (ADR-0065 §2),
+     * and each landmark that opens a card needs a prompt of its own, proposed in
+     * TN-REACH like Dow's Lake before them.
      */
-    expect(COPY_GAPS).toHaveLength(81);
+    expect(COPY_GAPS).toHaveLength(84);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

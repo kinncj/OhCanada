@@ -8,7 +8,7 @@
     "fr": "Ville de Québec"
   },
   "size": {
-    "x": 6048,
+    "x": 10848,
     "y": 1920
   },
   "spawn": {
@@ -90,6 +90,18 @@
     },
     {
       "x": 6048,
+      "y": 1280
+    },
+    {
+      "x": 7648,
+      "y": 1280
+    },
+    {
+      "x": 9248,
+      "y": 1280
+    },
+    {
+      "x": 10848,
       "y": 1280
     }
   ],
@@ -338,6 +350,117 @@
       },
       "artKey": "quebec-city-prop-terrace-kiosk",
       "radiusPx": 250
+    },
+    {
+      "id": "wolfe-montcalm-monument",
+      "name": {
+        "en": "The Wolfe and Montcalm monument",
+        "fr": "Le monument Wolfe-Montcalm"
+      },
+      "blurb": {
+        "en": "This is the monument to Wolfe and Montcalm. At the Battle of the Plains of Abraham, James Wolfe led the British army and the Marquis de Montcalm led the French army. Both men were killed while they led their soldiers.",
+        "fr": "Voici le monument Wolfe-Montcalm. À la bataille des plaines d'Abraham, James Wolfe dirigeait l'armée britannique et le marquis de Montcalm, l'armée française. Les deux hommes ont été tués pendant qu'ils menaient leurs soldats."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The commanders of both armies, Brigadier James Wolfe and the Marquis de Montcalm, were killed leading their troops in battle."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6400,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-wolfe-montcalm-monument",
+      "radiusPx": 240
+    },
+    {
+      "id": "martello-tower",
+      "name": {
+        "en": "The Plains of Abraham",
+        "fr": "Les plaines d'Abraham"
+      },
+      "blurb": {
+        "en": "This is Martello Tower 1, on the Plains of Abraham, where the battle of 1759 was fought. Under British rule, the French-speaking Catholic people were called habitants or Canadiens. They tried hard to keep their own way of life in an empire that spoke English and was ruled by Protestants.",
+        "fr": "Voici la tour Martello 1, sur les plaines d'Abraham, où s'est déroulée la bataille de 1759. Sous le régime britannique, on appelait habitants ou Canadiens les catholiques de langue française. Ils se sont efforcés de garder leur propre mode de vie dans un empire de langue anglaise dirigé par des protestants."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The French-speaking Catholic people, known as habitants or Canadiens, strove to preserve their way of life in the English-speaking, Protestant-ruled British Empire."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 8000,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-martello-tower",
+      "radiusPx": 250
+    },
+    {
+      "id": "hotel-du-parlement",
+      "name": {
+        "en": "The Parliament Building",
+        "fr": "L'hôtel du Parlement"
+      },
+      "blurb": {
+        "en": "This is the Parliament Building in Québec City. In 1791 a law called the Constitutional Act split the Province of Quebec in two. Upper Canada, later Ontario, was mostly Loyalist, Protestant and English-speaking. Lower Canada, later Quebec, was mostly Catholic and French-speaking.",
+        "fr": "Voici l'hôtel du Parlement, à Québec. En 1791, une loi appelée l'Acte constitutionnel a divisé la province de Québec en deux. Le Haut-Canada, plus tard l'Ontario, était surtout loyaliste, protestant et de langue anglaise. Le Bas-Canada, plus tard le Québec, était surtout catholique et de langue française."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Constitutional Act of 1791 divided the Province of Quebec into Upper Canada (later Ontario), which was mainly Loyalist, Protestant and English-speaking, and Lower Canada (later Quebec), heavily Catholic and French-speaking."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 9600,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-hotel-du-parlement",
+      "radiusPx": 260
     }
   ],
   "characters": [

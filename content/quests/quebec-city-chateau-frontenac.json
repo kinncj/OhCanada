@@ -8,8 +8,8 @@
     "fr": "La glissade"
   },
   "summary": {
-    "en": "Slide down through the old city with your guide. You stop at the Château, at the wall and at the bandstand, and at each one you learn a piece of Canada's history and then answer questions about it.",
-    "fr": "Glissez dans la vieille ville avec votre guide. Vous vous arrêtez au Château, au mur et au kiosque à musique, et à chaque halte vous apprenez un bout de l'histoire du Canada, puis vous répondez à des questions dessus."
+    "en": "Slide down through the old city with your guide. You stop at the Château, at the wall and at the bandstand, and at each one you learn a piece of Canada's history and then answer questions about it. Further on, at the monument, on the Plains of Abraham and at the Parliament Building, there is more to read.",
+    "fr": "Glissez dans la vieille ville avec votre guide. Vous vous arrêtez au Château, au mur et au kiosque à musique, et à chaque halte vous apprenez un bout de l'histoire du Canada, puis vous répondez à des questions dessus. Plus loin, au monument, sur les plaines d'Abraham et à l'hôtel du Parlement, il y a encore à lire."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You slid down through the old city with me, from the Château Frontenac along the city wall to the bandstand. Three stops, and the run is over.",
-      "fr": "Vous avez glissé dans la vieille ville avec moi, du Château Frontenac au kiosque à musique en longeant le mur de la ville. Trois haltes, et la descente est terminée."
+      "en": "You slid down through the old city with me, from the Château Frontenac along the city wall to the bandstand, then read at the monument, on the Plains of Abraham and at the Parliament Building. Six stops, and the run is over.",
+      "fr": "Vous avez glissé dans la vieille ville avec moi, du Château Frontenac au kiosque à musique en longeant le mur de la ville, puis vous avez lu au monument, sur les plaines d'Abraham et à l'hôtel du Parlement. Six haltes, et la descente est terminée."
     },
     "fact": {
       "factual": false,
@@ -161,8 +161,8 @@
           "speaker": "guide",
           "expression": "surprised",
           "text": {
-            "en": "Now hold on tight! We stop three times going down, and I have something for you at each stop.",
-            "fr": "Maintenant, tenez bon! On fait trois haltes en descendant, et j'ai quelque chose pour vous à chacune."
+            "en": "Now hold on tight! We stop three times going down, and I have something for you at each stop. Past the bandstand there are three more places to read.",
+            "fr": "Maintenant, tenez bon! On fait trois haltes en descendant, et j'ai quelque chose pour vous à chacune. Après le kiosque, il y a encore trois endroits où lire."
           },
           "fact": {
             "factual": false,
@@ -463,6 +463,79 @@
         "en": "Answer 5 questions about Confederation and after",
         "fr": "Répondez à 5 questions sur la Confédération et la suite"
       }
+    },
+    {
+      "id": "read-at-the-monument",
+      "kind": "read",
+      "targetId": "wolfe-montcalm-monument",
+      "prompt": {
+        "en": "Stop and read at the monument",
+        "fr": "Arrêtez-vous pour lire au monument"
+      },
+      "passages": [
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-french-empire-leaders"
+        },
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-english-colonies-grew-larger"
+        },
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-france-and-britain-fight-for-the-continent"
+        }
+      ]
+    },
+    {
+      "id": "read-on-the-plains",
+      "kind": "read",
+      "targetId": "martello-tower",
+      "prompt": {
+        "en": "Stop and read on the Plains of Abraham",
+        "fr": "Arrêtez-vous pour lire sur les plaines d'Abraham"
+      },
+      "passages": [
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-renamed-province-of-quebec"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-quebec-act-passed-1774"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-quebec-act-is-a-foundation"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-thirteen-colonies-become-the-united-states"
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-parliament-building",
+      "kind": "read",
+      "targetId": "hotel-du-parlement",
+      "prompt": {
+        "en": "Stop and read at the Parliament Building",
+        "fr": "Arrêtez-vous pour lire à l'hôtel du Parlement"
+      },
+      "passages": [
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-democracy-grew-step-by-step"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-pei-1773-and-nb-1785"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-british-north-america"
+        }
+      ]
     }
   ]
 }
