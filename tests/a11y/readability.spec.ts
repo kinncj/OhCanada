@@ -1,10 +1,10 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-import { labelled, text } from '../../app/ui/copy';
+import { hasCopyRow, labelled, text } from '../../app/ui/copy';
 import { HIGHLIGHT_ATTRIBUTE } from '../../app/ui/single-switch';
 
 import { HARNESS_URL } from './playwright.config';
@@ -225,6 +225,431 @@ test.describe('the task stays on screen at 200 % text', () => {
       }
     }
   });
+});
+
+/* ------------------------------------------- ADR-0066 §4: every strip */
+
+/*
+ * Every strip the game can draw, measured in lines against a face the test
+ * names and proves.
+ *
+ * ## Each quest is paired with ITS OWN level's offer rows
+ *
+ * Ported from `task-strip-gate` (9cb92ee, 48761e2). A level document lists its
+ * quests by id in `quests`, and the quest file is `<questId>.json`, so the offer
+ * a player can be reading while a given task is tracked is one of that level's
+ * own. Pairing Ottawa's offer with Halifax's task measures a strip the game
+ * cannot produce.
+ *
+ * ## The worst offer is the TALLEST one, not the longest string
+ *
+ * The limit is wrapped lines, so the row that hurts is the one that renders
+ * tallest, which is not always the one with the most characters. On Prairie Rail
+ * in French a 34-character row took two lines and a 33-character row took three.
+ * Every offer a level can draw is measured, and the tallest is the one held to
+ * the budget. A target with its own `hud.interact.<id>` row draws that row; one
+ * without draws the generic row for its kind (TN-REACH's precedence list); and
+ * any engaged target draws `hud.interact.done`.
+ *
+ * ## What changed under ADR-0066 §4
+ *
+ *  a. **The face is asserted before anything is measured.** `document.fonts.check`
+ *     answers "is it available", not "did it draw", so each tier also draws a
+ *     recorded reference string in the strip's own computed stack and compares
+ *     its width with the width recorded for that face. A face that failed to
+ *     arrive fails the test loudly, "the pinned face is not rendering", and does
+ *     not quietly re-measure the runner. That silent re-measurement is what
+ *     produced 0 and 50 overflows from one specification.
+ *  b. **Lines, not pixels.** A row's line count is the number of distinct line
+ *     boxes its text occupies (DOM Range client rects), which is independent of
+ *     the padding and border a button adds. One pixel assertion stays as a
+ *     backstop: the row ends inside the strip.
+ *  d, e. **A second run on a named fallback face** with the web font disabled.
+ *     See FALLBACK_FACE below.
+ *
+ * The dyslexia face is a third tier with its own budget (ADR-0071 §5).
+ */
+
+interface LocalisedPrompt {
+  readonly en: string;
+  readonly fr: string;
+}
+
+interface SweptLevel {
+  readonly id: string;
+  readonly offerKeys: readonly string[];
+  readonly steps: readonly { readonly where: string; readonly prompt: LocalisedPrompt }[];
+}
+
+const contentFile = <T,>(relative: string): T =>
+  JSON.parse(readFileSync(fileURLToPath(new URL(`../../content/${relative}`, import.meta.url)), 'utf8')) as T;
+
+const SWEPT_LEVELS: readonly SweptLevel[] = readdirSync(
+  fileURLToPath(new URL('../../content/levels', import.meta.url)),
+)
+  .filter((name) => name.endsWith('.json'))
+  .map((name) => {
+    const level = contentFile<{
+      readonly id: string;
+      readonly quests?: readonly string[];
+      readonly pois?: readonly { readonly id: string }[];
+      readonly characters?: readonly { readonly characterId?: string; readonly id?: string }[];
+    }>(`levels/${name}`);
+
+    /* The row each target draws, by TN-REACH's precedence: its own if it has
+       one, else the generic row for its kind. `done` is drawable on every
+       level, because any target that has been engaged draws it. */
+    const offerKeys = new Set<string>(['hud.interact.done']);
+    for (const poi of level.pois ?? []) {
+      const own = `hud.interact.${poi.id}`;
+      if (hasCopyRow(own)) offerKeys.add(own);
+      else {
+        offerKeys.add('hud.interact.poi');
+        offerKeys.add('hud.interact.poi.offer');
+      }
+    }
+    for (const character of level.characters ?? []) {
+      const id = character.characterId ?? character.id ?? '';
+      const own = `hud.interact.${id}`;
+      if (hasCopyRow(own)) offerKeys.add(own);
+      else offerKeys.add('hud.interact.npc');
+    }
+
+    const steps = (level.quests ?? []).flatMap((questId) => {
+      const quest = contentFile<{
+        readonly steps: readonly { readonly id: string; readonly prompt: LocalisedPrompt }[];
+      }>(`quests/${questId}.json`);
+      return quest.steps.map((step) => ({ where: `${level.id}/${questId}/${step.id}`, prompt: step.prompt }));
+    });
+
+    return { id: level.id, offerKeys: [...offerKeys], steps };
+  });
+
+/**
+ * The reference the face assertion draws: the longest task the ADR-0066 §2 table
+ * names, at 32 px and weight 400, in the strip's own computed `font-family`,
+ * with no letter- or word-spacing. The widths are recorded from this suite's
+ * Chromium with the bundled files and DejaVu Sans 2.37. They are properties of
+ * the font files, because advances come from the font and not from hinting.
+ * The nearest impostor is 12 px away: with the web font blocked, the game's own
+ * fallback face draws it 875 px wide where Atkinson draws 887 (measured
+ * 2026-09-23). FreeSans, the narrowest sans face on the image, draws 879.
+ */
+const REFERENCE = { text: 'Task: Answer 5 questions about the results and the government', size: 32 } as const;
+const REFERENCE_TOLERANCE_PX = 0.5;
+
+/**
+ * ADR-0066 §4e: the named fallback face, and why it is this one.
+ *
+ * **DejaVu Sans is the widest sans face a player can plausibly land on when the
+ * bundled face does not arrive.** Over the sweep's reference strings it is 13 %
+ * wider than Atkinson Hyperlegible and 12 % wider than Liberation Sans at 400,
+ * and 19 % wider than Atkinson at the strip's bold weights. It is also the
+ * default sans of most Linux desktops and fontconfig-based WebViews, so a strip
+ * that fits in it fits on the devices where the fallback is most likely to be
+ * seen. `make browsers` installs it (scripts/install-fallback-face.sh), so this
+ * tier measures a face the environment names, not one the image happens to have.
+ */
+const FALLBACK_FACE = 'DejaVu Sans';
+
+interface Tier {
+  readonly name: string;
+  /** The face this tier proves is drawing before it measures. */
+  readonly face: string;
+  readonly referenceWidth: number;
+  readonly params: Params;
+  /** The text sizes this tier sweeps. 200 % is the worst case for every face. */
+  readonly scales: readonly ('100' | '200')[];
+  /** Block every woff2 and draw the strip in FALLBACK_FACE: the web font disabled. */
+  readonly webFontDisabled: boolean;
+  /** Offer alone, tallest per level. */
+  readonly offerLines: number;
+  /** Task alone, every step, both languages. */
+  readonly taskLines: number;
+  /** Offer plus the one-line indicator; null where the tier does not assert it. */
+  readonly pairLines: number | null;
+  /**
+   * How many rows are known to end below the strip, where that is a recorded
+   * defect rather than a pass (a ratchet: may fall, may not rise). `null` means
+   * none may, which is every case but one.
+   */
+  readonly knownBelow:
+    | ((scale: '100' | '200', locale: 'en' | 'fr') => { readonly offers: number; readonly tasks: number } | null)
+    | null;
+}
+
+/**
+ * ADR-0071 §5, recorded 2026-09-23: rows at 200 % text in OpenDyslexic that
+ * end below the strip, per language. **This is a known defect, not a budget.**
+ * The dyslexia face is about 1.53x DejaVu's width. At 200 % it wraps a task to
+ * six lines and pushes Settings and Menu onto two rows, and the strip is capped
+ * at a third of the screen (ADR-0066 §3). No copy edit reaches that. It is
+ * held here as a ratchet: the count may fall and may not rise, and ADR-0071's
+ * obligation carries the decision that makes it zero. At 100 % it is zero, and
+ * asserted zero.
+ */
+const DYSLEXIA_200_BELOW_THE_STRIP: Readonly<Record<'en' | 'fr', { readonly offers: number; readonly tasks: number }>> = {
+  /* Of 10 levels' tallest offers, and of 72 task steps, per language. */
+  en: { offers: 2, tasks: 30 },
+  fr: { offers: 3, tasks: 45 },
+};
+
+const TIERS: readonly Tier[] = [
+  {
+    name: 'the pinned face',
+    face: 'Atkinson Hyperlegible',
+    referenceWidth: 887,
+    params: {},
+    scales: ['200'],
+    webFontDisabled: false,
+    offerLines: 4,
+    taskLines: 4,
+    pairLines: 5,
+    knownBelow: null,
+  },
+  {
+    /* ADR-0071 §5: OpenDyslexic draws about 1.53x DejaVu's width and 1.73x
+       Atkinson's, so it is measured on its own, at both ends of the text-size
+       range, and held to its own budget. */
+    name: 'the dyslexia face',
+    face: 'OpenDyslexic',
+    referenceWidth: 1569,
+    params: { font: 'dyslexia' },
+    scales: ['100', '200'],
+    webFontDisabled: false,
+    offerLines: 4,
+    taskLines: 6,
+    pairLines: 5,
+    knownBelow: (scale, locale) => (scale === '200' ? DYSLEXIA_200_BELOW_THE_STRIP[locale] : null),
+  },
+  {
+    name: `the named fallback face, ${FALLBACK_FACE}, with the web font disabled`,
+    face: FALLBACK_FACE,
+    referenceWidth: 1024.4,
+    params: {},
+    scales: ['200'],
+    webFontDisabled: true,
+    offerLines: 5,
+    taskLines: 5,
+    pairLines: null,
+    knownBelow: null,
+  },
+];
+
+/** Block the bundled faces and draw the strip in FALLBACK_FACE. Before `open`. */
+async function disableWebFont(page: Page): Promise<void> {
+  await page.route(/\.woff2(\?|$)/u, (route) => route.abort());
+}
+async function pinFallbackFace(page: Page): Promise<void> {
+  await page.addStyleTag({
+    content: `.tn-hud, .tn-hud * { font-family: "${FALLBACK_FACE}" !important; }`,
+  });
+}
+
+/**
+ * ADR-0066 §4a, before any measurement: the face this tier names is the face the
+ * strip draws in. Loud, and first.
+ */
+async function assertFaceIsRendering(page: Page, tier: Tier, rowTestId: string): Promise<void> {
+  const seen = await page.evaluate(
+    async ({ testId, face, reference, webFontDisabled }) => {
+      const row = document.querySelector(`[data-testid="${testId}"]`);
+      if (row === null) throw new Error(`${testId} is not drawn`);
+      const style = getComputedStyle(row);
+      const shorthand = `${style.fontWeight} ${style.fontSize} "${face}"`;
+      /* A face that failed to arrive rejects here. That is the case this whole
+         assertion exists for, so it is measured and reported below, not thrown. */
+      if (!webFontDisabled) await document.fonts.load(shorthand).catch(() => []);
+      await document.fonts.ready;
+
+      const span = document.createElement('span');
+      span.style.cssText =
+        `font-family: ${style.fontFamily}; font-weight: 400; font-size: ${String(reference.size)}px; ` +
+        'letter-spacing: normal; word-spacing: normal; white-space: nowrap; position: absolute;';
+      span.textContent = reference.text;
+      document.body.append(span);
+      const width = span.getBoundingClientRect().width;
+      span.remove();
+
+      const bundledLoaded = [...document.fonts].some(
+        (font) => font.status === 'loaded' && /Atkinson Hyperlegible|OpenDyslexic/u.test(font.family),
+      );
+      return { width, family: style.fontFamily, checked: document.fonts.check(shorthand), bundledLoaded };
+    },
+    { testId: rowTestId, face: tier.face, reference: REFERENCE, webFontDisabled: tier.webFontDisabled },
+  );
+
+  const drift = Math.abs(seen.width - tier.referenceWidth);
+  expect(
+    seen.checked && drift <= REFERENCE_TOLERANCE_PX,
+    `the pinned face is not rendering: ${tier.name} expects "${tier.face}", whose reference string is ` +
+      `${String(tier.referenceWidth)} px at ${String(REFERENCE.size)} px, and the strip's stack (${seen.family}) ` +
+      `drew it ${seen.width.toFixed(1)} px wide` +
+      (seen.checked ? '' : `; document.fonts.check says "${tier.face}" is not available`) +
+      (tier.webFontDisabled ? '. For the fallback tier: is DejaVu Sans installed? `make browsers` installs it.' : '.'),
+  ).toBe(true);
+  if (tier.webFontDisabled) {
+    expect(seen.bundledLoaded, 'the web font was meant to be disabled, and a bundled face loaded anyway').toBe(false);
+  }
+}
+
+/**
+ * Set a row's words, then report its wrapped lines and how far it ends below the
+ * strip. Lines are the distinct line boxes its text occupies (DOM Range client
+ * rects), so the padding and border a button adds are never counted as a line.
+ */
+function measureRow(
+  page: Page,
+  testId: string,
+  words: string,
+): Promise<{ readonly lines: number; readonly overflow: number }> {
+  return page.evaluate(
+    ({ id, value }) => {
+      const row = document.querySelector<HTMLElement>(`[data-testid="${id}"]`);
+      if (row === null) throw new Error(`${id} is not drawn`);
+      row.textContent = value;
+      const hud = document.querySelector('[data-testid="hud"]');
+      if (hud === null) throw new Error('the HUD is not drawn');
+      hud.scrollTop = 0;
+
+      const range = document.createRange();
+      range.selectNodeContents(row);
+      const half = parseFloat(getComputedStyle(row).lineHeight) / 2;
+      const tops: number[] = [];
+      const rects = [...range.getClientRects()]
+        .filter((rect) => rect.width > 0 && rect.height > 0)
+        .sort((first, second) => first.top - second.top);
+      for (const rect of rects) {
+        const last = tops.at(-1);
+        if (last === undefined || rect.top - last > half) tops.push(rect.top);
+      }
+      return {
+        lines: tops.length,
+        overflow: row.getBoundingClientRect().bottom - hud.getBoundingClientRect().bottom,
+      };
+    },
+    { id: testId, value: words },
+  );
+}
+
+/**
+ * The pixel backstop (ADR-0066 §4b): every row ends inside the strip. Where a
+ * tier records a known count (`knownBelow`), the count is a ratchet: it may
+ * fall and may not rise, and when it reaches zero the message says to make it
+ * an equality.
+ */
+function assertBelowTheStrip(below: readonly string[], known: number | null, where: string): void {
+  if (known === null) {
+    expect(below, `${where}: a row ends below the strip, where a player has to scroll to find it`).toEqual([]);
+    return;
+  }
+  expect(
+    below.length,
+    `${where}: more rows end below the strip than ADR-0071 §5 recorded (${String(known)}):\n${below.join('\n')}`,
+  ).toBeLessThanOrEqual(known);
+  if (below.length < known) {
+    test.info().annotations.push({
+      type: 'ratchet',
+      description: `${where}: ${String(below.length)} below the strip, recorded ${String(known)}. Lower the record.`,
+    });
+  }
+}
+
+test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named face', () => {
+  test('sweeps every level, and every quest a level claims, exactly once', () => {
+    /* The premise, asserted rather than assumed (ADR-0024). A sweep over an
+       empty list is a green tick that measured nothing, and this one walks two
+       directories to build its list. */
+    const swept = SWEPT_LEVELS.reduce((total, level) => total + level.steps.length, 0);
+    expect(SWEPT_LEVELS.length, 'no level document was read').toBeGreaterThan(0);
+    expect(swept, 'no quest step was read').toBeGreaterThan(0);
+
+    const claimed = SWEPT_LEVELS.flatMap((level) => level.steps.map((step) => step.where));
+    expect(new Set(claimed).size, 'a quest is claimed by two levels').toBe(claimed.length);
+    const questFiles = readdirSync(fileURLToPath(new URL('../../content/quests', import.meta.url))).filter((name) =>
+      name.endsWith('.json'),
+    );
+    const listed = new Set(claimed.map((where) => `${where.split('/')[1] ?? ''}.json`));
+    expect(
+      questFiles.filter((name) => !listed.has(name)),
+      'a quest document no level lists, so no level sweeps it',
+    ).toEqual([]);
+    for (const level of SWEPT_LEVELS) expect(level.offerKeys.length, `${level.id} draws no offer`).toBeGreaterThan(0);
+  });
+
+  for (const tier of TIERS) {
+    const runs = tier.scales.flatMap((scale) => (['en', 'fr'] as const).map((locale) => ({ scale, locale })));
+    for (const { scale, locale } of runs) {
+      const language = locale === 'fr' ? 'French' : 'English';
+
+      test(`${tier.name}, ${language}, ${scale} %: the tallest offer and the indicator fit their lines`, async ({
+        page,
+      }, info) => {
+        if (tier.webFontDisabled) await disableWebFont(page);
+        await open(page, { screen: 'level', locale, textScale: scale, task: '1', prompt: '1', hint: '1', notice: '1', warning: '1', ...tier.params });
+        if (tier.webFontDisabled) await pinFallbackFace(page);
+        await assertFaceIsRendering(page, tier, 'interact-prompt');
+
+        const indicatorText = await page.getByTestId('hud-task-indicator-text').innerText();
+        const indicator = await measureRow(page, 'hud-task-indicator-text', indicatorText);
+        expect(indicator.lines, 'the indicator is not one line').toBe(1);
+
+        const failures: string[] = [];
+        const below: string[] = [];
+        let tallest = 0;
+        for (const level of SWEPT_LEVELS) {
+          let worst = { text: '', lines: 0, overflow: Number.NEGATIVE_INFINITY };
+          for (const key of level.offerKeys) {
+            const offer = text(locale, key as Parameters<typeof text>[1]);
+            const measured = await measureRow(page, 'interact-prompt', offer);
+            if (measured.lines > worst.lines) worst = { text: offer, ...measured };
+          }
+          tallest = Math.max(tallest, worst.lines);
+          if (worst.lines > tier.offerLines) {
+            failures.push(`${level.id}: "${worst.text}" takes ${String(worst.lines)} lines; the budget is ${String(tier.offerLines)}`);
+          }
+          if (tier.pairLines !== null && worst.lines + indicator.lines > tier.pairLines) {
+            failures.push(`${level.id}: "${worst.text}" and the indicator take ${String(worst.lines + indicator.lines)} lines; the budget is ${String(tier.pairLines)}`);
+          }
+          /* The backstop: with this level's tallest offer up, the task's count
+             still ends inside the strip. */
+          await measureRow(page, 'interact-prompt', worst.text);
+          const count = await measureRow(page, 'hud-task-indicator-text', indicatorText);
+          if (count.overflow > 1) below.push(`${level.id}: under "${worst.text}" the task's count ends below the strip`);
+        }
+        info.annotations.push({ type: 'tallest offer', description: `${String(tallest)} line(s)` });
+        info.annotations.push({ type: 'below the strip', description: String(below.length) });
+        expect(failures, `${tier.name}, ${language}`).toEqual([]);
+        assertBelowTheStrip(below, tier.knownBelow?.(scale, locale)?.offers ?? null, `${tier.name}, ${language}, ${scale} %`);
+      });
+
+      test(`${tier.name}, ${language}, ${scale} %: every task a level can track fits its lines`, async ({ page }, info) => {
+        if (tier.webFontDisabled) await disableWebFont(page);
+        await open(page, { screen: 'level', locale, textScale: scale, task: '1', hint: '1', notice: '1', warning: '1', ...tier.params });
+        if (tier.webFontDisabled) await pinFallbackFace(page);
+        await assertFaceIsRendering(page, tier, 'hud-quest-tracker');
+
+        const failures: string[] = [];
+        const below: string[] = [];
+        let longest = 0;
+        for (const level of SWEPT_LEVELS) {
+          for (const step of level.steps) {
+            const task = labelled(locale, text(locale, 'hud.task'), step.prompt[locale]);
+            const measured = await measureRow(page, 'hud-quest-tracker', task);
+            longest = Math.max(longest, measured.lines);
+            if (measured.lines > tier.taskLines) {
+              failures.push(`${step.where}: "${task}" takes ${String(measured.lines)} lines; the budget is ${String(tier.taskLines)}`);
+            }
+            if (measured.overflow > 1) below.push(`${step.where}: "${task}" ends below the strip`);
+          }
+        }
+        info.annotations.push({ type: 'longest task', description: `${String(longest)} line(s)` });
+        info.annotations.push({ type: 'below the strip', description: String(below.length) });
+        expect(failures, `${tier.name}, ${language}`).toEqual([]);
+        assertBelowTheStrip(below, tier.knownBelow?.(scale, locale)?.tasks ?? null, `${tier.name}, ${language}, ${scale} %`);
+      });
+    }
+  }
 });
 
 /*

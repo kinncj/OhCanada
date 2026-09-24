@@ -25,8 +25,12 @@ setup: deps browsers ## Install dependencies and the Playwright browser
 deps: ## Install the npm dependencies only, with no browser
 	npm ci
 
-browsers: ## Install the Playwright browser and the OS packages it needs
+# The second line is the face the readability sweep's fallback tier names
+# (ADR-0066 §4e): DejaVu Sans, installed rather than inherited from the image,
+# so that tier measures the face it says it measures on every machine.
+browsers: ## Install the Playwright browser, the OS packages it needs, and the sweep's fallback face
 	npx playwright install --with-deps chromium
+	scripts/install-fallback-face.sh
 
 lint: ## ESLint, the dependency-cruiser architecture rules, the ADR-0009 obligation gate
 	npm run lint

@@ -462,12 +462,31 @@ are comfortable.
   `.ttf`. `tests/unit/infra/credit-gate.test.ts` drives the real gate both ways: an OFL font with its
   `OFL.txt` beside it passes, and an OFL `.png` fails.
 
-- **OBLIGATION due=2026-11-09 owner=ui-a11y** — land §4: the sweep asserts the pinned face is rendering
+- ~~**OBLIGATION due=2026-11-09 owner=ui-a11y** — land §4: the sweep asserts the pinned face is rendering
   before it measures, asserts **lines** against the 4-line and 5-line budgets in §4b rather than a decimal
   pixel overflow, and runs the second tier with the web font disabled against a named, installed fallback
   face. Record the name of that face and the one-sentence justification §4e requires. Delete no assertion the
   current sweep makes about pairing a quest with its own level's offers, or about choosing the tallest offer
-  rather than the longest string; both are correct.
+  rather than the longest string; both are correct.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line. `tests/a11y/readability.spec.ts` ports the
+  pairing (each quest against its own level's `pois`, `characters` and `hud.interact.done`, derived from the
+  level documents) and the tallest-offer choice from `task-strip-gate` (9cb92ee, 48761e2), with their premise
+  checks: levels and steps were read, and every quest file is claimed exactly once. Only the test logic was
+  ported, not that branch's copy edits. **§4a:** before measuring, each tier draws a 32 px reference string
+  in the strip's own computed stack and compares it with the width recorded for its face (Atkinson 887 px,
+  OpenDyslexic 1 569 px, DejaVu Sans 1 024.4 px, ±0.5 px), together with `document.fonts.check`. A face that
+  did not arrive fails with "the pinned face is not rendering" (checked by blocking the woff2 files: the
+  fallback drew it 875 px wide). **§4b:** lines are distinct line boxes of the row's text. Pinned: offer
+  ≤ 4, task ≤ 4, offer + indicator ≤ 5, and the indicator is exactly one line. Fallback: offer ≤ 5, task ≤ 5.
+  The pixel backstop (the row ends inside the strip) is asserted, not reported. Measured: pinned 2 / 4 / 3
+  lines, fallback 3 / 5, all inside the strip in both languages, so **no quest prompt was flagged and none
+  was shortened**. **§4d/§4e — the named fallback face is DejaVu Sans (2.37, `fonts-dejavu-core`),
+  because it is the widest sans face a player can plausibly land on when the bundled face does not arrive
+  (13 % wider than Atkinson and 12 % wider than Liberation Sans at 400 over the sweep's reference strings)
+  and the default sans of most Linux desktops and fontconfig-based WebViews.** That tier aborts every woff2
+  request, asserts no bundled face loaded, and pins the strip to DejaVu Sans. `make browsers`, which CI's
+  prepare action runs, installs it (`scripts/install-fallback-face.sh`). The dyslexia face is a third tier
+  with its own budget, recorded in ADR-0071 §5, where its 200 % overflow is recorded as an open defect.
 
 - **OBLIGATION due=2026-10-19 owner=ui-a11y** — identify the face `system-ui` resolves to on the CI runner
   image and record it, with its version, in `TN-REACH-what-is-in-reach.md` beside the 0-local / 50-CI

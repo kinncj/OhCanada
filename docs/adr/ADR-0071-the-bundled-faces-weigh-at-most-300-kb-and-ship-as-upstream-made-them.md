@@ -113,7 +113,32 @@ in the same two languages. The numbers are recorded below, in §5, by the commit
 
 ### 5. The dyslexia face's line budget
 
-Recorded by the commit that lands ADR-0066 §4. Until then, this section is the obligation below.
+Measured on 2026-09-23 by the ADR-0066 §4 sweep in `tests/a11y/readability.spec.ts`: 390 × 844, every level's
+tallest offer and all 72 task steps, English and French. Lines are distinct line boxes. "Below" counts rows
+that end under the strip, where the player has to scroll.
+
+| face | text | tallest offer | longest task | offer + indicator | below the strip |
+|---|---|---|---|---|---|
+| Atkinson Hyperlegible (pinned) | 200 % | 2 | 4 | 3 | 0 |
+| DejaVu Sans, web font disabled (fallback tier) | 200 % | 3 (FR), 2 (EN) | 5 (FR), 4 (EN) | — | 0 |
+| **OpenDyslexic** | 100 % | 2 | 4 (FR), 3 (EN) | 3 | **0** |
+| **OpenDyslexic** | 200 % | 4 | 6 | 5 | **EN: 2 offers, 30 tasks. FR: 3 offers, 45 tasks** |
+
+**The dyslexia face's budget is: offer ≤ 4 lines, task ≤ 6 lines, offer + indicator ≤ 5 lines**, at every
+text size. These are the measured maxima, with no headroom, so a longer task or offer fails the sweep. At
+100 % the rows also end inside the strip, and the sweep asserts that too.
+
+**At 200 % they do not, and no line budget can make them.** A six-line task is taller than the strip, which
+ADR-0066 §3 caps at a third of the screen. In OpenDyslexic, "Réglages" and "Menu" also no longer share a row
+at 200 %, which costs the strip one more line. The face's tall ascender (1.3 em against a fixed 1.2 line
+height) also draws some accents and the "/" of "3/7" into the line above. So ADR-0066's original defect,
+the task below the fold at 200 % text, is back for the one group of players who turned on the dyslexia
+toggle. No copy edit reaches it: the face is 1.5× wider than the widest face the copy was fitted to. The
+sweep holds the counts above as a **ratchet**: they may fall and may not rise. The obligation below carries
+the decision that brings them to zero. Choosing among the ways out (a dyslexia-specific strip layout, letting
+the dyslexia strip grow past a third, a narrower dyslexia face, or taking back the 0.02 em letter- and
+0.08 em word-spacing the sheet adds on top of a face that already spaces generously) is a product decision,
+not the implementer's.
 
 ### 6. The fallback while a face is not yet drawn
 
@@ -186,9 +211,19 @@ estimate.
 
 Written in ADR-0009's format.
 
-- **OBLIGATION due=2026-11-09 owner=ui-a11y** — record in §5 the dyslexia face's line budget, measured by
+- ~~**OBLIGATION due=2026-11-09 owner=ui-a11y** — record in §5 the dyslexia face's line budget, measured by
   the ADR-0066 §4 sweep on the same strips, languages and text scale as the UI face, and make the sweep
-  assert it.
+  assert it.~~
+  **DISCHARGED 2026-09-23**, in the commit that lands the sweep. §5 records the budget (offer ≤ 4, task ≤ 6,
+  offer + indicator ≤ 5) and the measurement it comes from, at 100 % and 200 %, in both languages. The
+  sweep asserts the budget, asserts every row inside the strip at 100 %, and holds the 200 % overflow
+  counts as a ratchet.
+
+- **OBLIGATION due=2026-10-21 owner=architect** — the dyslexia strip at 200 % text. With the dyslexia toggle
+  on, 30 English and 45 French task steps, and the task's count under 2 and 3 levels' tallest offers, end
+  below the HUD strip (§5). That is ADR-0066's defect again, for the players who asked for an easier font.
+  Decide the way out (§5 lists the candidates), land it, and set `DYSLEXIA_200_BELOW_THE_STRIP` in
+  `tests/a11y/readability.spec.ts` to zero, so that tier asserts the backstop like the others.
 
 - **OBLIGATION due=2026-12-07 owner=ui-a11y** — the answer marks. Draw ✓ and ✗ from a bundled face or as a
   drawn mark, so that no text the game prints falls back per glyph to a device face. Alternatively, record
