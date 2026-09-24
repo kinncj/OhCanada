@@ -462,10 +462,11 @@ export class LevelScene extends Phaser.Scene {
   #riderY = 0;
   readonly #bounds: LevelBounds;
   /**
-   * The end of the level, and the latch that lets it be announced once.
+   * The end of the level, and the latch that lets it be announced once per
+   * arrival.
    *
    * Built from the document, so it is fixed for the life of the scene and the
-   * per-frame cost is one comparison — and, after the arrival, one field read.
+   * per-frame cost is one or two comparisons.
    * The rule it holds is `level-exit.ts`'s, not this file's: a scene that
    * decided where a level ends would be a rule no `environment: 'node'` test
    * could reach.
@@ -1102,8 +1103,10 @@ export class LevelScene extends Phaser.Scene {
      * After the frame's movement and after the reach, so the trace reads in the
      * order it happened — the walk, then whatever came into reach on the way,
      * then the arrival. The latch is inside `#exit`: this is `false` on every
-     * frame after the first, which is what stops a player jostling at the
-     * boundary from opening a completion card sixty times a second.
+     * frame after the first of an arrival, which is what stops a player
+     * jostling at the boundary from opening a completion card sixty times a
+     * second. It re-arms once the player has walked back behind the line by a
+     * visible step, so arriving again is reported again (ADR-0074).
      *
      * The scene does not decide what the arrival is worth. It is a position, not
      * an achievement, and a player can reach it having answered nothing; whether
