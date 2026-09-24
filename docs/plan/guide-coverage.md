@@ -5,7 +5,7 @@
   `extractedTextSha256`). canada.ca refused the fetch, so the PDF came from the Wayback Machine's
   2026-08-03 capture of `discover-large.pdf`. It hashed to the register's `sha256`. `pdftotext -layout`
   **24.02.0** then reproduced the recorded text digest byte for byte, although the register records 26.08.0.
-- Re-run with `make guide-coverage` (`scripts/guide-coverage.mjs`). Add `-- --list` for every uncovered
+- Re-run with `make source-coverage` (`scripts/guide-coverage.mjs`). Add `-- --list` for every uncovered
   sentence, and `-- --units` for every unit with its class and carriers. The script is a measurement and
   not a gate. It needs the git-ignored extraction, so it cannot run in CI (ADR-0061 §9).
 - The owner's goal: every testable proposition in the guide can be reached by a player, not just stored in
@@ -442,7 +442,7 @@ Québec City has taken its tier 2 stops.** Decide city 12 when a second bank cro
 ## 7. Progress on the lesson programme
 
 Authored 2026-09-23. Every passage below is in the null verification form and waits for the verifier.
-Nothing in this section is a measurement: `make guide-coverage` counts only verified carriers, so the
+Nothing in this section is a measurement: `make source-coverage` counts only verified carriers, so the
 Headline table above does not move until the grants land. Re-run it then.
 
 **The owner's rule since 2026-09-23: a player is taught before being asked.** Every verified question gets a
@@ -539,6 +539,46 @@ Every passage is in `content/lessons/rights-and-responsibilities-of-citizenship/
 | `rights-37-cadets` | `rr6-cadets` |
 | `rights-38-coast-guard-and-emergency-services` | `rr6-coast-guard-and-emergency-services` |
 | `rights-39-protecting-your-community` | `rr6-in-their-footsteps` |
+
+**Read in the level (2026-09-23).** `content/quests/halifax-clock-and-pier.json` now has a `read` step
+right after each stop's `visit` step (ADR-0067), before that stop's `answer` step. Each stop has one
+sheet, and a sheet can use only one lesson. ADR-0067 §2 shows every passage in the run in one reader,
+and `resolveReading` rejects a reader that mixes lessons (`content.lesson.passages.manyLessons`). So
+a second `read` step with another lesson at the same stop would be rejected too. The rule is really
+one lesson per stop, not just one per step. Words are counted as runs of non-space, as the
+`a-stop-reads-at-most-four-passages` gate counts them.
+
+| Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
+|---|---|---|---|---|
+| Town Clock | `rr3` | `rr3-sources-of-canadian-law`, `rr3-magna-carta`, `rr3-freedom-of-conscience-and-religion`, `rr3-habeas-corpus` | 104 / 113 | 03, 04, 05, 06; and early for Pier 21: 07, 11, 12 |
+| Market stall | `rr5` | `rr5-rights-bring-responsibilities`, `rr5-work-and-family`, `rr5-jury-duty-is-required`, `rr5-juries-make-justice-work` | 83 / 93 | 22, 25, 26, 27 |
+| Pier 21 | `rr1` | `rr1-charter-added-in-1982`, `rr1-freedoms-and-other-rights`, `rr1-mobility-rights`, `rr1-official-language-rights` | 101 / 107 | 13, 15, 16, 17, 19 |
+| Harbour tug | `rr6` | `rr6-no-compulsory-service`, `rr6-the-regular-forces`, `rr6-part-time-reserves`, `rr6-cadets` | 82 / 96 | 34, 35, 36, 37 |
+
+Some pooled questions are not read, but the quest's own dialogue says their sentence before the
+question is asked: 20 (Pier 21 line), 22 and 30 (guide's opening), 23 and 24 (market-stall line),
+28 and 29 (Town Clock line), 38 (tug line). Question 22 is also read at the market stall.
+
+**Not taught in the level. They stay in Learn.** The budget or the one-lesson limit keeps out these
+11 pooled questions:
+
+| Question | Pooled at | Passage it needs | Why it is not read |
+|---|---|---|---|
+| `rights-01-where-rights-come-from` | Pier 21 | `rr3-rights-and-responsibilities`, `rr3-history-law-and-values` | `rr3` has only the Town Clock, and those 4 places go to its own pool (03–06) and to 07, 11 and 12 |
+| `rights-08-freedom-of-expression-includes-press` | Pier 21 | `rr3-freedom-of-expression` | Same. If it replaced the conscience passage, the clock would read 123 FR words |
+| `rights-09-freedom-of-peaceful-assembly` | Pier 21 | `rr3-freedom-of-peaceful-assembly` | Same, because the clock has no fifth place |
+| `rights-10-freedom-of-association` | Pier 21 | `rr3-freedom-of-association` | Same |
+| `rights-14-charter-opening-principles` | Pier 21 | `rr1-charter-opening-words` | Pier 21 has 4 places. This passage is 48 EN words, and five other questions win those places |
+| `rights-18-charter-and-treaty-rights` | Pier 21 | `rr1-aboriginal-peoples-rights` | Pier 21 has 4 places. Official languages won the last place: it teaches one question, like this one, and suits a gateway for newcomers better |
+| `rights-21-equality-of-women-and-men` | Pier 21 | `rr4-equal-under-the-law` | Pier 21 reads `rr1`, and no earlier stop can hold `rr4` |
+| `rights-31-what-volunteering-gives-back` | Harbour tug | `rr2-what-volunteering-gives-you` | The tug reads `rr6` (four questions). The market stall reads `rr5` (three untaught questions in its own pool, against two for `rr2`) |
+| `rights-32-protecting-heritage-and-environment` | Market stall | `rr2-protect-heritage-and-environment` | Same |
+| `rights-33-heritage-includes-buildings` | Market stall | `rr2-protect-heritage-and-environment` | Same |
+| `rights-39-protecting-your-community` | Harbour tug | `rr6-in-their-footsteps` | The tug has 4 places. The four passages about military service read as one set. This passage goes with the Coast Guard line that the guide says right after the reader |
+
+Result: 38 pooled questions. 20 are read at or before their stop, 7 more are told only by a dialogue
+line, and 11 are left for Learn. To reach the 11, Halifax needs a fifth stop (tier 2, §5.5). No
+passage move can do it, because every stop is already full at 4 passages.
 
 ### 7.4 Ceilings (§5(a))
 

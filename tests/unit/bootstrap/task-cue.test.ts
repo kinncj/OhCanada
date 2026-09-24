@@ -27,12 +27,15 @@ function xOf(targetId: string): number | null {
 describe('the place a step sends the player to', () => {
   it("is a talk or visit step's own target, and for an answer step the place before it", () => {
     const steps = halifaxQuest.steps;
-    expect(steps.map((step) => step.kind).slice(0, 5)).toEqual(['talk', 'visit', 'answer', 'visit', 'answer']);
-    expect(placeOfStep(steps, 0)).toBe('guide');
-    expect(placeOfStep(steps, 1)).toBe('town-clock');
+    /* A stop is a visit, the read it opens (ADR-0067), then its answer. */
+    expect(steps.map((step) => step.kind).slice(0, 5)).toEqual(['talk', 'visit', 'read', 'answer', 'visit']);
+    const at = (id: string): number => steps.findIndex((step) => step.id === id);
+    expect(placeOfStep(steps, at('meet-the-guide'))).toBe('guide');
+    expect(placeOfStep(steps, at('find-the-town-clock'))).toBe('town-clock');
+    expect(placeOfStep(steps, at('read-at-the-town-clock'))).toBe('town-clock');
     /* Answered at the clock: its target is the subject, never a place. */
-    expect(placeOfStep(steps, 2)).toBe('town-clock');
-    expect(placeOfStep(steps, 4)).toBe('market-stall');
+    expect(placeOfStep(steps, at('answer-at-the-clock'))).toBe('town-clock');
+    expect(placeOfStep(steps, at('answer-at-the-market-stall'))).toBe('market-stall');
   });
 
   it('is nothing for an index that is not a step, or an answer step with no place before it', () => {
