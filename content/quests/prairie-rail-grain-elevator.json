@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-grain-bins",
+      "kind": "read",
+      "targetId": "grain-bins",
+      "prompt": {
+        "en": "Stop and read at the grain bins",
+        "fr": "Arrêtez-vous pour lire aux silos à grains"
+      },
+      "passages": [
+        {
+          "lesson": "modern-02-canada-in-the-world",
+          "passage": "m2-nato-a-military-alliance"
+        },
+        {
+          "lesson": "modern-02-canada-in-the-world",
+          "passage": "m2-norad-with-the-united-states"
+        },
+        {
+          "lesson": "modern-02-canada-in-the-world",
+          "passage": "m2-korean-war"
+        },
+        {
+          "lesson": "modern-02-canada-in-the-world",
+          "passage": "m2-un-peacekeeping-missions"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-grain-bins",
       "kind": "answer",
       "targetId": "modern-canada",
@@ -304,6 +331,33 @@
       ]
     },
     {
+      "id": "read-at-the-grain-elevator",
+      "kind": "read",
+      "targetId": "grain-elevator",
+      "prompt": {
+        "en": "Stop and read at the grain elevator",
+        "fr": "Arrêtez-vous pour lire à l'élévateur à grain"
+      },
+      "passages": [
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-unemployment-insurance-1940"
+        },
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-old-age-security-1927"
+        },
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-pension-plans-1965"
+        },
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-canada-health-act"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-elevator",
       "kind": "answer",
       "targetId": "modern-canada",
@@ -373,6 +427,29 @@
       ]
     },
     {
+      "id": "read-at-the-combine-harvester",
+      "kind": "read",
+      "targetId": "combine-harvester",
+      "prompt": {
+        "en": "Stop and read at the combine harvester",
+        "fr": "Arrêtez-vous pour lire à la moissonneuse"
+      },
+      "passages": [
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-gatt-opened-up-trade"
+        },
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-oil-found-in-alberta-1947"
+        },
+        {
+          "lesson": "modern-01-prosperity-and-social-programs",
+          "passage": "m1-hard-work-and-trade"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-combine-harvester",
       "kind": "answer",
       "targetId": "modern-canada",
@@ -437,6 +514,33 @@
               "evidence": "GREAT CANADIAN DISCOVERIES AND INVENTIONS … Sir Sandford Fleming — invented the worldwide system of standard time zones."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-container-car",
+      "kind": "read",
+      "targetId": "container-car",
+      "prompt": {
+        "en": "Stop and read at the container car",
+        "fr": "Arrêtez-vous pour lire au wagon porte-conteneurs"
+      },
+      "passages": [
+        {
+          "lesson": "modern-07-science-and-inventions",
+          "passage": "m7-bell-and-the-telephone"
+        },
+        {
+          "lesson": "modern-07-science-and-inventions",
+          "passage": "m7-bombardier-and-the-snowmobile"
+        },
+        {
+          "lesson": "modern-07-science-and-inventions",
+          "passage": "m7-evans-and-woodward-light-bulb"
+        },
+        {
+          "lesson": "modern-07-science-and-inventions",
+          "passage": "m7-banting-and-best-insulin"
         }
       ]
     },

@@ -6685,62 +6685,62 @@
             "arm-upper-l": [
               -65.3,
               131.52,
-              14
+              -6.51
             ],
             "arm-lower-l": [
-              -81.75,
-              129.5,
-              -2
+              -57.59,
+              131.08,
+              -66.37
             ],
             "bare-hand-l": [
-              -79.37,
-              129.46,
-              -2
+              4.71,
+              90.34,
+              -66.37
             ],
             "hand-l": [
-              -79.37,
-              129.46,
-              -2
+              4.71,
+              90.34,
+              -66.37
             ],
             "leg-upper-l": [
               -28,
               131,
-              -116
+              -121.0
             ],
             "leg-lower-l": [
-              60.08,
-              -9.96,
-              52
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              1.77,
-              -38.4,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              1.77,
-              -38.4,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -106
+              -120.2
             ],
             "leg-lower-r": [
-              66.2,
-              5.99,
-              42
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              16.69,
-              -13.02,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              16.69,
-              -13.02,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -51.49,
@@ -6790,22 +6790,22 @@
             "arm-upper-r": [
               -63.63,
               142.03,
-              10
+              -13.8
             ],
             "arm-lower-r": [
-              -75.44,
-              141,
-              -6
+              -47.41,
+              140.07,
+              -75.71
             ],
             "bare-hand-r": [
-              -68.33,
-              140.63,
-              -6
+              18.48,
+              88.85,
+              -75.71
             ],
             "hand-r": [
-              -68.33,
-              140.63,
-              -6
+              18.48,
+              88.85,
+              -75.71
             ],
             "mount-fore": [
               0,
@@ -6835,62 +6835,62 @@
             "arm-upper-l": [
               -67.34,
               130.29,
-              15
+              -8.9
             ],
             "arm-lower-l": [
-              -84.94,
-              127.98,
-              -1
+              -56.82,
+              129.48,
+              -65.69
             ],
             "bare-hand-l": [
-              -83.76,
-              127.97,
-              -1
+              5.15,
+              89.47,
+              -65.69
             ],
             "hand-l": [
-              -83.76,
-              127.97,
-              -1
+              5.15,
+              89.47,
+              -65.69
             ],
             "leg-upper-l": [
               -28,
               129.4,
-              -117
+              -119.89
             ],
             "leg-lower-l": [
-              59.32,
-              -13.09,
-              53
+              56.96,
+              -17.44,
+              2.29
             ],
             "foot-l": [
-              0.22,
-              -42.56,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              0.22,
-              -42.56,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               129.4,
-              -107
+              -119.22
             ],
             "leg-lower-r": [
-              65.72,
-              2.75,
-              43
+              57.53,
+              -16.44,
+              -9.7
             ],
             "foot-r": [
-              15.25,
-              -17.13,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              15.25,
-              -17.13,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -52.74,
@@ -6940,22 +6940,22 @@
             "arm-upper-r": [
               -65.49,
               141.36,
-              11
+              -15.87
             ],
             "arm-lower-r": [
-              -78.47,
-              140.11,
-              -5
+              -46.9,
+              138.77,
+              -75.35
             ],
             "bare-hand-r": [
-              -72.54,
-              139.85,
-              -5
+              18.89,
+              87.97,
+              -75.35
             ],
             "hand-r": [
-              -72.54,
-              139.85,
-              -5
+              18.89,
+              87.97,
+              -75.35
             ],
             "mount-fore": [
               0,
@@ -6985,62 +6985,62 @@
             "arm-upper-l": [
               -65.3,
               131.52,
-              14
+              -6.51
             ],
             "arm-lower-l": [
-              -81.75,
-              129.5,
-              -2
+              -57.59,
+              131.08,
+              -66.37
             ],
             "bare-hand-l": [
-              -79.37,
-              129.46,
-              -2
+              4.71,
+              90.34,
+              -66.37
             ],
             "hand-l": [
-              -79.37,
-              129.46,
-              -2
+              4.71,
+              90.34,
+              -66.37
             ],
             "leg-upper-l": [
               -28,
               131,
-              -116
+              -121.0
             ],
             "leg-lower-l": [
-              60.08,
-              -9.96,
-              52
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              1.77,
-              -38.4,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              1.77,
-              -38.4,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -106
+              -120.2
             ],
             "leg-lower-r": [
-              66.2,
-              5.99,
-              42
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              16.69,
-              -13.02,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              16.69,
-              -13.02,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -51.49,
@@ -7090,22 +7090,22 @@
             "arm-upper-r": [
               -63.63,
               142.03,
-              10
+              -13.8
             ],
             "arm-lower-r": [
-              -75.44,
-              141,
-              -6
+              -47.41,
+              140.07,
+              -75.71
             ],
             "bare-hand-r": [
-              -68.33,
-              140.63,
-              -6
+              18.48,
+              88.85,
+              -75.71
             ],
             "hand-r": [
-              -68.33,
-              140.63,
-              -6
+              18.48,
+              88.85,
+              -75.71
             ],
             "mount-fore": [
               0,
@@ -7115,7 +7115,7 @@
           }
         }
       ],
-      "note": "The same seated posture as `toboggan/walk` with the recline taken out - 18 degrees instead of 27 - because a stopped sled at the top of the run still has a rider sitting on it. There is no standing idle for this mode: a tobogganer who stops does not stand up through the sled, and a level that wants the player on their feet sets the mode back to `walk`."
+      "note": "The same seated posture as `toboggan/walk` with the recline taken out - 18 degrees instead of 27 - because a stopped sled at the top of the run still has a rider sitting on it. The ankles are the same two points as `toboggan/walk` and the legs and arms are re-solved to them, so stopping does not lift a boot off the deck. There is no standing idle for this mode: a tobogganer who stops does not stand up through the sled, and a level that wants the player on their feet sets the mode back to `walk`."
     },
     "toboggan/walk": {
       "loop": "loop",
@@ -7142,62 +7142,62 @@
             "arm-upper-l": [
               -83.42,
               136.14,
-              22
+              -22.35
             ],
             "arm-lower-l": [
-              -108.9,
-              131.19,
-              8
+              -57.57,
+              131.04,
+              -66.33
             ],
             "bare-hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "leg-upper-l": [
               -28,
               131,
-              -123
+              -121.0
             ],
             "leg-lower-l": [
-              54.19,
-              -20.37,
-              57
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -113
+              -120.2
             ],
             "leg-lower-r": [
-              62.21,
-              -5.29,
-              47
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -62.5,
@@ -7247,22 +7247,22 @@
             "arm-upper-r": [
               -79.72,
               151.58,
-              18
+              -27.55
             ],
             "arm-lower-r": [
-              -100.73,
-              148.25,
-              4
+              -48.27,
+              143.87,
+              -78.99
             ],
             "bare-hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "mount-fore": [
               0,
@@ -7292,62 +7292,62 @@
             "arm-upper-l": [
               -89.28,
               140.31,
-              25
+              -26.94
             ],
             "arm-lower-l": [
-              -118.02,
-              133.94,
-              11
+              -58.47,
+              132.93,
+              -67.06
             ],
             "bare-hand-l": [
-              -130.99,
-              132.69,
-              11
+              4.15,
+              91.43,
+              -67.06
             ],
             "hand-l": [
-              -130.99,
-              132.69,
-              11
+              4.15,
+              91.43,
+              -67.06
             ],
             "leg-upper-l": [
               -28,
               133,
-              -126
+              -122.39
             ],
             "leg-lower-l": [
-              51.28,
-              -22.6,
-              48
+              54.75,
+              -17.5,
+              0.58
             ],
             "foot-l": [
-              -3.71,
-              -47.08,
-              -20
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -3.71,
-              -47.08,
-              -20
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               133,
-              -116
+              -121.42
             ],
             "leg-lower-r": [
-              60.08,
-              -7.96,
-              50
+              55.63,
+              -16.09,
+              -11.2
             ],
             "foot-r": [
-              3.39,
-              -34.39,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              3.39,
-              -34.39,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -66,
@@ -7397,22 +7397,22 @@
             "arm-upper-r": [
               -84.72,
               157.31,
-              21
+              -31.5
             ],
             "arm-lower-r": [
-              -109.09,
-              152.79,
-              7
+              -49.19,
+              147.29,
+              -80.96
             ],
             "bare-hand-r": [
-              -117.38,
-              152.28,
-              7
+              17.96,
+              89.97,
+              -80.96
             ],
             "hand-r": [
-              -117.38,
-              152.28,
-              7
+              17.96,
+              89.97,
+              -80.96
             ],
             "mount-fore": [
               0,
@@ -7442,62 +7442,62 @@
             "arm-upper-l": [
               -83.42,
               136.14,
-              22
+              -22.35
             ],
             "arm-lower-l": [
-              -108.9,
-              131.19,
-              8
+              -57.57,
+              131.04,
+              -66.33
             ],
             "bare-hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "leg-upper-l": [
               -28,
               131,
-              -123
+              -121.0
             ],
             "leg-lower-l": [
-              54.19,
-              -20.37,
-              57
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -113
+              -120.2
             ],
             "leg-lower-r": [
-              62.21,
-              -5.29,
-              47
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -62.5,
@@ -7547,22 +7547,22 @@
             "arm-upper-r": [
               -79.72,
               151.58,
-              18
+              -27.55
             ],
             "arm-lower-r": [
-              -100.73,
-              148.25,
-              4
+              -48.27,
+              143.87,
+              -78.99
             ],
             "bare-hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "mount-fore": [
               0,
@@ -7572,7 +7572,7 @@
           }
         }
       ],
-      "note": "Seated, reclined 27 degrees, knees folded up, feet tucked back on the deck - the posture in `refs/quebec-city/toboggan-slide-riders.jpg` and the same one the two background riders in `quebec-city/layer-60-slope.svg` hold, so the player matches the level rather than arriving from a different game. The whole figure drops 131 px and moves 28 px back: a seated rider's hips are at the deck, and the sled reaches further forward than the rider does. THE LEGS CANNOT REACH FURTHER FORWARD THAN THIS. 98 + 74 px of leg from a hip 19 px above the deck folds to about 70 px of forward reach, which is why the knees are up rather than out, and it is also why the prow is a separate part: at full extension the shins cross the front of the sled."
+      "note": "Seated, reclined 27 degrees, knees up, boots flat on the deck at the foot of the curl, near mitt on the near knee - the posture in `refs/quebec-city/toboggan-slide-riders.jpg` and the one the three riders in `quebec-city/layer-60-slope.svg` hold, so the player matches the level rather than arriving from a different game. The whole figure drops 131 px and moves 28 px back: a seated rider's hips are at the deck, and the sled reaches further forward than the rider does. THE FEET ARE THE FIXED POINT AND THE LEGS ARE SOLVED TO THEM. Each ankle is one point in every key of every `toboggan/*` state - near (178, 418.5), far (186, 418.5), which puts the sole on the deck top at y 444 with the foot unrotated and the toe under the prow - and the thigh and shin are two-link IK from the hip to it, knee up, so the knee rides 48-52 px above the hip as the seat bobs. The arms are IK from the carried shoulder to a wrist 50-54 px short of the knee along the thigh, which lands the mitt ON the knee and bends the elbow forward. REDRAWN 2026-09-24 after blind run d821836151a20d55 failed `the player matches the riders`: the previous keys folded each shin 180 degrees back up the thigh (thigh -123, shin +57), so the shins and boots vanished behind the parka and the knee read as a raised straight leg with a boot hanging over the curl, and the arms hung straight down behind the hip. A shin angled BACK past vertical reads as that same defect - keep the ankle forward of the knee or level with it."
     },
     "toboggan/run": {
       "loop": "loop",
@@ -7599,62 +7599,62 @@
             "arm-upper-l": [
               -83.42,
               136.14,
-              22
+              -22.35
             ],
             "arm-lower-l": [
-              -108.9,
-              131.19,
-              8
+              -57.57,
+              131.04,
+              -66.33
             ],
             "bare-hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "leg-upper-l": [
               -28,
               131,
-              -123
+              -121.0
             ],
             "leg-lower-l": [
-              54.19,
-              -20.37,
-              57
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -113
+              -120.2
             ],
             "leg-lower-r": [
-              62.21,
-              -5.29,
-              47
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -62.5,
@@ -7704,22 +7704,22 @@
             "arm-upper-r": [
               -79.72,
               151.58,
-              18
+              -27.55
             ],
             "arm-lower-r": [
-              -100.73,
-              148.25,
-              4
+              -48.27,
+              143.87,
+              -78.99
             ],
             "bare-hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "mount-fore": [
               0,
@@ -7749,62 +7749,62 @@
             "arm-upper-l": [
               -89.28,
               140.31,
-              25
+              -26.94
             ],
             "arm-lower-l": [
-              -118.02,
-              133.94,
-              11
+              -58.47,
+              132.93,
+              -67.06
             ],
             "bare-hand-l": [
-              -130.99,
-              132.69,
-              11
+              4.15,
+              91.43,
+              -67.06
             ],
             "hand-l": [
-              -130.99,
-              132.69,
-              11
+              4.15,
+              91.43,
+              -67.06
             ],
             "leg-upper-l": [
               -28,
               133,
-              -126
+              -122.39
             ],
             "leg-lower-l": [
-              51.28,
-              -22.6,
-              48
+              54.75,
+              -17.5,
+              0.58
             ],
             "foot-l": [
-              -3.71,
-              -47.08,
-              -20
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -3.71,
-              -47.08,
-              -20
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               133,
-              -116
+              -121.42
             ],
             "leg-lower-r": [
-              60.08,
-              -7.96,
-              50
+              55.63,
+              -16.09,
+              -11.2
             ],
             "foot-r": [
-              3.39,
-              -34.39,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              3.39,
-              -34.39,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -66,
@@ -7854,22 +7854,22 @@
             "arm-upper-r": [
               -84.72,
               157.31,
-              21
+              -31.5
             ],
             "arm-lower-r": [
-              -109.09,
-              152.79,
-              7
+              -49.19,
+              147.29,
+              -80.96
             ],
             "bare-hand-r": [
-              -117.38,
-              152.28,
-              7
+              17.96,
+              89.97,
+              -80.96
             ],
             "hand-r": [
-              -117.38,
-              152.28,
-              7
+              17.96,
+              89.97,
+              -80.96
             ],
             "mount-fore": [
               0,
@@ -7899,62 +7899,62 @@
             "arm-upper-l": [
               -83.42,
               136.14,
-              22
+              -22.35
             ],
             "arm-lower-l": [
-              -108.9,
-              131.19,
-              8
+              -57.57,
+              131.04,
+              -66.33
             ],
             "bare-hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "hand-l": [
-              -118.37,
-              130.53,
-              8
+              4.71,
+              90.33,
+              -66.33
             ],
             "leg-upper-l": [
               -28,
               131,
-              -123
+              -121.0
             ],
             "leg-lower-l": [
-              54.19,
-              -20.37,
-              57
+              56.0,
+              -17.47,
+              1.55
             ],
             "foot-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "foot-gear-l": [
-              -7.87,
-              -54.07,
-              -8
+              54.0,
+              -17.5,
+              0
             ],
             "leg-upper-r": [
               -28,
               131,
-              -113
+              -120.2
             ],
             "leg-lower-r": [
-              62.21,
-              -5.29,
-              47
+              56.7,
+              -16.3,
+              -10.35
             ],
             "foot-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "foot-gear-r": [
-              8.09,
-              -28.82,
-              -4
+              70.0,
+              -17.5,
+              0
             ],
             "neck": [
               -62.5,
@@ -8004,22 +8004,22 @@
             "arm-upper-r": [
               -79.72,
               151.58,
-              18
+              -27.55
             ],
             "arm-lower-r": [
-              -100.73,
-              148.25,
-              4
+              -48.27,
+              143.87,
+              -78.99
             ],
             "bare-hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "hand-r": [
-              -105.47,
-              148.08,
-              4
+              18.48,
+              88.86,
+              -78.99
             ],
             "mount-fore": [
               0,

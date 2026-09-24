@@ -176,6 +176,8 @@ export interface SavedTask {
   readonly locale?: 'en' | 'fr';
   /** 1 to 2, the way the save keeps text size (100 % to 200 %). */
   readonly textScale?: number;
+  /** The dyslexia-friendly face (ADR-0071, ADR-0072). Off unless a scenario says. */
+  readonly dyslexiaFont?: boolean;
 }
 
 /**
@@ -193,6 +195,7 @@ export function activeQuestSave(quest: SeededQuest, saved: SavedTask): string {
   const settings = {
     ...seededSettings(saved.locale ?? 'en'),
     textScale: saved.textScale ?? 1,
+    ...(saved.dyslexiaFont === undefined ? {} : { dyslexiaFont: saved.dyslexiaFont }),
   };
   const progress = withQuestState(newProgress(settings, [level]), level, {
     questId: quest.id as QuestId,

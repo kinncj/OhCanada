@@ -184,6 +184,33 @@
       ]
     },
     {
+      "id": "read-at-the-library",
+      "kind": "read",
+      "targetId": "library-of-parliament",
+      "prompt": {
+        "en": "Stop and read at the Library of Parliament",
+        "fr": "Arrêtez-vous pour lire à la Bibliothèque du Parlement"
+      },
+      "passages": [
+        {
+          "lesson": "govern-02-passing-laws-and-voting",
+          "passage": "g2-first-reading"
+        },
+        {
+          "lesson": "govern-02-passing-laws-and-voting",
+          "passage": "g2-second-reading"
+        },
+        {
+          "lesson": "govern-02-passing-laws-and-voting",
+          "passage": "g2-committee-stage"
+        },
+        {
+          "lesson": "govern-02-passing-laws-and-voting",
+          "passage": "g2-senate-stage"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-library",
       "kind": "answer",
       "targetId": "government",
@@ -251,6 +278,33 @@
               "evidence": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons. Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-peace-tower",
+      "kind": "read",
+      "targetId": "parliament-hill",
+      "prompt": {
+        "en": "Stop and read at the Peace Tower",
+        "fr": "Arrêtez-vous pour lire à la tour de la Paix"
+      },
+      "passages": [
+        {
+          "lesson": "govern-05-parliament-and-the-cabinet",
+          "passage": "g5-confidence-of-the-house"
+        },
+        {
+          "lesson": "govern-05-parliament-and-the-cabinet",
+          "passage": "g5-prime-minister-chooses-the-cabinet"
+        },
+        {
+          "lesson": "govern-05-parliament-and-the-cabinet",
+          "passage": "g5-house-of-commons-is-elected"
+        },
+        {
+          "lesson": "govern-05-parliament-and-the-cabinet",
+          "passage": "g5-senators-are-appointed"
         }
       ]
     },
@@ -343,6 +397,33 @@
               "evidence": "In our federal state, the federal government takes responsibility for matters of national and international concern. These include defence, foreign policy, interprovincial trade and communications, currency, navigation, criminal law and citizenship. The provinces are responsible for municipal government, education, health, natural resources, property and civil rights, and highways. The federal government and the provinces share jurisdiction over agriculture and immigration."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-warming-hut",
+      "kind": "read",
+      "targetId": "warming-hut",
+      "prompt": {
+        "en": "Stop and read at the warming hut",
+        "fr": "Arrêtez-vous pour lire à la cabane chauffée"
+      },
+      "passages": [
+        {
+          "lesson": "govern-04-three-key-facts-and-who-does-what",
+          "passage": "g4-constitution-act-1867"
+        },
+        {
+          "lesson": "govern-04-three-key-facts-and-who-does-what",
+          "passage": "g4-federal-responsibilities"
+        },
+        {
+          "lesson": "govern-04-three-key-facts-and-who-does-what",
+          "passage": "g4-provincial-responsibilities"
+        },
+        {
+          "lesson": "govern-04-three-key-facts-and-who-does-what",
+          "passage": "g4-the-three-territories"
         }
       ]
     },

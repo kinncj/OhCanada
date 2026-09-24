@@ -1,7 +1,9 @@
 # ADR-0066: The strip shows one job at a time, and the game brings its own font
 
 - Status: Accepted (2026-09-21). **Amended by ADR-0071 (2026-09-23):** the bundled faces' ceiling in §1 is
-  ≤ 300 KB, not ≤ 200 KB, by the product owner's decision. Nothing else here moves.
+  ≤ 300 KB, not ≤ 200 KB, by the product owner's decision. Nothing else here moves. **Amended by ADR-0072
+  (2026-09-24):** with the dyslexia toggle on, and only then, the strip may grow past a third (§3), up to
+  the player's feet, by the product owner's decision.
 - Settles the residual ADR-0045 §1 left to the product owner — "a three-line French prompt with a long task
   does not fit in a third of the screen at true 200 %" — and the second, larger defect found while trying to
   settle it by copy: **the game does not control the font its layout is measured against**.
@@ -230,7 +232,10 @@ non-conformance being fixed.
 - **Hiding the word "Task" / « Mission » from sight while keeping it for a screen reader** — ADR-0045's
   second — is refused for the reason given in §2: it makes the sighted player and the screen-reader player
   read different strips, and it buys about six characters.
-- **Letting the strip grow past a third of the viewport** at large text is refused. At 200 % it would need
+- **Letting the strip grow past a third of the viewport** at large text is refused. *(ADR-0072 makes one
+  exception: with the dyslexia toggle on, the strip may grow to just under the player's feet, 44 % at
+  390 × 844, and the canvas sits at the top of its space so the player stays above it. For every other
+  player this refusal stands as written.)* At 200 % it would need
   roughly 45 vh, and the thing it would cover is the level the player is walking through, including the
   landmark they are walking to. Trading the playfield for a sentence is a worse loss than delaying the
   sentence by one step, and it breaks `TN-HUD-01` and the "skater is drawn inside the upper two thirds"

@@ -679,6 +679,41 @@ Decisions an auditor should see:
   does not give them to Petitclerc.
 - **`mc-40`.** The text says "millions of lives" and does not repeat the guide's "16 million".
 
+**Read in the level (2026-09-24).** `content/quests/prairie-rail-grain-elevator.json` now has a `read`
+step right after each stop's `visit` step, before that stop's `answer` step, as at Halifax (§7.3). One
+lesson per stop. Words are runs of non-space.
+
+| Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
+|---|---|---|---|---|
+| Grain bins | `m2` | `m2-nato-a-military-alliance`, `m2-norad-with-the-united-states`, `m2-korean-war`, `m2-un-peacekeeping-missions` | 78 / 96 | 09, 10, 11, 12 |
+| Grain elevator | `m1` | `m1-unemployment-insurance-1940`, `m1-old-age-security-1927`, `m1-pension-plans-1965`, `m1-canada-health-act` | 60 / 72 | 04, 05, 06, 07 |
+| Combine harvester | `m1` | `m1-gatt-opened-up-trade`, `m1-oil-found-in-alberta-1947`, `m1-hard-work-and-trade` | 71 / 80 | 01, 02, 08 |
+| Container car | `m7` | `m7-bell-and-the-telephone`, `m7-bombardier-and-the-snowmobile`, `m7-evans-and-woodward-light-bulb`, `m7-banting-and-best-insulin` | 81 / 84 | 34, 35, 37, 40 |
+
+Why these: the bins pool 14 questions over `m1`–`m4`, and `m2`, `m3` and `m4` each reach four. `m3` reaches
+only three new ones, because `mc-14` is already told by the guide's opening line (its quote contains that
+line's), so `m2` was taken. The elevator and the combine pool only `m1` questions, and together they read all
+seven. The combine keeps a free place: nothing in `m1` is pooled later. The car pools 19 questions over
+`m5`, `m6` and `m7`. `m7` was taken because the car's own line is about Fleming (`mc-36`), and the four
+passages left out Fleming, which the line already tells.
+
+Told only by a dialogue line: 03 (bins line), 14 (guide's opening, by containment), 36 (car line).
+
+**Not taught in the level. They stay in Learn.** 22 of 40 pooled questions:
+
+| Questions | Pooled at | Lesson | Why it is not read |
+|---|---|---|---|
+| `mc-13`, `mc-15`, `mc-16`, `mc-17` | Grain bins | `m3` | The bins read `m2`, and no earlier stop exists |
+| `mc-18`, `mc-19`, `mc-20`, `mc-21` | Grain bins | `m4` | Same |
+| `mc-22`…`mc-25` | Container car | `m5` | The car reads `m7`, and the combine cannot hold a second lesson |
+| `mc-26`…`mc-32` | Container car | `m6` | Same |
+| `mc-33`, `mc-38`, `mc-39` | Container car | `m7` | The car has 4 places |
+
+Result: 40 pooled questions. 15 are read at or before their stop, 3 more are told only by a dialogue
+line, and 22 are left for Learn. The combine's free place could hold a car passage (`m5`–`m7`), but that
+would put a painter or an athlete beside a harvester. It would also leave the count the same, because the car
+would then read a different lesson's four.
+
 ### 7.6 Question to passage (ottawa, `government`)
 
 `g2` is `govern-02`, and 7 passages were added to it. `g4`, `g5` and `g6` are the new `govern-04-three-key-facts-and-who-does-what`,
@@ -736,6 +771,42 @@ Every passage on p. 57 or p. 63 copies its question's `volatile: true`. The mona
 ("Her Majesty", "53 other nations", "Her Majesty's Loyal Opposition" and the rest) appear only in
 `source.quote`, where the gate does not search. The text says "the Sovereign" and "other nations".
 
+**Read in the level (2026-09-24).** `content/quests/ottawa-parliament-hill.json` now has a `read` step
+right after the `visit` step at each of the first three stops, before that stop's `answer` step.
+`read-at-dows-lake` (`govern-03`, 2 passages, 48 / 59 words) is unchanged.
+
+| Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
+|---|---|---|---|---|
+| Library of Parliament | `g2` | `g2-first-reading`, `g2-second-reading`, `g2-committee-stage`, `g2-senate-stage` | 62 / 68 | the four `gov-20` stages |
+| Peace Tower (`parliament-hill`) | `g5` | `g5-confidence-of-the-house`, `g5-prime-minister-chooses-the-cabinet`, `g5-house-of-commons-is-elected`, `g5-senators-are-appointed` | 90 / 95 | 12, 15, 16, 17 |
+| Warming hut | `g4` | `g4-constitution-act-1867`, `g4-federal-responsibilities`, `g4-provincial-responsibilities`, `g4-the-three-territories` | 86 / 109 | 03, 04, 05, 08 |
+
+Why these: the Library's line already tells `gov-18` and `gov-19`, so its four places go to the four
+stages. The Peace Tower's line already tells `gov-13` and `gov-14`, so `g5`'s four places go to the four
+`g5` questions no line tells. `g6` also reaches four, but only if it leaves out a head-of-state passage,
+and the Peace Tower's line is about Parliament. At the warming hut, `g4` reaches four questions and `e7`
+reaches three new ones, because the hut's line already tells `gov-62`. `gov-04` is mapped to two passages
+above. Only `g4-federal-responsibilities` is read, because it holds the list the question's answer comes
+from.
+
+Told only by a dialogue line: 18, 19 (Library line), 13, 14 (Peace Tower line), 62 (hut line).
+
+**Not taught in the level. They stay in Learn.** 24 of 41 pooled questions:
+
+| Questions | Pooled at | Lesson | Why it is not read |
+|---|---|---|---|
+| `gov-01`, `gov-07` | Peace Tower | `g4` | The Peace Tower reads `g5` |
+| `gov-10`, `gov-11` | Peace Tower | `g5` | The Peace Tower has 4 places, and they went to the four the line leaves untold |
+| `gov-21` | Peace Tower | `g2` | The Library's 4 places went to its own pool |
+| `gov-22`…`gov-25`, `gov-27`…`gov-32`, `gov-65` | Peace Tower | `g6` | The Peace Tower reads `g5` |
+| `gov-52`…`gov-55` | Peace Tower | `e6` | Same |
+| `gov-64` | Peace Tower | `e7` | Same |
+| `gov-58`, `gov-59`, `gov-63` | Warming hut | `e7` | The hut reads `g4` (four questions against `e7`'s three) |
+
+Result: 41 pooled questions. 12 are read at or before their stop, 5 more are told only by a dialogue
+line, and 24 are left for Learn. 21 of the 24 are pooled at the Peace Tower. That one pool has 27
+questions across five lessons and only one reader.
+
 ### 7.7 Question to passage (winnipeg, `justice`)
 
 Batch 1's ceiling already teaches 36 of the 40 pooled questions: `jus-01`…`06`, `08`…`31`, `37`…`39` from
@@ -756,6 +827,42 @@ Nothing batch 1 wrote was edited. The two new passages are in new files:
   but it grades the other name, "the Supreme Court", and batch 1 left that out on purpose (§7.4). The
   register sources no province's current name for its trial court. So the proposition the question
   grades is not taught, even though the mechanical check passes.
+
+**Read in the level (2026-09-24).** `content/quests/winnipeg-human-rights-museum.json` now has a `read`
+step right after each stop's `visit` step, before that stop's `answer` step. The quest pools 39
+questions. `jus-33` is in no pool.
+
+| Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
+|---|---|---|---|---|
+| Footbridge | `justice-03` | `j3-laws-are-written-rules`, `j3-elected-people-make-laws`, `j3-courts-and-police`, `j3-the-law-is-for-everyone` | 57 / 66 | 08, 09; and early for later stops: 12 (museum), 10, 11 (maple) |
+| Museum | `justice-02` | `j2-due-process-for-everyone`, `j2-innocent-until-proven-guilty`, `j2-our-legal-heritage`, `j2-what-due-process-means` | 88 / 105 | 01, 02, 03, 04, 05, 06, 12 |
+| Maple tree | `justice-01` | `j1-when-to-ask-for-help`, `j1-provincial-and-municipal-police`, `j1-rcmp-enforce-federal-laws`, `j1-rcmp-as-provincial-police` | 97 / 112 | 10, 11, 20, 21, 22, 23, 24, 26, 27 |
+
+Why these: the footbridge line already tells 13 and 14, so `j3`'s places go to 08 and 09 and to
+three questions pooled later. `j2` is the whole lesson and covers six museum questions. At the maple,
+`j1` reaches seven questions and `j4` (the courts) reaches five, so the maple reads the police.
+`j1-more-than-one-kind-of-police` was left out for `j1-when-to-ask-for-help`: the lesson has one
+more passage than places. That passage adds `jus-27` and takes out `jus-39`. The provincial, city and
+RCMP passages next to it still show that there is more than one kind of police.
+
+Told only by a dialogue line: 13, 14 (footbridge line), 25 (officer's opening; that opening also tells 03, 04 and 26, which are read as well).
+
+**Not taught in the level. They stay in Learn.** 18 of 39 pooled questions:
+
+| Questions | Pooled at | Passage it needs | Why it is not read |
+|---|---|---|---|
+| `jus-32` | Footbridge | none (caption) | ADR-0061 §3 |
+| `jus-34`, `jus-35` | Footbridge | `rr4` | The footbridge reads `justice-03` (five questions against two) |
+| `jus-36` | Footbridge | `o1-promise-to-observe-the-laws` | Same |
+| `jus-07` | Museum | none (caption) | ADR-0061 §3 |
+| `jus-28`, `jus-29` | Museum | `j1-question-the-police`, `j1-raise-your-concerns` | The museum reads `justice-02` (six questions). The afterLine tells 29 only after the quest |
+| `jus-30`, `jus-31` | Museum | `justice-05` | Same. The maple line tells both, but it comes after the museum's question |
+| `jus-15`…`jus-19`, `jus-37`, `jus-38` | Maple tree | `justice-04` | The maple reads `justice-01` (seven questions against five). `jus-37` is not taught even in Learn (above) |
+| `jus-39` | Maple tree | `j1-more-than-one-kind-of-police` | The maple has 4 places (see above) |
+| `jus-40` | Maple tree | `e7-city-police-forces` | The maple reads `justice-01` |
+
+Result: 39 pooled questions. 18 are read at or before their stop, 3 more are told only by a dialogue
+line, and 18 are left for Learn.
 
 ### 7.8 Question to passage (alberta-foothills, `economy`)
 
@@ -810,6 +917,58 @@ Decisions an auditor should see:
   only, where the gate does not search. The text says "most" for `eco-25`'s three-quarters and "a large share" for
   `eco-31`'s one-half, and leaves out `eco-43`'s 40 %. The quote for `eco-43` is the clause "is the
   country's largest producer of grains and oilseeds.", which the question's quote contains.
+
+**Read in the level (2026-09-24).** `content/quests/alberta-foothills-ranch-barn.json` now has a `read`
+step right after each stop's `visit` step, before that stop's `answer` step. Two stops read
+*Canada's Regions* lessons (`r13`, `r14`). ADR-0065's tier-1 obligation keeps Regions material out of
+levels 1–5 only. It says levels 6–10 are "the same", and whether that includes the exclusion is left for
+the reviewer below.
+
+| Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
+|---|---|---|---|---|
+| Ranch gate | `economy-03` | `e3-service-industries`, `e3-most-workers-in-services`, `e3-natural-resources-industries`, `e3-resources-built-the-country` | 83 / 101 | 05, 06, 07, 11, 12 |
+| Barn (`ranch-barn`) | `r13` | `r13-ontario-and-quebec-manufacturing`, `r13-quebec-pulp-and-paper`, `r13-quebec-cutting-edge-industries`, `r13-ontario-farms` | 52 / 66 | 25, 38, 40, 42 |
+| Oil pump (`pump-jack`) | `r14` | `r14-prairies-energy-and-farmland`, `r14-saskatchewan-uranium-and-potash`, `r14-alberta-oil-and-gas`, `r14-alberta-oil-sands` | 61 / 68 | 27, 29, 30, 45 |
+| Herd (`beef-cattle`) | `economy-02` | `e2-always-a-trading-nation`, `e2-trade-keeps-our-standard-of-living`, `e2-free-trade-in-1988`, `e2-mexico-joins-in-1994` | 56 / 67 | 01, 02, 03, 04 |
+
+Why these: at the gate, `e3` reaches five of its pool (`e3-service-industries` holds the three-kinds
+heading, so it covers 05 and 07). **One flag on reading order:** the gate reads "The first is service
+industries" and then "The third kind is natural resources", because it skips the second kind,
+manufacturing. `e3-manufacturing-industries` in place of `e3-resources-built-the-country` would read in order. It
+would lose `eco-12` and gain only `eco-08`, which the barn line already tells. The barn's line already tells
+08, 09 and (in the guide's opening) 46. So the barn reads four other questions from its pool, and `r13` is
+the manufacturing lesson. `r12` and `r14` also reach four each. The pump's pool is mostly `r14`, and `r14`
+reaches four. At the herd, `e2` and `e1` each reach four, and `e2` was taken because it is half the length.
+The herd line already tells 16.
+
+Told only by a dialogue line: 08, 09 (barn line), 46 (guide's opening), 16 (herd line). The gate line tells 07, which is also read.
+
+**Not taught in the level. They stay in Learn.** 30 of 51 pooled questions:
+
+| Questions | Pooled at | Lesson | Why it is not read |
+|---|---|---|---|
+| `eco-19` | Gate | `e2` | The gate reads `e3` (five questions) |
+| `eco-26` | Gate | `r13` | Same |
+| `eco-49` | Gate | `rr5` | Same |
+| `eco-50` | Gate | `h8` | Same |
+| `eco-51` | Gate | `m1` | Same |
+| `eco-20`, `eco-21`, `eco-23`, `eco-24`, `eco-35`, `eco-37` | Barn | `r12` | The barn reads `r13`. `r12` also reaches only four |
+| `eco-31`, `eco-43` | Barn | `r14` | Same |
+| `eco-22`, `eco-34` | Oil pump | `r12` | The pump reads `r14` |
+| `eco-28`, `eco-44` | Oil pump | `r14` | The pump has 4 places |
+| `eco-32`, `eco-33`, `eco-48` | Oil pump | `r15` | The pump reads `r14` |
+| `eco-39` | Oil pump | `r13` | Same. The barn read `r13`, but its places went to the barn's own pool |
+| `eco-10`, `eco-13` | Herd | `e3` | The herd reads `e2`. The gate's `e3` places went to the gate's own pool |
+| `eco-14`, `eco-15`, `eco-17`, `eco-18` | Herd | `e1` | The herd reads `e2` |
+| `eco-36` | Herd | `r12` | Same |
+| `eco-41` | Herd | `r13` | Same |
+| `eco-47` | Herd | `r14` | Same |
+
+Result: 51 pooled questions. 17 are read at or before their stop, 4 more are told only by a dialogue
+line, and 30 are left for Learn. No choice of lessons does better. A stop that reads another stop's
+lesson early trades one of its own questions for one of the later stop's questions, so the total stays
+the same. For example, the barn could read `r14` (31, 43, 28, 44) and the pump the other four `r14`
+passages. That still reads 8 across the two stops.
 
 **Batch 2 totals:** 117 new passages in the null verification form. By level: prairie-rail 41 for 40
 questions, ottawa 43 for 41 questions, winnipeg 2 for 2 questions (the Oath passage and `e7-city-police-forces`),
