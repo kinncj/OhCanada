@@ -2966,3 +2966,262 @@ describe('the arithmetic half of B10 is an observation and cannot fail a build (
     expect(result.out).not.toContain(FLAGGED);
   });
 });
+
+/* -------------------------------------------------------------------------- */
+/* ADR-0073 - a recorded squash-merge is judged by the branch it came from     */
+/* -------------------------------------------------------------------------- */
+
+const gitOut = (root: string, args: readonly string[]): string =>
+  execFileSync('git', ['-C', root, ...args], {
+    env: GIT_ENV,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
+
+const Q0 = 'content/questions/government/fix-0.json';
+const Q1 = 'content/questions/government/fix-1.json';
+const RECORD = 'scripts/content-squash-merges.json';
+const PR = 7;
+const SQUASH_SUBJECT = `Teach one question (#${String(PR)})`;
+
+interface SquashRepo {
+  readonly root: string;
+  readonly squash: string;
+  readonly head: string;
+}
+
+/**
+ * main: the source register. `feature`: whatever `onBranch` commits. Then main
+ * squash-merges `feature` in one commit whose subject carries "(#7)", exactly
+ * as GitHub's squash button writes it. `beforeSquash` runs on main between the
+ * squash being staged and committed, which is how a squash whose content
+ * differs from its head is made. Nothing is recorded yet.
+ */
+const squashRepo = (
+  label: string,
+  onBranch: (root: string) => void,
+  beforeSquash: (root: string) => void = () => undefined,
+): SquashRepo => {
+  const root = tree(label, []);
+  initRepo(root);
+  commit(root, 'Add the source register');
+  inRepo(root, ['checkout', '-q', '-b', 'feature']);
+  onBranch(root);
+  const head = gitOut(root, ['rev-parse', 'feature']);
+  inRepo(root, ['checkout', '-q', 'main']);
+  inRepo(root, ['merge', '-q', '--squash', 'feature']);
+  beforeSquash(root);
+  commit(root, SQUASH_SUBJECT);
+  return { root, squash: gitOut(root, ['rev-parse', 'HEAD']), head };
+};
+
+/** The legitimate branch: the author's commit, then the verifier's. */
+const separatedBranch = (root: string): void => {
+  write(root, Q0, question({ verification: NULL_FORM }));
+  commit(root, 'Author a question');
+  write(root, Q0, question());
+  commit(root, 'Verify the question');
+};
+
+/** A branch that also merged main in, with `inMerge` run while resolving. */
+const branchWithMerge =
+  (inMerge: (root: string) => void) =>
+  (root: string): void => {
+    separatedBranch(root);
+    inRepo(root, ['checkout', '-q', 'main']);
+    write(root, 'NOTES.md', 'main moved on\n');
+    commit(root, 'Move main on');
+    inRepo(root, ['checkout', '-q', 'feature']);
+    inRepo(root, ['merge', '-q', '--no-ff', '--no-commit', 'main']);
+    inMerge(root);
+    commit(root, 'Merge main into feature');
+  };
+
+const recordOf = (repo: SquashRepo, overrides: Json = {}): Json => ({
+  squashes: [
+    {
+      commit: repo.squash,
+      head: repo.head,
+      branch: 'feature',
+      pr: PR,
+      reason: 'Squash-merged by mistake; the branch kept the two jobs apart.',
+      ...overrides,
+    },
+  ],
+});
+
+/** Record the squash on main, in a commit that does not touch content/. */
+const recordSquash = (repo: SquashRepo, record: Json = recordOf(repo)): void => {
+  write(repo.root, RECORD, record);
+  commit(repo.root, `Record the squash of #${String(PR)}`);
+};
+
+const failLines = (out: string): readonly string[] =>
+  out.split('\n').filter((line) => line.startsWith('verify-content: FAIL:'));
+
+describe('a recorded squash-merge is judged by the branch it came from (ADR-0073)', () => {
+  it('fails an UNRECORDED squash of a properly separated branch - the incident itself', () => {
+    const repo = squashRepo('squash-unrecorded', separatedBranch);
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain(`${repo.squash.slice(0, 9)} "${SQUASH_SUBJECT}"`);
+    expect(result.out).toContain("changes the question's own fields AND writes");
+  });
+
+  it('accepts the same squash once recorded, judging the head commits in its place', () => {
+    const repo = squashRepo('squash-recorded', separatedBranch);
+    recordSquash(repo);
+
+    const result = run(repo.root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+    expect(result.out).toContain(
+      `recorded squash (ADR-0073) — ${repo.squash.slice(0, 9)} (PR #${String(PR)}) judged by 2 commit(s) ` +
+        `of its head ${repo.head.slice(0, 9)}; content/ identical`,
+    );
+  });
+
+  it('still fails an unlisted commit that does both jobs, beside a valid record', () => {
+    const repo = squashRepo('squash-unlisted-neighbour', separatedBranch);
+    recordSquash(repo);
+    write(repo.root, Q1, question({ id: 'fix-02' }));
+    commit(repo.root, 'Add and verify a second question');
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    const failed = failLines(result.out);
+    expect(failed.length).toBeGreaterThan(0);
+    // Every failure is the unlisted commit's: the record exempted its own
+    // squash and nothing else.
+    for (const line of failed) expect(line).toContain('"Add and verify a second question"');
+    expect(result.out).toContain('recorded squash (ADR-0073)');
+  });
+
+  it('fails a recorded squash whose content differs from its head, and judges it as one commit', () => {
+    const repo = squashRepo('squash-content-differs', separatedBranch, (root) => {
+      write(root, 'content/README.md', 'A file the branch never carried.\n');
+      inRepo(root, ['add', '-A']);
+    });
+    recordSquash(repo);
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain(
+      "its content/ is NOT identical to the head's — 1 path(s) differ: content/README.md",
+    );
+    // A record without evidence exempts nothing: the squash is judged as itself.
+    expect(result.out).toContain(`${repo.squash.slice(0, 9)} "${SQUASH_SUBJECT}"`);
+    expect(result.out).toContain("changes the question's own fields AND writes");
+    expect(result.out).not.toContain('recorded squash (ADR-0073)');
+  });
+
+  it("fails a recorded squash whose head's own commits do both jobs", () => {
+    const repo = squashRepo('squash-head-does-both', (root) => {
+      write(root, Q0, question());
+      commit(root, 'Author and verify a question at once');
+    });
+    recordSquash(repo);
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain(
+      `(PR #${String(PR)} head ${repo.head.slice(0, 9)}, squashed as ${repo.squash.slice(0, 9)}) ` +
+        `"Author and verify a question at once"`,
+    );
+    expect(result.out).toContain("changes the question's own fields AND writes");
+  });
+
+  it('fails loudly, naming the ref to fetch, when the recorded head is not in the clone', () => {
+    const repo = squashRepo('squash-head-missing', separatedBranch);
+    recordSquash(repo);
+    inRepo(repo.root, ['branch', '-q', '-D', 'feature']);
+    inRepo(repo.root, ['reflog', 'expire', '--expire=now', '--all']);
+    inRepo(repo.root, ['gc', '-q', '--prune=now']);
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain(`the head commit ${repo.head} is NOT PRESENT in this clone`);
+    expect(result.out).toContain('git fetch origin feature');
+    expect(result.out).toContain(`git fetch origin refs/pull/${String(PR)}/head`);
+  });
+
+  it('refuses a malformed record outright, and it then exempts nothing', () => {
+    const repo = squashRepo('squash-record-malformed', separatedBranch);
+    recordSquash(repo, recordOf(repo, { approvedBy: 'someone' }));
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('squashes[0] has unknown property "approvedBy"');
+    expect(result.out).toContain(`${repo.squash.slice(0, 9)} "${SQUASH_SUBJECT}"`);
+  });
+
+  it('refuses a record whose PR number the squash subject does not carry', () => {
+    const repo = squashRepo('squash-wrong-pr', separatedBranch);
+    recordSquash(repo, recordOf(repo, { pr: 8 }));
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('does not carry "(#8)"');
+  });
+
+  it('keeps A4 across the replay: a later edit on main voids the grant the branch made', () => {
+    const repo = squashRepo('squash-a4-later-edit', separatedBranch);
+    recordSquash(repo);
+    write(
+      repo.root,
+      Q0,
+      question({
+        prompt: { en: 'How many parts make up Parliament?', fr: 'Combien de parties forment le Parlement ?' },
+      }),
+    );
+    commit(repo.root, 'Reword the prompt');
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    // Bound to the branch commit that wrote the grant - here the head itself,
+    // "Verify the question" - and not to the squash.
+    expect(result.out).toContain(
+      `the status "verified" was granted in ${repo.head.slice(0, 9)} ` +
+        `(PR #${String(PR)} head ${repo.head.slice(0, 9)}, squashed as ${repo.squash.slice(0, 9)}) ` +
+        `"Verify the question"`,
+    );
+  });
+
+  it('keeps A4 across a merge commit on the branch that the replay cannot see', () => {
+    // `--no-merges` hides what a merge on the branch did. Here one rewords the
+    // verified question while resolving, so the replayed commits alone would
+    // leave A4 comparing the grant with the text it was granted on. The
+    // re-record at the squash compares it with the text main actually holds.
+    const repo = squashRepo(
+      'squash-a4-evil-merge',
+      branchWithMerge((root) => {
+        write(
+          root,
+          Q0,
+          question({ explanation: { en: 'Reworded inside a merge.', fr: 'Reformule dans une fusion.' } }),
+        );
+      }),
+    );
+    recordSquash(repo);
+
+    const result = run(repo.root);
+    expect(result.status).toBe(1);
+    expect(result.out).toContain('the status "verified" was granted in');
+    expect(result.out).toContain('"Verify the question"');
+    expect(result.out).toContain('explanation');
+  });
+
+  it('accepts a branch that merged main in without touching content in the merge', () => {
+    // The control for the case above, so it is the merge's edit that fails it.
+    const repo = squashRepo(
+      'squash-clean-merge',
+      branchWithMerge(() => undefined),
+    );
+    recordSquash(repo);
+
+    const result = run(repo.root);
+    expect(result.out).toContain('verify-content: OK.');
+    expect(result.status).toBe(0);
+  });
+});

@@ -1,0 +1,12 @@
+{
+  "$comment": "ADR-0073. Incidents only: content PRs merge with a merge commit, not a squash. Each entry lets scripts/verify-content.mjs judge a squash-merge by the commits of its pre-squash head, and only after checking that the head is present, that its content/ tree is identical to the squash's, and that its own commits pass every separation-of-duties rule. Every key is required and no other key is allowed.",
+  "squashes": [
+    {
+      "commit": "8f25a49272319e3712d548c093641a7580ef6de7",
+      "head": "308a171beb8dd2515ae1cee67a311af3f6d0a273",
+      "branch": "claude/fervent-dijkstra-vxyz3k",
+      "pr": 138,
+      "reason": "Squash-merged by mistake; the head kept author and verifier commits separate and passed verify-content."
+    }
+  ]
+}
