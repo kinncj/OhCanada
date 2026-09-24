@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-ranch-gate",
+      "kind": "read",
+      "targetId": "ranch-gate",
+      "prompt": {
+        "en": "Stop and read at the ranch gate",
+        "fr": "Arrêtez-vous pour lire à la barrière du ranch"
+      },
+      "passages": [
+        {
+          "lesson": "economy-03-three-kinds-of-industry",
+          "passage": "e3-service-industries"
+        },
+        {
+          "lesson": "economy-03-three-kinds-of-industry",
+          "passage": "e3-most-workers-in-services"
+        },
+        {
+          "lesson": "economy-03-three-kinds-of-industry",
+          "passage": "e3-natural-resources-industries"
+        },
+        {
+          "lesson": "economy-03-three-kinds-of-industry",
+          "passage": "e3-resources-built-the-country"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-ranch-gate",
       "kind": "answer",
       "targetId": "economy",
@@ -296,6 +323,33 @@
               "evidence": "CANADA’S ECONOMY INCLUDES THREE MAIN TYPES OF INDUSTRIES: … Manufacturing industries make products to sell in Canada and around the world. Manufactured products include paper, high technology equipment, aerospace technology, automobiles, machinery, food, clothing and many other goods."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-ranch",
+      "kind": "read",
+      "targetId": "ranch-barn",
+      "prompt": {
+        "en": "Stop and read at the barn",
+        "fr": "Arrêtez-vous pour lire à la grange"
+      },
+      "passages": [
+        {
+          "lesson": "regions-13-what-central-canada-produces",
+          "passage": "r13-ontario-and-quebec-manufacturing"
+        },
+        {
+          "lesson": "regions-13-what-central-canada-produces",
+          "passage": "r13-quebec-pulp-and-paper"
+        },
+        {
+          "lesson": "regions-13-what-central-canada-produces",
+          "passage": "r13-quebec-cutting-edge-industries"
+        },
+        {
+          "lesson": "regions-13-what-central-canada-produces",
+          "passage": "r13-ontario-farms"
         }
       ]
     },
@@ -380,6 +434,33 @@
       ]
     },
     {
+      "id": "read-at-the-pump-jack",
+      "kind": "read",
+      "targetId": "pump-jack",
+      "prompt": {
+        "en": "Stop and read at the oil pump",
+        "fr": "Arrêtez-vous pour lire au chevalet de pompage"
+      },
+      "passages": [
+        {
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-prairies-energy-and-farmland"
+        },
+        {
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-saskatchewan-uranium-and-potash"
+        },
+        {
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-alberta-oil-and-gas"
+        },
+        {
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-alberta-oil-sands"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-pump-jack",
       "kind": "answer",
       "targetId": "economy",
@@ -453,6 +534,33 @@
               "evidence": "Natural resources industries include forestry, fishing, agriculture, mining and energy. … a large percentage of Canada’s exports are natural resources commodities. … Canada exports billions of dollars worth of energy products, industrial goods, machinery, equipment, automotive, agricultural, fishing and forestry products, and consumer goods every year."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-among-the-herd",
+      "kind": "read",
+      "targetId": "beef-cattle",
+      "prompt": {
+        "en": "Stop and read among the herd",
+        "fr": "Arrêtez-vous pour lire au milieu du troupeau"
+      },
+      "passages": [
+        {
+          "lesson": "economy-02-a-trading-nation",
+          "passage": "e2-always-a-trading-nation"
+        },
+        {
+          "lesson": "economy-02-a-trading-nation",
+          "passage": "e2-trade-keeps-our-standard-of-living"
+        },
+        {
+          "lesson": "economy-02-a-trading-nation",
+          "passage": "e2-free-trade-in-1988"
+        },
+        {
+          "lesson": "economy-02-a-trading-nation",
+          "passage": "e2-mexico-joins-in-1994"
         }
       ]
     },
