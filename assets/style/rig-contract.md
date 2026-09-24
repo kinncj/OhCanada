@@ -843,8 +843,13 @@ arithmetic, not taste, and both changed a pose:
   the 22° fold had given it, 8.3 px behind the average §4 requires, in all thirteen keys of the three `bike`
   states. `tests/unit/contracts/a-joint-bends-the-way-a-body-does.test.ts` caught it. The neck is not a pose
   decision — it is `(chest + head) / 2` per component, so it is re-derived whenever either end moves. The tobogganer's knees are up rather
-  than out, because 172 px of leg from a hip 19 px above the deck reaches about 70 px forward and no more —
-  that number is still arithmetic and still binds.
+  than out, and the pose is solved from the FEET: each boot sits flat on the deck top at the foot of the
+  curl, one ankle point in every `toboggan/*` key, and the leg is two-link IK from the hip to it with the
+  knee up — about 50 px above the hip, which is the figure the contract measures. The first pass solved
+  from the knee instead and folded the shin 180° back up the thigh, so the shins and boots vanished behind
+  the parka and blind run d821836151a20d55 read a raised straight leg with a boot hanging over the curl.
+  The near mitt rests on the near knee (arm IK to a wrist 50 px short of it along the thigh), as the three
+  riders in `quebec-city/layer-60-slope.svg` hold theirs.
 
 Three more rules that a later editor will otherwise undo:
 
