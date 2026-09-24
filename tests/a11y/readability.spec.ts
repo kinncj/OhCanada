@@ -357,6 +357,15 @@ interface Tier {
   /** The face this tier proves is drawing before it measures. */
   readonly face: string;
   readonly referenceWidth: number;
+  /**
+   * How far the drawn width may sit from the recorded one and still be this
+   * face. Set by the nearest impostor, not by taste: Atkinson's is 12 px away,
+   * so it keeps REFERENCE_TOLERANCE_PX. OpenDyslexic's nearest impostor is the
+   * Atkinson in its own stack, about 680 px narrower, while CI's Chromium shapes
+   * it 3 px wider than this suite's did (run 35969240439): 1 % of its width
+   * still refuses every other face and stops failing on a shaping difference.
+   */
+  readonly tolerancePx: number;
   readonly params: Params;
   /** The text sizes this tier sweeps. 200 % is the worst case for every face. */
   readonly scales: readonly ('100' | '200')[];
@@ -399,6 +408,7 @@ const TIERS: readonly Tier[] = [
     name: 'the pinned face',
     face: 'Atkinson Hyperlegible',
     referenceWidth: 887,
+    tolerancePx: REFERENCE_TOLERANCE_PX,
     params: {},
     scales: ['200'],
     webFontDisabled: false,
@@ -414,6 +424,7 @@ const TIERS: readonly Tier[] = [
     name: 'the dyslexia face',
     face: 'OpenDyslexic',
     referenceWidth: 1569,
+    tolerancePx: 1569 * 0.01,
     params: { font: 'dyslexia' },
     scales: ['100', '200'],
     webFontDisabled: false,
@@ -426,6 +437,7 @@ const TIERS: readonly Tier[] = [
     name: `the named fallback face, ${FALLBACK_FACE}, with the web font disabled`,
     face: FALLBACK_FACE,
     referenceWidth: 1024.4,
+    tolerancePx: REFERENCE_TOLERANCE_PX,
     params: {},
     scales: ['200'],
     webFontDisabled: true,
@@ -481,7 +493,7 @@ async function assertFaceIsRendering(page: Page, tier: Tier, rowTestId: string):
 
   const drift = Math.abs(seen.width - tier.referenceWidth);
   expect(
-    seen.checked && drift <= REFERENCE_TOLERANCE_PX,
+    seen.checked && drift <= tier.tolerancePx,
     `the pinned face is not rendering: ${tier.name} expects "${tier.face}", whose reference string is ` +
       `${String(tier.referenceWidth)} px at ${String(REFERENCE.size)} px, and the strip's stack (${seen.family}) ` +
       `drew it ${seen.width.toFixed(1)} px wide` +
