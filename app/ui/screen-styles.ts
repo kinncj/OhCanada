@@ -2322,6 +2322,53 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   pointer-events: none;
 }
 
+/*
+  The dyslexia strip grows past a third (ADR-0072, amending ADR-0066 §3).
+
+  OpenDyslexic runs about 1.5x wider than the UI face, so at 200 % text a task
+  takes six lines and Settings and Menu take two rows. The offer, the controls
+  and the task then need about 356 px at 390 x 844, and a third of the screen
+  is 278. With the dyslexia face on, and only then, two things change while a
+  level is running:
+
+   1. The canvas sits at the TOP of the space it is fitted in, not in the
+      middle. It is the same size and nothing of it is cut: the band of flat sky
+      a tall phone showed above it moves below it, under the strip. The
+      letterbox follows, because --tn-canvas-top is redeclared on :root, where
+      index.html and the sky stops resolve it.
+   2. The strip may reach up from the bottom of the screen to 8 px under the
+      line the player walks on: two thirds of the way down the canvas (y 1280
+      of 1920, every level's spawn row), so a sliver of ground stays under
+      their feet. At 390 x 844 that is 374 px, 44 % of the screen, against
+      278 px and 33 %. The strip is never shorter than it is without the toggle.
+
+  So the offer, Settings, Menu and the whole task end inside the strip, and
+  the player still stands above it. What the player gives up is the ground in
+  front of their feet, under the taller strip.
+
+  The size of the canvas does not depend on what the strip says, so nothing
+  moves when an offer comes and goes, and reduced motion has nothing to stop.
+  Where the canvas already fills the height (a window 9:16 or wider), there is
+  no band to move and the ceiling is a third, as it is without the toggle.
+*/
+:root[data-tn-font="dyslexia"]:has(.tn-hud) {
+  --tn-canvas-top: var(--tn-safe-top, 0px);
+}
+
+:root[data-tn-font="dyslexia"]:has(.tn-hud) [data-tn-canvas="level"] {
+  block-size: var(--tn-canvas-height, min(100dvh, 100vw * 16 / 9));
+}
+
+[data-tn-font="dyslexia"] .tn-hud {
+  max-block-size: max(
+    33vh,
+    calc(
+      100dvh - var(--tn-canvas-top, 0px) - var(--tn-canvas-height, min(100dvh, 100vw * 16 / 9)) * 2 / 3 -
+        calc(0.5rem / var(--tn-text-scale, 1))
+    )
+  );
+}
+
 .tn-hud p {
   margin: 0;
   overflow-wrap: break-word;

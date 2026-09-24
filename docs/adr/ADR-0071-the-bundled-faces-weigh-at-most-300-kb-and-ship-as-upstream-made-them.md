@@ -1,7 +1,8 @@
 # ADR-0071: The bundled faces weigh at most 300 KB, and ship as upstream made them
 
 - Status: Accepted (2026-09-23). **Decided by the product owner on 2026-09-23**; this record writes the
-  decision down with the measurements it was made on.
+  decision down with the measurements it was made on. §5's overflow at 200 % is closed by ADR-0072
+  (2026-09-24).
 - **Amends ADR-0066 §1** in one respect: the ceiling on the bundled faces. "The bundled faces together add
   **≤ 200 KB** to the initial payload" becomes **≤ 300 KB**. ADR-0066's Budget impact table and its §1
   obligation carry the old figure and are annotated in the same commit. Nothing else in ADR-0066 moves: one
@@ -140,6 +141,10 @@ the dyslexia strip grow past a third, a narrower dyslexia face, or taking back t
 0.08 em word-spacing the sheet adds on top of a face that already spaces generously) is a product decision,
 not the implementer's.
 
+*(ADR-0072, 2026-09-24: the owner chose to let the dyslexia strip grow past a third. At 390 × 844 it may
+take 374 px, 44 %, and the canvas sits at the top of its space so the player stays above it. The rows below
+the strip are now 0 in both languages, at both text sizes, and the budget above is unchanged.)*
+
 ### 6. The fallback while a face is not yet drawn
 
 - The UI stack is `"Atkinson Hyperlegible", "TrueNorth Text Fallback", sans-serif`. The dyslexia stack is
@@ -219,11 +224,16 @@ Written in ADR-0009's format.
   sweep asserts the budget, asserts every row inside the strip at 100 %, and holds the 200 % overflow
   counts as a ratchet.
 
-- **OBLIGATION due=2026-10-21 owner=architect** — the dyslexia strip at 200 % text. With the dyslexia toggle
+- ~~**OBLIGATION due=2026-10-21 owner=architect** — the dyslexia strip at 200 % text. With the dyslexia toggle
   on, 30 English and 45 French task steps, and the task's count under 2 and 3 levels' tallest offers, end
   below the HUD strip (§5). That is ADR-0066's defect again, for the players who asked for an easier font.
   Decide the way out (§5 lists the candidates), land it, and set `DYSLEXIA_200_BELOW_THE_STRIP` in
-  `tests/a11y/readability.spec.ts` to zero, so that tier asserts the backstop like the others.
+  `tests/a11y/readability.spec.ts` to zero, so that tier asserts the backstop like the others.~~
+  **DISCHARGED 2026-09-24** by ADR-0072, on the product owner's decision: with the dyslexia toggle on, the
+  strip may grow past a third, up to 8 px under the player's feet (374 px, 44 % at 390 × 844), and the
+  canvas sits at the top of its space so the player stays above it. `DYSLEXIA_200_BELOW_THE_STRIP` is zero
+  in both languages (it had reached 3 offers and 31 tasks in English, 4 and 59 in French), and the sweep
+  asserts it. ADR-0072 carries the residual on viewports with no letterbox as an obligation of its own.
 
 - **OBLIGATION due=2026-12-07 owner=ui-a11y** — the answer marks. Draw ✓ and ✗ from a bundled face or as a
   drawn mark, so that no text the game prints falls back per glyph to a device face. Alternatively, record

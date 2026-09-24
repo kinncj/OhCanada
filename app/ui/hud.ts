@@ -230,6 +230,9 @@ export interface Hud {
 
 const MAIN_ID = 'tn-main';
 
+/** The attribute the stylesheet places the canvas host by (ADR-0072). */
+const CANVAS_ATTRIBUTE = 'data-tn-canvas';
+
 export function createHud(host: HTMLElement, options: HudOptions): Hud {
   const doc = host.ownerDocument;
   injectScreenStyles(doc);
@@ -257,6 +260,13 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   if (options.canvasHost !== undefined && options.canvasHost.parentElement !== main) {
     main.append(options.canvasHost);
   }
+  /*
+   * Named for the stylesheet, so that with the dyslexia face on the canvas can
+   * sit at the top of its space and the taller strip stays below the player
+   * (ADR-0072). An attribute and nothing else: the HUD never measures or moves
+   * the canvas itself, and the engine refits it to its host as it always does.
+   */
+  options.canvasHost?.setAttribute(CANVAS_ATTRIBUTE, 'level');
 
   const modeLabel = element(doc, 'p', {
     testId: 'hud-mode-label',
@@ -881,6 +891,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       menu.destroy();
       warning.destroy();
       region.remove();
+      options.canvasHost?.removeAttribute(CANVAS_ATTRIBUTE);
     },
   };
 }
