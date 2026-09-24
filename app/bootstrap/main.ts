@@ -1812,7 +1812,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     }
     if (!teardownLevel()) return;
     /*
-     * Walked off the end of a finished level (ADR-0073): the canvas that showed
+     * Walked off the end of a finished level (ADR-0074): the canvas that showed
      * the player leaving is `aria-hidden`, so the live region says the level is
      * finished, and then the next level's own waiting sentence and its name
      * follow as they do on every route in. Said *after* the teardown, which
@@ -2016,7 +2016,7 @@ interface LevelWiring {
   readonly finishLevel: () => 'stamped' | 'finished' | 'unfinished';
   /**
    * The level after this one in `journey` order, when the player may open it
-   * right now — built, unlocked and nameable — or `null` (ADR-0073).
+   * right now — built, unlocked and nameable — or `null` (ADR-0074).
    *
    * Not {@link openedNext}: that is "what opened while this level was open",
    * which is `null` for a level stamped in an earlier sitting. Arriving at the
@@ -2026,7 +2026,7 @@ interface LevelWiring {
   readonly nextLevel: () => LevelId | null;
   /**
    * Go on to that level because the player walked off the end of a finished
-   * one (ADR-0073): the same route as {@link onPlayNextLevel}, with the
+   * one (ADR-0074): the same route as {@link onPlayNextLevel}, with the
    * transition said in the live region, because the canvas that showed it is
    * `aria-hidden`.
    */
@@ -3010,7 +3010,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
-   * Draw the card that says what is left, once per arrival (ADR-0073).
+   * Draw the card that says what is left, once per arrival (ADR-0074).
    *
    * Its own hold, `'complete'`, like the finished card's: keeping playing
    * releases it through the same `onKeepPlaying`, and leaving takes the level
@@ -3032,7 +3032,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
    * becomes an achievement, which is the split `app/adapters/phaser`'s
    * `level-events.ts` asks for and the reason the decision is here. The scene
    * reports **each arrival**: its latch re-arms once the player walks back
-   * behind the line (ADR-0073), so this runs again every time they come back to
+   * behind the line (ADR-0074), so this runs again every time they come back to
    * the end, and each outcome below is decided afresh.
    *
    *  - **The task is not done** (ADR-0036): nothing is written, nothing opens,
@@ -3041,7 +3041,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
    *  - **The stamp was already in the passport** — earned by the task in this
    *    sitting, when "Task done!" was drawn, or in an earlier one: the player is
    *    taken straight on to the next place on the journey, by the same route
-   *    the card's "Play …" takes (ADR-0073). The card already said the level
+   *    the card's "Play …" takes (ADR-0074). The card already said the level
    *    was finished; saying it again at the end is the dead end the owner's
    *    playtest found ("hitting the end of the wall should send you to the
    *    next level").

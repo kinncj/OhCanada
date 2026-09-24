@@ -44,7 +44,7 @@ import { walkInLegs } from './walk';
  *  2. **the task finished** — from a save one answer short of it, so the walk is
  *     the giver and one landmark — which opens the next level, and one press
  *     lands the player in it;
- *  3. **the end of a level already finished** — since ADR-0073, straight into
+ *  3. **the end of a level already finished** — since ADR-0074, straight into
  *     the next level, with no card: the card already said the level was done.
  *
  * Not asserted: where the exit line is. That is
@@ -362,7 +362,7 @@ test.describe('reaching the end of a level sends the player on only when the tas
     }
   });
 
-  test('a level already finished leads on at its end, straight into the next one (ADR-0073)', async ({
+  test('a level already finished leads on at its end, straight into the next one (ADR-0074)', async ({
     page,
   }) => {
     await seed(page, finishedSave(START_QUEST));

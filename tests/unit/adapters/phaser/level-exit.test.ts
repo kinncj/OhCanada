@@ -16,7 +16,7 @@
  *  2. **it fires once per arrival.** Jostling at the line is one arrival — a
  *     completion card per frame is what the alternative looks like — and a walk
  *     back behind the re-arm point and out again is a second one, because the
- *     player really did arrive twice (ADR-0073);
+ *     player really did arrive twice (ADR-0074);
  *  3. when it fires the player is still walking freely and the camera has
  *     already reached its right-hand clamp, so the moment is not "you are stuck
  *     against an invisible wall while the world is still sliding".

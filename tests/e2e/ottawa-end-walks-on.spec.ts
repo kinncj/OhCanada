@@ -10,7 +10,7 @@ import { walkInLegs } from './walk';
 
 /**
  * "Hitting the end of the wall should send you to the next level" — on the
- * level the owner played it on (ADR-0073).
+ * level the owner played it on (ADR-0074).
  *
  * Ottawa, from a save in which its task and every task before it on the
  * journey are finished, so its stamp is held and the next place is open. The
@@ -133,7 +133,7 @@ test('walking to the end of a finished Ottawa loads the next level', async ({ pa
   expect(
     outcome,
     `walking to the end of a finished ${LEVEL} drew a card or went nowhere, instead of ` +
-      `taking the player on to ${NEXT} (ADR-0073)`,
+      `taking the player on to ${NEXT} (ADR-0074)`,
   ).toBe('left');
   await expect(card).toBeHidden();
 

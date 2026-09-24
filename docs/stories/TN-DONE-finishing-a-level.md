@@ -68,7 +68,7 @@ level's task". The passport's promise won. Read everything below with these four
 - **Finishing the task after reaching the end still draws "Task done!"**, with the stamp and the level that
   opened. The unfinished card and the finished card are two cards, one each per sitting.
 
-**Amended a sixth time, 2026-09-24, by ADR-0073: the end of a finished level leads on.** From the owner's
+**Amended a sixth time, 2026-09-24, by ADR-0074: the end of a finished level leads on.** From the owner's
 playtest: "Hitting the end of the wall should send you to the next level". The scene now reports **every
 arrival**, and re-arms once the player walks back behind the line. Read everything below with these changes:
 
@@ -704,7 +704,7 @@ Feature: The card is honest about what this build actually has
     When I reach the end of it again
     Then no second "stamp/earned" event is emitted
     And the passport still contains exactly one stamp for it
-    And, when the next level is open, it opens (TN-DONE-10, ADR-0073)
+    And, when the next level is open, it opens (TN-DONE-10, ADR-0074)
     And, when it is not, any line the card draws about my answers is the current count, not the old one
 
   Scenario: Finishing the task after already reaching the end earns nothing twice either
@@ -910,7 +910,7 @@ Feature: The end of a level earns the stamp only for the task
     Then the card is gone and the level accepts input again
     And the card does not come back while I stay at the end
     When I walk back from the end and reach it again
-    Then the card is drawn again, once for that arrival (ADR-0073)
+    Then the card is drawn again, once for that arrival (ADR-0074)
 
   Scenario: Finishing the task afterwards is still finishing it
     Given I reached the end and kept playing
@@ -928,7 +928,7 @@ Feature: The end of a level earns the stamp only for the task
 The three new rows are `COPY_GAPS` entries in `app/ui/copy.ts`, written by `app/ui` and pending the product
 owner's ratification.
 
-## TN-DONE-10 — The end of a finished level leads on (ADR-0073)
+## TN-DONE-10 — The end of a finished level leads on (ADR-0074)
 
 ```gherkin
 Feature: Reaching the end of a level I have finished takes me to the next one

@@ -1,4 +1,4 @@
-# ADR-0073: The end of a finished level leads on, and every stop stands before it
+# ADR-0074: The end of a finished level leads on, and every stop stands before it
 
 - Status: Accepted (2026-09-24), from the owner's playtest of the same day.
 - **Amends ADR-0036 §1** in two sentences. "It is drawn once per sitting, like the arrival it answers" becomes
@@ -93,10 +93,11 @@ fit around it:
 
 Written in ADR-0009's format.
 
-- **OBLIGATION due=2026-10-01 owner=content** — extend `content/levels/ottawa.json` so that
+- ~~**OBLIGATION due=2026-10-01 owner=content** — extend `content/levels/ottawa.json` so that
   `every-stop-stands-before-the-end.test.ts` passes. Make `size.x` at least 9,481 (9,600 is proposed), extend
   the last ground point to match, and confirm that `make assets` and `make check-textures` still pass and
-  the parallax layers tile to the new width.
+  the parallax layers tile to the new width.~~
+  **DISCHARGED 2026-09-24** — `content/levels/ottawa.json` is 9,600 wide with the ground extended flat to it; the end line now falls past Dow's Lake's reach, `every-stop-stands-before-the-end.test.ts` passes for all ten levels, `make assets` and `make check-textures` pass (Ottawa 84 %, unchanged), and `ottawa-end-walks-on.spec.ts` walks the built level past the pavilion to the end.
 
 ## Alternatives considered
 

@@ -107,7 +107,7 @@ export function exitLineX(input: ExitLineInput): number {
 
 /**
  * How far behind the line, as a fraction of the camera's view, the player has to
- * go before arriving again counts as a new arrival (ADR-0073).
+ * go before arriving again counts as a new arrival (ADR-0074).
  *
  * A tenth of a view — 108 world px at zoom 1 — is a step back the player can
  * see themselves take, and far more than the few pixels a turn at the line
@@ -163,7 +163,7 @@ function rearmPointX(lineX: number, input: ExitLineInput): number {
  * also why this is cheap enough to call every frame.
  *
  * **It re-arms once the player goes back behind {@link ExitWatch.rearmX}**
- * (ADR-0073). It used to fire once per level visit, which was right while an
+ * (ADR-0074). It used to fire once per level visit, which was right while an
  * arrival could only ever mean one thing, and wrong once it could mean two: a
  * player who reached the end with the task unfinished, went back and finished
  * it, and walked to the end again got nothing, because the end had already been

@@ -125,7 +125,7 @@ describe('every stop and every character stands before the end of its level', ()
         `${String(level.id)}: a player walking to the last thing this level places crosses the ` +
           'end of the level first. Move the end, not the line: extend `size.x` and the ground ' +
           'polyline so the line (`size.x` minus half a view) falls past the last engage zone ' +
-          '(`app/adapters/phaser/level-exit.ts`, ADR-0073).',
+          '(`app/adapters/phaser/level-exit.ts`, ADR-0074).',
       ).toEqual([]);
     },
   );

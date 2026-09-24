@@ -147,7 +147,7 @@ export function finishedSave(quest: SeededQuest): string {
  * For a scenario that starts somewhere further along than the first level:
  * `unlockedLevelIds` opens a level only for the stamps before it in
  * `unlockRules.order`, so being in Ottawa with the next level open needs every
- * stamp from Halifax on (ADR-0073).
+ * stamp from Halifax on (ADR-0074).
  */
 export function journeyFinishedSave(quests: readonly SeededQuest[]): string {
   const now = Date.now() as EpochMillis;

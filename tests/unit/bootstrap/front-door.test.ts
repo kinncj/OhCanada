@@ -2245,7 +2245,7 @@ describe('reaching the end of a level whose task is not done earns nothing (ADR-
     expect(hoisted.state.completeShown).toHaveLength(1);
   });
 
-  it('draws the card again when the player keeps playing, walks back and arrives again (ADR-0073)', async () => {
+  it('draws the card again when the player keeps playing, walks back and arrives again (ADR-0074)', async () => {
     await walkToTheEnd();
     modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
     await flush();
@@ -2350,7 +2350,7 @@ const hearOver = async (ms: number): Promise<string[]> => {
   return heard;
 };
 
-describe('reaching the end of a finished level goes on to the next one (ADR-0073)', () => {
+describe('reaching the end of a finished level goes on to the next one (ADR-0074)', () => {
   /** The level after the start level on the journey: the one its stamp opens. */
   it('ships the level after the start level as the one its stamp opens', () => {
     const journey = parsedRules.value.journey;
