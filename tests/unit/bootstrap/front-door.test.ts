@@ -2728,39 +2728,107 @@ describe('a quest is offered, accepted and tracked', () => {
    * nothing here. Whatever the step names, the catalogue holds, with prose that
    * is obviously the fixture's rather than the guide's.
    *
-   * One chapter, because a `read` step names one lesson (`readingFor` refuses
-   * more, so that a sheet is named by one lesson's title).
+   * Built from **every** `read` step, not the first: since ADR-0067 a quest
+   * reads at every stop, and Ottawa reads four different lessons at four
+   * stops. A fixture holding only the first read step's lesson let the later
+   * stops open onto nothing, and a scenario walking past them was walking past
+   * a reader the catalogue could not fill.
+   *
+   * One chapter holding every named lesson, each lesson listing the passages
+   * the steps name, in the order they are first named. A `read` step names one
+   * lesson (`readingFor` refuses more, so that a sheet is named by one lesson's
+   * title), so every sheet the quest opens is titled "A fixture lesson". Each
+   * passage's prose carries its own id, so the words the reader shows can be
+   * traced to the reference that asked for them, letter for letter.
    */
   const CHAPTER = 'a-chapter';
+  const fixturePassageText = (passage: string): { readonly en: string; readonly fr: string } => ({
+    en: `Fixture passage ${passage} in English.`,
+    fr: `Passage fictif ${passage} en français.`,
+  });
   const lessonFixture = (): Record<string, unknown[]> => {
-    const read = STOPS.find((step) => step.kind === 'read');
-    if (read === undefined) return {};
-    const references = read.passages ?? [];
-    const lessonId = references[0]?.lesson;
-    if (lessonId === undefined) return {};
+    const passagesByLesson = new Map<string, string[]>();
+    for (const step of STOPS) {
+      if (step.kind !== 'read') continue;
+      for (const reference of step.passages ?? []) {
+        const named = passagesByLesson.get(reference.lesson) ?? [];
+        if (!named.includes(reference.passage)) named.push(reference.passage);
+        passagesByLesson.set(reference.lesson, named);
+      }
+    }
+    if (passagesByLesson.size === 0) return {};
     return {
-      [CHAPTER]: [
-        {
-          $schema: '../../schemas/lesson.schema.json',
-          id: lessonId,
-          chapter: 'A Chapter Of The Guide',
-          order: 1,
-          title: { en: 'A fixture lesson', fr: 'Une leçon fictive' },
-          passages: references.map((reference, index) => ({
-            id: reference.passage,
-            text: {
-              en: `Fixture passage ${String(index + 1)} in English.`,
-              fr: `Passage fictif ${String(index + 1)} en français.`,
-            },
-            fact: {
-              factual: true,
-              source: { sourceId: 'discover-canada', sourceHash: 'hash' },
-              verification: { status: 'verified', sourceHash: 'hash', evidence: 'quoted' },
-            },
-          })),
-        },
-      ],
+      [CHAPTER]: [...passagesByLesson].map(([lessonId, passages], order) => ({
+        $schema: '../../schemas/lesson.schema.json',
+        id: lessonId,
+        chapter: 'A Chapter Of The Guide',
+        order: order + 1,
+        title: { en: 'A fixture lesson', fr: 'Une leçon fictive' },
+        passages: passages.map((passage) => ({
+          id: passage,
+          text: fixturePassageText(passage),
+          fact: {
+            factual: true,
+            source: { sourceId: 'discover-canada', sourceHash: 'hash' },
+            verification: { status: 'verified', sourceHash: 'hash', evidence: 'quoted' },
+          },
+        })),
+      })),
     };
+  };
+
+  /**
+   * The steps one engagement of `step`'s landmark finishes, from `step` on
+   * (ADR-0067): every consecutive step that the player finishes by arriving —
+   * not `talk`, not `answer` — naming the same landmark.
+   *
+   * Written out here rather than imported, so the scenarios walk the document
+   * by the ADR's words and not by the function under test.
+   */
+  const arrivalRun = <S extends { readonly kind: string; readonly targetId: string }>(
+    steps: readonly S[],
+    step: S,
+  ): S[] => {
+    const run: S[] = [];
+    for (let at = steps.indexOf(step); at >= 0 && at < steps.length; at += 1) {
+      const next = steps[at];
+      if (next === undefined || next.kind === 'talk' || next.kind === 'answer') break;
+      if (next.targetId !== step.targetId) break;
+      run.push(next);
+    }
+    return run;
+  };
+
+  /**
+   * Where the arrival that finishes `step` starts: the first step of the run
+   * of arrival steps, ending at `step`, that names its landmark. A `read`
+   * directly after a `visit` at the same stop is finished by the engagement
+   * that finishes the `visit` (ADR-0067), so walking up to it means walking up
+   * to the `visit` and no further.
+   */
+  const arrivalStartOf = <S extends { readonly kind: string; readonly targetId: string }>(
+    steps: readonly S[],
+    step: S,
+  ): S => {
+    let at = steps.indexOf(step);
+    for (; at > 0; at -= 1) {
+      const before = steps[at - 1];
+      if (before === undefined || before.kind === 'talk' || before.kind === 'answer') break;
+      if (before.targetId !== step.targetId) break;
+    }
+    return steps[at] ?? step;
+  };
+
+  /**
+   * Close the reader if this engagement opened one — the passages of every
+   * `read` step in the arrival run, between the card and the lines (ADR-0067
+   * §2). Returns whether it did.
+   */
+  const closeTheReaderIfOpened = async (readerBefore: number): Promise<boolean> => {
+    if (hoisted.state.readerShown.length <= readerBefore) return false;
+    modalOption<{ onClose?: () => void }>('lesson-reader').onClose?.();
+    await flush();
+    return true;
   };
 
   /**
@@ -2809,15 +2877,17 @@ describe('a quest is offered, accepted and tracked', () => {
   /**
    * Accept the offer and bring the player to the first `visit` step.
    *
-   * On today's document that is one `read` step at the canal locks; on a quest
-   * that opens straight onto its first landmark it is nothing at all. Derived
+   * On today's document that is nothing at all: Ottawa opens straight onto the
+   * library. On a quest that sent the player somewhere first, it is every stop
+   * before the first visit's arrival. Derived
    * from the document either way, so the scenarios below are about what happens
    * *at a landmark* rather than about which step Ottawa happens to put first.
    */
   const acceptAndReachTheFirstVisit = async (): Promise<void> => {
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
-    for (const step of STOPS.slice(0, STOPS.indexOf(FIRST_VISIT))) await walkPast(step);
+    const arrival = arrivalStartOf(OTTAWA_QUEST.steps, FIRST_VISIT);
+    for (const step of STOPS.slice(0, STOPS.indexOf(arrival))) await walkPast(step);
   };
 
   it('offers the quest when the player engages its giver', async () => {
@@ -2943,9 +3013,9 @@ describe('a quest is offered, accepted and tracked', () => {
   it('ships a read step on this quest, so the scenario below cannot go quiet', () => {
     /*
      * ADR-0024's floor for the reader scenario, which returns early over a quest
-     * with no `read` step. Ottawa reads at Dow's Lake, as its last stop: a `read`
-     * step shares no stop with a `visit`, and ADR-0063 carries why it stands
-     * after the giver and after every `answer` step before it.
+     * with no `read` step. Ottawa reads at every stop: directly after the
+     * `visit` at the library, the Peace Tower and the warming hut, which one
+     * engagement finishes together (ADR-0067), and on its own at Dow's Lake.
      */
     expect(
       STOPS.filter((step) => step.kind === 'read').length,
@@ -2971,8 +3041,11 @@ describe('a quest is offered, accepted and tracked', () => {
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
     /* Every stop the quest sends the player to first, so the read step is the
-       current one — derived from the document, wherever it puts the read. */
-    for (const step of STOPS.slice(0, STOPS.indexOf(READ))) await walkPast(step);
+       one this engagement finishes — derived from the document, wherever it
+       puts the read. A `visit` at the same landmark directly before it is part
+       of the same arrival (ADR-0067), so the walk stops short of it too. */
+    const arrival = arrivalStartOf(OTTAWA_QUEST.steps, READ);
+    for (const step of STOPS.slice(0, STOPS.indexOf(arrival))) await walkPast(step);
     const readerBefore = hoisted.state.readerShown.length;
 
     emit('poi/engaged', READ.targetId);
@@ -3002,9 +3075,7 @@ describe('a quest is offered, accepted and tracked', () => {
     /* The catalogue's words, letter for letter: the route carried content and
        did not invent any. */
     expect(view.passages.map((passage) => passage.text)).toEqual(
-      (READ.passages ?? []).map(
-        (_reference, index) => `Fixture passage ${String(index + 1)} in English.`,
-      ),
+      (READ.passages ?? []).map((reference) => fixturePassageText(reference.passage).en),
     );
     /* Prose and an id, and nothing a screen could adjudicate or localise:
        ADR-0063 §6, held here as well as by the screen's own type. */
@@ -3049,9 +3120,18 @@ describe('a quest is offered, accepted and tracked', () => {
       'the quest spoke over the landmark’s own card',
     ).toBe(afterTheOffer);
 
-    /* Then the speaker, on the way out of the card. */
+    /* Then the passages of any `read` step this arrival also finishes
+       (ADR-0067 §2), and the speaker on the way out of them — never over them. */
+    const readerBefore = hoisted.state.readerShown.length;
     modalOption<{ onClose: () => void }>('poi-card').onClose();
     await flush();
+    if (hoisted.state.readerShown.length > readerBefore) {
+      expect(
+        hoisted.state.dialoguesShown.length,
+        'the quest spoke over the reader',
+      ).toBe(afterTheOffer);
+      await closeTheReaderIfOpened(readerBefore);
+    }
 
     const line = hoisted.state.dialoguesShown.at(-1) as {
       lines?: readonly string[];
@@ -3085,12 +3165,14 @@ describe('a quest is offered, accepted and tracked', () => {
   it('asks every question the answer step has left, and the card counts the step (ADR-0036)', async () => {
     /*
      * Halifax's tracker read "Answer 2 questions about voting" over a card
-     * reading "Question 1 of 1". The step after the first visit is an answer
-     * step; the landmark asks all of it, from the level's subject, and the card
-     * counts through the step.
+     * reading "Question 1 of 1". The step after the first visit's arrival — the
+     * visit and any `read` at the same stop, which one engagement finishes
+     * (ADR-0067) — is an answer step; the landmark asks all of it, from the
+     * level's subject, and the card counts through the step.
      */
-    const firstVisitAt = OTTAWA_QUEST.steps.indexOf(FIRST_VISIT);
-    const answerStep = OTTAWA_QUEST.steps[firstVisitAt + 1];
+    const firstArrival = arrivalRun(OTTAWA_QUEST.steps, FIRST_VISIT);
+    const lastOfTheArrival = firstArrival.at(-1) ?? FIRST_VISIT;
+    const answerStep = OTTAWA_QUEST.steps[OTTAWA_QUEST.steps.indexOf(lastOfTheArrival) + 1];
     expect(answerStep?.kind, `${String(OTTAWA_QUEST.id)} asks nothing after its first visit`).toBe(
       'answer',
     );
@@ -3104,8 +3186,10 @@ describe('a quest is offered, accepted and tracked', () => {
 
     emit('poi/engaged', FIRST_VISIT.targetId);
     const beforeTheLine = hoisted.state.dialoguesShown.length;
+    const beforeTheReader = hoisted.state.readerShown.length;
     modalOption<{ onClose: () => void }>('poi-card').onClose();
     await flush();
+    await closeTheReaderIfOpened(beforeTheReader);
     if (hoisted.state.dialoguesShown.length > beforeTheLine) {
       (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
       await flush();
@@ -3195,8 +3279,10 @@ describe('a quest is offered, accepted and tracked', () => {
     const questionsBefore = hoisted.state.questionsAsked.length;
     emit('poi/engaged', FIRST_VISIT.targetId);
     const beforeTheLine = hoisted.state.dialoguesShown.length;
+    const beforeTheReader = hoisted.state.readerShown.length;
     modalOption<{ onClose: () => void }>('poi-card').onClose();
     await flush();
+    await closeTheReaderIfOpened(beforeTheReader);
     if (hoisted.state.dialoguesShown.length > beforeTheLine) {
       (hoisted.state.dialoguesShown.at(-1) as { next?: { onSelect: () => void } }).next?.onSelect();
       await flush();

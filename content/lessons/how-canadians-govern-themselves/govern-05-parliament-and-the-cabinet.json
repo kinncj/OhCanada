@@ -1,0 +1,228 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "govern-05-parliament-and-the-cabinet",
+  "chapter": "How Canadians Govern Themselves",
+  "order": 5,
+  "title": {
+    "en": "Parliament, the legislatures and the Cabinet",
+    "fr": "Le Parlement, les assemblées législatives et le Cabinet"
+  },
+  "passages": [
+    {
+      "id": "g5-the-people-elect-members",
+      "text": {
+        "en": "Canada is a parliamentary democracy. Its people vote to choose members of the House of Commons in Ottawa, and members of the provincial and territorial legislatures.",
+        "fr": "Le Canada est une démocratie parlementaire. Sa population vote pour choisir les députés de la Chambre des communes, à Ottawa, et les membres des assemblées législatives des provinces et des territoires."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures."
+        }
+      }
+    },
+    {
+      "id": "g5-what-elected-members-do",
+      "text": {
+        "en": "These elected members pass laws. They approve the money the government spends and keep watch over it, and they hold the government to account.",
+        "fr": "Ces élus adoptent les lois. Ils approuvent les dépenses du gouvernement et les surveillent, et ils demandent des comptes au gouvernement."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures. These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable."
+        }
+      }
+    },
+    {
+      "id": "g5-confidence-of-the-house",
+      "text": {
+        "en": "Cabinet ministers answer to the elected members. They must keep the “confidence of the House.” If they lose a non-confidence vote, they have to resign.",
+        "fr": "Les ministres du Cabinet rendent des comptes aux élus. Ils doivent conserver la « confiance de la Chambre ». S'ils sont défaits lors d'un vote de censure, ils doivent démissionner."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
+        }
+      }
+    },
+    {
+      "id": "g5-three-parts-of-parliament",
+      "text": {
+        "en": "Parliament is made of three parts: the Sovereign (the Queen or King), the Senate and the House of Commons.",
+        "fr": "Le Parlement compte trois parties : le souverain (la reine ou le roi), le Sénat et la Chambre des communes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons."
+        }
+      }
+    },
+    {
+      "id": "g5-parts-of-a-provincial-legislature",
+      "text": {
+        "en": "A provincial legislature is made up of the Lieutenant Governor and the Assembly that the people elect.",
+        "fr": "La législature d'une province se compose du lieutenant-gouverneur et de l'assemblée élue par la population."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
+        }
+      }
+    },
+    {
+      "id": "g5-prime-minister-chooses-the-cabinet",
+      "text": {
+        "en": "In the federal government, the Prime Minister chooses the Cabinet ministers. The Prime Minister is also responsible for how the government runs and for its policies.",
+        "fr": "Au gouvernement fédéral, le premier ministre choisit les ministres du Cabinet. Le premier ministre est aussi responsable du fonctionnement et des politiques du gouvernement."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In the federal government, the Prime Minister selects the Cabinet ministers and is responsible for the operations and policy of the government."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In the federal government, the Prime Minister selects the Cabinet ministers and is responsible for the operations and policy of the government."
+        }
+      }
+    },
+    {
+      "id": "g5-house-of-commons-is-elected",
+      "text": {
+        "en": "The House of Commons is the chamber that represents the people. The people elect its members of Parliament, traditionally every four years.",
+        "fr": "La Chambre des communes est la chambre qui représente la population. La population élit ses députés, traditionnellement tous les quatre ans."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The House of Commons is the representative chamber, made up of members of Parliament elected by the people, traditionally every four years."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The House of Commons is the representative chamber, made up of members of Parliament elected by the people, traditionally every four years."
+        }
+      }
+    },
+    {
+      "id": "g5-senators-are-appointed",
+      "text": {
+        "en": "The Governor General appoints senators on the Prime Minister's advice. Senators can serve until they turn 75.",
+        "fr": "Le gouverneur général nomme les sénateurs sur l'avis du premier ministre. Les sénateurs peuvent siéger jusqu'à l'âge de 75 ans."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "How Canadians Govern Themselves",
+          "page": 55,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Senators are appointed by the Governor General on the advice of the Prime Minister and serve until age 75."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Senators are appointed by the Governor General on the advice of the Prime Minister and serve until age 75."
+        }
+      }
+    }
+  ]
+}

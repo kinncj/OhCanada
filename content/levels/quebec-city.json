@@ -8,7 +8,7 @@
     "fr": "Ville de Québec"
   },
   "size": {
-    "x": 6048,
+    "x": 10848,
     "y": 1920
   },
   "spawn": {
@@ -90,6 +90,18 @@
     },
     {
       "x": 6048,
+      "y": 1280
+    },
+    {
+      "x": 7648,
+      "y": 1280
+    },
+    {
+      "x": 9248,
+      "y": 1280
+    },
+    {
+      "x": 10848,
       "y": 1280
     }
   ],
@@ -338,6 +350,117 @@
       },
       "artKey": "quebec-city-prop-terrace-kiosk",
       "radiusPx": 250
+    },
+    {
+      "id": "wolfe-montcalm-monument",
+      "name": {
+        "en": "The Wolfe and Montcalm monument",
+        "fr": "Le monument Wolfe-Montcalm"
+      },
+      "blurb": {
+        "en": "This monument remembers two men, James Wolfe and the Marquis de Montcalm. Each one was the commander of an army. Both of them died in battle while they led their soldiers.",
+        "fr": "Ce monument rappelle le souvenir de deux hommes, James Wolfe et le marquis de Montcalm. Chacun était le commandant d'une armée. Tous les deux sont morts au combat pendant qu'ils menaient leurs soldats."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 25,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The commanders of both armies, Brigadier James Wolfe and the Marquis de Montcalm, were killed leading their troops in battle."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:09:54Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The commanders of both armies, Brigadier James Wolfe and the Marquis de Montcalm, were killed leading their troops in battle."
+        }
+      },
+      "position": {
+        "x": 6400,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-wolfe-montcalm-monument",
+      "radiusPx": 240
+    },
+    {
+      "id": "martello-tower",
+      "name": {
+        "en": "The Plains of Abraham",
+        "fr": "Les plaines d'Abraham"
+      },
+      "blurb": {
+        "en": "This is Martello Tower 1, on the Plains of Abraham. Under British rule, the French-speaking Catholic people were called habitants or Canadiens. They tried hard to keep their own way of life in an empire that spoke English and was ruled by Protestants.",
+        "fr": "Voici la tour Martello 1, sur les plaines d'Abraham. Sous le régime britannique, on appelait habitants ou Canadiens les catholiques de langue française. Ils se sont efforcés de garder leur propre mode de vie dans un empire de langue anglaise dirigé par des protestants."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 26,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The French-speaking Catholic people, known as habitants or Canadiens, strove to preserve their way of life in the English-speaking, Protestant-ruled British Empire."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:09:54Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Following the war, Great Britain renamed the colony the “Province of Quebec.” The French-speaking Catholic people, known as habitants or Canadiens, strove to preserve their way of life in the English-speaking, Protestant-ruled British Empire."
+        }
+      },
+      "position": {
+        "x": 8000,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-martello-tower",
+      "radiusPx": 250
+    },
+    {
+      "id": "hotel-du-parlement",
+      "name": {
+        "en": "The Parliament Building",
+        "fr": "L'hôtel du Parlement"
+      },
+      "blurb": {
+        "en": "This is the Parliament Building in Québec City. In 1791 a law called the Constitutional Act split the Province of Quebec in two. Upper Canada, later Ontario, was mostly Loyalist, Protestant and English-speaking. Lower Canada, later Quebec, was mostly Catholic and French-speaking.",
+        "fr": "Voici l'hôtel du Parlement, à Québec. En 1791, une loi appelée l'Acte constitutionnel a divisé la province de Québec en deux. Le Haut-Canada, plus tard l'Ontario, était surtout loyaliste, protestant et de langue anglaise. Le Bas-Canada, plus tard le Québec, était surtout catholique et de langue française."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 27,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Constitutional Act of 1791 divided the Province of Quebec into Upper Canada (later Ontario), which was mainly Loyalist, Protestant and English-speaking, and Lower Canada (later Quebec), heavily Catholic and French-speaking."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:01:07Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Constitutional Act of 1791 divided the Province of Quebec into Upper Canada (later Ontario), which was mainly Loyalist, Protestant and English-speaking, and Lower Canada (later Quebec), heavily Catholic and French-speaking."
+        }
+      },
+      "position": {
+        "x": 9600,
+        "y": 1280
+      },
+      "artKey": "quebec-city-prop-hotel-du-parlement",
+      "radiusPx": 260
     }
   ],
   "characters": [

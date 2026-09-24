@@ -16,6 +16,32 @@ of a dialogue; `TN-GUIDE-the-guide.md` owns the companion's name; `TN-REACH-what
 prompt that opens a dialogue; `TN-NAMES-naming-real-places.md` owns which real names may appear where, and
 this file amends one of its rules — see *The one naming rule this file changes*.
 
+## Two kinds of giver: a person or a landmark
+
+**A giver is whatever the level places that offers the quest: a character, or a point of interest (ADR-0029).**
+This file was first written when every giver was a person, and a story that names one kind of giver is the
+sentence ADR-0029 took out of the schema. So, from here on:
+
+- **Every scenario below applies to both kinds.** Where a scenario says "the guide", read "the giver". The
+  Halifax background in `TN-DIALOGUE-01` is one example, not the only case. The four moments, the four
+  fields, "silent, never wrong", both languages or neither, focus handling, single switch, reduced motion,
+  200 % text and "nothing counts down" are the same for a lighthouse as for a person.
+- **Five things are different for a landmark.** `TN-DIALOGUE-07` holds them:
+
+| | A character giver (`guide`, `officer`) | A landmark giver (`peggys-point-light`, `yukon-river-sternwheeler`) |
+|---|---|---|
+| Placed by | the level's `characters[]`, as `characterId` | the level's `pois[]`, as `id` |
+| The dialog's name | `content/characters/<id>.json#/name` | the level's `pois[…]/name`, the same string the point-of-interest card draws |
+| Portrait | drawn | **none**: no face, mouth, figure or silhouette |
+| `expression` on a line | allowed | **forbidden**, and the gate fails on it |
+| Voice | a person's voice | **second person or impersonal, never first person** in either language (`docs/guidelines/dialogue-quests-and-landmarks.md`) |
+
+The voice rule is held by review, not by a gate, and ADR-0029 §5 explains why. It is written as a scenario
+anyway, because a scenario is what a reviewer checks against. Two levels give a quest **only** by a landmark,
+because their art may not draw a figure: Peggy's Cove and the North. `TN-PEGGYS-06` and `TN-NORTH-06` still
+hold those levels' own rules. This file holds the rule for the screen, so a third landmark giver does not
+have to write it a third time.
+
 ## The four moments, and what happens at each today
 
 | Moment | What the game does today | Where the words would come from |
@@ -52,10 +78,12 @@ applied to `quest.<id>.done.body` — see below.
 
 ### Why content and not copy rows
 
-**The principle, stated once so it settles the next case too: a character's *name* is a copy row; what a
-character *says in a quest* is quest content.** A name is one string shared by every quest that character
-gives, and it belongs in a table (`npc.officer.name`, `npc.guide.name`). A line is one quest's, it names
-things only that quest knows, and it belongs with the quest.
+**The principle, stated once so it settles the next case too: a giver's *name* belongs to the giver; what a
+giver *says in a quest* is quest content.** A name is one string shared by every quest that giver gives.
+When this was written it lived in a copy table (`npc.officer.name`, `npc.guide.name`). Since ADR-0029 it is
+read from the giver's own document: `content/characters/<id>.json#/name` for a person, the level's
+`pois[…]/name` for a landmark. A line is one quest's, it names things only that quest knows, and it belongs
+with the quest.
 
 Four reasons it cannot be a copy table, in the order they decide it:
 
@@ -104,8 +132,9 @@ Routed to the architect; `content/` is not this directory's to edit. What this f
 - `additionalProperties: false` stays; the fields are declared or they do not exist.
 - The content check requires **both languages or neither** on any line that is present (`TN-COPY-06`), and
   requires a present line's `fact` to be verified like any other claim when `factual` is true.
-- A line whose `speaker` is not a character the level places is a build failure, so a quest cannot put words
-  in a mouth that is not on screen.
+- A line whose `speaker` is not exactly one thing the level places (a character or a point of interest) is a
+  build failure, so a quest cannot put words in the mouth of something that is not on screen. A line whose
+  speaker is a point of interest may not carry `expression` (ADR-0029 §4).
 
 **`reminderLine` is one line for the whole quest, not one per step.** A per-step reminder is the obvious
 extension and it is not taken: the step prompt already exists, the tracker already draws it, and a second
@@ -166,8 +195,9 @@ stricter option is still one copy-and-content pass away if the project owner wan
 | Screen reader | `TN-DIALOGUE-04` — the dialog is named by the giver at all four moments |
 | Reduced motion | `TN-DIALOGUE-04` |
 | 200 % text | `TN-DIALOGUE-04` |
-| Bilingual | `TN-DIALOGUE-05` |
+| Bilingual | `TN-DIALOGUE-05`, and `TN-DIALOGUE-07` for a landmark's name in French |
 | Failure path | `TN-DIALOGUE-02` (a moment with no line), `TN-DIALOGUE-03` (the gate, once the field exists) |
+| A giver that is not a person | `TN-DIALOGUE-07`; every other row applies to it unchanged |
 
 ---
 
@@ -275,14 +305,17 @@ Feature: A line that exists is complete, sourced and in both languages
     Then the build fails, naming the quest and the field
     And the rule is ADR-0003's, unchanged
 
-  Scenario: A line cannot be spoken by somebody who is not there
-    Given one of those lines names a speaker the level does not place
+  Scenario: A line cannot be spoken by something that is not there
+    Given one of those lines names a speaker that matches no character and no point of interest on the level,
+      or matches both a character and a point of interest
     When the content check runs
     Then the build fails, naming the quest, the field and the speaker
 
-  Scenario: The speaker's name still comes from the copy table
+  Scenario: The speaker's name comes from the giver's own document
     Given one of those lines is shown
-    Then the dialog's accessible name is the value of "npc.<giver>.name"
+    Then the dialog's accessible name is the giver's "name" from "content/characters/<id>.json"
+      when the giver is a character, or from the level's "pois[].name" when it is a landmark
+    And no "npc.<giver>.name" copy row is read
     And it is not the line's own text
     And it is not "Speaker", "NPC" or empty
 
@@ -403,6 +436,69 @@ Feature: The narrow exception, and its edges
     Then no line says or implies that the place made, sponsors, approves or is connected to this game
     And no line offers a booking, an address, an opening time or a price
     And no line invites the player to visit, book or buy
+```
+
+## TN-DIALOGUE-07 — When the giver is a landmark
+
+Every scenario in `TN-DIALOGUE-01` to `-06` also runs with a landmark as the giver, reading "the guide" as
+"the giver". This section holds only what is different. Peggy's Cove is the example. The North's
+`yukon-river-sternwheeler` is the same case with a different name.
+
+```gherkin
+Feature: A plaque offers, reminds and closes, and never becomes somebody
+  Background:
+    Given the Peggy's Cove level is playable
+    And this level's quest is offered by the point of interest "peggys-point-light"
+
+  Scenario: The four moments work the same way
+    When I engage "peggys-point-light"
+    Then the offer opens, and I can accept it or tap "Not now"
+    And declining, coming back mid-quest and coming back after the stamp each show
+      this quest's own line for that moment, as TN-DIALOGUE-01 describes
+    And a moment with no line is silent, as TN-DIALOGUE-02 describes
+
+  Scenario: The dialog is named after the landmark
+    When the dialogue opens at any of the four moments
+    Then "dialogue" has role "dialog"
+    And its accessible name is "Peggy's Point Lighthouse"
+    And "dialogue-speaker" reads "Peggy's Point Lighthouse"
+    And that name is the level document's "pois[].name" for "peggys-point-light"
+    And it is not a copy row, not "Speaker", not "NPC" and not empty
+
+  Scenario: No face is drawn for a thing
+    When the dialogue opens at any of the four moments
+    Then "dialogue-portrait" shows no picture
+    And no face, mouth, figure or silhouette is drawn for the speaker
+    And the speaker's name is still shown
+
+  Scenario: A landmark line carries no expression
+    Given a line in this quest's document whose speaker is "peggys-point-light"
+    When the line carries an "expression"
+    Then the build fails, naming the quest, the line and the speaker, as ADR-0029 §4 requires
+    And the check is proven by a failing fixture
+
+  Scenario: A landmark never speaks as a person
+    Then no line whose speaker is a point of interest is written in the first person, in either language
+    And none contains "I", "me", "my", "we", "our", "je", "j'", "moi", "nous" or "notre" as the speaker's own voice
+    And a quoted passage from Discover Canada is not the speaker's own voice
+    And this scenario is held by review, as ADR-0029 §5 records, and is not counted as a gate
+
+  Scenario: The landmark's name in French
+    Given the language is French
+    When I engage "peggys-point-light"
+    Then the dialog's accessible name is "Le phare de Peggy's Point"
+    And "dialogue-speaker" reads "Le phare de Peggy's Point"
+    And every line shown is the French value of this quest's own field
+
+  Scenario: Keyboard, one switch and a screen reader reach a landmark the same way
+    Then TN-DIALOGUE-04 passes with "peggys-point-light" as the giver
+    And the announcement in "#tn-live-region" names the landmark, never a person
+
+  Scenario: A giver that is neither placed nor single fails the build
+    Given a quest whose giver matches no point of interest and no character on its level,
+      or matches both a point of interest and a character
+    When the content check runs
+    Then the build fails, naming the quest and the giver
 ```
 
 ---

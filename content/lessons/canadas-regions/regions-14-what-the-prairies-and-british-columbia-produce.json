@@ -1,0 +1,282 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-14-what-the-prairies-and-british-columbia-produce",
+  "chapter": "Canada's Regions",
+  "order": 14,
+  "title": {
+    "en": "What the Prairies and British Columbia produce",
+    "fr": "Ce que produisent les Prairies et la Colombie-Britannique"
+  },
+  "passages": [
+    {
+      "id": "r14-prairies-energy-and-farmland",
+      "text": {
+        "en": "The Prairie Provinces are rich in energy resources. They also have some of the most fertile farmland.",
+        "fr": "Les provinces des Prairies sont riches en ressources énergétiques. Elles ont aussi certaines des terres agricoles les plus fertiles."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the Prairie Provinces, rich in energy resources and some of the most fertile farmland"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces, rich in energy resources and some of the most fertile farmland in the world."
+        }
+      }
+    },
+    {
+      "id": "r14-manitoba-economy",
+      "text": {
+        "en": "Manitoba's economy rests on farming, mining and making hydro-electric power.",
+        "fr": "L'économie du Manitoba repose sur l'agriculture, les mines et la production d'hydroélectricité."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Manitoba’s economy is based on agriculture, mining and hydro-electric power generation"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba’s economy is based on agriculture, mining and hydro-electric power generation"
+        }
+      }
+    },
+    {
+      "id": "r14-saskatchewan-grains-and-oilseeds",
+      "text": {
+        "en": "Saskatchewan grows more grains and oilseeds than any other province.",
+        "fr": "La Saskatchewan produit plus de céréales et d'oléagineux que toute autre province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "is the country’s largest producer of grains and oilseeds."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds."
+        }
+      }
+    },
+    {
+      "id": "r14-saskatchewan-uranium-and-potash",
+      "text": {
+        "en": "Saskatchewan has the richest deposits of uranium and potash in the world. Potash is used in fertilizer.",
+        "fr": "La Saskatchewan possède les plus riches gisements d'uranium et de potasse au monde. La potasse sert à fabriquer des engrais."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "It also boasts the world’s richest deposits of uranium and potash, used in fertilizer"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,” has 40% of the arable land in Canada and is the country’s largest producer of grains and oilseeds. It also boasts the world’s richest deposits of uranium and potash, used in fertilizer"
+        }
+      }
+    },
+    {
+      "id": "r14-saskatoon",
+      "text": {
+        "en": "Saskatoon, the province's biggest city, is where the mining industry has its headquarters. It is also an important centre for education, research and technology.",
+        "fr": "Saskatoon, la plus grande ville de la province, est le siège de l'industrie minière. C'est aussi un centre important d'éducation, de recherche et de technologie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Saskatoon, the largest city, is the headquarters of the mining industry and an important educational, research and technology centre."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan … Saskatoon, the largest city, is the headquarters of the mining industry and an important educational, research and technology centre."
+        }
+      }
+    },
+    {
+      "id": "r14-alberta-oil-and-gas",
+      "text": {
+        "en": "Alberta produces more oil and gas than any other province.",
+        "fr": "L'Alberta est la province qui produit le plus de pétrole et de gaz."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Alberta is the largest producer of oil and gas"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta is the largest producer of oil and gas, and the oil sands in the north are being developed as a major energy source."
+        }
+      }
+    },
+    {
+      "id": "r14-alberta-oil-sands",
+      "text": {
+        "en": "In the north of Alberta, the oil sands are being developed as a major source of energy.",
+        "fr": "Dans le nord de l'Alberta, les sables bitumineux sont mis en valeur comme grande source d'énergie."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the oil sands in the north are being developed as a major energy source"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta is the largest producer of oil and gas, and the oil sands in the north are being developed as a major energy source."
+        }
+      }
+    },
+    {
+      "id": "r14-alberta-cattle-ranches",
+      "text": {
+        "en": "Alberta is also famous for farming, above all for its huge cattle ranches. Because of them, Canada is one of the biggest producers of beef in the world.",
+        "fr": "L'Alberta est aussi réputée pour son agriculture, surtout pour ses immenses ranchs de bétail. Grâce à eux, le Canada est l'un des grands producteurs de bœuf au monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world’s major beef producers."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta is also renowned for agriculture, especially for the vast cattle ranches that make Canada one of the world’s major beef producers."
+        }
+      }
+    },
+    {
+      "id": "r14-bc-forestry-products",
+      "text": {
+        "en": "A large share of the goods made in B.C. are forestry products. These include lumber, newsprint, and pulp and paper products.",
+        "fr": "Une grande part des biens produits en Colombie-Britannique sont des produits forestiers, comme le bois d'œuvre, le papier journal et les produits de pâtes et papiers."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "of all the goods produced in B.C. are forestry products, including lumber, newsprint, and pulp and paper products"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "About one-half of all the goods produced in B.C. are forestry products, including lumber, newsprint, and pulp and paper products"
+        }
+      }
+    },
+    {
+      "id": "r14-port-of-vancouver",
+      "text": {
+        "en": "The Port of Vancouver is the largest and busiest port in Canada.",
+        "fr": "Le port de Vancouver est le plus grand et le plus achalandé du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Port of Vancouver, Canada’s largest and busiest"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Port of Vancouver, Canada’s largest and busiest, handles billions of dollars in goods traded around the world."
+        }
+      }
+    }
+  ]
+}

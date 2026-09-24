@@ -36,6 +36,141 @@
       }
     },
     {
+      "id": "m1-gatt-opened-up-trade",
+      "text": {
+        "en": "During the Depression, countries around the world made trade hard. Treaties such as the General Agreement on Tariffs and Trade (GATT) opened trade up again. The GATT is now the World Trade Organization (WTO).",
+        "fr": "Pendant la Dépression, les pays du monde entier ont rendu le commerce difficile. Des traités comme l'Accord général sur les tarifs douaniers et le commerce (GATT) ont rouvert le commerce. Le GATT est aujourd'hui l'Organisation mondiale du commerce (OMC)."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The world’s restrictive trading policies in the Depression era were opened up by such treaties as the General Agreement on Tariffs and Trade (GATT), now the World Trade Organization (WTO)."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The world’s restrictive trading policies in the Depression era were opened up by such treaties as the General Agreement on Tariffs and Trade (GATT), now the World Trade Organization (WTO)."
+        }
+      }
+    },
+    {
+      "id": "m1-oil-found-in-alberta-1947",
+      "text": {
+        "en": "Oil was found in Alberta in 1947. This was the beginning of Canada's modern energy industry.",
+        "fr": "On a découvert du pétrole en Alberta en 1947. C'est ce qui a lancé l'industrie moderne de l'énergie au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The discovery of oil in Alberta in 1947 began Canada’s modern energy industry."
+        }
+      }
+    },
+    {
+      "id": "m1-1951-food-shelter-and-clothing",
+      "text": {
+        "en": "In 1951, most Canadians could pay for enough food, a place to live and clothing. It was the first time this was true.",
+        "fr": "En 1951, la plupart des Canadiens pouvaient payer assez de nourriture, un logement et des vêtements. C'était la première fois."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1951, for the first time, a majority of Canadians were able to afford adequate food, shelter and clothing."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1951, for the first time, a majority of Canadians were able to afford adequate food, shelter and clothing."
+        }
+      }
+    },
+    {
+      "id": "m1-strong-economy-1945-to-1970",
+      "text": {
+        "en": "From 1945 to 1970, Canada grew closer to the United States and its other trading partners. In those years, its economy was one of the strongest of all the industrialized countries.",
+        "fr": "De 1945 à 1970, le Canada s'est rapproché des États-Unis et de ses autres partenaires commerciaux. Pendant ces années, son économie était l'une des plus fortes parmi les pays industrialisés."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Between 1945 and 1970, as Canada drew closer to the United States and other trading partners, the country enjoyed one of the strongest economies among industrialized nations."
+        }
+      }
+    },
+    {
+      "id": "m1-hard-work-and-trade",
+      "text": {
+        "en": "Canadians keep up their standard of living through hard work and through trade with other countries, above all the United States.",
+        "fr": "Les Canadiens maintiennent leur niveau de vie grâce à leur travail acharné et au commerce avec d'autres pays, surtout les États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "maintained by the hard work of Canadians and by trade with other nations, in particular the United States."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Today, Canadians enjoy one of the world’s highest standards of living— maintained by the hard work of Canadians and by trade with other nations, in particular the United States."
+        }
+      }
+    },
+    {
       "id": "m1-social-programs-grew-with-prosperity",
       "text": {
         "en": "The richer the country became, the more it could afford to pay for social assistance programs.",
@@ -63,6 +198,87 @@
       }
     },
     {
+      "id": "m1-unemployment-insurance-1940",
+      "text": {
+        "en": "In 1940, the federal government started unemployment insurance. Today it is called employment insurance.",
+        "fr": "En 1940, le gouvernement fédéral a créé l'assurance-chômage. On l'appelle aujourd'hui l'assurance-emploi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Unemployment insurance (now called “employment insurance”) was introduced by the federal government in 1940."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Unemployment insurance (now called “employment insurance”) was introduced by the federal government in 1940."
+        }
+      }
+    },
+    {
+      "id": "m1-old-age-security-1927",
+      "text": {
+        "en": "Old Age Security was worked out as early as 1927.",
+        "fr": "La Sécurité de la vieillesse a été conçue dès 1927."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Old Age Security was devised as early as 1927"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Old Age Security was devised as early as 1927, and the Canada and Quebec Pension Plans in 1965."
+        }
+      }
+    },
+    {
+      "id": "m1-pension-plans-1965",
+      "text": {
+        "en": "The Canada Pension Plan and the Quebec Pension Plan were created later, in 1965.",
+        "fr": "Le Régime de pensions du Canada et le Régime de rentes du Québec ont été créés plus tard, en 1965."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "and the Canada and Quebec Pension Plans in 1965."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Old Age Security was devised as early as 1927, and the Canada and Quebec Pension Plans in 1965."
+        }
+      }
+    },
+    {
       "id": "m1-publicly-funded-education",
       "text": {
         "en": "Each province and each territory provides the education that public money pays for.",
@@ -86,6 +302,33 @@
           "checkedAt": "2026-09-19T14:12:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Publicly funded education is provided by the provinces and territories."
+        }
+      }
+    },
+    {
+      "id": "m1-canada-health-act",
+      "text": {
+        "en": "A law called the Canada Health Act makes sure health coverage has the same main parts everywhere and meets a basic standard.",
+        "fr": "Une loi, la Loi canadienne sur la santé, fait en sorte que la couverture des soins de santé ait partout les mêmes éléments de base et respecte une norme minimale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 45,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Canada Health Act ensures common elements and a basic standard of coverage."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "As prosperity grew, so did the ability to support social assistance programs. The Canada Health Act ensures common elements and a basic standard of coverage."
         }
       }
     }

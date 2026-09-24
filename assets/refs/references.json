@@ -39,7 +39,8 @@
     "AMENDED AGAIN 2026-09-13 while drawing The North (level 10), which is the tenth and last level. Two more subjects, and the same shape as Peggy's Cove's: a non-repeating POI hero and a two-tile traversal composite, with `neverAdd` on BOTH carrying the docs/content-review.md 5.2 and 5.4 prohibitions and a ban on drawing any figure at all. THE HERO IS ASKED FOR A TYPE AND NEVER FOR A PLACE, because the vessel carries its own name in paint and this project draws no text; that makes this the third region in a row whose place rests on nothing in its art, which is OQ-SPINE-6's finding confirmed rather than a surprise.",
     "AMENDED 2026-09-22 while drawing Ottawa's sixth stop (ADR-0065 section 2). One subject added, `dows-lake`, and it is the SECOND subject in this file whose contract refuses to ask for a place name. `pier-21` established the rule for a shed with its name painted on it; this applies it to a building with its tenant's name hung on it, and the difference from the canal's amendment is that this one was decided BEFORE the drawing rather than after a verdict came back short. What the render is asked for instead is a building type and a setting - a pavilion on piles over open ice - and the identifying feature is an ABSENCE: no masonry retaining wall and no stone coping anywhere in the frame, which is what separates this end of the skateway from the walled canal that `rideau-canal-skateway` and `canal-lock` both draw.",
     "AMENDED 2026-09-22, a second time, closing two defects an art-verifier found by SCORING THIS FILE rather than by looking at a picture - which is a kind of finding this note has no earlier example of and is worth the paragraph. Both were in `dows-lake` and both were the list and the note disagreeing. (1) `\"a boathouse\"` was an accepted answer with ONE content word, so an answer set on a summer afternoon matched it while the note said in the same breath that an answer with no water in it fails; the scorer reads the LIST, so the list was fixed. (2) The note was headed \"IT IS A LAKE AND NOT THE CANAL\" while two canal answers sat in the list as passes. The list was right: nothing in one frame fixes a lake rather than a wide reach of a canal, and the heading was asking the render for something it cannot show. THE GENERAL RULE, since this is the third subject to need it: an `expectedBlindAnswerNote` may explain the list, warn about it and record why it is drawn where it is - it may not add a bar the list does not enforce. A `neverAdd` and a `mustBeRight` are both audited; a note is read by people. The same pass also corrected a REASON rather than a rule, in `dows-lake.mustBeRight`: putting the absent retaining wall in `mustBeRight` was the right call for the wrong stated reason. `neverAdd` entries are audited too and surface as `forbiddenPresent`, so the choice does not buy detection - it buys ATTENTION, because an auditor has to positively assert an absence it is asked about. And an absence carries no identification to a reader with one frame and no contrast set.",
-    "AMENDED 2026-09-22, a third time, after the first FULL blind pass over all 55 subjects. 52 passed and three did not, and the three splits cleanly into the two kinds of finding this file exists to tell apart. `marina-boats` was A DRAWING FAULT: the contract asked for a boom running aft and a boot stripe at the waterline, the file drew a boom crossing its mast and a stripe high on the topside, and the render read as a fishing fleet. Both features stand; their `detail` now names the wrong version so it cannot come back. `driftwood-pile` was A CONTRACT FAULT, and the sharpest one yet: `mustBeRight` asked for \"the shade tone for the END FACE\", a flat darker cap on a cylinder IS end grain, end grain is what a saw leaves, and the render was read as milled lumber in a sawmill yard. FOUR earlier redraws had failed on the same reading while faithfully obeying that clause - a contract can make a defect un-redrawable, and four attempts is what that costs before anybody looks at the contract. `ranch-barn` was A CONTRACT FAULT OF THE THIRD KIND, the one this file keeps making: 8 of 8 required features present and the identification still failed, because the list demanded the word RANCH and nothing a barnyard can show separates a ranch from a farm. That claim had been written down as a measurement and never measured. The word is no longer required, and the list also stopped insisting on ONE word - `corral` - for an object a reader will just as truthfully call a rail fence, a paddock or a pen. THE PATTERN, NAMED BECAUSE IT HAS NOW RECURRED THREE TIMES (`rideau-canal-skateway`, `pier-21`, `ranch-barn`): a contract writer who KNOWS what a render depicts predicts what a stranger will call it, and is wrong in the direction of their own knowledge. Two self-contradictions the same pass found were fixed without any render moving: `bulk-carrier` required \"nothing else above the deck line\" two entries above a required row of deck cranes, and `library-of-parliament` asked for \"three tall pointed-arch windows\" without saying per bay or in total while the render draws one per bay across five. A contract a scorer has to read charitably is a contract that can be read two ways."
+    "AMENDED 2026-09-22, a third time, after the first FULL blind pass over all 55 subjects. 52 passed and three did not, and the three splits cleanly into the two kinds of finding this file exists to tell apart. `marina-boats` was A DRAWING FAULT: the contract asked for a boom running aft and a boot stripe at the waterline, the file drew a boom crossing its mast and a stripe high on the topside, and the render read as a fishing fleet. Both features stand; their `detail` now names the wrong version so it cannot come back. `driftwood-pile` was A CONTRACT FAULT, and the sharpest one yet: `mustBeRight` asked for \"the shade tone for the END FACE\", a flat darker cap on a cylinder IS end grain, end grain is what a saw leaves, and the render was read as milled lumber in a sawmill yard. FOUR earlier redraws had failed on the same reading while faithfully obeying that clause - a contract can make a defect un-redrawable, and four attempts is what that costs before anybody looks at the contract. `ranch-barn` was A CONTRACT FAULT OF THE THIRD KIND, the one this file keeps making: 8 of 8 required features present and the identification still failed, because the list demanded the word RANCH and nothing a barnyard can show separates a ranch from a farm. That claim had been written down as a measurement and never measured. The word is no longer required, and the list also stopped insisting on ONE word - `corral` - for an object a reader will just as truthfully call a rail fence, a paddock or a pen. THE PATTERN, NAMED BECAUSE IT HAS NOW RECURRED THREE TIMES (`rideau-canal-skateway`, `pier-21`, `ranch-barn`): a contract writer who KNOWS what a render depicts predicts what a stranger will call it, and is wrong in the direction of their own knowledge. Two self-contradictions the same pass found were fixed without any render moving: `bulk-carrier` required \"nothing else above the deck line\" two entries above a required row of deck cranes, and `library-of-parliament` asked for \"three tall pointed-arch windows\" without saying per bay or in total while the render draws one per bay across five. A contract a scorer has to read charitably is a contract that can be read two ways.",
+    "AMENDED 2026-09-24 while drawing Québec City's three tier-2 stops (docs/plan/guide-coverage.md section 5.5, ADR-0065 section 2). Three subjects added: `wolfe-montcalm`, `hotel-du-parlement` and `martello-tower`. The obelisk is asked for a TYPE, as `pier-21` and `dows-lake` are, because its one unique feature is an inscription and this project draws no lettering. The Parliament Building may be named and is asked for a seat of government, with Ottawa's parliament stated as the failure to watch for. The Plains of Abraham are a park and a park cannot be drawn, so the stop's art is the real standing feature on them, Martello Tower 1, asked for as a Martello tower. Six references, licences established through the Commons API before download: four CC0, one CC BY 2.0 and one public domain; ShareAlike candidates were refused, as on every level."
   ],
   "verifyArtProtocol": {
     "blindIdentification": "The verifier is shown the render with no filename and no label and must name the subject unprompted. That answer is recorded first.",
@@ -53,7 +54,7 @@
       "`renderRecipe` says how to build the image. A single-file subject is that file rasterised. A CHARACTER",
       "cannot be judged from any single file: it is a rig of separate parts and every one of them is",
       "unidentifiable alone. Its recipe names the parts, their draw order and the slot choices, all of which",
-      "come from assets/style/rig-contract.json - the parts list, the z order and the frame templates."
+      "come from content/characters/rig.json - the parts list, the z order and the frame templates."
     ],
     "contradictionRule": "An entry in one subject's `neverAdd` may not forbid an entry in another subject's `mustBeRight`. Where two subjects cover overlapping geometry, the narrower prohibition wins and is scoped in its own text.",
     "anonymisedHandOff": [
@@ -723,7 +724,7 @@
         "src/svg/shared/character/hair-crop-black.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with costume=serge and any skin, hairShape, hairColour, expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. Every listed file is unidentifiable alone; a sleeve is a red capsule. The skin and hair choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the officer (costume=serge) and the player (costume=parka), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry, and two figures that differ only in costume answer it visually in the way the rule intends.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from content/characters/rig.json in `z` order, resolve each `frame` template with costume=serge and any skin, hairShape, hairColour, expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. Every listed file is unidentifiable alone; a sleeve is a red capsule. The skin and hair choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the officer (costume=serge) and the player (costume=parka), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry, and two figures that differ only in costume answer it visually in the way the rule intends.",
       "subject": "A Canadian police constable in ceremonial scarlet review order (the 'Mountie' silhouette)",
       "expectedBlindAnswer": [
         "Mountie",
@@ -858,7 +859,7 @@
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=parka. The skin, hair and head-covering choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of - and at least one run must set headCovering=none, because the toque carries a large share of the identification and a costume that only reads with a hat on has not been checked. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the player (costume=parka) and the officer (costume=serge), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from content/characters/rig.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=parka. The skin, hair and head-covering choice must be VARIED between runs - a subject that only ever renders with one tone is a subject nobody checked the others of - and at least one run must set headCovering=none, because the toque carries a large share of the identification and a costume that only reads with a hat on has not been checked. THE HAND-OFF MUST CONTAIN TWO FIGURES, side by side on one canvas: the player (costume=parka) and the officer (costume=serge), each built the same way, with DIFFERENT skin, hairShape, hairColour and expression choices between them. One figure cannot answer the identical-proportions entry.",
       "subject": "A person dressed for a Canadian winter - parka, toque, scarf, mitts and snow boots",
       "expectedBlindAnswer": [
         "a person in winter clothing",
@@ -1114,7 +1115,8 @@
         "a snow chute",
         "a winter promenade",
         "a boardwalk and a snow chute",
-        "a railed promenade and a snow run"
+        "a railed promenade and a snow run",
+        "a toboggan slide"
       ],
       "expectedBlindAnswerNote": [
         "GENERIC ON PURPOSE, and this list is the whole reason this note exists. Both renders are REPEATING parallax",
@@ -1129,7 +1131,8 @@
         "separate, non-repeating subject that draws one specific building and IS required to be named. The run is where",
         "the player toboggans; the Chateau is what says which city. Splitting them is what lets each be judged on what",
         "it actually contains.",
-        "Every answer here is deliberately free of ordinary connectives four letters or longer. \"a boardwalk with an ornate railing above a snow slope\" was in this list for one run and failed the hand-off's leak scan on the token \"with\". See the note on quebec-city-riverfront."
+        "Every answer here is deliberately free of ordinary connectives four letters or longer. \"a boardwalk with an ornate railing above a snow slope\" was in this list for one run and failed the hand-off's leak scan on the token \"with\". See the note on quebec-city-riverfront.",
+        "WIDENED 2026-09-24 after blind run 680d44f3192feaf0: `a toboggan slide` is accepted. The identifier answered `Dufferin Terrace, Quebec City, with the winter toboggan slide` with all seven mustBeRight features present and failed on the noun alone. `Slide` and `run` name the same built object here - the 1905 reference is captioned `The Toboggan Slide, Quebec`, and this list already accepts `a snow slide` and `an ice slide` - so refusing `a toboggan slide` punished a correct answer. It is widened only to a phrase that names the same thing: `a slide`, `a slope` or `a hill` alone still fail, because none of them says a toboggan or a built chute. It adds no new token to the hand-off leak scan: `toboggan` and `slide` are both already in this list."
       ],
       "referenceFiles": [
         "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg",
@@ -1413,6 +1416,252 @@
         "DRAWING OBSERVATION, not an identification: at 180 px the stripes, the scallops, the five posts, the",
         "balustrade and the two steps all survive; the 120 px silhouette is a wide shallow cone on an open",
         "colonnade, which is a bandstand and is not a tent."
+      ]
+    },
+    {
+      "id": "wolfe-montcalm",
+      "subject": "The Wolfe and Montcalm monument, Governors' Garden, Québec City: a stone obelisk on a three-stage pedestal",
+      "renders": [
+        "src/svg/quebec-city/prop-wolfe-montcalm-monument@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "an obelisk",
+        "a stone obelisk",
+        "an obelisk monument",
+        "a memorial obelisk",
+        "a monument",
+        "a memorial",
+        "the Wolfe and Montcalm monument",
+        "the Wolfe-Montcalm monument, Québec City"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ASKED FOR A TYPE AND MAY BE NAMED; IT IS NOT REQUIRED TO BE. The monument's only",
+        "unique feature is its inscription - the one place in the world where one obelisk honours the winning",
+        "and the losing general of the same battle - and this project draws no lettering, so both plaques are",
+        "blank. An obelisk on a stepped pedestal is what the render can carry and is what it is asked for, which",
+        "is the `pier-21` and `dows-lake` answer applied a third time. The level's identification rests on",
+        "`chateau-frontenac`.",
+        "WHAT IT MUST CARRY is that it is a MONUMENT and not a spire or a tower: a shaft that tapers to a",
+        "pyramid point, standing free on a pedestal, with nothing behind it. \"A spire\", \"a church steeple\",",
+        "\"a tower\" or \"a pencil\" is a FAIL. \"The Washington Monument\" names the wrong real obelisk and is a",
+        "FAIL too: that one stands on no pedestal at all, and this one's die, cornice and stepped plinth are",
+        "drawn as hard as the shaft for exactly that reason."
+      ],
+      "referenceFiles": [
+        "quebec-city/wolfe-montcalm-obelisk.jpg",
+        "quebec-city/wolfe-montcalm-monument-1901.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a tall, slender, square obelisk tapering to a small pyramid capstone",
+          "why": "It is the whole silhouette. An obelisk that is too stout reads as a tower, too thin as a spire.",
+          "detail": "MEASURED on quebec-city/wolfe-montcalm-obelisk.jpg: the shaft is about 66 per cent of the whole height, its foot is about 73 per cent of the die's width, and it narrows to a little over half its foot width under the capstone. The shipped art draws 63 per cent, 76 per cent and 30 over 56. The capstone is a paler stone than the shaft in both references and is drawn in `limestone` against the shaft's `slate`.",
+          "palette": "slate, limestone"
+        },
+        {
+          "feature": "a three-stage pedestal: a die under a projecting cornice with a low central pediment and raised corner blocks, a wider lower pedestal, and a broad plinth",
+          "why": "The pedestal is what makes this one obelisk and not any obelisk, and it is what separates it from the plain obelisks a verifier is most likely to know.",
+          "detail": "Each stage wider than the one above it, each capped with a ledge carrying snow. The whole monument stands about four times as tall as its plinth is wide, on both references."
+        },
+        {
+          "feature": "two plain panels, one on the die and a larger one on the lower pedestal, both BLANK",
+          "why": "The real panels carry the inscription. The panels are drawn because they are there; the lettering is not, because this project draws none.",
+          "detail": "Pale `white` rectangles with a shade band along the foot, set in the stone face.",
+          "palette": "white"
+        },
+        {
+          "feature": "the garden's lamp standard beside it, and snow on every ledge and at the foot",
+          "detail": "A dark iron standard with three globe lamps, from the primary reference, behind and to the left. Snow on the cornice, the corner blocks, the pedestal ledges and banked at the foot. The file's bottom edge IS the level ground line.",
+          "palette": "snow, white"
+        }
+      ],
+      "simplifyAway": [
+        "the individual stone blocks of the shaft and their two-tone grey: art-bible section 1 forbids a surface pattern",
+        "the inscriptions, in Latin, on both panels",
+        "the summer trees of the garden, the stair, its railings, the street sign and the parked car in the primary reference",
+        "the flower beds, the low wall and the figure in the 1901 photograph"
+      ],
+      "neverAdd": [
+        "any lettering, date, name, cross or emblem, on the panels or anywhere else",
+        "a statue, a bust, a portrait medallion or any figure. Reference rule 4 forbids depicting a real, identifiable person, and both men this monument honours are real; the monument itself carries no likeness of either and none may be added",
+        "a flag, a flagpole, a wreath, a cannon or any weapon",
+        "an eternal flame, a fountain or a pool",
+        "a clock, a window or a door in the shaft: it is solid"
+      ],
+      "notes": [
+        "quebec-city/wolfe-montcalm-obelisk.jpg (CC BY 2.0) is the PRIMARY reference: the monument square on,",
+        "in summer, with the garden's globe lamp beside it. quebec-city/wolfe-montcalm-monument-1901.jpg is a",
+        "public-domain photochrom of the same monument from the other side and is the check on the die, its",
+        "cornice and the stepped pedestal. Neither is in winter; the snow is the level's, not the references'.",
+        "PLACEMENT FLOOR: do not draw it below 300 px tall. DRAWING OBSERVATION, not an identification: at 150 px",
+        "tall the capstone, the die's cornice, both panels and the three stages survive; the 120 px silhouette",
+        "is a tapering spike on a stepped block, with a three-globe lamp beside it."
+      ]
+    },
+    {
+      "id": "hotel-du-parlement",
+      "subject": "The Hôtel du Parlement (Parliament Building of Québec), Québec City: the main façade and its central clock tower",
+      "renders": [
+        "src/svg/quebec-city/prop-hotel-du-parlement@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a parliament building",
+        "a legislative building",
+        "a legislature",
+        "a Second Empire government building",
+        "a government building",
+        "the Parliament Building of Québec",
+        "the Hôtel du Parlement",
+        "the National Assembly of Québec, Québec City"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY BE NAMED AND IS ASKED FOR A TYPE: a seat of government. Unlike the obelisk, the",
+        "silhouette is its own - a long Second Empire façade, two tall truncated mansards at the ends and one",
+        "clock tower in the middle - so a verifier who knows the building will name it, and the list accepts that.",
+        "It is not required, because nothing in the render but the shape says which province.",
+        "THE FAILURE TO WATCH FOR IS OTTAWA. `peace-tower` and `parliament-hill` are a parliament with a",
+        "central clock tower too. What separates them is the style, and it is drawn to be unmistakable: square",
+        "mansard roofs in grey slate, round-headed windows and niches, a squat openwork iron crown - and NO",
+        "pointed arch, NO copper-green roof and NO spire anywhere in the frame. A verifier who answers \"the",
+        "Parliament of Canada\" or \"the Centre Block\" has read the tower and not the roofs, and that is a FAIL.",
+        "\"A hotel\", \"a château\" or \"a city hall\" is a partial answer and does not pass: the second is also",
+        "this level's own `chateau-frontenac`, which is brick under steep green roofs and turrets."
+      ],
+      "referenceFiles": [
+        "quebec-city/parlement-east-facade.jpg",
+        "quebec-city/parlement-tower-from-fountain.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a tall central clock tower rising in stages to a slate mansard and an openwork iron crown",
+          "why": "It is the vertical the whole façade is organised around, and the clock is what says this is a public building rather than a palace or a hotel.",
+          "detail": "MEASURED on quebec-city/parlement-east-facade.jpg: the tower rises about 1.5 times the façade's height above the roofline, and it is about one ninth of the façade's width. The shipped art draws 1.56 and one ninth. The clock is a round white dial about a third of the tower's width, exaggerated from about a fifth, which art-bible section 5 rule 2 allows for a named feature. Round-headed openings and dark niches in pairs on the stages below it.",
+          "palette": "limestone, slate, white"
+        },
+        {
+          "feature": "two projecting end pavilions, each under a tall truncated mansard roof with iron cresting",
+          "why": "With the tower they make the three-peak skyline that is this building's silhouette at any size.",
+          "detail": "Each mansard stands on a short attic storey over the pavilion's cornice, its slopes lit on the left and shaded on the right, with one dormer, a flat top and a short run of iron cresting. Grey `slate`, not green.",
+          "palette": "slate"
+        },
+        {
+          "feature": "a long symmetrical four-storey façade in pale stone, with a mansard band and dormers, and a regular rhythm of windows, arched on the ground floor",
+          "detail": "Rhythm, not count: the wings carry five bays each where the real ones carry more. The recessed wings sit in the shadow the pavilions throw to the right, which is the one key light the game uses. Two lower pavilions with segmental pediments flank the tower.",
+          "palette": "limestone"
+        },
+        {
+          "feature": "snow on every cornice and ledge, and a snow bank at the foot",
+          "detail": "The file's bottom edge IS the level ground line.",
+          "palette": "snow"
+        }
+      ],
+      "simplifyAway": [
+        "every bronze statue in the façade's niches, and the bronze group in the niche at the foot of the tower: each is drawn as its dark recess",
+        "carving, pilasters, balustrades, the sculpture groups on the pediments and every ornament below 12 px",
+        "the flagstaffs on the tower and on both pavilions, and the flags on them",
+        "the modern entrance pavilion, its curved walls and stairs, the gardens, the lamps and the Fontaine de Tourny in front",
+        "the side wings and the courtyard behind the façade, and the office tower behind the building in the primary reference"
+      ],
+      "neverAdd": [
+        "any flag or flagstaff, and any lettering, date or coat of arms. The real tower flies Québec's flag and the flag is not drawn (OQ-ART-04 is open)",
+        "any statue or figure. The niches hold bronze figures of real, named people and reference rule 4 forbids depicting a real, identifiable person. The group at the foot of the tower depicts an Indigenous person; docs/content-review.md governs any depiction and none is made here",
+        "a pointed arch, a spire, a copper-green roof or a Gothic window. Scoped deliberately: those belong to `peace-tower` and `parliament-hill`, and this subject must not borrow from them",
+        "a dome: the tower's crown is an open iron cage, not a dome",
+        "brick, or a steep copper roof with turrets: those belong to `chateau-frontenac`, in the same level"
+      ],
+      "notes": [
+        "quebec-city/parlement-east-facade.jpg (CC0) is the PRIMARY reference: the whole main façade square on,",
+        "in autumn, which is the elevation the drawing is. quebec-city/parlement-tower-from-fountain.jpg (CC0,",
+        "same photographer) shows the tower's roof and iron crown against the sky and is the reference for them.",
+        "The stone is sampled pale warm grey and drawn in `limestone`, the same ramp as `city-wall`: it is the",
+        "city's stone, and a verifier who sees both is not seeing a duplication.",
+        "PLACEMENT FLOOR: do not draw it below 360 px wide. DRAWING OBSERVATION, not an identification: at 180",
+        "px wide the clock, the three roof peaks, the crown and the window rhythm survive; the 120 px silhouette",
+        "is a long block with a tall central tower and a steep truncated roof at each end."
+      ]
+    },
+    {
+      "id": "martello-tower",
+      "subject": "Martello Tower 1 on the Plains of Abraham (Battlefields Park), Québec City",
+      "renders": [
+        "src/svg/quebec-city/prop-martello-tower@1x.svg"
+      ],
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
+      "expectedBlindAnswer": [
+        "a Martello tower",
+        "a round stone fort",
+        "a round fort tower",
+        "a round stone tower",
+        "a fortified tower",
+        "a defensive tower",
+        "a Martello tower on the Plains of Abraham",
+        "the Plains of Abraham, Québec City"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT IS ASKED FOR A TYPE, AND THE TYPE HAS A NAME: a Martello tower. \"A round stone fort\" or",
+        "\"a defensive tower\" passes; the place is accepted and not required, because the Plains are a park and",
+        "a park cannot be drawn - this is the real feature on them that can, which is why it was chosen over a",
+        "generic field. Four Martello towers were built at Québec and three stand; this is Tower 1, which",
+        "overlooks the river from the Plains, and it is drawn as it stands today, timber upper storey included.",
+        "THE FAILURE TO WATCH FOR IS \"a lighthouse\". `peggys-cove-light` is in the same game. This tower has",
+        "no lantern, no gallery and no light: it has a squat battered drum, a timber storey, a low hipped roof",
+        "and a chimney, and it is wider than it is tall. \"A silo\", \"a water tower\" or \"a windmill\" is a FAIL."
+      ],
+      "referenceFiles": [
+        "quebec-city/martello-tower-1.jpg",
+        "quebec-city/plains-of-abraham-winter.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a squat round stone drum, battered so it is wider at the foot than at the top",
+          "why": "It is the whole type. A Martello tower is a short thick cylinder, and a tall one is a lighthouse.",
+          "detail": "MEASURED on quebec-city/martello-tower-1.jpg: the stone drum is about three quarters as tall as it is wide at the foot, and narrows by about a tenth from foot to top. The shipped art draws 218 over 290 and 262 over 290. Three tones across the drum, lit third on the left, and sparse coursing drawn as arcs that bow UP in the middle, which is how a course above the eye reads on a cylinder and what makes it round rather than flat.",
+          "palette": "path"
+        },
+        {
+          "feature": "a raised door reached only by a straight external timber stair and a railed landing on posts",
+          "why": "The raised entrance is the defensive idea of the type: nobody walks in at ground level.",
+          "detail": "A single flight rising right to left up the face of the drum, with treads, a stringer and a handrail on balusters, to a landing on two posts beside a dark door in the drum.",
+          "palette": "wood"
+        },
+        {
+          "feature": "a dark timber upper storey on the drum, under a low hipped roof with a deep eave, and a stone chimney",
+          "detail": "The storey is in the shadow of the eave, with two small white-framed windows. The roof is under snow with its slate edge showing. One stone chimney with a snow cap, left of centre.",
+          "palette": "wood, slate, snow"
+        },
+        {
+          "feature": "a small shuttered arched window in the drum, and the park's open snow and a green iron lantern lamp",
+          "detail": "The lamp is from quebec-city/plains-of-abraham-winter.jpg, which is the park in winter; the file's bottom edge IS the level ground line.",
+          "palette": "pine, snow"
+        }
+      ],
+      "simplifyAway": [
+        "the individual ashlar blocks and their mortar: four arcs are the whole coursing",
+        "the weatherboarding of the timber storey, the guttering and the downpipes",
+        "the display cannon on its pad beside the tower, the litter bins and the path",
+        "the river, the far shore and the autumn trees behind the tower in the primary reference, and the elm, the benches and the railing in the winter one"
+      ],
+      "neverAdd": [
+        "a lantern, a gallery, a light or a red band: those make it `peggys-cove-light`",
+        "crenellation, battlements, merlons, arrow slits or a flag. The tower's parapet is plain and today carries the timber storey",
+        "a cannon, a gun, a pile of shot or a soldier. The cannon in the primary reference is a display piece on a pad, not part of the tower, and a figure is never drawn",
+        "a battle, a battlefield scene or any figure: the stop is a park and the tower was built half a century after 1759",
+        "any plaque, sign or lettering"
+      ],
+      "notes": [
+        "quebec-city/martello-tower-1.jpg (CC0) is the PRIMARY reference: Tower 1 in autumn, from the landward",
+        "side, with the stair, the door landing, the timber storey, the roof and the chimney all in one frame.",
+        "quebec-city/plains-of-abraham-winter.jpg (CC0, same photographer) is the park in winter and is the",
+        "reference for the snow and the lantern lamps. The stone is a cool, nearly neutral grey and is drawn in",
+        "`path`, the palette's near-neutral ramp, rather than the warmer `limestone` of `city-wall`.",
+        "THE TOWER IS NOT FROM 1759 AND THE STOP DOES NOT SAY IT IS. It was built between 1808 and 1812 on the",
+        "ground where the 1759 battle was fought. It is drawn because it is the real, standing, recognisable",
+        "thing on the Plains; what the stop teaches is the content author's, and nothing in this drawing dates it.",
+        "PLACEMENT FLOOR: do not draw it below 280 px wide. DRAWING OBSERVATION, not an identification: at 140",
+        "px wide the stair, the door, the timber storey, the chimney and the shuttered window survive; the 120 px",
+        "silhouette is a squat tapering drum under a low roof with a chimney, and a diagonal stair on its face."
       ]
     },
     {
@@ -2291,7 +2540,7 @@
         "src/svg/shared/character/hair-crop-brown.svg",
         "src/svg/shared/character/ground-shadow.svg"
       ],
-      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from assets/style/rig-contract.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=beaver and leave every other slot at its fallback: head-skin and hair-crop ARE drawn and are then covered entirely by head-shell-beaver, which is why no pelt tone was added to the skin slot, and a composite that omits them is not what ships. Vary the expression between runs. THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for the same reason the officer's does: identical proportions cannot be judged from one figure.",
+      "renderRecipe": "A CHARACTER IS NEVER JUDGED FROM ONE FILE. Composite onto a 240 x 470 canvas: take `parts` from content/characters/rig.json in `z` order, resolve each `frame` template with the costume named below and any skin, hairShape, hairColour, headCovering, feature and expression, and draw each part at its own viewBox origin, mirroring the parts whose `mirrorX` is true about x=120. A resolved template absent from `frames` draws nothing, which is how the human artboards get no tail. The guide gets no toque a different way and the difference matters when you build the recipe: `head-covering-toque` IS in `frames`, and since `headCovering` falls back to `toque` the officer and the guide pin `headCovering: none` in their artboard `skins`. Resolve slots artboard-skins-first, then fallback, or you will hand the identifier a Mountie in a bobble hat. Every listed file is unidentifiable alone; a sleeve is a blue capsule. Use costume=beaver and leave every other slot at its fallback: head-skin and hair-crop ARE drawn and are then covered entirely by head-shell-beaver, which is why no pelt tone was added to the skin slot, and a composite that omits them is not what ships. Vary the expression between runs. THE HAND-OFF MUST CONTAIN THE PLAYER BESIDE THE GUIDE on one canvas, for the same reason the officer's does: identical proportions cannot be judged from one figure.",
       "subject": "A cartoon North American beaver, standing upright, as a companion guide",
       "expectedBlindAnswer": [
         "beaver",
@@ -3251,7 +3500,7 @@
         "src/svg/prairie-rail/ride-park-car-track@1x.svg",
         "src/svg/prairie-rail/ride-park-car@1x.svg"
       ],
-      "renderRecipe": "Composite the two at the LEVEL's own numbers: the car over the ride track, the track laid 582 px below the car's top edge, which is `track.topY` in content/levels/prairie-rail.json expressed in the car's own coordinates, and REPEATED across the car's width exactly as the level tiles it. `twoParallaxTiles({ farMatch: 'ride-park-car-track', nearMatch: 'ride-park-car@', nearTop: -582 })`; the sign is negative because the near layer (the car) begins ABOVE the far one (the track). IT WAS `singleSource()`, AND THAT IS HOW A REQUIRED FEATURE CAME TO BE AUDITED ABSENT WHILE THE ART WAS RIGHT: `mustBeRight` asks for trucks OVER A RAIL and its own detail puts the rail head on the track strip, so a render of the car ALONE can never contain one, and a blind pass read the car as floating on its own shadow. The car's wheel bottoms are at y 586 and the strip's rail head is at car y 586..598, so both trucks stand on it. The rider is still deliberately not composited: the engine draws the player BEHIND this file, seated in the dome, so the file's dome is EMPTY and this render shows the car without its passenger. The seated rider is the rig's (`train/*` in rig-contract.json) and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have; `verify-art` reports `train` as a posed mode with no subject, and that report is the true statement.",
+      "renderRecipe": "Composite the two at the LEVEL's own numbers: the car over the ride track, the track laid 582 px below the car's top edge, which is `track.topY` in content/levels/prairie-rail.json expressed in the car's own coordinates, and REPEATED across the car's width exactly as the level tiles it. `twoParallaxTiles({ farMatch: 'ride-park-car-track', nearMatch: 'ride-park-car@', nearTop: -582 })`; the sign is negative because the near layer (the car) begins ABOVE the far one (the track). IT WAS `singleSource()`, AND THAT IS HOW A REQUIRED FEATURE CAME TO BE AUDITED ABSENT WHILE THE ART WAS RIGHT: `mustBeRight` asks for trucks OVER A RAIL and its own detail puts the rail head on the track strip, so a render of the car ALONE can never contain one, and a blind pass read the car as floating on its own shadow. The car's wheel bottoms are at y 586 and the strip's rail head is at car y 586..598, so both trucks stand on it. The rider is still deliberately not composited: the engine draws the player BEHIND this file, seated in the dome, so the file's dome is EMPTY and this render shows the car without its passenger. The seated rider is the rig's (`train/*` in content/characters/rig.json) and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have; `verify-art` reports `train` as a posed mode with no subject, and that report is the true statement.",
       "expectedBlindAnswer": [
         "a passenger train car",
         "a passenger rail car",
@@ -3820,7 +4069,7 @@
       "renders": [
         "src/svg/alberta-foothills/ride-ranch-horse@1x.svg"
       ],
-      "renderRecipe": "Rasterise the file on its own at 1x with `singleSource()`. It is the behind layer of the Alberta foothills ride (ADR-0031): the engine draws the player IN FRONT of this file, astride, so this render shows the horse saddled and riderless. That is deliberate, and it is the park car's reason: the rider is the rig's (`horse/*` in rig-contract.json), and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have. `verify-art` reports `horse` as a posed mode with no subject, and that report is the true statement.",
+      "renderRecipe": "Rasterise the file on its own at 1x with `singleSource()`. It is the behind layer of the Alberta foothills ride (ADR-0031): the engine draws the player IN FRONT of this file, astride, so this render shows the horse saddled and riderless. That is deliberate, and it is the park car's reason: the rider is the rig's (`horse/*` in content/characters/rig.json), and a ride subject built with a pose would fall under the hand-off's mounted-subject rules, which require `{mode}` equipment frames that a ride by definition does not have. `verify-art` reports `horse` as a posed mode with no subject, and that report is the true statement.",
       "expectedBlindAnswer": [
         "a horse",
         "a saddled horse",
@@ -4268,7 +4517,7 @@
     {
       "id": "player-on-skates",
       "renders": [],
-      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from assets/style/rig-contract.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `skate` - the level's locomotion mode, which is not a slot - which is what makes the two skates resolve. And pose it: take `skate/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. See assets/style/rig-contract.md 11.4. JUDGE IT AT 390 px OVER THE OTTAWA CANAL (src/svg/ottawa/layer-50-canalwall.svg above src/svg/ottawa/layer-60-ice.svg, ice at world 1280, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from content/characters/rig.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from content/characters/rig.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `skate` - the level's locomotion mode, which is not a slot - which is what makes the two skates resolve. And pose it: take `skate/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. See assets/style/rig-contract.md 11.4. JUDGE IT AT 390 px OVER THE OTTAWA CANAL (src/svg/ottawa/layer-50-canalwall.svg above src/svg/ottawa/layer-60-ice.svg, ice at world 1280, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
       "subject": "A person in winter clothes skating on canal ice",
       "expectedBlindAnswer": [
         "someone ice skating",
@@ -4328,7 +4577,7 @@
     {
       "id": "player-on-a-toboggan",
       "renders": [],
-      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from assets/style/rig-contract.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `toboggan` - the level's locomotion mode, which is not a slot - which is what makes the deck and prow resolve. And pose it: take `toboggan/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE DUFFERIN TERRACE RUN (src/svg/quebec-city/layer-50-terrace.svg above src/svg/quebec-city/layer-60-slope.svg, the run at world 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from content/characters/rig.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from content/characters/rig.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `toboggan` - the level's locomotion mode, which is not a slot - which is what makes the deck and prow resolve. And pose it: take `toboggan/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE DUFFERIN TERRACE RUN (src/svg/quebec-city/layer-50-terrace.svg above src/svg/quebec-city/layer-60-slope.svg, the run at world 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
       "subject": "A person in winter clothes sitting on a wooden toboggan",
       "expectedBlindAnswer": [
         "someone on a toboggan",
@@ -4361,8 +4610,8 @@
         },
         {
           "feature": "the player matches the riders already on the level",
-          "why": "Two riders are drawn into layer-60-slope.svg seated, knees up, leaning back on flat plank toboggans. The player must be the same object in the same posture.",
-          "detail": "Same plank, same curl, same recline."
+          "why": "Three riders are drawn into layer-60-slope.svg seated, knees up, leaning back on flat plank toboggans with curled prows. The player must be the same object in the same posture.",
+          "detail": "Same plank, same curl, same recline. REDRAWN 2026-09-24 after blind run 680d44f3192feaf0 found the level's riders on a STRAIGHT upturned front and sitting upright or leaning forward while the player carried the curled prow. The contract (feature 2 here, and feature 7 of dufferin-terrace-toboggan-run: `a flat wooden deck with a curled front`) and the rig (`mount-fore-toboggan`, `toboggan/walk`) both say curled and reclined, so the riders were brought to the player and not the other way round: each rider now sits on a flat deck with the same third-of-a-turn curl drawn in front of the shins, torso reclined back from the hip, knees up and boots tucked back on the deck, one mitt at the knee."
         }
       ],
       "simplifyAway": [
@@ -4387,7 +4636,7 @@
     {
       "id": "player-on-a-bicycle",
       "renders": [],
-      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from assets/style/rig-contract.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `bike` - the level's locomotion mode, which is not a slot - which is what makes the bicycle resolve. And pose it: take `bike/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE TORONTO WATERFRONT TRAIL (src/svg/toronto/layer-40-boulevard.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from content/characters/rig.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from content/characters/rig.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `bike` - the level's locomotion mode, which is not a slot - which is what makes the bicycle resolve. And pose it: take `bike/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE TORONTO WATERFRONT TRAIL (src/svg/toronto/layer-40-boulevard.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
       "subject": "A person riding a bicycle on a waterfront trail",
       "expectedBlindAnswer": [
         "someone riding a bike",
@@ -4445,7 +4694,7 @@
     {
       "id": "player-on-a-skateboard",
       "renders": [],
-      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from assets/style/rig-contract.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from assets/style/rig-contract.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `skateboard` - the level's locomotion mode, which is not a slot - which is what makes the board resolve. And pose it: take `skateboard/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE VANCOUVER SEAWALL (src/svg/vancouver/layer-40-seawall.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
+      "renderRecipe": "BUILT FROM THE RIG CONTRACT, so `renders` is empty on purpose: scripts/lib/art-handoff.mjs composes this subject from content/characters/rig.json (its MOUNTS table names the mode, the state and the frame), and the part sources are listed in `notes` as documentation rather than as input. What the builder does, and why: A MOUNTED CHARACTER IS NEVER JUDGED FROM ONE FILE AND NEVER AT REST. Build the player composite exactly as the `player` subject's recipe says - parts from content/characters/rig.json in `z` order, costume=parka, any skin, hair and head covering - and then two things that recipe does not do. Pin the `{mode}` brace to `skateboard` - the level's locomotion mode, which is not a slot - which is what makes the board resolve. And pose it: take `skateboard/walk` from `states`, lerp the per-part `[dx, dy, rotationDegrees]` on `t`, and render MID-MOTION at t=0, not the rest pose. A rest-pose render of a mounted character is the render that passed four rounds of review while the defect was still on the phone. A pose leaves character space in every direction, so the canvas is not a fixed anchor: the builder measures one window from the rotated part windows of all four mounted poses, adds a 4 px margin, and frames all four in it, so their sole lines and crowns sit on the same rows. JUDGE IT AT 390 px OVER THE VANCOUVER SEAWALL (src/svg/vancouver/layer-40-seawall.svg at world 900, the figure’s sole line on 1280), which is where a player sees it; a cue that is 2 px on a phone is not a cue.",
       "subject": "A person riding a skateboard along a seawall path",
       "expectedBlindAnswer": [
         "someone on a skateboard",

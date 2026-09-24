@@ -4,7 +4,7 @@ Task 1.11. This is the vocabulary every TrueNorth character exposes, and the rea
 `app/application/ports/character-renderer.ts` can swap a Rive renderer for a sprite renderer without the
 calling code knowing which one it got.
 
-`assets/style/rig-contract.json` is **the same contract as data** and is the file a contract test loads.
+`content/characters/rig.json` is **the same contract as data** and is the file a contract test loads.
 This page says what each field means and why it is shaped that way. Where the two disagree, the JSON is
 right and this page is a bug.
 
@@ -656,15 +656,15 @@ an artefact nobody can audit. `sha256 7ae3e3ee7e4315fb4a1b4009f7c93baa47d816afc0
 
 ---
 
-## 9. Where this file lives, in two places
+## 9. Where this file lives
 
-`CLAUDE.md` says the contract is `content/characters/rig.json`. **It exists**, and it is a byte-for-byte
-mirror of `assets/style/rig-contract.json` except for its `$schema`, which is relative to `content/`. The
-copy under `assets/` is the one the contract test loads and the one an art change edits; the copy under
-`content/` is the one `make validate-content` walks. **They are edited together, in the same commit** — two
-live copies of one document with no gate comparing them is exactly the drift this page's own open-question
-table exists to catch, and the reason both exist is that `assets/**` is the art agent's boundary and
-`content/**` is not.
+`CLAUDE.md` says the contract is `content/characters/rig.json`, and **that is now its only copy.** It was
+authored as `assets/style/rig-contract.json` and mirrored under `content/` until ADR-0017 §7's obligation
+deleted the `assets/` copy (2026-09-23). The contract tests, the art hand-off and `make validate-content`
+all read the one file, so there is no second copy to keep in step. An art change to the rig edits
+`content/characters/rig.json`.
+
+*The rest of this section is kept as it was written, while two copies existed.*
 
 **Answered.** `content/schemas/rig.schema.json` exists (ADR-0017) and `rig-contract.json` now carries a
 `$schema` line pointing at it. `tests/unit/contracts/rig-is-coherent.test.ts` reads the contract **from
@@ -692,7 +692,8 @@ What the schema constrains, all of it already present in `rig-contract.json`:
 | `states` | `durationMs`, `loop` ∈ `loop \| once \| hold`, `keys[]` | `t` ascending, first 0 and last 1; every part named in a key is a declared part |
 | `events[]` | `name`, `when`, `use` | unique names |
 
-**What is still open** is the *duplication*, not the move. `content/characters/rig.json` exists and carries
+~~**What is still open** is the *duplication*, not the move.~~ *Closed 2026-09-23: the `assets/` copy is
+deleted; see the top of this section.* `content/characters/rig.json` exists and carries
 `"$schema": "../schemas/rig.schema.json"`; this copy carries `"../../content/schemas/rig.schema.json"`. That
 is the only difference and it is the only difference allowed. Nothing mechanically compares the two yet, so
 until something does, the rule is procedural: **an edit to one is an edit to both, in one commit.**
@@ -842,8 +843,13 @@ arithmetic, not taste, and both changed a pose:
   the 22° fold had given it, 8.3 px behind the average §4 requires, in all thirteen keys of the three `bike`
   states. `tests/unit/contracts/a-joint-bends-the-way-a-body-does.test.ts` caught it. The neck is not a pose
   decision — it is `(chest + head) / 2` per component, so it is re-derived whenever either end moves. The tobogganer's knees are up rather
-  than out, because 172 px of leg from a hip 19 px above the deck reaches about 70 px forward and no more —
-  that number is still arithmetic and still binds.
+  than out, and the pose is solved from the FEET: each boot sits flat on the deck top at the foot of the
+  curl, one ankle point in every `toboggan/*` key, and the leg is two-link IK from the hip to it with the
+  knee up — about 50 px above the hip, which is the figure the contract measures. The first pass solved
+  from the knee instead and folded the shin 180° back up the thigh, so the shins and boots vanished behind
+  the parka and blind run d821836151a20d55 read a raised straight leg with a boot hanging over the curl.
+  The near mitt rests on the near knee (arm IK to a wrist 50 px short of it along the thigh), as the three
+  riders in `quebec-city/layer-60-slope.svg` hold theirs.
 
 Three more rules that a later editor will otherwise undo:
 

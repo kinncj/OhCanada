@@ -90,6 +90,60 @@
       }
     },
     {
+      "id": "m4-asian-canadians-won-the-vote",
+      "text": {
+        "en": "In the past, most Canadians with Asian roots were not allowed to vote in federal and provincial elections. Japanese Canadians were the last of these groups to win the vote, in 1948.",
+        "fr": "Autrefois, la plupart des Canadiens d'origine asiatique n'avaient pas le droit de voter aux élections fédérales et provinciales. Les Canadiens d'origine japonaise ont été les derniers de ces groupes à obtenir le droit de vote, en 1948."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Most Canadians of Asian descent had in the past been denied the vote in federal and provincial elections. In 1948 the last of these, the Japanese- Canadians, gained the right to vote."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Most Canadians of Asian descent had in the past been denied the vote in federal and provincial elections. In 1948 the last of these, the Japanese- Canadians, gained the right to vote."
+        }
+      }
+    },
+    {
+      "id": "m4-aboriginal-people-vote-1960",
+      "text": {
+        "en": "In 1960, Aboriginal people received the right to vote.",
+        "fr": "En 1960, les peuples autochtones ont obtenu le droit de vote."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Aboriginal people were granted the vote in 1960."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Aboriginal people were granted the vote in 1960."
+        }
+      }
+    },
+    {
       "id": "m4-every-citizen-over-18-may-vote",
       "text": {
         "en": "Today, any citizen who is more than 18 years old can vote.",
@@ -113,6 +167,60 @@
           "checkedAt": "2026-09-19T14:12:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Aboriginal people were granted the vote in 1960. Today every citizen over the age of 18 may vote."
+        }
+      }
+    },
+    {
+      "id": "m4-hungarian-refugees-1956",
+      "text": {
+        "en": "Canada took in thousands of refugees who were running from Communist oppression. About 37,000 of them escaped Soviet rule in Hungary in 1956.",
+        "fr": "Le Canada a accueilli des milliers de réfugiés qui fuyaient l'oppression communiste. Environ 37 000 d'entre eux avaient échappé à la domination soviétique en Hongrie, en 1956."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada welcomed thousands of refugees from Communist oppression, including about 37,000 who escaped Soviet tyranny in Hungary in 1956."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada welcomed thousands of refugees from Communist oppression, including about 37,000 who escaped Soviet tyranny in Hungary in 1956."
+        }
+      }
+    },
+    {
+      "id": "m4-vietnamese-refugees-1975",
+      "text": {
+        "en": "In 1975, the Communists won the Vietnam War, and many Vietnamese people fled. More than 50,000 of them found refuge in Canada.",
+        "fr": "En 1975, les communistes ont gagné la guerre du Vietnam, et beaucoup de Vietnamiens ont fui. Plus de 50 000 d'entre eux ont trouvé refuge au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 48,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "With the Communist victory in the Vietnam War in 1975, many Vietnamese fled, including over 50,000 who sought refuge in Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "With the Communist victory in the Vietnam War in 1975, many Vietnamese fled, including over 50,000 who sought refuge in Canada."
         }
       }
     },

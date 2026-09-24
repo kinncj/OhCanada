@@ -239,6 +239,33 @@
       ]
     },
     {
+      "id": "read-at-the-driftwood",
+      "kind": "read",
+      "targetId": "driftwood",
+      "prompt": {
+        "en": "Stop and read at the driftwood",
+        "fr": "Arrêtez-vous pour lire au bois flotté"
+      },
+      "passages": [
+        {
+          "lesson": "regions-16-the-country-and-its-capitals",
+          "passage": "r16-second-largest-country"
+        },
+        {
+          "lesson": "regions-16-the-country-and-its-capitals",
+          "passage": "r16-three-oceans"
+        },
+        {
+          "lesson": "regions-16-the-country-and-its-capitals",
+          "passage": "r16-five-distinct-regions"
+        },
+        {
+          "lesson": "regions-16-the-country-and-its-capitals",
+          "passage": "r16-ten-provinces-three-territories"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-driftwood",
       "kind": "answer",
       "targetId": "regions",

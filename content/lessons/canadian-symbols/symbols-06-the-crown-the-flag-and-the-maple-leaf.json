@@ -1,0 +1,309 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-06-the-crown-the-flag-and-the-maple-leaf",
+  "chapter": "Canadian Symbols",
+  "order": 6,
+  "title": {
+    "en": "The Crown, the flag and the maple leaf",
+    "fr": "La Couronne, le drapeau et la feuille d'érable"
+  },
+  "passages": [
+    {
+      "id": "s6-what-symbols-do",
+      "text": {
+        "en": "Canada has many important symbols. They are things, events and people with a special meaning. Taken together, they help to show what being Canadian means, and they express who we are as a country.",
+        "fr": "Le Canada a de nombreux symboles importants. Ce sont des objets, des événements et des personnes qui ont un sens particulier. Ensemble, ils aident à montrer ce que signifie être Canadien et ils expriment notre identité nationale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 78,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada has many important symbols — objects, events, and people that have special meaning. Together they help explain what it means to be Canadian and express our national identity."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada has many important symbols — objects, events, and people that have special meaning. Together they help explain what it means to be Canadian and express our national identity."
+        }
+      }
+    },
+    {
+      "id": "s6-monarchy-since-1867",
+      "text": {
+        "en": "Since Confederation in 1867, in the reign of Queen Victoria, Canada has been a constitutional monarchy of its own.",
+        "fr": "Le Canada est une monarchie constitutionnelle à part entière depuis la Confédération, en 1867, sous le règne de la reine Victoria."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 78,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada has been a constitutional monarchy in its own right since Confederation in 1867 during Queen Victoria’s reign."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "THE CANADIAN CROWN … Canada has been a constitutional monarchy in its own right since Confederation in 1867 during Queen Victoria’s reign."
+        }
+      }
+    },
+    {
+      "id": "s6-the-crown-and-government",
+      "text": {
+        "en": "The Crown stands for government in Canada. That includes Parliament, the legislatures, the courts, the police and the Canadian Forces.",
+        "fr": "La Couronne représente le gouvernement au Canada. Cela comprend le Parlement, les assemblées législatives, les tribunaux, les services de police et les Forces canadiennes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 78,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Crown is a symbol of government, including Parliament, the legislatures, the courts, police services and the Canadian Forces."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Crown is a symbol of government, including Parliament, the legislatures, the courts, police services and the Canadian Forces."
+        }
+      }
+    },
+    {
+      "id": "s6-new-flag-1965",
+      "text": {
+        "en": "Canada's present flag went up a flagpole for the first time in 1965.",
+        "fr": "Le drapeau actuel du Canada a été hissé pour la première fois en 1965."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "A new Canadian flag was raised for the first time in 1965."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "FLAGS IN CANADA A new Canadian flag was raised for the first time in 1965. … The Canadian Red Ensign served as the Canadian flag for about 100 years."
+        }
+      }
+    },
+    {
+      "id": "s6-red-white-red-pattern",
+      "text": {
+        "en": "The flag's red, white and red design comes from the flag of the Royal Military College in Kingston. The college was founded in 1876.",
+        "fr": "Le motif rouge, blanc et rouge du drapeau vient du drapeau du Collège militaire royal de Kingston. Ce collège a été fondé en 1876."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The red-white-red pattern comes from the flag of the Royal Military College, Kingston, founded in 1876."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The red-white-red pattern comes from the flag of the Royal Military College, Kingston, founded in 1876."
+        }
+      }
+    },
+    {
+      "id": "s6-national-colours-since-1921",
+      "text": {
+        "en": "Red and white were colours of France and of England from the Middle Ages on. They have been Canada's national colours since 1921.",
+        "fr": "Le rouge et le blanc étaient des couleurs de la France et de l'Angleterre depuis le Moyen Âge. Ce sont les couleurs nationales du Canada depuis 1921."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Red and white had been colours of France and England since the Middle Ages and the national colours of Canada since 1921."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Red and white had been colours of France and England since the Middle Ages and the national colours of Canada since 1921."
+        }
+      }
+    },
+    {
+      "id": "s6-the-royal-flag",
+      "text": {
+        "en": "Canada's official Royal Flag is the Union Jack.",
+        "fr": "Le drapeau royal officiel du Canada est l'Union Jack."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Union Jack is our official Royal Flag."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "FLAGS IN CANADA … The Union Jack is our official Royal Flag."
+        }
+      }
+    },
+    {
+      "id": "s6-the-maple-leaf-best-known",
+      "text": {
+        "en": "Of all Canada's symbols, the maple leaf is the one people know best.",
+        "fr": "De tous les symboles du Canada, la feuille d'érable est celui que les gens connaissent le mieux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The maple leaf is Canada’s best-known symbol."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "THE MAPLE LEAF The maple leaf is Canada’s best-known symbol."
+        }
+      }
+    },
+    {
+      "id": "s6-maple-leaves-since-the-1700s",
+      "text": {
+        "en": "French-Canadians took up maple leaves as a symbol in the 1700s. Since the 1850s, maple leaves have been on Canadian uniforms and badges. They are also carved on the gravestones of Canada's fallen soldiers, both overseas and at home.",
+        "fr": "Les Canadiens français ont adopté la feuille d'érable comme symbole dans les années 1700. Depuis les années 1850, elle figure sur les uniformes et les insignes canadiens. Elle est aussi gravée sur les pierres tombales des soldats canadiens morts au combat, à l'étranger comme au pays."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Maple leaves were adopted as a symbol by French-Canadians in the 1700s, have appeared on Canadian uniforms and insignia since the 1850s, and are carved into the headstones of our fallen soldiers buried overseas and in Canada."
+        }
+      }
+    },
+    {
+      "id": "s6-the-fleur-de-lys",
+      "text": {
+        "en": "“Fleur-de-lys” means lily flower. The story goes that a French king made it his symbol in the year 496. For more than 1,000 years it stood for the kings of France, and for the colony of New France too.",
+        "fr": "« Fleur-de-lys » veut dire fleur de lis. On raconte qu'un roi de France en a fait son symbole en l'an 496. Pendant plus de 1 000 ans, elle a représenté la royauté française, y compris dans la colonie de la Nouvelle-France."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "It is said that the lily flower (“fleur-de-lys”) was adopted by the French king in the year 496. It became the symbol of French royalty for more than 1,000 years, including the colony of New France."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "It is said that the lily flower (“fleur-de-lys”) was adopted by the French king in the year 496. It became the symbol of French royalty for more than 1,000 years, including the colony of New France."
+        }
+      }
+    },
+    {
+      "id": "s6-quebec-flag-1948",
+      "text": {
+        "en": "Quebec took a flag of its own in 1948. Its design is built on the Cross and the fleur-de-lys.",
+        "fr": "Le Québec s'est donné son propre drapeau en 1948. Son dessin repose sur la croix et la fleur de lys."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1948 Quebec adopted its own flag, based on the Cross and the fleur-de-lys"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1948 Quebec adopted its own flag, based on the Cross and the fleur-de-lys"
+        }
+      }
+    }
+  ]
+}

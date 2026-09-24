@@ -202,6 +202,8 @@ const EN = {
   'card.finish': 'Finish',
   'card.close': 'Close',
   'card.closedNotice': 'No problem. We will ask again later.',
+  /* docs/stories/TN-TEACHBACK-read-about-this.md (ADR-0070) */
+  'card.readAbout': 'Read about this',
 
   /* docs/stories/TN-STUDY-study-mode.md */
   'study.open': 'Study',
@@ -235,6 +237,32 @@ const EN = {
   'study.exit': 'Back to the game',
   'study.leave': 'Leave',
   'study.leaveKept': 'Your answers so far are saved.',
+
+  /* docs/stories/TN-LEARN-reading-the-guide-by-chapter.md — the Learn surface
+     (ADR-0061). "Learn" and not "Read the guide": "the guide" is the beaver
+     (`TN-GUIDE`). One row per directory of `content/lessons/`, keyed by the
+     directory, holding the chapter's title as the source register prints it. */
+  'learn.open': 'Learn',
+  'learn.title': 'Learn',
+  'learn.intro':
+    'Read the citizenship study guide, one chapter at a time. There is no test here.',
+  'learn.lessons.intro': 'Choose a lesson to read.',
+  'learn.loading': 'Getting the chapter ready.',
+  'learn.error': 'We could not load this chapter. Check your connection and try again.',
+  'learn.error.retry': 'Try again',
+  'learn.chapter.empty': 'There is nothing to read in this chapter right now.',
+  'learn.chapter.the-oath-of-citizenship': 'The Oath of Citizenship',
+  'learn.chapter.rights-and-responsibilities-of-citizenship':
+    'Rights and Responsibilities of Citizenship',
+  'learn.chapter.who-we-are': 'Who We Are',
+  'learn.chapter.canadas-history': "Canada's History",
+  'learn.chapter.modern-canada': 'Modern Canada',
+  'learn.chapter.how-canadians-govern-themselves': 'How Canadians Govern Themselves',
+  'learn.chapter.federal-elections': 'Federal Elections',
+  'learn.chapter.the-justice-system': 'The Justice System',
+  'learn.chapter.canadian-symbols': 'Canadian Symbols',
+  'learn.chapter.canadas-economy': "Canada's Economy",
+  'learn.chapter.canadas-regions': "Canada's Regions",
 
   /* docs/stories/TN-EXAM-starting-and-answering.md */
   /* The practice exam, and it says **practice** on every screen that names it:
@@ -575,6 +603,16 @@ const EN = {
      listed in `COPY_GAPS`. A label, so no full stop; "behind" and not "left",
      because it is about the way the player has come, not a screen direction. */
   'hud.task.behind': 'Behind you',
+  /* ADR-0066 §2: while an offer is up the strip draws the task as a word and a
+     count, never the sentence. Written by app/ui and listed in `COPY_GAPS`; the
+     shape is the ADR's (one line in both languages, digits only after the word),
+     the words are TN-HUD's to ratify. The indicator's visible text, and its
+     accessible name — the same thing, expanded for speech, because "3/5" is read
+     aloud as a date or a fraction. */
+  'hud.task.indicator': 'Task {{n}}/{{total}}',
+  'hud.task.indicator.spoken': 'Task {{n}} of {{total}}',
+  /* The menu's line for the task in full, its permanent home (ADR-0066 §2). */
+  'hud.menu.task': 'Your task',
 
   /* docs/stories/TN-REACH-what-is-in-reach.md — what `interact-prompt` says,
      and the one-time explanation of the marks beside it.
@@ -677,6 +715,12 @@ const EN = {
   'hud.interact.village-house': 'Look at the house',
   'hud.interact.city-wall': 'Look at the wall',
   'hud.interact.terrace-kiosk': 'Look at the bandstand',
+  /* Québec City's three tier-2 stops (ADR-0065 §2), named by the thing drawn
+     as `dows-lake` is: the Plains of Abraham are drawn as Martello Tower 1, so
+     its prompt says "the tower". */
+  'hud.interact.wolfe-montcalm-monument': 'Look at the monument',
+  'hud.interact.martello-tower': 'Look at the tower',
+  'hud.interact.hotel-du-parlement': 'Look at the Parliament Building',
   'hud.interact.rideau-locks': 'Look at the locks',
   'hud.interact.library-of-parliament': 'Look at the Library',
   'hud.interact.warming-hut': 'Look at the hut',
@@ -1207,6 +1251,8 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'card.finish': 'Terminer',
   'card.close': 'Fermer',
   'card.closedNotice': 'Pas de problème. Nous reposerons la question plus tard.',
+  /* docs/stories/TN-TEACHBACK-read-about-this.md (ADR-0070) */
+  'card.readAbout': 'Lire à ce sujet',
 
   'study.open': 'Réviser',
   'study.title': 'Révision',
@@ -1244,6 +1290,32 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'study.exit': 'Retour au jeu',
   'study.leave': 'Quitter',
   'study.leaveKept': 'Vos réponses sont enregistrées.',
+
+  /* docs/stories/TN-LEARN-reading-the-guide-by-chapter.md. The chapter names
+     are *Découvrir le Canada*'s own, pending the check `OQ-LEARN-1` asks for;
+     they are not the level subtitles, which name subjects (ADR-0028). */
+  'learn.open': 'Apprendre',
+  'learn.title': 'Apprendre',
+  'learn.intro':
+    "Lisez le guide d'étude pour la citoyenneté, un chapitre à la fois. Il n'y a pas de test ici.",
+  'learn.lessons.intro': 'Choisissez une leçon à lire.',
+  'learn.loading': 'Préparation du chapitre.',
+  'learn.error':
+    "Nous n'avons pas pu charger ce chapitre. Vérifiez votre connexion et réessayez.",
+  'learn.error.retry': 'Réessayer',
+  'learn.chapter.empty': "Il n'y a rien à lire dans ce chapitre pour le moment.",
+  'learn.chapter.the-oath-of-citizenship': 'Le serment de citoyenneté',
+  'learn.chapter.rights-and-responsibilities-of-citizenship':
+    'Les droits et responsabilités liés à la citoyenneté',
+  'learn.chapter.who-we-are': 'Qui sommes-nous?',
+  'learn.chapter.canadas-history': "L'histoire du Canada",
+  'learn.chapter.modern-canada': 'Le Canada moderne',
+  'learn.chapter.how-canadians-govern-themselves': 'Comment les Canadiens se gouvernent-ils?',
+  'learn.chapter.federal-elections': 'Les élections fédérales',
+  'learn.chapter.the-justice-system': 'Le système judiciaire',
+  'learn.chapter.canadian-symbols': 'Les symboles canadiens',
+  'learn.chapter.canadas-economy': "L'économie canadienne",
+  'learn.chapter.canadas-regions': 'Les régions du Canada',
 
   'exam.open': 'Examen pratique',
   'exam.title': 'Examen pratique',
@@ -1421,6 +1493,11 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.task': 'Mission',
   /* « Derrière vous » agrees with nobody, and names the way the player came. */
   'hud.task.behind': 'Derrière vous',
+  /* « sur » and not « de » for the spoken count, as the tracker's own
+     « (0 sur 3) » already reads. */
+  'hud.task.indicator': 'Mission {{n}}/{{total}}',
+  'hud.task.indicator.spoken': 'Mission {{n}} sur {{total}}',
+  'hud.menu.task': 'Votre mission',
 
   'hud.interact.poi': 'Regarder ce lieu',
   /* « Ce qu'il y a à faire » rather than « vos missions » or « les tâches ici »:
@@ -1459,6 +1536,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.interact.village-house': 'Regarder la maison',
   'hud.interact.city-wall': 'Regarder le mur',
   'hud.interact.terrace-kiosk': 'Regarder le kiosque',
+  'hud.interact.wolfe-montcalm-monument': 'Regarder le monument',
+  'hud.interact.martello-tower': 'Regarder la tour',
+  'hud.interact.hotel-du-parlement': "Regarder l'hôtel du Parlement",
   'hud.interact.rideau-locks': 'Regarder les écluses',
   'hud.interact.library-of-parliament': 'Regarder la Bibliothèque',
   'hud.interact.warming-hut': 'Regarder la cabane',
@@ -1788,6 +1868,9 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'hud.interact.village-house',
   'hud.interact.city-wall',
   'hud.interact.terrace-kiosk',
+  'hud.interact.wolfe-montcalm-monument',
+  'hud.interact.martello-tower',
+  'hud.interact.hotel-du-parlement',
   'hud.interact.rideau-locks',
   'hud.interact.library-of-parliament',
   'hud.interact.warming-hut',
@@ -1863,6 +1946,12 @@ export const COPY_GAPS: readonly CopyKey[] = [
      Proposed rows in `TN-DONE` and `TN-HUD`. */
   'level.complete.nextOpen',
   'hud.task.behind',
+  /* ADR-0066 §2: the strip shows one job at a time. The indicator's two rows —
+     what is drawn, and what is said — and the menu's line for the task in full.
+     Proposed rows in `TN-HUD`. */
+  'hud.task.indicator',
+  'hud.task.indicator.spoken',
+  'hud.menu.task',
 ];
 
 const TABLES: Readonly<Record<UiLocale, Readonly<Record<CopyRow, string>>>> = {

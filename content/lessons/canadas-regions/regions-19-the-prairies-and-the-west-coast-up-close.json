@@ -1,0 +1,336 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-19-the-prairies-and-the-west-coast-up-close",
+  "chapter": "Canada's Regions",
+  "order": 19,
+  "title": {
+    "en": "The Prairies and the West Coast up close",
+    "fr": "Les Prairies et la côte Ouest de plus près"
+  },
+  "passages": [
+    {
+      "id": "r19-the-three-prairie-provinces",
+      "text": {
+        "en": "The three Prairie Provinces are Manitoba, Saskatchewan and Alberta.",
+        "fr": "Les trois provinces des Prairies sont le Manitoba, la Saskatchewan et l'Alberta."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces"
+        }
+      }
+    },
+    {
+      "id": "r19-portage-and-main",
+      "text": {
+        "en": "Winnipeg is the city with the most people in Manitoba. Its Exchange District has Portage and Main, the best-known street corner in Canada.",
+        "fr": "Winnipeg est la ville la plus peuplée du Manitoba. Son quartier de la Bourse comprend Portage et Main, l'intersection la plus connue du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The province’s most populous city is Winnipeg, whose Exchange District includes the most famous street intersection in Canada, Portage and Main."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … The province’s most populous city is Winnipeg, whose Exchange District includes the most famous street intersection in Canada, Portage and Main."
+        }
+      }
+    },
+    {
+      "id": "r19-st-boniface",
+      "text": {
+        "en": "St. Boniface is Winnipeg's French Quarter. It has the largest Francophone community in Western Canada.",
+        "fr": "Saint-Boniface est le quartier français de Winnipeg. On y trouve la plus grande communauté francophone de l'Ouest canadien."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community"
+        }
+      }
+    },
+    {
+      "id": "r19-manitoba-ukrainian-culture",
+      "text": {
+        "en": "Ukrainian culture has an important home in Manitoba.",
+        "fr": "La culture ukrainienne a un foyer important au Manitoba."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Manitoba is also an important centre of Ukrainian culture"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … Manitoba is also an important centre of Ukrainian culture"
+        }
+      }
+    },
+    {
+      "id": "r19-breadbasket-of-the-world",
+      "text": {
+        "en": "Saskatchewan was once called the “breadbasket of the world” and the “wheat province.”",
+        "fr": "La Saskatchewan était autrefois appelée le « grenier du monde » et la « province du blé »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,”"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,”"
+        }
+      }
+    },
+    {
+      "id": "r19-rcmp-training-academy",
+      "text": {
+        "en": "Regina, the capital of Saskatchewan, is where the Royal Canadian Mounted Police has its training academy.",
+        "fr": "C'est à Regina, la capitale de la Saskatchewan, que la Gendarmerie royale du Canada a son école de formation."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 100,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan … Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
+        }
+      }
+    },
+    {
+      "id": "r19-named-after-princess-louise",
+      "text": {
+        "en": "Alberta, and the famous Lake Louise in the Rocky Mountains, both got their names from Princess Louise Caroline Alberta. She was the fourth daughter of Queen Victoria.",
+        "fr": "L'Alberta, ainsi que le célèbre lac Louise dans les Rocheuses, tiennent tous deux leur nom de la princesse Louise Caroline Alberta. Elle était la quatrième fille de la reine Victoria."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
+        }
+      }
+    },
+    {
+      "id": "r19-banff-national-park",
+      "text": {
+        "en": "Alberta has five national parks. One of them is Banff National Park, which was created in 1885.",
+        "fr": "L'Alberta compte cinq parcs nationaux. L'un d'eux est le parc national Banff, créé en 1885."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Alberta has five national parks, including Banff National Park, established in 1885."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … Alberta has five national parks, including Banff National Park, established in 1885."
+        }
+      }
+    },
+    {
+      "id": "r19-the-badlands",
+      "text": {
+        "en": "Alberta's rough Badlands hold some of the richest beds of prehistoric fossils and dinosaur remains in the world.",
+        "fr": "Les badlands accidentés de l'Alberta renferment certains des plus riches gisements au monde de fossiles préhistoriques et de restes de dinosaures."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 101,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
+        }
+      }
+    },
+    {
+      "id": "r19-pacific-gateway",
+      "text": {
+        "en": "British Columbia is known for its grand mountains, and as Canada's gateway to the Pacific.",
+        "fr": "La Colombie-Britannique est connue pour ses montagnes majestueuses et comme la porte du Canada sur le Pacifique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway."
+        }
+      }
+    },
+    {
+      "id": "r19-mild-climate-on-the-bc-coast",
+      "text": {
+        "en": "Warm air blowing in from the Pacific Ocean gives the coast of British Columbia a mild climate.",
+        "fr": "L'air chaud qui vient de l'océan Pacifique donne à la côte de la Colombie-Britannique un climat tempéré."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Warm airstreams from the Pacific Ocean give the B.C. coast a temperate climate."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Warm airstreams from the Pacific Ocean give the B.C. coast a temperate climate."
+        }
+      }
+    },
+    {
+      "id": "r19-victoria-and-the-pacific-fleet",
+      "text": {
+        "en": "Victoria, the capital of British Columbia, is a tourist centre. It is also the headquarters of the navy's Pacific fleet.",
+        "fr": "Victoria, la capitale de la Colombie-Britannique, est un centre touristique. C'est aussi le quartier général de la flotte du Pacifique de la marine."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 102,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The capital, Victoria, is a tourist centre and headquarters of the navy’s Pacific fleet."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "British Columbia … The capital, Victoria, is a tourist centre and headquarters of the navy’s Pacific fleet."
+        }
+      }
+    }
+  ]
+}

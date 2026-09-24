@@ -15,9 +15,9 @@
   <polygon points="329,105 335,103 543,585 537,587" fill="#cbd2da"/>
   <polygon points="329,106 335,102 613,584 607,588" fill="#cbd2da"/>
   <polygon points="329,106 335,102 693,584 687,588" fill="#cbd2da"/>
-  <polygon points="329,103 335,105 153,587 147,585" fill="#cbd2da"/>
-  <polygon points="329,102 335,106 69,588 63,584" fill="#cbd2da"/>
-  <polygon points="329,102 335,106 9,588 3,584" fill="#cbd2da"/>
+  <polygon points="329,103 335,105 179,587 173,585" fill="#cbd2da"/>
+  <polygon points="329,103 335,105 135,587 129,585" fill="#cbd2da"/>
+  <polygon points="329,103 335,105 91,587 85,585" fill="#cbd2da"/>
   <path d="M 322 96 L 348 96 L 236 598 L 196 598 Z" fill="#f0f2f5"/>
   <path d="M 322 96 L 336 96 L 218 598 L 196 598 Z" fill="#ffffff"/>
   <path d="M 318 62 L 356 62 L 352 100 L 316 100 Z" fill="#f0f2f5"/>

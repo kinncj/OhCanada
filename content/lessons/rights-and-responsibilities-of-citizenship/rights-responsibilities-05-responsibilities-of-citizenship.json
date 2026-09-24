@@ -1,0 +1,255 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "rights-responsibilities-05-responsibilities-of-citizenship",
+  "chapter": "Rights and Responsibilities of Citizenship",
+  "order": 4,
+  "title": {
+    "en": "The responsibilities of citizenship",
+    "fr": "Les responsabilités des citoyens"
+  },
+  "passages": [
+    {
+      "id": "rr5-rights-bring-responsibilities",
+      "text": {
+        "en": "In Canada, having rights also means having responsibilities.",
+        "fr": "Au Canada, avoir des droits veut aussi dire avoir des responsabilités."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In Canada, rights come with responsibilities."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada, rights come with responsibilities."
+        }
+      }
+    },
+    {
+      "id": "rr5-rule-of-law-is-a-founding-principle",
+      "text": {
+        "en": "The first responsibility is to obey the law. The rule of law is one of the principles Canada was founded on.",
+        "fr": "La première responsabilité est de respecter la loi. La primauté du droit est l'un des principes sur lesquels le Canada a été fondé."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Obeying the law — One of Canada’s founding principles is the rule of law."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada, rights come with responsibilities. These include: • Obeying the law — One of Canada’s founding principles is the rule of law."
+        }
+      }
+    },
+    {
+      "id": "rr5-laws-not-whims",
+      "text": {
+        "en": "Both people and governments are bound by laws. They are not ruled by decisions that someone makes on a whim.",
+        "fr": "Les personnes comme les gouvernements sont soumis aux lois. Ils ne sont pas gouvernés par des décisions que quelqu'un prend selon son bon plaisir."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Individuals and governments are regulated by laws and not by arbitrary actions."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "• Obeying the law — One of Canada’s founding principles is the rule of law. Individuals and governments are regulated by laws and not by arbitrary actions."
+        }
+      }
+    },
+    {
+      "id": "rr5-no-one-above-the-law",
+      "text": {
+        "en": "No single person, and no group, stands above the law.",
+        "fr": "Aucune personne, et aucun groupe, n'est au-dessus de la loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "No person or group is above the law."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "• Obeying the law — One of Canada’s founding principles is the rule of law. Individuals and governments are regulated by laws and not by arbitrary actions. No person or group is above the law."
+        }
+      }
+    },
+    {
+      "id": "rr5-work-and-family",
+      "text": {
+        "en": "Another responsibility is to take care of yourself and your family. Having a job, looking after your family and working hard as well as you are able are important values in Canada.",
+        "fr": "Une autre responsabilité est de prendre soin de soi et de sa famille. Avoir un emploi, s'occuper de sa famille et travailler fort selon ses capacités sont des valeurs importantes au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Getting a job, taking care of one’s family and working hard in keeping with one’s abilities are important Canadian values."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "• Taking responsibility for oneself and one’s family — Getting a job, taking care of one’s family and working hard in keeping with one’s abilities are important Canadian values."
+        }
+      }
+    },
+    {
+      "id": "rr5-why-work-matters",
+      "text": {
+        "en": "Work gives a person dignity and self-respect, and it helps Canada prosper.",
+        "fr": "Le travail donne à une personne de la dignité et le respect de soi, et il aide le Canada à prospérer."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Work contributes to personal dignity and self-respect, and to Canada’s prosperity."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Work contributes to personal dignity and self-respect, and to Canada’s prosperity."
+        }
+      }
+    },
+    {
+      "id": "rr5-jury-duty-is-required",
+      "text": {
+        "en": "If you are called to serve on a jury, the law says you must do it.",
+        "fr": "Si vous êtes appelé à faire partie d'un jury, la loi vous oblige à le faire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Serving on a jury — When called to do so, you are legally required to serve."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Serving on a jury — When called to do so, you are legally required to serve."
+        }
+      }
+    },
+    {
+      "id": "rr5-juries-make-justice-work",
+      "text": {
+        "en": "Serving on a jury is a privilege. The justice system needs juries of citizens who judge fairly, without taking sides. That is what makes the system work.",
+        "fr": "Faire partie d'un jury est un privilège. Le système de justice a besoin de jurys formés de citoyens qui jugent de façon équitable, sans prendre parti. C'est ce qui permet au système de fonctionner."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 13,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Serving on a jury is a privilege that makes the justice system work as it depends on impartial juries made up of citizens."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Serving on a jury is a privilege that makes the justice system work as it depends on impartial juries made up of citizens."
+        }
+      }
+    },
+    {
+      "id": "rr5-responsibility-to-vote",
+      "text": {
+        "en": "The right to vote brings a responsibility with it: to vote in federal elections, in provincial or territorial elections, and in local elections.",
+        "fr": "Le droit de vote s'accompagne d'une responsabilité : voter aux élections fédérales, aux élections provinciales ou territoriales, et aux élections locales."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Rights and Responsibilities of Citizenship",
+          "page": 14,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Voting in elections — The right to vote comes with a responsibility to vote in federal, provincial or territorial and local elections."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Voting in elections — The right to vote comes with a responsibility to vote in federal, provincial or territorial and local elections."
+        }
+      }
+    }
+  ]
+}

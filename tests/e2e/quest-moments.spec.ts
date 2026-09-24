@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { finishedSave, oneAnswerFromDoneSave, seed } from './saves';
 import { START_LEVEL } from './start-level';
 import { walkInLegs } from './walk';
@@ -298,9 +299,12 @@ test.describe('a quest giver speaks at the moments a step cannot', () => {
     await page.getByTestId('dialogue-accept').click();
     await expect(page.getByTestId('dialogue')).toBeHidden();
 
-    const tracker = page.getByTestId('hud-quest-tracker');
+    /* Still at the giver, so the strip draws the count and the menu holds the
+       sentence (ADR-0066 §2). */
+    const tracker = page.getByTestId('menu-task');
     const stepStem = (step.prompt.en.split('(')[0] ?? step.prompt.en).trim();
     await expect(tracker).toContainText(stepStem);
+    await expect(page.getByTestId('hud-task-indicator')).toBeVisible();
 
     /* Still standing by the giver, whose prompt now says it was engaged. */
     await page.getByTestId('interact-prompt').click();
@@ -396,6 +400,7 @@ test.describe('a quest giver speaks at the moments a step cannot', () => {
 
     await expect(page.getByTestId('poi-card')).toBeVisible();
     await page.getByTestId('poi-card-close').click();
+    await closeTheReaderIfItOpens(page);
 
     const question = page.getByTestId('question-card');
     await expect(question, 'the landmark asked nothing, so no answer could finish the task')

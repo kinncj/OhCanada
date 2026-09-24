@@ -68,8 +68,8 @@
  * DOM only (ADR-0005): no adapters, no scenes.
  */
 
-import { labelled, text, type UiLocale } from './copy';
-import { button, element } from './dom';
+import { formatNumber, labelled, text, type UiLocale } from './copy';
+import { button, element, replaceChildren } from './dom';
 import { createMenu, type Menu } from './menu';
 import { injectScreenStyles } from './screen-styles';
 import { createSwitchRing, type SwitchRing } from './single-switch';
@@ -107,6 +107,17 @@ export interface HudOptions {
   readonly canvasHost?: HTMLElement;
 }
 
+/**
+ * Where the task is in its quest: step `number` of `of`, both counted from one.
+ *
+ * What the bounded indicator draws while an offer holds the strip (ADR-0066 §2):
+ * a fixed word and this count, and nothing a content author can lengthen.
+ */
+export interface TaskPosition {
+  readonly number: number;
+  readonly of: number;
+}
+
 /** How a task line arrives in the strip. */
 export interface TaskOptions {
   /**
@@ -120,6 +131,12 @@ export interface TaskOptions {
    * announced once, as it always was.
    */
   readonly announce?: boolean;
+  /**
+   * Which step of how many this task is. Drawn only while an offer is up, as
+   * "Task 3/5" in place of the sentence (ADR-0066 §2). Absent draws the word
+   * alone, which is still one line and still says a task is running.
+   */
+  readonly position?: TaskPosition;
 }
 
 export interface Hud {
@@ -133,8 +150,15 @@ export interface Hud {
   /** `hud-mode-label`: "Skating" / « Patinage ». Already localised. */
   setMode(label: string): void;
   /**
-   * `hud-quest-tracker`. `null` removes it: there is no task (`TN-HUD-01`).
-   * A line that changes is announced once, unless `options.announce` is `false`.
+   * The task. `null` removes it: there is no task (`TN-HUD-01`). A line that
+   * changes is announced once, in full, unless `options.announce` is `false`.
+   *
+   * **The strip shows one job at a time** (ADR-0066 §2). With nothing in reach
+   * the sentence is drawn in full as `hud-quest-tracker`. While an offer is up
+   * the offer is drawn in full and the task collapses to `hud-task-indicator`,
+   * "Task 3/5", whose accessible name says the same thing expanded for speech
+   * ("Task 3 of 5") and never the hidden sentence. The menu draws the sentence
+   * in full whenever there is one, whatever is in reach.
    */
   setTask(step: string | null, options?: TaskOptions): void;
   /**
@@ -206,6 +230,9 @@ export interface Hud {
 
 const MAIN_ID = 'tn-main';
 
+/** The attribute the stylesheet places the canvas host by (ADR-0072). */
+const CANVAS_ATTRIBUTE = 'data-tn-canvas';
+
 export function createHud(host: HTMLElement, options: HudOptions): Hud {
   const doc = host.ownerDocument;
   injectScreenStyles(doc);
@@ -213,6 +240,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   let locale = options.locale;
   let mode = '';
   let task: string | null = null;
+  let taskPosition: TaskPosition | null = null;
   let promptLabel: string | null = null;
   let hint: string | null = null;
   let notice: string | null = null;
@@ -232,6 +260,13 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
   if (options.canvasHost !== undefined && options.canvasHost.parentElement !== main) {
     main.append(options.canvasHost);
   }
+  /*
+   * Named for the stylesheet, so that with the dyslexia face on the canvas can
+   * sit at the top of its space and the taller strip stays below the player
+   * (ADR-0072). An attribute and nothing else: the HUD never measures or moves
+   * the canvas itself, and the engine refits it to its host as it always does.
+   */
+  options.canvasHost?.setAttribute(CANVAS_ATTRIBUTE, 'level');
 
   const modeLabel = element(doc, 'p', {
     testId: 'hud-mode-label',
@@ -500,21 +535,38 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     options.announce?.(message, locale);
   }
 
+  /**
+   * The task row: the sentence in full, or the bounded indicator while an offer
+   * is up (ADR-0066 §2). Never both, and the menu's line is kept in step here
+   * because it is the task's permanent home.
+   *
+   * Removed, not hidden, whichever of the two is not drawn: `TN-HUD-01`, "the
+   * tracker appears only when there is a task". A hidden tracker is one
+   * stylesheet away from being visible and one screen reader away from being
+   * read.
+   */
   function renderTask(): void {
+    menu.setTask(task);
     const existing = trackerElement();
+    const indicator = indicatorElement();
     if (task === null) {
-      /* Removed, not hidden: `TN-HUD-01`, "the tracker appears only when there
-         is a task". A hidden tracker is one stylesheet away from being visible
-         and one screen reader away from being read. */
       existing?.remove();
+      indicator?.remove();
       return;
     }
+    if (promptLabel !== null) {
+      existing?.remove();
+      renderIndicator(indicator);
+      return;
+    }
+    indicator?.remove();
     const wording = labelled(locale, text(locale, 'hud.task'), task);
     if (existing !== null) {
       existing.textContent = wording;
       return;
     }
-    taskSlot.append(
+    /* First in the slot, so the cue, when there is one, follows it. */
+    taskSlot.prepend(
       element(doc, 'p', {
         testId: 'hud-quest-tracker',
         className: 'tn-hud__task',
@@ -523,8 +575,62 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     );
   }
 
+  /**
+   * "Task 3/5" / « Mission 3/5 »: a fixed word and a count, one line in either
+   * language, and nothing in it comes from `content/` (ADR-0066 §2).
+   *
+   * Two spans rather than an `aria-label`. The visible words are hidden from
+   * assistive technology and a visually hidden twin says them expanded for
+   * speech — "Task 3 of 5" — because "3/5" is read aloud as a date or a fraction
+   * depending on the reader. Both say the same thing; neither carries the task
+   * sentence, which a sighted player cannot see here either (ADR-0066 §2, TN-REACH:
+   * the same information for everybody). An `aria-label` on a paragraph would
+   * also be a name on a role that prohibits one.
+   */
+  function renderIndicator(existing: HTMLElement | null): void {
+    const shown =
+      taskPosition === null
+        ? text(locale, 'hud.task')
+        : text(locale, 'hud.task.indicator', {
+            n: formatNumber(locale, taskPosition.number),
+            total: formatNumber(locale, taskPosition.of),
+          });
+    const spoken =
+      taskPosition === null
+        ? text(locale, 'hud.task')
+        : text(locale, 'hud.task.indicator.spoken', {
+            n: formatNumber(locale, taskPosition.number),
+            total: formatNumber(locale, taskPosition.of),
+          });
+    const visible = element(doc, 'span', {
+      testId: 'hud-task-indicator-text',
+      text: shown,
+      attrs: { 'aria-hidden': 'true' },
+    });
+    const name = element(doc, 'span', {
+      testId: 'hud-task-indicator-name',
+      className: 'tn-hud__spoken',
+      text: spoken,
+    });
+    if (existing !== null) {
+      replaceChildren(existing, [visible, name]);
+      return;
+    }
+    taskSlot.prepend(
+      element(doc, 'p', {
+        testId: 'hud-task-indicator',
+        className: 'tn-hud__task tn-hud__task--indicator',
+        children: [visible, name],
+      }),
+    );
+  }
+
   function trackerElement(): HTMLElement | null {
     return taskSlot.querySelector<HTMLElement>('[data-testid="hud-quest-tracker"]');
+  }
+
+  function indicatorElement(): HTMLElement | null {
+    return taskSlot.querySelector<HTMLElement>('[data-testid="hud-task-indicator"]');
   }
 
   /**
@@ -534,7 +640,9 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
    */
   function renderTaskCue(): void {
     const existing = taskSlot.querySelector<HTMLElement>('[data-testid="hud-task-cue"]');
-    if (task === null || taskCue === null) {
+    /* The cue belongs to the full row and is not drawn beside the indicator
+       (ADR-0066 §2). It was said once when it became true, and that stands. */
+    if (task === null || taskCue === null || promptLabel !== null) {
       existing?.remove();
       return;
     }
@@ -663,11 +771,16 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
     },
 
     setTask(step, options): void {
-      if (step === task) return;
+      const position = step === null ? null : (options?.position ?? null);
+      const moved =
+        position?.number !== taskPosition?.number || position?.of !== taskPosition?.of;
+      if (step === task && !moved) return;
+      const changed = step !== task;
       task = step;
+      taskPosition = position;
       renderTask();
       renderTaskCue();
-      if (step !== null && options?.announce !== false) {
+      if (changed && step !== null && options?.announce !== false) {
         say(labelled(locale, text(locale, 'hud.task'), step));
       }
     },
@@ -687,6 +800,11 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       if (label === promptLabel) return;
       promptLabel = label;
       renderPrompt();
+      /* The offer and the task take turns (ADR-0066 §2): an offer arriving
+         collapses the task to its indicator, and one withdrawn gives the
+         sentence back, cue and all. Drawn, not said — the task has not changed. */
+      renderTask();
+      renderTaskCue();
       /* The offer arriving or being withdrawn changes the ring, and it is the
          one item in it that comes and goes. An offer that appeared while the
          highlight was on Menu leaves it on Menu: `refresh` follows the item, not
@@ -773,6 +891,7 @@ export function createHud(host: HTMLElement, options: HudOptions): Hud {
       menu.destroy();
       warning.destroy();
       region.remove();
+      options.canvasHost?.removeAttribute(CANVAS_ATTRIBUTE);
     },
   };
 }

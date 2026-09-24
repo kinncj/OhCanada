@@ -947,15 +947,6 @@
       "modifications": "Original work. Authored to the proportion canon in assets/style/art-bible.md §7 and the slot vocabulary in assets/style/rig-contract.md; every fill and stroke is a colour id from assets/style/palette.json."
     },
     {
-      "path": "style/rig-contract.json",
-      "kind": "shipped",
-      "title": "TrueNorth character rig contract (machine-readable)",
-      "author": "TrueNorth contributors",
-      "licence": "CC-BY-4.0",
-      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/style/rig-contract.md",
-      "modifications": "Original work. The data form of assets/style/rig-contract.md: artboards, state-machine inputs, skin slots, expressions, events, parts and part windows. Its home is content/characters/rig.json once a rig schema exists; the schema fields it needs are listed in section 9 of rig-contract.md and are requested, not assumed."
-    },
-    {
       "path": "style/rig-contract.riv",
       "kind": "shipped",
       "title": "TrueNorth character rig contract fixture (Rive)",
@@ -1053,6 +1044,60 @@
       "licence": "CC-BY-3.0",
       "source": "https://commons.wikimedia.org/wiki/File:Quebec_Ramparts.JPG",
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/wolfe-montcalm-obelisk.jpg",
+      "kind": "reference",
+      "title": "The Wolfe and Montcalm obelisk in the Governors' Garden, Quebec City, square on with the garden's globe lamp",
+      "author": "Derek Hatfield",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Wolfe_and_Montcalm_Obelisk.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/wolfe-montcalm-monument-1901.jpg",
+      "kind": "reference",
+      "title": "Wolfe and Montcalm Monument, Quebec - photochrom, Detroit Photographic Co., 1901 (Library of Congress)",
+      "author": "Detroit Photographic Co.",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Wolfe_and_Montcalm_monument,_Quebec-LCCN2008678140.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/parlement-east-facade.jpg",
+      "kind": "reference",
+      "title": "The Parliament Building of Quebec (Hotel du Parlement), main facade square on",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Assembl%C3%A9e_nationale_du_Qu%C3%A9bec,_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/parlement-tower-from-fountain.jpg",
+      "kind": "reference",
+      "title": "The Parliament Building of Quebec - the central tower, its roof and iron crown, from the Fontaine de Tourny",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fountain_in_front_of_the_Parliament_Building_of_Quebec.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/martello-tower-1.jpg",
+      "kind": "reference",
+      "title": "Martello Tower 1 on the Plains of Abraham, Quebec City - drum, external stair, timber storey and chimney",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Martello_Tower_1.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/plains-of-abraham-winter.jpg",
+      "kind": "reference",
+      "title": "The Plains of Abraham, Quebec City, in winter - open snow and the park's lantern lamps",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Plains_of_Abraham.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
     },
     {
       "path": "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg",
@@ -1872,6 +1917,33 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/ground-snowbank@1x.svg",
       "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Uses the packed-snow lane, straight level runner streaks and divider ridges that assets/style/quebec-city-level.md section 7 sets for the run. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-wolfe-montcalm-monument@1x.svg",
+      "kind": "shipped",
+      "title": "The Wolfe and Montcalm monument - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-wolfe-montcalm-monument@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/wolfe-montcalm-obelisk.jpg, checked against wolfe-montcalm-monument-1901.jpg, under the rules in assets/style/art-bible.md; never traced. Both inscription panels are drawn blank: this project draws no lettering. The @1x suffix pins the source to one scale; the key quebec-city-prop-wolfe-montcalm-monument carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 360 x 600 and passed at both probes; at 2x it would cost 3.30 MiB of decoded texture instead of 0.82 MiB."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-hotel-du-parlement@1x.svg",
+      "kind": "shipped",
+      "title": "The Hotel du Parlement, Quebec City - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-hotel-du-parlement@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/parlement-east-facade.jpg, with the tower's roof and crown from parlement-tower-from-fountain.jpg, under the rules in assets/style/art-bible.md; never traced. No flag and no figure: the bronze statues in the niches are drawn as their dark recesses. The @1x suffix pins the source to one scale; the key quebec-city-prop-hotel-du-parlement carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 720 x 520 and passed at both probes; at 2x it would cost 5.71 MiB of decoded texture instead of 1.43 MiB."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-martello-tower@1x.svg",
+      "kind": "shipped",
+      "title": "Martello Tower 1 on the Plains of Abraham - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-martello-tower@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/martello-tower-1.jpg, with the snow and the lantern lamp from plains-of-abraham-winter.jpg, under the rules in assets/style/art-bible.md; never traced. The display cannon beside the real tower is not drawn. The @1x suffix pins the source to one scale; the key quebec-city-prop-martello-tower carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 440 and passed at both probes; at 2x it would cost 3.76 MiB of decoded texture instead of 0.94 MiB."
     },
     {
       "path": "src/svg/ottawa/ground-canal-bank@1x.svg",
@@ -2871,6 +2943,42 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/icons/truenorth-app-icon.svg",
       "modifications": "Original work, drawn for slice F3 (ADR-0034). Depicts no place, person or national emblem, so no reference applies. Palette colours only, linted by scripts/lib/pwa.mjs. Rasterised at build to 180, 192 and 512 px PNG for the web app manifest and the iOS home-screen icon; the star and the crest of the hills sit inside the maskable safe zone, so one drawing serves both icon purposes."
+    },
+    {
+      "path": "src/fonts/atkinson-hyperlegible/AtkinsonHyperlegible-Regular.woff2",
+      "kind": "shipped",
+      "title": "Atkinson Hyperlegible Regular (the UI text face, 400)",
+      "author": "Braille Institute of America, Inc.",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/googlefonts/atkinson-hyperlegible/blob/1cb311624b2ddf88e9e37873999d165a8cd28b46/fonts/webfonts/AtkinsonHyperlegible-Regular.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 2df4ba17804bc7a36f123127966075d8427bff2df58d0d76820c1130bb1a4150). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/atkinson-hyperlegible/AtkinsonHyperlegible-Bold.woff2",
+      "kind": "shipped",
+      "title": "Atkinson Hyperlegible Bold (the UI text face, 700)",
+      "author": "Braille Institute of America, Inc.",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/googlefonts/atkinson-hyperlegible/blob/1cb311624b2ddf88e9e37873999d165a8cd28b46/fonts/webfonts/AtkinsonHyperlegible-Bold.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 da8fce41a04f8498fbf79076f92d304b12e70c76f71b143c5dcfb6536c93c075). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/opendyslexic/OpenDyslexic-Regular.woff2",
+      "kind": "shipped",
+      "title": "OpenDyslexic Regular (the dyslexia face, 400; Reserved Font Name \"OpenDyslexic\")",
+      "author": "Abbie Gonzalez",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/antijingoist/opendyslexic/blob/1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7/compiled/OpenDyslexic-Regular.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 0441bc21071e42db57c217f93fbc48d3b55a2987c02814c94dc93621c42e8695). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/opendyslexic/OpenDyslexic-Bold.woff2",
+      "kind": "shipped",
+      "title": "OpenDyslexic Bold (the dyslexia face, 700; Reserved Font Name \"OpenDyslexic\")",
+      "author": "Abbie Gonzalez",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/antijingoist/opendyslexic/blob/1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7/compiled/OpenDyslexic-Bold.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 b534a0b84ef3cca941ebdb506ce3f4e0010aa4ef881271bac8b6959dbf694fbf). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
     }
   ]
 }

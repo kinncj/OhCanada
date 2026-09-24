@@ -59,9 +59,9 @@ import {
   type AffordanceMark,
   type AffordanceSubject,
 } from './interaction-affordance';
-import { placeSilhouette, silhouetteFromRgba, type ArtSilhouette } from './art-silhouette';
-import { figureSilhouette } from './figure-extent';
-import { restingHeadBoxes } from './mark-clearance';
+import { placeSilhouette, silhouetteBounds, silhouetteFromRgba, type ArtSilhouette } from './art-silhouette';
+import { figureSilhouette, type FigureBox } from './figure-extent';
+import { markClearance, playerStandingFigure, restingHeadBoxes, walkingFigureBoxes } from './mark-clearance';
 import {
   MAX_PHASE_STEP,
   PHASE_REFRESH_MS,
@@ -509,7 +509,7 @@ export class LevelScene extends Phaser.Scene {
     readonly rect: TargetRect;
     /** Where inside `rect` the art is, for the mark to point at (ADR-0049). */
     readonly art: ArtSilhouette | null;
-    /** The player's head wherever a stop holds them here, for the mark to keep off. */
+    /** What the mark keeps off: the player at a stop here and wherever they walk, and every other character. */
     readonly clear: readonly TargetRect[];
   }[] = [];
   /**
@@ -528,6 +528,10 @@ export class LevelScene extends Phaser.Scene {
    * top edge is not the art, and a mark placed over one floated in empty sky.
    */
   readonly #drawnArt = new Map<string, ArtSilhouette>();
+  /** The player's standing figure about their feet, for the probe's mark-on-actor count. */
+  #playerFigure: FigureBox | null = null;
+  /** Where each placed character's art was drawn, for the same count. */
+  #actorBoxes: readonly TargetRect[] = [];
   /**
    * The ride's art in each texture it shows at rest, in its own pixels, a band
    * per column: what a stop reads to keep a ride off a character's feet
@@ -1139,6 +1143,7 @@ export class LevelScene extends Phaser.Scene {
         facing: this.#state.facing,
         intentMove: intent.move,
         cameraX: this.#camera.x,
+        marksOnActors: this.#marksOnActors(),
       });
       probe.publish({
         ...this.#characterModeSnapshot(),
@@ -1697,22 +1702,48 @@ export class LevelScene extends Phaser.Scene {
       ride: this.#ride,
       rideArt: this.#rideSilhouettes,
     });
-    /* Where the player's head is while each of those stops holds them, so no
-       mark is drawn on it (ADR-0049, `mark-clearance.ts`). */
-    const heads = restingHeadBoxes({
-      ground: level.ground,
-      subjects: this.#stopSubjects,
-      rig: this.#options.rig,
-      tuning: this.#tuning,
-      ride: this.#ride,
-    });
+    /* What no mark may be drawn on (ADR-0049, `mark-clearance.ts`): the player's
+       head while each of those stops holds them, the player wherever they can
+       walk, crown to soles, and every other character standing in the level. */
+    const artRect = (id: string, position: Vec2): TargetRect => {
+      const drawn = this.#drawnArt.get(id);
+      const bounds = drawn === undefined ? null : silhouetteBounds(drawn);
+      return bounds === null
+        ? rectFor(id, position)
+        : { x: bounds.left, y: bounds.top, width: bounds.right - bounds.left, height: bounds.bottom - bounds.top };
+    };
+    const actors = level.characters.map((character) => ({
+      id: character.characterId as string,
+      rect: artRect(character.characterId as string, character.position),
+    }));
+    this.#actorBoxes = actors.map((actor) => actor.rect);
+    this.#playerFigure = playerStandingFigure(this.#options.rig, this.#tuning.mode);
+    const clearance = markClearance(
+      [...level.reachablePois.map((poi) => poi.id as string), ...level.characters.map((c) => c.characterId as string)],
+      {
+        resting: restingHeadBoxes({
+          ground: level.ground,
+          subjects: this.#stopSubjects,
+          rig: this.#options.rig,
+          tuning: this.#tuning,
+          ride: this.#ride,
+        }),
+        walking: walkingFigureBoxes({
+          ground: level.ground,
+          rig: this.#options.rig,
+          tuning: this.#tuning,
+          ride: this.#ride,
+        }),
+        actors,
+      },
+    );
     const target = (id: string, position: Vec2, npc: boolean) => ({
       id,
       position,
       npc,
       rect: rectFor(id, position),
       art: this.#drawnArt.get(id) ?? null,
-      clear: heads.get(id) ?? [],
+      clear: clearance.get(id) ?? [],
     });
     this.#reachTargets = [
       ...level.reachablePois.map((poi) => target(poi.id as string, poi.position, false)),
@@ -3121,6 +3152,35 @@ export class LevelScene extends Phaser.Scene {
       if (!visible) continue;
       if (entry.mark.state === 'ready') entry.object.setScale(pulse);
     }
+  }
+
+  /**
+   * How many marks on screen overlap a character this frame: the player's
+   * standing figure where they stand, or a placed character's art. Probe only —
+   * called behind `?e2e=1` — and zero while the player is off the ground, where
+   * a jump may pass through a mark. `mark-clearance.ts` is why it is zero.
+   */
+  #marksOnActors(): number {
+    const figure = this.#playerFigure;
+    const player: TargetRect | null =
+      figure === null || !this.#state.grounded
+        ? null
+        : { x: this.#state.x + figure.x, y: this.#riderY + figure.y, width: figure.width, height: figure.height };
+    const boxes = player === null ? this.#actorBoxes : [player, ...this.#actorBoxes];
+    let count = 0;
+    for (const entry of this.#marks.values()) {
+      if (!entry.object.visible) continue;
+      const extent = markExtent(entry.mark);
+      const hit = boxes.some(
+        (box) =>
+          extent.x < box.x + box.width &&
+          box.x < extent.x + extent.width &&
+          extent.y < box.y + box.height &&
+          box.y < extent.y + extent.height,
+      );
+      if (hit) count += 1;
+    }
+    return count;
   }
 
   /** How many things are advertised as tappable, and how many are in reach. */

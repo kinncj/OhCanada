@@ -66,7 +66,10 @@
  *     difference and forced-colours mode.
  */
 
+import { DYSLEXIA_STACK, UI_STACK } from '@common/type-faces';
+
 import { PALETTE } from './palette';
+import { injectTypeFaces } from './type-faces';
 
 const STYLE_ID = 'tn-screen-style';
 
@@ -146,7 +149,7 @@ const CSS = `
 
 [data-tn-font="dyslexia"] .tn-screen,
 [data-tn-font="dyslexia"] .tn-hud {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -163,7 +166,7 @@ const CSS = `
   /* Flat, and opaque. See the note at the top about axe and gradients. */
   background: var(--tn-night);
   color: var(--tn-on-night);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: ${UI_STACK};
   font-size: 1.0625rem;
   line-height: 1.5;
   overscroll-behavior: contain;
@@ -399,8 +402,16 @@ const CSS = `
 
   Two colours because there are two surfaces -- the paper sheet and the night
   behind it -- and one ring cannot be visible on both. The border also changes
-  shape and weight, so the indicator survives greyscale, a colour-vision
-  difference and forced-colours mode, where an outline colour may be replaced.
+  shape, so the indicator survives greyscale, a colour-vision difference and
+  forced-colours mode, where an outline colour may be replaced.
+
+  Shape and never WIDTH. It used to thicken to 0.25rem as well, which narrows
+  the content box by a few pixels, and with the bundled face (ADR-0066 §1)
+  "Choisir un niveau" at 200 % text fits one line only without that border. So
+  the focused primary wrapped to two lines, and pressing the next button, which
+  moves focus, unwrapped it: everything below rose 58 px between the finger
+  going down and coming up, and the tap landed on the gap. A focus style may not
+  move anything.
 */
 .tn-screen :focus-visible,
 .tn-screen [data-switch-highlight="true"],
@@ -410,7 +421,6 @@ const CSS = `
   outline-offset: 0.1875rem;
   box-shadow: 0 0 0 0.5rem var(--tn-focus-halo);
   border-style: double;
-  border-width: 0.25rem;
 }
 
 /*
@@ -735,6 +745,19 @@ const CSS = `
   cards that had none to spare. Only the indent: the gap is left as it was drawn.
 */
 .tn-screen ul.tn-screen__options { padding-inline-start: 0; }
+
+/*
+  Learn's chapter and lesson lists are ORDERED lists -- the guide's order is
+  part of what they say -- and .tn-screen ul above never reached an ol, so the
+  buttons sat edge to edge with the default indent. Same shape as the option
+  lists, without the numbers (the order is the reading order, not a label).
+*/
+.tn-screen ol.tn-screen__options {
+  margin: 0;
+  padding-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+}
 
 /*
   An option's words share the first line with its mark, and wrap beside it.
@@ -1071,7 +1094,7 @@ const CSS = `
 /* ------------------------------------------------------------------ *
  * The lesson reader: a passage of the study guide, read at a stop.
  *
- * ADR-0063, and docs/stories/TN-READ-reading-a-passage-at-a-stop.md. Three
+ * ADR-0063, and docs/stories/TN-READ-reading-a-passage-at-a-stop.md. Four
  * things here are acceptance criteria rather than decoration.
  *
  *  1. THE PARAGRAPHS ARE SET TO BE READ, NOT SKIMMED. One step up from body
@@ -1091,7 +1114,25 @@ const CSS = `
  *     rule down its leading edge, which survives greyscale, a colour vision
  *     difference and forced-colours mode: colour is never the only signal, and
  *     here colour is not a signal at all.
+ *  4. AT 200 % THE WORDS GET THE WIDTH. A 390 px phone in French at 200 % text
+ *     drew the lesson title at 56 px, a word or two to a line, filling the
+ *     whole first screen and splitting "monarchies" and "législatives" across
+ *     lines; the prose below sat behind a rule and an indent that had doubled
+ *     with the text, leaving about three words a line. Nothing here makes a word
+ *     smaller than the setting asks for. Two things stop growing instead:
+ *      - The rule, its three sibling edges and the indent are chrome that holds
+ *        still (ADR-0039): 4 px and 14 px at every scale.
+ *      - The title starts smaller: 1.375rem, 22 px at 100 % and 44 px at
+ *        200 %, over prose of 19 px and 38 px. It scales exactly with the
+ *        setting, like every other word, because drawing any text below what
+ *        the setting says is what ADR-0066 §3 refuses; what changed is its
+ *        base, not its growth. Weight carries the heading, not size.
  * ------------------------------------------------------------------ */
+
+/* The title: a smaller base that still scales with the setting (4 above). */
+.tn-lesson-reader h1 {
+  font-size: 1.375rem;
+}
 
 .tn-lesson-reader__body {
   display: flex;
@@ -1102,12 +1143,14 @@ const CSS = `
 .tn-lesson-reader__passage {
   font-size: 1.1875rem;
   line-height: 1.6;
-  /* Four edges of one width, so the highlight can never resize the box. */
-  border: 0.25rem double transparent;
+  /* Four edges of one width, so the highlight can never resize the box. The
+     width and the indent hold still at large text (4 above, ADR-0039): a rule
+     and a gap that doubled with the text took the width the words needed. */
+  border: calc(0.25rem / var(--tn-text-scale, 1)) double transparent;
   border-inline-start-style: solid;
   border-inline-start-color: var(--tn-accent);
   border-radius: var(--tn-radius);
-  padding-inline-start: 0.875rem;
+  padding-inline-start: calc(0.875rem / var(--tn-text-scale, 1));
   /* A switch user cannot scroll: leave room above when the highlight lands. */
   scroll-margin-block: 1.5rem;
 }
@@ -2265,7 +2308,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-right, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-bottom, 0px))
     max(calc(0.875rem / var(--tn-text-scale, 1)), env(safe-area-inset-left, 0px));
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: ${UI_STACK};
   font-size: 1rem;
   line-height: 1.2;
   color: var(--tn-on-night);
@@ -2277,6 +2320,53 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   border-start-start-radius: calc(1.25rem / var(--tn-text-scale, 1));
   border-start-end-radius: calc(1.25rem / var(--tn-text-scale, 1));
   pointer-events: none;
+}
+
+/*
+  The dyslexia strip grows past a third (ADR-0072, amending ADR-0066 §3).
+
+  OpenDyslexic runs about 1.5x wider than the UI face, so at 200 % text a task
+  takes six lines and Settings and Menu take two rows. The offer, the controls
+  and the task then need about 356 px at 390 x 844, and a third of the screen
+  is 278. With the dyslexia face on, and only then, two things change while a
+  level is running:
+
+   1. The canvas sits at the TOP of the space it is fitted in, not in the
+      middle. It is the same size and nothing of it is cut: the band of flat sky
+      a tall phone showed above it moves below it, under the strip. The
+      letterbox follows, because --tn-canvas-top is redeclared on :root, where
+      index.html and the sky stops resolve it.
+   2. The strip may reach up from the bottom of the screen to 8 px under the
+      line the player walks on: two thirds of the way down the canvas (y 1280
+      of 1920, every level's spawn row), so a sliver of ground stays under
+      their feet. At 390 x 844 that is 374 px, 44 % of the screen, against
+      278 px and 33 %. The strip is never shorter than it is without the toggle.
+
+  So the offer, Settings, Menu and the whole task end inside the strip, and
+  the player still stands above it. What the player gives up is the ground in
+  front of their feet, under the taller strip.
+
+  The size of the canvas does not depend on what the strip says, so nothing
+  moves when an offer comes and goes, and reduced motion has nothing to stop.
+  Where the canvas already fills the height (a window 9:16 or wider), there is
+  no band to move and the ceiling is a third, as it is without the toggle.
+*/
+:root[data-tn-font="dyslexia"]:has(.tn-hud) {
+  --tn-canvas-top: var(--tn-safe-top, 0px);
+}
+
+:root[data-tn-font="dyslexia"]:has(.tn-hud) [data-tn-canvas="level"] {
+  block-size: var(--tn-canvas-height, min(100dvh, 100vw * 16 / 9));
+}
+
+[data-tn-font="dyslexia"] .tn-hud {
+  max-block-size: max(
+    33vh,
+    calc(
+      100dvh - var(--tn-canvas-top, 0px) - var(--tn-canvas-height, min(100dvh, 100vw * 16 / 9)) * 2 / 3 -
+        calc(0.5rem / var(--tn-text-scale, 1))
+    )
+  );
 }
 
 .tn-hud p {
@@ -2334,6 +2424,38 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   forced-color-adjust: none;
 }
 
+/*
+  The task while an offer holds the strip (ADR-0066 §2): a word and a count,
+  "Task 3/5". One line in either language, and nothing a content author can
+  lengthen, so the strip's height stops depending on a quest file while an offer
+  is up.
+*/
+.tn-hud__task--indicator { font-weight: 800; }
+
+/*
+  The indicator's name, said and not drawn: "Task 3 of 5" beside the visible
+  "Task 3/5", which is hidden from assistive technology instead. The standard
+  visually-hidden recipe, and a declared colour so axe never has to guess the
+  contrast of clipped text.
+*/
+.tn-hud__spoken {
+  position: absolute;
+  inline-size: 0.0625rem;
+  block-size: 0.0625rem;
+  margin: -0.0625rem;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  color: var(--tn-on-night);
+}
+
+/* The menu's line for the task in full, its permanent home (ADR-0066 §2). */
+.tn-screen__menu-task { font-weight: 600; }
+.tn-screen__menu-task[hidden] { display: none; }
+
 .tn-hud__slot {
   display: flex;
   flex-direction: column;
@@ -2346,9 +2468,10 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   The two controls a player needs while a level is running, on one row: the way
   to Settings and the way to everything else. Each is as wide as its word and the
   row's spare width is shared between them, so at 200 % text "Settings" and
-  "Menu" -- and « Réglages » and « Menu » in the dyslexia font -- still share a
-  390 px line. They wrap to two rows only if a label ever cannot, rather than
-  shrinking a word into pieces.
+  "Menu" -- and « Réglages » and « Menu » -- still share a 390 px line. They
+  wrap to two rows only if a label ever cannot, rather than shrinking a word
+  into pieces. In the bundled dyslexia face (OpenDyslexic) at 200 % they
+  cannot, and do wrap: ADR-0071 §5 records that and what it costs the strip.
 */
 .tn-hud__controls {
   display: flex;
@@ -2479,6 +2602,15 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   color: var(--tn-ink);
 }
 
+/* Each reading may shrink below its longest word. In the dyslexia face at 200 %
+   text, « Chronomètre » alone is wider than the clock, and a flex item never
+   shrinks below its longest word unless told to (the few boxes in the header
+   note that must, do). */
+.tn-exam__clock > * {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
 /* "Timer paused" reads as a state word, in the same place every other state
    word on this screen sits -- and the time left stays beside it, because a
    player who opened a menu still wants to know what they are coming back to. */
@@ -2523,6 +2655,11 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
   inline-size: 1.25rem;
   text-align: center;
   line-height: 1;
+  /* A drawn mark, not a word, and aria-hidden: always the UI face's circle.
+     OpenDyslexic's circles are wider than this box at every size, so under the
+     dyslexia toggle they spilled out of it (ADR-0071). The words beside the
+     mark still take the dyslexia face. */
+  font-family: ${UI_STACK};
 }
 
 /* The review's marked options: a list item, not a control, so the option rules
@@ -2591,7 +2728,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 
 [data-tn-font="dyslexia"] .tn-update-notice {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -2695,7 +2832,7 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 
 [data-tn-font="dyslexia"] .tn-portrait-notice {
-  font-family: "Atkinson Hyperlegible", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+  font-family: ${DYSLEXIA_STACK};
   letter-spacing: 0.02em;
   word-spacing: 0.08em;
 }
@@ -2789,8 +2926,14 @@ body:has(.tn-screen--sheet:not([hidden])) #game { filter: brightness(0.55); }
 }
 `;
 
+/** The sheet's text, for the tests that read what it declares (tests/unit/ui/type-stacks.test.ts). */
+export const SCREEN_STYLES_CSS: string = CSS;
+
 /** Idempotent: a second screen on the page reuses the first one's stylesheet. */
 export function injectScreenStyles(doc: Document): HTMLStyleElement {
+  /* The faces first: a sheet that names a family nobody declared would draw the
+     fallback until something else happened to declare it. */
+  injectTypeFaces(doc);
   const existing = doc.getElementById(STYLE_ID);
   if (existing !== null) return existing as HTMLStyleElement;
 

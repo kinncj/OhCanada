@@ -419,6 +419,14 @@ export interface FrameTraceEntry {
   /** The movement intent this frame was given, -1..1. Zero means "not holding anything". */
   readonly intentMove: number;
   readonly cameraX: number;
+  /**
+   * How many marks on screen this frame overlap a character: the player's
+   * standing figure where they are, or any placed character's drawn art
+   * (`mark-clearance.ts`). Counted only while the player is grounded — a jump may
+   * pass through a mark — and zero is the only right answer. Absent where the
+   * scene does not count it.
+   */
+  readonly marksOnActors?: number;
 }
 
 export interface EventTraceEntry {

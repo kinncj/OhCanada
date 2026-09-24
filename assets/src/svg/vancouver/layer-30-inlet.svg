@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="300" viewBox="0 0 1800 300" shape-rendering="geometricPrecision">
-  <title>Burrard Inlet: the far shore as a low band of plain masses and conifers with two port gantry cranes, then open salt water in three flat tones with straight ripple bars, a small passenger ferry and a moored bulk carrier. World y 860..1160, opaque from its own top edge, which is where the North Shore tile's opaque band ends, so the seam closes at every tier. Water MEASURED at hsl(204,29%,22%) on refs/vancouver/canada-place-and-the-north-shore.jpg against water-shade's hsl(210,65%,29%). Every object here is a TYPE - this tile repeats every 1800 px, so no ship, crane or building on it may be a particular one.</title>
+  <title>Burrard Inlet: the far shore as a low band of plain masses and conifers with two red port gantry cranes drawn in profile - legs, portal beam, a long boom reaching out over the water, a short backreach and the A-frame with its stays, as in vancouver/canada-place-and-the-north-shore.jpg; drawn wholly inside the tile, because the first build put the booms above its top edge and only the legs showed, which a blind reader took for bridge towers - then open salt water in three flat tones with straight ripple bars, a small passenger ferry and a moored bulk carrier. World y 860..1160, opaque from its own top edge, which is where the North Shore tile's opaque band ends, so the seam closes at every tier. Water MEASURED at hsl(204,29%,22%) on refs/vancouver/canada-place-and-the-north-shore.jpg against water-shade's hsl(210,65%,29%). Every object here is a TYPE - this tile repeats every 1800 px, so no ship, crane or building on it may be a particular one.</title>
   <rect x="0" y="0" width="1800" height="300" fill="#2c8cba"/>
   <rect x="0" y="0" width="1800" height="46" fill="#57647a"/>
   <rect x="1230" y="21" width="14" height="25" fill="#57647a"/>
@@ -170,14 +170,22 @@
   <polygon points="1770,46 1782,30 1794,46" fill="#154536"/>
   <polygon points="1794,46 1806,18 1818,46" fill="#154536"/>
   <polygon points="1818,46 1830,21 1842,46" fill="#154536"/>
-  <rect x="416" y="-28" width="8" height="74" fill="#cbd2da"/>
-  <rect x="472" y="-28" width="8" height="74" fill="#cbd2da"/>
-  <rect x="398" y="-36" width="104" height="12" fill="#cbd2da"/>
-  <rect x="358" y="-32" width="46" height="7" fill="#cbd2da"/>
-  <rect x="1306" y="-28" width="8" height="74" fill="#cbd2da"/>
-  <rect x="1362" y="-28" width="8" height="74" fill="#cbd2da"/>
-  <rect x="1288" y="-36" width="104" height="12" fill="#cbd2da"/>
-  <rect x="1248" y="-32" width="46" height="7" fill="#cbd2da"/>
+  <rect x="416" y="16" width="6" height="30" fill="#d8262c"/>
+  <rect x="464" y="16" width="6" height="30" fill="#941835"/>
+  <rect x="416" y="28" width="54" height="4" fill="#941835"/>
+  <rect x="320" y="12" width="182" height="5" fill="#d8262c"/>
+  <polygon points="452,12 462,0 472,12" fill="#d8262c"/>
+  <polygon points="462,0 462,3 322,13 320,12" fill="#941835"/>
+  <polygon points="462,0 462,3 500,13 502,12" fill="#941835"/>
+  <rect x="430" y="17" width="14" height="7" fill="#57647a"/>
+  <rect x="1306" y="16" width="6" height="30" fill="#d8262c"/>
+  <rect x="1354" y="16" width="6" height="30" fill="#941835"/>
+  <rect x="1306" y="28" width="54" height="4" fill="#941835"/>
+  <rect x="1210" y="12" width="182" height="5" fill="#d8262c"/>
+  <polygon points="1342,12 1352,0 1362,12" fill="#d8262c"/>
+  <polygon points="1352,0 1352,3 1212,13 1210,12" fill="#941835"/>
+  <polygon points="1352,0 1352,3 1390,13 1392,12" fill="#941835"/>
+  <rect x="1320" y="17" width="14" height="7" fill="#57647a"/>
   <rect x="0" y="46" width="1800" height="8" fill="#30384f"/>
   <rect x="0" y="54" width="1800" height="96" fill="#1a487a"/>
   <rect x="0" y="150" width="1800" height="150" fill="#2c8cba"/>

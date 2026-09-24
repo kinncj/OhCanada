@@ -62,12 +62,29 @@ derivation*. Only the first has to leave the document.
 With §1–§3 the array becomes fillable, but nothing yet fills it, so the refusal still sums zero. Engine's
 loader is manifest-driven and needs no `assets[]` to draw; the refusal is the only consumer that does.
 
-- **OBLIGATION due=2026-11-08 owner=engine** — make TN-LEVEL-02's refusal effective again, by either
+- ~~**OBLIGATION due=2026-11-08 owner=engine** — make TN-LEVEL-02's refusal effective again, by either
   populating `content/levels/*.json`'s `assets[]` from the manifest at build time, or computing the refusal
   in the loader from the manifest entries for the keys a level names. Either is fine and the second is
   probably better; what is not fine is the present state, where a declared `textureBudgetBytes` is enforced
   against an empty list. Whichever lands, a test must show the refusal **firing** — this ADR exists because a
-  check that cannot fire looked exactly like one that passes.
+  check that cannot fire looked exactly like one that passes.~~
+  **DISCHARGED 2026-09-23** — the second option. `GameRenderer.loadLevel` now weighs the level in the loader,
+  after its load list is resolved from the manifest and before a texture is requested or the current level
+  torn down: `app/adapters/phaser/texture-budget.ts` prices each file `selectLevelAssets` will queue at the
+  manifest's `decodedBytes` and hands that total to the existing `refuseOverBudget`, whose failure reaches
+  the player as the `level-error` card. `parseAssetManifest` now reads `decodedBytes`, and **absent is not
+  zero**: a file the manifest lists without a weight, or a request it does not list, refuses the level rather
+  than counting as nothing. One refinement on the obligation's wording: what is priced is the *files* the
+  level's keys resolve to at this device's scale, not the keys — a whole atlas page is decoded, not the
+  frames a level uses from it, and a 1×-pinned file on a 2× device costs its 1× price — so the sum is what the
+  GPU will hold. It is this device's figure; CI already holds every device scale to the budget. **Firing is
+  shown twice.** `tests/unit/adapters/phaser/texture-budget.test.ts` parses every shipped level with its
+  `assets[]` as shipped (asserting that sum is 0), prices a manifest one byte over its budget and asserts
+  `content.level.textureBudget`, and at exactly its budget asserts it opens. `tests/e2e/level-landmarks.spec.ts`
+  serves the real built manifest with Ottawa's images repriced at its whole budget and asserts, on the
+  production build, `data-tn-level="failed"`, the `level-error` card, no `playable`, and no parallax layer
+  requested. The parser's own sum over `assets[]` is unchanged and still zero on every level; deleting the
+  array is now the follow-up Alternatives names, and no longer removes the refusal's input.
 
 ## Alternatives considered
 

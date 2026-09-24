@@ -1,0 +1,255 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-11-voting-step-by-step",
+  "chapter": "Federal Elections",
+  "order": 11,
+  "title": {
+    "en": "Voting, step by step",
+    "fr": "Voter, étape par étape"
+  },
+  "passages": [
+    {
+      "id": "e11-the-card-confirms-you-are-listed",
+      "text": {
+        "en": "If your details are in the National Register of Electors, you will get a voter information card. It shows that your name is on the voters' list, and it tells you when and where to vote.",
+        "fr": "Si vos renseignements figurent au Registre national des électeurs, vous recevrez une carte d'information de l'électeur. Elle confirme que votre nom est sur la liste électorale et vous indique quand et où voter."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 64,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Electors whose information is in the National Register of Electors will receive a voter information card. This confirms that your name is on the voters’ list and states when and where you vote."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Electors whose information is in the National Register of Electors will receive a voter information card. This confirms that your name is on the voters’ list and states when and where you vote."
+        }
+      }
+    },
+    {
+      "id": "e11-no-card-call-your-local-office",
+      "text": {
+        "en": "If no voter information card comes to you, phone your local elections office. They can make sure your name is on the voters' list.",
+        "fr": "Si vous ne recevez pas de carte d'information de l'électeur, téléphonez à votre bureau local d'élections. On pourra s'assurer que votre nom est sur la liste électorale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 64,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters’ list."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "If you do not receive a voter information card, call your local elections office to ensure that you are on the voters’ list."
+        }
+      }
+    },
+    {
+      "id": "e11-advance-polls-and-special-ballots",
+      "text": {
+        "en": "If you cannot vote on election day, or would rather not, you can vote early at an advance poll, or vote by special ballot. Your voter information card gives the dates and the place.",
+        "fr": "Si vous ne pouvez pas voter le jour de l'élection, ou si vous préférez ne pas le faire ce jour-là, vous pouvez voter par anticipation ou par bulletin spécial. Votre carte d'information de l'électeur indique les dates et l'endroit."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 64,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "If you cannot or do not wish to vote on election day, you can vote at the advance polls or by special ballot. The dates and location are on your voter information card."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "If you cannot or do not wish to vote on election day, you can vote at the advance polls or by special ballot. The dates and location are on your voter information card."
+        }
+      }
+    },
+    {
+      "id": "e11-what-to-bring",
+      "text": {
+        "en": "On election day, take your voter information card with you to the polling station. Take proof of who you are and of where you live, too.",
+        "fr": "Le jour de l'élection, apportez votre carte d'information de l'électeur au bureau de scrutin. Apportez aussi une preuve de votre identité et de votre adresse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 64,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Bring this card and proof of your identity and address to the polling station."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "4. On election day … Bring this card and proof of your identity and address to the polling station."
+        }
+      }
+    },
+    {
+      "id": "e11-marking-an-x",
+      "text": {
+        "en": "To vote, put an “X” in the circle beside the name of the candidate you choose.",
+        "fr": "Pour voter, faites un « X » dans le cercle à côté du nom du candidat que vous choisissez."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Mark an “X” in the circle next to the name of the candidate of your choice."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Mark an “X” in the circle next to the name of the candidate of your choice."
+        }
+      }
+    },
+    {
+      "id": "e11-behind-the-screen",
+      "text": {
+        "en": "Your vote is secret. At the polling station, you go behind a screen to mark your ballot. Then you fold it and give it to the poll officials.",
+        "fr": "Votre vote est secret. Au bureau de scrutin, vous passez derrière un isoloir pour marquer votre bulletin. Ensuite, vous le pliez et vous le remettez aux responsables du scrutin."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Your vote is secret. You will be invited to go behind the screen to mark your ballot. Once marked, fold it and present it to the poll officials."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "6. Voting is secret Your vote is secret. You will be invited to go behind the screen to mark your ballot. Once marked, fold it and present it to the poll officials."
+        }
+      }
+    },
+    {
+      "id": "e11-into-the-ballot-box",
+      "text": {
+        "en": "A poll official tears the number off your ballot and hands the ballot back to you. You then put it into the ballot box yourself.",
+        "fr": "Un responsable du scrutin détache le numéro de votre bulletin et vous le rend. Vous le déposez ensuite vous-même dans l'urne."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The poll official will tear off the ballot number and give your ballot back to you to deposit in the ballot box."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The poll official will tear off the ballot number and give your ballot back to you to deposit in the ballot box."
+        }
+      }
+    },
+    {
+      "id": "e11-where-to-see-the-results",
+      "text": {
+        "en": "You can watch the results on television. Elections Canada also posts them on its website, www.elections.ca.",
+        "fr": "Vous pouvez suivre les résultats à la télévision. Élections Canada les publie aussi sur son site Web, www.elections.ca."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 65,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "You can see the results on television or on the Elections Canada website (www.elections.ca)."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "You can see the results on television or on the Elections Canada website (www.elections.ca)."
+        }
+      }
+    },
+    {
+      "id": "e11-other-elections-have-other-rules",
+      "text": {
+        "en": "Provincial, territorial and municipal elections also use a secret ballot. Their rules, though, are different from the rules for federal elections.",
+        "fr": "Les élections provinciales, territoriales et municipales se font aussi par scrutin secret. Leurs règles, toutefois, sont différentes de celles des élections fédérales."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 66,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Provincial, territorial and municipal elections are held by secret ballot, but the rules are not the same as those for federal elections."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Provincial, territorial and municipal elections are held by secret ballot, but the rules are not the same as those for federal elections."
+        }
+      }
+    }
+  ]
+}

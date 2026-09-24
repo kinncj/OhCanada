@@ -11,7 +11,14 @@ import { defineConfig, devices } from '@playwright/test';
  * (ADR-0002) and no suite may ever assert a landscape layout.
  */
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
-const PORT = 4175;
+/*
+ * TN_A11Y_PORT moves both servers (the harness takes the next port). Several
+ * checkouts of this repository on one machine each run this suite. With CI=1 a
+ * server is never reused, so two runs on the default ports collide on
+ * --strictPort; without CI=1 the second run would silently test the FIRST
+ * checkout's build. CI leaves it unset.
+ */
+const PORT = Number(process.env.TN_A11Y_PORT ?? 4175);
 /**
  * The screen harness (`tests/a11y/harness.html`) is served by a *dev* server,
  * not by `vite preview`.
@@ -43,7 +50,7 @@ const PORT = 4175;
  * says the components are correct in every state, and `dist/` says the page a
  * visitor opens is correct in the state they open it in.
  */
-const HARNESS_PORT = 4176;
+const HARNESS_PORT = PORT + 1;
 const BASE_PATH = '/OhCanada/';
 export const HARNESS_URL = `http://127.0.0.1:${HARNESS_PORT}${BASE_PATH}tests/a11y/harness.html`;
 

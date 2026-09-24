@@ -344,6 +344,21 @@ control is the scrolling card list, which is why the level count stays a content
 screen-geometry one. A stop's reading is capped at **four passages and 120 words**, counted per stop rather
 than per step, derived from a 17-word median passage against ADR-0061 §1's rejected 155 words per landmark.
 
+**The first tier 3 case is Kingston, from a split of `history` (ADR-0068), and the map gains insets as an
+array (ADR-0069).** Neither has landed yet. The split is by remit and is listed by question id. Québec City
+keeps `history`: the First Peoples to the end of slavery, **32** verified (`hist-01` to `hist-31`, and
+`hist-96`). The new subject `building-canada` takes the War of 1812 to 1945, **65** (`hist-32` to `hist-95`,
+and `hist-97`). No two history questions share a proposition, so any partition passes the ADR-0028 gate. Ids
+do not change, so saved FSRS cards follow their questions. The larger half is the one re-filed, so the half
+at the floor's edge is never re-verified. That voids **65** grants and nothing else. Commit order is forced by
+two rules: the author-role null-form rule, and the pool-in-subject rule. The exam goes from 2 of 20 for every
+subject to 1 or 2, with history's two subjects together at 3.64 on average. Inserting a level into
+`unlockRules.order` must never re-lock a stamped level, and the domain owes that before Kingston lands.
+Kingston sits 18.3 viewBox units from Ottawa and 30.4 from Toronto, against a 45.4-unit pin, so it joins
+Ottawa and Toronto in a second inset. `inset` becomes `insets[]`, each entry with its own affine, and
+`validate-content` gains checks across insets and a pin-separation check. The separation check would fail on
+the shipped Ottawa–Toronto pair at 44.4.
+
 ```mermaid
 flowchart TB
   SRC["canada.ca — Discover Canada<br/>fetched to content/sources/ with a sourceHash"]

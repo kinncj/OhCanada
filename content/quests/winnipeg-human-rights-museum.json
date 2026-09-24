@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-on-the-footbridge",
+      "kind": "read",
+      "targetId": "footbridge",
+      "prompt": {
+        "en": "Stop and read on the footbridge",
+        "fr": "Arrêtez-vous pour lire sur la passerelle"
+      },
+      "passages": [
+        {
+          "lesson": "justice-03-what-laws-are-for",
+          "passage": "j3-laws-are-written-rules"
+        },
+        {
+          "lesson": "justice-03-what-laws-are-for",
+          "passage": "j3-elected-people-make-laws"
+        },
+        {
+          "lesson": "justice-03-what-laws-are-for",
+          "passage": "j3-courts-and-police"
+        },
+        {
+          "lesson": "justice-03-what-laws-are-for",
+          "passage": "j3-the-law-is-for-everyone"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-footbridge",
       "kind": "answer",
       "targetId": "justice",
@@ -294,6 +321,33 @@
               "evidence": "Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process. Due process is the principle that the government must respect all of legal rights a person is entitled to under the law."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-museum",
+      "kind": "read",
+      "targetId": "human-rights-museum",
+      "prompt": {
+        "en": "Stop and read at the museum",
+        "fr": "Arrêtez-vous pour lire au musée"
+      },
+      "passages": [
+        {
+          "lesson": "justice-02-due-process-and-our-legal-heritage",
+          "passage": "j2-due-process-for-everyone"
+        },
+        {
+          "lesson": "justice-02-due-process-and-our-legal-heritage",
+          "passage": "j2-innocent-until-proven-guilty"
+        },
+        {
+          "lesson": "justice-02-due-process-and-our-legal-heritage",
+          "passage": "j2-our-legal-heritage"
+        },
+        {
+          "lesson": "justice-02-due-process-and-our-legal-heritage",
+          "passage": "j2-what-due-process-means"
         }
       ]
     },
@@ -371,6 +425,33 @@
               "evidence": "GETTING LEGAL HELP Lawyers can help you with legal problems and act for you in court. If you cannot pay for a lawyer, in most communities there are legal aid services available free of charge or at a low cost."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-maple",
+      "kind": "read",
+      "targetId": "autumn-maple",
+      "prompt": {
+        "en": "Stop and read at the maple tree",
+        "fr": "Arrêtez-vous pour lire à l'érable"
+      },
+      "passages": [
+        {
+          "lesson": "justice-01-the-police-are-there-for-you",
+          "passage": "j1-when-to-ask-for-help"
+        },
+        {
+          "lesson": "justice-01-the-police-are-there-for-you",
+          "passage": "j1-provincial-and-municipal-police"
+        },
+        {
+          "lesson": "justice-01-the-police-are-there-for-you",
+          "passage": "j1-rcmp-enforce-federal-laws"
+        },
+        {
+          "lesson": "justice-01-the-police-are-there-for-you",
+          "passage": "j1-rcmp-as-provincial-police"
         }
       ]
     },

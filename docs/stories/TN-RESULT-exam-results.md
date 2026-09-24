@@ -442,6 +442,10 @@ Feature: Single-switch result
     Then the highlight reaches a control that leaves the review, without visiting every item first
 ```
 
+*Amended 2026-09-23 (ADR-0070, `TN-TEACHBACK-05`).* A review item may now carry a "Read about this"
+control, so the review's one way out, `exam-review-back`, is drawn **above** the list: it is the first
+control in the ring, and the scenario above stays true with twenty items and twenty controls.
+
 ## TN-RESULT-10 — The result with a screen reader
 
 ```gherkin

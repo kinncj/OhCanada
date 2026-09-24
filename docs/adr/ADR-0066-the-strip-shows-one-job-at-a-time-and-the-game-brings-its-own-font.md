@@ -1,6 +1,9 @@
 # ADR-0066: The strip shows one job at a time, and the game brings its own font
 
-- Status: Accepted (2026-09-21)
+- Status: Accepted (2026-09-21). **Amended by ADR-0071 (2026-09-23):** the bundled faces' ceiling in §1 is
+  ≤ 300 KB, not ≤ 200 KB, by the product owner's decision. Nothing else here moves. **Amended by ADR-0072
+  (2026-09-24):** with the dyslexia toggle on, and only then, the strip may grow past a third (§3), up to
+  the player's feet, by the product owner's decision.
 - Settles the residual ADR-0045 §1 left to the product owner — "a three-line French prompt with a long task
   does not fit in a third of the screen at true 200 %" — and the second, larger defect found while trying to
   settle it by copy: **the game does not control the font its layout is measured against**.
@@ -158,6 +161,8 @@ font the game did not choose, and pinning alone cannot make it.** That is §2.
   and a Latin legibility face with the French accents this game needs is small enough that the saving is not
   worth the licence question. **Ceiling: the bundled faces together add ≤ 200 KB to the initial payload**,
   against a budget of 8 MB. If a candidate cannot meet that unmodified, it is not the candidate.
+  **Amended by ADR-0071 (2026-09-23): ≤ 300 KB** (300 000 B). The owner chose to ship Atkinson Hyperlegible and
+  OpenDyslexic at 400 and 700, all four unmodified, 258 376 B together.
 - The face must not be **wider** than what the game is measured on today. Stated mechanically so it can be
   checked rather than eyeballed: the pinned face's advance width for the sweep's reference strings, at the
   same size, must be **no greater than the current CI runner's** for the same strings. A pin that loses
@@ -227,7 +232,10 @@ non-conformance being fixed.
 - **Hiding the word "Task" / « Mission » from sight while keeping it for a screen reader** — ADR-0045's
   second — is refused for the reason given in §2: it makes the sighted player and the screen-reader player
   read different strips, and it buys about six characters.
-- **Letting the strip grow past a third of the viewport** at large text is refused. At 200 % it would need
+- **Letting the strip grow past a third of the viewport** at large text is refused. *(ADR-0072 makes one
+  exception: with the dyslexia toggle on, the strip may grow to just under the player's feet, 44 % at
+  390 × 844, and the canvas sits at the top of its space so the player stays above it. For every other
+  player this refusal stands as written.)* At 200 % it would need
   roughly 45 vh, and the thing it would cover is the level the player is walking through, including the
   landmark they are walking to. Trading the playfield for a sentence is a worse loss than delaying the
   sentence by one step, and it breaks `TN-HUD-01` and the "skater is drawn inside the upper two thirds"
@@ -344,7 +352,7 @@ answer, and that independence is the test of whether the decision is any good:
 
 | cost | size |
 |---|---|
-| Bundled UI face, unmodified `woff2`, 2 weights | ceiling 200 KB for **all** bundled faces together |
+| Bundled UI face, unmodified `woff2`, 2 weights | ceiling 200 KB for **all** bundled faces together — **300 KB since ADR-0071** |
 | Bundled dyslexia face, unmodified `woff2` | included in the same ceiling |
 | Initial payload | 8 MB budget; the ceiling above is 2.5 % of it |
 | Level payloads, decoded texture memory | unchanged — fonts are initial-path assets, not level assets |
@@ -399,35 +407,91 @@ Named so that nobody mistakes the suite's silence for compliance:
 Written in ADR-0009's format. Owners are single tokens; the dates are the ones that matter, not the ones that
 are comfortable.
 
-- **OBLIGATION due=2026-10-19 owner=ui-a11y** — land §2: the offer and the task take turns in the strip, the
+- ~~**OBLIGATION due=2026-10-19 owner=ui-a11y** — land §2: the offer and the task take turns in the strip, the
   bounded indicator with its accessible name, the level menu drawing the task in full, and `hud-task-cue`
   attached to the full row. Rewrite `TN-HUD-hud-and-menu.md` (`TN-HUD-01`, `TN-HUD-08`) and
   `TN-REACH-what-is-in-reach.md` (the offer replaces the task; the open defect at the end of that file is
   answered by this ADR) in the same change, and declare the new copy rows in `COPY_GAPS`. Until this lands,
-  ten of ten built levels put the player's task below the strip at 200 % text in at least one language.
+  ten of ten built levels put the player's task below the strip at 200 % text in at least one language.~~
+  **DISCHARGED 2026-09-23** — in the commit that carries this line. `app/ui/hud.ts` draws the task in full as
+  `hud-quest-tracker` only while no offer is up; with one up it draws `hud-task-indicator`, "Task 3/5" /
+  « Mission 3/5 », whose visible words are `aria-hidden` beside a visually hidden twin reading "Task 3 of 5" /
+  « Mission 3 sur 5 » — no `aria-label`, and no task sentence anywhere in it. The count is the quest's own step
+  number and step total (`QuestController.taskPosition`). `hud-task-cue` is drawn only beside the full row. A
+  new task is still announced in full, and the offer coming and going says nothing. `app/ui/menu.ts` draws
+  `menu-task`, "Your task: …", whenever there is a task. `TN-HUD-01`, `TN-HUD-07`, `TN-HUD-08` and
+  `TN-REACH` are rewritten; `hud.task.indicator`, `hud.task.indicator.spoken` and `hud.menu.task` are in
+  `COPY_GAPS` (81 rows). `tests/unit/ui/hud.test.ts` holds the turn-taking, the name, the cue, the menu line
+  and the switch ring; `tests/a11y/level-screens.spec.ts` holds the one line, the name as read from the
+  accessibility tree and a clean axe scan at 100 % and 200 %, EN and FR, dyslexia and high contrast, strip and
+  menu; `tests/a11y/readability.spec.ts` measures both strips the game can now draw.
 
-- **OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
-  within the 200 KB ceiling; remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,
+- ~~**OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
+  within the 200 KB ceiling (300 KB since ADR-0071); remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,
   `Verdana` and `Tahoma` from the stacks in `app/ui/screen-styles.ts` and the stack in
   `app/adapters/phaser/boot-scene.ts`; declare the metrics-adjusted fallback; credit both faces in
   `assets/credits.json` with `kind: "shipped"`. Record in the commit body: the family, its licence, its
   weights, that the browser performs **no** synthetic emboldening at the weights the sheet asks for, the
   measured payload added, and the advance-width comparison §1 requires against the current CI face. If the
   chosen face is not OFL-1.1 or more permissive, say so — the ADR-0004 amendment is permission, not an
-  instruction.
+  instruction.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line. The UI face is Atkinson Hyperlegible and the
+  dyslexia face is OpenDyslexic, both at 400 and 700, both OFL-1.1, and all four files byte-identical to
+  upstream (ADR-0071's table; `tests/unit/infra/bundled-faces.test.ts` holds the digests and the 300 000 B
+  ceiling). They are in `assets/src/fonts/` with their `OFL.txt`, credited `shipped`, and emitted and precached
+  with the shell. `make build` charges them to the initial payload (258.4 kB of 2 574.5 kB) and fails
+  above the ceiling. No stack names a device family: `common/type-faces.ts` holds the two stacks, and
+  `screen-styles.ts`, `boot-scene.ts` and `index.html` use them. An ESLint rule refuses the seven names in any
+  string under `app/` and `common/`, and `tests/unit/ui/type-stacks.test.ts` holds every declared
+  `font-family` to exactly the two stacks. The metric-adjusted fallback is `TrueNorth Text Fallback` (ADR-0071
+  §6). The canvas creates its text only after `document.fonts` has the face, or after a 3 s bound. The front
+  door waits the same way, so its layout does not reflow under a finger when the face arrives.
+  `tests/a11y/type-faces.spec.ts` shows **no synthetic emboldening**: at 600, 700 and 800 each family draws
+  exactly the width and the ink of its real Bold, and at 400 exactly its Regular. It also shows the dyslexia
+  toggle changing the rendered face. **Width against the CI face:** the CI runner's face is still unidentified
+  (the obligation below stays open). Against this container's Chromium default, `system-ui` = DejaVu Sans 2.37,
+  Atkinson is 0.88× at 400 and 0.84× at the bold weights over the reference strings, and 0.99× Liberation
+  Sans. So it is narrower than both sans faces the image has. Landing it moved one thing: a focus style that
+  thickened a border rewrapped "Choisir un niveau" at 200 %. Focus now changes the border's shape and not its
+  width.
 
-- **OBLIGATION due=2026-11-02 owner=infra** — add `OFL-1.1` to the `licence` enum in
+- ~~**OBLIGATION due=2026-11-02 owner=infra** — add `OFL-1.1` to the `licence` enum in
   `content/schemas/credits.schema.json`, with a description restricting it to font assets and pointing at
   ADR-0004 as amended here. This must land before or with the obligation above; a font with no expressible
   licence is the ADR-0004 enum defect repeating itself, and that one already cost this project six
-  reference photographs.
+  reference photographs.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line, ahead of the faces themselves.
+  `OFL-1.1` is in the enum of `content/schemas/credits.schema.json`, and the `licence` description names ADR-0004
+  as amended by this ADR. The restriction is enforced by the schema, not just described: an `if`/`then` on the
+  credited-asset definition holds an `OFL-1.1` entry to a `path` ending in `.woff2`, `.woff`, `.otf` or
+  `.ttf`. `tests/unit/infra/credit-gate.test.ts` drives the real gate both ways: an OFL font with its
+  `OFL.txt` beside it passes, and an OFL `.png` fails.
 
-- **OBLIGATION due=2026-11-09 owner=ui-a11y** — land §4: the sweep asserts the pinned face is rendering
+- ~~**OBLIGATION due=2026-11-09 owner=ui-a11y** — land §4: the sweep asserts the pinned face is rendering
   before it measures, asserts **lines** against the 4-line and 5-line budgets in §4b rather than a decimal
   pixel overflow, and runs the second tier with the web font disabled against a named, installed fallback
   face. Record the name of that face and the one-sentence justification §4e requires. Delete no assertion the
   current sweep makes about pairing a quest with its own level's offers, or about choosing the tallest offer
-  rather than the longest string; both are correct.
+  rather than the longest string; both are correct.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line. `tests/a11y/readability.spec.ts` ports the
+  pairing (each quest against its own level's `pois`, `characters` and `hud.interact.done`, derived from the
+  level documents) and the tallest-offer choice from `task-strip-gate` (9cb92ee, 48761e2), with their premise
+  checks: levels and steps were read, and every quest file is claimed exactly once. Only the test logic was
+  ported, not that branch's copy edits. **§4a:** before measuring, each tier draws a 32 px reference string
+  in the strip's own computed stack and compares it with the width recorded for its face (Atkinson 887 px,
+  OpenDyslexic 1 569 px, DejaVu Sans 1 024.4 px, ±0.5 px), together with `document.fonts.check`. A face that
+  did not arrive fails with "the pinned face is not rendering" (checked by blocking the woff2 files: the
+  fallback drew it 875 px wide). **§4b:** lines are distinct line boxes of the row's text. Pinned: offer
+  ≤ 4, task ≤ 4, offer + indicator ≤ 5, and the indicator is exactly one line. Fallback: offer ≤ 5, task ≤ 5.
+  The pixel backstop (the row ends inside the strip) is asserted, not reported. Measured: pinned 2 / 4 / 3
+  lines, fallback 3 / 5, all inside the strip in both languages, so **no quest prompt was flagged and none
+  was shortened**. **§4d/§4e — the named fallback face is DejaVu Sans (2.37, `fonts-dejavu-core`),
+  because it is the widest sans face a player can plausibly land on when the bundled face does not arrive
+  (13 % wider than Atkinson and 12 % wider than Liberation Sans at 400 over the sweep's reference strings)
+  and the default sans of most Linux desktops and fontconfig-based WebViews.** That tier aborts every woff2
+  request, asserts no bundled face loaded, and pins the strip to DejaVu Sans. `make browsers`, which CI's
+  prepare action runs, installs it (`scripts/install-fallback-face.sh`). The dyslexia face is a third tier
+  with its own budget, recorded in ADR-0071 §5, where its 200 % overflow is recorded as an open defect.
 
 - **OBLIGATION due=2026-10-19 owner=ui-a11y** — identify the face `system-ui` resolves to on the CI runner
   image and record it, with its version, in `TN-REACH-what-is-in-reach.md` beside the 0-local / 50-CI

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" shape-rendering="geometricPrecision">
-  <title>A small harbour tug lying alongside a timber boardwalk edge: a bluff-bowed black hull with a heavy rubbing strake and a row of tyre fenders hung over the side, a buff bulwark rail, a buff deckhouse with a wheelhouse and a long window band above it, a tall rounded red funnel with a black cap aft of the wheelhouse, a short mast with a crosstree and a masthead light, a towing winch on the aft deck, and a mooring line running to a black bollard standing on the deck. A TYPE, not a named vessel: no name, no house flag, no funnel device, no hull number and no lettering of any kind. Drawn from assets/refs/halifax/waterfront-boardwalk.jpg and waterfront-harbour.jpg; see assets/refs/references.json, subject harbour-tug. POI hero, present at every visual tier.</title>
+  <title>A small harbour tug lying alongside a timber boardwalk edge: a bluff-bowed black hull with a heavy rubbing strake and a row of tyre fenders hung over the side on short lines from the rail, each standing proud of the hull with its own cast shadow so it reads as a hung ring and not as a porthole, a buff bulwark rail, a buff deckhouse with a wheelhouse and a long window band above it, a tall rounded red funnel with a black cap aft of the wheelhouse, a short mast with a crosstree and a masthead light, a towing winch on the aft deck, and a mooring line running to a black bollard standing on the deck. A TYPE, not a named vessel: no name, no house flag, no funnel device, no hull number and no lettering of any kind. Drawn from assets/refs/halifax/waterfront-boardwalk.jpg and waterfront-harbour.jpg; see assets/refs/references.json, subject harbour-tug. POI hero, present at every visual tier.</title>
 
   <rect x="0" y="446" width="720" height="34" fill="#1a487a"/>
 
@@ -8,16 +8,31 @@
   <path d="M 24 366 C 120 350 420 346 560 344 C 642 342 682 326 706 292 L 712 306 C 682 340 642 352 560 354 C 420 356 120 360 24 376 Z" fill="#c29455"/>
   <path d="M 24 366 C 120 350 420 346 560 344 C 642 342 682 326 706 292 L 709 299 C 680 334 642 344 560 346 C 420 348 120 352 24 368 Z" fill="#d5c18e"/>
 
-  <circle cx="112" cy="414" r="26" fill="#44555f"/>
-  <circle cx="112" cy="414" r="13" fill="#242b33"/>
-  <circle cx="222" cy="412" r="26" fill="#44555f"/>
-  <circle cx="222" cy="412" r="13" fill="#242b33"/>
-  <circle cx="332" cy="410" r="26" fill="#44555f"/>
-  <circle cx="332" cy="410" r="13" fill="#242b33"/>
-  <circle cx="442" cy="408" r="26" fill="#44555f"/>
-  <circle cx="442" cy="408" r="13" fill="#242b33"/>
-  <circle cx="552" cy="404" r="26" fill="#44555f"/>
-  <circle cx="552" cy="404" r="13" fill="#242b33"/>
+  <rect x="109" y="366" width="6" height="36" fill="#d5c18e"/>
+  <circle cx="117" cy="432" r="27" fill="#16203a" opacity="0.35"/>
+  <circle cx="112" cy="426" r="26" fill="#44555f"/>
+  <path d="M 90 420 A 23 23 0 0 1 118 403" fill="none" stroke="#7d8fa0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="112" cy="426" r="12" fill="#0f121a"/>
+  <rect x="219" y="358" width="6" height="44" fill="#d5c18e"/>
+  <circle cx="227" cy="432" r="27" fill="#16203a" opacity="0.35"/>
+  <circle cx="222" cy="426" r="26" fill="#44555f"/>
+  <path d="M 200 420 A 23 23 0 0 1 228 403" fill="none" stroke="#7d8fa0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="222" cy="426" r="12" fill="#0f121a"/>
+  <rect x="329" y="356" width="6" height="46" fill="#d5c18e"/>
+  <circle cx="337" cy="432" r="27" fill="#16203a" opacity="0.35"/>
+  <circle cx="332" cy="426" r="26" fill="#44555f"/>
+  <path d="M 310 420 A 23 23 0 0 1 338 403" fill="none" stroke="#7d8fa0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="332" cy="426" r="12" fill="#0f121a"/>
+  <rect x="439" y="354" width="6" height="48" fill="#d5c18e"/>
+  <circle cx="447" cy="432" r="27" fill="#16203a" opacity="0.35"/>
+  <circle cx="442" cy="426" r="26" fill="#44555f"/>
+  <path d="M 420 420 A 23 23 0 0 1 448 403" fill="none" stroke="#7d8fa0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="442" cy="426" r="12" fill="#0f121a"/>
+  <rect x="549" y="352" width="6" height="50" fill="#d5c18e"/>
+  <circle cx="557" cy="432" r="27" fill="#16203a" opacity="0.35"/>
+  <circle cx="552" cy="426" r="26" fill="#44555f"/>
+  <path d="M 530 420 A 23 23 0 0 1 558 403" fill="none" stroke="#7d8fa0" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="552" cy="426" r="12" fill="#0f121a"/>
 
   <rect x="92" y="296" width="104" height="52" rx="8" fill="#44555f"/>
   <rect x="92" y="296" width="104" height="13" fill="#7d8fa0"/>

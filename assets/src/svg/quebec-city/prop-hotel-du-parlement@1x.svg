@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="520" viewBox="0 0 720 520" shape-rendering="geometricPrecision">
+  <title>The Hôtel du Parlement, the Parliament Building of Québec, in Québec City, in winter, square on to its main façade: a long, symmetrical Second Empire stone building in pale grey stone, four storeys under a mansard roof with a row of dormers, with two projecting end pavilions each under a tall truncated slate mansard crowned with iron cresting, two lower pavilions with segmental pediments either side of the centre, and the TALL CENTRAL CLOCK TOWER rising in stages to a round clock face, arched niches, corner pinnacles, a slate mansard and an openwork iron crown. Snow lies on every cornice and ledge. The tower rises about one and a half times the height of the façade above its roofline, measured on the primary reference. No flag and no flagstaff (OQ-ART-04 is open), no lettering, no coat of arms, and NO FIGURE: the bronze statues in the façade's niches, and the bronze group in the niche at the foot of the tower, are simplified to their dark recesses and none is drawn. The modern entrance pavilion, the gardens and the fountain are not drawn. Drawn from assets/refs/quebec-city/parlement-east-facade.jpg, with the tower's roof and crown from parlement-tower-from-fountain.jpg; every colour is from palette.json. See assets/refs/references.json, subject hotel-du-parlement. POI hero, present at every visual tier.</title>
+
+  <!-- The two long wings, set back between the pavilions: four storeys under a mansard with a row of dormers. -->
+  <rect x="122" y="350" width="131" height="150" fill="#c8c1b6"/>
+  <rect x="130" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="130" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 130.0 480 L 130.0 456.0 A 6.0 6.0 0 0 1 142.0 456.0 L 142.0 480 Z" fill="#0f121a"/>
+  <rect x="155.4" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="155.4" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 155.4 480 L 155.4 456.0 A 6.0 6.0 0 0 1 167.4 456.0 L 167.4 480 Z" fill="#0f121a"/>
+  <rect x="180.8" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="180.8" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 180.8 480 L 180.8 456.0 A 6.0 6.0 0 0 1 192.8 456.0 L 192.8 480 Z" fill="#0f121a"/>
+  <rect x="206.2" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="206.2" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 206.2 480 L 206.2 456.0 A 6.0 6.0 0 0 1 218.2 456.0 L 218.2 480 Z" fill="#0f121a"/>
+  <rect x="231.6" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="231.6" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 231.6 480 L 231.6 456.0 A 6.0 6.0 0 0 1 243.6 456.0 L 243.6 480 Z" fill="#0f121a"/>
+  <rect x="122" y="440" width="131" height="4" fill="#a99789"/>
+  <rect x="122" y="398" width="131" height="3" fill="#a99789"/>
+  <polygon points="120,352 255,352 253,326 122,326" fill="#57647a"/>
+  <rect x="129" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="132" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="154.4" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="157.4" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="179.8" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="182.8" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="205.2" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="208.2" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="230.6" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="233.6" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="120" y="346" width="135" height="7" fill="#8a6256"/>
+  <rect x="120" y="346" width="135" height="3" fill="#c8c1b6"/>
+  <rect x="120" y="321" width="135" height="7" rx="3" fill="#e6eff7"/>
+  <rect x="120" y="321" width="135" height="3" fill="#ffffff"/>
+  <rect x="122" y="352" width="131" height="5" fill="#16203a" opacity="0.18"/>
+  <rect x="122" y="356" width="14" height="144" fill="#16203a" opacity="0.18"/>
+  <rect x="467" y="350" width="131" height="150" fill="#c8c1b6"/>
+  <rect x="475" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="475" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 475.0 480 L 475.0 456.0 A 6.0 6.0 0 0 1 487.0 456.0 L 487.0 480 Z" fill="#0f121a"/>
+  <rect x="500.4" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="500.4" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 500.4 480 L 500.4 456.0 A 6.0 6.0 0 0 1 512.4 456.0 L 512.4 480 Z" fill="#0f121a"/>
+  <rect x="525.8" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="525.8" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 525.8 480 L 525.8 456.0 A 6.0 6.0 0 0 1 537.8 456.0 L 537.8 480 Z" fill="#0f121a"/>
+  <rect x="551.2" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="551.2" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 551.2 480 L 551.2 456.0 A 6.0 6.0 0 0 1 563.2 456.0 L 563.2 480 Z" fill="#0f121a"/>
+  <rect x="576.6" y="366" width="12" height="24" rx="2" fill="#0f121a"/>
+  <rect x="576.6" y="404" width="12" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 576.6 480 L 576.6 456.0 A 6.0 6.0 0 0 1 588.6 456.0 L 588.6 480 Z" fill="#0f121a"/>
+  <rect x="467" y="440" width="131" height="4" fill="#a99789"/>
+  <rect x="467" y="398" width="131" height="3" fill="#a99789"/>
+  <polygon points="465,352 600,352 598,326 467,326" fill="#57647a"/>
+  <rect x="474" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="477" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="499.4" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="502.4" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="524.8" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="527.8" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="550.2" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="553.2" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="575.6" y="328" width="14" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="578.6" y="332" width="8" height="12" rx="2" fill="#0f121a"/>
+  <rect x="465" y="346" width="135" height="7" fill="#8a6256"/>
+  <rect x="465" y="346" width="135" height="3" fill="#c8c1b6"/>
+  <rect x="465" y="321" width="135" height="7" rx="3" fill="#e6eff7"/>
+  <rect x="465" y="321" width="135" height="3" fill="#ffffff"/>
+  <rect x="467" y="352" width="131" height="5" fill="#16203a" opacity="0.18"/>
+  <rect x="467" y="356" width="14" height="144" fill="#16203a" opacity="0.18"/>
+
+  <!-- Left end pavilion, projecting and lit, under its tall truncated mansard roof with iron cresting. -->
+  <rect x="22" y="322" width="100" height="178" fill="#c8c1b6"/>
+  <rect x="22" y="322" width="8" height="178" fill="#ffffff"/>
+  <rect x="114" y="322" width="8" height="178" fill="#a99789"/>
+  <rect x="40" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="40" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 40 480 L 40 456.5 A 6.5 6.5 0 0 1 53 456.5 L 53 480 Z" fill="#0f121a"/>
+  <rect x="66" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="66" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 66 480 L 66 456.5 A 6.5 6.5 0 0 1 79 456.5 L 79 480 Z" fill="#0f121a"/>
+  <rect x="92" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="92" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 92 480 L 92 456.5 A 6.5 6.5 0 0 1 105 456.5 L 105 480 Z" fill="#0f121a"/>
+  <rect x="22" y="440" width="100" height="4" fill="#a99789"/>
+  <rect x="22" y="398" width="100" height="3" fill="#a99789"/>
+  <rect x="22" y="356" width="100" height="4" fill="#a99789"/>
+  <rect x="37" y="296" width="70" height="28" fill="#c8c1b6"/>
+  <rect x="53" y="302" width="13" height="18" rx="2" fill="#0f121a"/>
+  <rect x="78" y="302" width="13" height="18" rx="2" fill="#0f121a"/>
+  <rect x="19" y="318" width="106" height="8" fill="#a99789"/>
+  <rect x="19" y="318" width="106" height="3" fill="#ffffff"/>
+  <rect x="19" y="312" width="106" height="7" rx="3" fill="#e6eff7"/>
+  <polygon points="38,296 106,296 89,244 55,244" fill="#57647a"/>
+  <polygon points="38,296 50,296 63,244 55,244" fill="#7d8fa0"/>
+  <polygon points="94,296 106,296 89,244 81,244" fill="#30384f"/>
+  <rect x="66" y="262" width="12" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="69" y="266" width="6" height="11" rx="2" fill="#0f121a"/>
+  <rect x="34" y="291" width="76" height="7" rx="3" fill="#e6eff7"/>
+  <rect x="34" y="291" width="76" height="3" fill="#ffffff"/>
+  <rect x="53" y="240" width="38" height="6" rx="3" fill="#e6eff7"/>
+  <rect x="55" y="228" width="4" height="14" fill="#30384f"/>
+  <rect x="70" y="224" width="4" height="18" fill="#30384f"/>
+  <rect x="85" y="228" width="4" height="14" fill="#30384f"/>
+  <rect x="55" y="232" width="34" height="3" fill="#30384f"/>
+  <rect x="22" y="494" width="100" height="6" fill="#16203a" opacity="0.28"/>
+
+  <!-- Right end pavilion, projecting and lit, under its tall truncated mansard roof with iron cresting. -->
+  <rect x="598" y="322" width="100" height="178" fill="#c8c1b6"/>
+  <rect x="690" y="322" width="8" height="178" fill="#a99789"/>
+  <rect x="616" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="616" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 616 480 L 616 456.5 A 6.5 6.5 0 0 1 629 456.5 L 629 480 Z" fill="#0f121a"/>
+  <rect x="642" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="642" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 642 480 L 642 456.5 A 6.5 6.5 0 0 1 655 456.5 L 655 480 Z" fill="#0f121a"/>
+  <rect x="668" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <rect x="668" y="404" width="13" height="26" rx="2" fill="#0f121a"/>
+  <path d="M 668 480 L 668 456.5 A 6.5 6.5 0 0 1 681 456.5 L 681 480 Z" fill="#0f121a"/>
+  <rect x="598" y="440" width="100" height="4" fill="#a99789"/>
+  <rect x="598" y="398" width="100" height="3" fill="#a99789"/>
+  <rect x="598" y="356" width="100" height="4" fill="#a99789"/>
+  <rect x="613" y="296" width="70" height="28" fill="#c8c1b6"/>
+  <rect x="629" y="302" width="13" height="18" rx="2" fill="#0f121a"/>
+  <rect x="654" y="302" width="13" height="18" rx="2" fill="#0f121a"/>
+  <rect x="595" y="318" width="106" height="8" fill="#a99789"/>
+  <rect x="595" y="318" width="106" height="3" fill="#ffffff"/>
+  <rect x="595" y="312" width="106" height="7" rx="3" fill="#e6eff7"/>
+  <polygon points="614,296 682,296 665,244 631,244" fill="#57647a"/>
+  <polygon points="614,296 626,296 639,244 631,244" fill="#7d8fa0"/>
+  <polygon points="670,296 682,296 665,244 657,244" fill="#30384f"/>
+  <rect x="642" y="262" width="12" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="645" y="266" width="6" height="11" rx="2" fill="#0f121a"/>
+  <rect x="610" y="291" width="76" height="7" rx="3" fill="#e6eff7"/>
+  <rect x="610" y="291" width="76" height="3" fill="#ffffff"/>
+  <rect x="629" y="240" width="38" height="6" rx="3" fill="#e6eff7"/>
+  <rect x="631" y="228" width="4" height="14" fill="#30384f"/>
+  <rect x="646" y="224" width="4" height="18" fill="#30384f"/>
+  <rect x="661" y="228" width="4" height="14" fill="#30384f"/>
+  <rect x="631" y="232" width="34" height="3" fill="#30384f"/>
+  <rect x="598" y="494" width="100" height="6" fill="#16203a" opacity="0.28"/>
+
+  <!-- Left pavilion beside the tower, with a segmental pediment and two bays. -->
+  <rect x="253" y="318" width="70" height="182" fill="#c8c1b6"/>
+  <rect x="267" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <path d="M 267 480 L 267 456.5 A 6.5 6.5 0 0 1 280 456.5 L 280 480 Z" fill="#0f121a"/>
+  <rect x="297" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <path d="M 297 480 L 297 456.5 A 6.5 6.5 0 0 1 310 456.5 L 310 480 Z" fill="#0f121a"/>
+  <path d="M 282 432 L 282 410.0 A 6.0 6.0 0 0 1 294 410.0 L 294 432 Z" fill="#242b33"/>
+  <rect x="253" y="440" width="70" height="4" fill="#a99789"/>
+  <rect x="253" y="398" width="70" height="3" fill="#a99789"/>
+  <rect x="253" y="356" width="70" height="4" fill="#a99789"/>
+  <rect x="250" y="314" width="76" height="8" fill="#a99789"/>
+  <rect x="250" y="314" width="76" height="3" fill="#ffffff"/>
+  <path d="M 261 314 Q 288 290 315 314 Z" fill="#c8c1b6"/>
+  <path d="M 261 314 Q 288 290 315 314 L 309 314 Q 288 297 267 314 Z" fill="#a99789"/>
+  <rect x="250" y="308" width="76" height="6" rx="3" fill="#e6eff7"/>
+
+  <!-- Right pavilion beside the tower, with a segmental pediment and two bays. -->
+  <rect x="397" y="318" width="70" height="182" fill="#c8c1b6"/>
+  <rect x="411" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <path d="M 411 480 L 411 456.5 A 6.5 6.5 0 0 1 424 456.5 L 424 480 Z" fill="#0f121a"/>
+  <rect x="441" y="366" width="13" height="24" rx="2" fill="#0f121a"/>
+  <path d="M 441 480 L 441 456.5 A 6.5 6.5 0 0 1 454 456.5 L 454 480 Z" fill="#0f121a"/>
+  <path d="M 426 432 L 426 410.0 A 6.0 6.0 0 0 1 438 410.0 L 438 432 Z" fill="#242b33"/>
+  <rect x="397" y="440" width="70" height="4" fill="#a99789"/>
+  <rect x="397" y="398" width="70" height="3" fill="#a99789"/>
+  <rect x="397" y="356" width="70" height="4" fill="#a99789"/>
+  <rect x="394" y="314" width="76" height="8" fill="#a99789"/>
+  <rect x="394" y="314" width="76" height="3" fill="#ffffff"/>
+  <path d="M 405 314 Q 432 290 459 314 Z" fill="#c8c1b6"/>
+  <path d="M 405 314 Q 432 290 459 314 L 453 314 Q 432 297 411 314 Z" fill="#a99789"/>
+  <rect x="394" y="308" width="76" height="6" rx="3" fill="#e6eff7"/>
+
+  <!-- The central tower: a tall square stone shaft in stages, the clock, niches, and a crowned mansard roof. -->
+  <rect x="323" y="160" width="74" height="340" fill="#c8c1b6"/>
+  <rect x="323" y="160" width="7" height="340" fill="#ffffff"/>
+  <rect x="389" y="160" width="8" height="340" fill="#a99789"/>
+  <rect x="319" y="350" width="82" height="7" fill="#a99789"/>
+  <rect x="319" y="350" width="82" height="3" fill="#ffffff"/>
+  <rect x="319" y="345" width="82" height="6" rx="3" fill="#e6eff7"/>
+  <rect x="319" y="290" width="82" height="7" fill="#a99789"/>
+  <rect x="319" y="290" width="82" height="3" fill="#ffffff"/>
+  <rect x="319" y="285" width="82" height="6" rx="3" fill="#e6eff7"/>
+  <rect x="319" y="220" width="82" height="7" fill="#a99789"/>
+  <rect x="319" y="220" width="82" height="3" fill="#ffffff"/>
+  <rect x="319" y="215" width="82" height="6" rx="3" fill="#e6eff7"/>
+  <path d="M 342 500 L 342 458.0 A 18.0 18.0 0 0 1 378 458.0 L 378 500 Z" fill="#242b33"/>
+  <path d="M 348 500 L 348 464.0 A 12.0 12.0 0 0 1 372 464.0 L 372 500 Z" fill="#0f121a"/>
+  <path d="M 335 392 L 335 368.5 A 6.5 6.5 0 0 1 348 368.5 L 348 392 Z" fill="#242b33"/>
+  <path d="M 372 392 L 372 368.5 A 6.5 6.5 0 0 1 385 368.5 L 385 392 Z" fill="#242b33"/>
+  <path d="M 335 432 L 335 408.5 A 6.5 6.5 0 0 1 348 408.5 L 348 432 Z" fill="#242b33"/>
+  <path d="M 372 432 L 372 408.5 A 6.5 6.5 0 0 1 385 408.5 L 385 432 Z" fill="#242b33"/>
+  <path d="M 353 392 L 353 373.0 A 7.0 7.0 0 0 1 367 373.0 L 367 392 Z" fill="#0f121a"/>
+  <path d="M 353 432 L 353 413.0 A 7.0 7.0 0 0 1 367 413.0 L 367 432 Z" fill="#0f121a"/>
+  <path d="M 353 332 L 353 307.0 A 7.0 7.0 0 0 1 367 307.0 L 367 332 Z" fill="#0f121a"/>
+  <path d="M 335 330 L 335 306.0 A 6.0 6.0 0 0 1 347 306.0 L 347 330 Z" fill="#242b33"/>
+  <path d="M 373 330 L 373 306.0 A 6.0 6.0 0 0 1 385 306.0 L 385 330 Z" fill="#242b33"/>
+  <circle cx="360" cy="254" r="17" fill="#a99789"/>
+  <circle cx="360" cy="254" r="14" fill="#f0f2f5"/>
+  <circle cx="358" cy="252" r="5" fill="#ffffff"/>
+  <rect x="359" y="243" width="3" height="12" rx="1.5" fill="#30384f"/>
+  <rect x="359" y="252" width="10" height="3" rx="1.5" fill="#30384f"/>
+  <polygon points="321,178 333,178 327,150" fill="#c8c1b6"/>
+  <rect x="321" y="178" width="12" height="40" fill="#c8c1b6"/>
+  <polygon points="387,178 399,178 393,150" fill="#a99789"/>
+  <rect x="387" y="178" width="12" height="40" fill="#a99789"/>
+  <rect x="333" y="160" width="54" height="6" fill="#a99789"/>
+  <polygon points="336,162 384,162 374,108 346,108" fill="#57647a"/>
+  <polygon points="336,162 347,162 353,108 346,108" fill="#7d8fa0"/>
+  <polygon points="373,162 384,162 374,108 367,108" fill="#30384f"/>
+  <rect x="354" y="126" width="12" height="18" rx="3" fill="#c8c1b6"/>
+  <rect x="357" y="130" width="6" height="11" rx="2" fill="#0f121a"/>
+  <rect x="332" y="158" width="56" height="7" rx="3" fill="#e6eff7"/>
+  <rect x="332" y="158" width="56" height="3" fill="#ffffff"/>
+  <rect x="343" y="104" width="34" height="6" rx="3" fill="#e6eff7"/>
+
+  <!-- The openwork iron crown and its finial. No flag and no flagstaff. -->
+  <rect x="342" y="96" width="36" height="8" rx="2" fill="#30384f"/>
+  <path d="M 344 98 Q 345 72 360 68 Q 375 72 376 98 L 371 98 Q 370 78 360 75 Q 350 78 349 98 Z" fill="#30384f"/>
+  <rect x="358" y="70" width="4" height="28" fill="#30384f"/>
+  <circle cx="360" cy="64" r="6" fill="#30384f"/>
+  <rect x="358" y="50" width="4" height="12" rx="2" fill="#30384f"/>
+  <rect x="323" y="494" width="74" height="6" fill="#16203a" opacity="0.28"/>
+
+  <!-- The snow in front. The file's bottom edge IS the level ground line. -->
+  <path d="M 0 520 L 0 494 Q 180 482 360 492 Q 540 502 720 488 L 720 520 Z" fill="#e6eff7"/>
+  <path d="M 0 494 Q 180 482 360 492 Q 540 502 720 488 L 720 498 Q 540 512 360 502 Q 180 492 0 504 Z" fill="#ffffff"/>
+  <path d="M 0 520 L 0 510 Q 360 522 720 506 L 720 520 Z" fill="#c2d6e8"/>
+</svg>

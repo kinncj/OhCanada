@@ -237,6 +237,33 @@
       ]
     },
     {
+      "id": "read-at-the-fish-store",
+      "kind": "read",
+      "targetId": "fish-store",
+      "prompt": {
+        "en": "Stop and read at the fish store",
+        "fr": "Arrêtez-vous pour lire au hangar de pêche"
+      },
+      "passages": [
+        {
+          "lesson": "who-08-aboriginal-rights-and-residential-schools",
+          "passage": "w8-rights-in-the-constitution"
+        },
+        {
+          "lesson": "who-08-aboriginal-rights-and-residential-schools",
+          "passage": "w8-royal-proclamation-of-1763"
+        },
+        {
+          "lesson": "who-08-aboriginal-rights-and-residential-schools",
+          "passage": "w8-residential-schools-1800s-to-1980s"
+        },
+        {
+          "lesson": "who-08-aboriginal-rights-and-residential-schools",
+          "passage": "w8-apology-in-2008"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-fish-store",
       "kind": "answer",
       "targetId": "who-we-are",
@@ -323,6 +350,33 @@
               "evidence": "Such experiences do not justify bringing to Canada violent, extreme or hateful prejudices. In becoming Canadian, newcomers are expected to embrace democratic principles such as the rule of law. … Canada’s legal system is based on a heritage that includes the rule of law, freedom under the law, democratic principles and due process."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-village-house",
+      "kind": "read",
+      "targetId": "village-house",
+      "prompt": {
+        "en": "Stop and read at the village house",
+        "fr": "Arrêtez-vous pour lire à la maison du village"
+      },
+      "passages": [
+        {
+          "lesson": "who-07-a-strong-and-free-country",
+          "passage": "w7-strong-and-free"
+        },
+        {
+          "lesson": "who-07-a-strong-and-free-country",
+          "passage": "w7-oldest-constitutional-tradition"
+        },
+        {
+          "lesson": "who-07-a-strong-and-free-country",
+          "passage": "w7-only-constitutional-monarchy"
+        },
+        {
+          "lesson": "who-07-a-strong-and-free-country",
+          "passage": "w7-the-great-dominion"
         }
       ]
     },

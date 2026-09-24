@@ -1,0 +1,336 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "elections-08-electing-your-member-of-parliament",
+  "chapter": "Federal Elections",
+  "order": 8,
+  "title": {
+    "en": "Electing your member of Parliament",
+    "fr": "Élire votre député"
+  },
+  "passages": [
+    {
+      "id": "e8-what-canadians-vote-for",
+      "text": {
+        "en": "In an election, Canadians vote for the people they want to speak for them in the House of Commons.",
+        "fr": "Lors d'une élection, les Canadiens votent pour les personnes qu'ils veulent voir parler en leur nom à la Chambre des communes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Canadians vote in elections for the people they want to represent them in the House of Commons."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadians vote in elections for the people they want to represent them in the House of Commons."
+        }
+      }
+    },
+    {
+      "id": "e8-re-elect-or-choose-new",
+      "text": {
+        "en": "At each election, voters can send the same members back to the House of Commons, or they can pick new ones.",
+        "fr": "À chaque élection, les électeurs peuvent renvoyer les mêmes députés à la Chambre des communes ou en choisir de nouveaux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "In each election, voters may re-elect the same members of the House of Commons or choose new ones."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In each election, voters may re-elect the same members of the House of Commons or choose new ones."
+        }
+      }
+    },
+    {
+      "id": "e8-fixed-election-date",
+      "text": {
+        "en": "A law passed by Parliament sets the date of federal elections. One must be held on the third Monday of October, four years after the last general election.",
+        "fr": "Une loi adoptée par le Parlement fixe la date des élections fédérales. Une élection doit avoir lieu le troisième lundi d'octobre, quatre ans après la dernière élection générale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Under legislation passed by Parliament, federal elections must be held on the third Monday in October every four years following the most recent general election."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Under legislation passed by Parliament, federal elections must be held on the third Monday in October every four years following the most recent general election."
+        }
+      }
+    },
+    {
+      "id": "e8-an-earlier-election",
+      "text": {
+        "en": "The Prime Minister can ask the Governor General to call an election sooner than that.",
+        "fr": "Le premier ministre peut demander au gouverneur général de déclencher une élection plus tôt."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The Prime Minister may ask the Governor General to call an earlier election."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Under legislation passed by Parliament, federal elections must be held on the third Monday in October every four years following the most recent general election. The Prime Minister may ask the Governor General to call an earlier election."
+        }
+      }
+    },
+    {
+      "id": "e8-ridings-and-constituencies",
+      "text": {
+        "en": "Canada is split into electoral districts. People also call them ridings or constituencies.",
+        "fr": "Le Canada est divisé en circonscriptions électorales. On les appelle aussi des comtés, ou tout simplement des circonscriptions."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "electoral districts, also known as ridings or constituencies."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada is divided into … electoral districts, also known as ridings or constituencies."
+        }
+      }
+    },
+    {
+      "id": "e8-what-an-electoral-district-is",
+      "text": {
+        "en": "An electoral district is an area on the map. A member of Parliament (MP) represents it.",
+        "fr": "Une circonscription électorale est un territoire délimité sur la carte. Un député la représente."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "An electoral district is a geographical area represented by a member of Parliament (MP)."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "An electoral district is a geographical area represented by a member of Parliament (MP)."
+        }
+      }
+    },
+    {
+      "id": "e8-whom-an-mp-represents",
+      "text": {
+        "en": "The citizens of each electoral district elect one MP. That MP sits in the House of Commons and speaks for them, and for all Canadians too.",
+        "fr": "Les citoyens de chaque circonscription élisent un député. Ce député siège à la Chambre des communes et les représente, ainsi que tous les Canadiens."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The citizens in each electoral district elect one MP who sits in the House of Commons to represent them, as well as all Canadians."
+        }
+      }
+    },
+    {
+      "id": "e8-who-may-run",
+      "text": {
+        "en": "Any Canadian citizen aged 18 or over may run in a federal election.",
+        "fr": "Tout citoyen canadien âgé de 18 ans ou plus peut se présenter à une élection fédérale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Canadian citizens who are 18 years old or older may run in a federal election."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canadian citizens who are 18 years old or older may run in a federal election."
+        }
+      }
+    },
+    {
+      "id": "e8-candidates",
+      "text": {
+        "en": "A person who runs for office is called a candidate.",
+        "fr": "Une personne qui se présente à une élection s'appelle un candidat."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The people who run for office are called candidates."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The people who run for office are called candidates."
+        }
+      }
+    },
+    {
+      "id": "e8-many-candidates-in-a-district",
+      "text": {
+        "en": "One electoral district can have many candidates.",
+        "fr": "Une seule circonscription peut compter de nombreux candidats."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "There can be many candidates in an electoral district."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "There can be many candidates in an electoral district."
+        }
+      }
+    },
+    {
+      "id": "e8-choose-a-candidate-and-a-party",
+      "text": {
+        "en": "In each electoral district, people vote for the candidate and the political party they prefer.",
+        "fr": "Dans chaque circonscription, les gens votent pour le candidat et le parti politique qu'ils préfèrent."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The people in each electoral district vote for the candidate and political party of their choice."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The people in each electoral district vote for the candidate and political party of their choice."
+        }
+      }
+    },
+    {
+      "id": "e8-most-votes-wins-the-seat",
+      "text": {
+        "en": "Whichever candidate gets the most votes wins, and becomes that district's MP.",
+        "fr": "Le candidat qui obtient le plus de votes devient le député de cette circonscription."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Federal Elections",
+          "page": 60,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "The candidate who receives the most votes becomes the MP for that electoral district."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The candidate who receives the most votes becomes the MP for that electoral district."
+        }
+      }
+    }
+  ]
+}

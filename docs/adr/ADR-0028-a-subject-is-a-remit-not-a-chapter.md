@@ -279,11 +279,43 @@ landscape and the peoples of each region, across 37 pages — the longest chapte
 twelve over *Canada's Economy*. The estimate that this clears thirty is an estimate; nobody has counted
 propositions in pp. 93–129 and this ADR does not pretend otherwise.
 
-- **OBLIGATION due=2026-11-09 owner=content** — before authoring level 10's bank, count the verified
+- ~~**OBLIGATION due=2026-11-09 owner=content** — before authoring level 10's bank, count the verified
   propositions available to `regions` in pp. 93–129 with the industry and resource material removed. If the
   count is under thirty, reopen this ADR rather than bending the floor or narrowing `economy`'s take after
   the fact. Level 10 is blocked on `docs/content-review.md` Indigenous content review and cannot ship before
-  this date on any path, so the count costs nothing to do first.
+  this date on any path, so the count costs nothing to do first.~~
+  **DISCHARGED 2026-09-23** — **54 verified propositions, 24 over the floor. The ADR stands.** The count
+  was made after the bank was written, not before as the obligation asked. `content/questions/regions/`
+  already held `reg-01` to `reg-59` when it was taken, so what is counted is what is verified, not an
+  estimate of what could be.
+
+  *Method.* (1) Take every document in `content/questions/regions/`: 59. All 59 carry
+  `verification.status: "verified"` against `fd5104…c836`. That is the manifest's current
+  `extractedTextSha256`, so none is verified against a superseded text. All cite *Canada's Regions* at pages
+  93–104, inside the chapter's 93–129. (2) Classify each question by the proposition it grades: its prompt
+  and `correctIndex`, per ADR-0030, and not the wider `source.quote`. Take out every one that §2 gives to
+  `economy`: what a place produces, fishes, mines, grows, manufactures or ships. Five go: `reg-34` Niagara
+  vineyards and fruit (grows), `reg-41` "breadbasket" and "wheat province" (grows), `reg-46` "Pacific
+  gateway" (ships), `reg-51` the 1890s Gold Rush miners (mines), and `reg-53` Yellowknife the "diamond
+  capital" (mines). Where a question was borderline, it was taken out. Two were kept because the graded
+  proposition is not industry, even though the quote touches it: `reg-25` asks about the naval base, not the
+  Atlantic trade in its quote, and `reg-48` asks about the Pacific fleet, not the tourist centre. (3) Check
+  that the remaining 54 are 54 different propositions. No two of them grade the same fact. They rest on 53
+  different quotes, because `reg-19` and `reg-20` take two facts from one sentence (§4 calls that normal
+  authoring), and `a-proposition-belongs-to-one-subject.test.ts` holds them against every other subject.
+  (4) What remains is only material §2 leaves to `regions`: the country's size, oceans and regions, the
+  thirteen capitals, the climate, the landscape (lakes, rivers, the tundra, Mount Logan, the Bay of Fundy),
+  where people live, the languages spoken where, culture, history and institutions.
+
+  *What the count cannot see.* The extracted text is `committed: false`, so there is no cached copy of
+  pp. 93–129 to count sentences in. That means 54 is a **floor** on what the chapter can give `regions`, and
+  not a measure of the whole chapter. It is also enough by itself. **The five removed questions are a
+  finding, not a correction.** They are verified, they ship in `regions` today, and they teach material §2
+  gives to `economy`. `reg-41`'s quote is the opening clause of the sentence `eco-29` and `eco-43` cite. The
+  quotes are not equal strings, so the §4 gate cannot see it. It is the paraphrase case that §4 leaves to
+  review. Under §3, the question written first keeps the proposition. Deciding which one that is, and
+  whether any should move, is for the verifier and the architect. This count does not depend on the answer:
+  54 is taken with all five already removed.
 
 **A live check on *Canada's Regions* is now a precondition, not a nicety.** The chapter has no `liveChecks`
 entry and no `knownStaleness` flag, and it is where a 2012 guide keeps its most perishable facts —

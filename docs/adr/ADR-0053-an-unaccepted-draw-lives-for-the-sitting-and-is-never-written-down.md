@@ -254,11 +254,24 @@ decided.
   reports the character it holds rather than the one it opened on) and by
   `tests/e2e/first-run.spec.ts` ("shows no face on the title screen until the player has chosen one"), which
   walks Play → "Surprise me" → Back on the built artefact and fails on the code this replaces.
-- **OBLIGATION due=2026-10-17 owner=ui-a11y** — build §4's gate: an end-to-end check over a real boot that
+- ~~**OBLIGATION due=2026-10-17 owner=ui-a11y** — build §4's gate: an end-to-end check over a real boot that
   the store still reports a first run while the creator is open and unfinished, through option changes,
   "Surprise me", a Settings visit and a language change, with no `character/created` or `character/changed`
   emitted. It is the only thing standing between this decision and a future change that quietly persists the
-  draw because the stranger looked like a bug.
+  draw because the stranger looked like a bug.~~
+  **DISCHARGED 2026-09-23** — landed on branch `first-run-gate` as `tests/e2e/unaccepted-draw.spec.ts`, and
+  nowhere else: no production code changed and no seam was added. On the built artefact under `?e2e=1`, a
+  first run opens the creator, changes two options, taps "Surprise me", goes Back and Play again, and opens
+  Settings from the creator to change the language to French; after every step the read-only `__tnExam`
+  trace must carry neither `character/created` nor `character/changed`. The store is then asked **by the
+  game**, from a second tab of the same browser while the creator in the first is still open and
+  unfinished: that tab must boot to a title offering "Play" and neither "Choose a level" nor "Continue"
+  (`TN-FIRSTRUN` ruling 1, the only question the save answers about a character), and must say it in
+  French — so it read the store this sitting wrote, not an empty one. No storage bytes are opened, so the
+  gate survives a change to the save's format or store (ADR-0026). It was shown to fail both ways: with the
+  first-run creator's `onChange` calling `onCreateCharacter` it failed on the trace ("character/created was
+  emitted after changing options"), and with that plus the emit removed from `keepCharacter` — a silent
+  write — it failed on the store ("the store holds a character the player never accepted").
 - **OBLIGATION due=2026-12-17 owner=po** — reword the two scenarios named in the consequences so the
   acceptance files say what the game does: `TN-FIRSTRUN-03`'s "Coming back in is a new draw" becomes the
   same character within a sitting and a new draw in a new sitting, and `TN-LOOK-03`'s "Opening the screen is

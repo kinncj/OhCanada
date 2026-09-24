@@ -1,0 +1,282 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-10-francophones-acadians-and-quebecers",
+  "chapter": "Who We Are",
+  "order": 10,
+  "title": {
+    "en": "Francophones, Acadians and Quebecers",
+    "fr": "Les francophones, les Acadiens et les Québécois"
+  },
+  "passages": [
+    {
+      "id": "w10-federal-services-in-both-languages",
+      "text": {
+        "en": "A law says the federal government must offer its services in English and in French, everywhere in Canada.",
+        "fr": "Une loi oblige le gouvernement fédéral à offrir ses services en anglais et en français, partout au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The federal government is required by law to provide services throughout Canada in English and French."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The federal government is required by law to provide services throughout Canada in English and French."
+        }
+      }
+    },
+    {
+      "id": "w10-anglophones-and-francophones",
+      "text": {
+        "en": "An Anglophone is a person whose first language is English. A Francophone is a person whose first language is French.",
+        "fr": "Un anglophone est une personne dont la première langue est l'anglais. Un francophone est une personne dont la première langue est le français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Today, there are 18 million Anglophones—people who speak English as a first language—and seven million Francophones—people who speak French as their first language."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Today, there are 18 million Anglophones—people who speak English as a first language—and seven million Francophones—people who speak French as their first language."
+        }
+      }
+    },
+    {
+      "id": "w10-francophones-outside-quebec",
+      "text": {
+        "en": "Outside Quebec, Ontario, New Brunswick and Manitoba are home to about one million Francophones. Smaller groups of Francophones live in the other provinces.",
+        "fr": "Hors du Québec, l'Ontario, le Nouveau-Brunswick et le Manitoba comptent environ un million de francophones. De plus petits groupes de francophones vivent dans les autres provinces."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "one million Francophones live in Ontario, New Brunswick and Manitoba, with a smaller presence in other provinces."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "While the majority of Francophones live in the province of Quebec, one million Francophones live in Ontario, New Brunswick and Manitoba, with a smaller presence in other provinces."
+        }
+      }
+    },
+    {
+      "id": "w10-acadians-settled-from-1604",
+      "text": {
+        "en": "The Acadians descend from French colonists. Those colonists started to settle in 1604 in the area that is now the Maritime provinces.",
+        "fr": "Les Acadiens descendent de colons français. Ces colons ont commencé à s'établir en 1604 dans la région qui forme aujourd'hui les provinces maritimes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Acadians are the descendants of French colonists who began settling in what are now the Maritime provinces in 1604."
+        }
+      }
+    },
+    {
+      "id": "w10-acadians-deported",
+      "text": {
+        "en": "From 1755 to 1763, while Britain and France were at war, more than two out of every three Acadians were forced out of their homeland.",
+        "fr": "De 1755 à 1763, pendant que la Grande-Bretagne et la France étaient en guerre, plus de deux Acadiens sur trois ont été chassés de leur terre natale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland."
+        }
+      }
+    },
+    {
+      "id": "w10-the-great-upheaval",
+      "text": {
+        "en": "The deportation of the Acadians is known as the “Great Upheaval.” The Acadians lived through this hard time and kept their own identity.",
+        "fr": "La déportation des Acadiens est connue sous le nom de « Grand Dérangement ». Les Acadiens ont survécu à cette dure épreuve et ont gardé leur identité propre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Despite this ordeal, known as the “Great Upheaval,” the Acadians survived and maintained their unique identity."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Between 1755 and 1763, during the war between Britain and France, more than two-thirds of the Acadians were deported from their homeland. Despite this ordeal, known as the “Great Upheaval,” the Acadians survived and maintained their unique identity."
+        }
+      }
+    },
+    {
+      "id": "w10-acadian-culture-today",
+      "text": {
+        "en": "Acadian culture is thriving today. It is a lively part of French-speaking Canada.",
+        "fr": "La culture acadienne est florissante aujourd'hui. Elle est une partie bien vivante du Canada francophone."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today, Acadian culture is flourishing and is a lively part of French-speaking Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Today, Acadian culture is flourishing and is a lively part of French-speaking Canada."
+        }
+      }
+    },
+    {
+      "id": "w10-quebecers-descend-from-8500-settlers",
+      "text": {
+        "en": "Most Quebecers descend from 8,500 French settlers who came in the 1600s and 1700s.",
+        "fr": "La plupart des Québécois descendent de 8 500 colons français venus aux 17e et 18e siècles."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 19,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Most are descendants of 8,500 French settlers from the 1600s and 1700s"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Quebecers are the people of Quebec, the vast majority French-speaking. Most are descendants of 8,500 French settlers from the 1600s and 1700s"
+        }
+      }
+    },
+    {
+      "id": "w10-the-quebecois-a-nation",
+      "text": {
+        "en": "In 2006, the House of Commons recognized that the Québécois are a nation inside a united Canada.",
+        "fr": "En 2006, la Chambre des communes a reconnu que les Québécois forment une nation au sein d'un Canada uni."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 20,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "recognized in 2006 that the Quebecois form a nation within a united Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The House of Commons recognized in 2006 that the Quebecois form a nation within a united Canada."
+        }
+      }
+    },
+    {
+      "id": "w10-anglo-quebecers",
+      "text": {
+        "en": "About one million English-speaking Quebecers, called Anglo-Quebecers, live in Quebec. Their roots there go back 250 years, and they are a lively part of life in the province.",
+        "fr": "Environ un million de Québécois d'expression anglaise, appelés Anglo-Québécois, vivent au Québec. Leurs racines y remontent à 250 ans, et ils sont une partie bien vivante de la province."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 20,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "One million Anglo-Quebecers have a heritage of 250 years and form a vibrant part of the Quebec fabric."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "One million Anglo-Quebecers have a heritage of 250 years and form a vibrant part of the Quebec fabric."
+        }
+      }
+    }
+  ]
+}

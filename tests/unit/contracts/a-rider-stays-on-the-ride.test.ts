@@ -46,7 +46,7 @@ interface LevelDoc {
   readonly rides?: readonly { readonly mode: string }[];
 }
 
-const rig = JSON.parse(readFileSync(`${REPO_ROOT}assets/style/rig-contract.json`, 'utf8')) as RigDoc;
+const rig = JSON.parse(readFileSync(`${REPO_ROOT}content/characters/rig.json`, 'utf8')) as RigDoc;
 
 const levels: readonly LevelDoc[] = readdirSync(`${REPO_ROOT}content/levels`)
   .filter((name) => name.endsWith('.json'))

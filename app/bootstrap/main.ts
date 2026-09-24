@@ -44,6 +44,10 @@
  */
 
 import gameConfigDocument from '@content/game.config.json';
+/* The register's chapter list alone — a named import, so the bundler keeps the
+   eleven titles and page ranges Learn orders its chapters by and drops the rest
+   of the manifest (ADR-0061 §7: Learn must not move the initial payload). */
+import { chapters as guideChapters } from '@content/sources/discover-canada.json';
 
 import { bundledLessonLibrary, bundledQuestionBank } from '@adapters/content';
 import { browserIndexedDb, browserLocalStorage, openProgressStore } from '@adapters/persistence';
@@ -57,7 +61,9 @@ import {
   type BootConfig,
   type SceneLevel,
 } from '@adapters/phaser';
+import { FONT_WAIT_MS, documentFonts, whenFacesReady } from '@adapters/phaser/font-ready';
 import { answerQuestion } from '@application/use-cases/answer-question';
+import { uiFontShorthand } from '@common/type-faces';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { createExamSession, type ExamSession } from '@application/use-cases/exam-session';
@@ -117,6 +123,7 @@ import {
 } from '@ui/settings';
 import { createSettingsScreen, type SettingsScreen } from '@ui/settings-screen';
 import { createShell } from '@ui/shell';
+import { injectTypeFaces } from '@ui/type-faces';
 
 import {
   creatorSlotsByLocale,
@@ -131,6 +138,10 @@ import { assetsBaseUrl, createScreenArt, type ScreenArt } from './screen-art';
 import { aboutThisPlaceView } from './about-this-place';
 import { lessonReaderView, resolveReading, type Reading } from './lesson-reading';
 import { grantsPassage } from './verified-passages';
+import {
+  createQuestionReadings,
+  type QuestionReading,
+} from '@application/use-cases/read-about-question';
 import { readGameRules, type GameRules } from './game-rules';
 import {
   createGameEventBus,
@@ -168,6 +179,7 @@ import {
 } from './verified-dialogue';
 import { createDrillRunner, type DrillRunner } from './quiz';
 import { createStudyController, type StudyController } from './study';
+import { createLearnController, type LearnController } from './learn';
 import { readSubjectIndex } from './subjects';
 import { watchPortraitFit, type PortraitWatch } from './portrait-notice';
 import { watchForUpdates, workerContainerOf, type UpdateWatch } from './update-notice';
@@ -208,6 +220,15 @@ function main(): void {
    * tests/unit/bootstrap/live-region-order.test.ts.
    */
   mountLiveRegion(uiHost);
+
+  /*
+   * The bundled faces, before anything draws text (ADR-0066 §1). The canvas asks
+   * `document.fonts` for the UI face before it writes its title, and a face
+   * nobody has declared yet is a face that load() reports as absent, so the
+   * declaration has to be on the page before the renderer exists. Every screen's
+   * stylesheet declares them too; this is only the earliest of those calls.
+   */
+  injectTypeFaces(document);
 
   /*
    * The bus, before the renderer that publishes on it.
@@ -514,6 +535,21 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   const { onLevelPlayable } = deps;
 
   /*
+   * The UI face, asked for now and awaited just before the shell draws
+   * (ADR-0066 §1). It loads while the save does. A front door drawn in the
+   * fallback reflows when the face arrives: at 200 % French the title wraps
+   * differently, every button moves, and a tap made during that reflow lands
+   * where the button was. Bounded like the canvas' wait: a face that fails
+   * resolves at once, a slow one after FONT_WAIT_MS, and either way the door
+   * opens in the fallback rather than not at all.
+   */
+  const facesReady = whenFacesReady(
+    documentFonts(),
+    [uiFontShorthand(400, 16), uiFontShorthand(700, 16)],
+    FONT_WAIT_MS,
+  );
+
+  /*
    * `#game`'s place on the page, remembered before anything moves it.
    *
    * `createHud` moves the canvas host inside the `<main>` it makes, which is
@@ -692,6 +728,14 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * `read` step names a lesson in it.
    */
   const lessonLibrary = bundledLessonLibrary();
+  /*
+   * "Read about this" on the question card (ADR-0070): the passages that share a
+   * question's proposition, found in the same catalogue through the same filter
+   * as a `read` step's, and fetched on the first card rather than at boot.
+   */
+  const questionReadings = createQuestionReadings(lessonLibrary, grantsPassage);
+  const readAbout = (question: ShippableQuestion): Promise<QuestionReading | null> =>
+    questionReadings.about(question);
 
   const examSource: ExamSession = createExamSession({
     bank: bundledQuestionBank,
@@ -1010,6 +1054,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
 
   let session: LevelSession | null = null;
 
+  await facesReady;
   const shell = createShell(uiHost, {
     store,
     entries,
@@ -1161,6 +1206,12 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
     },
     onOpenStudy: openShellStudy,
     /*
+     * Learn, from the title screen (`TN-LEARN-01`, ADR-0061 §1). The same seam as
+     * Study: `./learn.ts` owns the screens because it needs the lesson catalogue
+     * and the grant, mounted into `shell.main` and bracketed with `setModalOpen`.
+     */
+    onOpenLearn: openShellLearn,
+    /*
      * Exam mode, from the title screen (`TN-EXAM-01`) — and the way back to an
      * exam the player left, because `title-exam` is one control with two labels
      * (`OQ-ATTEMPT-4`).
@@ -1216,6 +1267,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       random: optionsRandom,
+      readAbout,
       record: (question, chosenIndex) => {
         recordAnswer(question, chosenIndex);
       },
@@ -1232,6 +1284,34 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   }
 
   /*
+   * Learn, kept for the session like Study: the chapters it has fetched stay in
+   * the one catalogue either way, but rebuilding the screen on every open would
+   * lose the chapter the player was in. The catalogue and the grant are the
+   * level reader's own (ADR-0063 §6: one catalogue, one filter).
+   */
+  let shellLearn: LearnController | null = null;
+
+  function openShellLearn(): void {
+    shellLearn ??= createLearnController({
+      host: shell.main,
+      library: lessonLibrary,
+      grant: grantsPassage,
+      guide: guideChapters,
+      store,
+      announce,
+      onOpen: () => {
+        shell.setModalOpen(true);
+        deps.updates.block('learn');
+      },
+      onClose: () => {
+        shell.setModalOpen(false);
+        deps.updates.unblock('learn');
+      },
+    });
+    shellLearn.open();
+  }
+
+  /*
    * Exam mode, kept for the session like Study: it holds the questions drawn,
    * the clock and the attempt being taken, and rebuilding it on every open would
    * be rebuilding the exam.
@@ -1245,6 +1325,8 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       store,
       announce,
       clock,
+      /* The review after the exam only; the exam itself never asks (ADR-0070). */
+      readAbout,
       /* Option order only, and seeded per *attempt* rather than per sitting, so
          an exam picked back up is the paper the player left rather than the
          same questions rearranged (ADR-0059 §3). Never the exam's own draw,
@@ -1489,6 +1571,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       /* One library for the sitting: a chapter fetched at a plaque is the same
          chunk Learn will read (ADR-0063 §6). */
       lessons: lessonLibrary,
+      readAbout,
       record: recordAnswer,
       /* One options stream for the sitting, shared with Study: see
          `LevelWiring.random` (ADR-0059). */
@@ -1870,6 +1953,12 @@ interface LevelWiring {
    * initial payload.
    */
   readonly lessons: LessonLibrary;
+  /**
+   * The passage(s) a question card's "Read about this" opens once an answer is
+   * judged, found in {@link LevelWiring.lessons} by the proposition rule
+   * (ADR-0070). One for the sitting, shared with the front door's Study.
+   */
+  readonly readAbout: (question: ShippableQuestion) => Promise<QuestionReading | null>;
   /** Record one answer. See {@link AnswerOutcome} for what comes back and why. */
   readonly record: (question: ShippableQuestion, chosenIndex: number) => AnswerOutcome;
   /**
@@ -2294,6 +2383,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       session: wiring.questions,
       store,
       announce: wiring.announce,
+      readAbout: wiring.readAbout,
       /* The level's own options stream, which is the front door's: a drill taken
          on the canal and a question asked at the Peace Tower share one sitting
          (ADR-0059). */
@@ -2533,6 +2623,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     random: wiring.random,
     /* A sheet over the level, as the landmark card before it is (ADR-0045). */
     overLevel: true,
+    readAbout: wiring.readAbout,
     onAnswer: (question, chosenIndex) => {
       /* Asked before the answer is recorded: once it completes the last step,
          no quest is answering any more, and the card needs to know which did. */
@@ -3022,7 +3113,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
     progress: wiring.progressNow,
     commit: wiring.commitProgress,
     setTask: (step) => {
-      hud.setTask(step);
+      /* Read after the controller has moved, so the count is the step the line
+         names. The indicator draws it while an offer is up (ADR-0066 §2). */
+      const position = questsBuilt?.taskPosition ?? null;
+      hud.setTask(step, position === null ? {} : { position });
       refreshTaskCue();
     },
     onOpen: () => {
@@ -3639,7 +3733,8 @@ function openLevel(wiring: LevelWiring): LevelSession {
      */
     const task = quests.task;
     if (task !== null) {
-      hud.setTask(task, { announce: false });
+      const position = quests.taskPosition;
+      hud.setTask(task, { announce: false, ...(position === null ? {} : { position }) });
       /*
        * And the cue that belongs with it. The resume draw goes straight to the
        * HUD rather than through the controller's `setTask`, which is what

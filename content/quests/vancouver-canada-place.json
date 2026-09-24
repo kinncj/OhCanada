@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-marina",
+      "kind": "read",
+      "targetId": "marina",
+      "prompt": {
+        "en": "Stop and read at the marina",
+        "fr": "Arrêtez-vous pour lire à la marina"
+      },
+      "passages": [
+        {
+          "lesson": "symbols-08-hockey-lacrosse-and-the-beaver",
+          "passage": "s8-hockey-the-national-winter-sport"
+        },
+        {
+          "lesson": "symbols-08-hockey-lacrosse-and-the-beaver",
+          "passage": "s8-ice-hockey-developed-in-the-1800s"
+        },
+        {
+          "lesson": "symbols-08-hockey-lacrosse-and-the-beaver",
+          "passage": "s8-the-stanley-cup"
+        },
+        {
+          "lesson": "symbols-08-hockey-lacrosse-and-the-beaver",
+          "passage": "s8-lacrosse-the-summer-sport"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-marina",
       "kind": "answer",
       "targetId": "symbols",
@@ -306,6 +333,33 @@
       ]
     },
     {
+      "id": "read-at-canada-place",
+      "kind": "read",
+      "targetId": "canada-place",
+      "prompt": {
+        "en": "Stop and read at Canada Place",
+        "fr": "Arrêtez-vous pour lire à Canada Place"
+      },
+      "passages": [
+        {
+          "lesson": "symbols-06-the-crown-the-flag-and-the-maple-leaf",
+          "passage": "s6-what-symbols-do"
+        },
+        {
+          "lesson": "symbols-06-the-crown-the-flag-and-the-maple-leaf",
+          "passage": "s6-monarchy-since-1867"
+        },
+        {
+          "lesson": "symbols-06-the-crown-the-flag-and-the-maple-leaf",
+          "passage": "s6-the-crown-and-government"
+        },
+        {
+          "lesson": "symbols-06-the-crown-the-flag-and-the-maple-leaf",
+          "passage": "s6-national-colours-since-1921"
+        }
+      ]
+    },
+    {
       "id": "answer-at-canada-place",
       "kind": "answer",
       "targetId": "symbols",
@@ -373,6 +427,33 @@
               "evidence": "English and French define the reality of day-to-day life for most people and are the country’s official languages. … English and French are the two official languages and are important symbols of identity. … You must have adequate knowledge of English or French to become a Canadian citizen. Adult applicants 55 years of age or over are exempted from this requirement."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-cargo-ship",
+      "kind": "read",
+      "targetId": "bulk-carrier",
+      "prompt": {
+        "en": "Stop and read at the cargo ship",
+        "fr": "Arrêtez-vous pour lire au navire de charge"
+      },
+      "passages": [
+        {
+          "lesson": "symbols-09-languages-anthems-and-honours",
+          "passage": "s9-official-languages-act-1969"
+        },
+        {
+          "lesson": "symbols-09-languages-anthems-and-honours",
+          "passage": "s9-anthem-proclaimed-1980"
+        },
+        {
+          "lesson": "symbols-09-languages-anthems-and-honours",
+          "passage": "s9-anthem-first-sung-in-quebec-city"
+        },
+        {
+          "lesson": "symbols-09-languages-anthems-and-honours",
+          "passage": "s9-the-royal-anthem"
         }
       ]
     },

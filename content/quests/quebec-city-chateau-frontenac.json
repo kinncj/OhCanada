@@ -8,8 +8,8 @@
     "fr": "La glissade"
   },
   "summary": {
-    "en": "Slide down through the old city with your guide. You stop at the Château, at the wall and at the bandstand, and at each one you learn a piece of Canada's history and then answer questions about it.",
-    "fr": "Glissez dans la vieille ville avec votre guide. Vous vous arrêtez au Château, au mur et au kiosque à musique, et à chaque halte vous apprenez un bout de l'histoire du Canada, puis vous répondez à des questions dessus."
+    "en": "Slide down through the old city with your guide. You stop at the Château, at the wall and at the bandstand, and at each one you learn a piece of Canada's history and then answer questions about it. Further on, at the monument, on the Plains of Abraham and at the Parliament Building, there is more to read.",
+    "fr": "Glissez dans la vieille ville avec votre guide. Vous vous arrêtez au Château, au mur et au kiosque à musique, et à chaque halte vous apprenez un bout de l'histoire du Canada, puis vous répondez à des questions dessus. Plus loin, au monument, sur les plaines d'Abraham et à l'hôtel du Parlement, il y a encore à lire."
   },
   "declinedLine": {
     "speaker": "guide",
@@ -69,8 +69,8 @@
     "speaker": "guide",
     "expression": "happy",
     "text": {
-      "en": "You slid down through the old city with me, from the Château Frontenac along the city wall to the bandstand. Three stops, and the run is over.",
-      "fr": "Vous avez glissé dans la vieille ville avec moi, du Château Frontenac au kiosque à musique en longeant le mur de la ville. Trois haltes, et la descente est terminée."
+      "en": "You slid down through the old city with me, from the Château Frontenac along the city wall to the bandstand, then read at the monument, on the Plains of Abraham and at the Parliament Building. Six stops, and the run is over.",
+      "fr": "Vous avez glissé dans la vieille ville avec moi, du Château Frontenac au kiosque à musique en longeant le mur de la ville, puis vous avez lu au monument, sur les plaines d'Abraham et à l'hôtel du Parlement. Six haltes, et la descente est terminée."
     },
     "fact": {
       "factual": false,
@@ -161,8 +161,8 @@
           "speaker": "guide",
           "expression": "surprised",
           "text": {
-            "en": "Now hold on tight! We stop three times going down, and I have something for you at each stop.",
-            "fr": "Maintenant, tenez bon! On fait trois haltes en descendant, et j'ai quelque chose pour vous à chacune."
+            "en": "Now hold on tight! We stop three times going down, and I have something for you at each stop. Past the bandstand there are three more places to read.",
+            "fr": "Maintenant, tenez bon! On fait trois haltes en descendant, et j'ai quelque chose pour vous à chacune. Après le kiosque, il y a encore trois endroits où lire."
           },
           "fact": {
             "factual": false,
@@ -221,6 +221,33 @@
               "evidence": "EXPLORING A RIVER, NAMING CANADA Between 1534 and 1542, Jacques Cartier made three voyages across the Atlantic, claiming the land for King Francis I of France. Cartier heard two captured guides speak the Iroquoian word kanata, meaning “village.” By the 1550s, the name of Canada began appearing on maps. … Jacques Cartier was the first European to explore the St. Lawrence River and to set eyes on present-day Québec City and Montreal"
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-chateau",
+      "kind": "read",
+      "targetId": "chateau-frontenac",
+      "prompt": {
+        "en": "Stop and read at the Château Frontenac",
+        "fr": "Arrêtez-vous pour lire au Château Frontenac"
+      },
+      "passages": [
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-first-settlement-1604"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-peace-with-the-iroquois-1701"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-plains-of-abraham-1759"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-wolfe-and-montcalm"
         }
       ]
     },
@@ -303,6 +330,33 @@
               "evidence": "To better govern the French Roman Catholic majority, the British Parliament passed the Quebec Act of 1774. … It allowed religious freedom for Catholics and permitted them to hold public office, a practice not then allowed in Britain. The Quebec Act restored French civil law while maintaining British criminal law."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-city-wall",
+      "kind": "read",
+      "targetId": "city-wall",
+      "prompt": {
+        "en": "Stop and read at the city wall",
+        "fr": "Arrêtez-vous pour lire au mur de la ville"
+      },
+      "passages": [
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-habitants-or-canadiens"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-first-assembly-halifax-1758"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-constitutional-act-1791"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-first-elected-assemblies-1791"
         }
       ]
     },
@@ -404,6 +458,33 @@
       ]
     },
     {
+      "id": "read-at-the-bandstand",
+      "kind": "read",
+      "targetId": "terrace-kiosk",
+      "prompt": {
+        "en": "Stop and read at the bandstand",
+        "fr": "Arrêtez-vous pour lire au kiosque à musique"
+      },
+      "passages": [
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-fathers-of-confederation"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-two-levels-of-government"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-ontario-and-quebec-created"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-born-on-july-1-1867"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-bandstand",
       "kind": "answer",
       "targetId": "history",
@@ -463,6 +544,79 @@
         "en": "Answer 5 questions about Confederation and after",
         "fr": "Répondez à 5 questions sur la Confédération et la suite"
       }
+    },
+    {
+      "id": "read-at-the-monument",
+      "kind": "read",
+      "targetId": "wolfe-montcalm-monument",
+      "prompt": {
+        "en": "Stop and read at the monument",
+        "fr": "Arrêtez-vous pour lire au monument"
+      },
+      "passages": [
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-french-empire-leaders"
+        },
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-english-colonies-grew-larger"
+        },
+        {
+          "lesson": "history-01-first-peoples-and-europeans",
+          "passage": "h1-france-and-britain-fight-for-the-continent"
+        }
+      ]
+    },
+    {
+      "id": "read-on-the-plains",
+      "kind": "read",
+      "targetId": "martello-tower",
+      "prompt": {
+        "en": "Stop and read on the Plains of Abraham",
+        "fr": "Arrêtez-vous pour lire sur les plaines d'Abraham"
+      },
+      "passages": [
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-renamed-province-of-quebec"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-quebec-act-passed-1774"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-quebec-act-is-a-foundation"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-thirteen-colonies-become-the-united-states"
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-parliament-building",
+      "kind": "read",
+      "targetId": "hotel-du-parlement",
+      "prompt": {
+        "en": "Stop and read at the Parliament Building",
+        "fr": "Arrêtez-vous pour lire à l'hôtel du Parlement"
+      },
+      "passages": [
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-democracy-grew-step-by-step"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-pei-1773-and-nb-1785"
+        },
+        {
+          "lesson": "history-02-british-colony-first-assemblies",
+          "passage": "h2-british-north-america"
+        }
+      ]
     }
   ]
 }

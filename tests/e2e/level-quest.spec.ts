@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { hasCopyRow, text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
 import { holdToMove } from './held-drive';
 import { letGo, walkInLegs } from './walk';
@@ -469,6 +470,9 @@ async function engageOnce(page: Page): Promise<'answered' | 'talked' | 'nothing'
     await page.getByTestId('poi-card-close').click();
     await expect(poi).toBeHidden();
 
+    /* The passages a `read` step names at this stop, when it names any (ADR-0067). */
+    await closeTheReaderIfItOpens(page);
+
     /*
      * The quest's own line about this place, when the player is standing on the
      * `visit` step that names it. The card is the place in its own words; this
@@ -632,9 +636,14 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
 
     await expect(page.getByTestId('dialogue')).toBeHidden();
     /* Accepting finishes the opening `talk` step in the same move, so the
-       tracker shows the step after it (`TN-QUEST-02`). */
-    await expect(tracker).toBeVisible();
-    await expect(tracker).toContainText(SECOND_STEP?.prompt.en ?? '');
+       task is the step after it (`TN-QUEST-02`). The giver is still in reach,
+       so the strip draws that step as a count — "Task 2/n" — and the sentence
+       is in the menu (ADR-0066 §2). */
+    await expect(page.getByTestId('hud-task-indicator-text')).toHaveText(
+      text('en', 'hud.task.indicator', { n: 2, total: QUEST.steps.length }),
+    );
+    await expect(tracker, 'the sentence was drawn beside the offer').toBeHidden();
+    await expect(page.getByTestId('menu-task')).toContainText(SECOND_STEP?.prompt.en ?? '');
     /* The level is running again: whoever takes it gives it back. */
     await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'false');
   });
@@ -721,8 +730,9 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await page.getByTestId('dialogue-accept').click();
     await expect(page.getByTestId('dialogue')).toBeHidden();
 
-    const tracker = page.getByTestId('hud-quest-tracker');
-    await expect(tracker).toContainText(FIRST_VISIT?.prompt.en ?? '');
+    /* The giver is still in reach, so the strip draws "Task 2/n" and the
+       sentence is in the menu, its permanent home (ADR-0066 §2). */
+    await expect(page.getByTestId('menu-task')).toContainText(FIRST_VISIT?.prompt.en ?? '');
 
     /* On past the giver — whose prompt keeps its own words while the task runs
        (ADR-0039) and read "Done. See it again" before — and up to the
@@ -741,6 +751,9 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(poi).toBeVisible();
     await page.getByTestId('poi-card-close').click();
     await expect(poi).toBeHidden();
+
+    /* Then what the stop reads, when a `read` step waits there (ADR-0067). */
+    await closeTheReaderIfItOpens(page);
 
     /* Then the speaker, in their own name — the same name the offer was made
        in, resolved the same way (`TN-QUEST-08`). */
@@ -805,7 +818,10 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     const finished = page.locator(
       '[data-testid="quest-complete-card"]:not([data-reason="unfinished"])',
     );
-    const tracker = page.getByTestId('hud-quest-tracker');
+    /* The task sentence, read where it always is: the menu (ADR-0066 §2). The
+       strip draws it only while nothing is in reach, and this walk stands at a
+       landmark most of the time. */
+    const tracker = page.getByTestId('menu-task');
     const seen: string[] = [];
 
     for (let round = 0; round < 40 && !(await finished.isVisible()); round += 1) {
@@ -894,9 +910,11 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     }
     /* The score is a count of answers, never a mark out of nothing. */
     await expect(card.getByTestId('quest-complete-progress')).toContainText('out of');
-    /* The tracker goes when the task does: no half-finished task behind a card
-       that says it is done. */
-    await expect(tracker).toBeHidden();
+    /* The tracker goes when the task does, in both of its forms and from the
+       menu: no half-finished task behind a card that says it is done. */
+    await expect(page.getByTestId('hud-quest-tracker')).toHaveCount(0);
+    await expect(page.getByTestId('hud-task-indicator')).toHaveCount(0);
+    await expect(tracker).toHaveText('');
     /* And the level is stopped behind it. */
     await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'true');
 

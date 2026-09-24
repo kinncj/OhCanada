@@ -2,12 +2,174 @@
   "$schema": "../../schemas/lesson.schema.json",
   "id": "justice-01-the-police-are-there-for-you",
   "chapter": "The Justice System",
-  "order": 1,
+  "order": 4,
   "title": {
     "en": "The police are there for you",
     "fr": "La police est là pour vous"
   },
   "passages": [
+    {
+      "id": "j1-keep-people-safe",
+      "text": {
+        "en": "The job of the police is to keep people safe and to make sure the law is followed.",
+        "fr": "Le travail de la police est d'assurer la sécurité des gens et de veiller au respect de la loi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The police are there to keep people safe and to enforce the law."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The police are there to keep people safe and to enforce the law."
+        }
+      }
+    },
+    {
+      "id": "j1-when-to-ask-for-help",
+      "text": {
+        "en": "You can go to the police for help in many situations: after an accident, if something is stolen from you, if someone attacks you, if you see a crime happening, or if a person you know is missing.",
+        "fr": "Vous pouvez demander l'aide de la police dans bien des situations : après un accident, si on vous a volé quelque chose, si quelqu'un vous agresse, si vous voyez un crime se produire ou si une personne que vous connaissez a disparu."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you, if you are a victim of assault, if you see a crime taking place or if someone you know has gone missing."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "You can ask the police for help in all kinds of situations—if there’s been an accident, if someone has stolen something from you, if you are a victim of assault, if you see a crime taking place or if someone you know has gone missing."
+        }
+      }
+    },
+    {
+      "id": "j1-more-than-one-kind-of-police",
+      "text": {
+        "en": "Canada has more than one kind of police.",
+        "fr": "Le Canada compte plus d'un type de police."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There are different types of police in Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "There are different types of police in Canada."
+        }
+      }
+    },
+    {
+      "id": "j1-provincial-and-municipal-police",
+      "text": {
+        "en": "Ontario and Quebec each have a provincial police force. Every province also has police departments run by its cities and towns.",
+        "fr": "L'Ontario et le Québec ont chacun une police provinciale. Chaque province a aussi des services de police gérés par ses villes et municipalités."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "There are provincial police forces in Ontario and Quebec and municipal police departments in all provinces."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "There are provincial police forces in Ontario and Quebec and municipal police departments in all provinces."
+        }
+      }
+    },
+    {
+      "id": "j1-rcmp-enforce-federal-laws",
+      "text": {
+        "en": "The Royal Canadian Mounted Police, or RCMP, enforce federal laws everywhere in Canada.",
+        "fr": "La Gendarmerie royale du Canada, ou GRC, fait respecter les lois fédérales partout au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Royal Canadian Mounted Police (RCMP) enforce federal laws throughout Canada"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Royal Canadian Mounted Police (RCMP) enforce federal laws throughout Canada, and serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+        }
+      }
+    },
+    {
+      "id": "j1-rcmp-as-provincial-police",
+      "text": {
+        "en": "Outside Ontario and Quebec, the RCMP also work as the provincial police in every province and territory. They police some cities and towns as well.",
+        "fr": "En dehors de l'Ontario et du Québec, la GRC sert aussi de police provinciale dans toutes les provinces et tous les territoires. Elle assure également le service de police dans certaines municipalités."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 76,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Royal Canadian Mounted Police (RCMP) enforce federal laws throughout Canada, and serve as the provincial police in all provinces and territories except Ontario and Quebec, as well as in some municipalities."
+        }
+      }
+    },
     {
       "id": "j1-police-are-there-for-you",
       "text": {
@@ -32,6 +194,60 @@
           "checkedAt": "2026-09-19T18:30:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Remember, the police are there to help you."
+        }
+      }
+    },
+    {
+      "id": "j1-question-the-police",
+      "text": {
+        "en": "If you feel you need to, you may also ask questions about how the police served you or how they behaved.",
+        "fr": "Si vous en ressentez le besoin, vous pouvez aussi poser des questions sur le service que la police vous a rendu ou sur sa conduite."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 77,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "You can also question the police about their service or conduct if you feel you need to."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "You can also question the police about their service or conduct if you feel you need to."
+        }
+      }
+    },
+    {
+      "id": "j1-raise-your-concerns",
+      "text": {
+        "en": "Nearly every police force in Canada has a way for you to raise a concern with them and ask for something to be done.",
+        "fr": "Presque tous les corps policiers du Canada offrent une façon de leur faire part d'une préoccupation et de demander que des mesures soient prises."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "The Justice System",
+          "page": 77,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Almost all police forces in Canada have a process by which you can bring your concerns to the police and seek action."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T22:11:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Almost all police forces in Canada have a process by which you can bring your concerns to the police and seek action."
         }
       }
     }

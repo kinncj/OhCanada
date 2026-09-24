@@ -36,6 +36,33 @@
       }
     },
     {
+      "id": "m3-the-quiet-revolution",
+      "text": {
+        "en": "In the 1960s, Quebec went through a time of fast change. It is called the Quiet Revolution.",
+        "fr": "Dans les années 1960, le Québec a connu une période de changements rapides. On l'appelle la Révolution tranquille."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebec experienced an era of rapid change in the 1960s known as the Quiet Revolution."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Quebec experienced an era of rapid change in the 1960s known as the Quiet Revolution."
+        }
+      }
+    },
+    {
       "id": "m3-many-quebecers-sought-to-separate",
       "text": {
         "en": "Many people in Quebec wanted their province to separate from Canada.",
@@ -59,6 +86,141 @@
           "checkedAt": "2026-09-19T14:12:00Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "French-Canadian society and culture flourished in the postwar years. Quebec experienced an era of rapid change in the 1960s known as the Quiet Revolution. Many Quebecers sought to separate from Canada."
+        }
+      }
+    },
+    {
+      "id": "m3-royal-commission-led-to-official-languages-act",
+      "text": {
+        "en": "In 1963, Parliament set up the Royal Commission on Bilingualism and Biculturalism. Its work led to the Official Languages Act of 1969. Because of that law, the federal government serves people in French and in English everywhere in Canada.",
+        "fr": "En 1963, le Parlement a créé la Commission royale d'enquête sur le bilinguisme et le biculturalisme. Ses travaux ont mené à la Loi sur les langues officielles de 1969. Grâce à cette loi, le gouvernement fédéral offre ses services en français et en anglais partout au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 46,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1963 Parliament established the Royal Commission on Bilingualism and Biculturalism. This led to the Official Languages Act (1969), which guarantees French and English services in the federal government across Canada."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1963 Parliament established the Royal Commission on Bilingualism and Biculturalism. This led to the Official Languages Act (1969), which guarantees French and English services in the federal government across Canada."
+        }
+      }
+    },
+    {
+      "id": "m3-la-francophonie-1970",
+      "text": {
+        "en": "In 1970, Canada helped to start La Francophonie, an international group of countries that speak French.",
+        "fr": "En 1970, le Canada a aidé à fonder la Francophonie, un regroupement international de pays de langue française."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1970, Canada helped found La Francophonie, an international association of French-speaking countries."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1970, Canada helped found La Francophonie, an international association of French-speaking countries."
+        }
+      }
+    },
+    {
+      "id": "m3-first-referendum-1980",
+      "text": {
+        "en": "Support for Quebec sovereignty grew. But in 1980, the people of the province voted against it in a referendum.",
+        "fr": "L'appui à la souveraineté du Québec a grandi. Mais en 1980, la population de la province l'a rejetée lors d'un référendum."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The movement for Quebec sovereignty gained strength but was defeated in a referendum in the province in 1980."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The movement for Quebec sovereignty gained strength but was defeated in a referendum in the province in 1980."
+        }
+      }
+    },
+    {
+      "id": "m3-constitution-amended-1982",
+      "text": {
+        "en": "In 1982, after long talks, the Constitution was changed even though Quebec did not agree.",
+        "fr": "En 1982, après de longues négociations, la Constitution a été modifiée sans l'accord du Québec."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "After much negotiation, in 1982 the Constitution was amended without the agreement of Quebec."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "After much negotiation, in 1982 the Constitution was amended without the agreement of Quebec."
+        }
+      }
+    },
+    {
+      "id": "m3-second-referendum-1995",
+      "text": {
+        "en": "In 1995, Quebec held a second referendum, and sovereignty was defeated again.",
+        "fr": "En 1995, le Québec a tenu un deuxième référendum, et la souveraineté a de nouveau été rejetée."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Modern Canada",
+          "page": 47,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Though sovereignty was again defeated in a second referendum in 1995"
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The movement for Quebec sovereignty gained strength but was defeated in a referendum in the province in 1980. … Though sovereignty was again defeated in a second referendum in 1995"
         }
       }
     }

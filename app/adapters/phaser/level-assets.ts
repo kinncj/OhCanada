@@ -61,6 +61,17 @@ export interface AssetManifestFile {
   readonly atlas?: string;
   /** Which levels want this file. A shared atlas names several. */
   readonly levels: readonly string[];
+  /**
+   * `width × height × 4`, as the pipeline recorded it and
+   * `scripts/lib/texture-memory.mjs` re-derived it: what this file costs once
+   * decoded. `0` for a file that is not a texture (atlas frame data, a Rive
+   * artboard).
+   *
+   * Optional, and **absent is not zero**. It is the only input TN-LEVEL-02's
+   * refusal has (`texture-budget.ts`), and a weight that defaults to nothing is
+   * the defect ADR-0020 records: a refusal summing zero cannot fire.
+   */
+  readonly decodedBytes?: number;
 }
 
 export interface AssetManifest {
@@ -132,6 +143,7 @@ export function parseAssetManifest(source: unknown): Result<AssetManifest> {
     const kind = entry['kind'];
     if (typeof path !== 'string' || typeof kind !== 'string') continue;
     const atlas = entry['atlas'];
+    const decodedBytes = entry['decodedBytes'];
     parsed.push({
       path,
       kind,
@@ -139,6 +151,9 @@ export function parseAssetManifest(source: unknown): Result<AssetManifest> {
       keys: stringsOf(entry['keys']),
       levels: stringsOf(entry['levels']),
       ...(typeof atlas === 'string' ? { atlas } : {}),
+      ...(typeof decodedBytes === 'number' && Number.isFinite(decodedBytes) && decodedBytes >= 0
+        ? { decodedBytes }
+        : {}),
     });
   }
 

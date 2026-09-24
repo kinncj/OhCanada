@@ -41,6 +41,14 @@ own stories forbid the landmark's name inside the HUD (`TN-PEGGYS-01`, `TN-NORTH
 
 The new rows are **proposed**, listed below and in `COPY_GAPS`, until this file's owner ratifies them.
 
+**Amended 2026-09-23 — ADR-0066 §2: the offer is drawn *instead of* the task, not beside it.** While something
+is in reach, the strip draws this file's prompt in full and the task collapses to a one-line indicator, "Task
+3/5" / « Mission 3/5 », whose accessible name says the same thing expanded for speech ("Task 3 of 5") — never
+the task sentence hidden in a name, which would be the asymmetry this file already calls a defect: the name
+in a button for one player and nowhere for the other. The sentence comes back when the offer is withdrawn, and
+the level menu always holds it. `TN-HUD-hud-and-menu.md` owns the indicator and its rows; this file's rows are
+unchanged. The open defect recorded at the end of *The rows were shortened* below is answered by that decision.
+
 Read `README.md` in this directory first. `TN-HUD-hud-and-menu.md` owns the strip the prompt is drawn in;
 `TN-LEVEL-ottawa.md` owns Ottawa's two per-target rows and the officer; `TN-GUIDE-the-guide.md` owns the
 guide's name and its prompt; `TN-NAMES-naming-real-places.md` owns which names may appear where;
@@ -261,6 +269,21 @@ its own make the strip big enough, and no arrangement of these words does.
 this file, with the measurement that motivates them, because pinning a face touches the initial-payload
 budget and the dyslexia-font toggle at once and is not a copy question (ADR-0045).
 
+**Answered by ADR-0066.** The same sweep measured **0 of 144** pairings overflowing on a developer machine
+where `system-ui` resolved to Liberation Sans, and **50** on the CI runner, whose face is wider. The prompt
+column is 332 px of Liberation Sans against **272 px equivalent** on the runner: 272 ⁄ 332 = 0.82, so the
+runner's face is **22 % wider** than Liberation Sans. (ADR-0066 §4c records the measurement once being described
+as "about 15 %" wider; the two pixel figures are the measurement, and 22 % is what they give.) Which face `system-ui`
+resolves to on the runner, and at what version, **has not been identified** — ADR-0066 carries that as an open
+obligation, and this paragraph will name it when it is known. It stops mattering for the gate once the game
+brings its own face and the sweep asserts that face is rendering (ADR-0066 §1, §4).
+
+What ADR-0066 decided is that the offer and the task are **no longer drawn at the same time** (see the
+amendment at the top of this file). The pair this section measured and could not fit is a pair the game no
+longer produces: an offer row now shares the strip with a one-line indicator, and a task row is drawn in full
+only when there is no offer. The rows in the table below stay short — they are plainer that way — but they
+are no longer what stands between a player and their task.
+
 The landmark rows below belong, on ratification, in each level's own story, as `hud.interact.parliament-hill`
 belongs in `TN-LEVEL-ottawa.md`. Each is written out from that level document's `pois[].name` with its article,
 and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-tower`, `canada-place` or
@@ -277,6 +300,9 @@ and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-
 | `hud.interact.village-house` | Look at the house | Regarder la maison |
 | `hud.interact.city-wall` | Look at the wall | Regarder le mur |
 | `hud.interact.terrace-kiosk` | Look at the bandstand | Regarder le kiosque |
+| `hud.interact.wolfe-montcalm-monument` | Look at the monument | Regarder le monument |
+| `hud.interact.martello-tower` | Look at the tower | Regarder la tour |
+| `hud.interact.hotel-du-parlement` | Look at the Parliament Building | Regarder l'hôtel du Parlement |
 | `hud.interact.rideau-locks` | Look at the locks | Regarder les écluses |
 | `hud.interact.library-of-parliament` | Look at the Library | Regarder la Bibliothèque |
 | `hud.interact.warming-hut` | Look at the hut | Regarder la cabane |
@@ -677,6 +703,7 @@ Feature: The prompt reaches everybody
     Given text scaling is 200 %
     And the viewport is 390 x 844
     Then the whole of the prompt's label is visible, not cut off
+    And a task being played is drawn as "hud-task-indicator", one line, and not as the sentence, as TN-HUD-01 describes
     And the whole of "See what to do here" is visible, which is the longest of the four
     And in French the whole of "Voir quoi faire ici" is visible
     And the whole of the hint is visible, by scrolling inside "hud" if needed

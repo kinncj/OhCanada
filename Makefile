@@ -6,7 +6,7 @@ SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-perf-device record-perf-device test-a11y \
         assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
-        check-obligations sources dist-digest verify-dist
+        check-obligations sources source-coverage dist-digest verify-dist
 
 help: ## List every target
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -25,8 +25,12 @@ setup: deps browsers ## Install dependencies and the Playwright browser
 deps: ## Install the npm dependencies only, with no browser
 	npm ci
 
-browsers: ## Install the Playwright browser and the OS packages it needs
+# The second line is the face the readability sweep's fallback tier names
+# (ADR-0066 §4e): DejaVu Sans, installed rather than inherited from the image,
+# so that tier measures the face it says it measures on every machine.
+browsers: ## Install the Playwright browser, the OS packages it needs, and the sweep's fallback face
 	npx playwright install --with-deps chromium
+	scripts/install-fallback-face.sh
 
 lint: ## ESLint, the dependency-cruiser architecture rules, the ADR-0009 obligation gate
 	npm run lint
@@ -185,6 +189,19 @@ validate-content: ## Validate every content file against its JSON Schema
 #                                             recorded command (5 of 7 today)
 sources: ## Re-derive each cached extraction from its document and check the digest
 	npm run sources
+
+# A MEASUREMENT, NOT A GATE, and not in CI, for the same reason as `sources`: it
+# reads the git-ignored extraction. It prints, per chapter of Discover Canada,
+# how many sentences a verified question, lesson passage or level-told claim
+# carries, how many nothing carries, and how many a playthrough alone reaches.
+# ADR-0061 §9 and ADR-0065 hold that coverage of the source can only be kept by
+# a repeated local measurement; this is that measurement, written down once.
+# The coverage plan under docs/plan/ records a run and the method.
+#
+#     npm run source-coverage -- --list    every uncovered sentence, by chapter
+#     npm run source-coverage -- --units   every unit with its class (audit)
+source-coverage: ## Per-chapter coverage of Discover Canada by surface (local, non-gating)
+	npm run --silent source-coverage
 
 # THE SEPARATION-OF-DUTIES GATE LIVES HERE, and it reads git history, so this
 # target needs the history to be present. Both workflows set `fetch-depth: 0` on

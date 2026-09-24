@@ -1,0 +1,147 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-12-ending-slavery-and-early-trade",
+  "chapter": "Canada's History",
+  "order": 12,
+  "title": {
+    "en": "Ending slavery, and early trade",
+    "fr": "La fin de l'esclavage et les débuts du commerce"
+  },
+  "passages": [
+    {
+      "id": "h12-upper-canada-moves-toward-abolition",
+      "text": {
+        "en": "In 1793, Upper Canada was the first province in the British Empire to take steps to end slavery. Its leader then was Lieutenant Governor John Graves Simcoe, a Loyalist army officer.",
+        "fr": "En 1793, le Haut-Canada a été la première province de l'Empire britannique à prendre des mesures pour abolir l'esclavage. Il était alors dirigé par le lieutenant-gouverneur John Graves Simcoe, un officier loyaliste."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1793, Upper Canada, led by Lieutenant Governor John Graves Simcoe, a Loyalist military officer, became the first province in the Empire to move toward abolition."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1793, Upper Canada, led by Lieutenant Governor John Graves Simcoe, a Loyalist military officer, became the first province in the Empire to move toward abolition. … Lieutenant Colonel John Graves Simcoe was Upper Canada’s first Lieutenant Governor"
+        }
+      }
+    },
+    {
+      "id": "h12-slavery-abolished-1833",
+      "text": {
+        "en": "In 1807, the British Parliament banned buying and selling slaves. In 1833, it ended slavery everywhere in the Empire.",
+        "fr": "En 1807, le Parlement britannique a interdit l'achat et la vente d'esclaves. En 1833, il a aboli l'esclavage partout dans l'Empire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1807, the British Parliament prohibited the buying and selling of slaves, and in 1833 abolished slavery throughout the Empire."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In 1807, the British Parliament prohibited the buying and selling of slaves, and in 1833 abolished slavery throughout the Empire."
+        }
+      }
+    },
+    {
+      "id": "h12-the-underground-railroad",
+      "text": {
+        "en": "Many people who escaped slavery made their way to Canada by the Underground Railroad. It was not a real railway. It was a Christian network that worked against slavery.",
+        "fr": "Beaucoup de personnes qui fuyaient l'esclavage sont arrivées au Canada grâce au chemin de fer clandestin. Ce n'était pas un vrai chemin de fer. C'était un réseau chrétien qui luttait contre l'esclavage."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 28,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "settled in Canada via the Underground Railroad, a Christian anti-slavery network."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Thousands of slaves escaped from the United States, followed “the North Star” and settled in Canada via the Underground Railroad, a Christian anti-slavery network."
+        }
+      }
+    },
+    {
+      "id": "h12-trading-posts-became-cities",
+      "text": {
+        "en": "Hudson's Bay Company trading posts such as Fort Garry, Fort Edmonton, Fort Langley and Fort Victoria later grew into cities.",
+        "fr": "Des postes de traite de la Compagnie de la Baie d'Hudson comme Fort Garry, Fort Edmonton, Fort Langley et Fort Victoria sont plus tard devenus des villes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "trading posts that later became cities."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Hudson’s Bay Company, with French, British and Aboriginal employees, came to dominate the trade in the northwest from Fort Garry (Winnipeg) and Fort Edmonton to Fort Langley (near Vancouver) and Fort Victoria—trading posts that later became cities."
+        }
+      }
+    },
+    {
+      "id": "h12-montreal-stock-exchange-1832",
+      "text": {
+        "en": "The Montreal Stock Exchange opened its doors in 1832.",
+        "fr": "La Bourse de Montréal a ouvert ses portes en 1832."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 29,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Montreal Stock Exchange opened in 1832."
+        },
+        "verification": {
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Montreal Stock Exchange opened in 1832."
+        }
+      }
+    }
+  ]
+}
