@@ -40,6 +40,8 @@ Tick only what applies; delete the rest.
 - [ ] EN and FR both present
 - [ ] If this adds or edits questions: I am not also the verifier, and I have not set
       `verification.status` myself
+- [ ] This PR will be merged with a **merge commit, not a squash**. A squash folds the author's and the
+      verifier's commits into one, and `verify-content` then fails `main` (ADR-0073)
 
 **Assets** (`assets/**`)
 - [ ] Licensed CC0 or CC BY, listed in `assets/credits.json` with author, licence and source

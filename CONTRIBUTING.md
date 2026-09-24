@@ -147,6 +147,11 @@ Fork the repository, branch, push, open a pull request against `main`. Then, in 
 4. **Your branch must be up to date with `main` before it can merge**, and any review conversation must be
    resolved. Merge or rebase `main` in if GitHub tells you the branch is behind.
 
+5. **A pull request that touches `content/` is merged with a merge commit, never a squash.** The
+   verification gate reads commits (see below). Your branch keeps the author's commits and the verifier's
+   commits apart, and a squash folds them into one commit that appears to do both jobs. That is how `main`
+   went red after PR #138 (ADR-0073). Maintainers: use "Create a merge commit" for content PRs.
+
 Useful things to do while you wait: fill in the pull request template honestly (it asks whether a new gate
 has been seen to *fail* on a real violation, not merely to pass — a gate nobody has watched fail is not
 known to work), and say in the description what you could not test and why.
@@ -188,6 +193,11 @@ Two more consequences you will meet:
   and drops out of the build rather than being left quietly wrong. It goes back to the verifier.
 - A question the verifier judges wrong is **rejected** and goes back to the author. Rejected and quarantined
   are different states because they wake different people.
+- **Content pull requests merge with a merge commit, not a squash.** The gate checks each commit, so a
+  squash of a properly separated branch fails it. If a squash happens anyway,
+  `scripts/content-squash-merges.json` can record it. That file is for incidents only (ADR-0073). The gate
+  then checks the pre-squash branch in its place, but only after confirming that the branch is present,
+  that its `content/` is identical to the squash, and that its own commits pass.
 
 The same rule now covers **any player-facing sentence that states a fact about Canada** — a landmark blurb
 or a line of NPC dialogue, not only a question card. A wrong fact in a dialogue line is read by the same
