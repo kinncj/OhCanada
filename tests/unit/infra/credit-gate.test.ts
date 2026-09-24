@@ -270,6 +270,18 @@ describe('the credit gate fails', () => {
     expect(result.status).toBe(1);
     expect(result.output).toContain('assets/src/rive/officer.riv is committed but not credited');
   });
+
+  it('on OFL-1.1 for a file that is not a font, because the font exception is for fonts only', () => {
+    // ADR-0004 as amended by ADR-0066 §1: OFL-1.1 is admitted because its
+    // reciprocity binds a font file and never the work that uses it. On a
+    // picture that argument does not exist, so the schema refuses the pair.
+    const result = run({ 'src/icons/badge.png': 'PNG' }, [
+      credit('src/icons/badge.png', { kind: 'shipped', licence: 'OFL-1.1' }),
+    ]);
+    expect(result.status).toBe(1);
+    expect(result.output).toMatch(/credits\.json/);
+    expect(result.output).toMatch(/pattern|path/);
+  });
 });
 
 describe('the credit gate passes', () => {
@@ -311,6 +323,20 @@ describe('the credit gate passes', () => {
     );
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('1 asset file(s) under assets/ credited');
+  });
+
+  it('for a font under OFL-1.1, with its licence text beside it and uncredited', () => {
+    // The enum value ADR-0066 asked infra for. OFL.txt is the licence itself,
+    // not a work, so the .txt exemption already covers it.
+    const result = run(
+      {
+        'src/fonts/face/Face-Regular.woff2': 'wOF2',
+        'src/fonts/face/OFL.txt': 'SIL OPEN FONT LICENSE Version 1.1\n',
+      },
+      [credit('src/fonts/face/Face-Regular.woff2', { kind: 'shipped', licence: 'OFL-1.1' })],
+    );
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('1 asset file(s) under assets/ credited (1 shipped, 0 reference)');
   });
 });
 

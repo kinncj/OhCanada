@@ -1,6 +1,9 @@
 import Phaser from 'phaser';
 
+import { UI_STACK, uiFontShorthand } from '@common/type-faces';
+
 import { fitCameraToDesign } from './design-viewport';
+import { FONT_WAIT_MS, documentFonts, whenFacesReady } from './font-ready';
 
 import { blendColors, mixColor, toPhaserColor, type BootConfig } from './boot-config';
 import {
@@ -64,8 +67,17 @@ const CREST_WIDTH = 7;
 /** A soft glow above the crest, so the land sits in the air instead of being pasted on. */
 const CREST_HAZE_DEPTH = 34;
 
-const FONT_STACK =
-  'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+/**
+ * The UI face's stack, the one the HUD and every screen draw in (ADR-0066 §1).
+ * Never a device family: the game brings its own face, and the canvas draws in it.
+ */
+const FONT_STACK = UI_STACK;
+
+/** The title's two sizes, in design pixels. Named because the font wait loads exactly these. */
+const TITLE_SIZE = 104;
+const VERSION_SIZE = 44;
+const DEBUG_SIZE = 28;
+
 
 export interface BootSceneOptions {
   readonly config: BootConfig;
@@ -107,15 +119,32 @@ export class BootScene extends Phaser.Scene {
 
     this.#paintBackground(width, height);
     this.#paintLand(width, height, horizonY);
-    this.#paintTitle(width, height);
 
-    if (config.debugOverlay) {
-      this.#paintDebugGuides(width, height, horizonY);
-      this.scale.on(Phaser.Scale.Events.RESIZE, this.#refreshDebugReadout, this);
-      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-        this.scale.off(Phaser.Scale.Events.RESIZE, this.#refreshDebugReadout, this);
-      });
-    }
+    /*
+     * Text waits for the face; the land does not. A Phaser Text rasterises once,
+     * at creation, so text made before the UI face arrives would stay in the
+     * fallback for good (./font-ready.ts). The ready signal is not held for it:
+     * the first frame is the land, and the title follows the face.
+     */
+    let shutDown = false;
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      shutDown = true;
+    });
+    void whenFacesReady(
+      documentFonts(),
+      [uiFontShorthand(700, TITLE_SIZE), uiFontShorthand(400, VERSION_SIZE)],
+      FONT_WAIT_MS,
+    ).then(() => {
+      if (shutDown) return;
+      this.#paintTitle(width, height);
+      if (config.debugOverlay) {
+        this.#paintDebugGuides(width, height, horizonY);
+        this.scale.on(Phaser.Scale.Events.RESIZE, this.#refreshDebugReadout, this);
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+          this.scale.off(Phaser.Scale.Events.RESIZE, this.#refreshDebugReadout, this);
+        });
+      }
+    });
 
     this.#options.onReady?.();
   }
@@ -237,7 +266,7 @@ export class BootScene extends Phaser.Scene {
     this.add
       .text(centreX, centreY - 40, config.title, {
         fontFamily: FONT_STACK,
-        fontSize: '104px',
+        fontSize: `${String(TITLE_SIZE)}px`,
         fontStyle: '700',
         color: config.palette.ink,
         align: 'center',
@@ -248,7 +277,7 @@ export class BootScene extends Phaser.Scene {
     this.add
       .text(centreX, centreY + 60, `v${config.version}`, {
         fontFamily: FONT_STACK,
-        fontSize: '44px',
+        fontSize: `${String(VERSION_SIZE)}px`,
         color: config.palette.inkMuted,
         align: 'center',
       })
@@ -289,7 +318,7 @@ export class BootScene extends Phaser.Scene {
     this.#debugReadout = this.add
       .text(TITLE_SAFE_MARGIN + 12, TITLE_SAFE_MARGIN + 12, '', {
         fontFamily: FONT_STACK,
-        fontSize: '28px',
+        fontSize: `${String(DEBUG_SIZE)}px`,
         color: this.#options.config.palette.ink,
         backgroundColor: 'rgba(0,0,0,0.45)',
         padding: { x: 12, y: 8 },

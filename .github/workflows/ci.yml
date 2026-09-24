@@ -245,6 +245,9 @@ jobs:
           built: 'true'
           digest: ${{ needs.build.outputs.digest }}
 
+      # The prepare action's `make setup` runs `make browsers`, which also
+      # installs DejaVu Sans: the face the readability sweep's fallback tier
+      # names (ADR-0066 §4e). That tier fails loudly if the face is not drawing.
       - name: Accessibility suite, shard ${{ matrix.shard }} of 2
         run: make test-a11y SHARD=${{ matrix.shard }}/2
 

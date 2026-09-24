@@ -221,7 +221,9 @@ describe('the screen stylesheet', () => {
     const first = injectScreenStyles(page.document);
     const second = injectScreenStyles(page.document);
     expect(first).toBe(second);
-    expect(page.doc.head.children.length).toBe(1);
+    /* Two sheets, each once: the bundled faces (ADR-0066 §1), which the screen
+       sheet declares first, and the screen sheet itself. */
+    expect(page.doc.head.children.length).toBe(2);
   });
 
   it('keeps every promise the screens depend on', () => {
