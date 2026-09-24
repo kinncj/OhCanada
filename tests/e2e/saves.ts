@@ -141,6 +141,36 @@ export function finishedSave(quest: SeededQuest): string {
 }
 
 /**
+ * A save in which each of these quests is complete and its level stamped, as
+ * the game writes them — the journey finished up to the last of them.
+ *
+ * For a scenario that starts somewhere further along than the first level:
+ * `unlockedLevelIds` opens a level only for the stamps before it in
+ * `unlockRules.order`, so being in Ottawa with the next level open needs every
+ * stamp from Halifax on (ADR-0073).
+ */
+export function journeyFinishedSave(quests: readonly SeededQuest[]): string {
+  const now = Date.now() as EpochMillis;
+  let progress = newProgress(
+    seededSettings(),
+    quests.map((quest) => quest.levelId as LevelId),
+  );
+  progress = withCharacter(progress, seededCharacter());
+  for (const quest of quests) {
+    const level = quest.levelId as LevelId;
+    progress = withQuestState(progress, level, {
+      questId: quest.id as QuestId,
+      status: 'completed',
+      stepIndex: quest.steps.length - 1,
+      stepProgress: 0,
+      updatedAt: now,
+    });
+    progress = withStamp(progress, level, now);
+  }
+  return encodeSave(progress, now);
+}
+
+/**
  * A save one answer short of finishing this level's quest: accepted, on its last
  * step, with that step's count all but met — and **no stamp**, because the
  * answer that finishes the quest is what earns it. That is the route whose card

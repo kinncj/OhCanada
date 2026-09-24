@@ -13,8 +13,10 @@
  *  1. the line sits inside the level — ahead of the spawn, short of the wall —
  *     for every level in `content/levels`, at whatever size and spawn they are
  *     authored with;
- *  2. **it fires once.** Walked past, walked back, walked past again: one
- *     arrival. A completion card per frame is what the alternative looks like;
+ *  2. **it fires once per arrival.** Jostling at the line is one arrival — a
+ *     completion card per frame is what the alternative looks like — and a walk
+ *     back behind the re-arm point and out again is a second one, because the
+ *     player really did arrive twice (ADR-0073);
  *  3. when it fires the player is still walking freely and the camera has
  *     already reached its right-hand clamp, so the moment is not "you are stuck
  *     against an invisible wall while the world is still sliding".
@@ -26,7 +28,12 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import type { Vec2 } from '@application/ports';
-import { EXIT_VIEW_FRACTION, exitLineX, watchExit } from '@adapters/phaser/level-exit';
+import {
+  EXIT_REARM_VIEW_FRACTION,
+  EXIT_VIEW_FRACTION,
+  exitLineX,
+  watchExit,
+} from '@adapters/phaser/level-exit';
 import { followCamera, scrollBounds } from '@adapters/phaser/level-camera';
 import { groundYAt, levelBounds, slopeAt } from '@adapters/phaser/ground-profile';
 import { applyBounds, createLocomotion } from '@adapters/phaser/locomotion';
@@ -184,26 +191,32 @@ describe('the end of a level is a place inside it', () => {
   });
 });
 
-describe('it fires once', () => {
+describe('it fires once per arrival', () => {
   it.each(LEVELS.map((level) => [level.id, level] as const))(
-    '%s says it once across the line, back over it, and across again',
+    '%s says it once for jostling at the line, and again after a real walk back',
     (_id, level) => {
-      /* Out to the end, three seconds back the way they came — far enough to
-         leave the zone at every one of the four speeds — and out again. This is
-         the jostling that would otherwise produce a completion card a frame. */
+      /* Out to the end, then the jostle a player makes on arriving: a moment's
+         turn back and on again, short of the re-arm margin. One arrival. */
+      const jostle = walk(level, [
+        { move: 1, frames: TO_THE_END },
+        { move: -1, frames: 2 },
+        { move: 1, frames: 30 },
+      ]);
+      expect(jostle.arrivals, 'a turn at the line announced the end a second time').toBe(1);
+
+      /* Three seconds back the way they came — far enough to leave the zone at
+         every speed the levels declare — and out again: two arrivals, because
+         the player really did leave the end and come back to it. */
       const { arrivals } = walk(level, [
         { move: 1, frames: TO_THE_END },
         { move: -1, frames: 180 },
         { move: 1, frames: 300 },
-        { move: -1, frames: 60 },
-        { move: 1, frames: 120 },
       ]);
-
-      expect(arrivals).toBe(1);
+      expect(arrivals, 'walking back behind the line did not re-arm it').toBe(2);
     },
   );
 
-  it('keeps its answer after the arrival, without re-deciding it', () => {
+  it('keeps its answer while the player stays past the line', () => {
     const level = LEVELS[0];
     if (level === undefined) throw new Error('content/levels is empty');
     const watch = watchExit({
@@ -218,6 +231,44 @@ describe('it fires once', () => {
     expect(watch.reached).toBe(true);
     expect(watch.arrived(watch.x)).toBe(false);
     expect(watch.arrived(watch.x + 1000)).toBe(false);
+  });
+
+  it('re-arms only once the player is behind the re-arm point, then fires again', () => {
+    const watch = watchExit({ bounds: { left: 0, right: 9000 }, spawnX: 640, viewWidth: 1080 });
+    const margin = 1080 * EXIT_REARM_VIEW_FRACTION;
+
+    expect(watch.rearmX).toBeCloseTo(watch.x - margin, 6);
+    expect(watch.arrived(watch.x)).toBe(true);
+
+    /* Back over the line but not by the margin: still the same arrival. */
+    expect(watch.arrived(watch.x - 1)).toBe(false);
+    expect(watch.reached).toBe(true);
+    expect(watch.arrived(watch.rearmX)).toBe(false);
+    expect(watch.reached).toBe(true);
+    expect(watch.arrived(watch.x)).toBe(false);
+
+    /* Behind the re-arm point: the latch opens, and the next crossing is news. */
+    expect(watch.arrived(watch.rearmX - 1)).toBe(false);
+    expect(watch.reached).toBe(false);
+    expect(watch.arrived(watch.x - 1)).toBe(false);
+    expect(watch.arrived(watch.x)).toBe(true);
+    expect(watch.arrived(watch.x + 5)).toBe(false);
+  });
+
+  it('re-arms ahead of the spawn in a level too short for the whole margin', () => {
+    const watch = watchExit({ bounds: { left: 0, right: 800 }, spawnX: 640, viewWidth: 1080 });
+    expect(watch.rearmX).toBeGreaterThan(640);
+    expect(watch.rearmX).toBeLessThan(watch.x);
+  });
+
+  it('re-arms behind the line even when the view is nonsense', () => {
+    const watch = watchExit({
+      bounds: { left: 0, right: 9000 },
+      spawnX: 640,
+      viewWidth: Number.NaN,
+    });
+    expect(watch.rearmX).toBeLessThan(watch.x);
+    expect(watch.rearmX).toBeGreaterThan(640);
   });
 });
 

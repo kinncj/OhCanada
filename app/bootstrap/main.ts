@@ -1606,8 +1606,25 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
         if (outcome.kind === 'finished' && outcome.stampEarned) {
           progress = outcome.progress;
           persist();
+          return 'stamped';
         }
         return outcome.kind;
+      },
+      /*
+       * The next place on the journey, asked fresh: `entriesNow()` runs the
+       * unlock rule over the save as it is now, so a stamp written a moment ago
+       * has already opened what it opens. The same three checks
+       * `playNextLevel` makes, so a level offered here is one it will open.
+       */
+      nextLevel: () => {
+        const now = entriesNow();
+        const here = now.findIndex((entry) => entry.id === id);
+        const next = here < 0 ? undefined : now[here + 1]?.id;
+        if (next === undefined || !isPlayable(now, next) || levelWords(next) === null) return null;
+        return next;
+      },
+      onWalkOnToLevel: (next) => {
+        playNextLevel(next, { walkedOn: true });
       },
       onLeave: () => {
         leaveLevel();
@@ -1782,7 +1799,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
    * the map, focused on the card that just opened, which is where every other
    * way out of a level lands.
    */
-  function playNextLevel(id: LevelId): void {
+  function playNextLevel(id: LevelId, how: { readonly walkedOn?: boolean } = {}): void {
     if (session === null) return;
     if (!isPlayable(entriesNow(), id) || levelWords(id) === null) {
       console.error(
@@ -1794,6 +1811,18 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
       return;
     }
     if (!teardownLevel()) return;
+    /*
+     * Walked off the end of a finished level (ADR-0073): the canvas that showed
+     * the player leaving is `aria-hidden`, so the live region says the level is
+     * finished, and then the next level's own waiting sentence and its name
+     * follow as they do on every route in. Said *after* the teardown, which
+     * empties the queue of everything the old level had left to say. Nothing on
+     * this route animates, so reduced motion has nothing to turn off.
+     */
+    if (how.walkedOn === true) {
+      const spoken = store.current.locale;
+      announce(text(spoken, 'level.complete.title'), spoken);
+    }
     /* The comparison the *next* level's completion card will be made against.
        `enterLevel` sets it again from the same value; setting it here as well
        keeps the invariant true even on the path that refuses below. */
@@ -1978,12 +2007,30 @@ interface LevelWiring {
    *
    * Called when the player reaches the end of the world, and called by nothing
    * else. It is the caller's because only the caller holds `Progress` and the
-   * save. `'finished'` means the stamp is in the passport — earned now, or
-   * already — and `'unfinished'` means the level's task is not done and nothing
+   * save. `'stamped'` means this arrival wrote the stamp; `'finished'` means it
+   * was already in the passport — earned by the task in this sitting or in an
+   * earlier one; `'unfinished'` means the level's task is not done and nothing
    * was written (ADR-0036, `reachLevelEnd`). Idempotent in the domain: a level
    * finished twice is one stamp, one unlock and one line in the passport.
    */
-  readonly finishLevel: () => 'finished' | 'unfinished';
+  readonly finishLevel: () => 'stamped' | 'finished' | 'unfinished';
+  /**
+   * The level after this one in `journey` order, when the player may open it
+   * right now — built, unlocked and nameable — or `null` (ADR-0073).
+   *
+   * Not {@link openedNext}: that is "what opened while this level was open",
+   * which is `null` for a level stamped in an earlier sitting. Arriving at the
+   * end of a finished level goes on to the next place on the journey whether or
+   * not it opened today.
+   */
+  readonly nextLevel: () => LevelId | null;
+  /**
+   * Go on to that level because the player walked off the end of a finished
+   * one (ADR-0073): the same route as {@link onPlayNextLevel}, with the
+   * transition said in the live region, because the canvas that showed it is
+   * `aria-hidden`.
+   */
+  readonly onWalkOnToLevel: (id: LevelId) => void;
   readonly onLeave: () => void;
   /**
    * Leave, and land the player on a card other than this level's.
@@ -2693,13 +2740,15 @@ function openLevel(wiring: LevelWiring): LevelSession {
   let cardShown = false;
 
   /**
-   * Did the player reach the end with the level's task unfinished, this sitting?
+   * Is a card about the end of the level on screen right now — either one?
    *
-   * ADR-0036. The arrival is latched by the scene and said once; the card that
-   * says what is left is drawn once. Finishing the task afterwards still draws
-   * "Task done!" — `cardShown` is about that card, and this is not.
+   * The mock-proof answer to "is the completion card open": the scene is
+   * paused behind the card, so no arrival can reach here while it is, but a
+   * milestone that did would draw a second card over the first. Set when
+   * either card is drawn and cleared by "Keep playing"; leaving takes the whole
+   * level down with it.
    */
-  let endReachedUnfinished = false;
+  let endCardUp = false;
 
   /** The unfinished card is owed, waiting for a card or a question to close. */
   let unfinishedOwed = false;
@@ -2791,6 +2840,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
       else wiring.onLeaveToLevel(next);
     },
     onKeepPlaying: () => {
+      endCardUp = false;
       pause.release('complete');
     },
     /*
@@ -2901,6 +2951,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
     finished = false;
     if (cardShown) return;
     cardShown = true;
+    endCardUp = true;
     showing = 'finished';
     /* The task is done: whatever the unfinished card was waiting to say is not
        true any more. */
@@ -2959,7 +3010,7 @@ function openLevel(wiring: LevelWiring): LevelSession {
   }
 
   /**
-   * Draw the card that says what is left, once per sitting.
+   * Draw the card that says what is left, once per arrival (ADR-0073).
    *
    * Its own hold, `'complete'`, like the finished card's: keeping playing
    * releases it through the same `onKeepPlaying`, and leaving takes the level
@@ -2967,34 +3018,53 @@ function openLevel(wiring: LevelWiring): LevelSession {
    */
   function showUnfinished(): void {
     unfinishedOwed = false;
-    if (cardShown) return;
+    if (cardShown || endCardUp) return;
+    endCardUp = true;
     showing = 'unfinished';
     pause.hold('complete');
     completed.show(completionContent);
   }
 
   /**
-   * The player reached the end of the level.
+   * The player reached the end of the level — or the world said it is over.
    *
    * `level/exitReached` is the scene reporting a **position**; this is where it
    * becomes an achievement, which is the split `app/adapters/phaser`'s
-   * `level-events.ts` asks for and the reason the decision is here. Since
-   * ADR-0036 it is an achievement only when the level's task is done — or the
-   * level sets none, or its stamp is already held. Otherwise nothing is written,
-   * nothing opens, the world keeps its marks, and the card says what is left.
-   * When it is, in order:
-   * the stamp goes into the passport (so `unlockedLevelIds` has already opened
-   * whatever it opens before anything is drawn), the world is told the level is
-   * over so nothing left in it keeps asking to be done, and then — and only
-   * then — the card says so.
+   * `level-events.ts` asks for and the reason the decision is here. The scene
+   * reports **each arrival**: its latch re-arms once the player walks back
+   * behind the line (ADR-0073), so this runs again every time they come back to
+   * the end, and each outcome below is decided afresh.
+   *
+   *  - **The task is not done** (ADR-0036): nothing is written, nothing opens,
+   *    the world keeps its marks, and the card says what is left — once per
+   *    arrival, so a player who kept playing and came back is told again.
+   *  - **The stamp was already in the passport** — earned by the task in this
+   *    sitting, when "Task done!" was drawn, or in an earlier one: the player is
+   *    taken straight on to the next place on the journey, by the same route
+   *    the card's "Play …" takes (ADR-0073). The card already said the level
+   *    was finished; saying it again at the end is the dead end the owner's
+   *    playtest found ("hitting the end of the wall should send you to the
+   *    next level").
+   *  - **This arrival wrote the stamp** (a level with no task, or a save whose
+   *    quest was completed by an older build), **or there is nowhere to go**
+   *    (the last level, or the next one is not open): the finished card, as
+   *    before, once per sitting. The stamp is news the player has not been told,
+   *    and the card is the one place that says it.
+   *
+   * `mayWalkOn` is `false` for `level/completed`, which is the scene's echo of
+   * the `markLevelComplete` call in {@link showCompleted}: an echo is not an
+   * arrival and must never move the player anywhere.
    *
    * Idempotent at every step: `withStamp` keeps the first moment,
    * `markLevelComplete` returns early, and {@link showCompleted} draws once.
    */
-  function reachedTheEnd(): void {
-    if (cardShown || endReachedUnfinished) return;
-    if (wiring.finishLevel() === 'unfinished') {
-      endReachedUnfinished = true;
+  function reachedTheEnd(mayWalkOn: boolean): void {
+    /* A card about the end is already up. The scene is paused behind it, so
+       this is a guard rather than a path. */
+    if (endCardUp) return;
+    if (!mayWalkOn && cardShown) return;
+    const outcome = wiring.finishLevel();
+    if (outcome === 'unfinished') {
       /* The same guard as below, for the same reason: a card never opens over
          another card. `backToTheLevel` draws what is owed. */
       if (card.visible || runner.running) {
@@ -3004,9 +3074,6 @@ function openLevel(wiring: LevelWiring): LevelSession {
       showUnfinished();
       return;
     }
-    /* The world's half — `markLevelComplete` — is `showCompleted`'s, so a level
-       finished by its task is told it is over as well as one walked to the end
-       (ADR-0036). */
     /* A level cannot advance while a modal is open — the pause stops the scene,
        and the scene is what watches the exit line — so this branch is a guard
        rather than a path. It is here because the failure it prevents is a
@@ -3016,6 +3083,16 @@ function openLevel(wiring: LevelWiring): LevelSession {
       finished = true;
       return;
     }
+    if (mayWalkOn && outcome === 'finished') {
+      const next = wiring.nextLevel();
+      if (next !== null) {
+        wiring.onWalkOnToLevel(next);
+        return;
+      }
+    }
+    /* The world's half — `markLevelComplete` — is `showCompleted`'s, so a level
+       finished by its task is told it is over as well as one walked to the end
+       (ADR-0036). */
     showCompleted();
   }
 
@@ -3556,8 +3633,10 @@ function openLevel(wiring: LevelWiring): LevelSession {
     }
     switch (event.type) {
       case 'level/exitReached':
+        reachedTheEnd(true);
+        return;
       case 'level/completed':
-        reachedTheEnd();
+        reachedTheEnd(false);
         return;
       case 'quest/completed':
         /* One subject finished, not the level. The world has already stopped
