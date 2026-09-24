@@ -194,6 +194,18 @@ Written in ADR-0009's format.
      background headroom. `make test` green with the test above. Record the two measured figures in
      `docs/plan/slices.md` row F3b.
 
+  **DISCHARGED 2026-09-24** — by infra, on branch `sw-cache-budget`, items 1–9 as written. The arithmetic is
+  `scripts/lib/worker-budget.mjs`, which `deploy-check.mjs` calls; the combined clause and its message are
+  gone. `make assets && make build` prints `service worker ON: precache 46 file(s), 4946.4 kB against 8.0 MiB;
+  then 112 level art file(s) over 10 level(s), 3210.7 kB against 5.0 MiB, in the background; a first visit
+  that stays downloads 8157.1 kB of at most 13631.5 kB`. Precache 4,946,398 B (headroom 3,442,210), level art
+  3,210,723 B (**headroom 2,032,157 B**, exactly the figure above). The precache is 29 B more than this
+  record's 4,946,369, from a different `index.html`. A real breach was proved on the built tree: with the
+  key set to 3,210,722, `deploy-check` exits 1 naming the-north 449.7 kB, alberta-foothills 434.9 kB, ottawa
+  298.7 kB and 4 shared files, 744.1 kB; with the key deleted it exits 1 with the "no positive numeric"
+  message. `tests/unit/infra/worker-budget-gate.test.ts` (15 cases) was run against 13 deliberately broken
+  implementations and failed on every one. Runbook gate row and `slices.md` F3b updated.
+
 ## Alternatives considered
 
 - **(b) Cache in the background only the next open level, and cache the rest when each is played.** It would

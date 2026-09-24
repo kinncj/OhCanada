@@ -16,7 +16,8 @@
  *      never gain a fetch handler, and nothing may register. On, it is the
  *      Workbox worker, whose precache must be exactly this build's shell and
  *      code and fit the initial payload budget, and whose level art must be
- *      exactly the files dist/manifest.json names. In both modes nothing the
+ *      exactly the files dist/manifest.json names and fit
+ *      `budgets.backgroundCacheBytes` (ADR-0075). In both modes nothing the
  *      page statically loads may reference it;
  *   6. a level in dist/manifest.json exceeds `budgets.levelPayloadBytes`, or the
  *      manifest and the files in dist/ have stopped agreeing. `make assets` is
@@ -67,6 +68,7 @@ import {
   serviceWorkerEnabled,
 } from './lib/pwa.mjs';
 import { checkTextureMemory } from './lib/texture-memory.mjs';
+import { backgroundBudgetKeyFailure, checkWorkerBudgets } from './lib/worker-budget.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIR = join(ROOT, 'dist');
@@ -413,6 +415,11 @@ if (distFiles.length > 0 && existsSync(INDEX_HTML) && config !== null) {
  *   - The precache fits `budgets.initialPayloadBytes`. It is not the initial
  *     payload (see above), but it is what a first visit ends up downloading,
  *     and it gets the same ceiling rather than none.
+ *   - The level art it caches in the background fits
+ *     `budgets.backgroundCacheBytes`, on its own, never added to the precache
+ *     (ADR-0075). A breach names the three heaviest levels and the shared
+ *     files, so the message says whose bytes broke it. The key is required
+ *     with the worker off too; it is only not measured.
  *   - Its level art is exactly the set dist/manifest.json names, with the same
  *     levels per file. A file missing there is art that is never cached for
  *     offline play; an extra one is a file that no longer ships.
@@ -460,7 +467,14 @@ if (config !== null && existsSync(SW_FILE)) {
           'install the tombstone on devices that never had a worker.',
       );
     }
-    workerSummary = 'service worker OFF: tombstone sw.js present and inert, nothing registers it';
+    // ADR-0075: the key is required in both modes, so turning the worker back
+    // on can never be the commit that discovers it missing. Off, nothing is
+    // cached in the background, so nothing is measured against it.
+    const keyFailure = backgroundBudgetKeyFailure(config.budgets);
+    if (keyFailure !== null) fail(keyFailure);
+    workerSummary =
+      'service worker OFF: tombstone sw.js present and inert, nothing registers it; ' +
+      'background level cache not checked (tombstone)';
   } else {
     if (!worker.startsWith(WORKER_BANNER)) {
       fail(
@@ -506,15 +520,13 @@ if (config !== null && existsSync(SW_FILE)) {
 
     // ---- the precache
     const precache = readInjected(worker, PRECACHE_SENTINEL);
-    const budget = config.budgets?.initialPayloadBytes;
     let precacheFiles = 0;
-    let precacheBytes = 0;
+    const precached = new Set();
     if (precache.error !== undefined) {
       fail(`dist/sw.js: ${precache.error}; the worker's precache cannot be checked.`);
     } else if (!Array.isArray(precache.value) || precache.value.length === 0) {
       fail('dist/sw.js precaches nothing, so nothing about the game would work offline.');
     } else {
-      const precached = new Set();
       for (const entry of precache.value) {
         const url = entry?.url;
         if (typeof url !== 'string' || url.length === 0) {
@@ -542,7 +554,6 @@ if (config !== null && existsSync(SW_FILE)) {
           );
         }
         precached.add(url);
-        precacheBytes += statSync(file).size;
       }
       precacheFiles = precached.size;
 
@@ -559,13 +570,6 @@ if (config !== null && existsSync(SW_FILE)) {
         fail(
           `dist/sw.js does not precache ${absent.length} file(s) the game needs offline: ` +
             `${absent.slice(0, 8).join(', ')}${absent.length > 8 ? ', ...' : ''}.`,
-        );
-      }
-
-      if (typeof budget === 'number' && Number.isFinite(budget) && budget > 0 && precacheBytes > budget) {
-        fail(
-          `dist/sw.js precaches ${mib(precacheBytes)} over ${precacheFiles} file(s); the ceiling is ` +
-            `budgets.initialPayloadBytes, ${mib(budget)}. A first visit downloads all of it.`,
         );
       }
     }
@@ -628,38 +632,35 @@ if (config !== null && existsSync(SW_FILE)) {
       }
     }
 
-    // ---- what a first visit downloads in the background
-    // ADR-0034, amended 2026-09-15: the precache installs, and then every page the
-    // worker controls asks it for every level's art, both scales, so a level never
-    // played online still opens offline. A first visit that stays downloads both,
-    // so both are held together under the ceiling the precache alone was held to.
-    // A build whose art outgrows it fails here, and the decision to cache every
-    // level in the background is reopened rather than quietly made expensive.
-    let artBytes = 0;
-    if (art.value !== null && typeof art.value === 'object' && !Array.isArray(art.value)) {
-      for (const path of Object.keys(art.value)) {
-        const file = join(DIST_DIR, path);
-        if (existsSync(file) && statSync(file).isFile()) artBytes += statSync(file).size;
-      }
-    }
-    if (
-      typeof budget === 'number' &&
-      Number.isFinite(budget) &&
-      budget > 0 &&
-      precacheBytes + artBytes > budget
-    ) {
-      fail(
-        `dist/sw.js precaches ${mib(precacheBytes)} and then caches every level's art, ${mib(artBytes)}, in ` +
-          `the background: ${mib(precacheBytes + artBytes)} against budgets.initialPayloadBytes, ${mib(budget)}. ` +
-          'A first visit that stays downloads all of it. Make the art smaller, or stop caching every level in ' +
-          'the background (ADR-0034).',
-      );
-    }
+    // ---- the worker's two downloads, each under its own budget (ADR-0075)
+    // The precache installs after `load`; then every page the worker controls
+    // asks it for every level's art, both scales, so a level never played online
+    // still opens offline (ADR-0034). Each download has its own key and its own
+    // owner: the precache stays under budgets.initialPayloadBytes, the level art
+    // is held to budgets.backgroundCacheBytes. They are not added together, so a
+    // lesson commit cannot fail on the art, nor an art commit on the lessons.
+    // The arithmetic is scripts/lib/worker-budget.mjs, which the gate's test
+    // drives directly.
+    const budgets = config.budgets;
+    const levelArt =
+      art.value !== null && typeof art.value === 'object' && !Array.isArray(art.value) ? art.value : {};
+    const { precacheBytes, artBytes, failures: budgetFailures } = checkWorkerBudgets({
+      distDir: DIST_DIR,
+      precacheUrls: [...precached],
+      levelArt,
+      budgets,
+    });
+    for (const message of budgetFailures) fail(message);
 
+    const precacheBudget = budgets?.initialPayloadBytes;
+    const backgroundBudget = budgets?.backgroundCacheBytes;
+    const ceiling = (value) => (typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : 0);
     workerSummary =
-      `service worker ON: precache ${precacheFiles} file(s), ${kb(precacheBytes)}, then ${artFiles} level art ` +
-      `file(s) over ${artLevels} level(s), ${kb(artBytes)}, in the background: ${kb(precacheBytes + artBytes)} ` +
-      `against ${mib(typeof budget === 'number' ? budget : 0)}`;
+      `service worker ON: precache ${precacheFiles} file(s), ${kb(precacheBytes)} against ` +
+      `${mib(ceiling(precacheBudget))}; then ${artFiles} level art file(s) over ${artLevels} level(s), ` +
+      `${kb(artBytes)} against ${mib(ceiling(backgroundBudget))}, in the background; a first visit that ` +
+      `stays downloads ${kb(precacheBytes + artBytes)} of at most ` +
+      `${kb(ceiling(precacheBudget) + ceiling(backgroundBudget))}`;
   }
 }
 
