@@ -27,11 +27,11 @@
           "quote": "The North is often referred to as the “Land of the Midnight Sun” because at the height of summer, daylight can last up to 24 hours."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The North is often referred to as the “Land of the Midnight Sun” because at the height of summer, daylight can last up to 24 hours."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "The Northern territories have long cold winters and short cool summers."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Northern territories have long cold winters and short cool summers."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Much of the North is made up of tundra, the vast rocky Arctic plain. Because of the cold Arctic climate, there are no trees on the tundra and the soil is permanently frozen."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Much of the North is made up of tundra, the vast rocky Arctic plain. Because of the cold Arctic climate, there are no trees on the tundra and the soil is permanently frozen."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "The capital, Yellowknife (population 20,000), is called the “diamond capital of North America.”"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Northwest Territories … The capital, Yellowknife … is called the “diamond capital of North America.”"
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "The Mackenzie River, at 4,200 kilometres, is the second-longest river system in North America after the Mississippi"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The Mackenzie River, at 4,200 kilometres, is the second-longest river system in North America after the Mississippi"
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Nunavut, meaning “our land” in Inuktitut"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Nunavut, meaning “our land” in Inuktitut, was established in 1999"
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "was established in 1999 from the eastern part of the Northwest Territories, including all of the former District of Keewatin."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Nunavut, meaning “our land” in Inuktitut, was established in 1999 from the eastern part of the Northwest Territories, including all of the former District of Keewatin."
         }
       }
     },
@@ -243,11 +243,11 @@
           "quote": "The capital is Iqaluit, formerly Frobisher Bay, named after the English explorer Martin Frobisher"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Nunavut … The capital is Iqaluit, formerly Frobisher Bay, named after the English explorer Martin Frobisher"
         }
       }
     },
@@ -270,11 +270,11 @@
           "quote": "Legislative Assembly chooses a premier and ministers by consensus."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Nunavut … Legislative Assembly chooses a premier and ministers by consensus."
         }
       }
     }

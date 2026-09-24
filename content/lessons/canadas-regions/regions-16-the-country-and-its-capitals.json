@@ -27,11 +27,11 @@
           "quote": "Canada is the second largest country on earth—10 million square kilometres."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada is the second largest country on earth—10 million square kilometres."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "Three oceans line Canada’s frontiers: the Pacific Ocean in the west, the Atlantic Ocean in the east, and the Arctic Ocean to the north."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Three oceans line Canada’s frontiers: the Pacific Ocean in the west, the Atlantic Ocean in the east, and the Arctic Ocean to the north."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Canada includes many different geographical areas and five distinct regions."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada includes many different geographical areas and five distinct regions."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Canada has ten provinces and three territories. Each province and territory has its own capital city."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Canada has ten provinces and three territories. Each province and territory has its own capital city."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Ottawa, located on the Ottawa River, was chosen as the capital in 1857"
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Newfoundland and Labrador................... St. John’s"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Newfoundland and Labrador................... St. John’s"
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "Prince Edward Island .............................. Charlottetown"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Prince Edward Island .............................. Charlottetown"
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "Nova Scotia............................................. Halifax"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Nova Scotia............................................. Halifax"
         }
       }
     },
@@ -243,11 +243,11 @@
           "quote": "New Brunswick ....................................... Fredericton"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … New Brunswick ....................................... Fredericton"
         }
       }
     },
@@ -270,11 +270,11 @@
           "quote": "Quebec ................................................... Québec City"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Quebec ................................................... Québec City"
         }
       }
     },
@@ -297,11 +297,11 @@
           "quote": "Ontario .................................................... Toronto"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Ontario .................................................... Toronto"
         }
       }
     },
@@ -324,11 +324,11 @@
           "quote": "Manitoba ................................................. Winnipeg"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Manitoba ................................................. Winnipeg"
         }
       }
     },
@@ -351,11 +351,11 @@
           "quote": "Saskatchewan......................................... Regina"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Saskatchewan......................................... Regina"
         }
       }
     },
@@ -378,11 +378,11 @@
           "quote": "Alberta..................................................... Edmonton"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Alberta..................................................... Edmonton"
         }
       }
     },
@@ -405,11 +405,11 @@
           "quote": "British Columbia...................................... Victoria"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … British Columbia...................................... Victoria"
         }
       }
     },
@@ -432,11 +432,11 @@
           "quote": "Nunavut................................................... Iqaluit"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Nunavut................................................... Iqaluit"
         }
       }
     },
@@ -459,11 +459,11 @@
           "quote": "Northwest Territories............................... Yellowknife"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Northwest Territories............................... Yellowknife"
         }
       }
     },
@@ -486,11 +486,11 @@
           "quote": "Yukon Territory ....................................... Whitehorse"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "REGION PROVINCE/TERRITORY CAPITAL CITY … Yukon Territory ....................................... Whitehorse"
         }
       }
     }

@@ -27,11 +27,11 @@
           "quote": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba, Saskatchewan and Alberta are the Prairie Provinces"
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "The province’s most populous city is Winnipeg, whose Exchange District includes the most famous street intersection in Canada, Portage and Main."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … The province’s most populous city is Winnipeg, whose Exchange District includes the most famous street intersection in Canada, Portage and Main."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … Winnipeg’s French Quarter, St. Boniface, has Western Canada’s largest Francophone community"
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Manitoba is also an important centre of Ukrainian culture"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Manitoba … Manitoba is also an important centre of Ukrainian culture"
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,”"
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan, once known as the “breadbasket of the world” and the “wheat province,”"
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Saskatchewan … Regina, the capital, is home to the training academy of the Royal Canadian Mounted Police."
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … The province, and the world-famous Lake Louise in the Rocky Mountains, were both named after Princess Louise Caroline Alberta, fourth daughter of Queen Victoria."
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "Alberta has five national parks, including Banff National Park, established in 1885."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … Alberta has five national parks, including Banff National Park, established in 1885."
         }
       }
     },
@@ -243,11 +243,11 @@
           "quote": "The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Alberta … The rugged Badlands house some of the world’s richest deposits of prehistoric fossils and dinosaur finds."
         }
       }
     },
@@ -270,11 +270,11 @@
           "quote": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "British Columbia is known for its majestic mountains and as Canada’s Pacific gateway."
         }
       }
     },
@@ -297,11 +297,11 @@
           "quote": "Warm airstreams from the Pacific Ocean give the B.C. coast a temperate climate."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Warm airstreams from the Pacific Ocean give the B.C. coast a temperate climate."
         }
       }
     },
@@ -324,11 +324,11 @@
           "quote": "The capital, Victoria, is a tourist centre and headquarters of the navy’s Pacific fleet."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-24T01:41:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "British Columbia … The capital, Victoria, is a tourist centre and headquarters of the navy’s Pacific fleet."
         }
       }
     }
