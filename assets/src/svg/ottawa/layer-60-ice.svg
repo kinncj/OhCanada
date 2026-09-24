@@ -21,6 +21,10 @@
   <path d="M 743 220 Q 821 242 899 224" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
   <path d="M 986 145 Q 1088.5 167 1191 149" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
   <path d="M 1229 180 Q 1373 202 1517 184" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
-  <path d="M 0 516 Q 360 486 760 512 Q 1120 536 1440 506 L 1440 560 L 0 560 Z" fill="#e6eff7"/>
-  <path d="M 0 516 Q 360 486 760 512 Q 1120 536 1440 506 L 1440 530 L 0 534 Z" fill="#ffffff"/>
+  <rect x="-283" y="116" width="315" height="24" rx="12" fill="#e4f2f6"/>
+  <path d="M -176 186 Q -15 160 146 184" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M 1378 236 Q 1479.5 210 1581 234" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+  <path d="M -211 180 Q -67 202 77 184" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.26"/>
+  <path d="M 0 512 Q 360 486 760 512 Q 1120 536 1440 512 L 1440 560 L 0 560 Z" fill="#e6eff7"/>
+  <path d="M 0 512 Q 360 486 760 512 Q 1120 536 1440 512 L 1440 532 L 0 532 Z" fill="#ffffff"/>
 </svg>

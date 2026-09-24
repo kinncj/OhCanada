@@ -1115,7 +1115,8 @@
         "a snow chute",
         "a winter promenade",
         "a boardwalk and a snow chute",
-        "a railed promenade and a snow run"
+        "a railed promenade and a snow run",
+        "a toboggan slide"
       ],
       "expectedBlindAnswerNote": [
         "GENERIC ON PURPOSE, and this list is the whole reason this note exists. Both renders are REPEATING parallax",
@@ -1130,7 +1131,8 @@
         "separate, non-repeating subject that draws one specific building and IS required to be named. The run is where",
         "the player toboggans; the Chateau is what says which city. Splitting them is what lets each be judged on what",
         "it actually contains.",
-        "Every answer here is deliberately free of ordinary connectives four letters or longer. \"a boardwalk with an ornate railing above a snow slope\" was in this list for one run and failed the hand-off's leak scan on the token \"with\". See the note on quebec-city-riverfront."
+        "Every answer here is deliberately free of ordinary connectives four letters or longer. \"a boardwalk with an ornate railing above a snow slope\" was in this list for one run and failed the hand-off's leak scan on the token \"with\". See the note on quebec-city-riverfront.",
+        "WIDENED 2026-09-24 after blind run 680d44f3192feaf0: `a toboggan slide` is accepted. The identifier answered `Dufferin Terrace, Quebec City, with the winter toboggan slide` with all seven mustBeRight features present and failed on the noun alone. `Slide` and `run` name the same built object here - the 1905 reference is captioned `The Toboggan Slide, Quebec`, and this list already accepts `a snow slide` and `an ice slide` - so refusing `a toboggan slide` punished a correct answer. It is widened only to a phrase that names the same thing: `a slide`, `a slope` or `a hill` alone still fail, because none of them says a toboggan or a built chute. It adds no new token to the hand-off leak scan: `toboggan` and `slide` are both already in this list."
       ],
       "referenceFiles": [
         "quebec-city/dufferin-terrace-toboggan-slide-1905.jpg",
@@ -4608,8 +4610,8 @@
         },
         {
           "feature": "the player matches the riders already on the level",
-          "why": "Two riders are drawn into layer-60-slope.svg seated, knees up, leaning back on flat plank toboggans. The player must be the same object in the same posture.",
-          "detail": "Same plank, same curl, same recline."
+          "why": "Three riders are drawn into layer-60-slope.svg seated, knees up, leaning back on flat plank toboggans with curled prows. The player must be the same object in the same posture.",
+          "detail": "Same plank, same curl, same recline. REDRAWN 2026-09-24 after blind run 680d44f3192feaf0 found the level's riders on a STRAIGHT upturned front and sitting upright or leaning forward while the player carried the curled prow. The contract (feature 2 here, and feature 7 of dufferin-terrace-toboggan-run: `a flat wooden deck with a curled front`) and the rig (`mount-fore-toboggan`, `toboggan/walk`) both say curled and reclined, so the riders were brought to the player and not the other way round: each rider now sits on a flat deck with the same third-of-a-turn curl drawn in front of the shins, torso reclined back from the hip, knees up and boots tucked back on the deck, one mitt at the knee."
         }
       ],
       "simplifyAway": [

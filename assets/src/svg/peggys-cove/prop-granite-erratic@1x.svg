@@ -2,22 +2,58 @@
   <title>A glacial erratic and a tide pool on bare granite barrens: one large boulder resting ON the pavement, and a second, smaller boulder of a different shape standing clear of it on the same rock with bare pavement between them. Neither mass rests on the other and neither is stacked or balanced. TWO THINGS ARE DELIBERATE AND BOTH ARE CORRECTIONS. First, THE BOULDERS ARE THE WARM `limestone` RAMP AND THE PAVEMENT IS THE NEUTRAL `path` RAMP. Both were drawn from `path` before, so a boulder and the ground under it were the same near-neutral grey and the mass had no edge of its own; `path` is also the one ramp palette.json declares near-neutral and exempts from the saturation gain, so a subject drawn wholly from it breached CLAUDE.md's saturated palette as well. `limestone` is the pinkish-warm grey this palette already carries and it is what Peggy's Cove granite actually is - `stone` was tried first and is too yellow: it made the mass read as a loaf. Second, THE OUTLINE IS LUMPY AND ITS CREST IS OFF CENTRE. A single smooth arc is a dome, and a blind pass twice read this subject as smooth grey domes it could not name. The big mass now has a long shallow left flank with a saddle in it, a crest well right of centre, and a blunt steep right shoulder; the small one is a low wedge with a flat top, a different shape rather than a smaller copy. The joints are SHORT and STRAIGHT and follow the rock's grain - the dark band that used to curve across the big mass's face read as an arched opening, which is most of why the boulder read as built. Landform only: no cairn, no stacked or balanced stones, no inuksuk, no marker, no carving, no lettering and no figure of any kind at any scale - assets/style/peggys-cove-level.md section 0 and docs/content-review.md. No lichen, speckle or surface pattern: the rock reads from its planes and its joints. Grass grows only in the joints; a shallow still tide pool lies in front. Drawn from assets/refs/peggys-cove/granite-barrens-and-sea.jpg and lighthouse-on-the-granite.jpg; see assets/refs/references.json, subject granite-erratic. POI hero, present at every visual tier.</title>
 
   <rect x="0" y="296" width="560" height="84" fill="#afaca5"/>
-  <rect x="0" y="348" width="560" height="32" fill="#8b857c"/>
-  <rect x="0" y="345" width="560" height="4" fill="#605a55"/>
-  <polygon points="96,296 101,296 109,345 104,345" fill="#605a55"/>
-  <polygon points="252,296 257,296 247,345 242,345" fill="#605a55"/>
-  <polygon points="404,296 409,296 415,345 410,345" fill="#605a55"/>
-  <polygon points="150,349 155,349 162,380 157,380" fill="#605a55"/>
-  <polygon points="392,349 397,349 386,380 381,380" fill="#605a55"/>
+  <rect x="0" y="345" width="560" height="3" fill="#605a55"/>
+  <polygon points="376,296 382,296 393,345 387,345" fill="#605a55"/>
+  <polygon points="18,296 24,296 18,345 12,345" fill="#605a55"/>
+  <polygon points="0,368 88,362 88,367 0,373" fill="#605a55"/>
+  <polygon points="346,361 560,368 560,373 346,366" fill="#605a55"/>
+  <polygon points="452,367 458,367 467,380 461,380" fill="#605a55"/>
 
-  <polygon points="98,343 104,343 107,321" fill="#276121"/>
-  <polygon points="105,343 111,343 102,323" fill="#56993a"/>
-  <polygon points="112,341 118,341 121,321" fill="#89c05f"/>
-  <polygon points="244,339 250,339 253,319" fill="#276121"/>
-  <polygon points="251,339 257,339 248,321" fill="#56993a"/>
-  <polygon points="408,341 414,341 417,321" fill="#276121"/>
-  <polygon points="415,341 421,341 412,323" fill="#89c05f"/>
-  <polygon points="422,340 428,340 431,322" fill="#56993a"/>
+  <polygon points="373,322 382,322 385,316" fill="#276121"/>
+  <polygon points="380,322 389,322 377,317" fill="#56993a"/>
+  <polygon points="386,322 395,322 398,317" fill="#89c05f"/>
+  <polygon points="381,342 390,342 393,336" fill="#276121"/>
+  <polygon points="388,342 397,342 385,337" fill="#56993a"/>
+  <polygon points="394,342 403,342 406,337" fill="#89c05f"/>
+  <polygon points="1,369 10,369 13,363" fill="#276121"/>
+  <polygon points="8,369 17,369 5,364" fill="#56993a"/>
+  <polygon points="14,369 23,369 26,364" fill="#89c05f"/>
+  <polygon points="23,367 32,367 35,350" fill="#276121"/>
+  <polygon points="30,367 39,367 27,353" fill="#56993a"/>
+  <polygon points="36,367 45,367 48,352" fill="#89c05f"/>
+  <polygon points="45,366 54,366 57,349" fill="#276121"/>
+  <polygon points="52,366 61,366 49,352" fill="#56993a"/>
+  <polygon points="58,366 67,366 70,351" fill="#89c05f"/>
+  <polygon points="67,364 76,364 79,358" fill="#276121"/>
+  <polygon points="74,364 83,364 71,359" fill="#56993a"/>
+  <polygon points="80,364 89,364 92,359" fill="#89c05f"/>
+  <polygon points="353,363 362,363 365,357" fill="#276121"/>
+  <polygon points="360,363 369,363 357,358" fill="#56993a"/>
+  <polygon points="366,363 375,363 378,358" fill="#89c05f"/>
+  <polygon points="373,364 382,364 385,351" fill="#276121"/>
+  <polygon points="380,364 389,364 377,354" fill="#56993a"/>
+  <polygon points="386,364 395,364 398,352" fill="#89c05f"/>
+  <polygon points="393,364 402,364 405,344" fill="#276121"/>
+  <polygon points="400,364 409,364 397,348" fill="#56993a"/>
+  <polygon points="406,364 415,364 418,346" fill="#89c05f"/>
+  <polygon points="413,365 422,365 425,345" fill="#276121"/>
+  <polygon points="420,365 429,365 417,349" fill="#56993a"/>
+  <polygon points="426,365 435,365 438,347" fill="#89c05f"/>
+  <polygon points="433,365 442,365 445,352" fill="#276121"/>
+  <polygon points="440,365 449,365 437,355" fill="#56993a"/>
+  <polygon points="446,365 455,365 458,353" fill="#89c05f"/>
+  <polygon points="453,366 462,366 465,360" fill="#276121"/>
+  <polygon points="460,366 469,366 457,361" fill="#56993a"/>
+  <polygon points="466,366 475,366 478,361" fill="#89c05f"/>
+  <polygon points="487,368 496,368 499,362" fill="#276121"/>
+  <polygon points="494,368 503,368 491,363" fill="#56993a"/>
+  <polygon points="500,368 509,368 512,363" fill="#89c05f"/>
+  <polygon points="512,369 521,369 524,351" fill="#276121"/>
+  <polygon points="519,369 528,369 516,355" fill="#56993a"/>
+  <polygon points="525,369 534,369 537,353" fill="#89c05f"/>
+  <polygon points="537,370 546,370 549,364" fill="#276121"/>
+  <polygon points="544,370 553,370 541,365" fill="#56993a"/>
+  <polygon points="550,370 559,370 562,365" fill="#89c05f"/>
 
   <ellipse cx="212" cy="346" rx="164" ry="11" fill="#16203a" opacity="0.28"/>
   <ellipse cx="477" cy="347" rx="74" ry="9" fill="#16203a" opacity="0.28"/>

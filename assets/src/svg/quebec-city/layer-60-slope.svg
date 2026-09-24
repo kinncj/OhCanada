@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" shape-rendering="geometricPrecision">
-  <title>The toboggan run: a packed-snow lane in three sub-lanes separated by two MODELLED divider ridges, sparse straight runner streaks, THREE riders seated on flat wooden toboggans, and a near snow bank framing the bottom. THE LANE IS THE `snow` RAMP AND NOT THE `ice` RAMP, and that correction still holds - no colour from the `ice` ramp appears anywhere in this file or in `layer-50-terrace.svg`, which was checked by grep before this redraw and is recorded because a blind audit reported the opposite. What that audit SAW was right even though its cause was wrong: the composite read as a frozen canal. The reason is that every band in the lower half ran the full width at almost the same value, so two ridges plus three lanes read as five long horizontal stripes, which is what wind-scoured river ice looks like. EACH RIDGE NOW CASTS A SHADOW. A flat pale band bounded by two slightly darker bands is a change of surface; a band with a bright crest, a shaded flank and a soft `ao-shadow` cast onto the lane below it is a thing standing up off the lane, and that is the only cue in a side view that separates a built chute from a frozen surface. The third rider is the second half of the fix: at play size one screen of this tile showed a single sledder, and a sport has to be visible more than once to be the subject. Straight, level, parallel edges throughout - a built chute, never a natural slope. Survives the low preset. World y 1280..1840; local y 0 is the ground line.</title>
+  <title>The toboggan run: a packed-snow lane in three sub-lanes separated by two MODELLED divider ridges, sparse straight runner streaks, THREE riders seated on flat wooden toboggans with curled prows, reclined back from the hip with knees up - the same plank, curl and recline as the player on `mount-deck-toboggan` and `mount-fore-toboggan`, and a near snow bank framing the bottom. THE LANE IS THE `snow` RAMP AND NOT THE `ice` RAMP, and that correction still holds - no colour from the `ice` ramp appears anywhere in this file or in `layer-50-terrace.svg`, which was checked by grep before this redraw and is recorded because a blind audit reported the opposite. What that audit SAW was right even though its cause was wrong: the composite read as a frozen canal. The reason is that every band in the lower half ran the full width at almost the same value, so two ridges plus three lanes read as five long horizontal stripes, which is what wind-scoured river ice looks like. EACH RIDGE NOW CASTS A SHADOW. A flat pale band bounded by two slightly darker bands is a change of surface; a band with a bright crest, a shaded flank and a soft `ao-shadow` cast onto the lane below it is a thing standing up off the lane, and that is the only cue in a side view that separates a built chute from a frozen surface. The third rider is the second half of the fix: at play size one screen of this tile showed a single sledder, and a sport has to be visible more than once to be the subject. Straight, level, parallel edges throughout - a built chute, never a natural slope. Survives the low preset. World y 1280..1840; local y 0 is the ground line.</title>
 
   <rect x="0" y="0" width="1440" height="560" fill="#e6eff7"/>
   <rect x="0" y="0" width="1440" height="12" fill="#c2d6e8"/>
@@ -27,45 +27,62 @@
   <rect x="1000" y="312" width="290" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
   <rect x="1150" y="348" width="230" height="4" rx="2" fill="#ffffff" opacity="0.35"/>
 
-  <ellipse cx="1080.0" cy="100.0" rx="75.47" ry="7.68" fill="#16203a" opacity="0.28"/>
-  <path d="M 1018.6 96.72 L 1129.89 96.72 L 1141.4 80.09 L 1138.84 74.97 L 1127.33 89.04 L 1018.6 89.04 Z" fill="#96632f"/>
-  <rect x="1018.6" y="89.04" width="111.29" height="3.2" fill="#c5994d"/>
-  <rect x="1018.6" y="96.72" width="111.29" height="3.84" fill="#5a2d19"/>
-  <path d="M 1076.16 86.49 L 1109.42 58.34 L 1122.21 74.97 L 1090.23 89.04 Z" fill="#57647a"/>
-  <rect x="1113.26" y="57.06" width="16.63" height="11.51" rx="3.84" fill="#7c4327"/>
-  <path d="M 1060.81 86.49 L 1082.56 83.93 L 1099.19 35.32 L 1074.88 30.2 Z" fill="#2c8055"/>
-  <path d="M 1083.84 57.06 L 1105.58 63.46 L 1109.42 74.97 L 1088.95 68.58 Z" fill="#2c8055"/>
-  <circle cx="1109.42" cy="72.42" r="7.04" fill="#7a4923"/>
-  <circle cx="1088.95" cy="22.53" r="13.43" fill="#7a4923"/>
-  <path d="M 1081.0 19.97 Q 1088.95 3.34 1101.96 19.97 Z" fill="#2275c6"/>
-  <rect x="1079.75" y="17.41" width="23.47" height="5.76" rx="2.56" fill="#2275c6"/>
+  <g transform="translate(804.8 -42.8) scale(0.64)">
+    <ellipse cx="430" cy="222" rx="118" ry="12" fill="#16203a" opacity="0.28"/>
+    <rect x="334" y="206" width="166" height="12" fill="#96632f"/>
+    <rect x="334" y="206" width="166" height="5" fill="#c5994d"/>
+    <rect x="334" y="218" width="166" height="6" fill="#5a2d19"/>
+    <g transform="rotate(-41 417 200)">
+      <path d="M 400 202 L 434 198 L 460 122 L 422 114 Z" fill="#2c8055"/>
+      <circle cx="444" cy="102" r="21" fill="#7a4923"/>
+      <path d="M 423 98 Q 444 72 465 98 Z" fill="#2275c6"/>
+      <rect x="420.48" y="94" width="47.04" height="9" rx="4" fill="#2275c6"/>
+    </g>
+    <path d="M 408 206 L 440 206 L 480 156 L 458 140 Z" fill="#57647a"/>
+    <path d="M 458 148 L 480 146 L 502 204 L 482 206 Z" fill="#57647a"/>
+    <rect x="480" y="194" width="30" height="14" rx="6" fill="#7c4327"/>
+    <path d="M 400 146 L 412 162 L 466 154 L 462 138 Z" fill="#2c8055"/>
+    <circle cx="468" cy="146" r="11" fill="#7a4923"/>
+    <path d="M 494 212 C 522 212 536 198 536 182 C 536 170 524 165 516 172" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 494 208 C 518 208 530 197 530 183" fill="none" stroke="#c5994d" stroke-width="3" stroke-linecap="round"/>
+  </g>
 
   <ellipse cx="430" cy="222" rx="118" ry="12" fill="#16203a" opacity="0.28"/>
-  <path d="M 334 218 L 508 218 L 526 192 L 522 184 L 504 206 L 334 206 Z" fill="#96632f"/>
-  <rect x="334" y="206" width="174" height="5" fill="#c5994d"/>
-  <rect x="334" y="218" width="174" height="6" fill="#5a2d19"/>
-  <path d="M 424 202 L 476 158 L 496 184 L 446 206 Z" fill="#2b3660"/>
-  <rect x="482" y="156" width="26" height="18" rx="6" fill="#7c4327"/>
-  <path d="M 400 202 L 434 198 L 460 122 L 422 114 Z" fill="#d8262c"/>
-  <path d="M 436 156 L 470 166 L 476 184 L 444 174 Z" fill="#d8262c"/>
-  <circle cx="476" cy="180" r="11" fill="#c68550"/>
-  <circle cx="444" cy="102" r="21" fill="#c68550"/>
-  <path d="M 423 98 Q 444 72 465 98 Z" fill="#d6a727"/>
-  <rect x="420.48" y="94" width="47.04" height="9" rx="4" fill="#d6a727"/>
+  <rect x="334" y="206" width="166" height="12" fill="#96632f"/>
+  <rect x="334" y="206" width="166" height="5" fill="#c5994d"/>
+  <rect x="334" y="218" width="166" height="6" fill="#5a2d19"/>
+  <g transform="rotate(-41 417 200)">
+    <path d="M 400 202 L 434 198 L 460 122 L 422 114 Z" fill="#d8262c"/>
+    <circle cx="444" cy="102" r="21" fill="#c68550"/>
+    <path d="M 423 98 Q 444 72 465 98 Z" fill="#d6a727"/>
+    <rect x="420.48" y="94" width="47.04" height="9" rx="4" fill="#d6a727"/>
+  </g>
+  <path d="M 408 206 L 440 206 L 480 156 L 458 140 Z" fill="#2b3660"/>
+  <path d="M 458 148 L 480 146 L 502 204 L 482 206 Z" fill="#2b3660"/>
+  <rect x="480" y="194" width="30" height="14" rx="6" fill="#7c4327"/>
+  <path d="M 400 146 L 412 162 L 466 154 L 462 138 Z" fill="#d8262c"/>
+  <circle cx="468" cy="146" r="11" fill="#c68550"/>
+  <path d="M 494 212 C 522 212 536 198 536 182 C 536 170 524 165 516 172" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round"/>
+  <path d="M 494 208 C 518 208 530 197 530 183" fill="none" stroke="#c5994d" stroke-width="3" stroke-linecap="round"/>
 
   <g transform="translate(365.9 121.3) scale(1.12)">
     <ellipse cx="430" cy="222" rx="118" ry="12" fill="#16203a" opacity="0.28"/>
-    <path d="M 334 218 L 508 218 L 526 192 L 522 184 L 504 206 L 334 206 Z" fill="#96632f"/>
-    <rect x="334" y="206" width="174" height="5" fill="#c5994d"/>
-    <rect x="334" y="218" width="174" height="6" fill="#5a2d19"/>
-    <path d="M 424 202 L 476 158 L 496 184 L 446 206 Z" fill="#30384f"/>
-    <rect x="482" y="156" width="26" height="18" rx="6" fill="#7c4327"/>
-    <path d="M 400 202 L 434 198 L 460 122 L 422 114 Z" fill="#2275c6"/>
-    <path d="M 436 156 L 470 166 L 476 184 L 444 174 Z" fill="#2275c6"/>
-    <circle cx="476" cy="180" r="11" fill="#9e6334"/>
-    <circle cx="444" cy="102" r="21" fill="#9e6334"/>
-    <path d="M 423 98 Q 444 72 465 98 Z" fill="#c5342a"/>
-    <rect x="420.48" y="94" width="47.04" height="9" rx="4" fill="#c5342a"/>
+    <rect x="334" y="206" width="166" height="12" fill="#96632f"/>
+    <rect x="334" y="206" width="166" height="5" fill="#c5994d"/>
+    <rect x="334" y="218" width="166" height="6" fill="#5a2d19"/>
+    <g transform="rotate(-41 417 200)">
+      <path d="M 400 202 L 434 198 L 460 122 L 422 114 Z" fill="#2275c6"/>
+      <circle cx="444" cy="102" r="21" fill="#9e6334"/>
+      <path d="M 423 98 Q 444 72 465 98 Z" fill="#c5342a"/>
+      <rect x="420.48" y="94" width="47.04" height="9" rx="4" fill="#c5342a"/>
+    </g>
+    <path d="M 408 206 L 440 206 L 480 156 L 458 140 Z" fill="#30384f"/>
+    <path d="M 458 148 L 480 146 L 502 204 L 482 206 Z" fill="#30384f"/>
+    <rect x="480" y="194" width="30" height="14" rx="6" fill="#7c4327"/>
+    <path d="M 400 146 L 412 162 L 466 154 L 462 138 Z" fill="#2275c6"/>
+    <circle cx="468" cy="146" r="11" fill="#9e6334"/>
+    <path d="M 494 212 C 522 212 536 198 536 182 C 536 170 524 165 516 172" fill="none" stroke="#96632f" stroke-width="12" stroke-linecap="round"/>
+    <path d="M 494 208 C 518 208 530 197 530 183" fill="none" stroke="#c5994d" stroke-width="3" stroke-linecap="round"/>
   </g>
 
   <path d="M -20 424 Q 240 396 500 422 Q 760 394 1020 420 Q 1240 398 1460 424 L 1460 560 L -20 560 Z" fill="#c2d6e8"/>
