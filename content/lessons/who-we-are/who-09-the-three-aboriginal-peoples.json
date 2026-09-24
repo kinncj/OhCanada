@@ -1,0 +1,174 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-09-the-three-aboriginal-peoples",
+  "chapter": "Who We Are",
+  "order": 9,
+  "title": {
+    "en": "The three Aboriginal peoples",
+    "fr": "Les trois peuples autochtones"
+  },
+  "passages": [
+    {
+      "id": "w9-three-distinct-groups",
+      "text": {
+        "en": "Today, the words “Aboriginal peoples” name three separate groups: First Nations, Inuit and Métis. Each one is a people of its own.",
+        "fr": "Aujourd'hui, l'expression « peuples autochtones » désigne trois groupes distincts : les Premières Nations, les Inuit et les Métis. Chacun est un peuple à part entière."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 17,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today, the term Aboriginal peoples refers to three distinct groups:"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w9-inuit-means-the-people",
+      "text": {
+        "en": "In the Inuktitut language, the word Inuit means “the people.”",
+        "fr": "En inuktitut, le mot Inuit veut dire « le peuple »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Inuit, which means “the people” in the Inuktitut language"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w9-inuit-knowledge-of-the-land",
+      "text": {
+        "en": "The Inuit know the land, the sea and the animals well. That knowledge let them live in one of the hardest places on earth.",
+        "fr": "Les Inuit connaissent bien la terre, la mer et les animaux. Ce savoir leur a permis de vivre dans l'un des milieux les plus rudes de la planète."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Their knowledge of the land, sea and wildlife enabled them to adapt to one of the harshest environments on earth."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w9-most-metis-live-on-the-prairies",
+      "text": {
+        "en": "Most Métis live in the Prairie provinces.",
+        "fr": "La plupart des Métis vivent dans les provinces des Prairies."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the majority of whom live in the Prairie provinces."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w9-michif",
+      "text": {
+        "en": "The Métis have a dialect of their own. It is called Michif.",
+        "fr": "Les Métis ont leur propre dialecte. Il s'appelle le michif."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "speak their own dialect, Michif."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w9-first-nations-the-largest-group",
+      "text": {
+        "en": "Of the three groups, First Nations people are the largest. The Métis come next, and the Inuit are the smallest.",
+        "fr": "Des trois groupes, les Premières Nations sont le plus nombreux. Les Métis viennent ensuite, et les Inuit sont le groupe le moins nombreux."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 18,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "About 65% of the Aboriginal people are First Nations, while 30% are Métis and 4% Inuit."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

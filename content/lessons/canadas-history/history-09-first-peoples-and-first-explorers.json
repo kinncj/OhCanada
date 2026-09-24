@@ -1,0 +1,282 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-09-first-peoples-and-first-explorers",
+  "chapter": "Canada's History",
+  "order": 9,
+  "title": {
+    "en": "The first peoples and the first explorers",
+    "fr": "Les premiers peuples et les premiers explorateurs"
+  },
+  "passages": [
+    {
+      "id": "h9-why-called-indians",
+      "text": {
+        "en": "The first European explorers believed they had arrived in the East Indies. That is why they called the native peoples they met here “Indians.”",
+        "fr": "Les premiers explorateurs européens croyaient être arrivés aux Indes orientales. C'est pourquoi ils ont appelé « Indiens » les peuples autochtones qu'ils ont rencontrés ici."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "because the first explorers thought they had reached the East Indies."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-the-sioux-followed-the-bison",
+      "text": {
+        "en": "The Sioux moved from place to place, following the herds of bison (buffalo).",
+        "fr": "Les Sioux se déplaçaient d'un endroit à l'autre en suivant les troupeaux de bisons."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Sioux were nomadic, following the bison (buffalo) herd."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-huron-wendat-farmers-and-hunters",
+      "text": {
+        "en": "Around the Great Lakes, the Huron-Wendat grew crops and hunted. So did the Iroquois.",
+        "fr": "Autour des Grands Lacs, les Hurons-Wendat cultivaient la terre et chassaient. Les Iroquois aussi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Huron-Wendat of the Great Lakes region, like the Iroquois, were farmers and hunters."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-west-coast-fish-dried-and-smoked",
+      "text": {
+        "en": "On the West Coast, native peoples kept fish from spoiling by drying it and smoking it.",
+        "fr": "Sur la côte Ouest, les peuples autochtones conservaient le poisson en le faisant sécher et en le fumant."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "West Coast natives preserved fish by drying and smoking."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-european-diseases",
+      "text": {
+        "en": "Many, many Aboriginal people died of diseases brought from Europe. Their bodies had no protection against these illnesses.",
+        "fr": "Un très grand nombre d'Autochtones sont morts de maladies venues d'Europe. Leur corps n'avait aucune protection contre ces maladies."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Large numbers of Aboriginals died of European diseases to which they lacked immunity."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-bonds-that-laid-the-foundations",
+      "text": {
+        "en": "In their first 200 years living side by side, Aboriginal peoples and Europeans built strong ties in trade, in religion and in war. Those ties laid the foundations of Canada.",
+        "fr": "Pendant leurs 200 premières années de coexistence, les Autochtones et les Européens ont tissé des liens solides dans le commerce, la religion et la guerre. Ces liens ont jeté les fondations du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 23,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Aboriginals and Europeans formed strong economic, religious and military bonds in the first 200 years of coexistence which laid the foundations of Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-lanse-aux-meadows",
+      "text": {
+        "en": "What is left of the Viking settlement at l'Anse aux Meadows is now a World Heritage site.",
+        "fr": "Ce qui reste de l'établissement viking de L'Anse aux Meadows est aujourd'hui un site du patrimoine mondial."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The remains of their settlement, l’Anse aux Meadows, are a World Heritage site."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-john-cabot-1497",
+      "text": {
+        "en": "Europeans began to explore in earnest in 1497, when John Cabot made his voyage.",
+        "fr": "Les Européens ont commencé à explorer pour de bon en 1497, avec l'expédition de Jean Cabot."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "European exploration began in earnest in 1497 with the expedition of John Cabot"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-cartier-three-voyages",
+      "text": {
+        "en": "Jacques Cartier sailed across the Atlantic three times between 1534 and 1542. He claimed the land for Francis I, King of France.",
+        "fr": "Jacques Cartier a traversé l'Atlantique trois fois entre 1534 et 1542. Il a pris possession du territoire au nom de François Ier, roi de France."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Between 1534 and 1542, Jacques Cartier made three voyages across the Atlantic, claiming the land for King Francis I of France."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h9-kanata-means-village",
+      "text": {
+        "en": "Cartier heard two guides he had captured use the Iroquoian word kanata. It means “village.”",
+        "fr": "Cartier a entendu deux guides qu'il avait capturés employer le mot iroquoien kanata. Ce mot veut dire « village »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 24,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Cartier heard two captured guides speak the Iroquoian word kanata, meaning “village.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

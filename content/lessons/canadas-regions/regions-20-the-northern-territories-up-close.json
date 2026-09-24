@@ -1,0 +1,282 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-20-the-northern-territories-up-close",
+  "chapter": "Canada's Regions",
+  "order": 20,
+  "title": {
+    "en": "The Northern Territories up close",
+    "fr": "Les territoires du Nord de plus près"
+  },
+  "passages": [
+    {
+      "id": "r20-land-of-the-midnight-sun",
+      "text": {
+        "en": "People often call the North the “Land of the Midnight Sun.” In the middle of summer, it can stay light for up to 24 hours.",
+        "fr": "On appelle souvent le Nord le « pays du soleil de minuit ». Au cœur de l'été, il peut faire jour jusqu'à 24 heures."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The North is often referred to as the “Land of the Midnight Sun” because at the height of summer, daylight can last up to 24 hours."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-northern-winters-and-summers",
+      "text": {
+        "en": "In the Northern territories, winters are long and cold, and summers are short and cool.",
+        "fr": "Dans les territoires du Nord, les hivers sont longs et froids, et les étés sont courts et frais."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Northern territories have long cold winters and short cool summers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-the-tundra",
+      "text": {
+        "en": "A large part of the North is tundra, a huge, rocky Arctic plain. The Arctic climate is so cold that no trees grow on the tundra, and the ground stays frozen all year.",
+        "fr": "Une grande partie du Nord est de la toundra, une immense plaine arctique rocheuse. Le climat arctique est si froid qu'aucun arbre ne pousse sur la toundra, et le sol reste gelé toute l'année."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Much of the North is made up of tundra, the vast rocky Arctic plain. Because of the cold Arctic climate, there are no trees on the tundra and the soil is permanently frozen."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-the-gold-rush",
+      "text": {
+        "en": "In the Gold Rush of the 1890s, thousands of miners came to the Yukon. The poet Robert W. Service wrote about those days.",
+        "fr": "Pendant la ruée vers l'or des années 1890, des milliers de mineurs sont venus au Yukon. Le poète Robert W. Service a écrit sur cette époque."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 103,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Thousands of miners came to the Yukon during the Gold Rush of the 1890s, as celebrated in the poetry of Robert W. Service."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-diamond-capital-of-north-america",
+      "text": {
+        "en": "Yellowknife, the capital of the Northwest Territories, is known as the “diamond capital of North America.”",
+        "fr": "Yellowknife, la capitale des Territoires du Nord-Ouest, est surnommée la « capitale du diamant de l'Amérique du Nord »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The capital, Yellowknife (population 20,000), is called the “diamond capital of North America.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-the-mackenzie-river",
+      "text": {
+        "en": "The Mackenzie River is 4,200 kilometres long. In North America, only the Mississippi is a longer river system.",
+        "fr": "Le fleuve Mackenzie mesure 4 200 kilomètres. En Amérique du Nord, seul le Mississippi forme un réseau fluvial plus long."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The Mackenzie River, at 4,200 kilometres, is the second-longest river system in North America after the Mississippi"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-what-nunavut-means",
+      "text": {
+        "en": "In Inuktitut, the name Nunavut means “our land.”",
+        "fr": "En inuktitut, le nom Nunavut veut dire « notre terre »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Nunavut, meaning “our land” in Inuktitut"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-nunavut-made-from-the-northwest-territories",
+      "text": {
+        "en": "Nunavut was created in 1999 out of the eastern part of the Northwest Territories. It took in all of what had been the District of Keewatin.",
+        "fr": "Le Nunavut a été créé en 1999 à partir de la partie est des Territoires du Nord-Ouest. Il comprend tout l'ancien district de Keewatin."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "was established in 1999 from the eastern part of the Northwest Territories, including all of the former District of Keewatin."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-iqaluit-formerly-frobisher-bay",
+      "text": {
+        "en": "Iqaluit, the capital of Nunavut, used to be called Frobisher Bay. The old name came from Martin Frobisher, an English explorer.",
+        "fr": "Iqaluit, la capitale du Nunavut, s'appelait autrefois Frobisher Bay. Ce nom venait de Martin Frobisher, un explorateur anglais."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The capital is Iqaluit, formerly Frobisher Bay, named after the English explorer Martin Frobisher"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r20-government-by-consensus",
+      "text": {
+        "en": "In Nunavut, the members of the Legislative Assembly choose a premier and ministers by consensus. That means they reach the choice together, by general agreement.",
+        "fr": "Au Nunavut, les membres de l'Assemblée législative choisissent un premier ministre et des ministres par consensus. Cela veut dire qu'ils font ce choix ensemble, d'un commun accord."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 104,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Legislative Assembly chooses a premier and ministers by consensus."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

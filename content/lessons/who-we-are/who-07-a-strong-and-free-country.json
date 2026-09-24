@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "who-07-a-strong-and-free-country",
+  "chapter": "Who We Are",
+  "order": 7,
+  "title": {
+    "en": "A strong and free country",
+    "fr": "Un pays fort et libre"
+  },
+  "passages": [
+    {
+      "id": "w7-strong-and-free",
+      "text": {
+        "en": "People in other parts of the world know Canada as a country that is strong and free.",
+        "fr": "Ailleurs dans le monde, on connaît le Canada comme un pays fort et libre."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada is known around the world as a strong and free country."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w7-oldest-constitutional-tradition",
+      "text": {
+        "en": "Canadians have received, from those who came before, a constitutional tradition that has run without a break for longer than any other in the world.",
+        "fr": "Les Canadiens ont reçu de ceux qui les ont précédés une tradition constitutionnelle qui dure sans interruption depuis plus longtemps que toute autre au monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "We have inherited the oldest continuous constitutional tradition in the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w7-only-constitutional-monarchy",
+      "text": {
+        "en": "In all of North America, Canada is the one country that is a constitutional monarchy.",
+        "fr": "De tous les pays d'Amérique du Nord, le Canada est le seul à être une monarchie constitutionnelle."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "We are the only constitutional monarchy in North America."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "w7-the-great-dominion",
+      "text": {
+        "en": "Poets and songwriters have praised Canada by calling it the “Great Dominion.”",
+        "fr": "Des poètes et des auteurs de chansons ont célébré le Canada en l'appelant le « Grand Dominion »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Who We Are",
+          "page": 16,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "poets and songwriters have hailed Canada as the “Great Dominion.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

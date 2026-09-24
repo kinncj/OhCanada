@@ -1,0 +1,390 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "history-18-the-depression-and-the-second-world-war",
+  "chapter": "Canada's History",
+  "order": 18,
+  "title": {
+    "en": "The Depression and the Second World War",
+    "fr": "La Crise et la Seconde Guerre mondiale"
+  },
+  "passages": [
+    {
+      "id": "h18-the-british-commonwealth-of-nations",
+      "text": {
+        "en": "After the First World War, the British Empire changed into a free association of states. It was called the British Commonwealth of Nations.",
+        "fr": "Après la Première Guerre mondiale, l'Empire britannique s'est transformé en une libre association d'États. On l'a appelée le Commonwealth britannique des nations."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "the British Empire evolved into a free association of states known as the British Commonwealth of Nations."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-unemployment-in-1933",
+      "text": {
+        "en": "In 1933, 27% of workers had no job, and many businesses were ruined.",
+        "fr": "En 1933, 27 % des travailleurs étaient sans emploi, et beaucoup d'entreprises ont été ruinées."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Unemployment reached 27% in 1933 and many businesses were wiped out."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-western-farmers-hit-hardest",
+      "text": {
+        "en": "Farmers in Western Canada suffered most. Grain prices were low, and a terrible drought hit their land.",
+        "fr": "Ce sont les agriculteurs de l'Ouest canadien qui ont le plus souffert. Le prix des céréales était bas, et une terrible sécheresse a frappé leurs terres."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Farmers in Western Canada were hit hardest by low grain prices and a terrible drought."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-bank-of-canada-1934",
+      "text": {
+        "en": "The Bank of Canada was set up in 1934. It is a central bank. Its job is to manage the money supply and keep the financial system steady.",
+        "fr": "La Banque du Canada a été créée en 1934. C'est une banque centrale. Son rôle est de gérer la masse monétaire et d'assurer la stabilité du système financier."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Bank of Canada, a central bank to manage the money supply and bring stability to the financial system, was created in 1934."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-refugees-turned-away",
+      "text": {
+        "en": "Fewer immigrants came, and many refugees were refused. Among them were Jews trying to escape Nazi Germany in 1939.",
+        "fr": "Moins d'immigrants sont arrivés, et beaucoup de réfugiés ont été refoulés. Parmi eux, il y avait des Juifs qui tentaient de fuir l'Allemagne nazie en 1939."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 42,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Immigration dropped and many refugees were turned away, including Jews trying to flee Nazi Germany in 1939."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-the-war-began-in-1939",
+      "text": {
+        "en": "The Second World War started in 1939, when Adolf Hitler, the Nazi dictator of Germany, invaded Poland.",
+        "fr": "La Seconde Guerre mondiale a commencé en 1939, quand Adolf Hitler, le dictateur nazi de l'Allemagne, a envahi la Pologne."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Second World War began in 1939 when Adolf Hitler, the National Socialist (Nazi) dictator of Germany, invaded Poland"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-a-million-served",
+      "text": {
+        "en": "Out of 11.5 million people, more than one million Canadians and Newfoundlanders served in the Second World War. Newfoundland was then a separate British territory.",
+        "fr": "Sur une population de 11,5 millions, plus d'un million de Canadiens et de Terre-Neuviens ont servi pendant la Seconde Guerre mondiale. Terre-Neuve était alors un territoire britannique distinct."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "More than one million Canadians and Newfoundlanders (Newfoundland was a separate British entity) served in the Second World War, out of a population of 11.5 million."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-juno-beach",
+      "text": {
+        "en": "On D-Day, 15,000 Canadian soldiers attacked Juno Beach and took it from the German Army.",
+        "fr": "Le jour J, 15 000 soldats canadiens ont attaqué la plage Juno et l'ont prise à l'armée allemande."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "15,000 Canadian troops stormed and captured Juno Beach from the German Army"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-liberating-the-netherlands",
+      "text": {
+        "en": "In 1944–45, the Canadian Army freed the Netherlands. It helped force Germany to surrender on May 8, 1945.",
+        "fr": "En 1944-1945, l'armée canadienne a libéré les Pays-Bas. Elle a aidé à forcer l'Allemagne à capituler le 8 mai 1945."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 43,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Canadian Army liberated the Netherlands in 1944–45 and helped force the German surrender of May 8, 1945"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-hong-kong-and-dieppe",
+      "text": {
+        "en": "Canadians fought bravely and suffered losses in two defeats. The first was the failed defence of Hong Kong against Imperial Japan in 1941. The second was a failed raid on Dieppe, on the coast of France, which the Nazis held, in 1942.",
+        "fr": "Les Canadiens ont combattu avec courage et subi des pertes lors de deux défaites. La première a été la défense ratée de Hong Kong contre le Japon impérial en 1941. La seconde a été un raid raté sur Dieppe, sur la côte française, alors aux mains des nazis, en 1942."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "the unsuccessful defence of Hong Kong (1941) from attack by Imperial Japan, and in a failed raid on Nazi-controlled Dieppe on the coast of France (1942)."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-air-training-plan",
+      "text": {
+        "en": "Under the British Commonwealth Air Training Plan, more than 130,000 Allied air crew were trained in Canada.",
+        "fr": "Dans le cadre du Programme d'entraînement aérien du Commonwealth britannique, plus de 130 000 membres d'équipage alliés ont été formés au Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "with over 130,000 Allied air crew trained in Canada under the British Commonwealth Air Training Plan."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-third-largest-navy",
+      "text": {
+        "en": "When the Second World War ended, only two countries in the world had bigger navies than Canada.",
+        "fr": "À la fin de la Seconde Guerre mondiale, seuls deux pays au monde avaient une marine plus grande que celle du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "At the end of the Second World War, Canada had the third-largest navy in the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-japan-surrendered",
+      "text": {
+        "en": "Japan surrendered on August 14, 1945. That ended four years of war in the Pacific.",
+        "fr": "Le Japon a capitulé le 14 août 1945. Cela a mis fin à quatre ans de guerre dans le Pacifique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Japan surrendered on August 14, 1945—the end of four years of war in the Pacific."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "h18-apology-to-japanese-canadians",
+      "text": {
+        "en": "In 1988, the Government of Canada apologized for the wrongs done to Canadians of Japanese origin during the war, and it paid compensation to the victims.",
+        "fr": "En 1988, le gouvernement du Canada a présenté des excuses pour les torts causés aux Canadiens d'origine japonaise pendant la guerre et a indemnisé les victimes."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 44,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Government of Canada apologized in 1988 for wartime wrongs and compensated the victims."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

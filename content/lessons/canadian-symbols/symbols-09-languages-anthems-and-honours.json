@@ -1,0 +1,363 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-09-languages-anthems-and-honours",
+  "chapter": "Canadian Symbols",
+  "order": 9,
+  "title": {
+    "en": "Languages, anthems and honours",
+    "fr": "Les langues, les hymnes et les distinctions"
+  },
+  "passages": [
+    {
+      "id": "s9-language-for-citizenship",
+      "text": {
+        "en": "To become a Canadian citizen, you need to know enough English or French.",
+        "fr": "Pour devenir citoyen canadien, il faut connaître suffisamment l'anglais ou le français."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 82,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "You must have adequate knowledge of English or French to become a Canadian citizen."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-language-exemption-at-55",
+      "text": {
+        "en": "Adults who apply at age 55 or older do not have to meet this language requirement.",
+        "fr": "Les adultes qui font leur demande à 55 ans ou plus n'ont pas à remplir cette exigence linguistique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 82,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Adult applicants 55 years of age or over are exempted from this requirement."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-official-languages-act-1969",
+      "text": {
+        "en": "In 1969, Parliament passed the Official Languages Act. The Act has three main goals.",
+        "fr": "En 1969, le Parlement a adopté la Loi sur les langues officielles. Cette loi a trois grands objectifs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 83,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Parliament passed the Official Languages Act in 1969. It has three main objectives:"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-anthem-proclaimed-1980",
+      "text": {
+        "en": "O Canada became the official national anthem in 1980.",
+        "fr": "Ô Canada est devenu l'hymne national officiel en 1980."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 84,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "O Canada was proclaimed as the national anthem in 1980."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-anthem-first-sung-in-quebec-city",
+      "text": {
+        "en": "O Canada was sung for the first time in Québec City, in 1880.",
+        "fr": "Ô Canada a été chanté pour la première fois à Québec, en 1880."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 84,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "It was first sung in Québec City in 1880."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-the-royal-anthem",
+      "text": {
+        "en": "Canada's Royal Anthem is “God Save the Queen,” or “God Save the King.” It may be played or sung at any event where Canadians want to honour the Sovereign.",
+        "fr": "L'hymne royal du Canada est « Dieu protège la Reine », ou « Dieu protège le Roi ». On peut le jouer ou le chanter lors de tout événement où les Canadiens veulent honorer le souverain."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 85,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Royal Anthem of Canada, “God Save the Queen (or King),” can be played or sung on any occasion when Canadians wish to honour the Sovereign."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-honours-orders-decorations-medals",
+      "text": {
+        "en": "Every country has ways to honour its outstanding citizens. In Canada, official awards are called honours. They are orders, decorations and medals.",
+        "fr": "Chaque pays a des façons de reconnaître ses citoyens exceptionnels. Au Canada, les récompenses officielles s'appellent des distinctions honorifiques. Ce sont des ordres, des décorations et des médailles."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "All countries have ways to recognize outstanding citizens. Official awards are called honours, consisting of orders, decorations, and medals."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-order-of-canada-1967",
+      "text": {
+        "en": "For many years Canada used British honours. Then, in 1967, the 100th year after Confederation, Canada began its own honours system with the Order of Canada.",
+        "fr": "Pendant de nombreuses années, le Canada a utilisé les distinctions britanniques. Puis, en 1967, centième anniversaire de la Confédération, le Canada a créé son propre régime de distinctions avec l'Ordre du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "After using British honours for many years, Canada started its own honours system with the Order of Canada in 1967, the centennial of Confederation."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-the-victoria-cross",
+      "text": {
+        "en": "The Victoria Cross (V.C.) is the highest honour a Canadian can receive. It is given for the greatest bravery, for a daring act of courage or self-sacrifice, or for extreme devotion to duty when facing the enemy.",
+        "fr": "La Croix de Victoria (V.C.) est la plus haute distinction qu'un Canadien puisse recevoir. Elle est décernée pour la plus grande bravoure, pour un acte audacieux de courage ou d'abnégation, ou pour un dévouement extrême au devoir face à l'ennemi."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Victoria Cross (V.C.) is the highest honour available to Canadians and is awarded for the most conspicuous bravery, a daring or pre-eminent act of valour or self-sacrifice, or extreme devotion to duty in the presence of the enemy."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-dunn-first-canadian-victoria-cross",
+      "text": {
+        "en": "Alexander Roberts Dunn was the first Canadian to receive the Victoria Cross. He served in the British Army and rode in the Charge of the Light Brigade at Balaclava, in 1854, during the Crimean War.",
+        "fr": "Alexander Roberts Dunn a été le premier Canadien à recevoir la Croix de Victoria. Il a servi dans l'armée britannique et a pris part à la charge de la brigade légère à Balaklava, en 1854, pendant la guerre de Crimée."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 86,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "served in the British Army in the Charge of the Light Brigade at Balaclava (1854) in the Crimean War, and was the first Canadian to be awarded the Victoria Cross."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-william-hall-victoria-cross",
+      "text": {
+        "en": "Able Seaman William Hall, from Horton, Nova Scotia, was the first black man to receive the V.C. His parents had been slaves in America. He earned it for his part in the Siege of Lucknow, in the Indian Rebellion of 1857.",
+        "fr": "Le matelot de 1re classe William Hall, de Horton, en Nouvelle-Écosse, a été le premier homme noir à recevoir la V.C. Ses parents avaient été esclaves en Amérique. Il l'a méritée pour son rôle au siège de Lucknow, pendant la rébellion indienne de 1857."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Able Seaman William Hall of Horton, Nova Scotia, whose parents were American slaves, was the first black man to be awarded the V.C. for his role in the Siege of Lucknow during the Indian Rebellion of 1857."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-robert-hampton-gray-last-victoria-cross",
+      "text": {
+        "en": "Lieutenant Robert Hampton Gray was a navy pilot from Trail, B.C. In August 1945, a few days before the Second World War ended, he was killed while bombing and sinking a Japanese warship. So far, he is the last Canadian to have received the V.C.",
+        "fr": "Le lieutenant Robert Hampton Gray était un pilote de la marine originaire de Trail, en Colombie-Britannique. En août 1945, quelques jours avant la fin de la Seconde Guerre mondiale, il a été tué en bombardant et en coulant un navire de guerre japonais. Jusqu'à présent, il est le dernier Canadien à avoir reçu la V.C."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 87,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": true,
+          "quote": "Lieutenant Robert Hampton Gray, a navy pilot born in Trail, B.C., was killed while bombing and sinking a Japanese warship in August 1945, a few days before the end of the Second World War, and was the last Canadian to receive the V.C. to date."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s9-canada-day",
+      "text": {
+        "en": "Canada Day is on July 1.",
+        "fr": "La fête du Canada a lieu le 1er juillet."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 89,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Canada Day July 1"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

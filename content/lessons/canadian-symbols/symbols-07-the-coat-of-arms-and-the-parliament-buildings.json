@@ -1,0 +1,228 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "symbols-07-the-coat-of-arms-and-the-parliament-buildings",
+  "chapter": "Canadian Symbols",
+  "order": 7,
+  "title": {
+    "en": "The coat of arms and the Parliament Buildings",
+    "fr": "Les armoiries et les édifices du Parlement"
+  },
+  "passages": [
+    {
+      "id": "s7-motto-from-sea-to-sea",
+      "text": {
+        "en": "After the First World War, Canadians felt national pride. To show it, Canada chose a national motto and an official coat of arms. The motto is A Mari Usque Ad Mare, which is Latin for “from sea to sea.”",
+        "fr": "Après la Première Guerre mondiale, les Canadiens ressentaient de la fierté nationale. Pour l'exprimer, le Canada s'est doté d'armoiries officielles et d'une devise nationale. La devise est A Mari Usque Ad Mare, qui veut dire en latin « d'un océan à l'autre »."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "As an expression of national pride after the First World War, Canada adopted an official coat of arms and a national motto, A Mari Usque Ad Mare, which in Latin means “from sea to sea.”"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-symbols-on-the-arms",
+      "text": {
+        "en": "On Canada's coat of arms there are symbols of England, France, Scotland and Ireland, along with red maple leaves.",
+        "fr": "Les armoiries du Canada portent des symboles de l'Angleterre, de la France, de l'Écosse et de l'Irlande, avec des feuilles d'érable rouges."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The arms contain symbols of England, France, Scotland and Ireland as well as red maple leaves."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-where-the-arms-appear",
+      "text": {
+        "en": "You can see the coat of arms today on paper money, on government papers and on public buildings.",
+        "fr": "On peut voir les armoiries aujourd'hui sur les billets de banque, sur les documents du gouvernement et sur les édifices publics."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "Today the arms can be seen on dollar bills, government documents and public buildings."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-parliament-completed-in-the-1860s",
+      "text": {
+        "en": "Work on the Parliament Buildings was finished in the 1860s.",
+        "fr": "Les travaux des édifices du Parlement ont été achevés dans les années 1860."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The buildings were completed in the 1860s."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-centre-block-fire-1916",
+      "text": {
+        "en": "In 1916, a fire started by accident destroyed the Centre Block. It was built again by 1922.",
+        "fr": "En 1916, un incendie accidentel a détruit l'édifice du Centre. Il a été reconstruit en 1922."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Centre Block was destroyed by an accidental fire in 1916 and rebuilt in 1922."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-the-library-survived",
+      "text": {
+        "en": "The Library is the one part of the first Parliament building that still stands.",
+        "fr": "La Bibliothèque est la seule partie du premier édifice du Parlement qui existe encore."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Library is the only part of the original building remaining."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-the-peace-tower",
+      "text": {
+        "en": "The Peace Tower was finished in 1927. It was built to remember the First World War.",
+        "fr": "La tour de la Paix a été achevée en 1927. Elle a été construite à la mémoire de la Première Guerre mondiale."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Peace Tower was completed in 1927 in memory of the First World War."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "s7-the-books-of-remembrance",
+      "text": {
+        "en": "Inside the Peace Tower is the Memorial Chamber. It holds the Books of Remembrance. They list the names of soldiers, sailors and airmen who died serving Canada, in war or on duty.",
+        "fr": "À l'intérieur de la tour de la Paix se trouve la chapelle du Souvenir. On y garde les Livres du Souvenir. Ils contiennent les noms des soldats, des marins et des aviateurs morts au service du Canada, à la guerre ou en service."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 80,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Memorial Chamber within the Tower contains the Books of Remembrance in which are written the names of soldiers, sailors and airmen who died serving Canada in wars or while on duty."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

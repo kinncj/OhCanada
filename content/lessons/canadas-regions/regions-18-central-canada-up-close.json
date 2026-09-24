@@ -1,0 +1,201 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-18-central-canada-up-close",
+  "chapter": "Canada's Regions",
+  "order": 18,
+  "title": {
+    "en": "Central Canada up close",
+    "fr": "Le Centre du Canada de plus près"
+  },
+  "passages": [
+    {
+      "id": "r18-where-most-canadians-live",
+      "text": {
+        "en": "Most of Canada's people live in southern Quebec and Ontario, in the cities and towns close to the St. Lawrence River and the Great Lakes.",
+        "fr": "La majorité de la population du Canada vit dans le sud du Québec et de l'Ontario, dans les villes et villages près du fleuve Saint-Laurent et des Grands Lacs."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "More than half the people in Canada live in cities and towns near the Great Lakes and the St. Lawrence River in southern Quebec and Ontario"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-central-canada-climate",
+      "text": {
+        "en": "In southern Ontario and Quebec, winters are cold and summers are warm and humid.",
+        "fr": "Dans le sud de l'Ontario et du Québec, les hivers sont froids et les étés sont chauds et humides."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Southern Ontario and Quebec have cold winters and warm humid summers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-french-first-language-in-quebec",
+      "text": {
+        "en": "For most people in Quebec, French is their first language.",
+        "fr": "Pour la plupart des gens au Québec, le français est la première langue."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "More than three-quarters speak French as their first language."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-quebec-culture-abroad",
+      "text": {
+        "en": "Quebec's films, music, books and food are known around the world. This is true above all in La Francophonie, a group of French-speaking nations.",
+        "fr": "Les films, la musique, les livres et la cuisine du Québec sont connus partout dans le monde. C'est surtout vrai dans la Francophonie, un regroupement de pays de langue française."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 98,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Quebec films, music, literary works and food have international stature, especially in La Francophonie, an association of French-speaking nations."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-niagara-vineyards-and-fruit",
+      "text": {
+        "en": "Ontario's Niagara region is known for its vineyards, its wines and its fruit.",
+        "fr": "La région de Niagara, en Ontario, est connue pour ses vignobles, ses vins et ses fruits."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The Niagara region is known for its vineyards, wines and fruit crops."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-lake-superior-the-largest",
+      "text": {
+        "en": "Lake Superior, one of the Great Lakes, is the largest lake of fresh water in the world.",
+        "fr": "Le lac Supérieur, l'un des Grands Lacs, est le plus grand lac d'eau douce du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Lake Superior, the largest fresh water lake in the world."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r18-lake-michigan-in-the-united-states",
+      "text": {
+        "en": "Of the Great Lakes, Lake Michigan is the one that lies in the United States.",
+        "fr": "Parmi les Grands Lacs, le lac Michigan est celui qui se trouve aux États-Unis."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 99,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Lake Michigan (in the U.S.A.)"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}

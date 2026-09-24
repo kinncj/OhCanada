@@ -1,0 +1,309 @@
+{
+  "$schema": "../../schemas/lesson.schema.json",
+  "id": "regions-17-the-atlantic-provinces-up-close",
+  "chapter": "Canada's Regions",
+  "order": 17,
+  "title": {
+    "en": "The Atlantic Provinces up close",
+    "fr": "Les provinces de l'Atlantique de plus près"
+  },
+  "passages": [
+    {
+      "id": "r17-atlantic-climate",
+      "text": {
+        "en": "Because of the Atlantic Ocean, winters in this region are cool, and summers are cool and humid.",
+        "fr": "À cause de l'océan Atlantique, les hivers de cette région sont frais, et les étés sont frais et humides."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The Atlantic Ocean brings cool winters and cool humid summers."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-most-easterly-point",
+      "text": {
+        "en": "No part of North America lies farther east than Newfoundland and Labrador.",
+        "fr": "Aucune partie de l'Amérique du Nord ne se trouve plus à l'est que Terre-Neuve-et-Labrador."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Newfoundland and Labrador is the most easterly point in North America"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-its-own-time-zone",
+      "text": {
+        "en": "Newfoundland and Labrador has a time zone all to itself.",
+        "fr": "Terre-Neuve-et-Labrador a un fuseau horaire bien à elle."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "has its own time zone."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-oldest-colony-of-the-british-empire",
+      "text": {
+        "en": "Newfoundland and Labrador was the oldest colony of the British Empire. Early in Canada's history, it was a place of great strategic value.",
+        "fr": "Terre-Neuve-et-Labrador a été la plus ancienne colonie de l'Empire britannique. Au début de l'histoire du Canada, c'était un endroit d'une grande valeur stratégique."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The oldest colony of the British Empire and a strategic prize in Canada’s early history"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-birthplace-of-confederation",
+      "text": {
+        "en": "Prince Edward Island is known as the birthplace of Confederation.",
+        "fr": "L'Île-du-Prince-Édouard est connue comme le berceau de la Confédération."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "P.E.I. is the birthplace of Confederation"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-confederation-bridge",
+      "text": {
+        "en": "The Confederation Bridge links Prince Edward Island to mainland Canada. It is one of the longest bridges of its kind in the world, with many spans in one unbroken line.",
+        "fr": "Le pont de la Confédération relie l'Île-du-Prince-Édouard au continent. C'est l'un des plus longs ponts de ce genre au monde, avec de nombreuses travées d'un seul tenant."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "connected to mainland Canada by one of the longest continuous multispan bridges in the world, the Confederation Bridge."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-anne-of-green-gables-set-in-pei",
+      "text": {
+        "en": "Lucy Maud Montgomery set her story Anne of Green Gables on Prince Edward Island.",
+        "fr": "Lucy Maud Montgomery a situé son histoire Anne… la maison aux pignons verts à l'Île-du-Prince-Édouard."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 96,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Anne of Green Gables, set in P.E.I. by Lucy Maud Montgomery"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-bay-of-fundy-tides",
+      "text": {
+        "en": "Nova Scotia is known for the Bay of Fundy, which has the highest tides in the world.",
+        "fr": "La Nouvelle-Écosse est connue pour la baie de Fundy, qui a les plus hautes marées du monde."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Known for the world’s highest tides in the Bay of Fundy"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-halifax-naval-base",
+      "text": {
+        "en": "Halifax, the capital of Nova Scotia, has had an important part in Atlantic trade and defence. Canada's largest naval base is there.",
+        "fr": "Halifax, la capitale de la Nouvelle-Écosse, a joué un rôle important dans le commerce et la défense de l'Atlantique. La plus grande base navale du Canada s'y trouve."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "the capital, Halifax, has played an important role in Atlantic trade and defence and is home to Canada’s largest naval base"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-celtic-and-gaelic-traditions",
+      "text": {
+        "en": "Celtic and Gaelic traditions keep culture lively in Nova Scotia.",
+        "fr": "Les traditions celtiques et gaéliques gardent la culture bien vivante en Nouvelle-Écosse."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "The province’s Celtic and Gaelic traditions sustain a vibrant culture."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    },
+    {
+      "id": "r17-moncton-acadian-centre",
+      "text": {
+        "en": "In New Brunswick, Moncton is the main centre of French-speaking Acadians.",
+        "fr": "Au Nouveau-Brunswick, Moncton est le principal centre des Acadiens francophones."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's Regions",
+          "page": 97,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-09T00:00:00Z",
+          "volatile": false,
+          "quote": "Moncton is the principal Francophone Acadian centre"
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      }
+    }
+  ]
+}
