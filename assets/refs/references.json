@@ -485,9 +485,9 @@
       "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. `singleSource()`.",
       "expectedBlindAnswer": [
         "a warming hut",
-        "a cabin",
+        "a cabin on the ice",
         "a hut on the ice",
-        "a wooden hut",
+        "a wooden hut on the ice",
         "a shelter on a frozen lake or canal",
         "a skate hut",
         "a log cabin on ice"
@@ -496,7 +496,15 @@
         "GENERIC ON PURPOSE. It is a hut, and the real ones carry an operator's wordmark and livery, neither",
         "of which this project draws. No answer here names a city or a canal and the gate must not reward one.",
         "WHAT IT MUST CARRY IS THAT IT STANDS ON ICE. \"A house\", \"a shed\" or \"a cabin in the woods\" without",
-        "the ice is a partial answer; the scored ice band under it and the skate marks are what place it."
+        "the ice is a partial answer; the scored ice band under it and the skate marks are what place it.",
+        "TIGHTENED 2026-09-24. `a cabin` and `a wooden hut` became `a cabin on the ice` and `a wooden hut on the ice`. Blind run",
+        "7e6b1463748d4299 passed this subject on \"small wooden cabin / bungalow in a snowy northern setting\", which never mentions",
+        "ice, and the verifier flagged the list as looser than the paragraph above it - the same disagreement dows-lake's",
+        "`a boathouse` had, corrected the same way. The reference supports the specific answer: rideau-canal-skateway-portrait.jpg",
+        "shows the hut standing on the canal ice beside the skating lane. `a warming hut` and `a skate hut` are kept bare because",
+        "each names what the building is FOR, which is itself a statement about skating. CONSEQUENCE, stated so it is not a",
+        "surprise: the render that passed under the old list would not pass under this one, and the art owner's next job on this",
+        "subject is the ice band at its foot, not the list."
       ],
       "referenceFiles": [
         "ottawa/rideau-canal-skateway-portrait.jpg",
@@ -616,7 +624,8 @@
       "referenceFiles": [
         "ottawa/dows-lake-pavilion-elevation.jpg",
         "ottawa/dows-lake-pavilion-deck-and-stair.jpg",
-        "ottawa/dows-lake-skateway-lane.jpg"
+        "ottawa/dows-lake-skateway-lane.jpg",
+        "ottawa/rideau-canal-skateway-ice.jpg"
       ],
       "mustBeRight": [
         {
@@ -643,14 +652,20 @@
         {
           "feature": "open ice, scored by skates, running unbroken to the foot of the deck, with no masonry wall and no stone coping anywhere in the frame",
           "why": "It is what keeps this hero from converging on the level's other two canal subjects. Every other Ottawa subject in this contract is contained - `rideau-canal-skateway` by its retaining wall, `canal-lock` by its coursed chamber walls - and Dow's Lake is the stretch where that containment stops. WHY THIS IS A `mustBeRight` AND NOT A `neverAdd`, CORRECTED 2026-09-22: the first draft said a `neverAdd` would go unchecked because a scorer cannot see a wall that correctly is not there. That is wrong, and the scorer said so - `neverAdd` entries ARE audited and a wall listed there would have surfaced as `forbiddenPresent` just as well. What the placement actually buys is ATTENTION: an auditor working down `mustBeRight` has to POSITIVELY ASSERT the absence, feature by feature, rather than merely fail to notice a thing that is not in the picture. That is worth having and it is the whole of the reason. AND THE ABSENCE CARRIES NO IDENTIFICATION, which the first draft also claimed. A blind reader sees one frame and no contrast set, and empty ice says nothing about where containment stops unless you already know the other subjects are walled. The identification is carried entirely by the positives in this list.",
-          "detail": "A flat band of the `ice` ramp across the bottom of the file with a lit top edge, two or three sheen lozenges and six straight scoring bars, plus a low swept snow windrow where the ice has been cleared against the deck. The file's bottom edge IS the level ground line, which on this stretch is world y 1469, on the ice.",
+          "detail": "AMENDED 2026-09-24 after blind run 7e6b1463748d4299, which read the previous drawing - a 60 px ice strip with six straight bars - as an Arctic building on permafrost piles because nothing said the ice was SKATED. The bottom fifth of the file is now the cleared skating lane: a band of the `ice` ramp with a lit far edge, two sheen lozenges, and ELEVEN LONG SHALLOW BLADE TRACKS that cross one another, in `white-light` and `ice-shade` - curved and crossing as they are on rideau-canal-skateway-ice.jpg and dows-lake-pavilion-deck-and-stair.jpg, and never straight parallel bars, which read as ripples on water. Along the lane's far edge runs a low swept SNOW WINDROW in the `snow` ramp - the ridge the ploughs leave, which is the most legible single thing in dows-lake-skateway-lane.jpg - with a gap where the ice stair comes down. Behind it the lake surface runs in under the deck between the piles in `snow-shade`, so the building still stands IN the frozen lake and not on a bank. The file's bottom edge IS the level ground line, which on this stretch is world y 1469, on the ice.",
           "palette": "ice"
         },
         {
           "feature": "a line of small spruces set into the ice, and globe lamps on the deck",
           "why": "The spruces are the skateway's own lane markers - cut trees stood up in the ice to edge the cleared lane - and they are in every winter photograph of this lake. They also give the building its scale, which a 600 px frame with no figure in it otherwise has no way to state.",
-          "detail": "Three trees of three different heights standing ON the ice in front of the deck, each with a short bare trunk and stacked drooping tiers, narrow rather than conical. Globe lamps are a flat `brass-light` disc with a `white-light` highlight on a slim standard, three of them along the deck; the same lamp the level's canal wall carries.",
+          "detail": "Three trees of three different heights standing ON the lane's snow windrow at the left of the frame, where the skateway sets them to edge the cleared lane, each with a short bare trunk and stacked drooping tiers, narrow rather than conical. Globe lamps are a flat `brass-light` disc with a `white-light` highlight on a slim standard, three of them along the deck; the same lamp the level's canal wall carries.",
           "palette": "pine, brass"
+        },
+        {
+          "feature": "plank skate-change benches on the ice, and a short stair from the ice up to the deck",
+          "why": "ADDED 2026-09-24. They are what says PEOPLE SKATE HERE in a frame that may not draw a person. A bench standing on the ice at the lane edge is where skates go on, and a stair from the ice to the deck says the building is reached from the skating surface. Blind run 7e6b1463748d4299 found no feature pointing to a skating lake; these two, with the blade tracks and the windrow, are the answer, and each is in a reference rather than invented.",
+          "detail": "Two plain plank benches - a seat board with a lit top edge on two splayed leg pairs, no back, no lettering - set on the ice just in front of the windrow, as the wooden benches stand on the ice in rideau-canal-skateway-ice.jpg. The ice stair is a short straight flight of five treads with two slate handrails, at the right-hand end of the deck, as the flight from the ice to the deck stands in dows-lake-pavilion-elevation.jpg. Neither is a rink fitting: no boards, no nets, no line markings.",
+          "palette": "wood, slate"
         },
         {
           "feature": "snow on every upward surface, and three flat tones per material",
@@ -664,7 +679,7 @@
         "the corrugation of the metal roof and of the wall panels: art-bible section 1 forbids a surface pattern, and the roof reads by its shape and its snow",
         "the downpipes, roof-top plant, aerials and every fitting below 12 px",
         "the towers of the Glebe standing behind the lake in `dows-lake-skateway-lane.jpg`: the level's skyline tile carries the city, and it repeats, so a recognisable building may never be drawn on it",
-        "the crowd on the ice, the skate-change benches and the kilometre marker post",
+        "the crowd on the ice and the kilometre marker post: the post carries a number, which is signage. The skate-change benches USED TO BE on this line and were brought back on 2026-09-24; see mustBeRight",
         "the summer boat racks, the canoe dock and the launch ramp: they are hauled out before the ice comes"
       ],
       "neverAdd": [
@@ -704,7 +719,15 @@
         "stair, the terrace railing, the mullion rhythm, the three lamps, the piles and the three trees all",
         "survive; the 120 px silhouette is a long low block with a broad shallow roof and a raised ridge, an",
         "open railed terrace on posts at one end, standing on a deck on piles over a flat surface, with three",
-        "small conifers beside it."
+        "small conifers beside it.",
+        "REDRAWN 2026-09-24 AFTER BLIND RUN 7e6b1463748d4299, which failed this subject at every size: the verifier named the Legislative",
+        "Assembly of Nunavut, reading a building on piles over a frozen northern shore, and wrote that nothing in the frame said the",
+        "ice was a skating lake or a canal. The building drawing is unchanged and is placed at 0.82 of its first size, raised, so the",
+        "bottom fifth of the file can be the cleared SKATING LANE: crossing blade tracks, the swept windrow with the lane spruces on",
+        "it, two plank skate-change benches and the short stair from the ice to the deck. Every one of those is in a reference -",
+        "rideau-canal-skateway-ice.jpg was added to referenceFiles for the tracks and the benches - and none of them is a person, a",
+        "sign or a rink fitting, so neverAdd is unchanged. The building is now about 420 px wide inside the 600 px file, which keeps",
+        "it above the 300 px placement floor at the file's shipping size. Unproven until a blind run scores it."
       ]
     },
     {
@@ -2816,7 +2839,8 @@
         {
           "feature": "street trees in EARLY AUTUMN, gold and green together",
           "why": "The season separates this level from the two winter levels and the two summer ones, and a level whose trees are uniformly green is summer.",
-          "detail": "Three trees per tile, two in gold and one still green, drawn as three-tone rounded canopies. Never a leaf texture."
+          "detail": "Three trees per tile, two in gold and one still green, drawn as three-tone rounded canopies. Never a leaf texture. GOLD IS `brass` AND GREEN IS `grass`, and neither is `oxide`: the autumn-maple hero is drawn in `oxide` and its own entry requires it to be distinguishable at a glance from these tile trees. RECOLOURED 2026-09-24 after blind run 7e6b1463748d4299 sampled two tile crowns at #cf5d2b and #91301c, the hero's red, and failed this feature. The contract was checked before the art was moved: the autumn street trees in winnipeg/cmhr-from-the-forks-tower.jpg are ochre-gold and green, with some brown and no red crown, so the entry was right and the drawing was wrong.",
+          "palette": "brass, grass"
         },
         {
           "feature": "people to the same cartoon proportions as every other character",
@@ -5131,7 +5155,15 @@
         "It names no place and no person and the gate must not ask it to.",
         "WHAT IT MUST CARRY: a HOUSE somebody lives in - the chimney, the domestic windows, the door and the",
         "garden fence. \"A barn\", \"a shed\", \"a church\" or \"a store\" is a FAIL, and the fence and the roses are",
-        "half of why it is not any of them."
+        "half of why it is not any of them.",
+        "CONSIDERED AND NOT TIGHTENED, 2026-09-24. Blind run 7e6b1463748d4299 passed this subject on \"family house with picket fence",
+        "and flower garden\" and the verifier asked whether the setting is part of the subject. It is not, and `a house` stays.",
+        "peggys-cove/village-houses.jpg shows a storey-and-a-half clapboard house behind a picket fence and roses, and nothing in",
+        "it says FISHING or SEA that this drawing is allowed to carry: the boats, nets, traps and fish stores are forbidden here",
+        "because each belongs to another subject on this level, and the granite behind the houses is the level's ground, not this",
+        "file's. A more specific answer - a fisherman's house, a coastal cottage - would be an answer the render cannot support,",
+        "which is the mistake dows-lake's note records. The coast is carried by `peggys-cove-light` and `fish-store`; this subject",
+        "answers HOUSE, not barn, shed, church or store, and the answer the run recorded does that."
       ],
       "referenceFiles": [
         "peggys-cove/village-houses.jpg",
@@ -5480,7 +5512,14 @@
         "built things listed above and it is worse than any of them: the contract's own `mustBeRight` had asked",
         "for a shade-toned END FACE, and a flat darker cap on a cylinder is end grain. The drawing followed the",
         "contract and the contract was wrong. Both are fixed; the lesson is recorded here rather than in the",
-        "commit, because the next person to write 'darker ends' for a natural object needs to read it."
+        "commit, because the next person to write 'darker ends' for a natural object needs to read it.",
+        "AND A THIRD FORM, 2026-09-24. Blind run 7e6b1463748d4299 led with \"a pile of bones and possibly an antler\" and offered driftwood",
+        "only as a hedged second reading. The phrase matcher passed it, because it checks that the words appear and not that they",
+        "are the answer given; the verifier recorded it as a miss for the art owner and this contract agrees. A reading that NAMES",
+        "BONE OR ANTLER is a FAIL here whatever else the answer contains, and the list above was NOT widened or narrowed to change",
+        "that: every entry already names wood or logs, and the leniency is the harness's, reported to its owner in",
+        "docs/art-verification.json `contractDefectsForTheOwner` rather than patched from this file. The drawing answer is in",
+        "mustBeRight: broken ends, grain checks, splits, limb stubs, a flared root butt, and greys ahead of cream."
       ],
       "referenceFiles": [
         "the-north/yukon-river-bluff-and-aspen.jpg",
@@ -5490,18 +5529,23 @@
         {
           "feature": "seven barkless logs LYING across one another at different angles",
           "why": "Lying and crossing is what says the river put them there. Parallel logs read as stacked cordwood, which is something a person does.",
-          "detail": "Long bowed capsules with ROUNDED ENDS, no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log. THE ROUNDED END IS THE WHOLE OF IT AND IT IS NOT DECORATION: the shipped art draws each spar as a round-capped stroke along a bent centreline, so a flat terminus is not expressible."
+          "detail": "Bowed logs of very different thicknesses - the thickest about two and a half times the thinnest - no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log. EVERY END IS BROKEN: a torn row of splinters of uneven length, with a different profile at each end. AMENDED 2026-09-24. This entry used to require ROUNDED ENDS, drawn as round-capped strokes so a flat sawn face could not be expressed, and blind run 7e6b1463748d4299 read that build as A PILE OF LONG BONES: a smooth round cap on a pale shaft is the end of a femur. A broken end is what a river leaves on a tree and what neither a saw nor a skeleton does. It must never resolve into a single point (a stake), a flat face (a saw cut) or a smooth dome (a bone)."
         },
         {
           "feature": "bleached pale wood with darker ends",
           "why": "Driftwood is grey-white, not brown. Brown logs with bark are freshly cut timber and that is a different object with a different meaning.",
-          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, each log taking all three tones of ONE of them: the light tone for the upper body, the base tone for the lower half AND for the last tenth of each end, and the shade tone as a thin rim along the very bottom edge. NO END FACE, OF ANY TONE - AMENDED 2026-09-22 AND THIS CLAUSE IS WHY THE RENDER FAILED. This entry used to read 'the shade tone for the end face', and a build that followed it was read blind as A STACK OF FRESHLY MILLED SQUARED LUMBER in a sawmill yard. It was right to be: a flat darker cap across the end of a cylinder IS end grain, end grain is what a saw leaves, and an earlier build's attempt to escape the reading by slanting those caps only made them look more sawn. The darker end this feature asks for is a darker LENGTH of the same round-ended cylinder, never a face across it. NO bark, NO green wood, NO axe or saw cut, and NO whittled point - a tapered spar that ends in a point is a stake, which is a thing a person made. `stone` WAS ADDED 2026-09-17 as a saturation fix: drawn from `path` and `limestone` alone the pile was six neutral greys end to end, `path` is the one ramp palette.json exempts from the saturation gain, and sun-bleached driftwood is silver AND warm tan. It is NOT brown: `wood` is the bark-and-fresh-timber ramp and stays forbidden here, because a brown log with bark is cut timber and that is this subject's whole point.",
+          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, WEIGHTED TO THE WEATHERED GREYS - three logs in `path`, three in `limestone`, one in `stone` - each log taking all three tones of ONE ramp: the light tone for the upper body, with a lower edge that wanders rather than running true, the base tone below it AND for the last stretch before each broken end, and the shade tone as a thin rim along the bottom edge and in the grain checks. NO END FACE, OF ANY TONE: the darker end is a darker LENGTH of the log, never a face across it (see the 2026-09-22 amendment in expectedBlindAnswerNote). NO bark, NO green wood, NO axe or saw cut, and NO whittled point. `stone` WAS ADDED 2026-09-17 as a saturation fix, and on 2026-09-24 it was cut back to one log of seven, because warm cream-tan on a smooth pale shaft is the colour of bone and the verifier of run 7e6b1463748d4299 named bone; weathered driftwood in both references is silver-grey first. `wood` is the bark-and-fresh-timber ramp and stays forbidden here.",
           "palette": "path, limestone, stone"
         },
         {
           "feature": "one short uneven root fan",
           "why": "It is what says these were trees the river tore out, rather than milled wood.",
-          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's butt, spread over less than half a turn, over a small uneven knob. NEVER an even radial star, NEVER a disc, and NEVER a lighter shape centred inside a darker one: a blind pass read the previous knob - a near-circular blob with a concentric highlight - as A CIRCULAR SAW BLADE, which turned the one feature that says 'the river tore this out' into the one that says 'a mill cut it'. Nothing round-and-concentric may appear on this subject."
+          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's butt, which FLARES into them rather than carrying a separate knob. Each root is thick at the flare, kinked at least once, and torn at the tip; they run out LOW AND DOWN into the gravel, spread over less than half a turn. AMENDED 2026-09-24: blind run 7e6b1463748d4299 read the previous fan - smooth curves rising and branching over a knob - as AN ANTLER. So no root forks at its tip, none curves up and back over itself, and there is no knob. NEVER an even radial star, NEVER a disc, and NEVER a lighter shape centred inside a darker one: an earlier knob read as A CIRCULAR SAW BLADE. Nothing round-and-concentric may appear on this subject."
+        },
+        {
+          "feature": "grain checks, splits and snapped limb stubs, drawn as shapes",
+          "why": "ADDED 2026-09-24. They are the incident a tree has and a bone, a plank or a pipe does not, and they are the proposal assets/style/the-north-level.md section 8.1 made after four rejected redraws: a clean untextured solid of any proportion reads as something manufactured, and the house style forbids texture, so the incident has to be carried by SHAPES.",
+          "detail": "Two to four grain CHECKS per log - short dark slivers in the log's own shade tone, 2.5 to 4 px at their widest, running along the log's length and following its bow - and one SPLIT per log opening from a broken end, widest at the end and closing to nothing within a quarter of the log. Three logs carry one SNAPPED LIMB STUB each, short, tapering and torn at the tip. The checks are sparse, a handful per log, and never a repeating fill: art-bible section 1's rule against surface pattern stands, and these are counted shapes in the way the skateway's scoring is."
         },
         {
           "feature": "a gravel bar with rounded cobbles under it",
@@ -5510,8 +5554,8 @@
         }
       ],
       "simplifyAway": [
-        "bark, grain, splits and knots",
-        "the branches on each log: one root fan on one log is the whole complication",
+        "bark and knots: bark is fresh timber and a knot is a ring",
+        "all but three snapped limb stubs, and every whole branch: the root fan on one log is the only large complication",
         "the hundreds of other logs along the shore in the reference",
         "sand ripples, weed and water: the river is a parallax tile behind this"
       ],
@@ -5527,7 +5571,9 @@
         "an even radial root wad, which reads as a sunburst device",
         "a flat end face on any log, of any tone or at any angle: it is end grain, and end grain is a saw cut",
         "a whittled or sharpened point on any log: a pointed spar is a stake, which is something a person made",
-        "any disc, ring or concentric shape anywhere in the frame, which is how a root knob became a saw blade"
+        "any disc, ring or concentric shape anywhere in the frame, which is how a root knob became a saw blade",
+        "a rounded knob, dome or ball on the end of any log: it is the end of a long bone (blind run 7e6b1463748d4299)",
+        "a root or limb that forks at its tip or curves up and back over itself: it is an antler (blind run 7e6b1463748d4299)"
       ],
       "notes": [
         "the-north/yukon-river-bluff-and-aspen.jpg carries the reference at its waterline: a continuous band of",
@@ -5541,7 +5587,13 @@
         "no sluice, no pan, no claim stake and no tool, and the neverAdd list forbids all of them.",
         "PLACEMENT FLOOR: none. DRAWING OBSERVATION, not an identification: at 180 px wide all seven logs, the",
         "darker ends, the root fan and the cobbles survive; the 120 px silhouette is a low crossed pile of",
-        "cylinders, which is driftwood and is not a structure."
+        "cylinders, which is driftwood and is not a structure.",
+        "REDRAWN 2026-09-24 (attempt six). Neither reference is close enough to show grain or the shape of a broken end - both are",
+        "distant shore views - so those two features are drawn from what driftwood is as a TYPE, as the gravel bar tile's two spars",
+        "already were, and are stated here as such rather than claimed as measured. What the references DO fix, and the drawing",
+        "follows, is the colour family (silver-grey first, some warm tan) and the arrangement (logs lying tangled along the waterline,",
+        "the jam on the bar in yukon-river-valley.jpg). A closer CC0 or CC BY driftwood photograph would be a better reference for",
+        "the ends and the grain and is worth adding; none was fetched in this pass."
       ]
     }
   ],

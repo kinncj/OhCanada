@@ -100,7 +100,7 @@ draws four. **This level draws none, anywhere, at any scale**, for the reason
 | `the-north-layer-40-river-and-bar` | `layer-40-river-and-bar.svg` | 1920 × 320 | 759 | the glacier-fed river in three tones, then a cobble bar with driftwood, willow and sedge |
 | `the-north-landmark-sternwheeler@1x` | `landmark-sternwheeler@1x.svg` | 2300 × 700 | 228 | **POI hero, and the level's place-anchor.** The authored 920 × 280 geometry under one uniform `scale(2.5)` group since 2026-09-16; §13 |
 | `the-north-prop-spruce-stand` | `prop-spruce-stand@1x.svg` | 620 × 760 | 46 | **POI hero, added 2026-09-13**: five spire-topped spruce of uneven height on a boulder bank |
-| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn twice on 2026-09-17**: seven bleached spars lying across one another at seven angles on the cobble bar, each tapering to a torn, slanted end — no elliptical end cap anywhere. **Still reads as milled lumber — OPEN, see §8.1** |
+| `the-north-prop-driftwood-pile` | `prop-driftwood-pile@1x.svg` | 700 × 340 | 48 | **POI hero, added 2026-09-13, redrawn on 2026-09-17, 2026-09-22 and 2026-09-24**: seven weathered logs of very different thicknesses lying across one another at seven angles on the cobble bar, every end broken into torn splinters, grain checks and a split on each log, three snapped limb stubs, and a flared butt with four kinked roots. **Attempt five read as bones and an antler; attempt six is unproven — see §8.1** |
 
 Shape counts are reported, not gated (ADR-0025). The sky is **49 shapes**, the same count as the CN Tower and
 the lowest of any layer in the game; the river-and-bar tile is **759**, the highest, and every one of them is
@@ -680,5 +680,27 @@ to be resolved in `references.json` before it is drawn.
 stays at **30.32 MiB of 36.00 (84 %)**; the payload moved 0.88 → **0.89 MiB of 8.00**.
 
 **Unproven.** This is the author's account of what changed, not an identification. A fresh blind run scores it.
+
+#### The sixth attempt, 2026-09-24 — bones and an antler, and the section 8.1 proposal taken up
+
+Blind run `7e6b1463748d4299` passed attempt five on the harness and failed it by the verifier's own protocol: the
+unprompted answer led with *"a pile of bones and possibly an antler … perhaps bison bones"*, and driftwood came
+second, hedged. The verifier named both causes. **The round-capped ends read as the knobbed ends of long
+bones** — attempt five had made a smooth dome the ONLY possible end, to rule out a sawn face, and a smooth dome
+on a pale shaft is a femur. **The root fan read as an antler** — smooth curves rising and branching over a knob.
+
+What attempt six draws is the proposal this section made before attempt five and set aside because the
+contract forbade it; the contract was amended FIRST this time, as that paragraph asked. Each log is a filled
+outline from a bowed centreline and a thickness profile, so its ends can be **broken**: a torn row of
+splinters of uneven length, a different profile at each end, never a dome, never a face, never one point.
+Each log carries two to four **grain checks** (short dark slivers along its length) and a **split** opening from
+a broken end; three carry a **snapped limb stub**; the edges wander. The root log's butt **flares** into four
+kinked roots that run low and down into the gravel, torn at the tip, with no fork, no knob and nothing
+curving back. The warm `stone` ramp is cut back to one log of seven, because cream-tan on a smooth pale shaft
+is bone-coloured and both references put silver-grey first. **The references are distant shore views and show
+neither grain nor the shape of an end**; those are drawn from driftwood as a type, the way the gravel-bar
+tile's two spars were, and `references.json` says so rather than claiming them as measured.
+
+**Cost: none.** The canvas is unchanged at 700 × 340. **Unproven** until a blind run scores it.
 
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.
