@@ -1084,7 +1084,7 @@ const CSS = `
 /* ------------------------------------------------------------------ *
  * The lesson reader: a passage of the study guide, read at a stop.
  *
- * ADR-0063, and docs/stories/TN-READ-reading-a-passage-at-a-stop.md. Three
+ * ADR-0063, and docs/stories/TN-READ-reading-a-passage-at-a-stop.md. Four
  * things here are acceptance criteria rather than decoration.
  *
  *  1. THE PARAGRAPHS ARE SET TO BE READ, NOT SKIMMED. One step up from body
@@ -1104,7 +1104,25 @@ const CSS = `
  *     rule down its leading edge, which survives greyscale, a colour vision
  *     difference and forced-colours mode: colour is never the only signal, and
  *     here colour is not a signal at all.
+ *  4. AT 200 % THE WORDS GET THE WIDTH. A 390 px phone in French at 200 % text
+ *     drew the lesson title at 56 px, a word or two to a line, filling the
+ *     whole first screen and splitting "monarchies" and "législatives" across
+ *     lines; the prose below sat behind a rule and an indent that had doubled
+ *     with the text, leaving about three words a line. Nothing here makes a word
+ *     smaller than the setting asks for. Two things stop growing instead:
+ *      - The rule, its three sibling edges and the indent are chrome that holds
+ *        still (ADR-0039): 4 px and 14 px at every scale.
+ *      - The title starts smaller: 1.375rem, 22 px at 100 % and 44 px at
+ *        200 %, over prose of 19 px and 38 px. It scales exactly with the
+ *        setting, like every other word, because drawing any text below what
+ *        the setting says is what ADR-0066 §3 refuses; what changed is its
+ *        base, not its growth. Weight carries the heading, not size.
  * ------------------------------------------------------------------ */
+
+/* The title: a smaller base that still scales with the setting (4 above). */
+.tn-lesson-reader h1 {
+  font-size: 1.375rem;
+}
 
 .tn-lesson-reader__body {
   display: flex;
@@ -1115,12 +1133,14 @@ const CSS = `
 .tn-lesson-reader__passage {
   font-size: 1.1875rem;
   line-height: 1.6;
-  /* Four edges of one width, so the highlight can never resize the box. */
-  border: 0.25rem double transparent;
+  /* Four edges of one width, so the highlight can never resize the box. The
+     width and the indent hold still at large text (4 above, ADR-0039): a rule
+     and a gap that doubled with the text took the width the words needed. */
+  border: calc(0.25rem / var(--tn-text-scale, 1)) double transparent;
   border-inline-start-style: solid;
   border-inline-start-color: var(--tn-accent);
   border-radius: var(--tn-radius);
-  padding-inline-start: 0.875rem;
+  padding-inline-start: calc(0.875rem / var(--tn-text-scale, 1));
   /* A switch user cannot scroll: leave room above when the highlight lands. */
   scroll-margin-block: 1.5rem;
 }
