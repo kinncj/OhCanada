@@ -122,8 +122,13 @@ Recorded by the commit that lands ADR-0066 §4. Until then, this section is the 
   `system-ui` or a device family.
 - **"TrueNorth Text Fallback"** is an `@font-face` the game defines. Its `src` is `local()` over three faces
   built to share Arial's advance widths, so one set of overrides is correct for whichever of them resolves.
-  Its `size-adjust`, `ascent-override`, `descent-override` and `line-gap-override` bring it to Atkinson
-  Hyperlegible's average advance and vertical metrics, as ADR-0066 §1 asked. It is a defined face with
+  Its `ascent-override`, `descent-override` and `line-gap-override` are Atkinson Hyperlegible's vertical
+  metrics. Its `size-adjust` brings its average advance **toward** Atkinson's, as ADR-0066 §1 asked, but not
+  onto it. A `local()` face renders with hinted, whole-pixel advances, so the adjustment moves the width in
+  steps. It is **98 %**, the largest step that never draws wider than Atkinson at the 200 % sizes where the
+  line budget binds. Measured over five strip strings at 15–38 px, the fallback runs 0.96–1.05× Atkinson's
+  width, and 0.96–0.99× at 30–38 px. With the web font blocked, the sweep's reference string is 875 px in
+  the fallback against 887 px in Atkinson. It is a defined face with
   declared metrics, not a stack entry that "may or may not be installed, in versions nobody chose": if none
   of the three is installed, the face does not exist and the stack falls through to `sans-serif`.
 - The dyslexia stack falls back to the **UI face**, not to a metric-adjusted fallback of its own. To match

@@ -421,7 +421,7 @@ are comfortable.
   accessibility tree and a clean axe scan at 100 % and 200 %, EN and FR, dyslexia and high contrast, strip and
   menu; `tests/a11y/readability.spec.ts` measures both strips the game can now draw.
 
-- **OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
+- ~~**OBLIGATION due=2026-11-02 owner=ui-a11y** — land §1: bundle one UI face and one dyslexia face, unmodified,
   within the 200 KB ceiling (300 KB since ADR-0071); remove `system-ui`, `-apple-system`, `"Segoe UI"`, `Roboto`, `"Comic Sans MS"`,
   `Verdana` and `Tahoma` from the stacks in `app/ui/screen-styles.ts` and the stack in
   `app/adapters/phaser/boot-scene.ts`; declare the metrics-adjusted fallback; credit both faces in
@@ -429,7 +429,26 @@ are comfortable.
   weights, that the browser performs **no** synthetic emboldening at the weights the sheet asks for, the
   measured payload added, and the advance-width comparison §1 requires against the current CI face. If the
   chosen face is not OFL-1.1 or more permissive, say so — the ADR-0004 amendment is permission, not an
-  instruction.
+  instruction.~~
+  **DISCHARGED 2026-09-23**, in the commit that carries this line. The UI face is Atkinson Hyperlegible and the
+  dyslexia face is OpenDyslexic, both at 400 and 700, both OFL-1.1, and all four files byte-identical to
+  upstream (ADR-0071's table; `tests/unit/infra/bundled-faces.test.ts` holds the digests and the 300 000 B
+  ceiling). They are in `assets/src/fonts/` with their `OFL.txt`, credited `shipped`, and emitted and precached
+  with the shell. `make build` charges them to the initial payload (258.4 kB of 2 574.5 kB) and fails
+  above the ceiling. No stack names a device family: `common/type-faces.ts` holds the two stacks, and
+  `screen-styles.ts`, `boot-scene.ts` and `index.html` use them. An ESLint rule refuses the seven names in any
+  string under `app/` and `common/`, and `tests/unit/ui/type-stacks.test.ts` holds every declared
+  `font-family` to exactly the two stacks. The metric-adjusted fallback is `TrueNorth Text Fallback` (ADR-0071
+  §6). The canvas creates its text only after `document.fonts` has the face, or after a 3 s bound. The front
+  door waits the same way, so its layout does not reflow under a finger when the face arrives.
+  `tests/a11y/type-faces.spec.ts` shows **no synthetic emboldening**: at 600, 700 and 800 each family draws
+  exactly the width and the ink of its real Bold, and at 400 exactly its Regular. It also shows the dyslexia
+  toggle changing the rendered face. **Width against the CI face:** the CI runner's face is still unidentified
+  (the obligation below stays open). Against this container's Chromium default, `system-ui` = DejaVu Sans 2.37,
+  Atkinson is 0.88× at 400 and 0.84× at the bold weights over the reference strings, and 0.99× Liberation
+  Sans. So it is narrower than both sans faces the image has. Landing it moved one thing: a focus style that
+  thickened a border rewrapped "Choisir un niveau" at 200 %. Focus now changes the border's shape and not its
+  width.
 
 - ~~**OBLIGATION due=2026-11-02 owner=infra** — add `OFL-1.1` to the `licence` enum in
   `content/schemas/credits.schema.json`, with a description restricting it to font assets and pointing at

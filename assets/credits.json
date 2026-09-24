@@ -2862,6 +2862,42 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/icons/truenorth-app-icon.svg",
       "modifications": "Original work, drawn for slice F3 (ADR-0034). Depicts no place, person or national emblem, so no reference applies. Palette colours only, linted by scripts/lib/pwa.mjs. Rasterised at build to 180, 192 and 512 px PNG for the web app manifest and the iOS home-screen icon; the star and the crest of the hills sit inside the maskable safe zone, so one drawing serves both icon purposes."
+    },
+    {
+      "path": "src/fonts/atkinson-hyperlegible/AtkinsonHyperlegible-Regular.woff2",
+      "kind": "shipped",
+      "title": "Atkinson Hyperlegible Regular (the UI text face, 400)",
+      "author": "Braille Institute of America, Inc.",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/googlefonts/atkinson-hyperlegible/blob/1cb311624b2ddf88e9e37873999d165a8cd28b46/fonts/webfonts/AtkinsonHyperlegible-Regular.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 2df4ba17804bc7a36f123127966075d8427bff2df58d0d76820c1130bb1a4150). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/atkinson-hyperlegible/AtkinsonHyperlegible-Bold.woff2",
+      "kind": "shipped",
+      "title": "Atkinson Hyperlegible Bold (the UI text face, 700)",
+      "author": "Braille Institute of America, Inc.",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/googlefonts/atkinson-hyperlegible/blob/1cb311624b2ddf88e9e37873999d165a8cd28b46/fonts/webfonts/AtkinsonHyperlegible-Bold.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 da8fce41a04f8498fbf79076f92d304b12e70c76f71b143c5dcfb6536c93c075). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/opendyslexic/OpenDyslexic-Regular.woff2",
+      "kind": "shipped",
+      "title": "OpenDyslexic Regular (the dyslexia face, 400; Reserved Font Name \"OpenDyslexic\")",
+      "author": "Abbie Gonzalez",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/antijingoist/opendyslexic/blob/1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7/compiled/OpenDyslexic-Regular.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 0441bc21071e42db57c217f93fbc48d3b55a2987c02814c94dc93621c42e8695). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "src/fonts/opendyslexic/OpenDyslexic-Bold.woff2",
+      "kind": "shipped",
+      "title": "OpenDyslexic Bold (the dyslexia face, 700; Reserved Font Name \"OpenDyslexic\")",
+      "author": "Abbie Gonzalez",
+      "licence": "OFL-1.1",
+      "source": "https://github.com/antijingoist/opendyslexic/blob/1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7/compiled/OpenDyslexic-Bold.woff2",
+      "modifications": "None: byte-identical to the upstream file (sha256 b534a0b84ef3cca941ebdb506ce3f4e0010aa4ef881271bac8b6959dbf694fbf). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
     }
   ]
 }

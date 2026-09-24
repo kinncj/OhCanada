@@ -61,7 +61,9 @@ import {
   type BootConfig,
   type SceneLevel,
 } from '@adapters/phaser';
+import { FONT_WAIT_MS, documentFonts, whenFacesReady } from '@adapters/phaser/font-ready';
 import { answerQuestion } from '@application/use-cases/answer-question';
+import { uiFontShorthand } from '@common/type-faces';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { createExamSession, type ExamSession } from '@application/use-cases/exam-session';
@@ -121,6 +123,7 @@ import {
 } from '@ui/settings';
 import { createSettingsScreen, type SettingsScreen } from '@ui/settings-screen';
 import { createShell } from '@ui/shell';
+import { injectTypeFaces } from '@ui/type-faces';
 
 import {
   creatorSlotsByLocale,
@@ -217,6 +220,15 @@ function main(): void {
    * tests/unit/bootstrap/live-region-order.test.ts.
    */
   mountLiveRegion(uiHost);
+
+  /*
+   * The bundled faces, before anything draws text (ADR-0066 §1). The canvas asks
+   * `document.fonts` for the UI face before it writes its title, and a face
+   * nobody has declared yet is a face that load() reports as absent, so the
+   * declaration has to be on the page before the renderer exists. Every screen's
+   * stylesheet declares them too; this is only the earliest of those calls.
+   */
+  injectTypeFaces(document);
 
   /*
    * The bus, before the renderer that publishes on it.
@@ -521,6 +533,21 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
   const { root, uiHost, gameHost, bus, milestones, renderer, pause, config, rules, screenArt } =
     deps;
   const { onLevelPlayable } = deps;
+
+  /*
+   * The UI face, asked for now and awaited just before the shell draws
+   * (ADR-0066 §1). It loads while the save does. A front door drawn in the
+   * fallback reflows when the face arrives: at 200 % French the title wraps
+   * differently, every button moves, and a tap made during that reflow lands
+   * where the button was. Bounded like the canvas' wait: a face that fails
+   * resolves at once, a slow one after FONT_WAIT_MS, and either way the door
+   * opens in the fallback rather than not at all.
+   */
+  const facesReady = whenFacesReady(
+    documentFonts(),
+    [uiFontShorthand(400, 16), uiFontShorthand(700, 16)],
+    FONT_WAIT_MS,
+  );
 
   /*
    * `#game`'s place on the page, remembered before anything moves it.
@@ -1027,6 +1054,7 @@ async function openFrontDoor(deps: FrontDoor): Promise<void> {
 
   let session: LevelSession | null = null;
 
+  await facesReady;
   const shell = createShell(uiHost, {
     store,
     entries,
