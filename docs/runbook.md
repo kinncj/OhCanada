@@ -112,6 +112,32 @@ is live:
    you**: the gate proves only that no single commit does both jobs, and two commits in the right order look
    the same whoever made them (ADR-0003, amended 2026-09-20). Under incident pressure that rule is held by
    the person running the agents and by nothing else.
+4. **Merge a content PR with a merge commit, never a squash, and that includes the fix.** Gate A reads
+   each commit. A squash folds the author's commits and the verifier's commits into one, and that commit
+   fails the gate on every claim it touches.
+
+### 2a. `main` is red because a content PR was squash-merged (ADR-0073)
+
+The signature: `make verify-content` fails on `main` with hundreds of `changes the question's own fields
+AND writes` findings, all naming the one squash commit. The PR's head passed the same gate. This happened
+with PR #138 (`8f25a4927`, head `308a171`, 497 failures).
+
+Do not rewrite `main`. Record the squash:
+
+1. Get the three facts: the squash sha (`git log -1 --format=%H <squash>`), the PR head sha (the PR's
+   "Commits" tab, or `git ls-remote origin refs/pull/<N>/head`) and the branch name.
+2. Check the evidence yourself before recording anything:
+   `git diff --quiet <head> <squash> -- content && echo identical`. If the content is not identical, stop.
+   The record will not help, and the squash has to be fixed by an ordinary content PR.
+3. Add an entry to `scripts/content-squash-merges.json` with `commit`, `head`, `branch`, `pr` and a one-line
+   `reason`, all required. Open a PR with only that change, and **merge that PR with a merge commit**.
+4. `make verify-content` locally must print
+   `recorded squash (ADR-0073) — <squash> (PR #N) judged by K commit(s) of its head …` and then `OK.`
+   `make squash-heads` fetches a missing head by sha, then by `refs/pull/<N>/head`. CI runs it before the
+   gate.
+
+The record is for incidents only. If a second entry is needed, the convention in step 4 of §2 is not
+holding. Fix that first, for example by turning off squash merging in the repository settings.
 
 ---
 

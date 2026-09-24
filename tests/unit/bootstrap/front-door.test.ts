@@ -2243,13 +2243,34 @@ describe('reaching the end of a level whose task is not done earns nothing (ADR-
     );
   });
 
-  it('draws one card however many times the player walks over the end', async () => {
+  it('draws one card for one arrival, however the milestone repeats while it is up', async () => {
     await walkToTheEnd();
     reachEnd();
     reachEnd();
     await flush();
 
     expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+
+  it('draws the card again when the player keeps playing, walks back and arrives again (ADR-0074)', async () => {
+    await walkToTheEnd();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await flush();
+
+    /* The scene re-arms its latch once the player is back behind the line, so
+       the next arrival is a new `level/exitReached`. */
+    reachEnd();
+    await flush();
+
+    expect(
+      hoisted.state.completeShown,
+      'a player who came back to the end of an unfinished level was told nothing the second time',
+    ).toHaveLength(2);
+    expect((hoisted.state.completeShown[1] as CardContent)('en').reason).toBe('unfinished');
+    expect(doc.documentElement.dataset['tnPaused']).toBe('true');
+    /* Still nothing earned, and nowhere new to go. */
+    expect(hoisted.state.loadCalls).toEqual([`${START_LEVEL}`]);
+    expect(hoisted.state.markedComplete).toBe(0);
   });
 
   it('gives the level back when the player keeps playing', async () => {
@@ -2317,13 +2338,71 @@ describe('reaching the end of a level whose task is not done earns nothing (ADR-
   });
 });
 
-describe('reaching the end of a level already finished', () => {
-  /**
-   * Finish by answering, leave, come back, and walk to the end with nothing
-   * answered this time. The stamp is in the passport, so the end finishes the
-   * level again — and earns nothing twice.
-   */
-  const walkBackToTheEnd = async (): Promise<void> => {
+/**
+ * Everything the live region says over the next `ms`, in order.
+ *
+ * The region clears and writes on later tasks (`app/ui/live-region.ts`), so a
+ * sentence is only ever on it for a while; this samples it as the fake clock
+ * runs and keeps each one it held.
+ */
+const hearOver = async (ms: number): Promise<string[]> => {
+  const region = doc.getElementById('tn-live-region');
+  if (region === null) throw new Error('no live region is mounted');
+  const heard: string[] = [];
+  for (let at = 0; at < ms; at += 20) {
+    const said = region.textContent ?? '';
+    if (said.length > 0 && heard.at(-1) !== said) heard.push(said);
+    await vi.advanceTimersByTimeAsync(20);
+  }
+  return heard;
+};
+
+describe('reaching the end of a finished level goes on to the next one (ADR-0074)', () => {
+  /** The level after the start level on the journey: the one its stamp opens. */
+  it('ships the level after the start level as the one its stamp opens', () => {
+    const journey = parsedRules.value.journey;
+    expect(journey[journey.indexOf(START_LEVEL) + 1]).toBe(EARNED_LEVEL);
+  });
+
+  it('arrives with the task done: the next level loads, straight, and nothing is drawn twice', async () => {
+    await finishByAnswering();
+    expect(hoisted.state.completeShown, 'the task finishing drew "Task done!"').toHaveLength(1);
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await flush();
+
+    reachEnd();
+    await flush();
+
+    expect(hoisted.state.calls).toContain(`shell.enterLevel:${String(EARNED_LEVEL)}`);
+    expect(hoisted.state.loadCalls.at(-1)).toBe(`${EARNED_LEVEL}`);
+    expect(
+      hoisted.state.completeShown,
+      'the card already said the task was done; the end should take the player on, not say it again',
+    ).toHaveLength(1);
+    expect(
+      hoisted.state.calls.filter((call) => call === 'shell.leaveLevel'),
+      'the map is not a screen the player is made to pass through',
+    ).toEqual([]);
+  });
+
+  it('says the level is finished in the live region, then the next level’s own waiting sentence', async () => {
+    await finishByAnswering();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await vi.advanceTimersByTimeAsync(5_000);
+
+    reachEnd();
+    const heard = await hearOver(5_000);
+
+    const finishedAt = heard.indexOf(text('en', 'level.complete.title'));
+    const loadingAt = heard.indexOf(
+      text('en', `level.${String(EARNED_LEVEL)}.loading` as Parameters<typeof text>[1]),
+    );
+    expect(finishedAt, `the canvas is aria-hidden, and the move was never said: ${heard.join(' | ')}`)
+      .toBeGreaterThanOrEqual(0);
+    expect(loadingAt).toBeGreaterThan(finishedAt);
+  });
+
+  it('arrives at a level stamped in an earlier sitting: no card, the next level loads', async () => {
     await finishByAnswering();
     modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
     hudOption<() => void>('onLeaveLevel')();
@@ -2331,44 +2410,62 @@ describe('reaching the end of a level already finished', () => {
 
     hoisted.state.completeShown = [];
     hoisted.state.stampFor = null;
-    /* The first sitting told its world the level was over; this counts the second. */
-    hoisted.state.markedComplete = 0;
     shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
     await flush();
     emit('level/ready');
     reachEnd();
     await flush();
-  };
 
-  it('draws the finished card, and says plainly that nothing was answered this time', async () => {
-    await walkBackToTheEnd();
+    expect(hoisted.state.completeShown).toEqual([]);
+    expect(hoisted.state.loadCalls.at(-1)).toBe(`${EARNED_LEVEL}`);
+  });
+
+  it('keeps the finished card when the next level cannot be opened', async () => {
+    hoisted.state.built = [`${START_LEVEL}`];
+    await finishByAnswering();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    hudOption<() => void>('onLeaveLevel')();
+    await flush();
+
+    hoisted.state.completeShown = [];
+    hoisted.state.markedComplete = 0;
+    shellOption<(id: LevelId) => void>('onPlayLevel')(START_LEVEL);
+    await flush();
+    emit('level/ready');
+    const loadsBefore = hoisted.state.loadCalls.length;
+    reachEnd();
+    await flush();
+
+    expect(hoisted.state.loadCalls, 'nothing is open to go on to').toHaveLength(loadsBefore);
     expect(hoisted.state.completeShown).toHaveLength(1);
-
     const resolve = hoisted.state.completeShown[0] as CardContent;
-    /*
-     * `TN-DONE-02`: the sentence carries no number — a total of zero is what it
-     * *is* — so the card can never read "0 out of 0", and no word in it marks
-     * the player down. And the heading is the level's: nothing finished a task
-     * in this sitting.
-     */
     expect(resolve('en').reason).toBe('level');
     expect(resolve('en').progressMessage).toBe(text('en', 'level.complete.none'));
     expect(resolve('fr').progressMessage).toBe(text('fr', 'level.complete.none'));
     expect(/\d/u.test(resolve('en').progressMessage ?? '')).toBe(false);
-    expect(
-      resolve('en').next,
-      'nothing opened this time, so there is no news to announce and no route to offer',
-    ).toBeUndefined();
-  });
+    expect(resolve('en').next).toBeUndefined();
 
-  it('tells the world the level is over, once however many times it is walked over', async () => {
-    await walkBackToTheEnd();
+    /* And once per sitting, however often the player comes back to the end. */
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
     reachEnd();
     reachEnd();
     await flush();
-
     expect(hoisted.state.markedComplete).toBe(1);
     expect(hoisted.state.completeShown).toHaveLength(1);
+  });
+
+  it('never moves the player for the world’s own echo of a finished level', async () => {
+    await finishByAnswering();
+    modalOption<{ onKeepPlaying: () => void }>('quest-complete-card').onKeepPlaying();
+    await flush();
+    const loadsBefore = hoisted.state.loadCalls.length;
+
+    const sink = hoisted.state.milestone;
+    if (sink === null) throw new Error('the renderer was never handed a milestone sink');
+    sink('level/completed', `${START_LEVEL}`);
+    await flush();
+
+    expect(hoisted.state.loadCalls).toHaveLength(loadsBefore);
   });
 });
 
