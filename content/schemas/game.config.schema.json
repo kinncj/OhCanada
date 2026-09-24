@@ -58,7 +58,7 @@
       "uniqueItems": true
     },
     "journey": {
-      "description": "The ten places, in map order (TN-MAP-01, TN-LEVELS). This is the game's SHAPE and not its progression: the map numbers a card by its position here, and a level document's `order` is the same number. `null` is a place whose id is not fixed - levels 2 and 10, which docs/content-review.md \u00a71 blocks and TN-LEVELS deliberately leaves unnamed - and TN-MAP-04 forbids a placeholder standing in for one, so the slot's number is its handle until a person names it. Kept apart from `unlockRules.order` because that list is the sequence a player unlocks levels in and has to begin where the player begins; one list tried to be both and the chain died of it.",
+      "description": "The places, in map order (TN-MAP-01, TN-LEVELS), at most eleven: ADR-0068 \u00a79 inserts Kingston at slot 5, and the cap is a number rather than open-ended so a twelfth place is a decision with an ADR (ADR-0065 \u00a74), not an edit. `level.schema.json#/properties/order/maximum` is the same number, and tests/unit/contracts/journey-cap-is-one-number.test.ts holds the two together. This is the game's SHAPE and not its progression: the map numbers a card by its position here, and a level document's `order` is the same number. `null` is a place whose id is not fixed - levels 2 and 10, which docs/content-review.md \u00a71 blocks and TN-LEVELS deliberately leaves unnamed - and TN-MAP-04 forbids a placeholder standing in for one, so the slot's number is its handle until a person names it. Kept apart from `unlockRules.order` because that list is the sequence a player unlocks levels in and has to begin where the player begins; one list tried to be both and the chain died of it.",
       "type": "array",
       "items": {
         "oneOf": [
@@ -66,7 +66,7 @@
           { "type": "null" }
         ]
       },
-      "maxItems": 10
+      "maxItems": 11
     },
     "unlockRules": { "$ref": "#/$defs/unlockRules" },
     "exam": { "$ref": "#/$defs/exam" },

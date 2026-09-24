@@ -12,9 +12,10 @@
       "$ref": "https://truenorth.app/schemas/common.schema.json#/$defs/subjectId"
     },
     "order": {
-      "description": "Position in the world map, 1-10. Unlocking is game.config's job, not this file's.",
+      "description": "Position in the world map: the 1-based slot game.config.json#/journey gives this level, so at most that array's maxItems (11, ADR-0068 \u00a79). Unlocking is game.config's job, not this file's.",
       "type": "integer",
-      "minimum": 1
+      "minimum": 1,
+      "maximum": 11
     },
     "title": {
       "description": "The level's name, carried in the document rather than in a locale bundle (ADR-0010).",

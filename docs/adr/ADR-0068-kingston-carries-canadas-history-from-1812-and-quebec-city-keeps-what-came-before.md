@@ -367,10 +367,19 @@ not drawn** (CLAUDE.md, Art: reference-accurate, never invented).
   and verifier stay separate under ADR-0003. This is not a precondition for Kingston. If the guide cannot
   supply them, record that here in an amendment.
 
-- **OBLIGATION due=2026-12-23 owner=infra** — raise `game.config.schema.json#/properties/journey/maxItems` to
+- ~~**OBLIGATION due=2026-12-23 owner=infra** — raise `game.config.schema.json#/properties/journey/maxItems` to
   11 and correct `level.schema.json`'s `order` description, which says "1-10". Neither may become open-ended.
   The ADR-0065 §4 ceiling gate (due 2026-12-21) reports 11 levels, 11 subjects, ceiling 12, headroom 1 on the
-  tree after Kingston lands.
+  tree after Kingston lands.~~
+  **DISCHARGED 2026-09-24** — in the commit that strikes this marker. `journey.maxItems` is 11, and its
+  description no longer says "the ten places". `order` no longer says "1-10". It names its journey slot and
+  gains `"maximum": 11`. Before this it had only `minimum: 1`, so it was already open-ended, and this closes
+  that. Each schema names the other, and `tests/unit/contracts/journey-cap-is-one-number.test.ts` holds the
+  two numbers equal and refuses a missing cap or a stale "1-10". The shipped journey still has ten places.
+  The tests that pin ten (`unlock-chain-is-reachable`, the passport and level-select counts) are about the
+  tree as it stands, and they change with Kingston's landing, not here. The last sentence is a check on a
+  later tree and belongs to the ceiling gate's own obligation (ADR-0065 §4, due 2026-12-21). That gate is
+  not in the tree yet, so nothing here claims its reading.
 
 - **OBLIGATION due=2026-12-23 owner=po** — amend `docs/stories/TN-LEVELS-2-to-10-spine.md`, narrowing
   `level.quebec-city.subtitle` to the §1 remit, since it is also the exam's subject label. Carry "of 11" into
