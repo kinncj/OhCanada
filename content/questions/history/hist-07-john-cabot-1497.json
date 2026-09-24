@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5",
-    "checkedAt": "2026-09-20T19:15:59Z",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-24T21:21:35Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "European exploration began in earnest in 1497 with the expedition of John Cabot, who was the first to draw a map of Canada’s East Coast. … John Cabot, an Italian immigrant to England, was the first to map Canada’s Atlantic shore, setting foot on Newfoundland or Cape Breton Island in 1497 and claiming the New Founde Land for England. English settlement did not begin until 1610"
   }

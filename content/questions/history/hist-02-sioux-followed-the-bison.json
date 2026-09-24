@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5",
-    "checkedAt": "2026-09-19T13:00:00Z",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-24T21:21:35Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "The Huron-Wendat of the Great Lakes region, like the Iroquois, were farmers and hunters. The Cree and Dene of the Northwest were hunter-gatherers. The Sioux were nomadic, following the bison (buffalo) herd. The Inuit lived off Arctic wildlife."
   }
