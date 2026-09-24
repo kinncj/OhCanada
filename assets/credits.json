@@ -1046,6 +1046,60 @@
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB from the file's embedded profile so the colours sampled off it are the colours a browser shows; all metadata stripped."
     },
     {
+      "path": "refs/quebec-city/wolfe-montcalm-obelisk.jpg",
+      "kind": "reference",
+      "title": "The Wolfe and Montcalm obelisk in the Governors' Garden, Quebec City, square on with the garden's globe lamp",
+      "author": "Derek Hatfield",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Wolfe_and_Montcalm_Obelisk.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/wolfe-montcalm-monument-1901.jpg",
+      "kind": "reference",
+      "title": "Wolfe and Montcalm Monument, Quebec - photochrom, Detroit Photographic Co., 1901 (Library of Congress)",
+      "author": "Detroit Photographic Co.",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Wolfe_and_Montcalm_monument,_Quebec-LCCN2008678140.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/parlement-east-facade.jpg",
+      "kind": "reference",
+      "title": "The Parliament Building of Quebec (Hotel du Parlement), main facade square on",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Assembl%C3%A9e_nationale_du_Qu%C3%A9bec,_Canada.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/parlement-tower-from-fountain.jpg",
+      "kind": "reference",
+      "title": "The Parliament Building of Quebec - the central tower, its roof and iron crown, from the Fontaine de Tourny",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fountain_in_front_of_the_Parliament_Building_of_Quebec.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/martello-tower-1.jpg",
+      "kind": "reference",
+      "title": "Martello Tower 1 on the Plains of Abraham, Quebec City - drum, external stair, timber storey and chimney",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Martello_Tower_1.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/quebec-city/plains-of-abraham-winter.jpg",
+      "kind": "reference",
+      "title": "The Plains of Abraham, Quebec City, in winter - open snow and the park's lantern lamps",
+      "author": "Wilfredor",
+      "licence": "CC0-1.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Plains_of_Abraham.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
       "path": "src/svg/quebec-city/landmark-chateau-frontenac@1x.svg",
       "kind": "shipped",
       "title": "Chateau Frontenac, Quebec City - the level 3 point-of-interest hero",
@@ -1863,6 +1917,33 @@
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/ground-snowbank@1x.svg",
       "modifications": "Original work. A level's ground dressing (ADR-0042): a 1080 x 640 strip, opaque in every row, repeated across the view over the ground fill from the walking line to the bottom of the world. Uses the packed-snow lane, straight level runner streaks and divider ridges that assets/style/quebec-city-level.md section 7 sets for the run. The @1x suffix pins the source to one scale."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-wolfe-montcalm-monument@1x.svg",
+      "kind": "shipped",
+      "title": "The Wolfe and Montcalm monument - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-wolfe-montcalm-monument@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/wolfe-montcalm-obelisk.jpg, checked against wolfe-montcalm-monument-1901.jpg, under the rules in assets/style/art-bible.md; never traced. Both inscription panels are drawn blank: this project draws no lettering. The @1x suffix pins the source to one scale; the key quebec-city-prop-wolfe-montcalm-monument carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 360 x 600 and passed at both probes; at 2x it would cost 3.30 MiB of decoded texture instead of 0.82 MiB."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-hotel-du-parlement@1x.svg",
+      "kind": "shipped",
+      "title": "The Hotel du Parlement, Quebec City - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-hotel-du-parlement@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/parlement-east-facade.jpg, with the tower's roof and crown from parlement-tower-from-fountain.jpg, under the rules in assets/style/art-bible.md; never traced. No flag and no figure: the bronze statues in the niches are drawn as their dark recesses. The @1x suffix pins the source to one scale; the key quebec-city-prop-hotel-du-parlement carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 720 x 520 and passed at both probes; at 2x it would cost 5.71 MiB of decoded texture instead of 1.43 MiB."
+    },
+    {
+      "path": "src/svg/quebec-city/prop-martello-tower@1x.svg",
+      "kind": "shipped",
+      "title": "Martello Tower 1 on the Plains of Abraham - a level 3 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/quebec-city/prop-martello-tower@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/quebec-city/martello-tower-1.jpg, with the snow and the lantern lamp from plains-of-abraham-winter.jpg, under the rules in assets/style/art-bible.md; never traced. The display cannon beside the real tower is not drawn. The @1x suffix pins the source to one scale; the key quebec-city-prop-martello-tower carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 560 x 440 and passed at both probes; at 2x it would cost 3.76 MiB of decoded texture instead of 0.94 MiB."
     },
     {
       "path": "src/svg/ottawa/ground-canal-bank@1x.svg",
