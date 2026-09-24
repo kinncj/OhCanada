@@ -178,6 +178,49 @@
  * fabricated sign-off naming a real person.
  *
  * ------------------------------------------------------------------------
+ * A RECORDED SQUASH-MERGE IS JUDGED BY THE BRANCH IT CAME FROM (ADR-0073)
+ * ------------------------------------------------------------------------
+ *
+ * The one-commit-one-job rule reads the commit, so it cannot tell a squash of
+ * a properly separated branch from one actor doing both jobs: both are one
+ * commit that authors claims and grants them. PR #138 was squash-merged as
+ * 8f25a4927 after its head, 308a171, had passed this gate with every author
+ * and verifier commit separate, and main went red on 497 findings that were
+ * true of the squash and false of the work.
+ *
+ * `scripts/content-squash-merges.json` records such a squash, BY EVIDENCE AND
+ * NOT BY TRUST. A listed squash commit is not judged as one commit; the
+ * commits of the head it names are judged in its place, and only if all of
+ * these hold (each failure is a failure of the run, and the squash is then
+ * judged as the single commit it is, so a record without evidence exempts
+ * nothing):
+ *
+ *   - the squash exists, has exactly one parent, and its subject carries the
+ *     recorded "(#N)";
+ *   - the head exists LOCALLY — this gate never fetches; `make squash-heads`
+ *     does, before it — and is not already an ancestor of the squash;
+ *   - `git diff --quiet <head> <squash> -- content` holds: the squash landed
+ *     exactly the content the head carried, byte for byte;
+ *   - the head's own commits, `<squash>^1..<head> --no-merges -- content`,
+ *     are non-empty. Those commits are then run through EVERY rule — A0 to
+ *     A4 — exactly as if the PR had been merged with a merge commit.
+ *
+ * `<squash>^1..<head>` rather than `merge-base(<squash>^1, <head>)..<head>`:
+ * they are the same set when the merge base is unique, and the first can
+ * never replay a commit the walk has already judged when it is not.
+ *
+ * A4 is kept consistent by one extra step after the replay: every document
+ * the head's commits or the squash touched is re-recorded AT THE SQUASH,
+ * without re-binding any grant. So each grant stays bound to the commit that
+ * wrote it on the branch, and what it is compared with is the claim as main
+ * actually holds it — including anything a merge commit on the branch changed,
+ * which `--no-merges` does not show.
+ *
+ * The record is for incidents. Content PRs merge with a merge commit
+ * (CONTRIBUTING.md, docs/runbook.md); an entry here means that convention was
+ * missed once and the evidence above was checked instead.
+ *
+ * ------------------------------------------------------------------------
  * FLAGS
  * ------------------------------------------------------------------------
  *   --root <dir>       run the whole gate over another tree. Fixtures in
@@ -193,6 +236,9 @@
  *   --no-history       skip gate A. For running gates B and C over a tree that
  *                      is not a git repository. Prints a loud line saying so.
  *   --roles <file>     override scripts/content-roles.json. See ROLE_IDENTITIES.
+ *   --squash-record <file>
+ *                      override <root>/scripts/content-squash-merges.json. See
+ *                      "A RECORDED SQUASH-MERGE" above.
  *   --help
  */
 
@@ -397,6 +443,9 @@ Usage: node scripts/verify-content.mjs [options]
                     exist and is not going to: every content commit carries the
                     same author email, so the map has nothing to key on. Ruled
                     2026-09-20, ADR-0003 amended; see the header.
+  --squash-record <file>
+                    the record of squash-merges judged by their pre-squash head
+                    (ADR-0073). Default <root>/scripts/content-squash-merges.json.
   -h, --help
 
 Gate A  separation of duties, from git history
@@ -408,6 +457,9 @@ Gate A  separation of duties, from git history
         repository, and ADR-0003's amendment of 2026-09-20 ruled that it cannot
         be made so while one person runs every agent. One commit, one job IS the
         guarantee - not a placeholder for a stronger one that is coming.
+        A squash-merge listed in the squash record is judged by its pre-squash
+        head's commits instead, only once the head is present, its content/ is
+        identical to the squash's, and it has commits to judge (ADR-0073).
 Gate B  ADR-0003's CI clause, per CLAIM - a question, a line of NPC dialogue, a
         landmark blurb, a territory acknowledgement, wherever under content/ it
         lives - verified for the current sourceHash; four options and EN/FR
@@ -541,6 +593,89 @@ const failures = [];
 const notes = [];
 const fail = (message) => failures.push(message);
 const note = (message) => notes.push(message);
+
+/**
+ * THE SQUASH RECORD (ADR-0073) — see "A RECORDED SQUASH-MERGE" in the header.
+ *
+ * Read from the tree being judged, not from beside this script: the record is
+ * a statement about ROOT's history, and a fixture repository carries its own.
+ * The shape is checked strictly here rather than by a schema under content/,
+ * because the file is not content and `make validate-content` does not read
+ * scripts/. Every key is required, no other key is allowed, and a malformed
+ * record is a failure that exempts nothing.
+ */
+const SQUASH_RECORD_FILE =
+  flagValue('--squash-record') ?? join(ROOT, 'scripts', 'content-squash-merges.json');
+const SQUASH_ENTRY_KEYS = ['commit', 'head', 'branch', 'pr', 'reason'];
+const FULL_SHA = /^[0-9a-f]{40}$/u;
+
+const squashEntryFaults = (entry, at) => {
+  if (!isObject(entry)) return [`${at} is not an object`];
+  const faults = [];
+  for (const key of Object.keys(entry)) {
+    if (!SQUASH_ENTRY_KEYS.includes(key)) faults.push(`${at} has unknown property "${key}"`);
+  }
+  for (const key of SQUASH_ENTRY_KEYS) {
+    if (!(key in entry)) faults.push(`${at} is missing "${key}"`);
+  }
+  for (const key of ['commit', 'head']) {
+    if (key in entry && !FULL_SHA.test(str(entry[key]) ?? '')) {
+      faults.push(`${at}.${key} must be a full 40-character lower-case sha, not ${JSON.stringify(entry[key])}`);
+    }
+  }
+  if ('commit' in entry && entry.commit === entry.head) faults.push(`${at}.head is the squash commit itself`);
+  if ('branch' in entry && ((str(entry.branch) ?? '').trim() === '' || /\s/u.test(str(entry.branch) ?? ''))) {
+    faults.push(`${at}.branch must be a non-empty ref name`);
+  }
+  if ('pr' in entry && !((int(entry.pr) ?? 0) > 0)) faults.push(`${at}.pr must be a positive integer`);
+  if ('reason' in entry) {
+    const reason = str(entry.reason) ?? '';
+    if (reason.trim() === '' || reason.includes('\n') || reason.length > 200) {
+      faults.push(`${at}.reason must be one non-empty line of at most 200 characters`);
+    }
+  }
+  return faults;
+};
+
+const loadSquashRecord = () => {
+  if (!existsSync(SQUASH_RECORD_FILE)) return new Map();
+  const where = relative(ROOT, SQUASH_RECORD_FILE) || SQUASH_RECORD_FILE;
+  let record;
+  try {
+    record = JSON.parse(readFileSync(SQUASH_RECORD_FILE, 'utf8'));
+  } catch (error) {
+    fail(`${where}: is not parseable JSON — ${String(error)}. A squash record that cannot be read exempts nothing.`);
+    return new Map();
+  }
+  const faults = [];
+  if (!isObject(record)) {
+    faults.push('the record is not an object');
+  } else {
+    for (const key of Object.keys(record)) {
+      if (key !== 'squashes' && key !== '$comment') faults.push(`unknown top-level property "${key}"`);
+    }
+    if ('$comment' in record && str(record.$comment) === null) faults.push('"$comment" must be a string');
+    if (!Array.isArray(record.squashes)) {
+      faults.push('"squashes" must be an array');
+    } else {
+      record.squashes.forEach((entry, index) => faults.push(...squashEntryFaults(entry, `squashes[${String(index)}]`)));
+      const commits = record.squashes.map((entry) => (isObject(entry) ? entry.commit : null));
+      commits.forEach((sha, index) => {
+        if (sha !== null && commits.indexOf(sha) !== index) faults.push(`squashes[${String(index)}] repeats ${String(sha)}`);
+      });
+    }
+  }
+  if (faults.length > 0) {
+    for (const fault of faults) {
+      fail(
+        `${where}: ${fault}. The squash record is read strictly (ADR-0073): a malformed record exempts ` +
+          `nothing, and every listed squash is judged as the single commit it is.`,
+      );
+    }
+    return new Map();
+  }
+  return new Map(record.squashes.map((entry) => [entry.commit, entry]));
+};
 
 /* -------------------------------------------------------------------------- */
 /* Small shared helpers                                                        */
@@ -1765,6 +1900,7 @@ const history = {
   roled: 0,
   bound: 0,
   rekeyed: 0,
+  squashes: [], // one line per recorded squash that was judged by its head
   ran: false,
 };
 
@@ -1814,7 +1950,131 @@ const runHistoryGate = () => {
     .filter((line) => line !== '');
 
   history.ran = true;
-  history.commits = commits.length;
+
+  /* ------------------------------------------------------------------------ */
+  /* ADR-0073 — a recorded squash is judged by the branch it came from         */
+  /* ------------------------------------------------------------------------ */
+  const squashRecord = loadSquashRecord();
+  const lines = (text) =>
+    text
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line !== '');
+  const exists = (rev) => {
+    try {
+      git(['cat-file', '-e', `${rev}^{commit}`]);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const isAncestor = (ancestor, descendant) => {
+    try {
+      git(['merge-base', '--is-ancestor', ancestor, descendant]);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  /**
+   * The evidence a recorded squash must carry, checked in full. Returns the
+   * steps that replace the squash in the walk, or null after failing — in which
+   * case the caller judges the squash as the ordinary commit it is.
+   */
+  const expandSquash = (entry) => {
+    const { commit: squash, head, branch, pr } = entry;
+    const s9 = squash.slice(0, 9);
+    const h9 = head.slice(0, 9);
+    const refuse = (why) => {
+      fail(
+        `${s9} is recorded in ${relative(ROOT, SQUASH_RECORD_FILE) || SQUASH_RECORD_FILE} as the squash of ` +
+          `PR #${String(pr)} (head ${h9}, branch ${branch}), and ${why} ADR-0073: a recorded squash is judged ` +
+          `by its head's commits only on evidence, so it is judged here as the single commit it is.`,
+      );
+      return null;
+    };
+    const parents = lines(git(['rev-list', '--parents', '-n', '1', squash])).join(' ').split(' ').slice(1);
+    if (parents.length !== 1) {
+      return refuse(`it has ${String(parents.length)} parents. A squash has exactly one; a merge commit needs no record.`);
+    }
+    const subject = git(['log', '-1', '--format=%s', squash]).trim();
+    if (!subject.includes(`(#${String(pr)})`)) {
+      return refuse(`its subject "${subject}" does not carry "(#${String(pr)})", so the record names the wrong PR or the wrong commit.`);
+    }
+    if (!exists(head)) {
+      return refuse(
+        `the head commit ${head} is NOT PRESENT in this clone. This gate never fetches. Fetch it with ` +
+          `\`make squash-heads\`, or by hand with \`git fetch origin ${branch}\`, \`git fetch origin ${head}\` ` +
+          `or \`git fetch origin refs/pull/${String(pr)}/head\`, and run again.`,
+      );
+    }
+    if (isAncestor(head, squash)) {
+      return refuse(`the head is already an ancestor of it, so its commits are in this walk already and the record is wrong.`);
+    }
+    try {
+      git(['merge-base', `${squash}^1`, head]);
+    } catch {
+      return refuse(`the head shares no history with the squash's parent, so it is not the branch that was squashed.`);
+    }
+    let differs = [];
+    try {
+      git(['diff', '--quiet', head, squash, '--', 'content']);
+    } catch {
+      differs = lines(git(['diff', '--name-only', head, squash, '--', 'content']));
+      if (differs.length === 0) differs = ['(git diff failed)'];
+    }
+    if (differs.length > 0) {
+      return refuse(
+        `its content/ is NOT identical to the head's — ${String(differs.length)} path(s) differ: ` +
+          `${differs.slice(0, 6).join(', ')}${differs.length > 6 ? ', and more' : ''}. The head's history ` +
+          `is evidence only for the bytes the head carries.`,
+      );
+    }
+    // `<squash>^1..<head>`: the head's commits that the walk has not already
+    // judged as ancestors of the squash's parent. See the header for why this
+    // and not merge-base..head.
+    const replay = lines(git(['log', '--reverse', '--no-merges', '--format=%H', `${squash}^1..${head}`, '--', 'content']));
+    if (replay.length === 0) {
+      return refuse(`the head has no non-merge commit touching content/ that the squash's parent lacks, so there is nothing to judge in its place.`);
+    }
+    const touched = new Set([
+      ...lines(git(['log', '--format=', '--name-only', `${squash}^1..${head}`, '--', 'content'])),
+      ...lines(git(['diff', '--name-only', `${squash}^1`, squash, '--', 'content'])),
+    ]);
+    const label = (sha) => `${sha.slice(0, 9)} (PR #${String(pr)} head ${h9}, squashed as ${s9})`;
+    history.squashes.push(
+      `${s9} (PR #${String(pr)}) judged by ${String(replay.length)} commit(s) of its head ${h9}; content/ identical`,
+    );
+    return [
+      ...replay.map((sha) => ({ sha, label: label(sha) })),
+      { reconcile: squash, paths: [...touched].sort(), label: `${s9} (PR #${String(pr)} squash)` },
+    ];
+  };
+
+  const listed = new Set();
+  const walk = commits.flatMap((sha) => {
+    const entry = squashRecord.get(sha);
+    if (entry === undefined) return [{ sha, label: sha.slice(0, 9) }];
+    listed.add(sha);
+    return expandSquash(entry) ?? [{ sha, label: sha.slice(0, 9) }];
+  });
+  for (const [sha, entry] of squashRecord) {
+    if (listed.has(sha)) continue;
+    if (!exists(sha)) {
+      fail(
+        `${relative(ROOT, SQUASH_RECORD_FILE) || SQUASH_RECORD_FILE} lists squash ${sha} (PR #${String(entry.pr)}), ` +
+          `which does not exist in this repository. A record entry names a commit on main; one that names ` +
+          `nothing is a typo waiting to exempt the wrong commit.`,
+      );
+    } else {
+      note(
+        `squash record: ${sha.slice(0, 9)} (PR #${String(entry.pr)}) is not in the walked range, so its ` +
+          `entry was not used.`,
+      );
+    }
+  }
+  history.commits = walk.filter((step) => step.reconcile === undefined).length;
 
   const blobAt = (rev, path) => {
     try {
@@ -2042,7 +2302,32 @@ const runHistoryGate = () => {
     }
   }
 
-  for (const sha of commits) {
+  for (const step of walk) {
+    /* --- ADR-0073: after a replayed head, main's documents as they stand ---- */
+    //
+    // Re-record every document the head's commits or the squash touched AT THE
+    // SQUASH, re-binding nothing: a grant stays bound to the branch commit that
+    // wrote it, and is compared with the claim as main holds it. That includes
+    // whatever a merge commit on the branch did, which `--no-merges` hid from
+    // the replay. A claim with no state yet arrived only through such a merge;
+    // it is bound here, at the squash, which is where main first carries it.
+    if (step.reconcile !== undefined) {
+      const at = step.reconcile;
+      const registry = registryAt(at);
+      const subject = git(['log', '-1', '--format=%s', at]).trim();
+      for (const path of step.paths) {
+        if (!isGovernedPath(path) || !bearsClaims(path)) continue;
+        const document = blobAt(at, path);
+        if (document === null) {
+          forgetPath(path);
+          continue;
+        }
+        rekeyState(path, document, registry);
+        recordRevision(path, document, keyedBlocks(document, path, registry), registry, step.label, subject, () => false);
+      }
+      continue;
+    }
+    const { sha } = step;
     const parent = (() => {
       try {
         return git(['rev-parse', '--verify', `${sha}^`]).trim();
@@ -2062,7 +2347,7 @@ const runHistoryGate = () => {
       .filter(({ path }) => isGovernedPath(path));
 
     const subject = git(['log', '-1', '--format=%s', sha]).trim();
-    const short = sha.slice(0, 9);
+    const short = step.label;
     // One identity rule per commit: both sides of every comparison below are
     // keyed with the schemas this commit carries.
     const registry = registryAt(sha);
@@ -2688,6 +2973,9 @@ if (history.ran) {
       `block(s) and ${String(history.reviews)} communityReview block(s) inspected` +
       `${history.rekeyed > 0 ? `; ${String(history.rekeyed)} grant state(s) carried across a schema change that re-keyed their claim` : ''}.`,
   );
+  for (const line of history.squashes) {
+    console.log(`verify-content: recorded squash (ADR-0073) — ${line}; judged by the branch, not the squash.`);
+  }
   console.log(
     `verify-content: A4 binds each grant to its own claim — ${String(history.bound)} grant(s) ` +
       `bound at HEAD; document-scope bindings ${[...scopeBinds.entries()]
