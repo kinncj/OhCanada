@@ -1112,20 +1112,16 @@ const CSS = `
  *     smaller than the setting asks for. Two things stop growing instead:
  *      - The rule, its three sibling edges and the indent are chrome that holds
  *        still (ADR-0039): 4 px and 14 px at every scale.
- *      - The title's STEP UP over the prose stops doubling. It is written as a
- *        part that grows with the text and a part that does not,
- *        calc(0.875rem + 0.875rem / var(--tn-text-scale, 1)): 28 px at 100 %
- *        (1.75rem, every other screen's h1) and 42 px at 200 %. Every size in
- *        it is still rem, so it grows with every step of the setting, never
- *        falls below the prose it heads (19 px and 38 px), and at 200 % is
- *        more than twice the size of the prose at 100 %. What shrinks is only
- *        the ratio between them: 1.47 at 100 %, 1.1 at 200 %, where a heading
- *        needs weight rather than size to read as one.
+ *      - The title starts smaller: 1.375rem, 22 px at 100 % and 44 px at
+ *        200 %, over prose of 19 px and 38 px. It scales exactly with the
+ *        setting, like every other word, because drawing any text below what
+ *        the setting says is what ADR-0066 §3 refuses; what changed is its
+ *        base, not its growth. Weight carries the heading, not size.
  * ------------------------------------------------------------------ */
 
-/* The title: its lead over the prose does not double with the text (4 above). */
+/* The title: a smaller base that still scales with the setting (4 above). */
 .tn-lesson-reader h1 {
-  font-size: calc(0.875rem + 0.875rem / var(--tn-text-scale, 1));
+  font-size: 1.375rem;
 }
 
 .tn-lesson-reader__body {
