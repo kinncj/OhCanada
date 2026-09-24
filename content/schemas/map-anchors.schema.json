@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://truenorth.app/schemas/map-anchors.schema.json",
   "title": "Map anchors",
-  "description": "The sidecar beside a screen-art map, `assets/src/svg/screens/<name>.anchors.json`: where each level's stop is on the drawing, in the drawing's own viewBox, plus the inset and the projection the points were placed with. It carries coordinates and no names, because a shipped JSON is reachable by a player and the basis for each point lives in the art sheet that never ships (assets/style/map-canada.md section 6). UI code places markers at these coordinates without looking at the map, so the claims this schema cannot state are cross-checked by make validate-content (scripts/lib/screen-art.mjs): `svg` names the drawing the sidecar sits beside, `viewBox` is that drawing's viewBox, there is exactly one anchor per place game.config.json#/journey names (ADR-0069 §6: keyed on the journey, not on content/levels/, so a level document and its anchor land in their owners' own commits), every anchor lies in the viewBox, the inset's frame, window, locator and anchors nest as they claim, and every listed region id is an id in the drawing. Mirrored by MapAnchorsDocument in app/application/ports/map-anchors.ts, which the level select reads to place its pins (ADR-0008).",
+  "description": "The sidecar beside a screen-art map, `assets/src/svg/screens/<name>.anchors.json`: where each level's stop is on the drawing, in the drawing's own viewBox, plus the insets and the projection the points were placed with. It carries coordinates and no names, because a shipped JSON is reachable by a player and the basis for each point lives in the art sheet that never ships (assets/style/map-canada.md section 6). UI code places markers at these coordinates without looking at the map, so the claims this schema cannot state are cross-checked by make validate-content (scripts/lib/screen-art.mjs): `svg` names the drawing the sidecar sits beside, `viewBox` is that drawing's viewBox, there is exactly one anchor per place game.config.json#/journey names (ADR-0069 §6: keyed on the journey, not on content/levels/, so a level document and its anchor land in their owners' own commits), every anchor lies in the viewBox, each inset's frame, window, locator and anchors nest as they claim, a stop is in at most one inset, each locator encloses exactly the main-map points of its own inset's stops, and no frame overlaps another frame or lies within one pin radius of a main-map pin (ADR-0069 §3.1-3.3), and every listed region id is an id in the drawing. Mirrored by MapAnchorsDocument in app/application/ports/map-anchors.ts, which the level select reads to place its pins (ADR-0008).",
   "type": "object",
   "properties": {
     "$schema": { "type": "string", "minLength": 1 },
@@ -36,7 +36,12 @@
       "additionalProperties": { "$ref": "#/$defs/mapPoint" },
       "minProperties": 1
     },
-    "inset": { "$ref": "#/$defs/mapInset" },
+    "insets": {
+      "description": "The enlarged views, in drawing order (ADR-0069 §1). Absent means no inset; an empty array is refused, because an empty collection must not stand in for none (ADR-0024). Renamed from the single-object `inset`, so a document that still carries `inset` fails naming that property.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/mapInset" },
+      "minItems": 1
+    },
     "projection": { "$ref": "#/$defs/mapProjection" },
     "provincesAndTerritories": {
       "description": "ISO 3166-2 codes the drawing carries as element ids, for a screen that inlines the SVG. validate-content checks each is an id in the drawing.",
@@ -89,7 +94,7 @@
     },
     "mapInset": {
       "title": "Map inset",
-      "description": "An enlarged view of stops too close to tell apart on the main map. `anchors` are in the viewBox too, inside `window`; each names a stop the main map anchors, and that main-map point lies inside `locator`.",
+      "description": "An enlarged view of stops too close to tell apart on the main map. `anchors` are in the viewBox too, inside `window`; each names a stop the main map anchors, and that main-map point lies inside `locator`. A stop is in at most one inset.",
       "type": "object",
       "properties": {
         "frame": { "$ref": "#/$defs/mapInsetFrame" },
@@ -105,9 +110,14 @@
           "description": "Inset scale over main-map scale.",
           "type": "number",
           "exclusiveMinimum": 1
-        }
+        },
+        "affine": {
+          "description": "This inset's own fit from projected metres to viewBox units. Each inset is its own fit, and one shared field cannot describe two (ADR-0069 §1).",
+          "$ref": "#/$defs/mapAffine"
+        },
+        "pxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 }
       },
-      "required": ["frame", "window", "locator", "anchors", "magnification"],
+      "required": ["frame", "window", "locator", "anchors", "magnification", "affine"],
       "additionalProperties": false
     },
     "mapAffine": {
@@ -132,9 +142,7 @@
         "name": { "type": "string", "minLength": 1 },
         "toViewBox": { "type": "string", "minLength": 1 },
         "main": { "$ref": "#/$defs/mapAffine" },
-        "inset": { "$ref": "#/$defs/mapAffine" },
-        "mainPxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 },
-        "insetPxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 }
+        "mainPxPerKmAtStandardParallels": { "type": "number", "exclusiveMinimum": 0 }
       },
       "required": ["crs", "main"],
       "additionalProperties": false

@@ -217,11 +217,26 @@ coordinates art publishes in `assets/style/map-canada.md` §6, and art reviews t
 
 ## Obligations
 
-- **OBLIGATION due=2026-11-23 owner=infra** — §6 commit 1. Rename `inset` to `insets` as specified in §1.
+- ~~**OBLIGATION due=2026-11-23 owner=infra** — §6 commit 1. Rename `inset` to `insets` as specified in §1.
   Move the inset affine into each entry. Change the port to §2's text in the same commit. Rewrite the shipped
   sidecar mechanically. Add §3.1–§3.3 to `scripts/lib/screen-art.mjs`, with a failing fixture for each.
   Change `level-map.ts`'s lookup and apply §4's same-inset leg rule, with a two-inset fixture in
-  `tests/unit/ui/level-map.test.ts` that fails on today's `previous.inset && stop.inset`.
+  `tests/unit/ui/level-map.test.ts` that fails on today's `previous.inset && stop.inset`.~~
+  **DISCHARGED 2026-09-24** — branch `map-insets-array`, in the commit that strikes this marker. The schema,
+  the port (§2's text, and the stale "one anchor per level document" header sentence replaced), the sidecar
+  (one entry, today's Atlantic inset with its affine and scale moved in from `projection`) and the reader
+  land together. `level-map.ts` pins a stop in whichever inset anchors it and records which
+  (`PlacedStop.insetIndex`); a leg is drawn in an inset only when both ends share one. The two-inset fixture
+  in `tests/unit/ui/level-map.test.ts` fails on `previous.inset && stop.inset` (1 of 32) and passes on the
+  new rule. `tests/unit/infra/screen-art-gate.test.ts` refuses, each on the real sidecar with one thing
+  broken: the old `inset` by name, an empty `insets`, an inset with no `affine`, `projection.inset`, a stop
+  in two insets (§3.1), a locator round Québec City (§3.2), overlapping frames and a main-map pin 10 units
+  from a frame (§3.3). The gate says what it measured ("1 inset(s): 2 enlarged stop(s) …, 8 main-map pin(s)
+  at least 202 unit(s) from every frame against a pin radius of 22.7"), and says in words when there is no
+  inset to measure. **The pin radius §3.3 needs is read, not restated.** The gate reads the last `cqi`
+  `inline-size` of `app/ui/screen-styles.ts`'s `.tn-map .tn-map__stop .tn-journey__pin` rule and fails when
+  it cannot, and a test shows a wider pin in that rule turning a passing sidecar red. That is the one home
+  as it stands today; commit 3 (§3.4) still decides whether it stays there.
 
 - **OBLIGATION due=2026-12-23 owner=art** — §6 commit 2. Draw the corridor inset at a magnification of at least
   2.5×, holding Ottawa and Toronto (§5). Record its basis, affine and scale in `assets/style/map-canada.md`

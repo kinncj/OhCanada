@@ -47,6 +47,9 @@ const stop = (over: Partial<JourneyStop> = {}): JourneyStop => ({
   ...over,
 });
 
+/** An inset's own fit; nothing under app/ reads it, so any valid one will do. */
+const FIXTURE_AFFINE = { a: 4, c: 0, d: -4, f: 0 } as const;
+
 /** A small drawing whose arithmetic can be done by eye: 200 x 100, offset (100, 50). */
 const FIXTURE: MapAnchorsDocument = {
   $schema: '../../content/schemas/map-anchors.schema.json',
@@ -57,13 +60,16 @@ const FIXTURE: MapAnchorsDocument = {
     beta: { x: 300, y: 150 },
     gamma: { x: 201, y: 101 },
   },
-  inset: {
-    frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
-    window: { x: 242, y: 57, width: 46, height: 36 },
-    locator: { x: 195, y: 95, width: 10, height: 10 },
-    anchors: { gamma: { x: 250, y: 60 } },
-    magnification: 4,
-  },
+  insets: [
+    {
+      frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+      window: { x: 242, y: 57, width: 46, height: 36 },
+      locator: { x: 195, y: 95, width: 10, height: 10 },
+      anchors: { gamma: { x: 250, y: 60 } },
+      magnification: 4,
+      affine: FIXTURE_AFFINE,
+    },
+  ],
   projection: { crs: 'EPSG:3978', main: { a: 1, c: 0, d: -1, f: 0 } },
 };
 
@@ -130,7 +136,36 @@ describe('where a pin goes', () => {
   it('goes in the inset when the inset enlarges that stop, and only there', () => {
     const placed = placeStops([{ id: id('gamma'), state: 'open', stop: stop() }], FIXTURE);
     expect(placed).toHaveLength(1);
-    expect(placed[0]).toMatchObject({ id: 'gamma', left: 75, top: 10, inset: true });
+    expect(placed[0]).toMatchObject({ id: 'gamma', left: 75, top: 10, inset: true, insetIndex: 0 });
+  });
+
+  it('goes in whichever inset anchors it, and says which (ADR-0069)', () => {
+    const anchors: MapAnchorsDocument = {
+      ...FIXTURE,
+      insets: [
+        ...(FIXTURE.insets ?? []),
+        {
+          frame: { x: 110, y: 110, width: 50, height: 35, radius: 4 },
+          window: { x: 112, y: 112, width: 46, height: 31 },
+          locator: { x: 145, y: 70, width: 10, height: 10 },
+          anchors: { alpha: { x: 130, y: 130 } },
+          magnification: 3,
+          affine: FIXTURE_AFFINE,
+        },
+      ],
+    };
+    const [alpha, beta, gamma] = placeStops(
+      [
+        { id: id('alpha'), state: 'open', stop: stop() },
+        { id: id('beta'), state: 'open', stop: stop() },
+        { id: id('gamma'), state: 'open', stop: stop() },
+      ],
+      anchors,
+    );
+    expect(alpha).toMatchObject({ id: 'alpha', left: 15, top: 80, inset: true, insetIndex: 1 });
+    expect(beta).toMatchObject({ id: 'beta', inset: false });
+    expect(beta).not.toHaveProperty('insetIndex');
+    expect(gamma).toMatchObject({ id: 'gamma', inset: true, insetIndex: 0 });
   });
 
   it("pins Halifax and Peggy's Cove apart, which the main map cannot", () => {
@@ -307,13 +342,16 @@ describe('the line the player has travelled', () => {
   const ROUTE_FIXTURE: MapAnchorsDocument = {
     ...FIXTURE,
     anchors: { ...FIXTURE.anchors, delta: { x: 203, y: 99 } },
-    inset: {
-      frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
-      window: { x: 242, y: 57, width: 46, height: 36 },
-      locator: { x: 195, y: 95, width: 10, height: 10 },
-      anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
-      magnification: 4,
-    },
+    insets: [
+      {
+        frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+        window: { x: 242, y: 57, width: 46, height: 36 },
+        locator: { x: 195, y: 95, width: 10, height: 10 },
+        anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
+        magnification: 4,
+        affine: FIXTURE_AFFINE,
+      },
+    ],
   };
 
   const at = (levelId: string, over: Partial<JourneyStop> = {}): MapStopInput => ({
@@ -363,18 +401,79 @@ describe('the line the player has travelled', () => {
     expect(legsOf([at('alpha', { reached: true }), at('beta', { reached: true })])).toEqual([]);
   });
 
-  it('draws no leg the sidecar cannot place in its frame', () => {
-    const anchors: MapAnchorsDocument = {
-      ...ROUTE_FIXTURE,
-      inset: {
+  /**
+   * ADR-0069 §4. Two insets, each holding two stops, like the Atlantic and the
+   * corridor. The leg from one inset's stop to the other's is between two inset
+   * stops, and "both in an inset" would draw it inside one inset between points
+   * that are not both in it. It belongs on the main map.
+   */
+  const TWO_INSETS: MapAnchorsDocument = {
+    ...FIXTURE,
+    anchors: {
+      alpha: { x: 150, y: 75 },
+      beta: { x: 300, y: 150 },
+      gamma: { x: 201, y: 101 },
+      delta: { x: 203, y: 99 },
+      epsilon: { x: 150, y: 120 },
+      zeta: { x: 152, y: 122 },
+    },
+    insets: [
+      {
         frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
         window: { x: 242, y: 57, width: 46, height: 36 },
         locator: { x: 195, y: 95, width: 10, height: 10 },
-        /* In the inset and nowhere on the main map, so a leg out of the inset
-           has no point to start from. validate-content refuses this document. */
-        anchors: { omega: { x: 260, y: 70 } },
+        anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
         magnification: 4,
+        affine: FIXTURE_AFFINE,
       },
+      {
+        frame: { x: 240, y: 100, width: 50, height: 40, radius: 4 },
+        window: { x: 242, y: 102, width: 46, height: 36 },
+        locator: { x: 145, y: 115, width: 10, height: 10 },
+        anchors: { epsilon: { x: 250, y: 110 }, zeta: { x: 280, y: 130 } },
+        magnification: 4,
+        affine: FIXTURE_AFFINE,
+      },
+    ],
+  };
+
+  it('draws a leg in an inset only when both its stops are in the same inset (ADR-0069 §4)', () => {
+    const legs = legsOf(
+      [
+        at('gamma', { reached: true }),
+        at('delta', { reached: true }),
+        at('epsilon', { reached: true }),
+        at('zeta', { current: true }),
+      ],
+      TWO_INSETS,
+    );
+    expect(legs.map((leg) => [leg.from, leg.to, leg.frame])).toEqual([
+      ['gamma', 'delta', 'inset'],
+      ['delta', 'epsilon', 'main'],
+      ['epsilon', 'zeta', 'inset'],
+    ]);
+    /* Each inset leg between its own inset's anchors; the leg between insets
+       between the two main-map points, each inside its own locator. */
+    expect(legs[0]).toMatchObject({ x1: 250, y1: 60, x2: 280, y2: 90 });
+    expect(legs[1]).toMatchObject({ x1: 203, y1: 99, x2: 150, y2: 120 });
+    expect(legs[2]).toMatchObject({ x1: 250, y1: 110, x2: 280, y2: 130 });
+  });
+
+  it('draws no leg the sidecar cannot place in its frame', () => {
+    const anchors: MapAnchorsDocument = {
+      ...ROUTE_FIXTURE,
+      insets: [
+        {
+          frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+          window: { x: 242, y: 57, width: 46, height: 36 },
+          locator: { x: 195, y: 95, width: 10, height: 10 },
+          /* In the inset and nowhere on the main map, so a leg out of the inset
+             has no point to start from. validate-content refuses this document. */
+          anchors: { omega: { x: 260, y: 70 } },
+          magnification: 4,
+          affine: FIXTURE_AFFINE,
+        },
+      ],
     };
     expect(legsOf([at('omega', { reached: true }), at('alpha', { current: true })], anchors)).toEqual(
       [],
@@ -404,7 +503,7 @@ describe('the line the player has travelled', () => {
        between them there would be a line with no length. */
     const anchors = SHIPPED_MAP_ANCHORS;
     if (anchors === null) throw new Error('the shipped sidecar did not read');
-    const inset = anchors.inset;
+    const inset = anchors.insets?.[0];
     if (inset === undefined) throw new Error('the shipped sidecar has no inset');
 
     const legs = legsOf(
@@ -459,13 +558,16 @@ describe('the line, drawn', () => {
   const ROUTE_FIXTURE: MapAnchorsDocument = {
     ...FIXTURE,
     anchors: { ...FIXTURE.anchors, delta: { x: 203, y: 99 } },
-    inset: {
-      frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
-      window: { x: 242, y: 57, width: 46, height: 36 },
-      locator: { x: 195, y: 95, width: 10, height: 10 },
-      anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
-      magnification: 4,
-    },
+    insets: [
+      {
+        frame: { x: 240, y: 55, width: 50, height: 40, radius: 4 },
+        window: { x: 242, y: 57, width: 46, height: 36 },
+        locator: { x: 195, y: 95, width: 10, height: 10 },
+        anchors: { gamma: { x: 250, y: 60 }, delta: { x: 280, y: 90 } },
+        magnification: 4,
+        affine: FIXTURE_AFFINE,
+      },
+    ],
   };
 
   const travelled: readonly MapStopInput[] = [

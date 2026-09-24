@@ -788,7 +788,7 @@ const MAP_SIDECAR = JSON.parse(
 ) as {
   readonly viewBox: readonly number[];
   readonly anchors: Readonly<Record<string, SidecarPoint>>;
-  readonly inset?: { readonly anchors: Readonly<Record<string, SidecarPoint>> };
+  readonly insets?: readonly { readonly anchors: Readonly<Record<string, SidecarPoint>> }[];
 };
 
 const JOURNEY = [
@@ -889,14 +889,14 @@ test.describe('the map above the route shows where the journey is in the country
 
     const [, , width = 0, height = 0] = MAP_SIDECAR.viewBox;
     for (const stop of placed) {
-      const point = MAP_SIDECAR.inset?.anchors[stop.handle] ?? MAP_SIDECAR.anchors[stop.handle];
+      const point = MAP_SIDECAR.insets?.find((inset) => stop.handle in inset.anchors)?.anchors[stop.handle] ?? MAP_SIDECAR.anchors[stop.handle];
       expect(point, `the sidecar has no anchor for ${stop.handle}`).toBeDefined();
       /* Six viewBox units is about two CSS px on a 390 px phone. */
       expect(Math.abs(stop.x * width - (point?.x ?? 0)), `${stop.handle} x`).toBeLessThan(6);
       expect(Math.abs(stop.y * height - (point?.y ?? 0)), `${stop.handle} y`).toBeLessThan(6);
     }
-    expect(MAP_SIDECAR.inset?.anchors.halifax, 'Halifax is not in the inset').toBeDefined();
-    expect(MAP_SIDECAR.inset?.anchors['peggys-cove'], "Peggy's Cove is not in the inset").toBeDefined();
+    expect(MAP_SIDECAR.insets?.[0]?.anchors.halifax, 'Halifax is not in the inset').toBeDefined();
+    expect(MAP_SIDECAR.insets?.[0]?.anchors['peggys-cove'], "Peggy's Cove is not in the inset").toBeDefined();
   });
 
   test("marks the stop the route has got to, in the rail's shapes and not new ones", async ({

@@ -123,6 +123,10 @@ function run(tree: Tree = {}): { readonly output: string; readonly root: string 
     writeFileSync(join(root, 'app', 'ui', 'hud.ts'), 'export const HUD = 1;\n');
     const copy = tree.copy === undefined ? readFileSync(REAL_COPY, 'utf8') : tree.copy;
     if (copy !== null) writeFileSync(join(root, 'app', 'ui', 'copy.ts'), copy);
+    // The real map sidecar came over with assets/, and its inset is checked
+    // against a pin radius read from the stylesheet that draws the pin
+    // (ADR-0069 §3.3), so the tree carries that stylesheet as the repo does.
+    cpSync(join(REPO, 'app', 'ui', 'screen-styles.ts'), join(root, 'app', 'ui', 'screen-styles.ts'));
   }
 
   const result = spawnSync(process.execPath, [SCRIPT, '--root', root], {

@@ -20,9 +20,12 @@
  *
  * What the schema cannot say, `make validate-content` cross-checks
  * (`scripts/lib/screen-art.mjs`): `svg` and `viewBox` match the drawing beside
- * the sidecar, there is exactly one anchor per level document, every anchor
- * lies in the viewBox, and the inset nests as it claims. So a reader may trust
- * that every level id has a point without re-checking it.
+ * the sidecar, there is exactly one anchor per place `game.config.json#/journey`
+ * names (ADR-0069 §6), every anchor lies in the viewBox, each inset nests as it
+ * claims, a stop is in at most one inset, each locator encloses exactly its own
+ * inset's stops, and no frame overlaps another frame or a main-map pin
+ * (ADR-0069 §3.1–§3.3). So a reader may trust that every journey place has a
+ * point without re-checking it.
  */
 
 /** A point in the drawing's viewBox; origin top-left, y down. */
@@ -51,19 +54,22 @@ export interface MapInsetFrame {
 /**
  * An enlarged view of stops too close to tell apart on the main map.
  *
- * On `map-canada.svg` that is Halifax and Peggy's Cove, 4 viewBox units apart on
- * the main map and 54 in the inset. `anchors` are in the same viewBox, inside
- * `window`; each names a stop the main map also anchors, and that main-map point
- * lies inside `locator`.
+ * On `map-canada.svg` the first is Halifax and Peggy's Cove, 4 viewBox units
+ * apart on the main map and 54 in the inset. `anchors` are in the same viewBox,
+ * inside `window`; each names a stop the main map also anchors, and that
+ * main-map point lies inside `locator` (ADR-0069 §1).
  */
 export interface MapInset {
   readonly frame: MapInsetFrame;
   readonly window: MapRectangle;
   readonly locator: MapRectangle;
-  /** Keyed by level id; validate-content refuses a key that is not one. */
+  /** Keyed by level id; a stop appears in at most one inset. */
   readonly anchors: Readonly<Record<string, MapPoint>>;
   /** Inset scale over main-map scale. */
   readonly magnification: number;
+  /** This inset's own fit from projected metres to viewBox units. */
+  readonly affine: MapAffineTransform;
+  readonly pxPerKmAtStandardParallels?: number;
 }
 
 /** `x = a*E + c`, `y = d*N + f`, from projected metres to viewBox units. */
@@ -82,9 +88,7 @@ export interface MapProjection {
   /** The transform in words, for a person reading the file. */
   readonly toViewBox?: string;
   readonly main: MapAffineTransform;
-  readonly inset?: MapAffineTransform;
   readonly mainPxPerKmAtStandardParallels?: number;
-  readonly insetPxPerKmAtStandardParallels?: number;
 }
 
 /** `assets/src/svg/screens/<name>.anchors.json`. */
@@ -103,7 +107,8 @@ export interface MapAnchorsDocument {
    * validate-content already refuses a key that names no level document.
    */
   readonly anchors: Readonly<Record<string, MapPoint>>;
-  readonly inset?: MapInset;
+  /** In drawing order. Absent when no stop needs enlarging; never empty. */
+  readonly insets?: readonly MapInset[];
   readonly projection: MapProjection;
   /** ISO 3166-2 codes the drawing carries as element ids, for a screen that inlines it. */
   readonly provincesAndTerritories?: readonly string[];
