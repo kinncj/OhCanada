@@ -84,6 +84,20 @@ describe('the HUD is there while the player plays', () => {
     expect(page.game.parentElement).toBe(hud.main);
   });
 
+  it('names the canvas host for the stylesheet while the level runs, and only then (ADR-0072)', () => {
+    const page = buildPage();
+    const hud = createHud(page.host, {
+      locale: 'en',
+      canvasHost: page.game as unknown as HTMLElement,
+    });
+
+    /* With the dyslexia face on, the sheet sits this host's canvas at the top of
+       its space so the taller strip stays under the player's feet. */
+    expect(page.game.getAttribute('data-tn-canvas')).toBe('level');
+    hud.destroy();
+    expect(page.game.getAttribute('data-tn-canvas')).toBeNull();
+  });
+
   it('offers the menu in one tap, with a visible label', () => {
     const { at } = mount();
     const button = at('menu-button');

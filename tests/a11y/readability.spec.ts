@@ -370,8 +370,8 @@ interface Tier {
   readonly pairLines: number | null;
   /**
    * How many rows are known to end below the strip, where that is a recorded
-   * defect rather than a pass (a ratchet: may fall, may not rise). `null` means
-   * none may, which is every case but one.
+   * defect rather than a pass (a ratchet: may fall, may not rise). `null` or 0
+   * means none may, which is every case today (ADR-0072).
    */
   readonly knownBelow:
     | ((scale: '100' | '200', locale: 'en' | 'fr') => { readonly offers: number; readonly tasks: number } | null)
@@ -379,19 +379,26 @@ interface Tier {
 }
 
 /**
- * ADR-0071 §5, recorded 2026-09-23: rows at 200 % text in OpenDyslexic that
- * end below the strip, per language. **This is a known defect, not a budget.**
- * The dyslexia face is about 1.53x DejaVu's width. At 200 % it wraps a task to
- * six lines and pushes Settings and Menu onto two rows, and the strip is capped
- * at a third of the screen (ADR-0066 §3). No copy edit reaches that. It is
- * held here as a ratchet: the count may fall and may not rise, and ADR-0071's
- * obligation carries the decision that makes it zero. At 100 % it is zero, and
- * asserted zero.
+ * Rows at 200 % text in OpenDyslexic that end below the strip, per language.
+ *
+ * ADR-0071 §5 recorded 2 offers and 30 tasks in English, and 3 and 45 in
+ * French, and held them as a ratchet: the face wraps a task to six lines and
+ * puts Settings and Menu on two rows, and the strip was capped at a third of
+ * the screen (ADR-0066 §3). By 2026-09-24 the read steps added on Prairie Rail,
+ * Ottawa, Winnipeg and Alberta had taken them to 3 and 31, and 4 and 59.
+ *
+ * **ADR-0072 brings them to zero.** With the dyslexia face on, the canvas sits
+ * at the top of its space and the strip may reach up to 8 px under the line
+ * the player walks on: 374 px at 390 x 844, 44 % of the screen, where a third
+ * is 278 px.
+ * Every level's tallest offer with the task's count under it, and every task,
+ * ends inside the strip in both languages, and this tier asserts that as the
+ * other tiers do. The record stays, at zero, so that a rise fails and says why.
  */
 const DYSLEXIA_200_BELOW_THE_STRIP: Readonly<Record<'en' | 'fr', { readonly offers: number; readonly tasks: number }>> = {
-  /* Of 10 levels' tallest offers, and of 72 task steps, per language. */
-  en: { offers: 2, tasks: 30 },
-  fr: { offers: 3, tasks: 45 },
+  /* Of 10 levels' tallest offers, and of every task step, per language. */
+  en: { offers: 0, tasks: 0 },
+  fr: { offers: 0, tasks: 0 },
 };
 
 const TIERS: readonly Tier[] = [
@@ -502,7 +509,7 @@ function measureRow(
   page: Page,
   testId: string,
   words: string,
-): Promise<{ readonly lines: number; readonly overflow: number }> {
+): Promise<{ readonly lines: number; readonly overflow: number; readonly need: number }> {
   return page.evaluate(
     ({ id, value }) => {
       const row = document.querySelector<HTMLElement>(`[data-testid="${id}"]`);
@@ -526,6 +533,12 @@ function measureRow(
       return {
         lines: tops.length,
         overflow: row.getBoundingClientRect().bottom - hud.getBoundingClientRect().bottom,
+        /* The height the strip needs to hold the row: from its top edge to the
+           row's foot, plus the padding under its last line. */
+        need:
+          row.getBoundingClientRect().bottom -
+          hud.getBoundingClientRect().top +
+          parseFloat(getComputedStyle(hud).paddingBlockEnd),
       };
     },
     { id: testId, value: words },
@@ -539,7 +552,7 @@ function measureRow(
  * an equality.
  */
 function assertBelowTheStrip(below: readonly string[], known: number | null, where: string): void {
-  if (known === null) {
+  if (known === null || known === 0) {
     expect(below, `${where}: a row ends below the strip, where a player has to scroll to find it`).toEqual([]);
     return;
   }
@@ -553,6 +566,47 @@ function assertBelowTheStrip(below: readonly string[], known: number | null, whe
       description: `${where}: ${String(below.length)} below the strip, recorded ${String(known)}. Lower the record.`,
     });
   }
+}
+
+/**
+ * The strip never reaches above the line the player walks on (ADR-0072).
+ *
+ * The harness draws no canvas, so the line is placed as the page places it: the
+ * canvas is FIT at 1080 x 1920 (ADR-0002), centred in the height, except with
+ * the dyslexia face on, where it sits at the top. Every level spawns the player
+ * on row 1280, two thirds of the way down. `tests/e2e/dyslexia-strip.spec.ts`
+ * reads the player's real position on a running level; this holds the strip's
+ * ceiling to the same line on every strip the sweep draws, and records the
+ * heights ADR-0072 quotes.
+ */
+async function assertStripClearsTheWalkingLine(
+  page: Page,
+  info: ReturnType<typeof test.info>,
+  tallestNeed: number,
+): Promise<void> {
+  const geometry = await page.evaluate(() => {
+    const hud = document.querySelector('[data-testid="hud"]');
+    if (hud === null) throw new Error('the HUD is not drawn');
+    const box = hud.getBoundingClientRect();
+    const canvasHeight = Math.min(window.innerHeight, (window.innerWidth * 16) / 9);
+    const dyslexia = document.documentElement.getAttribute('data-tn-font') === 'dyslexia';
+    const canvasTop = dyslexia ? 0 : (window.innerHeight - canvasHeight) / 2;
+    return {
+      viewport: window.innerHeight,
+      top: box.top,
+      height: box.height,
+      ceiling: parseFloat(getComputedStyle(hud).maxBlockSize),
+      walkingLine: canvasTop + (canvasHeight * 1280) / 1920,
+    };
+  });
+  const share = (px: number): string => `${px.toFixed(0)} px, ${((px / geometry.viewport) * 100).toFixed(1)} %`;
+  info.annotations.push({ type: 'strip ceiling', description: share(geometry.ceiling) });
+  info.annotations.push({ type: 'strip drawn', description: share(geometry.height) });
+  info.annotations.push({ type: 'the rows need', description: share(tallestNeed) });
+  expect(
+    geometry.top,
+    `the strip reaches ${(geometry.walkingLine - geometry.top).toFixed(1)} px above the line the player walks on`,
+  ).toBeGreaterThanOrEqual(geometry.walkingLine - 1);
 }
 
 test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named face', () => {
@@ -597,6 +651,7 @@ test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named
         const failures: string[] = [];
         const below: string[] = [];
         let tallest = 0;
+        let need = 0;
         for (const level of SWEPT_LEVELS) {
           let worst = { text: '', lines: 0, overflow: Number.NEGATIVE_INFINITY };
           for (const key of level.offerKeys) {
@@ -615,10 +670,12 @@ test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named
              still ends inside the strip. */
           await measureRow(page, 'interact-prompt', worst.text);
           const count = await measureRow(page, 'hud-task-indicator-text', indicatorText);
+          need = Math.max(need, count.need);
           if (count.overflow > 1) below.push(`${level.id}: under "${worst.text}" the task's count ends below the strip`);
         }
         info.annotations.push({ type: 'tallest offer', description: `${String(tallest)} line(s)` });
         info.annotations.push({ type: 'below the strip', description: String(below.length) });
+        await assertStripClearsTheWalkingLine(page, info, need);
         expect(failures, `${tier.name}, ${language}`).toEqual([]);
         assertBelowTheStrip(below, tier.knownBelow?.(scale, locale)?.offers ?? null, `${tier.name}, ${language}, ${scale} %`);
       });
@@ -632,11 +689,13 @@ test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named
         const failures: string[] = [];
         const below: string[] = [];
         let longest = 0;
+        let need = 0;
         for (const level of SWEPT_LEVELS) {
           for (const step of level.steps) {
             const task = labelled(locale, text(locale, 'hud.task'), step.prompt[locale]);
             const measured = await measureRow(page, 'hud-quest-tracker', task);
             longest = Math.max(longest, measured.lines);
+            need = Math.max(need, measured.need);
             if (measured.lines > tier.taskLines) {
               failures.push(`${step.where}: "${task}" takes ${String(measured.lines)} lines; the budget is ${String(tier.taskLines)}`);
             }
@@ -645,6 +704,7 @@ test.describe('ADR-0066 §4: every strip the game can draw, in lines, on a named
         }
         info.annotations.push({ type: 'longest task', description: `${String(longest)} line(s)` });
         info.annotations.push({ type: 'below the strip', description: String(below.length) });
+        await assertStripClearsTheWalkingLine(page, info, need);
         expect(failures, `${tier.name}, ${language}`).toEqual([]);
         assertBelowTheStrip(below, tier.knownBelow?.(scale, locale)?.tasks ?? null, `${tier.name}, ${language}, ${scale} %`);
       });
