@@ -34,7 +34,7 @@ Measured on `5c545ca`, which is `main`:
 | Verified questions in the bank | **493** |
 | Lesson passages shipped in `content/lessons/` | **302**, in 48 lessons over 10 chapters, **every one `verified`** |
 | Questions a full task-accepted playthrough asks | **130** |
-| **Lesson passages reachable by playing** | **0 of 302** |
+| **Lesson passages reachable by playing** | **0 of 302** (2 of 302 since `read-at-dows-lake`, 2026-09-22 — see the content obligation) |
 
 The complaint is arithmetically exact, and the interesting half is the last row.
 
@@ -462,13 +462,68 @@ the contract only.
   material: ADR-0028's live-check of *Canada's Regions* is still open, and slice 10's Indigenous content
   review is unobtainable. `toronto` is the recommendation — 22 passages available, and the highest newly
   taught count (4) of any level.
-  **STILL OPEN, AND NOW BLOCKED ON A STOP THAT DOES NOT EXIST — 2026-09-22.** It was written, measured
-  and withdrawn, and what the attempt bought is a bound nobody had: **a `read` step cannot be placed on any
-  level this project currently ships.** The route it would call is built and tested (§6 above); what is
-  missing is somewhere for it to stand. The owner has commissioned a sixth Ottawa stop — **Dow's Lake**, the
-  skateway's terminus, at about x 8 700, which clears the 1 080 px minimum from the warming hut at 7 600
-  inside a 9 000 px level — and this obligation closes when that stop and its `read` step land
-  together. Everything below is the measurement that forced it.
+  **DISCHARGED 2026-09-22** — `read-at-dows-lake` in `content/quests/ottawa-parliament-hill.json`, the
+  eighth and last step of Ottawa's quest, standing on **Dow's Lake** at x 8 700, the sixth Ottawa stop the
+  owner commissioned. **Passages reachable by playing: 2 of 302**, where every measurement in this document
+  says 0.
+
+  **What it reads, and why those passages belong at that plaque.** Two passages of
+  `govern-03-the-royal-family-and-the-legislatures`: `g3-royal-family-lifelong-service` and
+  `g3-other-constitutional-monarchies`. Both are on **page 57**, which is the page Dow's Lake's own blurb
+  teaches, and in the guide's `CONSTITUTIONAL MONARCHY` run they are the two sentences immediately *before*
+  the sentence that blurb paraphrases — the Royal Family's lifelong service is what a head of state does
+  instead of directing, and the list of other constitutional monarchies puts Canada's split of the two top
+  jobs in a class rather than opening a subject of its own. **48 words EN / 59 FR**, and two passages of
+  four, against ADR-0065 §3.3's four-passages-and-120-words-per-stop ceiling counted from the resolved
+  passages.
+
+  **Why two rather than the three `TN-READ` recommends.** The lesson's third passage,
+  `g3-each-legislature-passes-its-own-laws`, is on **page 58** under a different heading and is the
+  provincial-legislature subject — and this same quest has already taught that player at the Peace Tower,
+  3 300 px earlier ("Provincial legislatures comprise the Lieutenant Governor and the elected Assembly"),
+  with `gov-07-provincial-legislative-assembly` and `gov-14-provincial-legislature-parts` in that stop's own
+  pool. So **relevance ran out before the budget did**, at 48 words of 120: ADR-0065 §3.2's "relevance does
+  not distribute" measured on the first real step rather than asserted. `TN-READ`'s three-or-four is a shape
+  and §3.3's four-and-120 is the ceiling; neither is raised or lowered here.
+
+  **The one-lesson rule bound the choice, and nothing else could have been chosen.**
+  `content.lesson.passages.manyLessons` refuses a step naming two lessons, and `govern-03` is the **only**
+  lesson in the 48-document corpus carrying a page-57 passage at all. The alternative to this lesson was not
+  another lesson; it was no step.
+
+  **Where it stands, and that was not a free choice either.** A `read` step is a non-`answer` step, so
+  `a-quests-answer-steps-fill-in-one-sitting.test.ts` may not meet one at a stop that already spends its
+  single non-`answer` advance on a `visit`. Dow's Lake is the level's **last** stop, so the step is the
+  quest's **last** step, after `answer-at-the-warming-hut`; anywhere earlier stalls the walk exactly as the
+  canal locks did. Walked over all ten levels in `journey` order: Ottawa reaches 8 of 8 steps and no level
+  stalls.
+
+  **No `verification` block was written, edited or read by an author.** Both passages were already granted,
+  which is the whole of §2. Nothing under `content/levels/` moved, so gate A4 voided nothing: the step is
+  appended to the **end** of `steps[]`, which moves no existing claim's pointer, and the three sentences
+  that were edited because they said "three stops" — the quest's `summary`, the officer's route line and the
+  `doneLine` — all carry `factual: false` and no grant. `make verify-content` is green on the committed
+  tree: 905 claims, 0 FAIL.
+
+  **How it reads on the phone,** measured in Chromium at 390×844 against a dev server by playing Ottawa from
+  the title screen, in **English and French** and at **100 % and 200 %** text. The title and both passages
+  fit **without scrolling at 100 %** and scroll once at 200 % (FR 2 436 px of prose against 844); no
+  sideways scroll at either size; `Close` is 55.5 px tall at 100 % and 111 px at 200 %; the task line reads
+  "Task: Stop and read at Dow's Lake" / "Mission : Arrêtez-vous pour lire au lac Dow" and wraps to **two**
+  lines at 200 % in both languages. The step completes on arrival — the pavilion's card reads "Task done!"
+  behind the reader — and closing the reader hands the player the stop's own question, "In Canada, who is
+  the head of government?", which is the plaque's page continuing into the draw.
+
+  **One thing found while driving it, recorded because nobody will guess it.** The **end-of-level card opens
+  just before this stop rather than after it**: `exitLineX` puts a level's arrival line at
+  `bounds.right - view/2`, which on Ottawa is about x 8 400, and Dow's Lake stands past it at 8 700. The
+  card says the right thing — "Your task here is not finished yet. Next: Stop and read at Dow's Lake" — and
+  the latch fires once, so the player dismisses it, walks on and reads. It is geometry that shipped with the
+  stop, not something this step introduced, and it is the price of putting the last `read` step on the last
+  stop of a level.
+
+  Everything below is the measurement that forced the step here rather than anywhere else, and it is kept
+  because the next geometry change will re-open the question.
 
   **Why not `toronto`, and why not anywhere: the reason is structural rather than editorial.**
   `tests/unit/contracts/a-quests-answer-steps-fill-in-one-sitting.test.ts` walks each level's POIs and
@@ -606,8 +661,8 @@ the contract only.
   the level from the title screen in both languages: the title, three passages and `Close` all fit **without
   scrolling**, and the player met the officer, was told the route, read at the locks and carried on to the
   Library with the tracker correct at every step. So the route works end to end and the surface fits the
-  phone; what it lacks is a stop. **Passages reachable by playing: still 0**, and this ADR does not claim
-  otherwise until Dow's Lake lands.
+  phone; what it lacked was a stop, which Dow's Lake is. **Passages reachable by playing: 2**, read at the
+  stop above rather than at the locks.
 
 - **OBLIGATION due=2027-03-20 owner=architect** — re-measure Context's four tables over the tree as it then
   stands and record the result in an amendment: passages reachable by playing, passages sharing a proposition

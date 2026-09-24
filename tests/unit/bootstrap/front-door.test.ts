@@ -156,6 +156,11 @@ const hoisted = vi.hoisted(() => {
     appearance: Record<string, string>[];
     /** Every question the card was asked to present, in order. */
     questionsAsked: unknown[];
+    /**
+     * Whether the faked `answerQuestion` moves the quest's `answer` step on.
+     * Off by default, so a suite about one card is not also about the tracker.
+     */
+    answersAdvanceQuests: boolean;
     /** Which host the question card was mounted into. */
     questionHost: unknown;
     /** The options the card was built with, so the answer wire can be driven. */
@@ -283,6 +288,7 @@ const hoisted = vi.hoisted(() => {
     reducedMotion: [],
     appearance: [],
     questionsAsked: [],
+    answersAdvanceQuests: false,
     questionHost: null,
     questionOptions: null,
     completeShown: [],
@@ -744,7 +750,25 @@ vi.mock('@application/use-cases/answer-question', async () => {
    * `unlockedLevelIds`, which changes the map — and a fake progress value would
    * short-circuit exactly the chain being asserted. Only the judgement is faked.
    */
-  const { withStamp } = await import('@domain/entities/progress');
+  const { questStateFor, withQuestState, withStamp } = await import('@domain/entities/progress');
+  const { currentStep, progressQuest } = await import('@domain/entities/quest');
+  /*
+   * The quest's own count, when a scenario asks for it: the real domain rule
+   * moving the real document, so a walk that has to get *past* `answer` steps
+   * — to a `read` step standing last, say — gets there the way a player does.
+   */
+  const advanced = (input: { progress: never; quest?: unknown }): never => {
+    const quest = input.quest as Parameters<typeof progressQuest>[0] | undefined;
+    if (!hoisted.state.answersAdvanceQuests || quest === undefined) return input.progress;
+    const state = questStateFor(input.progress, quest.levelId, quest.id);
+    if (state?.status !== 'active' || currentStep(quest, state)?.kind !== 'answer') {
+      return input.progress;
+    }
+    const advance = progressQuest(quest, state, { kind: 'answer' }, 1 as never);
+    return (
+      advance.ok ? withQuestState(input.progress, quest.levelId, advance.value.state) : input.progress
+    ) as never;
+  };
   return {
     answerQuestion: (
       _deps: unknown,
@@ -755,10 +779,11 @@ vi.mock('@application/use-cases/answer-question', async () => {
         (input as { quest?: { id: string } }).quest?.id ?? null,
       );
       const earn = hoisted.state.stampFor;
+      const progress = advanced(input);
       return {
         ok: true,
         value: {
-          progress: earn === null ? input.progress : withStamp(input.progress, earn as never, 1 as never),
+          progress: earn === null ? progress : withStamp(progress, earn as never, 1 as never),
           stampEarned: earn !== null,
           /* Whether a **quest** finished, which is a different question from
              whether a stamp was earned: the card's heading follows this one. */
@@ -1095,6 +1120,7 @@ beforeEach(() => {
   hoisted.state.autoMove = [];
   hoisted.state.reducedMotion = [];
   hoisted.state.questionsAsked = [];
+  hoisted.state.answersAdvanceQuests = false;
   hoisted.state.questionHost = null;
   hoisted.state.questionOptions = null;
   hoisted.state.completeShown = [];
@@ -2765,14 +2791,17 @@ describe('a quest is offered, accepted and tracked', () => {
       await flush();
     }
 
-    const question = hoisted.state.questionOptions as {
-      onAnswer: (index: number, right: boolean) => void;
-      onNext: () => void;
-    } | null;
-    const asked = hoisted.state.questionsAsked.length - questionsBefore;
-    for (let index = 0; index < asked && question !== null; index += 1) {
+    /* A stop's draw is presented one card at a time, so answer until no new
+       card arrives rather than counting the cards seen before the first answer. */
+    for (let answered = 0; hoisted.state.questionsAsked.length - questionsBefore > answered; ) {
+      const question = hoisted.state.questionOptions as {
+        onAnswer: (index: number, right: boolean) => void;
+        onNext: () => void;
+      } | null;
+      if (question === null) break;
       question.onAnswer(0, true);
       question.onNext();
+      answered += 1;
       await flush();
     }
   };
@@ -2911,19 +2940,17 @@ describe('a quest is offered, accepted and tracked', () => {
     ).not.toBe(afterAccepting);
   });
 
-  it('reports whether this quest reads, so the scenario below cannot go quiet', () => {
+  it('ships a read step on this quest, so the scenario below cannot go quiet', () => {
     /*
-     * Zero today, and said out loud rather than discovered by a scenario
-     * returning early in silence — which is ADR-0024's empty collection with a
-     * test name attached.
-     *
-     * The first `read` step was authored on Ottawa's canal locks and withdrawn:
-     * a `read` step needs a stop **after** the quest's giver, the locks stand
-     * before the officer, and three gates refuse every way of moving either
-     * (ADR-0063 carries the arithmetic). The scenario below is written and
-     * dormant, and wakes the day a quest ships one.
+     * ADR-0024's floor for the reader scenario, which returns early over a quest
+     * with no `read` step. Ottawa reads at Dow's Lake, as its last stop: a `read`
+     * step shares no stop with a `visit`, and ADR-0063 carries why it stands
+     * after the giver and after every `answer` step before it.
      */
-    expect(STOPS.filter((step) => step.kind === 'read').length).toBeGreaterThanOrEqual(0);
+    expect(
+      STOPS.filter((step) => step.kind === 'read').length,
+      `${String(OTTAWA_QUEST.id)} ships no read step, so the reader scenario proves nothing.`,
+    ).toBeGreaterThan(0);
   });
 
   it('opens the reader at a read step, with the lesson’s own prose and nothing else', async () => {
@@ -2938,16 +2965,22 @@ describe('a quest is offered, accepted and tracked', () => {
     const READ = STOPS.find((step) => step.kind === 'read');
     if (READ === undefined) return;
 
+    hoisted.state.answersAdvanceQuests = true;
     await arriveInOttawa();
 
     emit('npc/engaged', 'officer');
     (hoisted.state.dialoguesShown[0] as { accept: { onSelect: () => void } }).accept.onSelect();
+    /* Every stop the quest sends the player to first, so the read step is the
+       current one — derived from the document, wherever it puts the read. */
+    for (const step of STOPS.slice(0, STOPS.indexOf(READ))) await walkPast(step);
+    const readerBefore = hoisted.state.readerShown.length;
 
     emit('poi/engaged', READ.targetId);
     /* The place first, in its own words, exactly as at any other stop. */
-    expect(hoisted.state.readerShown, 'the reader opened over the landmark’s own card').toEqual(
-      [],
-    );
+    expect(
+      hoisted.state.readerShown,
+      'the reader opened over the landmark’s own card',
+    ).toHaveLength(readerBefore);
     modalOption<{ onClose: () => void }>('poi-card').onClose();
     await flush();
 
@@ -2955,9 +2988,9 @@ describe('a quest is offered, accepted and tracked', () => {
       hoisted.state.readerShown,
       `${String(OTTAWA_QUEST.id)} step "${READ.id}" names ` +
         `${String(READ.passages?.length ?? 0)} passage(s) and the reader was never opened`,
-    ).toHaveLength(1);
+    ).toHaveLength(readerBefore + 1);
 
-    const view = hoisted.state.readerShown[0] as {
+    const view = hoisted.state.readerShown.at(-1) as {
       title: string;
       passages: readonly { id: string; text: string }[];
     };
