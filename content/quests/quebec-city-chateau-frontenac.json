@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-chateau",
+      "kind": "read",
+      "targetId": "chateau-frontenac",
+      "prompt": {
+        "en": "Stop and read at the Château Frontenac",
+        "fr": "Arrêtez-vous pour lire au Château Frontenac"
+      },
+      "passages": [
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-first-settlement-1604"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-peace-with-the-iroquois-1701"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-plains-of-abraham-1759"
+        },
+        {
+          "lesson": "history-10-new-france-and-the-fur-trade",
+          "passage": "h10-wolfe-and-montcalm"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-chateau",
       "kind": "answer",
       "targetId": "history",
@@ -303,6 +330,33 @@
               "evidence": "To better govern the French Roman Catholic majority, the British Parliament passed the Quebec Act of 1774. … It allowed religious freedom for Catholics and permitted them to hold public office, a practice not then allowed in Britain. The Quebec Act restored French civil law while maintaining British criminal law."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-city-wall",
+      "kind": "read",
+      "targetId": "city-wall",
+      "prompt": {
+        "en": "Stop and read at the city wall",
+        "fr": "Arrêtez-vous pour lire au mur de la ville"
+      },
+      "passages": [
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-habitants-or-canadiens"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-first-assembly-halifax-1758"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-constitutional-act-1791"
+        },
+        {
+          "lesson": "history-11-the-quebec-act-and-the-loyalists",
+          "passage": "h11-first-elected-assemblies-1791"
         }
       ]
     },
@@ -400,6 +454,33 @@
               "evidence": "The Constitutional Act of 1791 divided the Province of Quebec into Upper Canada (later Ontario) … The Act also granted to the Canadas, for the first time, legislative assemblies elected by the people. The name Canada also became official at this time and has been used ever since."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-bandstand",
+      "kind": "read",
+      "targetId": "terrace-kiosk",
+      "prompt": {
+        "en": "Stop and read at the bandstand",
+        "fr": "Arrêtez-vous pour lire au kiosque à musique"
+      },
+      "passages": [
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-fathers-of-confederation"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-two-levels-of-government"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-ontario-and-quebec-created"
+        },
+        {
+          "lesson": "history-15-building-the-dominion",
+          "passage": "h15-born-on-july-1-1867"
         }
       ]
     },

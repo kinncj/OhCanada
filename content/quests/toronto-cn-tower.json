@@ -225,6 +225,33 @@
       ]
     },
     {
+      "id": "read-at-the-streetcar",
+      "kind": "read",
+      "targetId": "streetcar",
+      "prompt": {
+        "en": "Stop and read at the streetcar",
+        "fr": "Arrêtez-vous pour lire au tramway"
+      },
+      "passages": [
+        {
+          "lesson": "elections-11-voting-step-by-step",
+          "passage": "e11-no-card-call-your-local-office"
+        },
+        {
+          "lesson": "elections-11-voting-step-by-step",
+          "passage": "e11-advance-polls-and-special-ballots"
+        },
+        {
+          "lesson": "elections-11-voting-step-by-step",
+          "passage": "e11-what-to-bring"
+        },
+        {
+          "lesson": "elections-11-voting-step-by-step",
+          "passage": "e11-marking-an-x"
+        }
+      ]
+    },
+    {
       "id": "answer-on-the-boulevard",
       "kind": "answer",
       "targetId": "elections",
@@ -298,6 +325,33 @@
       ]
     },
     {
+      "id": "read-at-the-cn-tower",
+      "kind": "read",
+      "targetId": "cn-tower",
+      "prompt": {
+        "en": "Stop and read at the CN Tower",
+        "fr": "Arrêtez-vous pour lire à la Tour CN"
+      },
+      "passages": [
+        {
+          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
+          "passage": "e10-who-forms-the-government"
+        },
+        {
+          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
+          "passage": "e10-the-governor-general-appoints-the-prime-minister"
+        },
+        {
+          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
+          "passage": "e10-majority-government"
+        },
+        {
+          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
+          "passage": "e10-minority-government"
+        }
+      ]
+    },
+    {
       "id": "answer-at-the-tower",
       "kind": "answer",
       "targetId": "elections",
@@ -367,6 +421,33 @@
               "evidence": "At more than 12 million, the people of Ontario make up more than one-third of Canadians. The large and culturally diverse population, natural resources and strategic location contribute to a vital economy."
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-square",
+      "kind": "read",
+      "targetId": "nathan-phillips-square",
+      "prompt": {
+        "en": "Stop and read at the big square",
+        "fr": "Arrêtez-vous pour lire à la grande place"
+      },
+      "passages": [
+        {
+          "lesson": "elections-08-electing-your-member-of-parliament",
+          "passage": "e8-who-may-run"
+        },
+        {
+          "lesson": "elections-08-electing-your-member-of-parliament",
+          "passage": "e8-candidates"
+        },
+        {
+          "lesson": "elections-08-electing-your-member-of-parliament",
+          "passage": "e8-many-candidates-in-a-district"
+        },
+        {
+          "lesson": "elections-08-electing-your-member-of-parliament",
+          "passage": "e8-most-votes-wins-the-seat"
         }
       ]
     },
