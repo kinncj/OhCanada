@@ -16,10 +16,19 @@
  *
  *  1. the mark's point lies over its subject's art, and no more than
  *     {@link JUST_ABOVE_PX} above the art under the mark;
- *  2. no mark overlaps the player's head at any place a stop can leave them there.
+ *  2. no mark overlaps the player's head at any place a stop can leave them there;
+ *  3. no mark overlaps the player anywhere they can walk, crown to soles, nor any
+ *     other character — and every mark stays inside the playfield, above the
+ *     ground under it and on the canvas.
+ *
+ * A mark that had to rise over the player or a character is "just above" what it
+ * rose over rather than its own art: rule 1 is measured from the higher of the two.
  *
  * And the gate is shown to fail: marks placed over rectangles and blind to the
- * player — the old rule — float above art and cover heads on the shipped levels.
+ * player — the old rule — float above art and cover heads on the shipped levels;
+ * and marks that keep off the resting head alone — the rule before a real build
+ * at 390 × 844 showed the granite erratic's ring on the walking player's chest at
+ * Peggy's Cove — cover the player as they walk up.
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -47,7 +56,7 @@ import {
   type AffordanceMark,
 } from '@adapters/phaser/interaction-affordance';
 import { parseLevelDocument, type SceneLevel } from '@adapters/phaser/level-document';
-import { restingHeadBoxes } from '@adapters/phaser/mark-clearance';
+import { markClearance, restingHeadBoxes, walkingFigureBoxes } from '@adapters/phaser/mark-clearance';
 import { rideFor } from '@adapters/phaser/ride';
 import { stopSubjectsFor } from '@adapters/phaser/stand-off';
 import type { TargetRect } from '@adapters/phaser/touch-controls';
@@ -118,6 +127,10 @@ interface Target {
   readonly rect: TargetRect;
   readonly art: ArtSilhouette;
   readonly clear: readonly TargetRect[];
+  /** Only the player's head where a stop holds them here: the rule before walking was counted. */
+  readonly resting: readonly TargetRect[];
+  /** The player wherever they can walk, and every other character. */
+  readonly standing: readonly TargetRect[];
 }
 
 /** Every engageable subject, drawn and placed as `level-scene.ts` draws and places it. */
@@ -126,6 +139,7 @@ function targetsFor(level: SceneLevel, tuning: LocomotionTuning): readonly Targe
   const rideArt = ride === null ? [] : (rideArts.get(`${String(level.id)}:${ride.mode}`) ?? []);
   const subjects = stopSubjectsFor({ level, rig: RIG, tuning, ride, rideArt });
   const heads = restingHeadBoxes({ ground: level.ground, subjects, rig: RIG, tuning, ride });
+  const walking = walkingFigureBoxes({ ground: level.ground, rig: RIG, tuning, ride });
 
   const landmarks = level.reachablePois.map((poi): Target => {
     const picture = pictures.get(sourceFor(String(level.id), poi.artKey));
@@ -143,7 +157,9 @@ function targetsFor(level: SceneLevel, tuning: LocomotionTuning): readonly Targe
       position: poi.position,
       rect,
       art: placeSilhouette(picture.art, { x: rect.x, y: rect.y, scale: 1 }),
-      clear: heads.get(String(poi.id)) ?? [],
+      clear: [],
+      resting: heads.get(String(poi.id)) ?? [],
+      standing: [],
     };
   });
 
@@ -163,11 +179,32 @@ function targetsFor(level: SceneLevel, tuning: LocomotionTuning): readonly Targe
       position: character.position,
       rect: { x: character.position.x - space.centreX, y: groundY - space.soleY, width: space.width, height: space.height },
       art,
-      clear: heads.get(id) ?? [],
+      clear: [],
+      resting: heads.get(id) ?? [],
+      standing: [],
     };
   });
 
-  return [...landmarks, ...characters];
+  /* As `level-scene.ts` puts it together: each character's drawn art is what
+     every other subject's mark keeps off. */
+  const actors = characters.map((target) => {
+    const bounds = silhouetteBounds(target.art);
+    if (bounds === null) throw new Error(`${String(level.id)}: "${target.id}" has no art`);
+    return {
+      id: target.id,
+      rect: { x: bounds.left, y: bounds.top, width: bounds.right - bounds.left, height: bounds.bottom - bounds.top },
+    };
+  });
+  const all = [...landmarks, ...characters];
+  const clearance = markClearance(
+    all.map((target) => target.id),
+    { resting: heads, walking, actors },
+  );
+  return all.map((target) => ({
+    ...target,
+    clear: clearance.get(target.id) ?? [],
+    standing: [...walking, ...actors.filter((actor) => actor.id !== target.id).map((actor) => actor.rect)],
+  }));
 }
 
 const overlaps = (a: TargetRect, b: TargetRect): boolean =>
@@ -184,7 +221,12 @@ function misplaced(target: Target, mark: AffordanceMark): string | null {
   }
   const top = topWithin(target.art, mark.x - mark.size / 2, mark.x + mark.size / 2);
   if (top === null) return `${at}: has no art under the mark`;
-  if (anchor.y < top - JUST_ABOVE_PX) {
+  /* A mark risen over something it keeps clear of is just above that instead. */
+  const extent = markExtent(mark);
+  const risen = target.clear
+    .filter((box) => box.x < extent.x + extent.width && extent.x < box.x + box.width)
+    .reduce((highest, box) => Math.min(highest, box.y), top);
+  if (anchor.y < Math.min(top, risen) - JUST_ABOVE_PX) {
     return `${at}: floats ${String(Math.round(top - anchor.y))} px above its art, in empty sky`;
   }
   if (anchor.y > bounds.bottom) return `${at}: points below its art`;
@@ -193,7 +235,11 @@ function misplaced(target: Target, mark: AffordanceMark): string | null {
 
 /** Whether a mark overlaps the player's head anywhere a stop leaves them at its subject. */
 const coversHead = (target: Target, mark: AffordanceMark): boolean =>
-  target.clear.some((head) => overlaps(markExtent(mark), head));
+  target.resting.some((head) => overlaps(markExtent(mark), head));
+
+/** Whether a mark overlaps the player anywhere they can walk, or another character. */
+const coversStanding = (target: Target, mark: AffordanceMark): boolean =>
+  target.standing.some((box) => overlaps(markExtent(mark), box));
 
 const nameOf = (level: SceneLevel, tuning: LocomotionTuning): string => `${String(level.id)}/${tuning.mode}`;
 
@@ -255,7 +301,7 @@ describe('a mark sits on or just above the art it points at, and off the player 
     it(`${nameOf(level, tuning)}: no mark covers the player's head wherever a stop holds them`, () => {
       const targets = targetsFor(level, tuning);
       expect(
-        targets.every((target) => target.clear.length > 0),
+        targets.every((target) => target.resting.length > 0),
         'a subject has no head to keep clear of, so this checks nothing for it',
       ).toBe(true);
       const problems: string[] = [];
@@ -269,11 +315,36 @@ describe('a mark sits on or just above the art it points at, and off the player 
       }
       expect(problems, `${nameOf(level, tuning)}:\n${problems.join('\n')}`).toEqual([]);
     });
+
+    it(`${nameOf(level, tuning)}: no mark covers the player as they walk, or another character, and every mark stays in the playfield`, () => {
+      const targets = targetsFor(level, tuning);
+      expect(
+        targets.every((target) => target.standing.length > 0),
+        'there is nowhere the player walks to keep clear of, so this checks nothing',
+      ).toBe(true);
+      const problems: string[] = [];
+      for (const minTouchPx of MARK_SIZES) {
+        affordanceMarks(targets, { playerX: level.spawn.x, reachPx, minTouchPx }).forEach((mark, index) => {
+          const target = targets[index];
+          if (target === undefined) return;
+          const at = `"${target.id}" at mark size ${String(minTouchPx)}`;
+          if (coversStanding(target, mark)) problems.push(`${at} covers the player where they walk, or a character`);
+          const extent = markExtent(mark);
+          if (extent.y < 0) problems.push(`${at} leaves the top of the canvas`);
+          if (extent.y + extent.height > groundYAt(level.ground, mark.x)) {
+            problems.push(`${at} reaches below the ground line, out of the playfield`);
+          }
+        });
+      }
+      expect(problems, `${nameOf(level, tuning)}:\n${problems.join('\n')}`).toEqual([]);
+    });
   }
 
   it('the gate can fail: marks over rectangles, blind to the player, float above art and cover heads', () => {
     let floating = 0;
     let covering = 0;
+    let walkedInto = 0;
+    const struck = new Set<string>();
     for (const { level, tuning } of CASES) {
       const targets = targetsFor(level, tuning);
       const blind = targets.map((target) => ({ ...target, art: null, clear: [] }));
@@ -288,8 +359,23 @@ describe('a mark sits on or just above the art it points at, and off the player 
         if (misplaced(target, mark) !== null) floating += 1;
         if (coversHead(target, mark)) covering += 1;
       });
+      /* The rule before walking was counted: clear of the resting head alone. */
+      const restingOnly = targets.map((target) => ({ ...target, clear: target.resting }));
+      affordanceMarks(restingOnly, {
+        playerX: level.spawn.x,
+        reachPx: tuning.interaction?.reachPx ?? 0,
+        minTouchPx: 122,
+      }).forEach((mark, index) => {
+        const target = targets[index];
+        if (target === undefined || !coversStanding(target, mark)) return;
+        walkedInto += 1;
+        struck.add(`${String(level.id)}/${target.id}`);
+      });
     }
     expect(floating, 'no mark over a rectangle floats above its art, so the first check proves nothing').toBeGreaterThan(0);
     expect(covering, "no mark blind to the player covers a head, so the second check proves nothing").toBeGreaterThan(0);
+    expect(walkedInto, 'no mark clear of the resting head alone covers the walking player, so the third proves nothing').toBeGreaterThan(0);
+    /* The subject of the report: the ring on the walking player's chest. */
+    expect([...struck]).toContain('peggys-cove/granite-shore');
   });
 });

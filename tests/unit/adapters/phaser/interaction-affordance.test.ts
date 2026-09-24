@@ -280,6 +280,33 @@ describe('a mark keeps off the player a stop holds at its subject (ADR-0049)', (
     expect(extent.y + extent.height).toBeCloseTo(head.y - MARK_GAP_PX, 9);
     expect(size).toBe(mark.size);
   });
+
+  /* Peggy's Cove at 390 × 844: the granite erratic is lower than the player's
+     chest, its mark stepped sideways off the resting head — and sat on the
+     player's chest as they walked up to it. Clear of where the player stands
+     anywhere on the ground, crown to soles, it goes above them instead. */
+  it('rises above the player wherever they can walk, for a landmark lower than they are', () => {
+    const boulder = { x: 1300, y: 1150, width: 400, height: 130 };
+    const walking = { x: -60, y: 950, width: 10_120, height: 330 };
+    const rest = { x: 1440, y: 950, width: 120, height: 110 };
+    const shore: AffordanceSubject = { ...landmark, rect: boulder, art: art([boulder]) };
+
+    const sideways = only(affordanceMarks([{ ...shore, clear: [rest] }], { ...options, playerX: 1500 }));
+    expect(overlaps(markExtent(sideways), rest), 'the case does not move the mark off the resting head').toBe(false);
+    expect(
+      overlaps(markExtent(sideways), walking),
+      'the case does not put the old mark where the player walks — the defect is not reproduced',
+    ).toBe(true);
+
+    const mark = only(affordanceMarks([{ ...shore, clear: [rest, walking] }], { ...options, playerX: 1500 }));
+    const extent = markExtent(mark);
+    expect(overlaps(extent, walking)).toBe(false);
+    expect(extent.y + extent.height).toBeCloseTo(walking.y - MARK_GAP_PX, 9);
+    expect(mark.x).toBe(1500);
+    /* Still inside the playfield's upper two-thirds (ADR-0002): above the ground line, on the canvas. */
+    expect(extent.y).toBeGreaterThanOrEqual(0);
+    expect(extent.y + extent.height).toBeLessThan(1280);
+  });
 });
 
 describe('the pulse', () => {
