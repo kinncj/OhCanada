@@ -11,8 +11,8 @@
     {
       "id": "r12-atlantic-coasts-and-resources",
       "text": {
-        "en": "In Atlantic Canada, the coasts and the natural resources, such as fishing, farming, forestry and mining, have shaped the region's place in Canada's history.",
-        "fr": "Au Canada atlantique, les côtes et les ressources naturelles, comme la pêche, l'agriculture, la foresterie et les mines, ont façonné la place de la région dans l'histoire du Canada."
+        "en": "Thanks to their coasts and natural resources, such as fishing, farming, forestry and mining, the Atlantic provinces are an important part of the history and development of Canada.",
+        "fr": "Grâce à leurs côtes et à leurs ressources naturelles, comme la pêche, l'agriculture, la foresterie et les mines, les provinces de l'Atlantique occupent une place importante dans l'histoire et le développement du Canada."
       },
       "fact": {
         "factual": true,
@@ -24,7 +24,7 @@
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "asOf": "2026-09-08T00:00:00Z",
           "volatile": false,
-          "quote": "Atlantic Canada’s coasts and natural resources, including fishing, farming, forestry and mining"
+          "quote": "Atlantic Canada’s coasts and natural resources, including fishing, farming, forestry and mining, have made these provinces an important part of Canada’s history and development."
         },
         "verification": {
           "status": "rejected",
