@@ -1555,6 +1555,17 @@ const RECIPES = {
   'terrace-kiosk': singleSource(),
 
   /**
+   * Québec City's three tier-2 stops (docs/plan/guide-coverage.md section 5.5),
+   * the same builder again. `wolfe-montcalm` is the third contract in this
+   * table that asks for a type and not a place, because its one unique feature
+   * is an inscription; `martello-tower` is the Plains of Abraham drawn as the
+   * real feature standing on them, since a park is not a drawable subject.
+   */
+  'wolfe-montcalm': singleSource(),
+  'hotel-du-parlement': singleSource(),
+  'martello-tower': singleSource(),
+
+  /**
    * Ottawa's three. `warming-hut` is the first hero in the game standing on a
    * surface the player skates over rather than walks on, which is why its base
    * band is ice and not a snow bank — the builder is unchanged, the contract is

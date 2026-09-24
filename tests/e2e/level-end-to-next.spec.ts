@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { finishedSave, oneAnswerFromDoneSave, seed, type SeededQuest } from './saves';
 import {
   JOURNEY,
@@ -193,6 +194,7 @@ async function answerWhatTheLandmarkAsks(page: Page): Promise<void> {
   await page.getByTestId('interact-prompt').click();
   await expect(poi).toBeVisible({ timeout: 15_000 });
   await page.getByTestId('poi-card-close').click();
+  await closeTheReaderIfItOpens(page);
 
   const opened = await Promise.race([
     dialogue

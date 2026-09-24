@@ -251,6 +251,7 @@ const EN = {
   'learn.error': 'We could not load this chapter. Check your connection and try again.',
   'learn.error.retry': 'Try again',
   'learn.chapter.empty': 'There is nothing to read in this chapter right now.',
+  'learn.chapter.the-oath-of-citizenship': 'The Oath of Citizenship',
   'learn.chapter.rights-and-responsibilities-of-citizenship':
     'Rights and Responsibilities of Citizenship',
   'learn.chapter.who-we-are': 'Who We Are',
@@ -714,6 +715,12 @@ const EN = {
   'hud.interact.village-house': 'Look at the house',
   'hud.interact.city-wall': 'Look at the wall',
   'hud.interact.terrace-kiosk': 'Look at the bandstand',
+  /* Québec City's three tier-2 stops (ADR-0065 §2), named by the thing drawn
+     as `dows-lake` is: the Plains of Abraham are drawn as Martello Tower 1, so
+     its prompt says "the tower". */
+  'hud.interact.wolfe-montcalm-monument': 'Look at the monument',
+  'hud.interact.martello-tower': 'Look at the tower',
+  'hud.interact.hotel-du-parlement': 'Look at the Parliament Building',
   'hud.interact.rideau-locks': 'Look at the locks',
   'hud.interact.library-of-parliament': 'Look at the Library',
   'hud.interact.warming-hut': 'Look at the hut',
@@ -1297,6 +1304,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
     "Nous n'avons pas pu charger ce chapitre. Vérifiez votre connexion et réessayez.",
   'learn.error.retry': 'Réessayer',
   'learn.chapter.empty': "Il n'y a rien à lire dans ce chapitre pour le moment.",
+  'learn.chapter.the-oath-of-citizenship': 'Le serment de citoyenneté',
   'learn.chapter.rights-and-responsibilities-of-citizenship':
     'Les droits et responsabilités liés à la citoyenneté',
   'learn.chapter.who-we-are': 'Qui sommes-nous?',
@@ -1528,6 +1536,9 @@ const FR: Readonly<Record<CopyRow, string>> = {
   'hud.interact.village-house': 'Regarder la maison',
   'hud.interact.city-wall': 'Regarder le mur',
   'hud.interact.terrace-kiosk': 'Regarder le kiosque',
+  'hud.interact.wolfe-montcalm-monument': 'Regarder le monument',
+  'hud.interact.martello-tower': 'Regarder la tour',
+  'hud.interact.hotel-du-parlement': "Regarder l'hôtel du Parlement",
   'hud.interact.rideau-locks': 'Regarder les écluses',
   'hud.interact.library-of-parliament': 'Regarder la Bibliothèque',
   'hud.interact.warming-hut': 'Regarder la cabane',
@@ -1857,6 +1868,9 @@ export const COPY_GAPS: readonly CopyKey[] = [
   'hud.interact.village-house',
   'hud.interact.city-wall',
   'hud.interact.terrace-kiosk',
+  'hud.interact.wolfe-montcalm-monument',
+  'hud.interact.martello-tower',
+  'hud.interact.hotel-du-parlement',
   'hud.interact.rideau-locks',
   'hud.interact.library-of-parliament',
   'hud.interact.warming-hut',

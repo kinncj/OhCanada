@@ -5,6 +5,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { hasCopyRow, text } from '@ui/copy';
 
+import { closeTheReaderIfItOpens } from './after-the-card';
 import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
 import { holdToMove } from './held-drive';
 import { letGo, walkInLegs } from './walk';
@@ -469,6 +470,9 @@ async function engageOnce(page: Page): Promise<'answered' | 'talked' | 'nothing'
     await page.getByTestId('poi-card-close').click();
     await expect(poi).toBeHidden();
 
+    /* The passages a `read` step names at this stop, when it names any (ADR-0067). */
+    await closeTheReaderIfItOpens(page);
+
     /*
      * The quest's own line about this place, when the player is standing on the
      * `visit` step that names it. The card is the place in its own words; this
@@ -747,6 +751,9 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await expect(poi).toBeVisible();
     await page.getByTestId('poi-card-close').click();
     await expect(poi).toBeHidden();
+
+    /* Then what the stop reads, when a `read` step waits there (ADR-0067). */
+    await closeTheReaderIfItOpens(page);
 
     /* Then the speaker, in their own name — the same name the offer was made
        in, resolved the same way (`TN-QUEST-08`). */

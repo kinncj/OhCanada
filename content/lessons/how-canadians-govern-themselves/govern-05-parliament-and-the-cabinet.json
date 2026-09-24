@@ -27,11 +27,11 @@
           "quote": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures."
         }
       }
     },
@@ -54,11 +54,11 @@
           "quote": "These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In Canada’s parliamentary democracy, the people elect members to the House of Commons in Ottawa and to the provincial and territorial legislatures. These representatives are responsible for passing laws, approving and monitoring expenditures, and keeping the government accountable."
         }
       }
     },
@@ -81,11 +81,11 @@
           "quote": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Cabinet ministers are responsible to the elected representatives, which means they must retain the “confidence of the House” and have to resign if they are defeated in a non-confidence vote."
         }
       }
     },
@@ -108,11 +108,11 @@
           "quote": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Parliament has three parts: the Sovereign (Queen or King), the Senate and the House of Commons."
         }
       }
     },
@@ -135,11 +135,11 @@
           "quote": "Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Provincial legislatures comprise the Lieutenant Governor and the elected Assembly."
         }
       }
     },
@@ -162,11 +162,11 @@
           "quote": "In the federal government, the Prime Minister selects the Cabinet ministers and is responsible for the operations and policy of the government."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "In the federal government, the Prime Minister selects the Cabinet ministers and is responsible for the operations and policy of the government."
         }
       }
     },
@@ -189,11 +189,11 @@
           "quote": "The House of Commons is the representative chamber, made up of members of Parliament elected by the people, traditionally every four years."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "The House of Commons is the representative chamber, made up of members of Parliament elected by the people, traditionally every four years."
         }
       }
     },
@@ -216,11 +216,11 @@
           "quote": "Senators are appointed by the Governor General on the advice of the Prime Minister and serve until age 75."
         },
         "verification": {
-          "status": "unverified",
-          "model": "",
-          "checkedAt": null,
-          "sourceHash": "",
-          "evidence": ""
+          "status": "verified",
+          "model": "claude-opus-5-5",
+          "checkedAt": "2026-09-23T23:58:00Z",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "evidence": "Senators are appointed by the Governor General on the advice of the Prime Minister and serve until age 75."
         }
       }
     }

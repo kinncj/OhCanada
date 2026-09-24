@@ -28,7 +28,7 @@ count it walked and refuses to pass below the count shipped when it was written.
 2. **A chapter is fetched when it is opened, and only then.** One lazy chunk per chapter
    (`vite.config.ts` groups `content/lessons/<chapter>/*.json` into `lessons-<chapter>`), so the initial
    payload does not move (ADR-0061 §7): measured at build, the initial payload is 4 files and no lesson.
-   The service worker precaches the ten chapter chunks with every other code chunk (ADR-0034), so once it
+   The service worker precaches the chapter chunks, one per chapter directory, with every other code chunk (ADR-0034), so once it
    is installed Learn reads offline; before then, a chapter is fetched on first open.
 3. **The shippable-passage filter runs in `app/application`**, never in a screen
    (`app/application/content/learn.ts`, built on `lesson-passages.ts`'s `passageVerdict`), with ADR-0003's
@@ -70,6 +70,7 @@ Canada* — see `OQ-LEARN-1`.
 
 | Key | EN | FR |
 |---|---|---|
+| `learn.chapter.the-oath-of-citizenship` | The Oath of Citizenship | Le serment de citoyenneté |
 | `learn.chapter.rights-and-responsibilities-of-citizenship` | Rights and Responsibilities of Citizenship | Les droits et responsabilités liés à la citoyenneté |
 | `learn.chapter.who-we-are` | Who We Are | Qui sommes-nous? |
 | `learn.chapter.canadas-history` | Canada's History | L'histoire du Canada |
@@ -158,7 +159,7 @@ Feature: Reading the guide by chapter
     When I tap "title-learn"
     Then the element "learn" has role "dialog" and its accessible name is "Learn"
     And "learn-chapters" lists one button per chapter that has something to read
-    And the first is "Rights and Responsibilities of Citizenship" and the last is "Canada's Regions"
+    And the first is "The Oath of Citizenship" and the last is "Canada's Regions"
     And "The Oath of Citizenship" is not listed
     And no lesson document has been downloaded
 
@@ -380,7 +381,7 @@ Feature: An empty chapter is never an empty screen
 - **`OQ-LEARN-1` — the French chapter titles are the French edition's, from memory rather than from a
   check.** They are written above as *Découvrir le Canada* titles them, and they are on screen stating what a
   chapter is called, which is the same standing as `OQ-SPINE-2` for the level subtitles.
-  *Recommendation:* the `content-verifier` checks the ten pairs against canada.ca in the same pass as
+  *Recommendation:* the `content-verifier` checks the eleven pairs against canada.ca in the same pass as
   `OQ-SPINE-2`, and where the official title differs, the official title wins and this table is amended.
   The level subtitles (« Le système de justice », « L'économie du Canada ») are **subject** names under
   ADR-0028 and are deliberately not the same strings.

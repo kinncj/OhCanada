@@ -71,6 +71,12 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   geometry references only. Every file in this directory was **converted from its embedded profile to sRGB
   before any colour was sampled off it**, so the colours measured are the colours a browser shows — a step
   that was skipped on the first pass and produced brick that sampled as blue-grey.
+  **Six files added 2026-09-24** for the level's three tier-2 stops (`docs/plan/guide-coverage.md` §5.5): the
+  Wolfe and Montcalm obelisk (CC BY 2.0, and a 1901 public-domain photochrom of the same monument), the
+  Parliament Building's main façade and its tower (both CC0), and Martello Tower 1 with the Plains of Abraham
+  in winter (both CC0). Licences checked against the Commons API on **2026-09-23** before anything was
+  fetched; the best-known photograph of the obelisk and the Luc Noppen survey of the Governors' Garden are
+  CC BY-SA and were refused on licence.
 - `halifax/` — the Level 1 subjects: the Old Town Clock (three views), Pier 21 (three views) and the
   waterfront boardwalk and harbour (three views). Nine files, licence-checked against the Commons API on
   **2026-09-08** before any was downloaded: two CC0, four public domain, two CC BY 2.0, one CC BY 3.0 and one
