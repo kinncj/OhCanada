@@ -15,7 +15,7 @@ import { describe, expect, it } from 'vitest';
 
 import { bundledQuestionBank } from '@adapters/content';
 import { createSeededRandom } from '@adapters/random';
-import type { ExamRules, QuestionBank, ShippableQuestion } from '@application/ports';
+import type { ExamRules, QuestionBank, RandomSource, ShippableQuestion } from '@application/ports';
 import type { QuestionId, SubjectId } from '@domain/ids';
 import { ok } from '@common/result';
 
@@ -297,5 +297,138 @@ describe('the exam session, over the shipped bank', () => {
      */
     const deps = { bank: bundledQuestionBank, random: createSeededRandom(1), rules: RULES };
     expect(Object.keys(deps).sort()).toEqual(['bank', 'random', 'rules']);
+  });
+});
+
+describe('the exam mix for eleven ready subjects (ADR-0068 §8)', () => {
+  /*
+   * `docs/plan/kingston.md` K-0.4. The journey after Kingston lands, in journey
+   * order, with each subject's verified count: `history` 32 and
+   * `building-canada` 65 after the split (ADR-0068 §6), the other nine as
+   * `content/questions/*` holds them today. The fixture is fixed rather than
+   * read from the bank, because the claim is ADR-0068 §8's table and the table
+   * was written against these numbers. Total 493, the ADR's denominator.
+   */
+  const ELEVEN: readonly (readonly [string, number])[] = [
+    ['rights', 38],
+    ['who-we-are', 48],
+    ['history', 32],
+    ['government', 41],
+    ['building-canada', 65],
+    ['elections', 37],
+    ['justice', 39],
+    ['modern-canada', 40],
+    ['economy', 51],
+    ['symbols', 43],
+    ['regions', 59],
+  ];
+  const SUBJECTS = ELEVEN.map(([subject]) => subject);
+  const CAPACITIES = ELEVEN.map(([, capacity]) => capacity);
+  const HISTORY = SUBJECTS.indexOf('history');
+  const BUILDING = SUBJECTS.indexOf('building-canada');
+
+  const sum = (values: readonly number[]): number =>
+    values.reduce((total, value) => total + value, 0);
+
+  it('is the fixture ADR-0068 §8 was written against', () => {
+    expect(ELEVEN).toHaveLength(11);
+    expect(new Set(SUBJECTS).size).toBe(11);
+    expect(sum(CAPACITIES)).toBe(493);
+    expect((CAPACITIES[HISTORY] ?? 0) + (CAPACITIES[BUILDING] ?? 0)).toBe(97);
+    /* §8: "every capacity here is at least 2, so no subject fills up early". */
+    for (const capacity of CAPACITIES) expect(capacity).toBeGreaterThanOrEqual(2);
+  });
+
+  it('pins the exact quotas for a fixed seed', () => {
+    const quotas = allocateQuotas(20, CAPACITIES, createSeededRandom(2026));
+    const bySubject = Object.fromEntries(
+      SUBJECTS.map((subject, index) => [subject, quotas[index]]),
+    );
+    /* Seed 2026: symbols and who-we-are are the two dealt no extra question. */
+    expect(bySubject).toEqual({
+      rights: 2,
+      'who-we-are': 1,
+      history: 2,
+      government: 2,
+      'building-canada': 2,
+      elections: 2,
+      justice: 2,
+      'modern-canada': 2,
+      economy: 2,
+      symbols: 1,
+      regions: 2,
+    });
+    expect(sum(quotas)).toBe(20);
+    for (const quota of quotas) {
+      expect(quota).toBeGreaterThanOrEqual(1);
+      expect(quota).toBeLessThanOrEqual(2);
+    }
+    /* Replays from its seed: the pin is the stream, not a lucky draw. */
+    expect([...allocateQuotas(20, CAPACITIES, createSeededRandom(2026))]).toEqual([...quotas]);
+  });
+
+  it('asks twenty, one or two from every subject, nine of them two, for any seed', () => {
+    const seeds = Array.from({ length: 200 }, (_unused, index) => index + 1);
+    expect(seeds).toHaveLength(200);
+    for (const seed of seeds) {
+      const quotas = allocateQuotas(20, CAPACITIES, createSeededRandom(seed));
+      expect(quotas).toHaveLength(11);
+      expect(sum(quotas)).toBe(20);
+      for (const quota of quotas) {
+        expect(quota).toBeGreaterThanOrEqual(1);
+        expect(quota).toBeLessThanOrEqual(2);
+      }
+      expect(quotas.filter((quota) => quota === 2)).toHaveLength(9);
+    }
+  });
+
+  it("matches §8's table exactly, over every way the remainder can fall", () => {
+    /*
+     * 20 = 11 × 1 + 9, and floor(9 / 11) = 0, so the second round is one
+     * shuffle of all eleven and the first nine in it get the extra question.
+     * Which nine depends only on which two come last, and a uniform shuffle
+     * makes each of the C(11, 2) = 55 pairs equally likely (each is 2! × 9!
+     * orderings). So enumerating the 55 pairs through a stub whose `shuffle`
+     * puts that pair last is the exact distribution, not an estimate of it.
+     */
+    const stubPuttingLast = (left: number, right: number): RandomSource => ({
+      next: () => 0,
+      int: (minInclusive) => minInclusive,
+      pick: (items) => items[0],
+      shuffle: <T>(items: readonly T[]): readonly T[] => [
+        ...items.filter((item) => item !== left && item !== right),
+        ...items.filter((item) => item === left || item === right),
+      ],
+    });
+
+    const perSubjectTwos = SUBJECTS.map(() => 0);
+    const pairTotals = new Map<number, number>();
+    let pairs = 0;
+    for (let left = 0; left < 11; left += 1) {
+      for (let right = left + 1; right < 11; right += 1) {
+        const quotas = allocateQuotas(20, CAPACITIES, stubPuttingLast(left, right));
+        expect(sum(quotas)).toBe(20);
+        quotas.forEach((quota, index) => {
+          if (quota === 2) perSubjectTwos[index] = (perSubjectTwos[index] ?? 0) + 1;
+        });
+        const pair = (quotas[HISTORY] ?? 0) + (quotas[BUILDING] ?? 0);
+        pairTotals.set(pair, (pairTotals.get(pair) ?? 0) + 1);
+        pairs += 1;
+      }
+    }
+    expect(pairs).toBe(55);
+
+    /* "Each subject: 2 with p = 9/11, 1 with p = 2/11; mean 1.82". 9/11 of 55 is 45. */
+    for (const twos of perSubjectTwos) expect(twos).toBe(45);
+    expect(((45 * 2 + 10 * 1) / 55).toFixed(2)).toBe('1.82');
+
+    /* "history + building-canada: 4 with p = 72/110, 3 with p = 36/110,
+       2 with p = 2/110; mean 3.64 (18.2%)". Over 55 pairs: 36, 18 and 1. */
+    expect(Object.fromEntries(pairTotals)).toEqual({ 4: 36, 3: 18, 2: 1 });
+    const meanPair = (4 * 36 + 3 * 18 + 2 * 1) / 55;
+    expect(meanPair.toFixed(2)).toBe('3.64');
+    expect(((meanPair / 20) * 100).toFixed(1)).toBe('18.2');
+    /* "Any other subject: 1 in about 18% of exams": 10 of 55. */
+    expect(((10 / 55) * 100).toFixed(0)).toBe('18');
   });
 });
