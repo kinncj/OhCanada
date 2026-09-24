@@ -41,7 +41,6 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
-import { readLevelDocuments } from './lib/level-payload.mjs';
 import { SIDECAR_SCHEMA, checkScreenSidecars, screenArtTree } from './lib/screen-art.mjs';
 
 const argv = process.argv.slice(2);
@@ -662,12 +661,25 @@ for (const sidecar of screenArt.sidecars) {
   checkableSidecars.push({ ...sidecar, doc: done.data });
 }
 
-// Malformed level documents are the schema pass's to report; here only the ids
-// that exist matter.
-const levelIds = readLevelDocuments(ROOT, () => {})
-  .map((doc) => doc.id)
-  .sort();
-const sidecarCheck = checkScreenSidecars({ root: ROOT, sidecars: checkableSidecars, levelIds });
+// The places the map shows are the journey's named slots (ADR-0069 §6, the
+// boundary defect): the anchor rule is keyed there and not on content/levels/,
+// so a level document and its anchor land in their owners' own commits. A config
+// that is missing or malformed is the schema pass's to report; here it is `null`,
+// and the sidecar check refuses to call anything checked against it.
+const journeyPlaces = (() => {
+  try {
+    const config = JSON.parse(readFileSync(join(ROOT, 'content', 'game.config.json'), 'utf8'));
+    if (!Array.isArray(config?.journey)) return null;
+    return [...new Set(config.journey.filter((slot) => typeof slot === 'string'))].sort();
+  } catch {
+    return null;
+  }
+})();
+const sidecarCheck = checkScreenSidecars({
+  root: ROOT,
+  sidecars: checkableSidecars,
+  places: journeyPlaces,
+});
 failures.push(...sidecarCheck.failures);
 
 // -------------------------------------------- anti-vacuum, per printed count ---
@@ -837,7 +849,7 @@ const screenArtClause = !screenArt.exists
   : sidecarCheck.checked === 0
     ? 'no screen-art sidecar to check'
     : `${sidecarCheck.checked} screen-art sidecar(s) cross-checked: ${sidecarCheck.anchors} anchor(s) ` +
-      `against ${levelIds.length} level(s), the drawing's viewBox and its inset, ` +
+      `against ${journeyPlaces?.length ?? 0} journey place(s), the drawing's viewBox and its inset, ` +
       `${sidecarCheck.regions} region id(s) found in the drawing`;
 
 console.log(
