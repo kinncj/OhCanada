@@ -251,6 +251,7 @@ const EN = {
   'learn.error': 'We could not load this chapter. Check your connection and try again.',
   'learn.error.retry': 'Try again',
   'learn.chapter.empty': 'There is nothing to read in this chapter right now.',
+  'learn.chapter.the-oath-of-citizenship': 'The Oath of Citizenship',
   'learn.chapter.rights-and-responsibilities-of-citizenship':
     'Rights and Responsibilities of Citizenship',
   'learn.chapter.who-we-are': 'Who We Are',
@@ -1297,6 +1298,7 @@ const FR: Readonly<Record<CopyRow, string>> = {
     "Nous n'avons pas pu charger ce chapitre. Vérifiez votre connexion et réessayez.",
   'learn.error.retry': 'Réessayer',
   'learn.chapter.empty': "Il n'y a rien à lire dans ce chapitre pour le moment.",
+  'learn.chapter.the-oath-of-citizenship': 'Le serment de citoyenneté',
   'learn.chapter.rights-and-responsibilities-of-citizenship':
     'Les droits et responsabilités liés à la citoyenneté',
   'learn.chapter.who-we-are': 'Qui sommes-nous?',
