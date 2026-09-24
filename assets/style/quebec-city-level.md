@@ -681,6 +681,118 @@ the two dead ends named, so the third person to find it does not re-derive them.
 
 Same shape as `chateau-frontenac`. Until they land, `make verify-art` names two more failures.
 
+
+---
+
+## 13. Three tier-2 stops: the Wolfe and Montcalm monument, the Parliament Building, and Martello Tower 1
+
+**Added 2026-09-24.** `docs/plan/guide-coverage.md` §5.5 ranks Québec City's three read-stops first of the
+twelve it proposes, and ADR-0065 §2 prices each one: a drawing, a contract, a blind run and about 1 600 px of
+level. This is the art half. **The blurbs, the facts, the `read` steps and every edit to
+`content/levels/quebec-city.json` are the content author's** — as at Dow's Lake (`ottawa-level.md` §13),
+because the runtime parser refuses a POI with no `blurb` or `fact` and a partial stop stops the level loading.
+
+| key | source | authored px | decoded at 1× | what it is |
+|---|---|---|---|---|
+| `quebec-city-prop-wolfe-montcalm-monument` | `prop-wolfe-montcalm-monument@1x.svg` | 360 × 600 | 0.82 MiB | the obelisk in the Governors' Garden on its three-stage pedestal, with the garden's globe lamp |
+| `quebec-city-prop-hotel-du-parlement` | `prop-hotel-du-parlement@1x.svg` | 720 × 520 | 1.43 MiB | the Parliament Building's main façade, its two pavilion mansards and its central clock tower |
+| `quebec-city-prop-martello-tower` | `prop-martello-tower@1x.svg` | 560 × 440 | 0.94 MiB | Martello Tower 1 on the Plains of Abraham, with its stair, timber storey and chimney, in the park's snow |
+
+### What is drawn, and the decision behind each
+
+**The obelisk is asked for a type.** Its one unique feature is its inscription — one monument to both
+generals of the same battle — and this project draws no lettering, so both panels are blank and
+`expectedBlindAnswer` asks for *an obelisk*, naming it as accepted rather than required. That is the
+`pier-21` and `dows-lake` answer a third time. What it must carry is the **pedestal**: a plain obelisk is
+anybody's, and the die with its cornice, pediment and corner blocks over two wider stages is this one.
+Measured on the primary reference: shaft about 66 % of the height (63 % drawn), whole height about four
+times the plinth's width. No statue and no likeness of either general, under reference rule 4.
+
+**The Parliament Building may be named, and the failure to watch for is Ottawa.** It has a clock tower, as
+`peace-tower` does. The difference is drawn to be unmistakable: square truncated mansards in grey `slate`,
+round-headed windows and niches, an open iron crown — and no pointed arch, no copper-green roof and no spire
+anywhere, each written into `neverAdd` and scoped to this subject. Tower above the roofline 1.56 × the
+façade's height drawn against 1.5 measured. **No flag** on any of its three staffs (`OQ-ART-04`), and **no
+figure**: the bronze statues in the niches are real, named people, and the group at the foot of the tower
+depicts an Indigenous person, so every niche is drawn as its dark recess and `docs/content-review.md` is
+never engaged. The stone is `limestone`, the same ramp as `city-wall`, because it is the city's stone.
+
+**The Plains of Abraham are drawn as Martello Tower 1.** A park is not a drawable subject and a generic
+snowfield would be invented identity. Tower 1 is the standing, recognisable thing on the Plains: a squat
+battered drum (three quarters as tall as it is wide, measured), a raised door up an external stair, a
+timber upper storey, a low roof and a chimney. The failure to watch for is *a lighthouse*, because
+`peggys-cove-light` is in the same game: no lantern, no gallery, no band. The stone is `path`, the
+near-neutral ramp, because the real ashlar is a cool grey and `limestone` would warm it. **The tower dates
+from 1808–1812, not 1759**, and nothing in the drawing claims otherwise; what the stop teaches is the
+author's. The display cannon beside the real tower is not drawn.
+
+References, all licence-checked against the Commons API before download, none ShareAlike:
+
+| file | author | licence |
+|---|---|---|
+| `refs/quebec-city/wolfe-montcalm-obelisk.jpg` | Derek Hatfield | CC BY 2.0 |
+| `refs/quebec-city/wolfe-montcalm-monument-1901.jpg` | Detroit Photographic Co. (Library of Congress) | public domain |
+| `refs/quebec-city/parlement-east-facade.jpg` | Wilfredor | CC0 |
+| `refs/quebec-city/parlement-tower-from-fountain.jpg` | Wilfredor | CC0 |
+| `refs/quebec-city/martello-tower-1.jpg` | Wilfredor | CC0 |
+| `refs/quebec-city/plains-of-abraham-winter.jpg` | Wilfredor | CC0 |
+
+### Placement — the numbers for the level document
+
+The ground is flat at **y 1280**, so every stop takes that y. Each needs about 1 600 px, as the audit says,
+and the level grows from 6 048 to **10 848** to hold all three. **Option A moves nothing that exists** and
+appends the three in date order — 1759, the years after 1763, 1791:
+
+| id | x | y | radiusPx | artKey |
+|---|---|---|---|---|
+| `wolfe-montcalm` | **6 400** | 1280 | 240 | `quebec-city-prop-wolfe-montcalm-monument` |
+| `martello-tower` | **8 000** | 1280 | 250 | `quebec-city-prop-martello-tower` |
+| `hotel-du-parlement` | **9 600** | 1280 | 260 | `quebec-city-prop-hotel-du-parlement` |
+
+`size.x` **10 848**, and the `ground` polyline extended flat to it; every layer and the ground dressing tile,
+so no art changes. Gaps of 1 600 px, well over any pair of radii. 9 600 falls inside the footbridge-free
+window §3 derives (1 458 + 2 016k … 1 632 + 2 016k); 6 400 falls on the footbridge span, which is a
+composition preference only, because a POI draws above every layer.
+
+**Option B keeps §12's walk through the centuries intact**, and it is the one this sheet would pick: the
+obelisk takes the kiosk's slot beside the wall that already teaches the battle, and the 1880 anthem moves to
+the end. It moves one existing POI, which is the author's call and not art's:
+`wolfe-montcalm` 4 800, `martello-tower` 6 400, `hotel-du-parlement` 8 000, `terrace-kiosk` 4 800 → **9 600**,
+same size and y. Built alone, a single stop needs only the first row of either option and a `size.x` of 7 648.
+
+### Budgets, measured 2026-09-24
+
+```
+level-payload:  OK - quebec-city 0.67 MiB of 8.00 MiB over 20 file(s)
+texture-memory: quebec-city FILES 36.58 MiB of 40.00 MiB
+                CHARGED 38.30 MiB of 40.00 MiB (96%, 1 784 112 B spare) = files + 1.72 MiB character surface
+```
+
+The three cost **3 347 200 B = 3.19 MiB of decoded texture** (864 000 + 1 497 600 + 985 600) and moved the
+level from 35.11 to 38.30 MiB charged, 88 % → 96 %. **They fit, but with less room than the audit printed.**
+§5.5 says 6.61 MiB spare; the gate measured 4.89 MiB before this work, because it now charges the character
+surface that the audit's figure predates. What is left, 1.70 MiB, is not a fourth stop at the safe 2.03 MiB.
+The cheapest room available is §5's standing finding: the two POI markers and the snow particle, 0.55 MiB,
+are packed and charged and referenced by nothing. At 2× the three would cost 12.77 MiB and break the budget,
+which is why all three are pinned to 1×.
+
+### The two-size test, and what is still owed
+
+Run at the shipping sizes. At 120 px tall the obelisk is a tapering spike on a stepped block beside a
+three-globe lamp; the Parliament is a long block with a tall central tower and a steep truncated roof at
+each end, clock still legible; the tower is a squat tapering drum under a low roof with a chimney and a
+diagonal stair. **That is the drawer's self-check and not an identification.** `make verify-art` builds all
+three into the hand-off with anonymisation held and reports each **NEVER CHECKED**; a blind pass by a party
+that has not seen this work is owed.
+
+### The builder patch `scripts/lib/art-handoff.mjs` needed, and has
+
+```js
+  'wolfe-montcalm': singleSource(),
+  'hotel-du-parlement': singleSource(),
+  'martello-tower': singleSource(),
+```
+
 ---
 
 ## Ground dressing (ADR-0042)

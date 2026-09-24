@@ -392,6 +392,23 @@ questions into ADR-0057's taught set. Québec's three stops place 12 of its 65 o
 is the argument for tier 3. Whichever passages a stop reads, they must also fit 120 words: four of the
 longest `history-01` passages would not.
 
+**Québec City's three, authored 2026-09-24** (author half; blurbs in the null verification form, waiting on
+the verifier). Placement is `quebec-city-level.md` §13 Option A: `wolfe-montcalm-monument` at x 6400,
+`martello-tower` at 8000, `hotel-du-parlement` at 9600, level width 10,848, no existing stop moved. Each is a
+read-only stop, and the quest's three `answer` steps are unchanged.
+
+| Stop | Blurb tells | Reads |
+|---|---|---|
+| `wolfe-montcalm-monument` | p. 25, both commanders killed (`hist-18`) | `history-01`: `h1-french-empire-leaders`, `h1-english-colonies-grew-larger`, `h1-france-and-britain-fight-for-the-continent` |
+| `martello-tower` | p. 26, habitants or Canadiens kept their way of life (`hist-96`) | `history-02`: `h2-renamed-province-of-quebec`, `h2-quebec-act-passed-1774`, `h2-quebec-act-is-a-foundation`, `h2-thirteen-colonies-become-the-united-states` |
+| `hotel-du-parlement` | p. 27, the Constitutional Act divided the Province of Quebec (`hist-25`) | `history-02`: `h2-democracy-grew-step-by-step`, `h2-pei-1773-and-nb-1785`, `h2-british-north-america` |
+
+The table above named `history-04` for the Plains and `history-02` for the Parliament Building. That was
+written before ADR-0068. Responsible government and Confederation (`history-04`) now fall in
+`building-canada`, Kingston's remit, so both stops read from `history-02`, which is in Québec City's half.
+`h2-canadiens-kept-their-way-of-life` and `h2-two-canadas-were-different` are left out because the stop's own
+blurb quote contains them. That places 10 passages, not 12.
+
 ### 5.6 Tier 3: new cities
 
 The ceiling is Σ⌊verified ÷ 30⌋ = **12**. There are 10 levels, so headroom is **2**. Only `history`

@@ -300,6 +300,9 @@ and none is interpolated. No row exists for `pier-21`, `chateau-frontenac`, `cn-
 | `hud.interact.village-house` | Look at the house | Regarder la maison |
 | `hud.interact.city-wall` | Look at the wall | Regarder le mur |
 | `hud.interact.terrace-kiosk` | Look at the bandstand | Regarder le kiosque |
+| `hud.interact.wolfe-montcalm-monument` | Look at the monument | Regarder le monument |
+| `hud.interact.martello-tower` | Look at the tower | Regarder la tour |
+| `hud.interact.hotel-du-parlement` | Look at the Parliament Building | Regarder l'hôtel du Parlement |
 | `hud.interact.rideau-locks` | Look at the locks | Regarder les écluses |
 | `hud.interact.library-of-parliament` | Look at the Library | Regarder la Bibliothèque |
 | `hud.interact.warming-hut` | Look at the hut | Regarder la cabane |

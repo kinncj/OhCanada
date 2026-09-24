@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" shape-rendering="geometricPrecision">
+  <title>Martello Tower 1 on the Plains of Abraham, in Battlefields Park, Québec City, in winter: a squat, round, grey stone tower, battered so its drum is wider at the foot than at the top, with sparse curved coursing that reads round, a small shuttered arched window, a raised first-floor door reached only by a straight external timber stair and a railed landing on posts, a dark timber upper storey with two small windows set on the drum, a low hipped roof with a deep eave under snow, a stone chimney, and one of the park's green iron lantern lamps in the open snow beside it. The drum is about three quarters as tall as it is wide, measured on the primary reference. No cannon, no flag, no plaque, no lettering and no figure. Drawn from assets/refs/quebec-city/martello-tower-1.jpg, with the snow-covered park and its lantern lamps from plains-of-abraham-winter.jpg; every colour is from palette.json. See assets/refs/references.json, subject martello-tower. POI hero, present at every visual tier.</title>
+
+  <!-- The park's lamp standard, green iron with a lantern head, standing in the snow to the right. -->
+  <rect x="506" y="258" width="8" height="150" rx="4" fill="#154536"/>
+  <rect x="506" y="258" width="3" height="150" fill="#2c8055"/>
+  <rect x="500" y="398" width="20" height="12" rx="4" fill="#154536"/>
+  <polygon points="496,236 524,236 519,262 501,262" fill="#154536"/>
+  <rect x="501" y="240" width="18" height="18" rx="2" fill="#f0f2f5"/>
+  <rect x="503" y="242" width="6" height="14" fill="#ffffff"/>
+  <polygon points="494,238 510,222 526,238" fill="#154536"/>
+  <rect x="507" y="214" width="6" height="10" rx="3" fill="#154536"/>
+
+  <!-- AO where the drum meets the snow. -->
+  <ellipse cx="310" cy="412" rx="170" ry="12" fill="#16203a" opacity="0.28"/>
+
+  <!-- The drum: a squat round stone tower, battered so it is wider at the foot, lit on the left and in shade on the right. -->
+  <polygon points="155,410 445,410 431,192 169,192" fill="#8b857c"/>
+  <polygon points="155,410 233,410 241,192 169,192" fill="#afaca5"/>
+  <polygon points="375,410 445,410 431,192 367,192" fill="#605a55"/>
+  <clipPath id="lit"><polygon points="155,410 233,410 241,192 169,192"/></clipPath>
+  <clipPath id="mid"><polygon points="233,410 375,410 367,192 241,192"/></clipPath>
+  <g clip-path="url(#lit)">
+    <path d="M 166.4 232 Q 300 212 433.6 232 L 433.6 238 Q 300 218 166.4 238 Z" fill="#8b857c"/>
+    <path d="M 163.7 274 Q 300 254 436.3 274 L 436.3 280 Q 300 260 163.7 280 Z" fill="#8b857c"/>
+    <path d="M 161.0 316 Q 300 296 439.0 316 L 439.0 322 Q 300 302 161.0 322 Z" fill="#8b857c"/>
+    <path d="M 158.3 358 Q 300 338 441.7 358 L 441.7 364 Q 300 344 158.3 364 Z" fill="#8b857c"/>
+  </g>
+  <g clip-path="url(#mid)">
+    <path d="M 166.4 232 Q 300 212 433.6 232 L 433.6 238 Q 300 218 166.4 238 Z" fill="#605a55"/>
+    <path d="M 163.7 274 Q 300 254 436.3 274 L 436.3 280 Q 300 260 163.7 280 Z" fill="#605a55"/>
+    <path d="M 161.0 316 Q 300 296 439.0 316 L 439.0 322 Q 300 302 161.0 322 Z" fill="#605a55"/>
+    <path d="M 158.3 358 Q 300 338 441.7 358 L 441.7 364 Q 300 344 158.3 364 Z" fill="#605a55"/>
+  </g>
+
+  <!-- The shuttered window on the drum. -->
+  <path d="M 334 340 L 334 308 A 18 18 0 0 1 370 308 L 370 340 Z" fill="#605a55"/>
+  <path d="M 338 336 L 338 308 A 14 14 0 0 1 366 308 L 366 336 Z" fill="#5a2d19"/>
+  <rect x="350" y="298" width="4" height="38" fill="#96632f"/>
+  <rect x="334" y="336" width="36" height="6" fill="#afaca5"/>
+
+  <!-- The raised first-floor door, reached only by the external stair. -->
+  <rect x="169.881" y="300" width="24" height="48" rx="3" fill="#0f121a"/>
+  <rect x="169.881" y="300" width="24" height="5" fill="#605a55"/>
+
+  <!-- The timber upper storey set on the drum, in the shadow of the eave, with its two small windows. -->
+  <rect x="169" y="138" width="262" height="56" fill="#5a2d19"/>
+  <rect x="169" y="138" width="26" height="56" fill="#96632f"/>
+  <rect x="257" y="150" width="28" height="26" rx="2" fill="#f0f2f5"/>
+  <rect x="261" y="154" width="9" height="18" fill="#0f121a"/>
+  <rect x="273" y="154" width="8" height="18" fill="#0f121a"/>
+  <rect x="315" y="150" width="28" height="26" rx="2" fill="#f0f2f5"/>
+  <rect x="319" y="154" width="9" height="18" fill="#0f121a"/>
+  <rect x="331" y="154" width="8" height="18" fill="#0f121a"/>
+  <rect x="169" y="188" width="262" height="8" fill="#16203a" opacity="0.18"/>
+  <rect x="169" y="138" width="262" height="10" fill="#16203a" opacity="0.18"/>
+
+  <!-- The low hipped roof with its deep eave, under snow. -->
+  <polygon points="149,142 451,142 370,106 230,106" fill="#57647a"/>
+  <polygon points="149,142 163,142 240,106 230,106" fill="#7d8fa0"/>
+  <rect x="147" y="138" width="306" height="8" rx="3" fill="#30384f"/>
+  <path d="M 147 140 L 228 104 Q 300 94 372 104 L 453 140 Q 300 130 147 140 Z" fill="#e6eff7"/>
+  <path d="M 147 140 L 228 104 Q 300 94 372 104 L 364 108 Q 300 100 236 108 L 157 138 Z" fill="#ffffff"/>
+
+  <!-- The chimney, stone, capped with snow. -->
+  <rect x="248" y="58" width="26" height="46" fill="#8b857c"/>
+  <rect x="248" y="58" width="9" height="46" fill="#afaca5"/>
+  <rect x="268" y="58" width="6" height="46" fill="#605a55"/>
+  <rect x="244" y="52" width="34" height="9" fill="#8b857c"/>
+  <rect x="244" y="46" width="34" height="8" rx="4" fill="#e6eff7"/>
+
+  <!-- The external timber stair: a straight flight up the face of the drum to a landing on posts at the door. -->
+  <rect x="119.11" y="340" width="70" height="8" fill="#96632f"/>
+  <rect x="119.11" y="340" width="70" height="3" fill="#c5994d"/>
+  <rect x="121.11" y="348" width="8" height="62" fill="#5a2d19"/>
+  <rect x="173.11" y="348" width="8" height="62" fill="#5a2d19"/>
+  <rect x="119.11" y="316" width="6" height="26" fill="#96632f"/>
+  <rect x="119.11" y="316" width="64" height="5" fill="#96632f"/>
+  <rect x="132.11" y="321" width="4" height="20" fill="#96632f"/>
+  <rect x="145.11" y="321" width="4" height="20" fill="#96632f"/>
+  <rect x="158.11" y="321" width="4" height="20" fill="#96632f"/>
+  <rect x="171.11" y="321" width="4" height="20" fill="#96632f"/>
+  <polygon points="179.11,348 289.11,410 289.11,398 179.11,336" fill="#96632f"/>
+  <rect x="187.11" y="346" width="14" height="4" fill="#c5994d"/>
+  <rect x="202.11" y="354.5" width="14" height="4" fill="#c5994d"/>
+  <rect x="217.11" y="363" width="14" height="4" fill="#c5994d"/>
+  <rect x="232.11" y="371.5" width="14" height="4" fill="#c5994d"/>
+  <rect x="247.11" y="380" width="14" height="4" fill="#c5994d"/>
+  <rect x="262.11" y="388.5" width="14" height="4" fill="#c5994d"/>
+  <rect x="277.11" y="397" width="14" height="4" fill="#c5994d"/>
+  <polygon points="179.11,314 295.11,378 295.11,384 179.11,320" fill="#96632f"/>
+  <rect x="198.11" y="327.5" width="4" height="26" fill="#96632f"/>
+  <rect x="217.11" y="338" width="4" height="26" fill="#96632f"/>
+  <rect x="236.11" y="348.5" width="4" height="26" fill="#96632f"/>
+  <rect x="255.11" y="359" width="4" height="26" fill="#96632f"/>
+  <rect x="274.11" y="369.5" width="4" height="26" fill="#96632f"/>
+  <rect x="289.11" y="376" width="6" height="34" fill="#5a2d19"/>
+
+  <!-- The snow of the Plains. The file's bottom edge IS the level ground line. -->
+  <path d="M 0 440 L 0 404 Q 140 396 280 406 Q 420 416 560 400 L 560 440 Z" fill="#e6eff7"/>
+  <path d="M 0 404 Q 140 396 280 406 Q 420 416 560 400 L 560 410 Q 420 426 280 416 Q 140 406 0 414 Z" fill="#ffffff"/>
+  <path d="M 0 440 L 0 428 Q 280 442 560 424 L 560 440 Z" fill="#c2d6e8"/>
+</svg>

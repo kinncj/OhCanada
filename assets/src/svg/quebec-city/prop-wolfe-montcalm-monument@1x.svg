@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="600" viewBox="0 0 360 600" shape-rendering="geometricPrecision">
+  <title>The Wolfe and Montcalm monument in the Governors' Garden, Québec City, in winter: a tall, slender, square stone obelisk in grey stone, tapering from 56 px at its foot to 30 px under a pale capstone pyramid, lit on its left edge and in shade on its right return, standing on a three-stage pedestal - a die with a projecting cornice, a low central pediment and raised corner blocks, a plain plaque panel on its face; a wider lower pedestal with a second, larger plain panel; and a broad plinth - with snow on every ledge, a snow bank at its foot, and the garden's three-globe lamp standard beside it. The shaft is about two thirds of the whole height (66 per cent on the primary reference, 63 drawn) and the height is about four times the width of the plinth. No statue, no figure, no portrait, no lettering: both plaques are drawn blank, because this project draws no text and the inscription is the only writing on the monument. No flag, no cannon, no wreath. Drawn from assets/refs/quebec-city/wolfe-montcalm-obelisk.jpg, with the die, its cornice and corner blocks and the stepped pedestal checked against wolfe-montcalm-monument-1901.jpg; every colour is from palette.json. See assets/refs/references.json, subject wolfe-montcalm. POI hero, present at every visual tier.</title>
+
+  <!-- The garden's lamp standard, behind the monument and to the left. -->
+  <rect x="62" y="446" width="8" height="126" rx="4" fill="#30384f"/>
+  <rect x="62" y="446" width="3" height="126" fill="#57647a"/>
+  <rect x="42" y="470" width="48" height="6" rx="3" fill="#30384f"/>
+  <rect x="56" y="560" width="20" height="14" rx="4" fill="#30384f"/>
+  <circle cx="40" cy="462" r="11" fill="#f0f2f5"/>
+  <circle cx="37" cy="459" r="4" fill="#ffffff"/>
+  <circle cx="92" cy="462" r="11" fill="#f0f2f5"/>
+  <circle cx="89" cy="459" r="4" fill="#ffffff"/>
+  <circle cx="66" cy="434" r="12" fill="#f0f2f5"/>
+  <circle cx="63" cy="431" r="4" fill="#ffffff"/>
+
+  <!-- AO where the plinth meets the snow. -->
+  <ellipse cx="200" cy="574" rx="104" ry="12" fill="#16203a" opacity="0.28"/>
+
+  <!-- The shaft: a square obelisk, lit edge on the left, return face in shade on the right. -->
+  <polygon points="185,60 215,60 228,402 172,402" fill="#57647a"/>
+  <polygon points="185,60 192,60 181,402 172,402" fill="#7d8fa0"/>
+  <polygon points="209,60 215,60 228,402 218,402" fill="#30384f"/>
+
+  <!-- The capstone pyramid, pale stone. -->
+  <polygon points="200,34 183,62 217,62" fill="#a99789"/>
+  <polygon points="200,34 183,62 196,62" fill="#c8c1b6"/>
+  <polygon points="200,34 209,62 217,62" fill="#8a6256"/>
+
+  <!-- The die: a projecting cornice with a low central pediment and raised corner blocks. -->
+  <rect x="163" y="412" width="74" height="50" fill="#57647a"/>
+  <rect x="163" y="412" width="10" height="50" fill="#7d8fa0"/>
+  <rect x="227" y="412" width="10" height="50" fill="#30384f"/>
+  <rect x="183" y="424" width="34" height="22" rx="2" fill="#f0f2f5"/>
+  <rect x="183" y="440" width="34" height="6" fill="#cbd2da"/>
+  <rect x="152" y="400" width="96" height="13" rx="3" fill="#7d8fa0"/>
+  <rect x="152" y="408" width="96" height="5" fill="#30384f"/>
+  <polygon points="166,401 200,382 234,401" fill="#7d8fa0"/>
+  <polygon points="200,382 234,401 214,401" fill="#57647a"/>
+  <polygon points="166,399 200,380 200,385 172,401" fill="#ffffff"/>
+  <rect x="150" y="386" width="16" height="16" rx="3" fill="#7d8fa0"/>
+  <rect x="234" y="386" width="16" height="16" rx="3" fill="#57647a"/>
+  <rect x="150" y="383" width="16" height="5" rx="2" fill="#ffffff"/>
+  <rect x="234" y="383" width="16" height="5" rx="2" fill="#e6eff7"/>
+  <rect x="166" y="397" width="68" height="5" rx="2" fill="#e6eff7"/>
+  <rect x="163" y="462" width="74" height="6" fill="#16203a" opacity="0.18"/>
+
+  <!-- The lower pedestal, wider, with the larger panel. -->
+  <rect x="148" y="468" width="104" height="48" fill="#57647a"/>
+  <rect x="148" y="468" width="14" height="48" fill="#7d8fa0"/>
+  <rect x="238" y="468" width="14" height="48" fill="#30384f"/>
+  <rect x="169" y="474" width="62" height="34" rx="2" fill="#f0f2f5"/>
+  <rect x="169" y="501" width="62" height="7" fill="#cbd2da"/>
+  <rect x="142" y="458" width="116" height="12" rx="3" fill="#7d8fa0"/>
+  <rect x="142" y="465" width="116" height="5" fill="#30384f"/>
+  <rect x="142" y="452" width="116" height="8" rx="3" fill="#e6eff7"/>
+  <rect x="142" y="452" width="116" height="3" rx="1.5" fill="#ffffff"/>
+  <rect x="148" y="516" width="104" height="6" fill="#16203a" opacity="0.18"/>
+
+  <!-- The plinth, broadest, stepped out once. -->
+  <rect x="134" y="522" width="132" height="54" fill="#57647a"/>
+  <rect x="134" y="522" width="18" height="54" fill="#7d8fa0"/>
+  <rect x="248" y="522" width="18" height="54" fill="#30384f"/>
+  <rect x="134" y="540" width="132" height="4" fill="#30384f"/>
+  <rect x="130" y="514" width="140" height="10" rx="3" fill="#e6eff7"/>
+  <rect x="130" y="514" width="140" height="3" rx="1.5" fill="#ffffff"/>
+
+  <!-- The snow bank at the foot. The file's bottom edge IS the level ground line. -->
+  <path d="M 0 600 L 0 566 Q 90 552 180 568 Q 270 584 360 562 L 360 600 Z" fill="#e6eff7"/>
+  <path d="M 0 566 Q 90 552 180 568 Q 270 584 360 562 L 360 572 Q 270 594 180 578 Q 90 562 0 576 Z" fill="#ffffff"/>
+  <path d="M 0 600 L 0 588 Q 180 600 360 584 L 360 600 Z" fill="#c2d6e8"/>
+</svg>
