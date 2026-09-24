@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="520" viewBox="0 0 1920 520" shape-rendering="geometricPrecision">
-  <title>The riverside promenade the player walks: a LIMESTONE SLAB pavement - six courses graded so the near ones are taller, a 96 px slab period staggered half a slab per course, adjacent slabs in different tones - behind a low limestone parapet with piers over the river, with lamps, benches, planters, three street trees and six people. THE TREES ARE MAPLES AND ARE DRAWN AS TREES, which is the correction this build exists for: each was a single flat tan ELLIPSE on a straight stick, and in the played scene - beside a green one of the same construction - it read as a lollipop or a mushroom cap, on the one level whose POI teaches the maple leaf. Each crown is now eight overlapping circles of six different radii, so its edge is scalloped and lobed rather than one smooth arc, in three tones running light at the upper left to shade at the lower right; each trunk tapers into THREE BRANCHES that show in the open band between the trunk head and the underside of the crown. Two crowns take the saturated `oxide` ramp for autumn red and one the `grass` ramp for green, replacing the near-neutral khaki `wood` tan the ellipses carried. The construction is the POI maple's, so the tree the player walks past and the tree on the card are the same species drawn the same way. Two sett courses then four slab courses, the near ones much taller: SLABS AND NOT PLANKS, deliberately: Halifax's tile is a timber deck and read as pavement once already, so this level's pavement is drawn as what it is, with a cross-joint grid rather than long boards, and its parapet is stone rather than a timber kerb. Every object is a TYPE - a plain lamp standard, a plain bench, a plain planter - because this tile repeats every 1920 px and furniture that is really architecture is architecture. The six figures stand at the parapet, across the promenade, which is why they are drawn at about 165 px rather than the player's 420; they are six heads tall like every character in the game and carry no cultural marker of any kind. World y 800..1320; local y 480 IS the ground line at world 1280, and the tile is opaque from world 1150 down. The tile is 80 px taller than the band it needs, and the whole drawing is translated down by that much, so the tallest street tree's canopy is not clipped by the tile's own top edge - which it was at 440.</title>
+  <title>The riverside promenade the player walks: a LIMESTONE SLAB pavement - six courses graded so the near ones are taller, a 96 px slab period staggered half a slab per course, adjacent slabs in different tones - behind a low limestone parapet with piers over the river, with lamps, benches, planters, three street trees and six people. THE TREES ARE MAPLES AND ARE DRAWN AS TREES, which is the correction this build exists for: each was a single flat tan ELLIPSE on a straight stick, and in the played scene - beside a green one of the same construction - it read as a lollipop or a mushroom cap, on the one level whose POI teaches the maple leaf. Each crown is now eight overlapping circles of six different radii, so its edge is scalloped and lobed rather than one smooth arc, in three tones running light at the upper left to shade at the lower right; each trunk tapers into THREE BRANCHES that show in the open band between the trunk head and the underside of the crown. Two crowns take the `brass` ramp for autumn GOLD and one the `grass` ramp for green, which is EARLY AUTUMN, gold and green together, as the reference photograph winnipeg/cmhr-from-the-forks-tower.jpg shows the Forks' street trees: ochre-gold and green, with no red crown in it. RECOLOURED 2026-09-24 FROM `oxide`: an earlier pass drew these two crowns in the POI maple's red, which contradicted this subject's contract (gold and green) and autumn-maple's (the hero's red must be distinguishable at a glance from the tile trees), and blind run 7e6b1463748d4299 failed the subject for it. The construction is the POI maple's - eight lobes, three branches - but the colour deliberately is not, so the one red tree on the level is the hero the player stops at. Two sett courses then four slab courses, the near ones much taller: SLABS AND NOT PLANKS, deliberately: Halifax's tile is a timber deck and read as pavement once already, so this level's pavement is drawn as what it is, with a cross-joint grid rather than long boards, and its parapet is stone rather than a timber kerb. Every object is a TYPE - a plain lamp standard, a plain bench, a plain planter - because this tile repeats every 1920 px and furniture that is really architecture is architecture. The six figures stand at the parapet, across the promenade, which is why they are drawn at about 165 px rather than the player's 420; they are six heads tall like every character in the game and carry no cultural marker of any kind. World y 800..1320; local y 480 IS the ground line at world 1280, and the tile is opaque from world 1150 down. The tile is 80 px taller than the band it needs, and the whole drawing is translated down by that much, so the tallest street tree's canopy is not clipped by the tile's own top edge - which it was at 440.</title>
   <g transform="translate(0,80)">
   <rect x="0" y="270" width="1920" height="250" fill="#a99789"/>
   <rect x="0" y="270" width="1920" height="9" fill="#c8c1b6"/>
@@ -430,14 +430,14 @@
   <polygon points="440,192 518,142 518,136 440,186" fill="#5a2d19"/>
   <polygon points="424,176 426,116 436,116 438,176" fill="#96632f"/>
   <polygon points="438,176 436,116 432,116 432,176" fill="#5a2d19"/>
-  <circle cx="518" cy="66" r="62" fill="#4e0e10"/>
-  <circle cx="470" cy="86" r="44" fill="#4e0e10"/>
-  <circle cx="486" cy="30" r="70" fill="#91301c"/>
-  <circle cx="392" cy="78" r="54" fill="#91301c"/>
-  <circle cx="330" cy="44" r="52" fill="#91301c"/>
-  <circle cx="428" cy="-2" r="72" fill="#cf5d2b"/>
-  <circle cx="352" cy="14" r="62" fill="#cf5d2b"/>
-  <circle cx="292" cy="78" r="44" fill="#cf5d2b"/>
+  <circle cx="518" cy="66" r="62" fill="#935a18"/>
+  <circle cx="470" cy="86" r="44" fill="#935a18"/>
+  <circle cx="486" cy="30" r="70" fill="#d6a727"/>
+  <circle cx="392" cy="78" r="54" fill="#d6a727"/>
+  <circle cx="330" cy="44" r="52" fill="#d6a727"/>
+  <circle cx="428" cy="-2" r="72" fill="#e1c368"/>
+  <circle cx="352" cy="14" r="62" fill="#e1c368"/>
+  <circle cx="292" cy="78" r="44" fill="#e1c368"/>
   <ellipse cx="430" cy="332" rx="109.44" ry="9" fill="#16203a" opacity="0.28"/>
   <rect x="1051" y="190" width="18" height="140" fill="#5a2d19"/>
   <rect x="1051" y="190" width="6" height="140" fill="#96632f"/>
@@ -464,14 +464,14 @@
   <polygon points="1570,190 1650,142 1650,136 1570,184" fill="#5a2d19"/>
   <polygon points="1554,174 1556,114 1566,114 1568,174" fill="#96632f"/>
   <polygon points="1568,174 1566,114 1562,114 1562,174" fill="#5a2d19"/>
-  <circle cx="1652" cy="62" r="64" fill="#4e0e10"/>
-  <circle cx="1600" cy="88" r="46" fill="#4e0e10"/>
-  <circle cx="1618" cy="24" r="72" fill="#91301c"/>
-  <circle cx="1520" cy="76" r="56" fill="#91301c"/>
-  <circle cx="1458" cy="46" r="52" fill="#91301c"/>
-  <circle cx="1556" cy="0" r="74" fill="#cf5d2b"/>
-  <circle cx="1480" cy="14" r="62" fill="#cf5d2b"/>
-  <circle cx="1420" cy="78" r="44" fill="#cf5d2b"/>
+  <circle cx="1652" cy="62" r="64" fill="#935a18"/>
+  <circle cx="1600" cy="88" r="46" fill="#935a18"/>
+  <circle cx="1618" cy="24" r="72" fill="#d6a727"/>
+  <circle cx="1520" cy="76" r="56" fill="#d6a727"/>
+  <circle cx="1458" cy="46" r="52" fill="#d6a727"/>
+  <circle cx="1556" cy="0" r="74" fill="#e1c368"/>
+  <circle cx="1480" cy="14" r="62" fill="#e1c368"/>
+  <circle cx="1420" cy="78" r="44" fill="#e1c368"/>
   <ellipse cx="1560" cy="332" rx="115.2" ry="9" fill="#16203a" opacity="0.28"/>
   <rect x="560" y="300" width="116" height="9" fill="#96632f"/>
   <rect x="560" y="300" width="116" height="3" fill="#c5994d"/>

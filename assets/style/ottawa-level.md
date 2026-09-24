@@ -626,7 +626,7 @@ first lesson-reading step, so ADR-0065 §2 authorises a sixth, and this is its a
 
 | key | source | authored px | what it is |
 |---|---|---|---|
-| `ottawa-prop-dows-lake-pavilion` | `prop-dows-lake-pavilion@1x.svg` | 600 × 400 | **POI hero**: the pavilion at Dow's Lake, on piles over the lake ice, with the skateway's lane spruces in front of it |
+| `ottawa-prop-dows-lake-pavilion` | `prop-dows-lake-pavilion@1x.svg` | 600 × 400 | **POI hero**: the pavilion at Dow's Lake, on piles over the lake ice, in front of it the cleared skating lane — crossing blade tracks, a swept windrow with the lane spruces on it, two plank skate-change benches and a stair from the ice to the deck |
 
 ### What is drawn, and why each piece is there
 
@@ -678,6 +678,21 @@ requirement, in front of an auditor that has the contract open.
 That one is a 560 × 360 timber box with a shallow gable, two lit windows and a red panel; this is a 600 × 400
 glass pavilion on piles with a stair. Nothing is shared but the surface, and `references.json` says so under
 both subjects so a verifier who sees the two does not report a duplication.
+
+**Redrawn 2026-09-24: the ice now says SKATING.** Blind run `7e6b1463748d4299` failed this subject at every size.
+The verifier read *a modern building raised on piles at a frozen northern shore* and named the Legislative
+Assembly of Nunavut — piles for permafrost — and wrote that nothing in the frame said the ice was a skating
+lake or a canal: the ice was a 60 px strip with six straight bars, which read as ripples, and the figure
+that would have said *skaters* is forbidden. The building drawing is untouched and now stands at 0.82 of its
+first size, raised, so the bottom fifth of the file is the **cleared lane**, and every piece of it is in a
+reference: eleven long **crossing blade tracks** (`rideau-canal-skateway-ice.jpg`, which was added to the
+subject's `referenceFiles`), the swept **snow windrow** along the lane's far edge with the three spruces
+standing on it (`dows-lake-skateway-lane.jpg`), two plain **plank skate-change benches** on the ice
+(`rideau-canal-skateway-ice.jpg`), and the short **stair from the ice up to the deck**
+(`dows-lake-pavilion-elevation.jpg`). The lake runs in under the deck between the piles in `snow-shade`, so
+the building still stands in the lake. No person, no sign, no kilometre post, no rink fitting. The
+benches used to be on the subject's `simplifyAway` list and were brought back; `references.json` says so.
+Cost: none — the canvas is unchanged. Unproven until a blind run scores it.
 
 **Refused:** the tenant's signage, awnings and string lights (most of what the references show); the flag on
 the mast at the far end (`OQ-ART-04` is open); a Winterlude dome, marquee or ice sculpture, which is kit put
