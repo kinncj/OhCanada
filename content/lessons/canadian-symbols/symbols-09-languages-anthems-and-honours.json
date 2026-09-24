@@ -270,9 +270,9 @@
           "quote": "served in the British Army in the Charge of the Light Brigade at Balaclava (1854) in the Crimean War, and was the first Canadian to be awarded the Victoria Cross."
         },
         "verification": {
-          "status": "rejected",
+          "status": "verified",
           "model": "claude-opus-5-5",
-          "checkedAt": "2026-09-24T01:41:00Z",
+          "checkedAt": "2026-09-24T01:48:09Z",
           "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
           "evidence": "Then lieutenant Alexander Roberts Dunn, born in present-day Toronto, served in the British Army in the Charge of the Light Brigade at Balaclava (1854) in the Crimean War, and was the first Canadian to be awarded the Victoria Cross."
         }
