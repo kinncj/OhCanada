@@ -49,7 +49,7 @@ Five SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `toronto-layer-10-sky` | `layer-10-sky.svg` | 1080 × 960 | 23 | a bleached hazy sky with five soft cloud banks |
 | `toronto-layer-20-skyline` | `layer-20-skyline.svg` | 1800 × 420 | 166 | sixteen generic towers standing out of an opaque haze band |
 | `toronto-layer-30-podium` | `layer-30-podium.svg` | 2016 × 270 | 81 | the street wall: brick warehouses, glass podiums, awnings |
-| `toronto-layer-40-boulevard` | `layer-40-boulevard.svg` | 1440 × 400 | 142 | the trail itself, its verge, trees, lamps, bench, bike rack, wayfinding post, two riders and one walker |
+| `toronto-layer-40-boulevard` | `layer-40-boulevard.svg` | 1440 × 400 | 142 | the trail itself, its verge, trees, lamps, bench, bike rack, two riders and one walker |
 | `toronto-landmark-cn-tower` | `landmark-cn-tower@1x.svg` | 700 × 1020 | 49 | **the POI hero**, and the only thing in this level that names a city |
 
 Shape counts are **reported, not budgeted** (ADR-0025). The landmark is 49 shapes and it is the most
@@ -95,9 +95,37 @@ concrete, dark glass and blue-green glass. No CN Tower, no coloured crown, no ch
 
 Québec City taught this the hard way one level earlier, and the lesson was not about a building: a striped
 bandstand kiosk was drawn into a repeating tile *as street furniture*, and a blind verifier named the place
-off it. Furniture that is really architecture is architecture. The bench, the bike rack, the lamps and the
-wayfinding post on this level's boulevard are drawn as types for that reason, and the bicycles in the rack
+off it. Furniture that is really architecture is architecture. The bench, the bike rack and the lamps on this
+level's boulevard are drawn as types for that reason, and the bicycles in the rack
 carry **no operator livery** — they are in palette colours precisely so they do not become a mark.
+
+### No sign, blank or otherwise — decided 2026-09-24
+
+Until 2026-09-24 the boulevard tile carried a **wayfinding post**: a dark-framed board with four grey bars
+standing in for its text, at x 196 on every 1440 px repeat. This document and the SVG's title both called it a
+deliberate unlettered *type*. Blind run `bde36c08332f59f9` scored the subject **fail** on it, because
+`toronto-trail.neverAdd` forbids *"any lettering, signage or wordmark, in either language"* — and a board of
+faux text is signage. The art and the contract disagreed; one of them had to be wrong, and **it was the art.**
+
+The contract was not reworded to "no legible text", for three reasons:
+
+1. **A faux-text board is a sign by every reading that matters here.** A verifier saw it as one, which is the
+   only test this tile gets. Grey bars say *there is writing here, in some language*; this game ships in two
+   languages and the rule "in either language" exists because any sign on a shared tile has to be in one of
+   them. Stubbing the text out does not answer that question, it just leaves it visible.
+2. **The post carried nothing the subject needs.** No `mustBeRight` entry asks for it. The separation, the
+   green-and-blue lines, the painted bicycle mark and arrow, the young trees and the riders are the read, and
+   the painted mark is by the contract's own words "the only symbol in the level". The failing run's own blind
+   answer — a painted bike lane, cyclists and a bike-share rack in front of a skyline — named none of what
+   the post supplied, so it was paying for nothing. That is the author's reading of one answer; the next
+   blind run is what tests the tile without it.
+3. **Narrowing a `neverAdd` to fit the drawing is the direction this project refuses.** A contract amended to
+   admit what the art already did stops being a check on the art.
+
+So the post is gone, its shadow with it, and the verge from 142 to 250 on each repeat is grass. Halifax's
+quayside had the same fault and got the same answer (`assets/style/halifax-level.md`). The `neverAdd` wording
+was **tightened, not loosened**: it now names *a blank or faux-text board standing in for a sign* outright, so
+the next build cannot repeat this by calling a sign a type.
 
 ### The sky bands, and where their steps hide
 
@@ -130,7 +158,7 @@ theme gradient.
   3630.
 - **The whole trail surface is clear.** Everything the boulevard tile carries stands on the verge *behind*
   the path, so there is nowhere on the ground line that a prop can block a rider or a dialogue prompt. Per
-  1440 px tile, measured from the tile origin, what stands on the verge is: a wayfinding post at 196, street
+  1440 px tile, measured from the tile origin, what stands on the verge is: street
   trees at 130 / 486 / 852 / 1252, lamp standards at 312 / 704 / 1096, benches at 600 and 1330, a bike rack
   at 980, two riders at 700 and 1220 and one walker at 400. The painted marks on the surface are bicycle
   marks at 310 and 1030 and arrows at 432 and 1152.

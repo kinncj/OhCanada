@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2016" height="440" viewBox="0 0 2016 440" shape-rendering="geometricPrecision">
-  <title>The harbour boardwalk and the wharves it runs past: a plank deck of graded board courses with staggered butt joints and a timber edge board, and along the water edge ornate lamp standards, benches, bollards, planters, one interpretive panel, gulls and six people walking; beyond the kerb two low gabled waterfront buildings, one timber cargo shed, and two open slips holding a moored sailing hull and a tug. GENERIC BY CONSTRUCTION - this tile repeats every 2016 px, so nothing on it is a named or recognisable building and none of the figures carries a cultural marker. World y 860..1300; local y 420 is the level ground line and the rows below it sit behind the ground polygon.</title>
+  <title>The harbour boardwalk and the wharves it runs past: a plank deck of graded board courses with staggered butt joints and a timber edge board, and along the water edge ornate lamp standards, benches, bollards, planters, gulls and six people walking; beyond the kerb two low gabled waterfront buildings, one timber cargo shed, and two open slips holding a moored sailing hull and a tug. GENERIC BY CONSTRUCTION - this tile repeats every 2016 px, so nothing on it is a named or recognisable building and none of the figures carries a cultural marker. NO SIGN OF ANY KIND: an interpretive panel with grey bars standing in for its text stood here until 2026-09-24 and was removed, because a board of faux text is signage and the contract forbids signage, not only legible lettering (assets/style/halifax-level.md section 2). World y 860..1300; local y 420 is the level ground line and the rows below it sit behind the ground polygon.</title>
   <rect x="0" y="100" width="2016" height="244" fill="#b9cfe2"/>
   <rect x="238" y="84" width="356" height="260" fill="#f0f2f5"/>
   <rect x="238" y="84" width="356" height="26" fill="#ffffff"/>
@@ -246,15 +246,6 @@
   <ellipse cx="1560" cy="162" rx="62" ry="50" fill="#56993a"/>
   <ellipse cx="1530" cy="180" rx="40" ry="32" fill="#56993a"/>
   <ellipse cx="1572" cy="138" rx="44" ry="34" fill="#89c05f"/>
-  <ellipse cx="1082" cy="352" rx="44" ry="10" fill="#16203a" opacity="0.28"/>
-  <rect x="1030" y="220" width="12" height="132" rx="4" fill="#30384f"/>
-  <rect x="1122" y="220" width="12" height="132" rx="4" fill="#30384f"/>
-  <rect x="1022" y="134" width="120" height="92" rx="8" fill="#57647a"/>
-  <rect x="1030" y="142" width="104" height="76" rx="5" fill="#f0f2f5"/>
-  <rect x="1038" y="152" width="74" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="1038" y="169" width="60" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="1038" y="186" width="82" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="1038" y="203" width="48" height="8" rx="4" fill="#7d8fa0"/>
   <ellipse cx="58" cy="278" rx="22" ry="12" fill="#f0f2f5"/>
   <ellipse cx="73" cy="269" rx="10" ry="8" fill="#ffffff"/>
   <path d="M 38 275 L 56 266 L 64 276 Z" fill="#57647a"/>

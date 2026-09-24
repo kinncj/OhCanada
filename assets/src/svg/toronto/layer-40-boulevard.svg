@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="400" viewBox="0 0 1440 400" shape-rendering="geometricPrecision">
-  <title>The waterfront trail the player rides: an asphalt path carrying a green line, a blue line, a dashed centre line, bicycle marks and direction arrows, with a planted verge, a kerb, young street trees, curved-arm lamp standards, benches, a bike rack holding two bicycles, one wayfinding post, two people riding and one walking. GENERIC BY CONSTRUCTION - this tile repeats every 1440 px, so nothing on it is a named or recognisable building and there is no lettering, no livery and no wordmark: the bicycles in the rack are drawn in palette colours and carry no operator colour. World y 900..1300; local y 380 is the level ground line and the rows below it sit behind the ground polygon.</title>
+  <title>The waterfront trail the player rides: an asphalt path carrying a green line, a blue line, a dashed centre line, bicycle marks and direction arrows, with a planted verge, a kerb, young street trees, curved-arm lamp standards, benches, a bike rack holding two bicycles, two people riding and one walking. NO SIGN OF ANY KIND: a wayfinding post with grey bars standing in for its text was drawn here until 2026-09-24 and was removed, because a board of faux text is signage and the contract forbids signage, not only legible lettering (assets/style/toronto-level.md). GENERIC BY CONSTRUCTION - this tile repeats every 1440 px, so nothing on it is a named or recognisable building and there is no lettering, no livery and no wordmark: the bicycles in the rack are drawn in palette colours and carry no operator colour. World y 900..1300; local y 380 is the level ground line and the rows below it sit behind the ground polygon.</title>
   <rect x="0" y="242" width="1440" height="30" fill="#56993a"/>
   <rect x="0" y="242" width="1440" height="7" fill="#89c05f"/>
   <rect x="0" y="272" width="1440" height="12" fill="#afaca5"/>
@@ -97,14 +97,6 @@
   <circle cx="1058" cy="218" r="30" fill="none" stroke="#30384f" stroke-width="8"/>
   <polygon points="994,218 1021,168 1041,168 1058,218 1048,218 1034,178 1024,178 1005,218" fill="#2c8cba"/>
   <rect x="1014" y="158" width="32" height="8" rx="4" fill="#2c8cba"/>
-  <ellipse cx="196" cy="250" rx="30" ry="8" fill="#16203a" opacity="0.28"/>
-  <rect x="189" y="44" width="14" height="206" fill="#57647a"/>
-  <rect x="142" y="-46" width="108" height="92" rx="8" fill="#30384f"/>
-  <rect x="150" y="-38" width="92" height="76" rx="5" fill="#f0f2f5"/>
-  <rect x="158" y="-28" width="66" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="158" y="-11" width="50" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="158" y="6" width="74" height="8" rx="4" fill="#7d8fa0"/>
-  <rect x="158" y="23" width="40" height="8" rx="4" fill="#7d8fa0"/>
   <ellipse cx="700" cy="252" rx="76" ry="10" fill="#16203a" opacity="0.28"/>
   <circle cx="656" cy="210" r="38" fill="none" stroke="#30384f" stroke-width="9"/>
   <circle cx="744" cy="210" r="38" fill="none" stroke="#30384f" stroke-width="9"/>

@@ -703,4 +703,53 @@ tile's two spars were, and `references.json` says so rather than claiming them a
 
 **Cost: none.** The canvas is unchanged at 700 × 340. **Unproven** until a blind run scores it.
 
+#### The seventh attempt, 2026-09-24 — a beaver dam, and the ends a river actually leaves
+
+Blind run `bde36c08332f59f9` got past the bones and the antler and read attempt six as *"a pile of sticks and
+branches, most likely a beaver dam (could be a driftwood/log jam)"*. The cue written before the reveal was
+*"stripped, pointed-end sticks"*, and the audit found `neverAdd`'s stake point: attempt six's torn rows of
+splinters, on thin pale logs, tapered into one or two long spikes. A spiked end is a beaver's cut or a whittled
+stake, and a heap of them is a dam. The subject failed on the `neverAdd`; the hedged identification would have
+passed the harness on its own, which is the harness finding carried forward in `docs/art-verification.json`.
+
+**What the three failed ends have in common.** Attempt five drew a smooth symmetric dome (a bone). Attempt six
+drew splinters (a spike). Before them, a flat face (a saw). Each one answered the previous reading by drawing a
+different thing a river does *not* leave. A river rolls a broken end until the splinters are gone and the break
+is rounded over; it does not make a ball of it. So attempt seven draws that: **blunt, full width to the very
+end, rounded over into a lopsided bevel with one shallow worn dip**, and a different profile at each end. The
+cap is a flattened curve (about 0.8 of the half-width deep, flatter than a semicircle) skewed toward one side,
+so it can't be a dome, a point or a face. A bone's end is a knob *wider* than its shaft; these ends narrow a
+little into the cap and never swell. `neverAdd` now says that exactly, rather than forbidding all roundness.
+
+**What reads as a dam, and what was changed for each:**
+
+1. **Many thin sticks in a heap.** The logs are fewer-looking and much thicker: the root log is 54 px at the
+   butt, and every log tapers from butt to top the way a trunk does. They lie loose and lopsided, crossing but
+   not woven — nothing goes over-under-over — with six in the pile and one lying apart on the beach in front,
+   because a river's debris is scattered and a tidy heap is made.
+2. **Warm tan wood.** The one `stone` log was the brightest thing in attempt six. `stone` is now off the wood
+   entirely: six logs in `path`, the palette's only near-neutral and the silver-grey both references put
+   first, and one in `limestone`. The wood is lighter than the shingle under it, so it still separates.
+3. **Pointed stubs and root tips.** Limb stubs and the four roots now end blunt and worn like the logs. The
+   roots flare out of the butt, low and down into the shingle, and are drawn *under* the butt so no seam shows.
+4. **The shore.** The old ground was a narrow flat band, which with a heap of sticks on it gives no reason to
+   think *shore*. It is now a broad shingle beach with randomly laid cobbles, bigger toward the viewer, and a
+   thin dark drift line of fine debris along its crest, running out of both sides of the frame. **No water was
+   drawn, on purpose.** Water behind a pile of wood is the dam picture, and a strip of water with ground beyond
+   it is a stream. The river is the level's own parallax behind the prop, where it is broad and has no near bank.
+
+The grain checks, one split per log, three limb stubs and the one-sided root fan that attempt six added are
+kept, since they are what separate wood from bone. `references.json` was amended **before** the file was
+redrawn, as this section has asked since attempt five: the ends, colour, root-tip, stub and shore clauses, two
+`neverAdd` entries sharpened (the knob is now "wider than the shaft", the point now covers roots, stubs and
+spiked splinters) and two added (no water; no woven lattice or mound spanning the frame).
+
+**Author's reading, not an identification.** Rendered at 1× on the hand-off's grey matte, and at 300 px and
+140 px wide, it looks to its author like weathered grey logs on a pebble beach, with the root fan the only
+complication. The previous six attempts also looked right to whoever drew them. A fresh blind run is the test.
+
+**Cost: none.** The canvas is unchanged at 700 × 340, so the decoded texture is identical. The SVG source grew
+from 43 KB to about 100 KB, because each outline is sampled more finely. What ships is the rasterised WebP, and
+`make assets` measures that.
+
 A repeating strip over the ground fill and under every landmark, character and ride, at every visual tier, moving exactly with the world. 1080 px wide (one tile per screen), pinned to 1x, opaque in every row, and ending on the bottom of the world, so the scene paints no ground fill under it. Palette colours only, no outline, no lettering, no figures. Its most legible detail is in its first ~160 rows, which stay visible above the HUD with a prompt showing.

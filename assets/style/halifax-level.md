@@ -55,7 +55,7 @@ Eight SVG sources. `scripts/assets.mjs` reads the level from the path, so everyt
 | `halifax-layer-10-sky` | `layer-10-sky.svg` | 1080 × 880 | 29 | one flat sky field and seven cumulus |
 | `halifax-layer-20-citadel` | `layer-20-citadel.svg` | 1800 × 160 | 51 | the grassy hill above the town, with spruce and maple on the lower slope |
 | `halifax-layer-30-uptown` | `layer-30-uptown.svg` | 1800 × 260 | 137 | the town on the slope: gabled houses, mid-rise blocks, one plain steeple, and a lower row of roofs |
-| `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 353 | the boardwalk — a **modelled plank deck**, §5.1 — its lamps, benches, bollards, planters, panel, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
+| `halifax-layer-40-quayside` | `layer-40-quayside.svg` | 2016 × 440 | 353 | the boardwalk — a **modelled plank deck**, §5.1 — its lamps, benches, bollards, planters, gulls and six people; two waterfront buildings, a cargo shed and two open slips |
 | `halifax-landmark-town-clock` | `landmark-town-clock@1x.svg` | 800 × 1010 | 113 | **POI hero, and the level's only place-anchor** |
 | `halifax-landmark-pier-21` | `landmark-pier-21@1x.svg` | 900 × 620 | 140 | **POI hero**: the terminal, the liner and the immigrant train. The liner was redrawn 2026-09-17: a raked bow and stem, a tiered superstructure with a rounded front and a boat row, because as a flat-topped rectangle under two upright stacks it read as a factory |
 | `halifax-prop-market-stall` | `prop-market-stall@1x.svg` | 560 × 480 | 60 | **POI hero, added 2026-09-13**: a striped awning on two posts over a trestle of produce crates, with a barrel and two sacks on the deck |
@@ -124,8 +124,32 @@ kind (`docs/content-review.md` §3.3, outcome 2).
 That rule now has teeth it did not have before. On Québec City a **striped bandstand kiosk** was drawn into
 the terrace tile as street furniture, and a genuinely blind verifier named *Terrasse Dufferin, Québec City*
 off it — from a tile whose own `neverAdd` already forbade exactly that. **Furniture that is really
-architecture is architecture.** The Halifax interpretive panel, lamps, benches, bollards and planters are
-drawn as types for that reason.
+architecture is architecture.** The Halifax lamps, benches, bollards and planters are drawn as types for
+that reason.
+
+### No sign, blank or otherwise — decided 2026-09-24
+
+The quayside tile used to carry an **interpretive panel** at x 1082: a framed board on two posts with four
+grey bars standing in for its text, drawn from the panel in `halifax/waterfront-boardwalk.jpg` and described
+in this document and the SVG title as an unlettered *type*. Blind run `bde36c08332f59f9` failed
+`halifax-quayside` on it: the subject's `neverAdd` forbids *"any lettering, signage or wordmark, in either
+language"*, and a panel of faux text is signage. The art and the contract disagreed, and **the art was the
+one that was wrong** — so the panel is removed rather than the contract narrowed to "no legible text".
+
+- **Faux text is still a sign.** The bars say *writing goes here*; the verifier saw a sign, and that is the
+  only reading a tile gets. The contract says "in either language" because any board on a tile this game
+  shows in English and French has to be in one of them. Greying the words out leaves that question in the
+  picture instead of answering it.
+- **Nothing required depended on it.** No `mustBeRight` entry names the panel. The deck, the lamps, the
+  bollards and benches, the slips with moored hulls, the gabled buildings, the walkers and the gulls are the
+  read, and all six were present on the failing run.
+- **A `neverAdd` narrowed to admit what the art already draws stops constraining the art.** That direction
+  is refused here as it is on Toronto, which had the same fault and got the same answer
+  (`assets/style/toronto-level.md` §2).
+
+The reference photograph still shows a panel; the drawing simplifies it away, and `simplifyAway` now says so.
+The contract's `neverAdd` was tightened to name *a blank or faux-text board standing in for a sign*, so a later
+build cannot re-add it as a "type".
 
 ### The sky is flat, and that is a departure
 
@@ -603,8 +627,8 @@ at 900, a screen short of the first point, and the spawn is at 400.
 6 360 is the berth that replaces it, is recorded in full below rather than lost in a diff.
 
 **What was drawn as scenery and not as a POI, and why.** Nothing new. The corridor between the points was
-already the most populated in the game — `layer-40-quayside` carries lamps, benches, bollards, planters, an
-interpretive panel, gulls, six people, two gabled waterfront buildings, a cargo shed and two open slips, and
+already the most populated in the game — `layer-40-quayside` carries lamps, benches, bollards, planters,
+gulls, six people, two gabled waterfront buildings, a cargo shed and two open slips, and
 §5.1 rebuilt its deck so it reads as timber. Adding more to it would have cost 0 bytes and bought nothing;
 what the level was short of was things to *stop at*, and those are POIs by definition. The two new heroes are
 drawn as types for the reason §2 gives: the tile repeats, and Halifax comes from the Town Clock.

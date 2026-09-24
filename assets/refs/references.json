@@ -1972,11 +1972,12 @@
         "the pile cribbing under the deck: it is below the level's ground line and is never drawn",
         "rigging, shrouds and sails on the moored hulls: a mast and one crosstree is the rhythm",
         "faces on the background figures below 12 px",
-        "street furniture above the lamp line"
+        "street furniture above the lamp line",
+        "the interpretive panel in halifax/waterfront-boardwalk.jpg: it is signage, which this tile may not carry in any form. Removed 2026-09-24 - see assets/style/halifax-level.md section 2"
       ],
       "neverAdd": [
         "any named or recognisable building drawn into either of these two REPEATING tiles. Scoped deliberately: the Town Clock is required on the town-clock subject and forbidden here, and the reason is the tiling, not the building",
-        "any lettering, signage or wordmark, in either language",
+        "any lettering, signage or wordmark, in either language - and that INCLUDES a blank board or a board of grey bars standing in for text: a sign with its words left out is still a sign (tightened 2026-09-24, after blind run bde36c08332f59f9 found one on this tile)",
         "a lighthouse: Peggy's Cove is not in Halifax and is not this level",
         "snow, ice or bare winter trees: this level is summer, and two of this game's other levels are already winter",
         "mountains on the horizon"
@@ -2000,7 +2001,11 @@
         "both ends, warm board-to-board tone variation, and a modelled timber edge with its shadow on the deck",
         "and on the water. Nothing else on the tile changed: no landmark was added and none may be, for the",
         "reason in `expectedBlindAnswerNote`. Judged by rendering the composite and looking at it, three times,",
-        "not by reading the SVG."
+        "not by reading the SVG.",
+        "BLIND RUN bde36c08332f59f9, 2026-09-24: FAILED on neverAdd. The tile drew an interpretive panel with grey bars for",
+        "text and called it an unlettered type; the verifier read it, correctly, as signage. The ART was wrong and the",
+        "contract was not narrowed: the panel is removed and the neverAdd entry now names faux-text boards outright.",
+        "Reasoning in assets/style/halifax-level.md section 2, `No sign, blank or otherwise`."
       ]
     },
     {
@@ -2359,7 +2364,7 @@
       ],
       "neverAdd": [
         "any named or recognisable building drawn into either of these two REPEATING tiles, and the CN Tower above all: it is required on the cn-tower subject and forbidden here, and the reason is the tiling, not the building",
-        "any lettering, signage or wordmark, in either language",
+        "any lettering, signage or wordmark, in either language - and that INCLUDES a blank board or a board of grey bars standing in for text: a sign with its words left out is still a sign (tightened 2026-09-24, after blind run bde36c08332f59f9 found one on this tile)",
         "a streetcar, a bus or a train in the cycling lane",
         "mountains on the horizon: this city is on a lake plain",
         "snow or winter trees: this level is late summer"
@@ -2371,7 +2376,11 @@
         "the green surface treatment, the white bicycle mark and the arrow. Its required credit line is in",
         "the `author` field of its entry in assets/credits.json, which is where a licence condition of that",
         "kind has to live: credits.schema.json is additionalProperties:false and has no other field for it.",
-        "toronto/skyline-overcast.jpg is CC0 and is the massing reference for the tower rhythm."
+        "toronto/skyline-overcast.jpg is CC0 and is the massing reference for the tower rhythm.",
+        "BLIND RUN bde36c08332f59f9, 2026-09-24: FAILED on neverAdd. The tile drew a wayfinding post with grey bars for",
+        "text and called it an unlettered type; the verifier read it, correctly, as signage. The ART was wrong and the",
+        "contract was not narrowed: the post is removed and the neverAdd entry now names faux-text boards outright.",
+        "Reasoning in assets/style/toronto-level.md section 2, `No sign, blank or otherwise`."
       ]
     },
     {
@@ -3454,7 +3463,8 @@
         "a railway wagon carrying containers",
         "a double-stack container car",
         "a train car carrying shipping containers",
-        "a rail car carrying two containers"
+        "a rail car carrying two containers",
+        "a railway car carrying containers"
       ],
       "expectedBlindAnswerNote": [
         "GENERIC ON PURPOSE AND MORE STRICTLY THAN MOST. Real containers and real cars are covered in reporting",
@@ -3463,7 +3473,25 @@
         "operator's.",
         "WHAT IT MUST CARRY: that the boxes are on a RAILWAY car. \"Shipping containers\" alone is a partial",
         "answer and \"a truck\" is a fail - the trucks, the wheels, the rail and the ties under it are drawn at",
-        "full contrast for exactly that reason."
+        "full contrast for exactly that reason.",
+        "AMENDED 2026-09-24, BY ONE ENTRY, AND THE REASON IS THIS NOTE'S OWN SENTENCE ABOVE, NOT THE RUN THAT FAILED.",
+        "The paragraph above says the answer must carry that the boxes are on a \"RAILWAY car\", and until today no",
+        "accepted answer contained that phrase: the list had `railway wagon`, `rail car` and `train car`, so the plain",
+        "Canadian term, the one this contract itself uses, could only pass by also saying `wagon`, `rail` or `train`.",
+        "That is the vocabulary rule toronto-trail's note states - a list that omits the plain word for the thing",
+        "drawn measures diction, not art - applied to a word this contract already chose. It is not a synonym table",
+        "and it goes in this file, not in scripts/lib/art-score.mjs, as docs/art-verification-method.md requires.",
+        "MEASURED BOTH WAYS over blind run bde36c08332f59f9's 188 verdicts: the entry matches exactly one, this subject's",
+        "own gating answer, and no verdict on any other subject. It matches that answer only because the answer says",
+        "`car` on its own inside a parenthesis; the two probe answers say `Railway flatcar` and still miss, and stay",
+        "diagnostic misses. Because the verdict is recorded and the art is unchanged, this amendment turns that run's",
+        "container-car from FAIL to PASS after the fact. That is stated rather than hidden: the amendment stands on the",
+        "argument above, and a fresh blind run is what tests it.",
+        "REFUSED, deliberately. (1) `flatcar`: the first mustBeRight entry says a box on a flat car IS a flat car, the",
+        "thing this subject is drawn to differ from; accepting it would pass the misreading the dropped well exists to",
+        "prevent. (2) `double-stacked` against `double-stack`: that is inflection - HOW an answer is worded - which the",
+        "method gives to the scorer's normalisation and not to this list. Reported to the harness owner; no",
+        "`double-stacked` variant is added here, and no entry is added to catch it."
       ],
       "referenceFiles": [
         "prairie-rail/prairie-freight-train-at-dawn.jpg"
@@ -5519,7 +5547,12 @@
         "BONE OR ANTLER is a FAIL here whatever else the answer contains, and the list above was NOT widened or narrowed to change",
         "that: every entry already names wood or logs, and the leniency is the harness's, reported to its owner in",
         "docs/art-verification.json `contractDefectsForTheOwner` rather than patched from this file. The drawing answer is in",
-        "mustBeRight: broken ends, grain checks, splits, limb stubs, a flared root butt, and greys ahead of cream."
+        "mustBeRight: broken ends, grain checks, splits, limb stubs, a flared root butt, and greys ahead of cream.",
+        "AND A FOURTH FORM, 2026-09-24. Blind run bde36c08332f59f9 led with \"a pile of sticks and branches, most likely a beaver dam\"",
+        "and offered driftwood only as a hedged alternative. A BEAVER DAM OR A BEAVER LODGE is a FAIL here whatever else the answer",
+        "contains, for the same reason as the built things above: something made it. The list above is again NOT widened or narrowed",
+        "to change that. The drawing answer is in mustBeRight: water-worn blunt ends instead of spikes, silver-grey wood, fewer and",
+        "thicker logs lying loose and lopsided rather than a heap of sticks, and an open beach with no water in the file."
       ],
       "referenceFiles": [
         "the-north/yukon-river-bluff-and-aspen.jpg",
@@ -5527,30 +5560,30 @@
       ],
       "mustBeRight": [
         {
-          "feature": "seven barkless logs LYING across one another at different angles",
+          "feature": "seven barkless logs LYING loosely across one another at different angles, in a low random pile",
           "why": "Lying and crossing is what says the river put them there. Parallel logs read as stacked cordwood, which is something a person does.",
-          "detail": "Bowed logs of very different thicknesses - the thickest about two and a half times the thinnest - no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log. EVERY END IS BROKEN: a torn row of splinters of uneven length, with a different profile at each end. AMENDED 2026-09-24. This entry used to require ROUNDED ENDS, drawn as round-capped strokes so a flat sawn face could not be expressed, and blind run 7e6b1463748d4299 read that build as A PILE OF LONG BONES: a smooth round cap on a pale shaft is the end of a femur. A broken end is what a river leaves on a tree and what neither a saw nor a skeleton does. It must never resolve into a single point (a stake), a flat face (a saw cut) or a smooth dome (a bone)."
+          "detail": "Bowed logs of very different thicknesses - the thickest about two and a half times the thinnest - no two at the same angle, none vertical, none steeper than about 20 degrees from the horizontal, overlapping into a low pile no taller than about a third of the longest log. Six in one lopsided pile and one lying apart on the beach, because debris a river strands is scattered and a heap with nothing around it is a made thing. The logs CROSS, they do not WEAVE: each lies on whatever is under it, with no over-under-over alternation, and the pile is lopsided and open rather than a mound or a wall across the frame. EVERY END IS WATER-WORN: blunt, as wide as the log to the very end, rounded over into an irregular, lopsided bevel with one shallow worn dip, and a different profile at each end. AMENDED 2026-09-24, TWICE IN ONE DAY, and the two amendments are one lesson. This entry first required ROUNDED ENDS drawn as round-capped strokes, and blind run 7e6b1463748d4299 read that as A PILE OF LONG BONES: a smooth symmetric dome on a pale shaft is the end of a femur. It was then amended to BROKEN ends, a torn row of splinters, and blind run bde36c08332f59f9 read that as A BEAVER DAM: splinters on a thin pale stick taper to spikes, which is gnawed or sharpened wood, and the audit found the forbidden stake point. Both were drawings of what a river does NOT leave. A river rolls a broken end until the splinters are gone and the break is rounded over, but it does not turn it into a ball: a water-worn end is blunt, full width, lopsided and plain. It must never come to a point (a stake, or a beaver's cut), never be a flat face (a saw cut) and never be a symmetric dome or a knob wider than the shaft (a bone)."
         },
         {
-          "feature": "bleached pale wood with darker ends",
+          "feature": "silver-grey bleached wood, one log warmer",
           "why": "Driftwood is grey-white, not brown. Brown logs with bark are freshly cut timber and that is a different object with a different meaning.",
-          "detail": "Bodies in the pale ends of the `path`, `limestone` and `stone` ramps, WEIGHTED TO THE WEATHERED GREYS - three logs in `path`, three in `limestone`, one in `stone` - each log taking all three tones of ONE ramp: the light tone for the upper body, with a lower edge that wanders rather than running true, the base tone below it AND for the last stretch before each broken end, and the shade tone as a thin rim along the bottom edge and in the grain checks. NO END FACE, OF ANY TONE: the darker end is a darker LENGTH of the log, never a face across it (see the 2026-09-22 amendment in expectedBlindAnswerNote). NO bark, NO green wood, NO axe or saw cut, and NO whittled point. `stone` WAS ADDED 2026-09-17 as a saturation fix, and on 2026-09-24 it was cut back to one log of seven, because warm cream-tan on a smooth pale shaft is the colour of bone and the verifier of run 7e6b1463748d4299 named bone; weathered driftwood in both references is silver-grey first. `wood` is the bark-and-fresh-timber ramp and stays forbidden here.",
-          "palette": "path, limestone, stone"
+          "detail": "Bodies in `path`, the palette's only near-neutral and the silver-grey both references put first, with ONE log in `limestone` for the warmer cream-grey some driftwood carries - six `path`, one `limestone`, none in `stone`. Each log takes all three tones of ONE ramp: the light tone on the upper body with a lower edge that wanders rather than running true, the base tone below it and on the worn ends, and the shade tone as a thin rim along the underside and in the grain checks. NO END FACE, OF ANY TONE (see the 2026-09-22 amendment in expectedBlindAnswerNote). NO bark, NO green wood, NO axe or saw cut, and NO point. AMENDED 2026-09-24 (attempt seven): `stone` came off the wood entirely. It was added 2026-09-17 as a saturation fix and cut to one log on the morning of 2026-09-24 because cream-tan on a pale shaft is bone; blind run bde36c08332f59f9 then saw a pile in which the one tan log was the brightest thing, the top of a heap of sticks. `stone` stays on the beach's cobbles only. `wood` is the bark-and-fresh-timber ramp and stays forbidden here.",
+          "palette": "path, limestone"
         },
         {
           "feature": "one short uneven root fan",
           "why": "It is what says these were trees the river tore out, rather than milled wood.",
-          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's butt, which FLARES into them rather than carrying a separate knob. Each root is thick at the flare, kinked at least once, and torn at the tip; they run out LOW AND DOWN into the gravel, spread over less than half a turn. AMENDED 2026-09-24: blind run 7e6b1463748d4299 read the previous fan - smooth curves rising and branching over a knob - as AN ANTLER. So no root forks at its tip, none curves up and back over itself, and there is no knob. NEVER an even radial star, NEVER a disc, and NEVER a lighter shape centred inside a darker one: an earlier knob read as A CIRCULAR SAW BLADE. Nothing round-and-concentric may appear on this subject."
+          "detail": "Four roots of different lengths and thicknesses on ONE side of one log's butt, which FLARES into them rather than carrying a separate knob. Each root is thick at the flare, kinked at least once, and ends BLUNT and worn like the logs (AMENDED 2026-09-24: a torn tip on a thin root is a spike); they run out LOW AND DOWN into the gravel, spread over less than half a turn. AMENDED 2026-09-24: blind run 7e6b1463748d4299 read the previous fan - smooth curves rising and branching over a knob - as AN ANTLER. So no root forks at its tip, none curves up and back over itself, and there is no knob. NEVER an even radial star, NEVER a disc, and NEVER a lighter shape centred inside a darker one: an earlier knob read as A CIRCULAR SAW BLADE. Nothing round-and-concentric may appear on this subject."
         },
         {
           "feature": "grain checks, splits and snapped limb stubs, drawn as shapes",
           "why": "ADDED 2026-09-24. They are the incident a tree has and a bone, a plank or a pipe does not, and they are the proposal assets/style/the-north-level.md section 8.1 made after four rejected redraws: a clean untextured solid of any proportion reads as something manufactured, and the house style forbids texture, so the incident has to be carried by SHAPES.",
-          "detail": "Two to four grain CHECKS per log - short dark slivers in the log's own shade tone, 2.5 to 4 px at their widest, running along the log's length and following its bow - and one SPLIT per log opening from a broken end, widest at the end and closing to nothing within a quarter of the log. Three logs carry one SNAPPED LIMB STUB each, short, tapering and torn at the tip. The checks are sparse, a handful per log, and never a repeating fill: art-bible section 1's rule against surface pattern stands, and these are counted shapes in the way the skateway's scoring is."
+          "detail": "Two to four grain CHECKS per log - short dark slivers in the log's own shade tone, 2.5 to 4 px at their widest, running along the log's length and following its bow - and one SPLIT per log opening from a worn end, widest at the end and closing to nothing within a quarter of the log. Three logs carry one SNAPPED LIMB STUB each, short and worn blunt at the tip - never pointed (AMENDED 2026-09-24). The checks are sparse, a handful per log, and never a repeating fill: art-bible section 1's rule against surface pattern stands, and these are counted shapes in the way the skateway's scoring is."
         },
         {
-          "feature": "a gravel bar with rounded cobbles under it",
-          "detail": "A flat band of `path` with a lit crest, a darker foot and four or five rounded cobbles. The file's bottom edge IS the level ground line, which on this level is the bar the player walks along.",
-          "palette": "path"
+          "feature": "a broad open shingle beach under it, running out of both sides of the frame, and no water",
+          "detail": "A low band of rounded cobbles of mixed sizes, larger toward the viewer, laid at random rather than in rows, over a darker shingle field with a lit crest, and a thin dark drift line of fine debris along the crest - the line a falling river leaves. It runs out of both edges of the file, so the wood lies ON an open shore rather than across anything. The file's bottom edge IS the level ground line, which on this level is the bar the player walks along. AMENDED 2026-09-24: blind run bde36c08332f59f9 read the pile as a beaver dam, and a dam is sticks laid ACROSS moving water. So NO WATER is drawn in this file at all - water behind a pile of wood is the dam picture, and a strip of water with ground beyond it is a stream. The river is the level's own parallax behind this prop, where it is broad and has no near bank to dam.",
+          "palette": "path, stone"
         }
       ],
       "simplifyAway": [
@@ -5570,10 +5603,12 @@
         "an axe, a saw cut, a rope or any tool mark",
         "an even radial root wad, which reads as a sunburst device",
         "a flat end face on any log, of any tone or at any angle: it is end grain, and end grain is a saw cut",
-        "a whittled or sharpened point on any log: a pointed spar is a stake, which is something a person made",
+        "a whittled or sharpened point on any log, root or limb stub, and a row of splinters tapering to spikes: a pointed spar is a stake, which is something a person made, and a spiked end is a beaver's cut (blind run bde36c08332f59f9)",
         "any disc, ring or concentric shape anywhere in the frame, which is how a root knob became a saw blade",
-        "a rounded knob, dome or ball on the end of any log: it is the end of a long bone (blind run 7e6b1463748d4299)",
-        "a root or limb that forks at its tip or curves up and back over itself: it is an antler (blind run 7e6b1463748d4299)"
+        "a knob or ball WIDER than the log on the end of any log, or a smooth symmetric dome: it is the end of a long bone (blind run 7e6b1463748d4299). A blunt, lopsided, water-worn end no wider than the shaft is REQUIRED and is not this",
+        "a root or limb that forks at its tip or curves up and back over itself: it is an antler (blind run 7e6b1463748d4299)",
+        "water of any kind in the file, and above all water BEHIND the pile: sticks across water are a beaver dam (blind run bde36c08332f59f9)",
+        "a woven over-and-under lattice, or a mound or wall of sticks spanning the frame: that is a beaver dam or lodge, which is something an animal built"
       ],
       "notes": [
         "the-north/yukon-river-bluff-and-aspen.jpg carries the reference at its waterline: a continuous band of",
@@ -5593,7 +5628,11 @@
         "already were, and are stated here as such rather than claimed as measured. What the references DO fix, and the drawing",
         "follows, is the colour family (silver-grey first, some warm tan) and the arrangement (logs lying tangled along the waterline,",
         "the jam on the bar in yukon-river-valley.jpg). A closer CC0 or CC BY driftwood photograph would be a better reference for",
-        "the ends and the grain and is worth adding; none was fetched in this pass."
+        "the ends and the grain and is worth adding; none was fetched in this pass.",
+        "REDRAWN 2026-09-24 (attempt seven), the same day, after blind run bde36c08332f59f9 read attempt six as a beaver dam and found",
+        "the forbidden stake point on its spiked ends. What changed and why is in assets/style/the-north-level.md section 8.1,",
+        "`The seventh attempt`. The ends, the colour, the pile's shape and the shore were all changed; the canvas was not.",
+        "Unproven until a fresh blind run scores it."
       ]
     }
   ],
