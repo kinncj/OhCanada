@@ -39,6 +39,15 @@ the offer is withdrawn. The **level menu** draws the task in full whenever there
 has a home one press away. The rule is the same at 100 % and at 200 %, in both languages: a player at large
 text loses nothing a player at 100 % keeps (ADR-0066 §3). `TN-HUD-01` and `TN-HUD-08` below carry it.
 
+**Amended 2026-09-24 — ADR-0072: with the dyslexia face on, the strip may grow past a third.** In
+OpenDyslexic at 200 % text a task takes six lines and Settings and Menu take two rows, so at a third of a
+390 × 844 phone the task ended below the strip (ADR-0071 §5). By the owner's decision, with the dyslexia
+toggle on and only then, the canvas sits at the top of its space (it is not cut; the band of empty sky above
+it moves under the strip) and the strip may reach up to 8 px under the player's feet. At 390 × 844 that is
+**374 px, 44 % of the screen**, against 278 px, 33 %; the offer, the controls and the task need at most
+362 px. The feet stand 8 px above the strip at its ceiling. What the player gives up is the ground in front
+of them. In normal mode nothing here changes. `TN-HUD-01`, `TN-HUD-03` and `TN-HUD-08` below carry it.
+
 Read `README.md` in this directory first. `TN-COPY-strings-and-counts.md` fixes the plural and state-word
 rules this file uses.
 
@@ -189,6 +198,15 @@ Feature: The lower-third HUD
     And it is inside the lower third of the canvas
     And no part of it covers the skater
     And the skater is still drawn inside the upper two thirds
+
+  Scenario: With the dyslexia face on, the strip may grow and still stays out of the way (ADR-0072)
+    Given the dyslexia-friendly font is on
+    Then the canvas sits at the top of the space it is fitted in, the same size, with nothing of it cut
+    And the top of "hud" is never above 8 px under the line the skater walks on (world row 1280)
+    And at 390 x 844 that lets "hud" take up to 374 px, 44 % of the screen, and never less than a third
+    And no part of it covers the skater, whose feet stand at 462 px, above the strip
+    And the skater is still drawn inside the upper two thirds of the canvas
+    But on a screen with no room under the canvas, 9:16 or wider, "hud" stays inside the lower third
 
   Scenario: The HUD says what the player is doing
     Then the element "hud-mode-label" reads "Skating"
@@ -352,6 +370,7 @@ Feature: Telling the player their progress is not being kept
 
   Scenario: It does not eat the playfield
     Then the skater is still drawn inside the upper two thirds of the canvas
+    And, with the dyslexia face on, the skater's feet are above the top of "hud" (ADR-0072)
     And "hud-quest-tracker" and "menu-button" are both still visible and operable
 ```
 
@@ -511,6 +530,7 @@ Feature: The HUD honours the settings it opens
     And every HUD control is still at least 44 CSS px wide and tall
     And the page does not scroll sideways
     And the skater is still drawn inside the upper two thirds of the canvas
+    And, with the dyslexia face on, above the top of "hud" (ADR-0072)
 
   Scenario: The task is on screen at 200 %, whatever is in reach (ADR-0066)
     Given text scaling is 200 %
@@ -525,6 +545,21 @@ Feature: The HUD honours the settings it opens
     And the task is drawn at 200 %, the size the Settings slider says, never smaller
     And the word "Task" is drawn, never hidden from sight while kept for a screen reader
     And the strip is not allowed to grow past a third of the viewport to make room
+    But with the dyslexia face on it may, as far as 8 px under the skater's feet (ADR-0072)
+
+  Scenario: The task is on screen at 200 % in the dyslexia face (ADR-0072)
+    Given text scaling is 200 %
+    And the dyslexia-friendly font is on
+    And the viewport is 390 x 844
+    And I have accepted a quest on any built level, in either language
+    When a landmark's offer is in reach
+    Then "interact-prompt", "hud-settings-button", "menu-button" and "hud-task-indicator" all end inside "hud"
+    When nothing is in reach
+    Then "hud-settings-button", "menu-button" and the whole of "hud-quest-tracker" end inside "hud"
+    And the player does not have to scroll inside "hud" to find what they are doing
+    And "hud" is at most 374 px tall, 44 % of the screen, and the rows need at most 362 px
+    And the skater's feet, at 462 px, are above the top of "hud"
+    And nothing moves when an offer comes or goes, so reduced motion has nothing to stop
 
   Scenario: What a player at 200 % loses is what every player loses
     Given something is in reach
