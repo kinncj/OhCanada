@@ -13,7 +13,7 @@
     },
     {
       "en": "The Huron-Wendat.",
-      "fr": "Les Hurons-Wendat."
+      "fr": "Les Huron-Wendat."
     },
     {
       "en": "The Inuit.",
@@ -27,7 +27,7 @@
   "correctIndex": 0,
   "explanation": {
     "en": "The Sioux moved with the bison rather than staying in one place. In the Northwest, the Cree and Dene lived by hunting and gathering; around the Great Lakes, the Huron-Wendat also planted crops.",
-    "fr": "Les Sioux se déplaçaient avec les bisons plutôt que de rester au même endroit. Dans le Nord-Ouest, les Cris et les Dene vivaient de la chasse et de la cueillette; autour des Grands Lacs, les Hurons-Wendat cultivaient aussi la terre."
+    "fr": "Les Sioux se déplaçaient avec les bisons plutôt que de rester au même endroit. Dans le Nord-Ouest, les Cris et les Dene vivaient de la chasse et de la cueillette; autour des Grands Lacs, les Huron-Wendat cultivaient aussi la terre."
   },
   "source": {
     "sourceId": "discover-canada",
@@ -41,8 +41,8 @@
   },
   "verification": {
     "status": "verified",
-    "model": "claude-opus-5",
-    "checkedAt": "2026-09-19T13:00:00Z",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-24T21:21:35Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "The Huron-Wendat of the Great Lakes region, like the Iroquois, were farmers and hunters. The Cree and Dene of the Northwest were hunter-gatherers. The Sioux were nomadic, following the bison (buffalo) herd. The Inuit lived off Arctic wildlife."
   }
