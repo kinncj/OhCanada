@@ -5,7 +5,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 .PHONY: help setup deps browsers lint typecheck test test-e2e test-perf test-perf-device record-perf-device test-a11y \
-        assets check-assets check-textures validate-content verify-content verify-art art-handoff art-handoff-blind build preview clean \
+        assets check-assets check-textures validate-content squash-heads verify-content verify-art art-handoff art-handoff-blind build preview clean \
         check-obligations sources source-coverage dist-digest verify-dist
 
 help: ## List every target
@@ -212,8 +212,18 @@ source-coverage: ## Per-chapter coverage of Discover Canada by surface (local, n
 # checker in a source register's `liveChecks[]` (ADR-0016); a CI job that fetched
 # a page and wrote its own finding would be granting itself the attestation the
 # separation of duties exists to withhold. This target reads the record.
-verify-content: ## ADR-0003/ADR-0016: separation of duties, the CI clause, the re-check table
+#
+# `squash-heads` runs first (ADR-0073). A squash-merge recorded in
+# scripts/content-squash-merges.json is judged by the commits of its pre-squash
+# head, so that head must be in the clone. `fetch-depth: 0` fetches every branch,
+# which covers it while the branch exists; the target fetches the recorded sha,
+# then `refs/pull/<N>/head`, when it does not. A head already present costs no
+# network. The gate itself never fetches.
+verify-content: squash-heads ## ADR-0003/ADR-0016: separation of duties, the CI clause, the re-check table
 	npm run verify-content
+
+squash-heads: ## ADR-0073: fetch each recorded squash's pre-squash head if it is not present
+	node scripts/fetch-squash-heads.mjs
 
 # THE ART GATE IS A HARNESS, NOT AN IDENTIFIER, and the distinction is the whole
 # task. Naming what a render depicts is the art-verifier's judgement; a

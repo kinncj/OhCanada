@@ -1,6 +1,10 @@
 # ADR-0003: Agentic content verification
 
 - Status: Accepted (2026-09-08)
+- Amended by ADR-0073 (2026-09-24): a squash-merge listed in `scripts/content-squash-merges.json` is
+  judged by its pre-squash head's commits, on evidence (the head is present, its `content/` is identical,
+  and its own commits pass every rule). Content PRs merge with a merge commit, not a squash. The
+  one-commit-one-job rule is unchanged.
 - Amended 2026-09-08: the Decision listed `evidence` among the five fields the verifier writes, but the
   CI clause below did not gate it. That omission is how the verification block in
   `app/application/ports/content-repository.ts` was able to drop the field entirely without any gate
