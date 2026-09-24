@@ -85,16 +85,38 @@ export const questAtPoi = (level: Level, poiId: PoiId): QuestId | undefined =>
   poiById(level, poiId)?.questId;
 
 /**
- * Which levels are open, given the stamps earned.
+ * Which levels are open, given the stamps earned and the levels the save has
+ * already opened.
  *
  * Until this function existed, `unlockRules` was three numbers in
  * `game.config.json` that nothing read — the same shape of defect as a budget
  * that appears in the config and is enforced by nothing. The rule it states:
- * `initialLevels` are always open, and walking `order`, each locked level opens
- * when `stampsToUnlockNext` stamps have been earned and not yet spent on an
- * earlier unlock. The walk stops at the first level that cannot be opened,
- * because `order` is a progression and level 6 opening before level 5 would make
- * the order decorative.
+ * `initialLevels` are always open, and walking `order`, each other level costs
+ * `stampsToUnlockNext` stamps of credit, earned by stamping the levels before
+ * it and not yet spent on an earlier one. The walk stops at the first level it
+ * can neither pay for nor finds already open, because `order` is a progression
+ * and level 6 opening before level 5 would make the order decorative.
+ *
+ * ## Monotone under insertion (ADR-0068 §9)
+ *
+ * Adding a level to `order` must never lock a level a save could already open.
+ * Stamps and order alone cannot promise that: if every insertion kept what the
+ * shorter order opened, then by chaining insertions an order would have to open
+ * everything any of its subsequences opens — and `[initial, X]` opens `X` for
+ * one stamp, for every `X`, so one stamp would open the whole map. The rule
+ * needs memory, and the save already has it: `LevelProgress.unlocked`. So:
+ *
+ *  - the answer is the walk ∪ `stampedLevelIds` ∪ `previouslyUnlocked`, so
+ *    nothing a save holds is ever taken back, and a stamp — proof the level was
+ *    played — always keeps its own level open;
+ *  - the walk does not stop at a level that is already open (stamped or
+ *    previously unlocked) and cannot be paid for: it passes it without spending,
+ *    and that level's stamp still earns credit. A level that *can* be paid for
+ *    is paid for whether or not it was already open — which is what keeps the
+ *    walk's accounting identical to the pre-memory walk for every save played in
+ *    order, and what makes the answer a fixed point when it is persisted and
+ *    fed back (a remembered level passed free would leave a stamp unspent, and
+ *    one stamp would open one more level on every reload).
  *
  * A `stampsToUnlockNext` below 1 would unlock the whole map from a config typo,
  * so it is floored at 1 rather than trusted.
@@ -102,22 +124,25 @@ export const questAtPoi = (level: Level, poiId: PoiId): QuestId | undefined =>
 export const unlockedLevelIds = (
   rules: UnlockRules,
   stampedLevelIds: readonly LevelId[],
+  previouslyUnlocked: readonly LevelId[] = [],
 ): readonly LevelId[] => {
+  const initial = new Set(rules.initialLevels);
   const stamped = new Set(stampedLevelIds);
+  const alreadyOpen = new Set([...stampedLevelIds, ...previouslyUnlocked]);
   const unlocked = new Set(rules.initialLevels);
   const cost = Math.max(1, Math.floor(rules.stampsToUnlockNext));
   let credit = 0;
 
   for (const levelId of rules.order) {
-    if (!unlocked.has(levelId)) {
-      if (credit < cost) break;
-      credit -= cost;
+    if (!initial.has(levelId)) {
+      if (credit >= cost) credit -= cost;
+      else if (!alreadyOpen.has(levelId)) break;
       unlocked.add(levelId);
     }
     if (stamped.has(levelId)) credit += 1;
   }
 
-  return [...unlocked];
+  return [...new Set([...unlocked, ...stampedLevelIds, ...previouslyUnlocked])];
 };
 
 /**
@@ -155,16 +180,28 @@ export const journeyLevelIds = (journey: Journey): readonly LevelId[] =>
 /**
  * Which levels in `order` no sequence of play can ever open.
  *
- * The check that would have caught the dead chain. Because {@link
- * unlockedLevelIds} only ever *gains* credit from a stamp, the furthest a
- * player can get is the walk with every level stamped — so anything `order`
- * names that is still shut when everything is stamped is shut forever, and a
- * config that returns anything here has levels in it that nobody can reach.
+ * The check that would have caught the dead chain. It plays the chain as far
+ * as it goes: stamp every level that is open, remember it as opened, walk
+ * again, until a walk opens nothing new. Stamping more never opens less, so
+ * that fixed point is the furthest any player can get — and anything `order`
+ * names that is still shut there is shut forever. A config that returns
+ * anything here has levels in it that nobody can reach.
+ *
+ * It plays rather than stamping all of `order` at once, as it did before the
+ * walk had memory: {@link unlockedLevelIds} keeps a stamped level open, so a
+ * passport holding every stamp opens every level whether or not the chain can
+ * reach it, and the check would have become vacuous.
  *
  * Returned in `order`'s own order, so the first entry is where the chain dies.
  */
 export const unreachableLevelIds = (rules: UnlockRules): readonly LevelId[] => {
-  const furthest = new Set(unlockedLevelIds(rules, [...rules.order, ...rules.initialLevels]));
+  let open = unlockedLevelIds(rules, []);
+  for (;;) {
+    const next = unlockedLevelIds(rules, open, open);
+    if (next.length === open.length) break;
+    open = next;
+  }
+  const furthest = new Set(open);
   return rules.order.filter((levelId) => !furthest.has(levelId));
 };
 

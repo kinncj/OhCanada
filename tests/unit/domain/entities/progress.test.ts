@@ -27,8 +27,11 @@ import {
   withStamp,
   withSubjectStarted,
   withUnlockedLevels,
+  savedUnlockedLevelIds,
+  withRulesUnlocked,
 } from '@domain/entities/progress';
 import type { Progress } from '@domain/entities/progress';
+import type { UnlockRules } from '@domain/entities/level';
 import type { QuestState } from '@domain/entities/quest';
 import { unseenRecord, recordAnswer } from '@domain/scheduling/review-record';
 
@@ -135,6 +138,60 @@ describe('unlocking, scores and exams', () => {
   it('opens a list of levels at once', () => {
     const opened = withUnlockedLevels(base(), [levelId('halifax'), levelId('victoria')]);
     expect(opened.levels.map((level) => level.levelId)).toEqual(['ottawa', 'halifax', 'victoria']);
+  });
+
+  it('reads back the levels the save marks open, and not a row that is locked', () => {
+    const progress: Progress = {
+      ...base(),
+      levels: [...base().levels, emptyLevelProgress(levelId('halifax'), false)],
+    };
+    expect(savedUnlockedLevelIds(progress)).toEqual(['ottawa']);
+  });
+});
+
+describe('the save remembers what the unlock rules opened (ADR-0068 §9)', () => {
+  const rules: UnlockRules = {
+    initialLevels: [levelId('ottawa')],
+    order: ['ottawa', 'halifax', 'victoria'].map((id) => levelId(id)),
+    stampsToUnlockNext: 1,
+  };
+
+  it('writes down the level a stamp opened', () => {
+    const stamped = withStamp(base(), levelId(), ORIGIN);
+    const remembered = withRulesUnlocked(stamped, rules);
+    expect(savedUnlockedLevelIds(remembered)).toEqual(['ottawa', 'halifax']);
+    expect(isLevelUnlocked(remembered, levelId('victoria'))).toBe(false);
+  });
+
+  it('marks a locked row open rather than adding a second one', () => {
+    const progress: Progress = {
+      ...withStamp(base(), levelId(), ORIGIN),
+      levels: [
+        ...withStamp(base(), levelId(), ORIGIN).levels,
+        emptyLevelProgress(levelId('halifax'), false),
+      ],
+    };
+    const remembered = withRulesUnlocked(progress, rules);
+    expect(remembered.levels.filter((level) => level.levelId === levelId('halifax'))).toEqual([
+      emptyLevelProgress(levelId('halifax'), true),
+    ]);
+  });
+
+  it('returns the same value when nothing new opens, so nothing is written', () => {
+    const progress = base();
+    expect(withRulesUnlocked(progress, rules)).toBe(progress);
+    const once = withRulesUnlocked(withStamp(progress, levelId(), ORIGIN), rules);
+    expect(withRulesUnlocked(once, rules)).toBe(once);
+  });
+
+  it('keeps a remembered level open after a level is inserted ahead of it', () => {
+    const once = withRulesUnlocked(withStamp(base(), levelId(), ORIGIN), rules);
+    const inserted: UnlockRules = {
+      ...rules,
+      order: ['ottawa', 'kingston', 'halifax', 'victoria'].map((id) => levelId(id)),
+    };
+    const after = withRulesUnlocked(once, inserted);
+    expect(savedUnlockedLevelIds(after)).toEqual(['ottawa', 'halifax', 'kingston']);
   });
 
   it('keeps the better score', () => {

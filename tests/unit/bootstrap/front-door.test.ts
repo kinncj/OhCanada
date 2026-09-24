@@ -19,7 +19,14 @@ import { toProgressSnapshot } from '@application/persistence/progress-document';
 import { SAVE_MIGRATIONS } from '@application/persistence/save-migrations';
 import { unlockedLevelIds } from '@domain/entities/level';
 import { defaultSettings } from '@domain/entities/player';
-import { newProgress, withCharacter, withQuestState } from '@domain/entities/progress';
+import {
+  newProgress,
+  withCharacter,
+  withQuestState,
+  withStamp,
+  withUnlockedLevels,
+  type Progress,
+} from '@domain/entities/progress';
 import { hasCopyRow, text } from '@ui/copy';
 import type { EpochMillis, LevelId, LocaleCode, QuestId } from '@domain/ids';
 
@@ -4002,5 +4009,92 @@ describe('a save with no character is handed no character (ADR-0053, rule 3)', (
       hoisted.state.appearance,
       'the puppet was dressed more than once on one boot',
     ).toEqual([SAVED_SKINS]);
+  });
+});
+
+/* ------------------------------------------------ the save remembers what it opened */
+
+/**
+ * ADR-0068 §9: inserting a level into `unlockRules.order` must never lock a
+ * level a save could already open. The domain can only promise that over a
+ * remembered set, and the set lives in `levels[].unlocked` — so the wiring has
+ * two halves, and each is asserted here against a real save in `localStorage`
+ * through the real codec:
+ *
+ *  - the map is drawn from the save's remembered set as well as its stamps;
+ *  - a level the rules open is written into the save, at boot for a save from a
+ *    build that did not remember, so the set is on disk before any insertion.
+ */
+describe('the save remembers the levels it has opened (ADR-0068 §9)', () => {
+  const codec = createJsonSaveCodec({ maxImportBytes: 10_000_000, migrations: SAVE_MIGRATIONS });
+  let items = new Map<string, string>();
+
+  function seed(progress: Progress): void {
+    const now = 1_700_000_000_000 as EpochMillis;
+    const snapshot = toProgressSnapshot(progress, { version: codec.version, updatedAt: now });
+    if (!snapshot.ok) throw new Error(`the seeded save is not a save: ${snapshot.error.message}`);
+    const encoded = codec.encode(snapshot.value);
+    if (!encoded.ok) throw new Error(`the seeded save would not encode: ${encoded.error.message}`);
+    items = new Map<string, string>([[PROGRESS_STORAGE_KEY, encoded.value]]);
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string): string | null => items.get(key) ?? null,
+      setItem: (key: string, value: string): void => {
+        items.set(key, value);
+      },
+      removeItem: (key: string): void => {
+        items.delete(key);
+      },
+    });
+  }
+
+  /** The levels the save on disk marks open, read back through the codec. */
+  const writtenUnlocked = (): readonly string[] => {
+    const stored = items.get(PROGRESS_STORAGE_KEY);
+    if (stored === undefined) throw new Error('nothing is saved');
+    const decoded = codec.decode(stored);
+    if (!decoded.ok) throw new Error(`the written save does not decode: ${decoded.error.message}`);
+    return decoded.value.levels
+      .filter((level) => level.unlocked)
+      .map((level) => `${level.levelId}`);
+  };
+
+  const fresh = (): Progress => newProgress(defaultSettings('en' as LocaleCode), [START_LEVEL]);
+
+  it('writes the level a stamp opened into a save that only had the stamp', async () => {
+    /* A save from before the walk had memory: the start level stamped, and the
+       level its stamp opened never written down, because nobody played it. */
+    seed(withStamp(fresh(), START_LEVEL, 1_700_000_000_000 as EpochMillis));
+    expect(writtenUnlocked()).not.toContain(`${EARNED_LEVEL}`);
+
+    await boot('');
+
+    expect(entryFor(`${EARNED_LEVEL}`)).toMatchObject({ unlocked: true });
+    expect(
+      writtenUnlocked(),
+      `${EARNED_LEVEL} is open on the map and not in the save, so inserting a level before ` +
+        'it would lock it again',
+    ).toContain(`${EARNED_LEVEL}`);
+  });
+
+  it('opens a level the save remembers even when no stamp in it would', async () => {
+    /* What a save looks like after a level is inserted ahead of one it opened:
+       the stamps now pay for the new level, and only the memory keeps this one. */
+    seed(withUnlockedLevels(fresh(), [EARNED_LEVEL]));
+
+    await boot('');
+
+    expect(
+      entryFor(`${EARNED_LEVEL}`),
+      'the map was drawn from the stamps alone, so a remembered level locked again',
+    ).toMatchObject({ unlocked: true });
+  });
+
+  it('does not write a save the rules open nothing new in', async () => {
+    seed(fresh());
+    const before = items.get(PROGRESS_STORAGE_KEY);
+
+    await boot('');
+
+    expect(items.get(PROGRESS_STORAGE_KEY)).toBe(before);
   });
 });

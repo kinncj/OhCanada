@@ -54,14 +54,14 @@ const onDisk = readdirSync(LEVELS_DIR)
 
 describe('the ten entries', () => {
   it('is ten rows even when the config names fewer places', () => {
-    const entries = journeyEntries({ rules: rules(), journey: journey(), stamped: [], isBuilt: () => false });
+    const entries = journeyEntries({ rules: rules(), journey: journey(), stamped: [], unlocked: [], isBuilt: () => false });
 
     expect(entries).toHaveLength(JOURNEY_LENGTH);
     expect(entries.map((entry) => entry.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 
   it('leaves a place the config has not named without an id, and never a placeholder', () => {
-    const entries = journeyEntries({ rules: rules(), journey: journey(), stamped: [], isBuilt: () => true });
+    const entries = journeyEntries({ rules: rules(), journey: journey(), stamped: [], unlocked: [], isBuilt: () => true });
 
     /* `TN-LEVELS` declines to fix ids for the blocked levels, and `TN-MAP-04`
        forbids "TBD" standing in for one. A row with no id is a numbered card. */
@@ -77,6 +77,7 @@ describe('the ten entries', () => {
       rules: rules(),
       journey: withBlank,
       stamped: [],
+      unlocked: [],
       isBuilt: () => true,
     });
 
@@ -90,7 +91,7 @@ describe('the ten entries', () => {
       id(`level-${String(index)}`),
     );
     expect(
-      journeyEntries({ rules: rules(), journey: long, stamped: [], isBuilt: () => false }),
+      journeyEntries({ rules: rules(), journey: long, stamped: [], unlocked: [], isBuilt: () => false }),
     ).toHaveLength(12);
   });
 
@@ -99,6 +100,7 @@ describe('the ten entries', () => {
       rules: rules(),
       journey: journey(),
       stamped: [],
+      unlocked: [],
       isBuilt: (candidate) => candidate === 'quebec-city' || candidate === 'ottawa',
     });
 
@@ -112,6 +114,7 @@ describe('the ten entries', () => {
       rules: rules(),
       journey: journey(),
       stamped: [id('ottawa')],
+      unlocked: [],
       isBuilt: () => true,
     });
 
@@ -128,11 +131,33 @@ describe('the ten entries', () => {
       rules: chain,
       journey: journey(),
       stamped: [id('halifax')],
+      unlocked: [],
       isBuilt: () => true,
     });
 
     expect(entries[1]).toMatchObject({ id: 'quebec-city', unlocked: true });
     expect(entries[2]).toMatchObject({ id: 'ottawa', unlocked: false });
+  });
+
+  it('keeps a place the save opened when a level is inserted before it (ADR-0068 §9)', () => {
+    /* Halifax stamped opened Québec City. Insert Kingston between them: the
+       stamp's credit now reaches Kingston first, and without the save's own
+       record Québec City would lock again. */
+    const inserted = rules({
+      initialLevels: [id('halifax')],
+      order: [id('halifax'), id('kingston'), id('quebec-city'), id('ottawa')],
+    });
+    const entries = journeyEntries({
+      rules: inserted,
+      journey: [id('halifax'), id('kingston'), id('quebec-city'), id('ottawa')],
+      stamped: [id('halifax')],
+      unlocked: [id('halifax'), id('quebec-city')],
+      isBuilt: () => true,
+    });
+
+    expect(entries[1]).toMatchObject({ id: 'kingston', unlocked: true });
+    expect(entries[2]).toMatchObject({ id: 'quebec-city', unlocked: true });
+    expect(entries[3]).toMatchObject({ id: 'ottawa', unlocked: false });
   });
 });
 
@@ -141,6 +166,7 @@ describe('what the composition root is allowed to open', () => {
     rules: rules(),
     journey: journey(),
     stamped: [],
+    unlocked: [],
     isBuilt: (candidate) => candidate !== 'halifax',
   });
 
@@ -157,6 +183,7 @@ describe('what the composition root is allowed to open', () => {
       rules: rules({ initialLevels: [id('halifax'), id('ottawa')] }),
       journey: journey(),
       stamped: [],
+      unlocked: [],
       isBuilt: (candidate) => candidate !== 'halifax',
     });
     expect(generous[0]).toMatchObject({ unlocked: true, built: false });
@@ -181,6 +208,7 @@ describe('the shipped config opens a door (OQ-MAP-1)', () => {
       rules: parsed.value.unlockRules,
       journey: parsed.value.journey,
       stamped: [],
+      unlocked: [],
       isBuilt: (candidate) => onDisk.includes(`${candidate}`),
     });
 
@@ -198,6 +226,7 @@ describe('the shipped config opens a door (OQ-MAP-1)', () => {
       rules: parsed.value.unlockRules,
       journey: parsed.value.journey,
       stamped: [],
+      unlocked: [],
       isBuilt: (candidate) => onDisk.includes(`${candidate}`),
     });
 

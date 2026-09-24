@@ -336,10 +336,49 @@ not drawn** (CLAUDE.md, Art: reference-accurate, never invented).
 
 ## Obligations
 
-- **OBLIGATION due=2026-10-23 owner=engine** — make the unlock walk monotone under insertion (§9). For every
+- ~~**OBLIGATION due=2026-10-23 owner=engine** — make the unlock walk monotone under insertion (§9). For every
   set of stamps, adding a level to `unlockRules.order` never shrinks the set of levels a save can open.
   `unlockedLevelIds` gets a unit test with a fixture that inserts a level after a stamped one. The test must
-  fail on today's walk and pass on the new one. This lands before any level is inserted into `order`.
+  fail on today's walk and pass on the new one. This lands before any level is inserted into `order`.~~
+  **DISCHARGED 2026-09-24** — the commit that strikes this marker lands it, before any level is inserted into
+  `order`. `unlockedLevelIds(rules, stamped, previouslyUnlocked)` in `app/domain/entities/level.ts` returns
+  the walk ∪ the stamped levels ∪ the levels the save already opened, and the walk no longer stops at a level
+  that is already open (stamped or remembered) and cannot be paid for: it passes it without spending, and
+  that level's stamp still earns credit. `tests/unit/domain/entities/level.test.ts` holds the fixture this
+  marker asks for, on `content/game.config.json`'s real order with `kingston` inserted before `ottawa`: stamps
+  on Halifax, Peggy's Cove and Québec City open Ottawa, and on the old walk (kept in the test as
+  `legacyWalk`) the credit goes to Kingston and Ottawa locks; with Ottawa stamped too, the old walk locks
+  Ottawa *and* Toronto. Both are asserted to fail on `legacyWalk` and pass on the new walk. A seeded property
+  loop (400 trials, over 400 chained insertions) plays random saves over random orders, costs and insertion
+  points, persisting the open set after every stamp and feeding it back, and asserts before ⊆ after at every
+  insertion. It also asserts `legacyWalk` breaks the same property, so the loop is known to bite.
+  **Two findings shaped the rule, and one reading of this marker is corrected by them.**
+  (1) **Stamps and order alone cannot satisfy it, so the rule remembers.** "For every set of stamps" cannot be
+  met by any rule that sees only stamps and `order`. Chained insertions reach any order from any of its
+  subsequences, so monotonicity would force the set a rule opens for an order to contain what it opens for
+  every subsequence. `[initial, X]` must open `X` for one stamp on `initial`, or no stamp ever opens
+  anything, and it is a subsequence of every order holding both. So one stamp would open the whole map. That
+  rule was rejected. The promise is kept for a save that remembers what it opened, and the save already
+  can: `LevelProgress.unlocked` (`app/domain/entities/progress.ts`, codec field 4 under ADR-0026) was written
+  by `withLevelUnlocked` and read by nobody. It is now the memory, **with no schema, codec or migration
+  change**. `withRulesUnlocked(progress, rules)` marks open every level the rules open.
+  `app/bootstrap/main.ts` calls it on every write and once at boot, and draws the map from
+  `savedUnlockedLevelIds(progress)` as well as the stamps. `tests/unit/bootstrap/front-door.test.ts` proves
+  the wiring against a real save in `localStorage`. A stamp-only save from an older build has the level its
+  stamp opened written on first boot. A remembered level stays open with no stamp to pay for it. A save with
+  nothing new is not rewritten. Both of the first two fail without the `main.ts` change.
+  (2) **A remembered level is still paid for when the walk can pay.** Passing every remembered level for free
+  was considered and rejected. It leaves a stamp unspent on every reload, so the fed-back set grows by one
+  level each boot, and one stamp opens the map in about ten reloads. Charging a level the walk can afford,
+  whether or not it is remembered, keeps the accounting identical to the old walk for every save played in
+  order. The property loop asserts that equality, and that the persisted set is a fixed point. A save opens
+  a level early only when an insertion hands it one: Kingston, above, opens without a stamp being spent on
+  it. **What it cannot keep.** A save never loaded by a build carrying this commit has only its stamps and
+  the rows a quest created. If it first loads a build that already has Kingston, a level it had opened and
+  not played (Ottawa, above) moves to Kingston, although a *stamped* level never locks. That is why this
+  marker lands before Kingston's config slot, and why that slot should not ship in the same release.
+  `unreachableLevelIds` now plays the chain to its fixed point. It no longer stamps every level at once,
+  because a stamp now keeps its own level open, and that check would have gone vacuous.
 
 - **OBLIGATION due=2026-11-23 owner=content** — take Québec City's tier 2 stops (§7), which are the audit's
   ranks 1 to 3, each telling a `history`-half sentence. The alternative is to record their refusal as a play
