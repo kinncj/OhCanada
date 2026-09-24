@@ -55,8 +55,11 @@ for (const locale of ['en', 'fr'] as const) {
     await expect(learn).toHaveAttribute('role', 'dialog');
     await expect(learn).toHaveAccessibleName(text(locale, 'learn.title'));
     const chapters = page.locator('[data-testid="learn-chapters"] button');
+    /* Guide order: the Oath chapter opens the guide, and lessons batch 2 gave it
+       lessons, so it is listed first (TN-LEARN, "the first is 'The Oath of
+       Citizenship'"). */
     await expect(chapters.first()).toHaveText(
-      text(locale, 'learn.chapter.rights-and-responsibilities-of-citizenship'),
+      text(locale, 'learn.chapter.the-oath-of-citizenship'),
     );
     expect(lessonChunks, 'opening Learn downloaded a lesson').toEqual([]);
 
