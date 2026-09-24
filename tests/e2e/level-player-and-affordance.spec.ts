@@ -272,11 +272,27 @@ function luminance(hex: string): number {
   return 0.2126 * ((value >> 16) & 0xff) + 0.7152 * ((value >> 8) & 0xff) + 0.0722 * (value & 0xff);
 }
 
+/**
+ * Hold right until the player is at `worldX`, or until a stop holds them short of it.
+ *
+ * A held drive comes to rest at every subject it can engage (ADR-0032), beside a
+ * character rather than on them (ADR-0037), so walking at the first subject ends
+ * at its stop — about 755 on Halifax, short of the guide's 900 − 60 — and never
+ * at `worldX`. Waiting for a position the stop forbids spent the whole 20 s of
+ * polling on every run, and under load pushed the test past its timeout. Ten
+ * polls (half a second) with the key held and no movement is that rest.
+ */
 async function walkTo(page: Page, worldX: number): Promise<void> {
   const probe = page.locator('[data-testid="scene-state"]');
   await page.keyboard.down('ArrowRight');
+  let last = Number.NaN;
+  let still = 0;
   for (let tick = 0; tick < 400; tick += 1) {
-    if (Number(await probe.getAttribute('data-player-x')) >= worldX) break;
+    const x = Number(await probe.getAttribute('data-player-x'));
+    if (x >= worldX) break;
+    still = x === last ? still + 1 : 0;
+    if (still >= 10) break;
+    last = x;
     await page.waitForTimeout(50);
   }
   await page.keyboard.up('ArrowRight');
