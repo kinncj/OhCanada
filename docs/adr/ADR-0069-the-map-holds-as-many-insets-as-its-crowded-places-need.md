@@ -233,7 +233,22 @@ coordinates art publishes in `assets/style/map-canada.md` §6, and art reviews t
   commit 2. If no single home is possible, record that here and in `docs/architecture.md` as review-only. Do
   not write a second literal.
 
-- **OBLIGATION due=2026-12-23 owner=infra** — fix the boundary defect in §6. A level document and its map
+- ~~**OBLIGATION due=2026-12-23 owner=infra** — fix the boundary defect in §6. A level document and its map
   anchor must be landable by their own owners in their own commits. Key `screen-art.mjs`'s one-anchor rule on
   `game.config.json#/journey` rather than on `content/levels/`, or record in an amendment here why the
-  coupling stays and who authors the shared commit.
+  coupling stays and who authors the shared commit.~~
+  **DISCHARGED 2026-09-24** — keyed on the journey, in the commit that strikes this marker.
+  `checkScreenSidecars` takes `places`, the non-null ids of `game.config.json#/journey`, and requires exactly
+  one anchor per place, both directions. A `null` slot takes none. `validate-content.mjs` no longer reads
+  `content/levels/` for this rule. It now says "12 anchor(s) against 10 journey place(s)". Two floors replace
+  the old one. A journey that names no place fails as vacuous (ADR-0024), and a config it cannot read fails
+  rather than passing. `tests/unit/infra/screen-art-gate.test.ts` adds a case that removes a level document
+  and keeps its journey slot and anchor. It passes now. On the pre-fix script it fails with `anchors."…"
+  names no level in content/levels/`, which is the defect. What a reader could trust before still holds,
+  one step further removed. `unlock-chain-is-reachable.test.ts` requires every level document to sit at its
+  own `order` in `journey`, so every level document still has an anchor. **What stays coupled.** An anchor
+  now lands with the journey slot that names its place, not with the level document. For Kingston, that is
+  ADR-0068 §9's insertion at slot 5, which also renumbers the later level documents' `order` under that unit
+  test. The Kingston level document itself lands alone, in content's commit, after the slot and the anchor.
+  The stale sentence "exactly one anchor per level document" in `app/application/ports/map-anchors.ts`'s
+  header is outside infra's files, and it is left for §6 commit 1, which rewrites that port.

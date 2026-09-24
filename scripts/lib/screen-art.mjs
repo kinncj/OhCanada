@@ -62,7 +62,7 @@
  *
  *   - the directory exists and holds no SVG: a failure, not "0 screen sources";
  *   - a sidecar with no drawing beside it: a failure;
- *   - a sidecar's anchors cross-checked against zero levels: a failure.
+ *   - a sidecar's anchors cross-checked against zero places: a failure.
  *
  * An ABSENT directory is legal - a build with no screen art - and assets.mjs
  * says so in words rather than printing a count of zero.
@@ -251,14 +251,15 @@ const fmtRect = (r) => `(${r.x}, ${r.y}, ${r.width} x ${r.height})`;
 
 /**
  * The claims in a sidecar that its schema cannot state, checked against the two
- * things they are about: the drawing beside it and the levels that exist.
+ * things they are about: the drawing beside it and the places the map shows.
  *
  * UI code will place a marker at these coordinates without looking at the map,
  * so every one is checked here rather than trusted there:
  *
  *   1. `svg` names the drawing the sidecar sits beside;
  *   2. `viewBox` is that drawing's own viewBox;
- *   3. there is exactly one anchor per level in content/levels/, both directions;
+ *   3. there is exactly one anchor per place `game.config.json#/journey` names,
+ *      both directions. A `null` slot names no place and takes no anchor.
  *   4. every anchor lies inside the viewBox;
  *   5. an inset's frame lies inside the viewBox, its window inside its frame, its
  *      anchors inside its window and name stops the main map anchors, and each of
@@ -268,19 +269,36 @@ const fmtRect = (r) => `(${r.x}, ${r.y}, ${r.width} x ${r.height})`;
  * `sidecars` are `{ rel, file, svg, doc }` whose `doc` has ALREADY passed
  * content/schemas/map-anchors.schema.json; a sidecar that failed its schema is
  * reported there and not again here.
+ *
+ * `places` are the non-null ids of `game.config.json#/journey`, or `null` when
+ * the config could not be read. The rule is keyed on the journey and NOT on the
+ * documents in content/levels/ (ADR-0069, the boundary defect in §6). The map
+ * pins what the journey names (`app/ui/level-map.ts` places the level select's
+ * stops, which are journey slots), so the journey is what the anchors must
+ * agree with. Keyed on content/levels/, a level document (content's) and its
+ * anchor (art's) could only land in one commit by two owners. Keyed on the
+ * journey, art anchors a place once the journey names it, and content lands the
+ * level document on its own commit.
  */
-export function checkScreenSidecars({ root, sidecars, levelIds }) {
+export function checkScreenSidecars({ root, sidecars, places }) {
   const failures = [];
   let anchors = 0;
   let regions = 0;
 
   if (sidecars.length === 0) return { failures, anchors, regions, checked: 0 };
 
-  if (levelIds.length === 0) {
+  if (places === null) {
     failures.push(
-      `${sidecars.map((s) => s.rel).join(', ')}: anchors were to be checked against the levels in ` +
-        'content/levels/ and there are none. ANTI-VACUUM FLOOR (ADR-0024): "every anchor names a level" ' +
-        'is vacuously true of no levels.',
+      `${sidecars.map((s) => s.rel).join(', ')}: anchors are checked against the places ` +
+        'content/game.config.json#/journey names, and that journey could not be read.',
+    );
+    return { failures, anchors, regions, checked: 0 };
+  }
+  if (places.length === 0) {
+    failures.push(
+      `${sidecars.map((s) => s.rel).join(', ')}: anchors were to be checked against the places ` +
+        'content/game.config.json#/journey names and it names none. ANTI-VACUUM FLOOR (ADR-0024): ' +
+        '"every anchor names a place" is vacuously true of no places.',
     );
     return { failures, anchors, regions, checked: 0 };
   }
@@ -312,17 +330,19 @@ export function checkScreenSidecars({ root, sidecars, levelIds }) {
 
     const box = { x: doc.viewBox[0], y: doc.viewBox[1], width: doc.viewBox[2], height: doc.viewBox[3] };
     const named = Object.keys(doc.anchors).sort();
-    for (const id of levelIds) {
+    for (const id of places) {
       if (!named.includes(id)) {
         failures.push(
-          `${rel}: no anchor for level "${id}", which content/levels/ declares. The screen would have a stop ` +
+          `${rel}: no anchor for "${id}", which game.config.json#/journey names. The screen would have a stop ` +
             'it cannot place on the map.',
         );
       }
     }
     for (const id of named) {
-      if (!levelIds.includes(id)) {
-        failures.push(`${rel}: anchors."${id}" names no level in content/levels/ (${levelIds.join(', ')}).`);
+      if (!places.includes(id)) {
+        failures.push(
+          `${rel}: anchors."${id}" names no place in game.config.json#/journey (${places.join(', ')}).`,
+        );
       }
       const point = doc.anchors[id];
       anchors += 1;

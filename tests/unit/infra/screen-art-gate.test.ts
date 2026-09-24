@@ -6,10 +6,13 @@
  * at the drawing. So the sidecar is schema-checked
  * (`content/schemas/map-anchors.schema.json`) and then cross-checked by
  * scripts/lib/screen-art.mjs against what the schema cannot see: the drawing
- * beside it and the level documents that exist.
+ * beside it and the places `content/game.config.json#/journey` names. The
+ * anchor rule is keyed on the journey, not on content/levels/ (ADR-0069 §6's
+ * boundary defect), so an anchor and its level document land in their owners'
+ * own commits.
  *
  * Every case drives the real CLI over a scratch tree built from the REAL map,
- * sidecar, schemas and level documents, with one thing broken. The first case is
+ * sidecar, schemas, game config and level documents, with one thing broken. The first case is
  * the unbroken tree, so a mutation that fails is failing for its own reason and
  * not because the fixture never passed.
  */
@@ -67,7 +70,15 @@ const LEVEL_IDS = readdirSync(join(REPO, 'content', 'levels'))
   .map((name) => (JSON.parse(readFileSync(join(REPO, 'content', 'levels', name), 'utf8')) as { id: string }).id)
   .sort();
 
-const FIRST_LEVEL = LEVEL_IDS[0] ?? '';
+interface GameConfig {
+  [property: string]: unknown;
+  journey: (string | null)[];
+}
+
+const CONFIG = JSON.parse(readFileSync(join(REPO, 'content', 'game.config.json'), 'utf8')) as GameConfig;
+const PLACES = [...new Set(CONFIG.journey.filter((slot): slot is string => slot !== null))].sort();
+
+const FIRST_LEVEL = PLACES[0] ?? '';
 const INSET_STOP = Object.keys(REAL.inset?.anchors ?? {}).sort()[0] ?? '';
 
 const credit = (path: string): Record<string, string> => ({
@@ -85,7 +96,14 @@ let caseId = 0;
  * A scratch root holding the real schemas, level documents, palette, map and
  * sidecar - with `mutate` applied to the sidecar - and the gate's verdict on it.
  */
-function run(mutate: (doc: Sidecar) => void, options: { readonly levels?: boolean } = {}): Run {
+interface RunOptions {
+  /** Level ids whose documents the scratch tree leaves out. */
+  readonly withoutLevels?: readonly string[];
+  /** Applied to a copy of the real game config; `null` leaves the config out. */
+  readonly config?: ((config: GameConfig) => void) | null;
+}
+
+function run(mutate: (doc: Sidecar) => void, options: RunOptions = {}): Run {
   caseId += 1;
   const root = join(WORK, `case-${caseId}`);
   const screens = join(root, 'assets', 'src', 'svg', 'screens');
@@ -94,9 +112,14 @@ function run(mutate: (doc: Sidecar) => void, options: { readonly levels?: boolea
   mkdirSync(screens, { recursive: true });
 
   cpSync(join(REPO, 'content', 'schemas'), join(root, 'content', 'schemas'), { recursive: true });
-  const withLevels = options.levels !== false;
-  if (withLevels) {
-    cpSync(join(REPO, 'content', 'levels'), join(root, 'content', 'levels'), { recursive: true });
+  cpSync(join(REPO, 'content', 'levels'), join(root, 'content', 'levels'), { recursive: true });
+  for (const id of options.withoutLevels ?? []) {
+    rmSync(join(root, 'content', 'levels', `${id}.json`));
+  }
+  if (options.config !== null) {
+    const config = structuredClone(CONFIG);
+    options.config?.(config);
+    writeFileSync(join(root, 'content', 'game.config.json'), `${JSON.stringify(config, null, 2)}\n`, 'utf8');
   }
   cpSync(join(REPO, 'assets', 'style', 'palette.json'), join(root, 'assets', 'style', 'palette.json'));
 
@@ -118,10 +141,7 @@ function run(mutate: (doc: Sidecar) => void, options: { readonly levels?: boolea
     'utf8',
   );
 
-  // --allow-empty-content only where the case removes the level documents on
-  // purpose; that waiver is about content/ being empty and must not hide the
-  // sidecar's own floor, which is what that case asserts.
-  const args = [SCRIPT, '--root', root, ...(withLevels ? [] : ['--allow-empty-content'])];
+  const args = [SCRIPT, '--root', root];
   const result = spawnSync(process.execPath, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   const stdout = result.stdout ?? '';
   return { status: result.status ?? -1, stdout, output: `${stdout}${result.stderr ?? ''}` };
@@ -136,6 +156,7 @@ const expectRefused = (result: Run, message: string): void => {
 describe('the screen-art sidecar gate', () => {
   it('has a real map, sidecar and levels to build its cases from', () => {
     expect(LEVEL_IDS.length).toBeGreaterThan(0);
+    expect(PLACES.length).toBeGreaterThan(0);
     expect(Object.keys(REAL.anchors).length).toBeGreaterThan(0);
     expect(INSET_STOP).not.toBe('');
   });
@@ -144,25 +165,65 @@ describe('the screen-art sidecar gate', () => {
     const result = run(() => undefined);
     expect(result.status, result.output).toBe(0);
     expect(result.stdout).toContain('1 screen-art sidecar(s) cross-checked');
-    expect(result.stdout).toContain(`against ${LEVEL_IDS.length} level(s)`);
+    expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
   });
 
-  it('fails when a level has no anchor', () => {
+  it('fails when a place the journey names has no anchor', () => {
     expectRefused(
       run((doc) => {
         delete doc.anchors[FIRST_LEVEL];
       }),
-      `no anchor for level "${FIRST_LEVEL}"`,
+      `no anchor for "${FIRST_LEVEL}", which game.config.json#/journey names`,
     );
   });
 
-  it('fails on an anchor for a level that does not exist', () => {
+  it('fails on an anchor for a place the journey does not name', () => {
     expectRefused(
       run((doc) => {
         doc.anchors['not-a-level'] = { x: 10, y: 10 };
       }),
-      'anchors."not-a-level" names no level in content/levels/',
+      'anchors."not-a-level" names no place in game.config.json#/journey',
     );
+  });
+
+  it('fails on an anchor whose place left the journey, though its level document is still there', () => {
+    expectRefused(
+      run(() => undefined, {
+        config: (config) => {
+          config.journey = config.journey.map((slot) => (slot === FIRST_LEVEL ? null : slot));
+        },
+      }),
+      `anchors."${FIRST_LEVEL}" names no place in game.config.json#/journey`,
+    );
+  });
+
+  /*
+   * ADR-0069 §6's boundary defect, closed. Keyed on content/levels/, the rule
+   * refused an anchor with no level document and a level document with no
+   * anchor, so the two could only land together, by two owners. Keyed on the
+   * journey, art's anchor passes before content's level document exists, and
+   * the level document then lands on its own commit without touching the map.
+   */
+  it('passes an anchor whose level document has not landed yet, so art and content land apart', () => {
+    const result = run(() => undefined, { withoutLevels: [FIRST_LEVEL] });
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
+  });
+
+  it('takes no anchor for a journey slot with no id', () => {
+    const result = run(
+      (doc) => {
+        delete doc.anchors[FIRST_LEVEL];
+      },
+      {
+        withoutLevels: [FIRST_LEVEL],
+        config: (config) => {
+          config.journey = config.journey.map((slot) => (slot === FIRST_LEVEL ? null : slot));
+        },
+      },
+    );
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain(`against ${PLACES.length - 1} journey place(s)`);
   });
 
   it('fails on an anchor outside the viewBox', () => {
@@ -246,10 +307,18 @@ describe('the screen-art sidecar gate', () => {
     );
   });
 
-  it('fails rather than cross-checking anchors against no levels (ADR-0024)', () => {
+  it('fails rather than cross-checking anchors against a journey that names no place (ADR-0024)', () => {
     expectRefused(
-      run(() => undefined, { levels: false }),
-      'is vacuously true of no levels',
+      run(() => undefined, {
+        config: (config) => {
+          config.journey = config.journey.map(() => null);
+        },
+      }),
+      'is vacuously true of no places',
     );
+  });
+
+  it('fails rather than passing anchors it had no journey to check against', () => {
+    expectRefused(run(() => undefined, { config: null }), 'that journey could not be read');
   });
 });
