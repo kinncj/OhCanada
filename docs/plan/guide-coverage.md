@@ -1403,3 +1403,26 @@ Decisions an auditor should see:
 level's answer pools are now taught except for 10 caption questions (`jus-07`, `jus-32`, and the 7 above) and
 two partial teaches (`jus-37` in §7.7, `hist-07` in §7.12). Next under the owner's rule: the verified
 questions in no pool, then the ceilings of §5(a).
+
+
+### 7.15 Read in the level: the last five levels (2026-09-24)
+
+Every stop on Peggy's Cove, Toronto, Vancouver, The North and Québec City now reads one lesson directly after its `visit`, under ADR-0067, inside ADR-0065 §3.3's four passages and 120 words a stop (both gated). With this, all ten levels read at every stop. Pooled questions not read or told before the step that asks them: **303** of 492 (the teach-back ratchet), down from 410 before any read step. What is not read in a level stays in Learn; the per-question maps for these levels are §7.9–§7.13.
+
+| Level | Stop | Lesson | Passages |
+|---|---|---|---|
+| Peggy's Cove | `fish-store` | `who-08-aboriginal-rights-and-residential-schools` | `w8-rights-in-the-constitution`, `w8-royal-proclamation-of-1763`, `w8-residential-schools-1800s-to-1980s`, `w8-apology-in-2008` |
+| Peggy's Cove | `village-house` | `who-07-a-strong-and-free-country` | `w7-strong-and-free`, `w7-oldest-constitutional-tradition`, `w7-only-constitutional-monarchy`, `w7-the-great-dominion` |
+| Toronto | `streetcar` | `elections-11-voting-step-by-step` | `e11-no-card-call-your-local-office`, `e11-advance-polls-and-special-ballots`, `e11-what-to-bring`, `e11-marking-an-x` |
+| Toronto | `cn-tower` | `elections-10-the-secret-ballot-and-forming-a-government` | `e10-who-forms-the-government`, `e10-the-governor-general-appoints-the-prime-minister`, `e10-majority-government`, `e10-minority-government` |
+| Toronto | `nathan-phillips-square` | `elections-08-electing-your-member-of-parliament` | `e8-who-may-run`, `e8-candidates`, `e8-many-candidates-in-a-district`, `e8-most-votes-wins-the-seat` |
+| Vancouver | `marina` | `symbols-08-hockey-lacrosse-and-the-beaver` | `s8-hockey-the-national-winter-sport`, `s8-ice-hockey-developed-in-the-1800s`, `s8-the-stanley-cup`, `s8-lacrosse-the-summer-sport` |
+| Vancouver | `canada-place` | `symbols-06-the-crown-the-flag-and-the-maple-leaf` | `s6-what-symbols-do`, `s6-monarchy-since-1867`, `s6-the-crown-and-government`, `s6-national-colours-since-1921` |
+| Vancouver | `bulk-carrier` | `symbols-09-languages-anthems-and-honours` | `s9-official-languages-act-1969`, `s9-anthem-proclaimed-1980`, `s9-anthem-first-sung-in-quebec-city`, `s9-the-royal-anthem` |
+| Québec City | `chateau-frontenac` | `history-10-new-france-and-the-fur-trade` | `h10-first-settlement-1604`, `h10-peace-with-the-iroquois-1701`, `h10-plains-of-abraham-1759`, `h10-wolfe-and-montcalm` |
+| Québec City | `city-wall` | `history-11-the-quebec-act-and-the-loyalists` | `h11-habitants-or-canadiens`, `h11-first-assembly-halifax-1758`, `h11-constitutional-act-1791`, `h11-first-elected-assemblies-1791` |
+| Québec City | `terrace-kiosk` | `history-15-building-the-dominion` | `h15-fathers-of-confederation`, `h15-two-levels-of-government`, `h15-ontario-and-quebec-created`, `h15-born-on-july-1-1867` |
+| Québec City | `wolfe-montcalm-monument` | `history-01-first-peoples-and-europeans` | `h1-french-empire-leaders`, `h1-english-colonies-grew-larger`, `h1-france-and-britain-fight-for-the-continent` |
+| Québec City | `martello-tower` | `history-02-british-colony-first-assemblies` | `h2-renamed-province-of-quebec`, `h2-quebec-act-passed-1774`, `h2-quebec-act-is-a-foundation`, `h2-thirteen-colonies-become-the-united-states` |
+| Québec City | `hotel-du-parlement` | `history-02-british-colony-first-assemblies` | `h2-democracy-grew-step-by-step`, `h2-pei-1773-and-nb-1785`, `h2-british-north-america` |
+| The North | `driftwood` | `regions-16-the-country-and-its-capitals` | `r16-second-largest-country`, `r16-three-oceans`, `r16-five-distinct-regions`, `r16-ten-provinces-three-territories` |
