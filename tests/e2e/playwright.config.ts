@@ -9,9 +9,14 @@ import { defineConfig, devices } from '@playwright/test';
  * exercises the same artefact GitHub Pages serves, base path included.
  * The viewport is a portrait phone (390x844 CSS px): TrueNorth is portrait-only
  * (ADR-0002) and no suite may ever assert a landscape layout.
+ *
+ * `TN_E2E_PORT` moves the server, as `TN_A11Y_PORT` does for the a11y suite, so
+ * two checkouts on one machine can run the suite at once without one of them
+ * finding the other's port taken (`--strictPort`) or, off CI, reusing the other
+ * checkout's build.
  */
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
-const PORT = 4173;
+const PORT = Number(process.env.TN_E2E_PORT ?? 4173);
 const BASE_PATH = '/OhCanada/';
 
 export default defineConfig({

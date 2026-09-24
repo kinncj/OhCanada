@@ -1,12 +1,12 @@
 /**
- * Where a level ends, and the latch that says so once.
+ * Where a level ends, and the latch that says so once per arrival.
  *
  * A level had no ending. You walked to the far edge of the world, `applyBounds`
  * clamped you to it, and nothing happened — which is the whole of the player's
  * "we don't know how to go to the next level" seen from the world's side.
  *
  * This is the *observation*, not the decision. The scene watches the player's x
- * and publishes `level/exitReached` the first time they arrive; whether arriving
+ * and publishes `level/exitReached` each time they arrive; whether arriving
  * finishes a level is a product question the composition root answers, and the
  * inbound `LevelScene.markLevelComplete()` — the domain telling the world a
  * stamp was earned — stays exactly as it was. Nothing here asserts the player
@@ -16,7 +16,7 @@
  * gives: `level-scene.ts` imports Phaser at module scope and cannot be loaded
  * under `environment: 'node'`, so a rule left in the scene is a rule proved only
  * by a browser, once, on one machine. `tests/unit/adapters/phaser/level-exit.test.ts`
- * walks all four shipped levels to the end and back with the real locomotion
+ * walks every shipped level to the end and back with the real locomotion
  * strategy and the real camera instead.
  *
  * ## Where the end is, and why it is not the edge
@@ -105,44 +105,91 @@ export function exitLineX(input: ExitLineInput): number {
   return Math.min(bounds.right, Math.max(line, halfway));
 }
 
+/**
+ * How far behind the line, as a fraction of the camera's view, the player has to
+ * go before arriving again counts as a new arrival (ADR-0074).
+ *
+ * A tenth of a view — 108 world px at zoom 1 — is a step back the player can
+ * see themselves take, and far more than the few pixels a turn at the line
+ * carries them: a turn is a deceleration from a standing start or a brake from
+ * cruise, and the latch must not read either as leaving the end. Expressed
+ * against the view for the reason {@link EXIT_VIEW_FRACTION} is.
+ */
+export const EXIT_REARM_VIEW_FRACTION = 0.1;
+
 /** The line, and whether the player has crossed it yet. */
 export interface ExitWatch {
   /** Where the line is, in world x. Fixed for the life of the level. */
   readonly x: number;
-  /** Has the arrival already been reported? */
+  /**
+   * Where the player has to be, strictly behind, for the next crossing of
+   * {@link x} to count as a new arrival. Always ahead of the spawn and behind
+   * the line.
+   */
+  readonly rearmX: number;
+  /** Is the player at the end right now, as far as the latch knows? */
   readonly reached: boolean;
   /**
-   * Feed this frame's player x. `true` **exactly once**, on the first frame at
-   * or past the line; `false` for every frame after it, however the player
-   * jostles at the boundary.
+   * Feed this frame's player x. `true` on the first frame at or past the line
+   * of each arrival; `false` on every frame after it until the player has gone
+   * back behind {@link rearmX}, however they jostle at the boundary.
    */
   arrived(playerX: number): boolean;
 }
 
 /**
- * A latch, because an arrival is a moment and a position is not.
+ * Where the latch opens again, for a line at `lineX`.
  *
- * Without it the check is `x >= line`, which is true on every frame the player
- * spends near the end of the level — a completion card sixty times a second.
- * With it the answer is a boolean read after the first crossing, which is also
- * why this is cheap enough to call every frame: once it has fired the update
- * costs one field read and a return.
+ * The margin is {@link EXIT_REARM_VIEW_FRACTION} of the view, but never more
+ * than half the walk from the spawn to the line — a re-arm point behind the
+ * spawn could never be reached by a player who spawned there, and would make
+ * the first arrival the only one. A nonsense view (see {@link exitLineX}) takes
+ * that half-walk too, so the point is always strictly behind the line.
+ */
+function rearmPointX(lineX: number, input: ExitLineInput): number {
+  const view = Number.isFinite(input.viewWidth) && input.viewWidth > 0 ? input.viewWidth : 0;
+  const halfWalk = (lineX - input.spawnX) / 2;
+  const wanted = view > 0 ? view * EXIT_REARM_VIEW_FRACTION : halfWalk;
+  const margin = halfWalk > 0 ? Math.min(wanted, halfWalk) : wanted;
+  return lineX - Math.max(margin, Number.EPSILON * Math.max(1, Math.abs(lineX)));
+}
+
+/**
+ * A latch with a re-arm, because an arrival is a moment and a position is not.
  *
- * It never re-arms. Walking back and forth across the line is one arrival,
- * because the player has still only reached the end of the level once, and the
- * scene that owns the latch is destroyed when the level is unloaded.
+ * Without the latch the check is `x >= line`, which is true on every frame the
+ * player spends near the end of the level — a completion card sixty times a
+ * second. With it the answer is a boolean read after the crossing, which is
+ * also why this is cheap enough to call every frame.
+ *
+ * **It re-arms once the player goes back behind {@link ExitWatch.rearmX}**
+ * (ADR-0074). It used to fire once per level visit, which was right while an
+ * arrival could only ever mean one thing, and wrong once it could mean two: a
+ * player who reached the end with the task unfinished, went back and finished
+ * it, and walked to the end again got nothing, because the end had already been
+ * reported. Whether each arrival is worth a card, a new level or nothing is
+ * still `app/bootstrap`'s to say; the scene only reports that it happened.
+ *
+ * The re-arm point sits behind the line rather than on it — hysteresis — so a
+ * turn at the line, which carries the player a few pixels back before they walk
+ * on, is the same arrival and not a second one.
  */
 export function watchExit(input: ExitLineInput): ExitWatch {
   const x = exitLineX(input);
+  const rearmX = rearmPointX(x, input);
   let reached = false;
 
   return {
     x,
+    rearmX,
     get reached(): boolean {
       return reached;
     },
     arrived(playerX: number): boolean {
-      if (reached) return false;
+      if (reached) {
+        if (playerX < rearmX) reached = false;
+        return false;
+      }
       if (!(playerX >= x)) return false;
       reached = true;
       return true;

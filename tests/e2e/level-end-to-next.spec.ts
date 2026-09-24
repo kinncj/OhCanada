@@ -44,8 +44,8 @@ import { walkInLegs } from './walk';
  *  2. **the task finished** — from a save one answer short of it, so the walk is
  *     the giver and one landmark — which opens the next level, and one press
  *     lands the player in it;
- *  3. **the end of a level already finished** — one card, the stamp already in
- *     the passport, and nothing earned twice.
+ *  3. **the end of a level already finished** — since ADR-0074, straight into
+ *     the next level, with no card: the card already said the level was done.
  *
  * Not asserted: where the exit line is. That is
  * `tests/unit/adapters/phaser/level-exit.test.ts`'s, over every shipped level
@@ -362,51 +362,59 @@ test.describe('reaching the end of a level sends the player on only when the tas
     }
   });
 
-  test('a level already finished is finished again at its end, with one card and nothing twice', async ({
+  test('a level already finished leads on at its end, straight into the next one (ADR-0074)', async ({
     page,
   }) => {
     await seed(page, finishedSave(START_QUEST));
     await openLevel(page);
-    await walkToTheEnd(page);
 
-    /* The stamp is already in the passport, so the end finishes the level — the
-       level's heading, the level's stamp sentence, and a plain line about a
-       sitting in which nothing was answered (`TN-DONE-02`). */
+    /* Walk to the end. The stamp is in the passport and the next level is open,
+       so the end is a way on: no card, and the level is left. */
     const card = page.getByTestId('quest-complete-card');
-    await expect(card).toHaveAttribute('data-reason', 'level');
-    await expect(card).toHaveAccessibleName(text('en', 'level.complete.title'));
-    await expect(card.getByTestId('quest-complete-stamp')).toHaveText(STAMP_SENTENCE);
-    const line = card.getByTestId('quest-complete-progress');
-    await expect(line).toHaveText(text('en', 'level.complete.none'));
-    await expect(line).not.toContainText('0 out of 0');
-    /* Nothing opened this sitting, so no route into a level is offered as news. */
-    await expect(card.getByTestId('quest-complete-next')).toHaveCount(0);
-
-    /* Back into the level, then push on into the end of the world again. The
-       stamp is idempotent in the domain and the card is idempotent on the
-       screen. */
-    await card.getByTestId('quest-complete-keep-playing').click();
+    const outcome = await walkInLegs(
+      page,
+      'ArrowRight',
+      (legMs) =>
+        page
+          .waitForFunction(
+            () => {
+              if (document.documentElement.dataset['tnLevel'] !== 'ready') return 'left';
+              const shown = document.querySelector('[data-testid="quest-complete-card"]');
+              return shown !== null && (shown as HTMLElement).checkVisibility() ? 'card' : false;
+            },
+            undefined,
+            { timeout: legMs, polling: 'raf' },
+          )
+          .then((handle) => handle.jsonValue() as Promise<'left' | 'card'>)
+          .catch(() => null),
+      { budgetMs: 240_000 },
+    );
+    expect(
+      outcome,
+      `the end of ${START_LEVEL}, already finished, drew a card or went nowhere instead of ` +
+        `opening ${NEXT_LEVEL ?? ''}`,
+    ).toBe('left');
     await expect(card).toBeHidden();
-    await expect(page.locator('html')).toHaveAttribute('data-tn-paused', 'false');
 
-    await page.keyboard.down('ArrowRight');
-    await page.waitForTimeout(5_000);
-    await page.keyboard.up('ArrowRight');
+    await page.waitForSelector('html[data-tn-level="ready"]', { timeout: 60_000 });
+    await expect(page.getByTestId('level-select')).toHaveCount(0);
+    const modeLabel = page.getByTestId('hud-mode-label');
+    if (NEXT_LEVEL_MODE_LABEL === null) {
+      await expect(modeLabel).toBeHidden();
+    } else {
+      await expect(modeLabel).toHaveText(NEXT_LEVEL_MODE_LABEL);
+    }
 
-    await expect(card, 'a level finished twice is one stamp, one unlock and one card').toBeHidden();
-
-    /* Out by the menu. Nothing opened while the player was in there, so they
-       land on the card they left, which carries its stamp as a word. */
+    /* Out by the menu: the map, on the card of the level the player is in now,
+       and the stamp they already had still there — one, not two. */
     await page.getByTestId('menu-button').click();
     await page.getByTestId('menu-leave').click();
 
     await expect(page.getByTestId('level-select')).toBeVisible();
-    await expect(page.getByTestId(`level-card-${START_LEVEL}`)).toBeFocused();
+    await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}`)).toBeFocused();
     await expect(page.getByTestId(`level-card-${START_LEVEL}-stamp`)).toBeVisible();
-    await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}`)).toHaveAttribute(
-      'data-state',
-      'open',
+    await expect(page.getByTestId(`level-card-${NEXT_LEVEL ?? ''}-here`)).toHaveText(
+      'You are here',
     );
-    await expect(page.getByTestId(`level-card-${START_LEVEL}-here`)).toHaveText('You are here');
   });
 });
