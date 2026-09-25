@@ -284,45 +284,49 @@ describe('the screen-art sidecar gate', () => {
    * ADR-0069 §6's boundary defect, the second half (plan K-0.7). Keyed on the
    * journey alone, the defect moved into the config: a new journey id
    * (content's) and its anchor (art's) each failed without the other, so they
-   * still had to share a commit. These cases use Kingston as it stands: a story
-   * and art's published coordinates (assets/style/map-canada.md §6), no journey
-   * slot, no level document. Each failed on the pre-fix gate.
+   * still had to share a commit. Kingston has since landed with both, so each
+   * case rebuilds one of the two halves it landed in by taking the other away:
+   * art first is the tree without Kingston's journey slot and level document,
+   * content first is the tree without its anchors. Each failed on the pre-fix
+   * gate.
    */
   describe('a journey place and its anchor land apart, in either order', () => {
     const PLACE = 'kingston';
-    const MAIN = { x: 621.0, y: 526.6 };
-    const IN_INSET = { x: 895.2, y: 268.8 };
     const corridor = (doc: Sidecar): Inset => {
       const inset = doc.insets?.find((candidate) => Object.hasOwn(candidate.anchors, 'ottawa'));
       if (inset === undefined) throw new Error('the committed sidecar has no inset anchoring ottawa');
       return inset;
     };
-    const anchorIt = (doc: Sidecar): void => {
-      doc.anchors[PLACE] = MAIN;
-      corridor(doc).anchors[PLACE] = IN_INSET;
+    const unanchorIt = (doc: Sidecar): void => {
+      delete doc.anchors[PLACE];
+      delete corridor(doc).anchors[PLACE];
     };
-    const slotIt = (config: GameConfig): void => {
-      const at = config.journey.indexOf('ottawa') + 1;
-      config.journey = [...config.journey.slice(0, at), PLACE, ...config.journey.slice(at)];
+    const unslotIt = (config: GameConfig): void => {
+      config.journey = config.journey.filter((slot) => slot !== PLACE);
     };
 
-    it('has the place with no slot, no level document and no anchor today', () => {
-      expect(PLACES).not.toContain(PLACE);
-      expect(LEVEL_IDS).not.toContain(PLACE);
-      expect(Object.keys(REAL.anchors)).not.toContain(PLACE);
+    it('has the place landed with a slot, a level document and both anchors', () => {
+      expect(PLACES).toContain(PLACE);
+      expect(LEVEL_IDS).toContain(PLACE);
+      expect(Object.keys(REAL.anchors)).toContain(PLACE);
     });
 
     it('art first: passes an anchor ahead of its journey slot when a story declares the place, and reports it', () => {
-      const result = run(anchorIt, { stories: [PLACE] });
+      const result = run(() => undefined, { stories: [PLACE], config: unslotIt, withoutLevels: [PLACE] });
       expect(result.status, result.output).toBe(0);
       expect(result.stdout).toContain(
         `1 anchor(s) ahead of the journey (${PLACE}, declared by docs/stories/TN-LEVEL-${PLACE}.md)`,
       );
-      expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
+      expect(result.stdout).toContain(`against ${PLACES.length - 1} journey place(s)`);
     });
 
     it('art first, and still under --release: an anchor ahead of its slot is never drawn', () => {
-      const result = run(anchorIt, { stories: [PLACE], release: true });
+      const result = run(() => undefined, {
+        stories: [PLACE],
+        config: unslotIt,
+        withoutLevels: [PLACE],
+        release: true,
+      });
       expect(result.status, result.output).toBe(0);
       expect(result.stdout).toContain('every journey place anchored (--release)');
     });
@@ -330,33 +334,33 @@ describe('the screen-art sidecar gate', () => {
     it('refuses an anchor ahead of the journey that no story or level document declares: a typo', () => {
       expectRefused(
         run((doc) => {
-          doc.anchors['kingstn'] = MAIN;
+          doc.anchors['kingstn'] = doc.anchors[PLACE] ?? { x: 0, y: 0 };
         }, { stories: [PLACE] }),
         'anchors."kingstn" names no place in game.config.json#/journey',
       );
     });
 
     it('content first: passes a journey slot awaiting its anchor, and says make build refuses it', () => {
-      const result = run(() => undefined, { config: slotIt });
+      const result = run(unanchorIt);
       expect(result.status, result.output).toBe(0);
       expect(result.stdout).toContain(`1 journey place(s) AWAITING an anchor (${PLACE})`);
       expect(result.stdout).toContain('refused by make build');
-      expect(result.stdout).toContain(`against ${PLACES.length + 1} journey place(s)`);
+      expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
     });
 
     it('content first: the same tree fails under --release, so it cannot be built or deployed', () => {
       expectRefused(
-        run(() => undefined, { config: slotIt, release: true }),
+        run(unanchorIt, { release: true }),
         `no anchor for "${PLACE}", which game.config.json#/journey names`,
       );
     });
 
     it('both landed, in either order: passes under --release with nothing ahead and nothing awaiting', () => {
-      const result = run(anchorIt, { config: slotIt, release: true });
+      const result = run(() => undefined, { release: true });
       expect(result.status, result.output).toBe(0);
       expect(result.stdout).toContain('every journey place anchored (--release)');
       expect(result.stdout).not.toContain('ahead of the journey');
-      expect(result.stdout).toContain(`against ${PLACES.length + 1} journey place(s)`);
+      expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
     });
   });
 
@@ -486,10 +490,11 @@ describe('the insets (ADR-0069)', () => {
   };
 
   it('has an Atlantic inset in the committed sidecar to build its cases from', () => {
-    // The Atlantic inset first, then the Ottawa–Toronto corridor (ADR-0069 §6 commit 2).
+    // The Atlantic inset first, then the Ottawa–Toronto corridor (ADR-0069 §6 commit 2),
+    // which holds Kingston since it landed.
     expect(REAL.insets?.length).toBe(2);
     expect(Object.keys(REAL.insets?.[0]?.anchors ?? {}).sort()).toEqual(['halifax', 'peggys-cove']);
-    expect(Object.keys(REAL.insets?.[1]?.anchors ?? {}).sort()).toEqual(['ottawa', 'toronto']);
+    expect(Object.keys(REAL.insets?.[1]?.anchors ?? {}).sort()).toEqual(['kingston', 'ottawa', 'toronto']);
     expect(REAL.anchors['winnipeg']).toBeDefined();
     expect(REAL.anchors['quebec-city']).toBeDefined();
     expect(STYLESHEET).toContain(PIN_RULE);
@@ -498,7 +503,7 @@ describe('the insets (ADR-0069)', () => {
   it('says what it measured across the committed insets', () => {
     const result = run(() => undefined);
     expect(result.status, result.output).toBe(0);
-    expect(result.stdout).toContain('2 inset(s): 4 enlarged stop(s) each in one inset');
+    expect(result.stdout).toContain('2 inset(s): 5 enlarged stop(s) each in one inset');
     expect(result.stdout).toContain("2 locator(s) enclosing only their own inset's stops");
     expect(result.stdout).toMatch(/1 frame pair\(s\) at least [\d.]+ unit\(s\) apart/);
     expect(result.stdout).toMatch(/\d+ main-map pin\(s\) at least [\d.]+ unit\(s\) from every frame against a pin radius of [\d.]+/);
@@ -548,10 +553,11 @@ describe('the insets (ADR-0069)', () => {
       delete doc.insets;
       doc.anchors['peggys-cove'] = { x: 760, y: 530 };
       doc.anchors['toronto'] = { x: 580, y: 570 };
+      doc.anchors['kingston'] = { x: 680, y: 600 };
     });
     expect(result.status, result.output).toBe(0);
     expect(result.stdout).toContain('no inset in any sidecar, so the cross-inset checks (ADR-0069 §3.1-3.3) had nothing to measure');
-    expect(result.stdout).toMatch(/the main map 10 pin\(s\) at least [\d.]+ unit\(s\) apart/);
+    expect(result.stdout).toMatch(/the main map 11 pin\(s\) at least [\d.]+ unit\(s\) apart/);
   });
 
   it('passes three insets that keep apart, and says how far apart', () => {
@@ -559,7 +565,7 @@ describe('the insets (ADR-0069)', () => {
       doc.insets = [...(doc.insets ?? []), winnipegInset(doc, 0)];
     });
     expect(result.status, result.output).toBe(0);
-    expect(result.stdout).toContain('3 inset(s): 5 enlarged stop(s) each in one inset');
+    expect(result.stdout).toContain('3 inset(s): 6 enlarged stop(s) each in one inset');
     expect(result.stdout).toContain('3 frame pair(s) at least 10 unit(s) apart');
     expect(result.stdout).toContain('insets[2] 1 pin(s), no pair to keep apart');
   });
@@ -652,7 +658,7 @@ describe('pin separation (ADR-0069 §3.4)', () => {
     expect(result.status, result.output).toBe(0);
     expect(result.stdout).toMatch(/pin separation \(ADR-0069 §3\.4\) against a pin diameter of [\d.]+: the main map 6 pin\(s\) at least [\d.]+ unit\(s\) apart/);
     expect(result.stdout).toMatch(/insets\[0\] 2 pin\(s\) at least [\d.]+ unit\(s\) apart \(halifax - peggys-cove\)/);
-    expect(result.stdout).toMatch(/insets\[1\] 2 pin\(s\) at least [\d.]+ unit\(s\) apart \(ottawa - toronto\)/);
+    expect(result.stdout).toMatch(/insets\[1\] 3 pin\(s\) at least [\d.]+ unit\(s\) apart \(ottawa - kingston\)/);
   });
 
   it('fails when two main-map pins are closer than one pin diameter, naming both stops', async () => {

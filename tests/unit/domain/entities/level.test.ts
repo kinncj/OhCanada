@@ -215,10 +215,13 @@ describe('the unlock walk is monotone under insertion (ADR-0068 §9)', () => {
   const includesAll = (outer: readonly LevelId[], inner: readonly LevelId[]): boolean =>
     inner.every((id) => outer.includes(id));
 
-  describe("with content/game.config.json's own order, and kingston before ottawa", () => {
+  describe("with content/game.config.json's order before Kingston, and kingston before ottawa", () => {
+    /* The chain a save made before Kingston landed was opened against. */
     const shipped: UnlockRules = {
       initialLevels: gameConfig.unlockRules.initialLevels.map((id) => levelId(id)),
-      order: gameConfig.unlockRules.order.map((id) => levelId(id)),
+      order: gameConfig.unlockRules.order
+        .filter((id) => id !== 'kingston')
+        .map((id) => levelId(id)),
       stampsToUnlockNext: gameConfig.unlockRules.stampsToUnlockNext,
     };
     const withKingston = insertBefore(shipped, levelId('kingston'), levelId('ottawa'));
@@ -264,6 +267,20 @@ describe('the unlock walk is monotone under insertion (ADR-0068 §9)', () => {
       expect(unlockedLevelIds(withKingston, stamps)).toEqual(
         expect.arrayContaining(['kingston', 'ottawa', 'toronto']),
       );
+    });
+
+    it('matches the shipped order once kingston is placed where it landed, after ottawa', () => {
+      const landed = insertBefore(shipped, levelId('kingston'), levelId('toronto'));
+      expect(landed.order).toEqual(gameConfig.unlockRules.order);
+
+      /* A save that reached Toronto before Kingston landed keeps Toronto. */
+      const stamps = [...upToQuebec, levelId('ottawa')];
+      const before = unlockedLevelIds(shipped, stamps);
+      expect(before).toContain('toronto');
+      const after = unlockedLevelIds(landed, stamps, before);
+      expect(includesAll(after, before)).toBe(true);
+      expect(after).toContain('kingston');
+      expect(legacyWalk(landed, stamps)).not.toContain('toronto');
     });
 
     it('lets play carry on past the inserted level', () => {
