@@ -241,6 +241,28 @@ variant 0 is bare-headed and variant 1 is drawn at random, so the toque is absen
 be absent from all of them. **That is variant coverage, not drawing**, and removing or reshaping a part to
 answer it would change a picture nobody objected to.
 
+**The `bob` and `crop` shapes are redrawn, 2026-09-25.** Blind run `7d90205061b27757` read `player-on-skates`
+(skin-3, **bob**-brown, bare head) as wearing *"a helmet"* at full size and at 390 px, which the subject's
+`neverAdd` forbids. Three things in the old part made that shell: a **smooth closed dome** with an unbroken
+fringe arc (a visor edge), a single **glossy highlight ellipse** on the crown (a moulded-plastic shine), and a
+**shade-tone ellipse at the nape**, which clipped to the hair's back edge into a dark crescent right behind
+the ear — the ear opening of a helmet shell. All ten files (`hair-bob-*`, `hair-crop-*`) now draw:
+
+- the fringe as **four rounded tufts**, the front tip at x = 156 exactly where it was, so §7.4's leading edge
+  and the brow clearance are unchanged;
+- a **cowlick** at the crown and, on the bob, one notch in the back contour, so the dome is not a shell;
+- the nape as **two or three tufts** instead of one rounded foot, and the edge behind the ear as a wave;
+- light and shade as **strands** (two light strokes following the flow over the crown, two or three shade
+  strokes), with no highlight ellipse and **no shade blob anywhere**.
+
+Same colours (the `hair-{colour}` ramps and `ink-warm`), same viewBox and pivot per shape, same z, same slot
+names (`hair-{hairShape}-{hairColour}`), and the head is untouched, so proportions are identical for every
+character. The beaver's `head-shell` still covers the crop entirely (checked on the guide render). Checked in
+every pose that draws hair: `player` and `officer` at rest, and the skate, toboggan, bicycle and skateboard
+states, in bob-grey, bob-brown and crop-brown, plus all twenty shape/colour heads bare and under the toque.
+`coil` and `long` are not changed: the coil's scalloped silhouette does not read as a shell, and `long` was
+not implicated. **Not verified blind**: this is the art owner's comparison, and the next blind run is owed.
+
 **What the parka's width rule means here.** Every `jacket` window sits inside the matching `parka` window, so
 the body span `stand-off.ts` measures is the same and no stop moves. At rest the jacket figure is narrower than
 the parka.

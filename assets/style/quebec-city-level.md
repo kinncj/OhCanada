@@ -795,6 +795,49 @@ that has not seen this work is owed.
 
 ---
 
+## 14. Blind run 7d90205061b27757: the two weakest passes (2026-09-25)
+
+The run passed `city-wall` only as *"a stone wall"* at confidence 0.15 (the identifier's cue was *"possibly
+part of a canal lock chamber"*) and `martello-tower` as *"stone defensive tower/blockhouse"* at 0.35, with
+*"stone military blockhouse"* at w140. Both are passes on accepted answers. **No accepted answer was
+loosened**; what follows is what the art owner did with each.
+
+**`martello-tower`: two roundness cues, both the reference's own.** The blockhouse reading came from a
+flat-bottomed dark box sitting on the drum: a straight horizontal foot to the timber storey says *square
+building*, and it contradicted the four course arcs below it, which bow up as a course above the eye does on
+a cylinder. In `martello-tower-1.jpg` the storey's foot follows the drum's top course and its panels turn
+away from the eye at both edges. So:
+
+- the storey's foot now **bows up 11 px in the middle**, the same curvature as the coursing, and the drum's
+  top was raised under it so no gap opens at the centre;
+- **four panel joints** sit where the facets of a round storey would project (x = 300 ± 131·sin 22.5° and
+  ± 131·sin 67.5°), crowding toward both edges, and the storey carries the drum's three-band cel shading
+  (lit strip left, AO over the right fifth) instead of one flat tone.
+
+Nothing was added that the reference does not show: no crenellation, no flag, no cannon, and the
+weatherboarding stays simplified away — the joints are the storey's facets, not its boards. The windows,
+stair, door, chimney, roof and lamp are unchanged. Before and after were compared at 1x; the drum's
+proportions (218 over 290, 262 over 290) are unchanged.
+
+**`city-wall`: not changed, and why.** Every cheap cue that would make a wall read as a *fortification*
+is either forbidden by this subject's contract or has no licence-clean reference here:
+
+- **crenellation, merlons, embrasures, arrow slits** — `neverAdd`, by name. The reference does show two
+  notches in a far parapet, but at this size a notched head is crenellation to any reader, and the wall the
+  subject draws (the near face in `quebec-ramparts-snow.jpg`) has a plain coping;
+- **a gate, a tower, a cannon, a sentry box** — `neverAdd`, and refused in §12 for the same reason that still
+  holds: no licence-clean photograph of any of them in `assets/refs/`;
+- **the ditch and counterscarp** the wall rises from in the reference — the one cue that would kill *"canal
+  lock"* outright — lie below the level's ground line, which is the file's bottom edge, and `simplifyAway`
+  lists them for that reason.
+
+What would unlock it, routed to the contract owner rather than drawn: a licence-clean photograph of the
+Québec ramparts with a gate (Porte Saint-Louis, Porte Saint-Jean) or the guns on the ramparts, after which
+`neverAdd` can be narrowed for that one feature; or a decision that the **snow-covered earth rampart behind
+the coping**, which the reference does show as a thick white band behind the wall head, may be drawn — it
+changes the silhouette of a `mustBeRight` feature (the plain coping), so it is the contract's call, not the
+art's.
+
 ## Ground dressing (ADR-0042)
 
 | key | source | authored px | world y | decoded |
