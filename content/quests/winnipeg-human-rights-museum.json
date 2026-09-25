@@ -334,20 +334,20 @@
       },
       "passages": [
         {
-          "lesson": "justice-02-due-process-and-our-legal-heritage",
-          "passage": "j2-due-process-for-everyone"
+          "lesson": "justice-04-the-courts",
+          "passage": "j4-supreme-court-is-highest"
         },
         {
-          "lesson": "justice-02-due-process-and-our-legal-heritage",
-          "passage": "j2-innocent-until-proven-guilty"
+          "lesson": "justice-04-the-courts",
+          "passage": "j4-federal-court"
         },
         {
-          "lesson": "justice-02-due-process-and-our-legal-heritage",
-          "passage": "j2-our-legal-heritage"
+          "lesson": "justice-04-the-courts",
+          "passage": "j4-appeal-and-trial-courts"
         },
         {
-          "lesson": "justice-02-due-process-and-our-legal-heritage",
-          "passage": "j2-what-due-process-means"
+          "lesson": "justice-04-the-courts",
+          "passage": "j4-provincial-family-and-traffic-courts"
         }
       ]
     },
@@ -443,11 +443,11 @@
         },
         {
           "lesson": "justice-01-the-police-are-there-for-you",
-          "passage": "j1-provincial-and-municipal-police"
+          "passage": "j1-more-than-one-kind-of-police"
         },
         {
           "lesson": "justice-01-the-police-are-there-for-you",
-          "passage": "j1-rcmp-enforce-federal-laws"
+          "passage": "j1-provincial-and-municipal-police"
         },
         {
           "lesson": "justice-01-the-police-are-there-for-you",

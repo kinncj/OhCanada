@@ -239,11 +239,11 @@
         },
         {
           "lesson": "rights-responsibilities-03-where-our-rights-come-from",
-          "passage": "rr3-magna-carta"
+          "passage": "rr3-freedom-of-conscience-and-religion"
         },
         {
           "lesson": "rights-responsibilities-03-where-our-rights-come-from",
-          "passage": "rr3-freedom-of-conscience-and-religion"
+          "passage": "rr3-freedom-of-expression"
         },
         {
           "lesson": "rights-responsibilities-03-where-our-rights-come-from",
@@ -330,20 +330,16 @@
       },
       "passages": [
         {
-          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
-          "passage": "rr5-rights-bring-responsibilities"
+          "lesson": "rights-responsibilities-02-ways-people-volunteer",
+          "passage": "rr2-volunteers-give-their-time"
         },
         {
-          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
-          "passage": "rr5-work-and-family"
+          "lesson": "rights-responsibilities-02-ways-people-volunteer",
+          "passage": "rr2-what-volunteering-gives-you"
         },
         {
-          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
-          "passage": "rr5-jury-duty-is-required"
-        },
-        {
-          "lesson": "rights-responsibilities-05-responsibilities-of-citizenship",
-          "passage": "rr5-juries-make-justice-work"
+          "lesson": "rights-responsibilities-02-ways-people-volunteer",
+          "passage": "rr2-protect-heritage-and-environment"
         }
       ]
     },

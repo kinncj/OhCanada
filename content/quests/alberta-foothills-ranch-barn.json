@@ -243,11 +243,11 @@
         },
         {
           "lesson": "economy-03-three-kinds-of-industry",
-          "passage": "e3-natural-resources-industries"
+          "passage": "e3-resources-built-the-country"
         },
         {
           "lesson": "economy-03-three-kinds-of-industry",
-          "passage": "e3-resources-built-the-country"
+          "passage": "e3-resource-exports"
         }
       ]
     },
@@ -336,20 +336,20 @@
       },
       "passages": [
         {
-          "lesson": "regions-13-what-central-canada-produces",
-          "passage": "r13-ontario-and-quebec-manufacturing"
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-prairies-energy-and-farmland"
         },
         {
-          "lesson": "regions-13-what-central-canada-produces",
-          "passage": "r13-quebec-pulp-and-paper"
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-manitoba-economy"
         },
         {
-          "lesson": "regions-13-what-central-canada-produces",
-          "passage": "r13-quebec-cutting-edge-industries"
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-saskatchewan-grains-and-oilseeds"
         },
         {
-          "lesson": "regions-13-what-central-canada-produces",
-          "passage": "r13-ontario-farms"
+          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
+          "passage": "r14-bc-forestry-products"
         }
       ]
     },
@@ -443,20 +443,20 @@
       },
       "passages": [
         {
-          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
-          "passage": "r14-prairies-energy-and-farmland"
+          "lesson": "economy-01-trade-with-the-united-states",
+          "passage": "e1-biggest-two-way-trade"
         },
         {
-          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
-          "passage": "r14-saskatchewan-uranium-and-potash"
+          "lesson": "economy-01-trade-with-the-united-states",
+          "passage": "e1-shared-supply-chains"
         },
         {
-          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
-          "passage": "r14-alberta-oil-and-gas"
+          "lesson": "economy-01-trade-with-the-united-states",
+          "passage": "e1-longest-undefended-border"
         },
         {
-          "lesson": "regions-14-what-the-prairies-and-british-columbia-produce",
-          "passage": "r14-alberta-oil-sands"
+          "lesson": "economy-01-trade-with-the-united-states",
+          "passage": "e1-the-peace-arch"
         }
       ]
     },
