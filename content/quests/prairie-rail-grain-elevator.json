@@ -436,16 +436,20 @@
       },
       "passages": [
         {
-          "lesson": "modern-01-prosperity-and-social-programs",
-          "passage": "m1-gatt-opened-up-trade"
+          "lesson": "modern-05-arts-and-letters",
+          "passage": "m5-group-of-seven"
         },
         {
-          "lesson": "modern-01-prosperity-and-social-programs",
-          "passage": "m1-oil-found-in-alberta-1947"
+          "lesson": "modern-05-arts-and-letters",
+          "passage": "m5-emily-carr"
         },
         {
-          "lesson": "modern-01-prosperity-and-social-programs",
-          "passage": "m1-hard-work-and-trade"
+          "lesson": "modern-05-arts-and-letters",
+          "passage": "m5-les-automatistes"
+        },
+        {
+          "lesson": "modern-05-arts-and-letters",
+          "passage": "m5-kenojuak-ashevak"
         }
       ]
     },

@@ -335,19 +335,19 @@
       "passages": [
         {
           "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
-          "passage": "e10-who-forms-the-government"
-        },
-        {
-          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
           "passage": "e10-the-governor-general-appoints-the-prime-minister"
         },
         {
           "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
-          "passage": "e10-majority-government"
+          "passage": "e10-minority-government"
         },
         {
           "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
-          "passage": "e10-minority-government"
+          "passage": "e10-governing-with-the-confidence-of-mps"
+        },
+        {
+          "lesson": "elections-10-the-secret-ballot-and-forming-a-government",
+          "passage": "e10-defeated-on-a-major-decision"
         }
       ]
     },
@@ -435,7 +435,7 @@
       "passages": [
         {
           "lesson": "elections-08-electing-your-member-of-parliament",
-          "passage": "e8-who-may-run"
+          "passage": "e8-what-canadians-vote-for"
         },
         {
           "lesson": "elections-08-electing-your-member-of-parliament",

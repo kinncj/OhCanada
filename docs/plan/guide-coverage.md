@@ -568,8 +568,13 @@ one lesson per stop, not just one per step. Words are counted as runs of non-spa
 
 | Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
 |---|---|---|---|---|
-| Town Clock | `rr3` | `rr3-sources-of-canadian-law`, `rr3-magna-carta`, `rr3-freedom-of-conscience-and-religion`, `rr3-habeas-corpus` | 104 / 113 | 03, 04, 05, 06; and early for Pier 21: 07, 11, 12 |
-| Market stall | `rr5` | `rr5-rights-bring-responsibilities`, `rr5-work-and-family`, `rr5-jury-duty-is-required`, `rr5-juries-make-justice-work` | 83 / 93 | 22, 25, 26, 27 |
+| Town Clock | `rr3` | `rr3-sources-of-canadian-law`, `rr3-freedom-of-conscience-and-religion`, `rr3-freedom-of-expression`, `rr3-habeas-corpus` | 88 / 104 | 03; and early for Pier 21: 07, 08, 11, 12 (04–06 are told by the clock's own blurb) |
+| Market stall | `rr2` | `rr2-volunteers-give-their-time`, `rr2-what-volunteering-gives-you`, `rr2-protect-heritage-and-environment` | 85 / 103 | 32, 33; and early for the tug: 31 |
+
+**Changed 2026-09-25 (§7.16).** The two rows above replace `rr3-magna-carta` (the Town Clock's blurb
+already tells `rights-04`–`06`) and the market stall's `rr5` set (22 and 25 are told by a line and the
+stall's blurb, so `rr5` taught only 26 and 27; `rr2` teaches 31, 32 and 33). The "not taught" table
+below is the state before that change: 08, 31, 32 and 33 are now read, and 26 and 27 are not.
 | Pier 21 | `rr1` | `rr1-charter-added-in-1982`, `rr1-freedoms-and-other-rights`, `rr1-mobility-rights`, `rr1-official-language-rights` | 101 / 107 | 13, 15, 16, 17, 19 |
 | Harbour tug | `rr6` | `rr6-no-compulsory-service`, `rr6-the-regular-forces`, `rr6-part-time-reserves`, `rr6-cadets` | 82 / 96 | 34, 35, 36, 37 |
 
@@ -687,7 +692,7 @@ lesson per stop. Words are runs of non-space.
 |---|---|---|---|---|
 | Grain bins | `m2` | `m2-nato-a-military-alliance`, `m2-norad-with-the-united-states`, `m2-korean-war`, `m2-un-peacekeeping-missions` | 78 / 96 | 09, 10, 11, 12 |
 | Grain elevator | `m1` | `m1-unemployment-insurance-1940`, `m1-old-age-security-1927`, `m1-pension-plans-1965`, `m1-canada-health-act` | 60 / 72 | 04, 05, 06, 07 |
-| Combine harvester | `m1` | `m1-gatt-opened-up-trade`, `m1-oil-found-in-alberta-1947`, `m1-hard-work-and-trade` | 71 / 80 | 01, 02, 08 |
+| Combine harvester | `m5` | `m5-group-of-seven`, `m5-emily-carr`, `m5-les-automatistes`, `m5-kenojuak-ashevak` | 87 / 100 | early for the car: 22, 23, 24, 25 (01, 02, 08 are told by the combine's line, its blurb and the elevator's blurb) |
 | Container car | `m7` | `m7-bell-and-the-telephone`, `m7-bombardier-and-the-snowmobile`, `m7-evans-and-woodward-light-bulb`, `m7-banting-and-best-insulin` | 81 / 84 | 34, 35, 37, 40 |
 
 Why these: the bins pool 14 questions over `m1`–`m4`, and `m2`, `m3` and `m4` each reach four. `m3` reaches
@@ -696,6 +701,10 @@ line's), so `m2` was taken. The elevator and the combine pool only `m1` question
 seven. The combine keeps a free place: nothing in `m1` is pooled later. The car pools 19 questions over
 `m5`, `m6` and `m7`. `m7` was taken because the car's own line is about Fleming (`mc-36`), and the four
 passages left out Fleming, which the line already tells.
+
+**Changed 2026-09-25 (§7.16).** The combine's three `m1` passages taught nothing new: its pool (01, 02,
+08) is told by the combine's line, the combine's blurb and the elevator's blurb. It now reads `m5` for the
+car's pool, so `mc-22`…`mc-25` below are read.
 
 Told only by a dialogue line: 03 (bins line), 14 (guide's opening, by containment), 36 (car line).
 
@@ -777,7 +786,11 @@ right after the `visit` step at each of the first three stops, before that stop'
 
 | Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
 |---|---|---|---|---|
-| Library of Parliament | `g2` | `g2-first-reading`, `g2-second-reading`, `g2-committee-stage`, `g2-senate-stage` | 62 / 68 | the four `gov-20` stages |
+| Library of Parliament | `e6` | `e6-a-matter-of-confidence`, `e6-what-the-cabinet-is`, `e6-the-official-opposition`, `e6-what-the-opposition-does` | 81 / 85 | early for the Peace Tower: 52, 53, 54, 55 (the four `gov-20` stages are told by the Library's blurb) |
+
+**Changed 2026-09-25 (§7.16).** The Library's blurb quotes the first, second and committee stages and the
+Peace Tower's blurb quotes the Senate stage, so the four `g2` passages taught nothing the level did not
+already tell. The Library now reads `e6`, so `gov-52`…`gov-55` below are read.
 | Peace Tower (`parliament-hill`) | `g5` | `g5-confidence-of-the-house`, `g5-prime-minister-chooses-the-cabinet`, `g5-house-of-commons-is-elected`, `g5-senators-are-appointed` | 90 / 95 | 12, 15, 16, 17 |
 | Warming hut | `g4` | `g4-constitution-act-1867`, `g4-federal-responsibilities`, `g4-provincial-responsibilities`, `g4-the-three-territories` | 86 / 109 | 03, 04, 05, 08 |
 
@@ -835,8 +848,15 @@ questions. `jus-33` is in no pool.
 | Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
 |---|---|---|---|---|
 | Footbridge | `justice-03` | `j3-laws-are-written-rules`, `j3-elected-people-make-laws`, `j3-courts-and-police`, `j3-the-law-is-for-everyone` | 57 / 66 | 08, 09; and early for later stops: 12 (museum), 10, 11 (maple) |
-| Museum | `justice-02` | `j2-due-process-for-everyone`, `j2-innocent-until-proven-guilty`, `j2-our-legal-heritage`, `j2-what-due-process-means` | 88 / 105 | 01, 02, 03, 04, 05, 06, 12 |
-| Maple tree | `justice-01` | `j1-when-to-ask-for-help`, `j1-provincial-and-municipal-police`, `j1-rcmp-enforce-federal-laws`, `j1-rcmp-as-provincial-police` | 97 / 112 | 10, 11, 20, 21, 22, 23, 24, 26, 27 |
+| Museum | `justice-04` | `j4-supreme-court-is-highest`, `j4-federal-court`, `j4-appeal-and-trial-courts`, `j4-provincial-family-and-traffic-courts` | 56 / 68 | early for the maple: 15, 16, 17, 18, 19, 37, 38 |
+| Maple tree | `justice-01` | `j1-when-to-ask-for-help`, `j1-more-than-one-kind-of-police`, `j1-provincial-and-municipal-police`, `j1-rcmp-as-provincial-police` | 91 / 105 | 10, 11, 20, 21, 22, 23, 24, 26, 27, 39 |
+
+**Changed 2026-09-25 (§7.16).** Three of the museum's four `j2` passages were already told (03, 04 by the
+officer's opening, 05 by the museum line, 06 by the maple's blurb), so `j2` taught only 01 and 02. The
+museum now reads `j4`, whose `j4-provincial-family-and-traffic-courts` alone reaches 18, 19 and 38. At
+the maple, `j1-rcmp-enforce-federal-laws` added nothing `j1-rcmp-as-provincial-police` does not (22 and 23
+quote one sentence that contains the latter), so it gives way to `j1-more-than-one-kind-of-police` (39).
+The "not taught" table below is the state before: 15–19, 37, 38 and 39 are now read, and 01 and 02 are not.
 
 Why these: the footbridge line already tells 13 and 14, so `j3`'s places go to 08 and 09 and to
 three questions pooled later. `j2` is the whole lesson and covers six museum questions. At the maple,
@@ -926,9 +946,16 @@ the reviewer below.
 
 | Stop | Lesson | Passages | Words EN / FR | Pooled questions read here or earlier |
 |---|---|---|---|---|
-| Ranch gate | `economy-03` | `e3-service-industries`, `e3-most-workers-in-services`, `e3-natural-resources-industries`, `e3-resources-built-the-country` | 83 / 101 | 05, 06, 07, 11, 12 |
-| Barn (`ranch-barn`) | `r13` | `r13-ontario-and-quebec-manufacturing`, `r13-quebec-pulp-and-paper`, `r13-quebec-cutting-edge-industries`, `r13-ontario-farms` | 52 / 66 | 25, 38, 40, 42 |
-| Oil pump (`pump-jack`) | `r14` | `r14-prairies-energy-and-farmland`, `r14-saskatchewan-uranium-and-potash`, `r14-alberta-oil-and-gas`, `r14-alberta-oil-sands` | 61 / 68 | 27, 29, 30, 45 |
+| Ranch gate | `economy-03` | `e3-service-industries`, `e3-most-workers-in-services`, `e3-resources-built-the-country`, `e3-resource-exports` | 82 / 100 | 05, 06, 07, 12; and early for the herd: 13 |
+| Barn (`ranch-barn`) | `r14` | `r14-prairies-energy-and-farmland`, `r14-manitoba-economy`, `r14-saskatchewan-grains-and-oilseeds`, `r14-bc-forestry-products` | 58 / 69 | 31, 43; and early for the pump: 27, 28, 29 |
+| Oil pump (`pump-jack`) | `economy-01` | `e1-biggest-two-way-trade`, `e1-shared-supply-chains`, `e1-longest-undefended-border`, `e1-the-peace-arch` | 111 / 117 | early for the herd: 14, 15, 17, 18 (30 and 45 are told by the pump's blurb and the territorial statement) |
+
+**Changed 2026-09-25 (§7.16).** "No choice of lessons does better" below is not right, for two reasons.
+`e3-natural-resources-industries`, `r14-alberta-oil-and-gas` and `r14-alberta-oil-sands` taught questions
+the level already tells (11 by the barn's blurb, 30 and 45 by the pump's blurb and the territorial
+statement). And `r14-saskatchewan-grains-and-oilseeds` is contained in both `eco-43` (barn) and `eco-29`
+(pump), so read at the barn it teaches two questions. The three rows above read 17 pooled questions no
+blurb or line tells, where the old set read 13. The "not taught" table below is the state before.
 | Herd (`beef-cattle`) | `economy-02` | `e2-always-a-trading-nation`, `e2-trade-keeps-our-standard-of-living`, `e2-free-trade-in-1988`, `e2-mexico-joins-in-1994` | 56 / 67 | 01, 02, 03, 04 |
 
 Why these: at the gate, `e3` reaches five of its pool (`e3-service-industries` holds the three-kinds
@@ -1414,15 +1441,59 @@ Every stop on Peggy's Cove, Toronto, Vancouver, The North and Québec City now r
 | Peggy's Cove | `fish-store` | `who-08-aboriginal-rights-and-residential-schools` | `w8-rights-in-the-constitution`, `w8-royal-proclamation-of-1763`, `w8-residential-schools-1800s-to-1980s`, `w8-apology-in-2008` |
 | Peggy's Cove | `village-house` | `who-07-a-strong-and-free-country` | `w7-strong-and-free`, `w7-oldest-constitutional-tradition`, `w7-only-constitutional-monarchy`, `w7-the-great-dominion` |
 | Toronto | `streetcar` | `elections-11-voting-step-by-step` | `e11-no-card-call-your-local-office`, `e11-advance-polls-and-special-ballots`, `e11-what-to-bring`, `e11-marking-an-x` |
-| Toronto | `cn-tower` | `elections-10-the-secret-ballot-and-forming-a-government` | `e10-who-forms-the-government`, `e10-the-governor-general-appoints-the-prime-minister`, `e10-majority-government`, `e10-minority-government` |
-| Toronto | `nathan-phillips-square` | `elections-08-electing-your-member-of-parliament` | `e8-who-may-run`, `e8-candidates`, `e8-many-candidates-in-a-district`, `e8-most-votes-wins-the-seat` |
+| Toronto | `cn-tower` | `elections-10-the-secret-ballot-and-forming-a-government` | `e10-the-governor-general-appoints-the-prime-minister`, `e10-minority-government`, `e10-governing-with-the-confidence-of-mps`, `e10-defeated-on-a-major-decision` |
+| Toronto | `nathan-phillips-square` | `elections-08-electing-your-member-of-parliament` | `e8-what-canadians-vote-for`, `e8-candidates`, `e8-many-candidates-in-a-district`, `e8-most-votes-wins-the-seat` |
 | Vancouver | `marina` | `symbols-08-hockey-lacrosse-and-the-beaver` | `s8-hockey-the-national-winter-sport`, `s8-ice-hockey-developed-in-the-1800s`, `s8-the-stanley-cup`, `s8-lacrosse-the-summer-sport` |
 | Vancouver | `canada-place` | `symbols-06-the-crown-the-flag-and-the-maple-leaf` | `s6-what-symbols-do`, `s6-monarchy-since-1867`, `s6-the-crown-and-government`, `s6-national-colours-since-1921` |
-| Vancouver | `bulk-carrier` | `symbols-09-languages-anthems-and-honours` | `s9-official-languages-act-1969`, `s9-anthem-proclaimed-1980`, `s9-anthem-first-sung-in-quebec-city`, `s9-the-royal-anthem` |
+| Vancouver | `bulk-carrier` | `symbols-09-languages-anthems-and-honours` | `s9-official-languages-act-1969`, `s9-anthem-first-sung-in-quebec-city`, `s9-the-royal-anthem`, `s9-honours-orders-decorations-medals` |
 | Québec City | `chateau-frontenac` | `history-10-new-france-and-the-fur-trade` | `h10-first-settlement-1604`, `h10-peace-with-the-iroquois-1701`, `h10-plains-of-abraham-1759`, `h10-wolfe-and-montcalm` |
 | Québec City | `city-wall` | `history-11-the-quebec-act-and-the-loyalists` | `h11-habitants-or-canadiens`, `h11-first-assembly-halifax-1758`, `h11-constitutional-act-1791`, `h11-first-elected-assemblies-1791` |
 | Québec City | `terrace-kiosk` | `history-15-building-the-dominion` | `h15-fathers-of-confederation`, `h15-two-levels-of-government`, `h15-ontario-and-quebec-created`, `h15-born-on-july-1-1867` |
 | Québec City | `wolfe-montcalm-monument` | `history-01-first-peoples-and-europeans` | `h1-french-empire-leaders`, `h1-english-colonies-grew-larger`, `h1-france-and-britain-fight-for-the-continent` |
 | Québec City | `martello-tower` | `history-02-british-colony-first-assemblies` | `h2-renamed-province-of-quebec`, `h2-quebec-act-passed-1774`, `h2-quebec-act-is-a-foundation`, `h2-thirteen-colonies-become-the-united-states` |
 | Québec City | `hotel-du-parlement` | `history-02-british-colony-first-assemblies` | `h2-democracy-grew-step-by-step`, `h2-pei-1773-and-nb-1785`, `h2-british-north-america` |
-| The North | `driftwood` | `regions-16-the-country-and-its-capitals` | `r16-second-largest-country`, `r16-three-oceans`, `r16-five-distinct-regions`, `r16-ten-provinces-three-territories` |
+| The North | `driftwood` | `regions-17-the-atlantic-provinces-up-close` | `r17-most-easterly-point`, `r17-birthplace-of-confederation`, `r17-celtic-and-gaelic-traditions`, `r17-moncton-acadian-centre` |
+
+The Toronto, Vancouver and The North rows above were changed on 2026-09-25; §7.16 says why.
+
+### 7.16 Read steps re-aimed at what the level does not already tell (2026-09-25)
+
+Tier 1 only (ADR-0065 §1): `read` steps at existing stops, re-pointed at passages that are already
+verified. No passage, line, question or `verification` block was written or edited. Every stop still reads
+one lesson, at most four passages and at most 120 words in each language.
+
+The earlier choices (§7.3–§7.15) counted a passage as teaching a question even when a landmark blurb, the
+territorial statement or an earlier quest line already told it. The teach-back gate
+(`a-question-teaches-back-to-its-passage.test.ts`) counts a blurb as told wherever the stop stands on
+the level, so those passages taught nothing new. The earlier choices also missed passages whose quote is
+contained in two or three pooled questions' quotes (`sharesProposition` is containment). This pass re-aims
+only the places that were wasted this way.
+
+| Level | Unreached before | Unreached after | Stops changed |
+|---|---|---|---|
+| halifax | 9 | 7 | Town Clock, market stall |
+| peggys-cove | 34 | 34 | none |
+| ottawa | 22 | 18 | Library of Parliament |
+| toronto | 17 | 14 | CN Tower, square |
+| winnipeg | 18 | 12 | museum, maple tree |
+| prairie-rail | 22 | 18 | combine harvester |
+| alberta-foothills | 29 | 25 | ranch gate, barn, oil pump |
+| vancouver | 21 | 20 | cargo ship |
+| the-north | 50 | 47 | driftwood |
+| quebec-city | 80 (302 − 222, not counted by hand) | 80 | none (another branch) |
+| **Total** | **302** | **275** | |
+
+Where nothing more can be done inside tier 1:
+
+- **Peggy's Cove, The North (first stop).** The quest giver is a landmark, and its `answer` step follows its
+  `talk` step directly. A `read` step at a giver is not finished by the arrival (the walk in
+  `a-quests-answer-steps-fill-in-one-sitting.test.ts` completes only the `talk` there), and the spare
+  landmark on each level (granite shore, spruce stand) stands before the giver. So nothing can be read
+  before the light's 9-question pool or the sternwheeler's 11-question pool.
+- **Every other stop** now reads four passages that each reach at least one pooled question that no blurb
+  or line tells. The few exceptions are single-lesson stops with no other useful passage (the grain elevator's
+  `m1`, Halifax's market stall `rr2`, Winnipeg's footbridge `justice-03`). A stop cannot take a
+  second lesson in the same reader.
+- **Two further single-question gains were declined.** Each would leave a stop's own pool untold:
+  Prairie Rail's grain elevator reading `m5` or `m6` instead of `m1` (+4 car questions, −3 of its own), and
+  Vancouver's Canada Place reading `symbols-07` instead of `symbols-06` (+5 cargo-ship questions, −4 of its own).
