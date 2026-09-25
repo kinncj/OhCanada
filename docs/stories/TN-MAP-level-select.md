@@ -1,4 +1,4 @@
-# TN-MAP — Level select: ten places, three states
+# TN-MAP — Level select: every place on the journey, three states
 
 **Intent.** A player sees the whole journey across Canada, knows which level they can open now, knows what
 would open the next one, and is never left thinking the game is broken because part of it is not built yet —
@@ -29,13 +29,24 @@ needed a rule rather than an amendment:
   `OQ-PASSPORT-7` is where it was found.
 - **`OQ-MAP-1` is closed.** The config's ten ids are the ten this directory names.
 
+**Amended 2026-09-25 (K-0.9b) — the number of cards is the journey's length, and it becomes eleven when
+Kingston lands.** Kingston takes journey slot 5, between Ottawa and Toronto, and unlocks after Ottawa
+(ADR-0068 §9). Toronto to the North become levels 6 to 11. Every count on this screen is the journey's
+length: the cards, `map.stamps`' total and `map.levelsReady`' total (`journeyPlaces` in
+`app/bootstrap/journey.ts`). No screen or copy string holds the number. So the scenarios below state their
+premise, which is that the journey names eleven places, and say "of 11" where they used to say "of 10". Until
+the Kingston landing PR merges, the shipped map draws ten cards and "of 10", under the same rules. **Three
+scenarios were also corrected in passing.** `TN-MAP-01` and `TN-MAP-11` said a complete map shows "Levels
+ready: 10 of 10". Since ADR-0039, and as this file's own copy notes say, that count is drawn only while `ready`
+is less than `total`.
+
 ## The problem this story is mostly about
 
-For most of this project's life, most of the ten levels did not exist; today all ten do, and a future build
-may again contain fewer — a partial checkout, a branch mid-migration, or a level pulled after a
+For most of this project's life, most of the levels on the journey did not exist; today all of them do, and
+a future build may again contain fewer — a partial checkout, a branch mid-migration, or a level pulled after a
 cultural-accuracy report, which `docs/content-review.md` §7 requires to happen *before* the discussion. A
-screen listing ten things where some of them cannot be opened has to say *why* each one cannot be opened, and
-there are two different whys:
+screen listing the journey's places where some of them cannot be opened has to say *why* each one cannot be
+opened, and there are two different whys:
 
 | State | Means | The player's reading of it |
 |---|---|---|
@@ -84,7 +95,7 @@ nobody is building is `README.md`'s "a screen never describes a state it is not 
 direction nobody watches: **a sentence that stopped being true because the work finished.** Four things this
 rule does and does not say:
 
-1. **The string is not deleted.** A build with fewer than ten documents still needs it, and
+1. **The string is not deleted.** A build with fewer documents than the journey names still needs it, and
    `TN-MAP-04`'s "a build with one level is a normal state of this game" still asserts it.
 2. **Nothing replaces it.** The slot is empty when the journey is complete — no "That's all of them!", no
    "You have the whole map", no tick. This screen reports state; a congratulation is a result, and
@@ -166,19 +177,26 @@ per level, in `COPY_GAPS` until ratified. `map.locked.after` dropped the map tit
 | `level.vancouver.finishFirst` | Finish Vancouver first. | Terminez d'abord Vancouver. |
 | `level.the-north.finishFirst` | Finish the North first. | Terminez d'abord le Nord. |
 
+**Kingston's row is in its own story.** `level.kingston.finishFirst` — "Finish Kingston first." /
+« Terminez d'abord Kingston. » — is in `TN-LEVEL-kingston.md`'s copy table, which Ruling 1 of K-0.9 ratified.
+When Kingston lands, it is the sentence under Toronto's locked card, because Toronto unlocks after Kingston
+and no longer after Ottawa.
+
 **`map.levelsReady` follows `map.moreComing`'s rule since ADR-0039**: it is drawn, and put in the arrival
 announcement, only while `ready` is less than `total`, on the map and in the passport alike.
-"Levels ready: 10 of 10" is a build report, not something a player can act on. `exam.subjectsReady` and
+"Levels ready: 11 of 11" is a build report, not something a player can act on. `exam.subjectsReady` and
 `exam.subjects.help` follow the same rule on the exam's start and result screens.
 
 The level names and subject lines are owned by `TN-LEVELS-2-to-10-spine.md` (`level.<id>.title` and
-`level.<id>.subtitle`, for **every level but Ottawa**) and by `TN-LEVEL-ottawa.md` (`level.ottawa.title`,
-`level.ottawa.subtitle`). This screen names the keys and does not carry the words: a place name written in
+`level.<id>.subtitle`, for **every level but Ottawa and Kingston**), by `TN-LEVEL-ottawa.md`
+(`level.ottawa.title`, `level.ottawa.subtitle`) and by `TN-LEVEL-kingston.md` (`level.kingston.title`,
+`level.kingston.subtitle`). This screen names the keys and does not carry the words: a place name written in
 two tables is a place name that will eventually differ between two screens. **Every one of those keys is
 spelled with the level's id**; `level.2.subtitle`, `level.10.title` and `level.10.subtitle` were retired when
-levels 2 and 10 got ids, and `TN-WAIT-03` refuses a key numbered by journey position. `common.back` is owned
-by `TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`; `passport.open` by
-`TN-PASSPORT-my-passport.md`.
+levels 2 and 10 got ids, and `TN-WAIT-03` refuses a key numbered by journey position. Kingston's insertion
+at slot 5 is the case that rule was written for: it renumbers six levels and moves no key. `common.back` is
+owned by `TN-FLOW-first-run-and-return.md`; `storage.warning` by `TN-SAVE-save-and-reload.md`;
+`passport.open` by `TN-PASSPORT-my-passport.md`.
 
 `map.stamps`, `map.levelsReady`, `map.moreComing`, `map.state.notBuilt` and `map.notBuilt.help` are drawn by
 the passport too, by key. Five strings, one home, two screens that cannot drift apart. **`map.moreComing` is
@@ -201,7 +219,7 @@ complete: the honest wording for "everything that is planned exists" is silence.
 
 ---
 
-## TN-MAP-01 — The ten levels, in order, each with a state
+## TN-MAP-01 — Every level on the journey, in order, each with a state
 
 ```gherkin
 Feature: The level select screen
@@ -211,7 +229,8 @@ Feature: The level select screen
 
   Background:
     Given I have a saved game with a character
-    And this build contains ten level documents
+    And the journey names eleven places, as it does once Kingston lands
+    And this build contains a level document for each of them
     When I open the level select
 
   Scenario: The screen is there and says what it is
@@ -220,19 +239,25 @@ Feature: The level select screen
     And it shows the heading "Choose a level"
     And the element "playable" is not present
 
-  Scenario: Ten levels, in the order the journey takes
-    Then ten level cards are shown
-    And they appear in reading order from level 1 to level 10
+  Scenario: One card per place, in the order the journey takes
+    Then eleven level cards are shown, one for each place the journey names
+    And they appear in reading order from level 1 to level 11
     And the focus order is the same as the reading order
     And each card shows "Level {{n}}" with its number
     And each card shows its place name and its subject line
 
-  Scenario: The ten are the ten this directory names
-    Then the cards are "halifax", "peggys-cove", "quebec-city", "ottawa", "toronto",
+  Scenario: The cards are the places this directory names
+    Then the cards are "halifax", "peggys-cove", "quebec-city", "ottawa", "kingston", "toronto",
       "winnipeg", "prairie-rail", "alberta-foothills", "vancouver" and "the-north", in that order
     And each id is the one "content/game.config.json" lists in "journey" and in "unlockRules.order"
     And each id has a document under "content/levels"
     And no card is drawn for an id no story names
+
+  Scenario: The number of cards is the journey's length, not a number on the screen
+    Then the number of cards equals the number of places in "journey"
+    Given a build whose journey names ten places, as before Kingston landed
+    Then ten cards are shown
+    And no copy string and no screen holds either number
 
   Scenario: Every card carries exactly one state, in words
     Then each card shows one of "Open", "Locked" or "Not made yet" as text
@@ -240,9 +265,9 @@ Feature: The level select screen
     And no card's state is conveyed by colour, by an icon or by opacity alone
     And each card reports "data-state" equal to "open", "locked" or "not-built"
 
-  Scenario: The screen says how much of the game exists
-    Then it shows "Levels ready: 10 of 10"
-    And it shows "Stamps: 0 of 10"
+  Scenario: The screen says how far I have got, and not how much of the game exists
+    Then it shows "Stamps: 0 of 11"
+    And it does not show "Levels ready: 11 of 11", because every level is made (ADR-0039)
 
   Scenario: A complete journey promises nothing more
     Given every level in the journey has a document
@@ -259,7 +284,7 @@ Feature: The level select screen
 
   Scenario: An incomplete journey still says so
     Given exactly one level document exists
-    Then the screen shows "Levels ready: 1 of 10"
+    Then the screen shows "Levels ready: 1 of 11"
     And it shows "More are coming."
     And the sentence is drawn whenever the ready count is lower than the total, and never otherwise
 
@@ -274,7 +299,7 @@ Feature: The level select screen
     Given the viewport is 390 x 844
     Then the page does not scroll sideways
     And every card and every control is at least 44 CSS px wide and tall
-    And reaching level 10 needs only a vertical scroll
+    And reaching the last level on the journey needs only a vertical scroll
     And no card needs a swipe, a drag, a pinch or a double tap to reach or to choose
 
   Scenario: Leaving the screen
@@ -361,11 +386,11 @@ Feature: A locked level says what would open it
 
 ## TN-MAP-04 — A level that is not built yet
 
-**No card is in this state on the shipped build**, because all ten documents exist. These scenarios supply
-their own unbuilt entry rather than borrowing one from the config, for the reason ADR-0024 gives: a guard
-whose only input has been deleted passes exactly as a working guard passes, and nothing can make it fail.
-`tests/unit/ui/level-select.test.ts` does the same thing on purpose — the shipped ten are asserted by name,
-and the no-placeholder guard is handed a synthetic entry.
+**No card is in this state on the shipped build**, because every place the journey names has a document.
+These scenarios supply their own unbuilt entry rather than borrowing one from the config, for the reason
+ADR-0024 gives: a guard whose only input has been deleted passes exactly as a working guard passes, and
+nothing can make it fail. `tests/unit/ui/level-select.test.ts` does the same thing on purpose — the shipped
+places are asserted by name, and the no-placeholder guard is handed a synthetic entry.
 
 ```gherkin
 Feature: A level the game does not contain
@@ -406,9 +431,10 @@ Feature: A level the game does not contain
     And a state no input can reach is not evidence that the state is handled
 
   Scenario: A build with one level is a normal state of this game
-    Given exactly one level document exists
-    Then nine cards report "data-state" equal to "not-built"
-    And the screen shows "Levels ready: 1 of 10"
+    Given the journey names eleven places
+    And exactly one level document exists
+    Then ten cards report "data-state" equal to "not-built"
+    And the screen shows "Levels ready: 1 of 11"
     And the screen shows "More are coming."
 ```
 
@@ -493,10 +519,11 @@ Feature: A map built on data that does not agree with itself
     And no other card's state changes
 
   Scenario: The map is reachable when the game has no levels at all
-    Given no level document exists
+    Given the journey names eleven places
+    And no level document exists
     When I open the level select
-    Then ten cards are shown, all reporting "data-state" equal to "not-built"
-    And the screen shows "Levels ready: 0 of 10"
+    Then eleven cards are shown, all reporting "data-state" equal to "not-built"
+    And the screen shows "Levels ready: 0 of 11"
     And the screen shows "More are coming."
     And no error screen is shown
 ```
@@ -511,7 +538,7 @@ Feature: Keyboard-only level select
 
   Scenario: Every card is reachable, whatever its state
     When I press "Tab" through the screen
-    Then focus reaches all ten cards, in level order
+    Then focus reaches every card on the journey, in level order
     And a locked card and a card that is not built both receive focus
     And each focused card has a focus indicator that is not colour alone
 
@@ -537,6 +564,7 @@ Feature: Keyboard-only level select
 Feature: Single-switch level select
   Background:
     Given single-switch mode is on
+    And the journey names eleven places
     And the level select is visible
 
   Scenario: Nothing scans and nothing expires
@@ -546,8 +574,8 @@ Feature: Single-switch level select
     And nothing on screen counts down
 
   Scenario: Short press moves through every card and wraps
-    When I press the switch briefly ten times
-    Then the highlight has visited all ten cards in order
+    When I press the switch briefly eleven times, once for each place on the journey
+    Then the highlight has visited all eleven cards in order
     And each card's name and state are announced as the highlight arrives
     When I press the switch briefly again
     Then the highlight moves on to "See my passport", then "Back", and then wraps to the first card
@@ -571,7 +599,8 @@ Feature: Single-switch level select
 ```gherkin
 Feature: Announcing the map
   Background:
-    Given the level select is visible
+    Given the journey names eleven places
+    And the level select is visible
 
   Scenario: The screen is a named region or dialog inside a landmark
     Then "level-select" has an accessible name that is not empty
@@ -579,9 +608,9 @@ Feature: Announcing the map
     And exactly one element on the page has an "aria-live" attribute
     And any canvas on the page is "aria-hidden"
 
-  Scenario: The ten cards are a list, and their order is the journey
-    Then the cards are exposed as a list of ten items
-    And their order in the accessibility tree is level 1 to level 10
+  Scenario: The cards are a list, and their order is the journey
+    Then the cards are exposed as a list of eleven items, one for each place on the journey
+    And their order in the accessibility tree is level 1 to level 11
 
   Scenario: A card's accessible name carries its number, its place and its state
     Then the accessible name of "level-card-ottawa" contains "Level 4", "Ottawa" and "Open"
@@ -591,7 +620,8 @@ Feature: Announcing the map
   Scenario: A place name with an apostrophe or an accent is read as a place
     Then the second card's name contains "Peggy's Cove" and is not spelled out
     And the third card's name contains "Québec City", or "Ville de Québec" in French
-    And the tenth card's name contains "The North", or "Le Nord" in French
+    And the fifth card's name contains "Kingston", in both languages
+    And the last card's name contains "The North", or "Le Nord" in French
 
   Scenario: The reason is a description, not a tooltip
     Then each card's help sentence is its accessible description
@@ -630,7 +660,7 @@ Feature: The map honours the accessibility settings
     And every card's number, place name, subject line, state word and help sentence are fully visible
     And no label is truncated with an ellipsis
     And every card is still at least 44 CSS px wide and tall
-    And all ten cards are reachable by scrolling down
+    And every card on the journey is reachable by scrolling down
 
   Scenario: High contrast
     Given "High contrast" is on
@@ -651,13 +681,15 @@ Feature: The map honours the accessibility settings
 Feature: The level select in French
   Background:
     Given the language is French
-    And this build contains ten level documents
+    And the journey names eleven places, as it does once Kingston lands
+    And this build contains a level document for each of them
     And the level select is visible
 
   Scenario: The screen is French
     Then the heading reads "Choisir un niveau"
     And the back control reads "Retour"
-    And the counts read "Niveaux prêts : 10 sur 10" and "Tampons : 0 sur 10"
+    And the stamp count reads "Tampons : 0 sur 11"
+    And it does not show "Niveaux prêts : 11 sur 11", because every level is made (ADR-0039)
     And there is a space before each colon
     And no English word appears in "level-select"
 
@@ -665,7 +697,7 @@ Feature: The level select in French
     Then the screen does not show "D'autres arrivent."
     And no other French sentence is drawn in its place
     Given exactly one level document exists
-    Then the screen reads "Niveaux prêts : 1 sur 10"
+    Then the screen reads "Niveaux prêts : 1 sur 11"
     And it shows "D'autres arrivent."
     And the condition is the same in both languages, because it is one row and one rule
 
@@ -694,9 +726,10 @@ Feature: The level select in French
 
   Scenario: Place names are what each language calls the place
     Then level 4 reads "Ottawa" in both languages
+    And level 5 reads "Kingston" in both languages
     And level 3 reads "Québec City" in English and "Ville de Québec" in French
     And level 2 reads "Peggy's Cove" in both, with the same apostrophe
-    And level 10 reads "The North" in English and "Le Nord" in French, each with its own capitals
+    And level 11, the last, reads "The North" in English and "Le Nord" in French, each with its own capitals
     And every place name has a value in both "en" and "fr"
 
   Scenario: No French string on this screen needs gender agreement
@@ -726,20 +759,23 @@ Feature: The level select in French
   no nulls, with `initialLevels: ["halifax"]` and a document for each. `TN-MAP-06`'s fourth scenario is the
   check that keeps the two lists agreeing, because agreement reached once is not agreement maintained.
   `OQ-PASSPORT-2` is closed by the same fact; `OQ-EXAM-5` and `OQ-RESULT-2` are **not**, because they count
-  *subjects* and nothing in `content/` declares those (`OQ-SUBJECTS-1`).
+  *subjects* and nothing in `content/` declares those (`OQ-SUBJECTS-1`). **Kingston makes it eleven**, after
+  `ottawa` in all three lists (ADR-0068 §9), and `TN-MAP-01` now names it.
 - **`OQ-MAP-2` — is the map a map, or a list?** These scenarios require an ordered, vertically scrollable
-  set of cards, because ten places east to west across a 1080×1920 portrait screen is a horizontal shape in a
-  vertical window, and a horizontally panned map fails "the page does not scroll sideways" and needs a drag.
-  *Recommendation:* a vertical list of cards on a painted backdrop that suggests the journey, with the DOM
-  order and focus order being the journey's order. If a drawn map is wanted later, it is a decoration behind
-  the same list, never the only way to choose.
+  set of cards, because the journey's places east to west across a 1080×1920 portrait screen is a horizontal
+  shape in a vertical window, and a horizontally panned map fails "the page does not scroll sideways" and
+  needs a drag. *Recommendation:* a vertical list of cards on a painted backdrop that suggests the journey,
+  with the DOM order and focus order being the journey's order. If a drawn map is wanted later, it is a
+  decoration behind the same list, never the only way to choose.
 - **`OQ-MAP-3` — where does the North sit on an east-to-west journey?** Levels 1 to 9 run Halifax to
   Vancouver; level 10 is The North, which is not west of Vancouver. *Recommendation:* keep it last in the
   order — it is last in the plan and last in the unlock chain — and do not print a sentence claiming the
   journey runs east to west, because level 10 makes that sentence false. No copy in this file makes that
   claim, deliberately. **Level 10 has now shipped and the card draws "The North" / « Le Nord »**, so the
   question is live rather than hypothetical and the answer is unchanged: the order is the journey's, and no
-  sentence describes its direction.
+  sentence describes its direction. **When Kingston lands, the North is level 11 and the answer does not
+  change.** Kingston sits between Ottawa and Toronto by longitude, so levels 1 to 10 still run roughly east to
+  west and the last level is still the one that is north.
 - **`OQ-MAP-4` — is `stampsToUnlockNext` one stamp or several, and does the map say which?** The copy table
   carries both shapes: `map.locked.after` names the level to finish (right when the answer is one), and
   `map.locked.stamps.*` counts stamps (right when it is more than one). *Recommendation:* keep

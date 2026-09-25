@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-58-how-riel-is-seen",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "How is Louis Riel seen by many Canadians?",
+    "fr": "Comment beaucoup de Canadiens voient-ils Louis Riel?"
+  },
+  "options": [
+    {
+      "en": "As a hero, a defender of Métis rights and the father of Manitoba.",
+      "fr": "Comme un héros, un défenseur des droits des Métis et le père du Manitoba."
+    },
+    {
+      "en": "As the first Prime Minister of Canada, in office after 1867.",
+      "fr": "Comme le premier premier ministre du Canada, en poste après 1867."
+    },
+    {
+      "en": "As the founder of the North West Mounted Police, created in 1873.",
+      "fr": "Comme le fondateur de la Police à cheval du Nord-Ouest, créée en 1873."
+    },
+    {
+      "en": "As the builder of the Canadian Pacific Railway, completed in 1885.",
+      "fr": "Comme le bâtisseur du chemin de fer Canadien Pacifique, terminé en 1885."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "A rising in 1885, on land that is now Saskatchewan, ended with Riel put on trial and executed for high treason. Quebec objected loudly. To many Canadians he is a hero who stood up for Métis rights and gave Manitoba its start.",
+    "fr": "Un soulèvement en 1885, sur des terres qui sont aujourd'hui la Saskatchewan, s'est terminé par le procès de Riel et son exécution pour haute trahison. Le Québec s'y est opposé haut et fort. Pour bien des Canadiens, c'est un héros qui a défendu les droits des Métis et qui a donné naissance au Manitoba."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 36,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Riel is seen by many as a hero, a defender of Métis rights and the father of Manitoba."
+  },
+  "verification": {
+    "status": "verified",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-25T19:58:42Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "Later, as Métis and Indian rights were again threatened by westward settlement, a second rebellion in 1885 in present-day Saskatchewan led to Riel’s trial and execution for high treason, a decision that was strongly opposed in Quebec. Riel is seen by many as a hero, a defender of Métis rights and the father of Manitoba."
+  }
+}

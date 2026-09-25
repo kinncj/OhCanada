@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-63-head-tax-apology-2006",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "In what year did the Government of Canada apologize for the Head Tax imposed on Chinese immigrants?",
+    "fr": "En quelle année le gouvernement du Canada a-t-il présenté des excuses pour la taxe d'entrée imposée aux immigrants chinois?"
+  },
+  "options": [
+    {
+      "en": "2006.",
+      "fr": "En 2006."
+    },
+    {
+      "en": "1988.",
+      "fr": "En 1988."
+    },
+    {
+      "en": "2008.",
+      "fr": "En 2008."
+    },
+    {
+      "en": "1885.",
+      "fr": "En 1885."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Chinese and European crews laid the track together. Once it was finished, Chinese workers met open discrimination, including a fee charged at the border because of their race — the Head Tax. Canada apologized for it in 2006.",
+    "fr": "Des équipes chinoises et européennes ont posé la voie ensemble. Une fois le travail terminé, les travailleurs chinois ont subi une discrimination ouverte, dont un droit exigé à la frontière en raison de leur race : la taxe d'entrée. Le Canada s'en est excusé en 2006."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 37,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Afterwards the Chinese were subject to discrimination, including the Head Tax, a race-based entry fee. The Government of Canada apologized in 2006 for this discriminatory policy."
+  },
+  "verification": {
+    "status": "verified",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-25T11:14:18Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "The project was financed by British and American investors and built by both European and Chinese labour. Afterwards the Chinese were subject to discrimination, including the Head Tax, a race-based entry fee. The Government of Canada apologized in 2006 for this discriminatory policy."
+  }
+}

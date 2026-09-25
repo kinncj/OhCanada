@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="150" viewBox="0 0 1800 150" shape-rendering="geometricPrecision">
+  <title>The far side of the lake: a low, flat wooded island shore across open water, with a row of white three-bladed wind turbines standing on it, as seen from Kingston across the water (refs/kingston/lake-ontario-to-wolfe-island-2012.jpg). GENERIC BY CONSTRUCTION - this tile repeats every 1800 px, so it draws a low shore and turbines as types, with no building, lighthouse, fort or tower. Rows 66..96 are an opaque sky-light haze band (world 846..876), the lake haze at the horizon. World y 780..930. Every colour is from palette.json.</title>
+  <rect x="0" y="66" width="1800" height="30" fill="#a5d6ee"/>
+  <rect x="0" y="92" width="1800" height="20" fill="#4b9aa0"/>
+  <ellipse cx="28.1" cy="93" rx="34.1" ry="5.9" fill="#4b9aa0"/>
+  <ellipse cx="81.2" cy="93" rx="42.3" ry="5.4" fill="#4b9aa0"/>
+  <ellipse cx="136.4" cy="93" rx="39.4" ry="7.2" fill="#4b9aa0"/>
+  <ellipse cx="177.9" cy="93" rx="27.4" ry="8" fill="#4b9aa0"/>
+  <ellipse cx="211.7" cy="93" rx="26.9" ry="7.6" fill="#4b9aa0"/>
+  <ellipse cx="246" cy="93" rx="27.7" ry="5.5" fill="#4b9aa0"/>
+  <ellipse cx="289.7" cy="93" rx="36.6" ry="10" fill="#4b9aa0"/>
+  <ellipse cx="331.1" cy="93" rx="29.1" ry="6.3" fill="#4b9aa0"/>
+  <ellipse cx="380.7" cy="93" rx="41.7" ry="10.7" fill="#4b9aa0"/>
+  <ellipse cx="436.5" cy="93" rx="40.4" ry="7.4" fill="#4b9aa0"/>
+  <ellipse cx="501.6" cy="93" rx="50.4" ry="5.3" fill="#4b9aa0"/>
+  <ellipse cx="569.7" cy="93" rx="47.5" ry="6.7" fill="#4b9aa0"/>
+  <ellipse cx="618.1" cy="93" rx="29.6" ry="5.7" fill="#4b9aa0"/>
+  <ellipse cx="660" cy="93" rx="33.7" ry="9.9" fill="#4b9aa0"/>
+  <ellipse cx="701.2" cy="93" rx="30.5" ry="8.5" fill="#4b9aa0"/>
+  <ellipse cx="751.9" cy="93" rx="42" ry="7.2" fill="#4b9aa0"/>
+  <ellipse cx="807.1" cy="93" rx="39.7" ry="5.4" fill="#4b9aa0"/>
+  <ellipse cx="848.8" cy="93" rx="27.5" ry="6.2" fill="#4b9aa0"/>
+  <ellipse cx="898.7" cy="93" rx="43" ry="7.6" fill="#4b9aa0"/>
+  <ellipse cx="948.8" cy="93" rx="33.9" ry="8.5" fill="#4b9aa0"/>
+  <ellipse cx="996.8" cy="93" rx="37.3" ry="6.8" fill="#4b9aa0"/>
+  <ellipse cx="1055.5" cy="93" rx="45.9" ry="9.2" fill="#4b9aa0"/>
+  <ellipse cx="1105.5" cy="93" rx="32.1" ry="8.4" fill="#4b9aa0"/>
+  <ellipse cx="1154.3" cy="93" rx="39.1" ry="10.3" fill="#4b9aa0"/>
+  <ellipse cx="1212.4" cy="93" rx="44.2" ry="6.7" fill="#4b9aa0"/>
+  <ellipse cx="1279.9" cy="93" rx="50.5" ry="5.7" fill="#4b9aa0"/>
+  <ellipse cx="1337" cy="93" rx="36.5" ry="9.5" fill="#4b9aa0"/>
+  <ellipse cx="1379.1" cy="93" rx="29.8" ry="7.9" fill="#4b9aa0"/>
+  <ellipse cx="1414.4" cy="93" rx="27" ry="9" fill="#4b9aa0"/>
+  <ellipse cx="1466.1" cy="93" rx="45.1" ry="8.4" fill="#4b9aa0"/>
+  <ellipse cx="1531.4" cy="93" rx="47.9" ry="6.9" fill="#4b9aa0"/>
+  <ellipse cx="1593.9" cy="93" rx="43.4" ry="8.6" fill="#4b9aa0"/>
+  <ellipse cx="1650.9" cy="93" rx="40.5" ry="7.7" fill="#4b9aa0"/>
+  <ellipse cx="1712.6" cy="93" rx="47" ry="10.7" fill="#4b9aa0"/>
+  <ellipse cx="1769" cy="93" rx="37.9" ry="9" fill="#4b9aa0"/>
+  <ellipse cx="1809.6" cy="93" rx="27.5" ry="9.2" fill="#4b9aa0"/>
+  <rect x="0" y="104" width="1800" height="8" fill="#7d8fa0"/>
+  <polygon points="66.5,96 73.5,96 72,36.2 68,36.2" fill="#f0f2f5"/>
+  <line x1="70" y1="36.2" x2="75.7" y2="9.3" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="70" y1="36.2" x2="90.4" y2="54.6" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="70" y1="36.2" x2="43.9" y2="44.7" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="70" cy="36.2" r="3.5" fill="#cbd2da"/>
+  <polygon points="296.5,96 303.5,96 302,32.1 298,32.1" fill="#f0f2f5"/>
+  <line x1="300" y1="32.1" x2="306.1" y2="3.3" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="300" y1="32.1" x2="321.8" y2="51.8" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="300" y1="32.1" x2="272" y2="41.2" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="300" cy="32.1" r="3.5" fill="#cbd2da"/>
+  <polygon points="416.5,96 423.5,96 422,34.1 418,34.1" fill="#f0f2f5"/>
+  <line x1="420" y1="34.1" x2="425.9" y2="6.3" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="420" y1="34.1" x2="441.1" y2="53.2" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="420" y1="34.1" x2="392.9" y2="42.9" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="420" cy="34.1" r="3.5" fill="#cbd2da"/>
+  <polygon points="606.5,96 613.5,96 612,40.6 608,40.6" fill="#f0f2f5"/>
+  <line x1="610" y1="40.6" x2="615.3" y2="15.7" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="610" y1="40.6" x2="628.9" y2="57.6" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="610" y1="40.6" x2="585.8" y2="48.5" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="610" cy="40.6" r="3.5" fill="#cbd2da"/>
+  <polygon points="876.5,96 883.5,96 882,39.4 878,39.4" fill="#f0f2f5"/>
+  <line x1="880" y1="39.4" x2="885.4" y2="13.9" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="880" y1="39.4" x2="899.4" y2="56.8" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="880" y1="39.4" x2="855.2" y2="47.4" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="880" cy="39.4" r="3.5" fill="#cbd2da"/>
+  <polygon points="1006.5,96 1013.5,96 1012,36 1008,36" fill="#f0f2f5"/>
+  <line x1="1010" y1="36" x2="1015.7" y2="9" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1010" y1="36" x2="1030.5" y2="54.5" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1010" y1="36" x2="983.7" y2="44.5" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="1010" cy="36" r="3.5" fill="#cbd2da"/>
+  <polygon points="1226.5,96 1233.5,96 1232,43.7 1228,43.7" fill="#f0f2f5"/>
+  <line x1="1230" y1="43.7" x2="1235" y2="20.2" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1230" y1="43.7" x2="1247.9" y2="59.8" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1230" y1="43.7" x2="1207.1" y2="51.2" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="1230" cy="43.7" r="3.5" fill="#cbd2da"/>
+  <polygon points="1476.5,96 1483.5,96 1482,38.5 1478,38.5" fill="#f0f2f5"/>
+  <line x1="1480" y1="38.5" x2="1485.5" y2="12.6" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1480" y1="38.5" x2="1499.7" y2="56.2" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1480" y1="38.5" x2="1454.8" y2="46.6" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="1480" cy="38.5" r="3.5" fill="#cbd2da"/>
+  <polygon points="1596.5,96 1603.5,96 1602,42 1598,42" fill="#f0f2f5"/>
+  <line x1="1600" y1="42" x2="1605.2" y2="17.7" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1600" y1="42" x2="1618.5" y2="58.6" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="1600" y1="42" x2="1576.4" y2="49.7" stroke="#f0f2f5" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="1600" cy="42" r="3.5" fill="#cbd2da"/>
+  <rect x="0" y="110" width="1800" height="40" fill="#5cbfd6"/>
+  <rect x="0" y="110" width="1800" height="4" fill="#dce9f3"/>
+  <rect x="17" y="122" width="45.9" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="100" y="130" width="42.9" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="183" y="138" width="78.4" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="266" y="122" width="46.5" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="349" y="130" width="52.4" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="432" y="138" width="59.5" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="515" y="122" width="83.6" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="598" y="130" width="44" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="681" y="138" width="62.5" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="764" y="122" width="67.5" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="847" y="130" width="84.2" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="930" y="138" width="81" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1013" y="122" width="83.2" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1096" y="130" width="53.9" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1179" y="138" width="60.8" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1262" y="122" width="57.9" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1345" y="130" width="84.2" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1428" y="138" width="87.9" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1511" y="122" width="47.5" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1594" y="130" width="48.8" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1677" y="138" width="51.6" height="3" fill="#dce9f3" opacity="0.7"/>
+  <rect x="1760" y="122" width="51.7" height="3" fill="#dce9f3" opacity="0.7"/>
+</svg>

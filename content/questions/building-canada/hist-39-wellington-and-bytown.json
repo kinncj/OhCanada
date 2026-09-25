@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-39-wellington-and-bytown",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "Which town, chosen as the endpoint of the Rideau Canal, later became Canada's national capital?",
+    "fr": "Quelle ville, choisie comme point d'arrivée du canal Rideau, est devenue plus tard la capitale nationale du Canada?"
+  },
+  "options": [
+    {
+      "en": "Bytown, now Ottawa.",
+      "fr": "Bytown, aujourd'hui Ottawa."
+    },
+    {
+      "en": "Fredericton.",
+      "fr": "Fredericton."
+    },
+    {
+      "en": "York, now Toronto.",
+      "fr": "York, aujourd'hui Toronto."
+    },
+    {
+      "en": "Halifax.",
+      "fr": "Halifax."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The Duke of Wellington picked Bytown — today's Ottawa — for the far end of the Rideau Canal. The canal belonged to a chain of defences built so no second invasion could succeed, and that choice is how the national capital began.",
+    "fr": "Le duc de Wellington a choisi Bytown — l'Ottawa d'aujourd'hui — pour l'extrémité du canal Rideau. Ce canal faisait partie d'une chaîne de défenses construites pour qu'aucune seconde invasion ne réussisse, et c'est ainsi qu'est née la capitale nationale."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 30,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal"
+  },
+  "verification": {
+    "status": "verified",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-25T19:58:42Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal, part of a network of forts to prevent the U.S.A. from invading Canada again. Wellington, who defeated Napoleon in 1815, therefore played a direct role in founding the national capital"
+  }
+}

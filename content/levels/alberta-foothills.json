@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "alberta-foothills",
   "subject": "economy",
-  "order": 8,
+  "order": 9,
   "title": {
     "en": "Alberta",
     "fr": "L'Alberta"

@@ -573,6 +573,16 @@
       "skyBandStops": {
         "note": "NONE. the-north/layer-10-sky.svg is ONE FLAT sky-shade field, for the reason Winnipeg's, the Prairies', the Alberta foothills', Vancouver's and Peggy's Cove's are: at the LOW preset this level keeps the sky and the river-and-bar tile, and that tile's first opaque row is world 960, so a band step anywhere above it would show against open sky. Its clouds are LENTICULAR STACKS - smooth stacked lens shapes, the mountain-wave cloud of a high range - which is the seventh distinct cloud treatment in the game and the only one with a vertical stack in it."
       }
+    },
+    "kingston-lakeshore-summer": {
+      "sky": "sky-base",
+      "ground": "path-light",
+      "horizon": "sky-light",
+      "why": "A clear summer afternoon on Lake Ontario over a city of grey limestone. `sky-base` at the zenith, the lake's `sky-light` haze at the horizon rule, and the ground is `path-light` because Kingston's limestone measures grey (sunlit hsl(55, 7 %, 68 %) on assets/refs/kingston/city-hall-dome-and-clocks-2011.jpg) and the paving strip the player walks on is that stone, so the ground polygon and the strip meet with no step. Deliberately not Toronto's (`sky-light`, `path-shade`, `cloud-base`), which is the same lake a level later under a bleached city haze over asphalt. No two level triples are equal.",
+      "skyBandStops": {
+        "note": "Design-resolution y at which layer-10-sky.svg changes band. The one step sits behind the opaque water of layer-30-harbour, which starts at world 900 and is the layer kept beside the sky at every tier, the low preset included, so it never shows against open sky.",
+        "baseToLight": 910
+      }
     }
   },
   "restrictedMarks": {
