@@ -15,11 +15,11 @@
   <ellipse cx="310" cy="412" rx="170" ry="12" fill="#16203a" opacity="0.28"/>
 
   <!-- The drum: a squat round stone tower, battered so it is wider at the foot, lit on the left and in shade on the right. -->
-  <polygon points="155,410 445,410 431,192 169,192" fill="#8b857c"/>
-  <polygon points="155,410 233,410 241,192 169,192" fill="#afaca5"/>
-  <polygon points="375,410 445,410 431,192 367,192" fill="#605a55"/>
-  <clipPath id="lit"><polygon points="155,410 233,410 241,192 169,192"/></clipPath>
-  <clipPath id="mid"><polygon points="233,410 375,410 367,192 241,192"/></clipPath>
+  <polygon points="155,410 445,410 431.8,180 168.2,180" fill="#8b857c"/>
+  <polygon points="155,410 233,410 241.4,180 168.2,180" fill="#afaca5"/>
+  <polygon points="375,410 445,410 431.8,180 366.6,180" fill="#605a55"/>
+  <clipPath id="lit"><polygon points="155,410 233,410 241.4,180 168.2,180"/></clipPath>
+  <clipPath id="mid"><polygon points="233,410 375,410 366.6,180 241.4,180"/></clipPath>
   <g clip-path="url(#lit)">
     <path d="M 166.4 232 Q 300 212 433.6 232 L 433.6 238 Q 300 218 166.4 238 Z" fill="#8b857c"/>
     <path d="M 163.7 274 Q 300 254 436.3 274 L 436.3 280 Q 300 260 163.7 280 Z" fill="#8b857c"/>
@@ -43,16 +43,28 @@
   <rect x="169.881" y="300" width="24" height="48" rx="3" fill="#0f121a"/>
   <rect x="169.881" y="300" width="24" height="5" fill="#605a55"/>
 
-  <!-- The timber upper storey set on the drum, in the shadow of the eave, with its two small windows. -->
-  <rect x="169" y="138" width="262" height="56" fill="#5a2d19"/>
-  <rect x="169" y="138" width="26" height="56" fill="#96632f"/>
+  <!-- The timber upper storey set on the drum, in the shadow of the eave, with its two small windows.
+       It is round because the drum is: its foot follows the drum's top course, bowing UP in the middle
+       like every course below it, and its panel joints crowd toward both edges the way the faceted storey
+       in martello-tower-1.jpg turns away from the eye. A flat-bottomed box on a drum read as a blockhouse
+       (blind run 7d90205061b27757); these two cues are the reference's own, not added detail. -->
+  <clipPath id="storey"><path d="M 169 138 L 431 138 L 431 198 Q 300 176 169 198 Z"/></clipPath>
+  <g clip-path="url(#storey)">
+    <rect x="169" y="138" width="262" height="60" fill="#5a2d19"/>
+    <rect x="169" y="138" width="30" height="60" fill="#96632f"/>
+    <rect x="378" y="138" width="53" height="60" fill="#16203a" opacity="0.22"/>
+    <rect x="178" y="138" width="3" height="60" fill="#5a2d19"/>
+    <rect x="248" y="138" width="3" height="60" fill="#96632f"/>
+    <rect x="349" y="138" width="3" height="60" fill="#96632f"/>
+    <rect x="419" y="138" width="3" height="60" fill="#96632f" opacity="0.6"/>
+    <path d="M 169 198 Q 300 176 431 198 L 431 190 Q 300 168 169 190 Z" fill="#16203a" opacity="0.18"/>
+  </g>
   <rect x="257" y="150" width="28" height="26" rx="2" fill="#f0f2f5"/>
   <rect x="261" y="154" width="9" height="18" fill="#0f121a"/>
   <rect x="273" y="154" width="8" height="18" fill="#0f121a"/>
   <rect x="315" y="150" width="28" height="26" rx="2" fill="#f0f2f5"/>
   <rect x="319" y="154" width="9" height="18" fill="#0f121a"/>
   <rect x="331" y="154" width="8" height="18" fill="#0f121a"/>
-  <rect x="169" y="188" width="262" height="8" fill="#16203a" opacity="0.18"/>
   <rect x="169" y="138" width="262" height="10" fill="#16203a" opacity="0.18"/>
 
   <!-- The low hipped roof with its deep eave, under snow. -->
