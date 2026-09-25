@@ -246,8 +246,61 @@ export function describeScreenArt(tree) {
 const inRect = (p, r) => p.x >= r.x && p.y >= r.y && p.x <= r.x + r.width && p.y <= r.y + r.height;
 const rectInRect = (a, b) =>
   a.x >= b.x && a.y >= b.y && a.x + a.width <= b.x + b.width && a.y + a.height <= b.y + b.height;
+/** Interiors intersect; frames that share an edge do not overlap. */
+const rectsOverlap = (a, b) =>
+  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+/**
+ * How far `p` is outside `r` along the axis it is furthest out on; 0 inside.
+ * A point is within `r` grown by `d` on every side exactly when this is <= d.
+ */
+const pointRectGap = (p, r) =>
+  Math.max(0, r.x - p.x, p.x - (r.x + r.width), r.y - p.y, p.y - (r.y + r.height));
+/** The same measure between two rectangles: 0 when they touch or overlap. */
+const rectGap = (a, b) =>
+  Math.max(0, b.x - (a.x + a.width), a.x - (b.x + b.width), b.y - (a.y + a.height), a.y - (b.y + b.height));
+const round = (n) => Math.round(n * 10) / 10;
 const fmtPoint = (p) => `(${p.x}, ${p.y})`;
 const fmtRect = (r) => `(${r.x}, ${r.y}, ${r.width} x ${r.height})`;
+
+/** The stylesheet that sizes a map pin, and the rule in it that does. */
+export const PIN_STYLESHEET = 'app/ui/screen-styles.ts';
+const PIN_RULE = '.tn-map .tn-map__stop .tn-journey__pin';
+
+/**
+ * A map pin's diameter as a fraction of the drawing's width, read from the rule
+ * that draws it, or a sentence saying why it could not be read.
+ *
+ * The pin is sized in `cqi` of the map, whose inline size is the drawing's, so
+ * `inline-size: Ncqi` is N % of the viewBox width. The last `cqi` inline-size in
+ * the rule wins, as it does in the browser (the `rem` one before it is the
+ * fallback for an engine without container units). ADR-0069 §3.4: the fraction
+ * has one home and the gate reads it; it is never restated here. Where that
+ * home finally lives is §6 commit 3's to decide; until then it is this rule.
+ */
+export function readPinFraction(root) {
+  const where = `${PIN_STYLESHEET} rule "${PIN_RULE}"`;
+  let text;
+  try {
+    text = readFileSync(join(root, PIN_STYLESHEET), 'utf8');
+  } catch (error) {
+    return (
+      `the map pin's size could not be read from ${PIN_STYLESHEET} (${error.message}), so no frame can ` +
+      'be checked against a main-map pin (ADR-0069 §3.3).'
+    );
+  }
+  const at = text.indexOf(`${PIN_RULE} {`);
+  const close = at === -1 ? -1 : text.indexOf('}', at);
+  const body = close === -1 ? '' : text.slice(at, close);
+  const sizes = [...body.matchAll(/(?:^|[\s;{])inline-size:\s*([0-9]*\.?[0-9]+)cqi\s*;/g)].map((m) => Number(m[1]));
+  const last = sizes.at(-1);
+  if (last === undefined || !(last > 0)) {
+    return (
+      `no "inline-size: <n>cqi" in the ${where}, so the pin's size is unknown and no frame can be ` +
+      'checked against a main-map pin (ADR-0069 §3.3).'
+    );
+  }
+  return last / 100;
+}
 
 /**
  * The claims in a sidecar that its schema cannot state, checked against the two
@@ -261,10 +314,20 @@ const fmtRect = (r) => `(${r.x}, ${r.y}, ${r.width} x ${r.height})`;
  *   3. there is exactly one anchor per place `game.config.json#/journey` names,
  *      both directions. A `null` slot names no place and takes no anchor.
  *   4. every anchor lies inside the viewBox;
- *   5. an inset's frame lies inside the viewBox, its window inside its frame, its
- *      anchors inside its window and name stops the main map anchors, and each of
- *      those main-map anchors lies inside the locator box;
- *   6. every region id listed is an `id` in the drawing.
+ *   5. each inset's frame lies inside the viewBox, its window inside its frame,
+ *      its anchors inside its window and name stops the main map anchors, and
+ *      each of those main-map anchors lies inside its locator box;
+ *   6. across insets (ADR-0069 §3.1-§3.3): a stop is in at most one inset; a
+ *      locator encloses no main-map point of a stop its inset does not anchor;
+ *      no two frames overlap; and no main-map pin (a stop in no inset) lies
+ *      within a frame's rectangle grown by one pin radius. The pin's size is
+ *      read from the stylesheet that draws it (`readPinFraction`), never
+ *      restated here;
+ *   7. every region id listed is an `id` in the drawing.
+ *
+ * The result's `insets` carries what the cross-inset checks measured, so the
+ * summary line can say it, and can say in words when there was no inset to
+ * measure rather than count a pass over none (ADR-0024).
  *
  * `sidecars` are `{ rel, file, svg, doc }` whose `doc` has ALREADY passed
  * content/schemas/map-anchors.schema.json; a sidecar that failed its schema is
@@ -284,15 +347,35 @@ export function checkScreenSidecars({ root, sidecars, places }) {
   const failures = [];
   let anchors = 0;
   let regions = 0;
+  let insetCount = 0;
+  let enlarged = 0;
+  let locators = 0;
+  let framePairs = 0;
+  let mainPins = 0;
+  let minFrameGap = Infinity;
+  let minClearance = Infinity;
+  let pinRadius = null;
+  /** The pin fraction, read once when an inset needs it; a string says why it could not be. */
+  let pin;
+  const measured = () => ({
+    insets: insetCount,
+    enlarged,
+    locators,
+    framePairs,
+    minFrameGap: Number.isFinite(minFrameGap) ? round(minFrameGap) : null,
+    mainPins,
+    minClearance: Number.isFinite(minClearance) ? round(minClearance) : null,
+    pinRadius: pinRadius === null ? null : round(pinRadius),
+  });
 
-  if (sidecars.length === 0) return { failures, anchors, regions, checked: 0 };
+  if (sidecars.length === 0) return { failures, anchors, regions, checked: 0, insets: measured() };
 
   if (places === null) {
     failures.push(
       `${sidecars.map((s) => s.rel).join(', ')}: anchors are checked against the places ` +
         'content/game.config.json#/journey names, and that journey could not be read.',
     );
-    return { failures, anchors, regions, checked: 0 };
+    return { failures, anchors, regions, checked: 0, insets: measured() };
   }
   if (places.length === 0) {
     failures.push(
@@ -300,7 +383,7 @@ export function checkScreenSidecars({ root, sidecars, places }) {
         'content/game.config.json#/journey names and it names none. ANTI-VACUUM FLOOR (ADR-0024): ' +
         '"every anchor names a place" is vacuously true of no places.',
     );
-    return { failures, anchors, regions, checked: 0 };
+    return { failures, anchors, regions, checked: 0, insets: measured() };
   }
 
   for (const { rel, svg, doc } of sidecars) {
@@ -351,32 +434,100 @@ export function checkScreenSidecars({ root, sidecars, places }) {
       }
     }
 
-    const inset = doc.inset;
-    if (inset !== undefined) {
+    const insets = Array.isArray(doc.insets) ? doc.insets : [];
+    const home = new Map();
+    insets.forEach((inset, index) => {
+      const at = `insets[${index}]`;
+      insetCount += 1;
       if (!rectInRect(inset.frame, box)) {
-        failures.push(`${rel}: inset.frame ${fmtRect(inset.frame)} is not inside the viewBox ${fmtRect(box)}.`);
+        failures.push(`${rel}: ${at}.frame ${fmtRect(inset.frame)} is not inside the viewBox ${fmtRect(box)}.`);
       }
       if (!rectInRect(inset.window, inset.frame)) {
-        failures.push(`${rel}: inset.window ${fmtRect(inset.window)} is not inside inset.frame ${fmtRect(inset.frame)}.`);
+        failures.push(`${rel}: ${at}.window ${fmtRect(inset.window)} is not inside ${at}.frame ${fmtRect(inset.frame)}.`);
       }
       if (!rectInRect(inset.locator, box)) {
-        failures.push(`${rel}: inset.locator ${fmtRect(inset.locator)} is not inside the viewBox ${fmtRect(box)}.`);
+        failures.push(`${rel}: ${at}.locator ${fmtRect(inset.locator)} is not inside the viewBox ${fmtRect(box)}.`);
       }
       for (const [id, point] of Object.entries(inset.anchors)) {
         anchors += 1;
         if (!inRect(point, inset.window)) {
           failures.push(
-            `${rel}: inset.anchors."${id}" at ${fmtPoint(point)} lies outside inset.window ${fmtRect(inset.window)}.`,
+            `${rel}: ${at}.anchors."${id}" at ${fmtPoint(point)} lies outside ${at}.window ${fmtRect(inset.window)}.`,
           );
+        }
+        /* ADR-0069 §3.1: enlarged twice, a stop would have two pins and be at
+           two ends of a route leg. */
+        if (home.has(id)) {
+          failures.push(
+            `${rel}: ${at}.anchors."${id}" is also anchored in insets[${home.get(id)}]. A stop is in at most ` +
+              'one inset (ADR-0069 §3.1); in two it would have two pins and two ends to every leg.',
+          );
+        } else {
+          home.set(id, index);
+          enlarged += 1;
         }
         const main = doc.anchors[id];
         if (main === undefined) {
-          failures.push(`${rel}: inset.anchors."${id}" has no main-map anchor; an inset enlarges a stop the map already has.`);
+          failures.push(`${rel}: ${at}.anchors."${id}" has no main-map anchor; an inset enlarges a stop the map already has.`);
         } else if (!inRect(main, inset.locator)) {
           failures.push(
-            `${rel}: anchors."${id}" at ${fmtPoint(main)} is outside inset.locator ${fmtRect(inset.locator)}, ` +
+            `${rel}: anchors."${id}" at ${fmtPoint(main)} is outside ${at}.locator ${fmtRect(inset.locator)}, ` +
               'so the inset shows a stop its locator box does not point at.',
           );
+        }
+      }
+      /* ADR-0069 §3.2, the converse: the locator points at no stop its inset
+         does not show. */
+      for (const [id, main] of Object.entries(doc.anchors)) {
+        if (Object.hasOwn(inset.anchors, id)) continue;
+        if (inRect(main, inset.locator)) {
+          failures.push(
+            `${rel}: anchors."${id}" at ${fmtPoint(main)} lies inside ${at}.locator ${fmtRect(inset.locator)}, ` +
+              `and ${at} does not anchor it. A locator encloses exactly the stops its inset shows ` +
+              '(ADR-0069 §3.2); a box round a stop the inset leaves out is a false pointer.',
+          );
+        }
+      }
+      locators += 1;
+    });
+
+    /* ADR-0069 §3.3: frames apart from one another, and clear of main-map pins
+       by one pin radius. */
+    for (let i = 0; i < insets.length; i += 1) {
+      for (let j = i + 1; j < insets.length; j += 1) {
+        const a = insets[i].frame;
+        const b = insets[j].frame;
+        framePairs += 1;
+        minFrameGap = Math.min(minFrameGap, rectGap(a, b));
+        if (rectsOverlap(a, b)) {
+          failures.push(
+            `${rel}: insets[${i}].frame ${fmtRect(a)} and insets[${j}].frame ${fmtRect(b)} overlap. Frames ` +
+              'do not overlap one another (ADR-0069 §3.3); one would hide the other.',
+          );
+        }
+      }
+    }
+    if (insets.length > 0) {
+      if (pin === undefined) pin = readPinFraction(root);
+      if (typeof pin === 'string') {
+        failures.push(`${rel}: ${pin}`);
+      } else {
+        const radius = (pin * box.width) / 2;
+        pinRadius = radius;
+        for (const [id, point] of Object.entries(doc.anchors)) {
+          if (home.has(id)) continue;
+          mainPins += 1;
+          insets.forEach((inset, index) => {
+            const clearance = pointRectGap(point, inset.frame);
+            minClearance = Math.min(minClearance, clearance);
+            if (clearance <= radius) {
+              failures.push(
+                `${rel}: the main-map pin for "${id}" at ${fmtPoint(point)} is ${round(clearance)} unit(s) from ` +
+                  `insets[${index}].frame ${fmtRect(inset.frame)}, within one pin radius (${round(radius)}). ` +
+                  'A frame drawn over a pin hides it (ADR-0069 §3.3).',
+              );
+            }
+          });
         }
       }
     }
@@ -392,5 +543,5 @@ export function checkScreenSidecars({ root, sidecars, places }) {
     }
   }
 
-  return { failures, anchors, regions, checked: sidecars.length };
+  return { failures, anchors, regions, checked: sidecars.length, insets: measured() };
 }

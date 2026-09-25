@@ -63,13 +63,19 @@
  * stop the inset anchors is pinned **in the inset** and nowhere else. Two pins
  * on the locator box would be one smudge.
  *
- * The line follows the pins. A leg between two stops the inset anchors is drawn
- * **in the inset**, between their inset anchors; on the main map it would be a
- * line four units long, which is no line at all. A leg between an inset stop and
- * a stop on the main map is drawn on the main map, from the inset stop's
- * main-map anchor. That point lies inside the locator box the drawing puts round
- * the inset's area, so the line comes out of the box that stands for the inset,
- * rather than out of a pin that is not there.
+ * The line follows the pins. A leg between two stops **the same inset** anchors
+ * is drawn in that inset, between their inset anchors; on the main map it would
+ * be a line four units long, which is no line at all. Every other leg — into or
+ * out of an inset, or from one inset to another — is drawn on the main map,
+ * between main-map anchors. An inset stop's main-map anchor lies inside the
+ * locator box the drawing puts round the inset's area, so the line comes out of
+ * the box that stands for the inset, rather than out of a pin that is not there.
+ *
+ * The sidecar holds as many insets as the map's crowded places need
+ * (ADR-0069), and a stop is anchored in at most one of them. "Both ends are in
+ * an inset" is not "both ends are in the same inset": a leg from Peggy's Cove in
+ * one to Ottawa in another drawn inside either would join two points that are
+ * not both in it (§4).
  *
  * ## Motion
  *
@@ -147,8 +153,10 @@ export interface PlacedStop {
   readonly number?: number;
   readonly reached: boolean;
   readonly current: boolean;
-  /** Pinned at the inset's anchor rather than the main map's. */
+  /** Pinned at an inset's anchor rather than the main map's. */
   readonly inset: boolean;
+  /** Which of the sidecar's `insets` it is pinned in; absent on the main map. */
+  readonly insetIndex?: number;
   /** Percent of the drawing's width from its left edge, and of its height from its top. */
   readonly left: number;
   readonly top: number;
@@ -177,7 +185,8 @@ export function placeStops(
   const placed: PlacedStop[] = [];
   for (const { id, state, stop, number } of stops) {
     if (id === undefined) continue;
-    const inInset: MapPoint | undefined = anchors.inset?.anchors[id];
+    const insetIndex = anchors.insets?.findIndex((inset) => Object.hasOwn(inset.anchors, id)) ?? -1;
+    const inInset: MapPoint | undefined = anchors.insets?.[insetIndex]?.anchors[id];
     const point = inInset ?? anchors.anchors[id];
     if (point === undefined) continue;
     placed.push({
@@ -187,6 +196,7 @@ export function placeStops(
       reached: stop.reached,
       current: stop.current,
       inset: inInset !== undefined,
+      ...(inInset === undefined ? {} : { insetIndex }),
       left: percent(((point.x - minX) / width) * 100),
       top: percent(((point.y - minY) / height) * 100),
     });
@@ -229,11 +239,11 @@ export interface RouteLeg {
 /**
  * The travelled line, leg by leg, in journey order.
  *
- * A leg between two inset stops is drawn in the inset between their inset
- * anchors. Any other leg is drawn on the main map between main-map anchors,
- * which for an inset stop is a point inside the locator box. A leg that would
- * have no length, or whose ends the sidecar cannot place in its frame, is not
- * drawn.
+ * A leg between two stops pinned in the same inset is drawn in that inset,
+ * between their inset anchors. Any other leg is drawn on the main map between
+ * main-map anchors, which for an inset stop is a point inside its locator box
+ * (ADR-0069 §4). A leg that would have no length, or whose ends the sidecar
+ * cannot place in its frame, is not drawn.
  *
  * `start` and `share` are what the stylesheet paces the draw-in by, so the line
  * grows at one speed along its whole length instead of spending as long on a
@@ -247,8 +257,12 @@ export function routeLegs(
   let previous: PlacedStop | undefined;
   for (const stop of travelledStops(placed)) {
     if (previous !== undefined) {
-      const frame: MapFrame = previous.inset && stop.inset ? 'inset' : 'main';
-      const table = frame === 'inset' ? anchors.inset?.anchors : anchors.anchors;
+      const shared =
+        previous.insetIndex !== undefined && previous.insetIndex === stop.insetIndex
+          ? anchors.insets?.[previous.insetIndex]
+          : undefined;
+      const frame: MapFrame = shared === undefined ? 'main' : 'inset';
+      const table = shared === undefined ? anchors.anchors : shared.anchors;
       const from = table?.[previous.id];
       const to = table?.[stop.id];
       if (from !== undefined && to !== undefined) {

@@ -18,9 +18,10 @@
  *    ramps is exactly the file where that distinction bites.
  * 6. Validates every screen-art sidecar, `assets/src/svg/screens/<name>.anchors.json`,
  *    against the schema it declares, then cross-checks what no schema can say:
- *    that it describes the drawing beside it, that it anchors every level in
- *    content/levels/ and nothing else, and that every coordinate lands inside the
- *    viewBox and the inset it claims (scripts/lib/screen-art.mjs). UI code places
+ *    that it describes the drawing beside it, that it anchors every place
+ *    game.config.json#/journey names and nothing else, that every coordinate
+ *    lands inside the viewBox and the inset it claims, and that its insets keep
+ *    apart (ADR-0069 §3.1-3.3; scripts/lib/screen-art.mjs). UI code places
  *    markers at those coordinates without looking at the map, so they are checked
  *    here rather than trusted there. The directory's other rules - flat, SVG or
  *    sidecar only, not empty - belong to `make assets`, which owns the source tree.
@@ -844,12 +845,26 @@ if (failures.length > 0) {
  * is legal here (screen art need not have a sidecar, and a tree may have no
  * screen art), and a count of zero would read like a pass over something.
  */
+const measuredInsets = sidecarCheck.insets;
+const insetClause =
+  measuredInsets.insets === 0
+    ? 'no inset in any sidecar, so the cross-inset checks (ADR-0069 §3.1-3.3) had nothing to measure'
+    : `${measuredInsets.insets} inset(s): ${measuredInsets.enlarged} enlarged stop(s) each in one inset, ` +
+      `${measuredInsets.locators} locator(s) enclosing only their own inset's stops, ` +
+      (measuredInsets.framePairs === 0
+        ? 'one frame so no pair to keep apart, '
+        : `${measuredInsets.framePairs} frame pair(s) at least ${measuredInsets.minFrameGap} unit(s) apart, `) +
+      (measuredInsets.mainPins === 0
+        ? 'no main-map pin to keep clear of a frame'
+        : `${measuredInsets.mainPins} main-map pin(s) at least ${measuredInsets.minClearance} unit(s) from ` +
+          `every frame against a pin radius of ${measuredInsets.pinRadius}`);
+
 const screenArtClause = !screenArt.exists
   ? 'no screen art under assets/src/svg/screens/, so no sidecar to check'
   : sidecarCheck.checked === 0
     ? 'no screen-art sidecar to check'
     : `${sidecarCheck.checked} screen-art sidecar(s) cross-checked: ${sidecarCheck.anchors} anchor(s) ` +
-      `against ${journeyPlaces?.length ?? 0} journey place(s), the drawing's viewBox and its inset, ` +
+      `against ${journeyPlaces?.length ?? 0} journey place(s) and the drawing's viewBox, ${insetClause}, ` +
       `${sidecarCheck.regions} region id(s) found in the drawing`;
 
 console.log(
