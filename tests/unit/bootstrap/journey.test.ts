@@ -7,12 +7,17 @@ import gameConfigDocument from '@content/game.config.json';
 /* Relative, not aliased: there is no `@bootstrap` alias and adding one means
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
-import { isPlayable, journeyEntries, JOURNEY_LENGTH } from '../../../app/bootstrap/journey';
+import {
+  isPlayable,
+  journeyEntries,
+  journeyPlaces,
+  JOURNEY_LENGTH,
+} from '../../../app/bootstrap/journey';
 import type { Journey, UnlockRules } from '@domain/entities/level';
 import type { LevelId } from '@domain/ids';
 
 /**
- * The ten rows the map draws, and the one question this file exists to answer:
+ * The rows the map draws, and the one question this file exists to answer:
  * does the shipped `content/game.config.json` plus the shipped
  * `content/levels/` actually produce a level a player can open?
  *
@@ -52,12 +57,14 @@ const onDisk = readdirSync(LEVELS_DIR)
   .map((name) => name.slice(0, -'.json'.length))
   .sort();
 
-describe('the ten entries', () => {
-  it('is ten rows even when the config names fewer places', () => {
+describe('the entries', () => {
+  it('is the floor of rows even when the config names fewer places', () => {
     const entries = journeyEntries({ rules: rules(), journey: journey(), stamped: [], unlocked: [], isBuilt: () => false });
 
     expect(entries).toHaveLength(JOURNEY_LENGTH);
-    expect(entries.map((entry) => entry.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(entries.map((entry) => entry.number)).toEqual(
+      Array.from({ length: JOURNEY_LENGTH }, (_unused, index) => index + 1),
+    );
   });
 
   it('leaves a place the config has not named without an id, and never a placeholder', () => {
@@ -65,7 +72,12 @@ describe('the ten entries', () => {
 
     /* `TN-LEVELS` declines to fix ids for the blocked levels, and `TN-MAP-04`
        forbids "TBD" standing in for one. A row with no id is a numbered card. */
-    expect(entries[9]).toEqual({ number: 10, built: false, unlocked: false, stamped: false });
+    expect(entries[JOURNEY_LENGTH - 1]).toEqual({
+      number: JOURNEY_LENGTH,
+      built: false,
+      unlocked: false,
+      stamped: false,
+    });
   });
 
   it('draws a place whose id is not fixed as a numbered card with no id', () => {
@@ -86,13 +98,15 @@ describe('the ten entries', () => {
     expect(entries[3]).toMatchObject({ number: 4, id: 'ottawa' });
   });
 
-  it('never truncates a config that names more than ten', () => {
-    const long: Journey = Array.from({ length: 12 }, (_unused, index) =>
+  it('never truncates a config that names more than the floor', () => {
+    const length = JOURNEY_LENGTH + 2;
+    const long: Journey = Array.from({ length }, (_unused, index) =>
       id(`level-${String(index)}`),
     );
+    expect(journeyPlaces(long)).toBe(length);
     expect(
       journeyEntries({ rules: rules(), journey: long, stamped: [], unlocked: [], isBuilt: () => false }),
-    ).toHaveLength(12);
+    ).toHaveLength(length);
   });
 
   it('answers built from the catalogue and unlocked from the domain, separately', () => {

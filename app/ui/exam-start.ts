@@ -322,8 +322,8 @@ export function createExamStartScreen(
 
     /*
      * Only while some subject has no questions, exactly as the map draws its
-     * count (`TN-MAP`, ADR-0039). With every subject ready, "Subjects ready: 10 of
-     * 10" and "This exam only asks about the subjects that are ready" are a build
+     * count (`TN-MAP`, ADR-0039). With every subject ready, "Subjects ready: N of
+     * N" and "This exam only asks about the subjects that are ready" are a build
      * report and a caveat about nothing, and a player preparing for a real test
      * reads a caveat as a warning.
      */

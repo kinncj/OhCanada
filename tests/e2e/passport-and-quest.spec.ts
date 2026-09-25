@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { PLACE_COUNT } from '../support/journey-count';
+
 import { START_LEVEL } from './start-level';
 
 /**
@@ -63,7 +65,7 @@ test.describe('the passport, on the shipped build', () => {
     await expect(passport).toBeVisible();
     await expect(passport).toHaveAttribute('role', 'dialog');
     await expect(passport).toHaveAccessibleName('My passport');
-    await expect(passport.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
+    await expect(passport.locator('[data-testid="passport-slots"] > li')).toHaveCount(PLACE_COUNT);
   });
 
   test('looks like a beginning to a player who has earned nothing', async ({ page }) => {
@@ -73,9 +75,9 @@ test.describe('the passport, on the shipped build', () => {
     const passport = page.locator('[data-testid="passport"]');
     await expect(passport.locator('[data-testid="passport-empty"]')).toBeVisible();
     await expect(passport.locator('[data-testid="passport-counts"]')).toContainText(
-      'Stamps: 0 of 10',
+      `Stamps: 0 of ${String(PLACE_COUNT)}`,
     );
-    /* Nothing on it reads as an error: a build with four levels out of ten is a
+    /* Nothing on it reads as an error: a build with some levels still unmade is a
        normal state of this game (`TN-PASSPORT-04`). */
     const wording = ((await passport.textContent()) ?? '').toLowerCase();
     for (const word of ['error', 'failed', 'missing', 'unavailable']) {
@@ -131,7 +133,7 @@ test.describe('the passport, on the shipped build', () => {
 
     const passport = page.locator('[data-testid="passport"]');
     await expect(passport).toHaveAccessibleName('Mon passeport');
-    await expect(passport).toContainText('Tampons : 0 sur 10');
+    await expect(passport).toContainText(`Tampons : 0 sur ${String(PLACE_COUNT)}`);
     await expect(passport, 'a passport stamp is a tampon, never a timbre').not.toContainText(
       'timbre',
     );

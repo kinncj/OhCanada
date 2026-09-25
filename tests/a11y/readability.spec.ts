@@ -405,7 +405,7 @@ interface Tier {
  * other tiers do. The record stays, at zero, so that a rise fails and says why.
  */
 const DYSLEXIA_200_BELOW_THE_STRIP: Readonly<Record<'en' | 'fr', { readonly offers: number; readonly tasks: number }>> = {
-  /* Of 10 levels' tallest offers, and of every task step, per language. */
+  /* Of every level's tallest offer, and of every task step, per language. */
   en: { offers: 0, tasks: 0 },
   fr: { offers: 0, tasks: 0 },
 };
@@ -1054,8 +1054,9 @@ test.describe('the exam', () => {
      *
      * This test used to measure `exam-begin` against `exam-timer` and failed on
      * CI at 139 px, with nothing wrong: the harness opens the ready state with
-     * one subject of ten, so the screen legitimately draws three more lines
-     * after the timer — "Subjects ready: 1 of 10", "More are coming." and "This
+     * one subject ready of one per journey place, so the screen legitimately
+     * draws three more lines after the timer — "Subjects ready: 1 of N", "More
+     * are coming." and "This
      * exam only asks about the subjects that are ready." Measured locally in
      * that state: 141 px from the timer and 24 px from the last of those lines.
      * The pair that answers "is there a column of white above the buttons" is

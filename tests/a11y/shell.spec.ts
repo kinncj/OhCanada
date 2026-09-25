@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+import { PLACE_COUNT, placeNumber, SHIPPED_JOURNEY } from '../support/journey-count';
+
 import { focusedTestId } from './focus';
 import { HARNESS_URL } from './playwright.config';
 
@@ -328,27 +330,19 @@ test.describe('getting in without a pointer', () => {
   }) => {
     await open(page, { view: 'level-select' });
 
-    /* `TN-MAP-07`: focus reaches all ten cards, in level order, and a card that
-       cannot be opened is disabled in name and not removed from the order. */
+    /* `TN-MAP-07`: focus reaches every card, in level order, and a card that
+       cannot be opened is disabled in name and not removed from the order. The
+       harness draws the config's journey, so the walk is as long as it is. */
     await page.locator('[data-testid="level-card-halifax"]').focus();
     const reached: string[] = ['level-card-halifax'];
-    for (let index = 0; index < 9; index += 1) {
+    for (let index = 1; index < PLACE_COUNT; index += 1) {
       await page.keyboard.press('Tab');
       reached.push(await focusedTestId(page));
     }
 
-    expect(reached).toEqual([
-      'level-card-halifax',
-      'level-card-peggys-cove',
-      'level-card-quebec-city',
-      'level-card-ottawa',
-      'level-card-toronto',
-      'level-card-winnipeg',
-      'level-card-prairie-rail',
-      'level-card-alberta-foothills',
-      'level-card-vancouver',
-      'level-card-the-north',
-    ]);
+    expect(reached).toEqual(
+      SHIPPED_JOURNEY.map((id, index) => `level-card-${id ?? String(index + 1)}`),
+    );
 
     for (const closed of ['level-card-halifax', 'level-card-vancouver']) {
       await expect(page.locator(`[data-testid="${closed}"]`)).toHaveAttribute(
@@ -448,11 +442,11 @@ test.describe('what the level select says about a place', () => {
     await expect(vancouver).toHaveAccessibleDescription(/still making this level/);
   });
 
-  test('is a list of ten items, in the order of the journey', async ({ page }) => {
+  test('is a list with one item per place, in the order of the journey', async ({ page }) => {
     await open(page, { view: 'level-select' });
-    await expect(page.locator('[data-testid="level-select-list"] > li')).toHaveCount(10);
+    await expect(page.locator('[data-testid="level-select-list"] > li')).toHaveCount(PLACE_COUNT);
     await expect(page.locator('[data-testid="level-select-counts"]')).toContainText(
-      'Levels ready: 2 of 10',
+      `Levels ready: 2 of ${String(PLACE_COUNT)}`,
     );
   });
 
@@ -488,10 +482,10 @@ test.describe('what the level select says about a place', () => {
     await expect(two).toContainText("Peggy's Cove");
     await expect(two).toContainText('Who we are');
 
-    const ten = page.locator('[data-testid="level-card-the-north"]');
-    await expect(ten).toContainText('Level 10');
-    await expect(ten).toContainText('The North');
-    await expect(ten).toContainText("Canada's regions");
+    const north = page.locator('[data-testid="level-card-the-north"]');
+    await expect(north).toContainText(`Level ${String(placeNumber('the-north'))}`);
+    await expect(north).toContainText('The North');
+    await expect(north).toContainText("Canada's regions");
   });
 
   test('a card with no place name draws no placeholder in its place', async ({ page }) => {
@@ -504,8 +498,10 @@ test.describe('what the level select says about a place', () => {
      */
     await open(page, { view: 'level-select', map: 'unnamed' });
 
-    const unnamed = page.locator('[data-testid="level-card-11"]');
-    await expect(unnamed).toContainText('Level 11');
+    /* Numbered after the last place the config names (`?map=unnamed`). */
+    const unnamedNumber = String(PLACE_COUNT + 1);
+    const unnamed = page.locator(`[data-testid="level-card-${unnamedNumber}"]`);
+    await expect(unnamed).toContainText(`Level ${unnamedNumber}`);
     for (const placeholder of ['TBD', '???', 'undefined', 'null', 'Coming soon']) {
       await expect(unnamed).not.toContainText(placeholder);
     }
@@ -513,7 +509,7 @@ test.describe('what the level select says about a place', () => {
     /* It is still a card a screen reader can read and a switch user can reach:
        a number is not a name, and "Not made yet" is the state either way. */
     await expect(unnamed).toContainText('Not made yet');
-    await expect(unnamed).toHaveAccessibleName(/Level 11/);
+    await expect(unnamed).toHaveAccessibleName(new RegExp(`Level ${unnamedNumber}\\b`, 'u'));
 
     const results = await scan(page).analyze();
     expect(results.violations, violationsOf(results)).toEqual([]);
@@ -555,12 +551,12 @@ test.describe('what the level select says about a place', () => {
     await page.emulateMedia({ forcedColors: null });
   });
 
-  test('a build with no levels at all still shows ten cards, and no error', async ({ page }) => {
+  test('a build with no levels at all still shows every card, and no error', async ({ page }) => {
     await open(page, { view: 'level-select', levels: 'none' });
 
-    await expect(page.locator('[data-testid="level-select-list"] > li')).toHaveCount(10);
+    await expect(page.locator('[data-testid="level-select-list"] > li')).toHaveCount(PLACE_COUNT);
     await expect(page.locator('[data-testid="level-select-counts"]')).toContainText(
-      'Levels ready: 0 of 10',
+      `Levels ready: 0 of ${String(PLACE_COUNT)}`,
     );
     await expect(page.locator('[data-testid="level-select"]')).not.toContainText('error');
 
@@ -587,20 +583,20 @@ test.describe('what the level select says about a place', () => {
  *  - that it grows with the text instead of squeezing the cards beside it.
  */
 test.describe('the level select is a route, not a list', () => {
-  test('draws a length of route beside all ten cards, and axe is clean', async ({ page }) => {
+  test('draws a length of route beside every card, and axe is clean', async ({ page }) => {
     await open(page, { view: 'level-select', stamped: 'ottawa' });
 
     const rails = page.locator('[data-testid="level-select-list"] .tn-journey');
-    await expect(rails).toHaveCount(10);
+    await expect(rails).toHaveCount(PLACE_COUNT);
 
-    /* Drawn, not merely present: a rail with no box would be ten attributes
+    /* Drawn, not merely present: a rail with no box would be attributes
        nobody can see, which is a different screen from the one described. */
     const widths = await rails.evaluateAll((elements) =>
       elements.map((element) => element.getBoundingClientRect().width),
     );
     expect(Math.min(...widths)).toBeGreaterThan(8);
 
-    for (let index = 0; index < 10; index += 1) {
+    for (let index = 0; index < PLACE_COUNT; index += 1) {
       await expect(rails.nth(index)).toHaveAttribute('aria-hidden', 'true');
     }
 
@@ -611,8 +607,8 @@ test.describe('the level select is a route, not a list', () => {
   test('costs the keyboard, the reader and the switch nothing', async ({ page }) => {
     await open(page, { view: 'level-select', stamped: 'ottawa' });
 
-    /* Nothing on the rail can be focused, so the ten stops on the journey are
-       still exactly the ten cards (`TN-MAP-07`, `TN-MAP-08`). */
+    /* Nothing on the rail can be focused, so the stops on the journey are
+       still exactly the cards (`TN-MAP-07`, `TN-MAP-08`). */
     await expect(page.locator('.tn-journey button, .tn-journey [tabindex]')).toHaveCount(0);
 
     /* And the card's accessible name is what it always was: a number, a place
@@ -740,7 +736,7 @@ test.describe('the level select is a route, not a list', () => {
     expect(await undersizedTargets(page), 'at 200 % text, beside the route').toEqual([]);
   });
 
-  test('is still a list of ten items to a screen reader', async ({ page }) => {
+  test('is still a list with one item per place to a screen reader', async ({ page }) => {
     /* `TN-MAP-09`. `list-style: none` on a flex <ul> is the one stylesheet
        change WebKit takes the list role away for, so the role is written. */
     await open(page, { view: 'level-select' });
@@ -750,7 +746,7 @@ test.describe('the level select is a route, not a list', () => {
     );
     await expect(
       page.locator('[data-testid="level-select-list"]').getByRole('listitem'),
-    ).toHaveCount(10);
+    ).toHaveCount(PLACE_COUNT);
   });
 });
 
@@ -791,18 +787,8 @@ const MAP_SIDECAR = JSON.parse(
   readonly insets?: readonly { readonly anchors: Readonly<Record<string, SidecarPoint>> }[];
 };
 
-const JOURNEY = [
-  'halifax',
-  'peggys-cove',
-  'quebec-city',
-  'ottawa',
-  'toronto',
-  'winnipeg',
-  'prairie-rail',
-  'alberta-foothills',
-  'vancouver',
-  'the-north',
-] as const;
+/** The places, in map order, as `content/game.config.json#/journey` names them (K-0.3). */
+const JOURNEY: readonly string[] = SHIPPED_JOURNEY.filter((id): id is string => id !== null);
 
 test.describe('the map above the route shows where the journey is in the country', () => {
   const mapOf = (page: Page): Locator => page.locator('[data-testid="level-select-map"]');

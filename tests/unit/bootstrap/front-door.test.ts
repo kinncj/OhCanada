@@ -13,6 +13,7 @@ import { repairSelection, toPlayerCharacter } from '../../../app/bootstrap/chara
 import { readGameRules } from '../../../app/bootstrap/game-rules';
 import { completionLine } from '../../../app/bootstrap/quest';
 import { readQuests } from '../../../app/bootstrap/quests';
+import { PLACE_COUNT } from '../../support/journey-count';
 import { PROGRESS_STORAGE_KEY } from '@adapters/persistence/record-progress-repository';
 import { createJsonSaveCodec } from '@application/persistence/json-save-codec';
 import { toProgressSnapshot } from '@application/persistence/progress-document';
@@ -1241,11 +1242,15 @@ describe('a cold load opens the front door', () => {
 });
 
 describe('the map is handed data, and the data is computed here', () => {
-  it('gives the shell ten entries, in the config order', async () => {
+  it('gives the shell one entry per journey place, in the config order', async () => {
     await boot('');
 
-    expect(entries()).toHaveLength(10);
-    expect(entries().map((entry) => entry.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    /* The count is the config's (K-0.3): an eleventh place in `journey` is a
+       content change, and this suite follows it rather than failing on it. */
+    expect(entries()).toHaveLength(PLACE_COUNT);
+    expect(entries().map((entry) => entry.number)).toEqual(
+      Array.from({ length: PLACE_COUNT }, (_unused, index) => index + 1),
+    );
   });
 
   it('asks the catalogue what is built and the domain what is unlocked', async () => {
@@ -1280,7 +1285,7 @@ describe('the map is handed data, and the data is computed here', () => {
     hoisted.state.built = [];
     await boot('');
 
-    expect(entries()).toHaveLength(10);
+    expect(entries()).toHaveLength(PLACE_COUNT);
     expect(entries().every((entry) => !entry.built)).toBe(true);
   });
 
@@ -2623,7 +2628,7 @@ describe('leaving a level', () => {
     hudOption<() => void>('onLeaveLevel')();
     await flush();
 
-    expect(entries(), 'the map was not redrawn on the way out').toHaveLength(10);
+    expect(entries(), 'the map was not redrawn on the way out').toHaveLength(PLACE_COUNT);
   });
 });
 
@@ -2721,7 +2726,7 @@ describe('the passport is reachable, and gives the level back', () => {
     shellOption<() => void>('onOpenPassport')();
 
     expect(hoisted.state.passports).toHaveLength(2);
-    expect(hoisted.state.passports[1]?.options['entries']).toHaveLength(10);
+    expect(hoisted.state.passports[1]?.options['entries']).toHaveLength(PLACE_COUNT);
   });
 });
 

@@ -4,7 +4,12 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 
+import { PLACE_COUNT, SHIPPED_JOURNEY } from '../support/journey-count';
+
 import { HARNESS_URL } from './playwright.config';
+
+/** The passport's slot handles, in journey order: an id, or a number where there is none. */
+const JOURNEY_HANDLES: readonly string[] = SHIPPED_JOURNEY.map((id, index) => id ?? String(index + 1));
 
 /**
  * Slice 1's DOM screens, scanned in a real browser: settings, the character
@@ -201,7 +206,7 @@ const SCREENS: readonly ScreenName[] = [
   /* The card a level's task ends on. It is the newest screen in the game and it
      goes through exactly the same battery as the other five. */
   'complete',
-  /* The passport: ten slots, three states, and the reward surface of the whole
+  /* The passport: one slot per place, three states, and the reward surface of the whole
      game. Same battery, no exceptions — it is the screen a player opens to feel
      good about what they have done, which is no reason for it to be the one
      screen a switch user cannot read. */
@@ -1389,33 +1394,22 @@ test.describe('dialogue', () => {
 });
 
 test.describe('the passport', () => {
-  test('draws ten slots, in journey order, as a list', async ({ page }) => {
+  test('draws one slot per place, in journey order, as a list', async ({ page }) => {
     const root = await openScreen(page, 'passport');
     const slots = root.locator('[data-testid="passport-slots"] > li');
-    await expect(slots).toHaveCount(10);
+    await expect(slots).toHaveCount(PLACE_COUNT);
 
     /* Reading order is the journey's order, and the focus order is the same as
        the reading order (`TN-PASSPORT-01`). */
     const handles = await slots.evaluateAll((items) =>
       items.map((item) => item.getAttribute('data-level-handle')),
     );
-    /* The ten ids of `TN-LEVELS-2-to-10-spine.md`, all named: slots 2 and 10
+    /* The ids of `content/game.config.json#/journey`, all named: slots 2 and 10
        carried numbers here until `peggys-cove` and `the-north` shipped with ids.
-       The passport's "not made yet" state is still reached — six of these ten
-       are unbuilt in the fixture on purpose (`TN-PASSPORT-04`, ADR-0024) — but
+       The passport's "not made yet" state is still reached — all but four of
+       these are unbuilt in the fixture on purpose (`TN-PASSPORT-04`, ADR-0024) — but
        it no longer borrows two real levels' places to do it. */
-    expect(handles).toEqual([
-      'halifax',
-      'peggys-cove',
-      'quebec-city',
-      'ottawa',
-      'toronto',
-      'winnipeg',
-      'prairie-rail',
-      'alberta-foothills',
-      'vancouver',
-      'the-north',
-    ]);
+    expect(handles).toEqual(JOURNEY_HANDLES);
   });
 
   test('tells the three states apart without colour', async ({ page }) => {
@@ -1470,31 +1464,21 @@ test.describe('the passport', () => {
     await expect(page.locator('[data-testid="passport"] img')).toHaveCount(0);
   });
 
-  test('lets a keyboard read all ten, and activates none of them', async ({ page }) => {
-    /* `TN-PASSPORT-07`: focus reaches all ten in level order, including the ones
+  test('lets a keyboard read every slot, and activates none of them', async ({ page }) => {
+    /* `TN-PASSPORT-07`: focus reaches every slot in level order, including the ones
        that are not earned and the ones nobody has built — and a slot is
        readable, not activatable. */
     const root = await openScreen(page, 'passport');
     const visited: string[] = [];
-    for (let index = 0; index < 11; index += 1) {
+    /* One press per slot and one for the control before them. */
+    for (let index = 0; index < PLACE_COUNT + 1; index += 1) {
       await page.keyboard.press('Tab');
       const handle = await page.evaluate(() =>
         document.activeElement?.getAttribute('data-level-handle'),
       );
       if (handle !== null && handle !== undefined) visited.push(handle);
     }
-    expect(visited).toEqual([
-      'halifax',
-      'peggys-cove',
-      'quebec-city',
-      'ottawa',
-      'toronto',
-      'winnipeg',
-      'prairie-rail',
-      'alberta-foothills',
-      'vancouver',
-      'the-north',
-    ]);
+    expect(visited).toEqual(JOURNEY_HANDLES);
 
     /* Enter on a slot does nothing and announces nothing false. */
     await page.keyboard.press('Enter');
@@ -1508,8 +1492,10 @@ test.describe('the passport', () => {
     await expect(root.locator('[data-testid="passport-empty"]')).toContainText(
       'Finish a level to earn your first stamp.',
     );
-    await expect(root.locator('[data-testid="passport-counts"]')).toContainText('Stamps: 0 of 10');
-    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
+    await expect(root.locator('[data-testid="passport-counts"]')).toContainText(
+      `Stamps: 0 of ${String(PLACE_COUNT)}`,
+    );
+    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(PLACE_COUNT);
 
     const wording = ((await root.textContent()) ?? '').toLowerCase();
     for (const word of ['error', 'failed', 'missing', 'unavailable', 'tbd', '???']) {
@@ -1520,8 +1506,8 @@ test.describe('the passport', () => {
   test('is French, and says tampon rather than timbre', async ({ page }) => {
     const root = await openScreen(page, 'passport', { locale: 'fr' });
     await expect(root.locator('h1')).toHaveText('Mon passeport');
-    await expect(root).toContainText('Tampons : 1 sur 10');
-    await expect(root).toContainText('Niveaux prêts : 4 sur 10');
+    await expect(root).toContainText(`Tampons : 1 sur ${String(PLACE_COUNT)}`);
+    await expect(root).toContainText(`Niveaux prêts : 4 sur ${String(PLACE_COUNT)}`);
     await expect(root).toContainText('Obtenu');
     await expect(root).toContainText('Pas encore obtenu');
     await expect(root).toContainText('Pas encore créé');
@@ -1573,14 +1559,14 @@ test.describe('the passport', () => {
 
     /* Every slot is still reachable by scrolling down, and every state word is
        fully visible rather than truncated. */
-    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(10);
+    await expect(root.locator('[data-testid="passport-slots"] > li')).toHaveCount(PLACE_COUNT);
   });
 
   /**
    * The passport is the same journey as the map, marked differently.
    *
-   * Both screens draw the same ten places in the same order and both used to
-   * draw them as ten identical rows. They share `app/ui/journey.ts` now, and
+   * Both screens draw the same places in the same order and both used to
+   * draw them as identical rows. They share `app/ui/journey.ts` now, and
    * differ in the mark on the route: the map marks a place you can go to, the
    * passport marks a stamp pressed into a page. What only a browser can prove
    * is that the drawing is really drawn, that hiding it cost nothing, and that
@@ -1590,14 +1576,14 @@ test.describe('the passport', () => {
     const root = await openScreen(page, 'passport');
 
     const rails = root.locator('[data-testid="passport-slots"] .tn-journey');
-    await expect(rails).toHaveCount(10);
-    for (let index = 0; index < 10; index += 1) {
+    await expect(rails).toHaveCount(PLACE_COUNT);
+    for (let index = 0; index < PLACE_COUNT; index += 1) {
       await expect(rails.nth(index)).toHaveAttribute('aria-hidden', 'true');
       await expect(rails.nth(index)).toHaveAttribute('data-journey', 'stamp');
     }
 
-    /* Nothing on the rail is focusable, so the ten things a keyboard stops on
-       are still the ten slots (`TN-PASSPORT-07`). */
+    /* Nothing on the rail is focusable, so the things a keyboard stops on
+       are still the slots (`TN-PASSPORT-07`). */
     await expect(root.locator('.tn-journey button, .tn-journey [tabindex]')).toHaveCount(0);
 
     const results = await scan(page).analyze();

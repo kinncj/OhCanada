@@ -85,7 +85,7 @@ export type LevelCardState = 'open' | 'locked' | 'not-built';
  * keyed on it.
  */
 export interface MapEntry {
-  /** 1 to 10. The map order, the unlock order and the reading order. */
+  /** 1 to the journey's length. The map order, the unlock order and the reading order. */
   readonly number: number;
   /** `content/levels/<id>.json`. Absent while the id is not fixed. */
   readonly id?: LevelId;
@@ -150,7 +150,7 @@ function hasRow(key: CopyKey): boolean {
  */
 export interface MapDescription {
   readonly locale: UiLocale;
-  /** The ten entries, in map order. Never sorted, here or anywhere. */
+  /** One entry per journey place, in map order. Never sorted, here or anywhere. */
   readonly entries: readonly MapEntry[];
   /** `unlockRules.stampsToUnlockNext`, for a locked card with no other answer. */
   readonly stampsToUnlock: number;
@@ -252,7 +252,7 @@ export function levelTitle(locale: UiLocale, entry: MapEntry): string | null {
 
 export interface LevelSelectOptions {
   readonly locale: UiLocale;
-  /** The ten entries, in map order. This screen never sorts them. */
+  /** One entry per journey place, in map order. This screen never sorts them. */
   readonly entries: readonly MapEntry[];
   /** `unlockRules.stampsToUnlockNext`, for a locked card with no other answer. */
   readonly stampsToUnlock: number;
@@ -332,14 +332,15 @@ export function createLevelSelect(
   /* How much of the game exists, as text rather than as an absence the player
      has to notice (`TN-MAP-01`). One line per count: the rows are labels, not
      sentences, and joined with a space they ran into one — "Levels ready: 2 of
-     10 Stamps: 0 of 10" — which a screen reader reads without a breath. */
+     N Stamps: 0 of N" — which a screen reader reads without a breath. The N is
+     `entries.length`, never a number written here (K-0.3). */
   const counts = element(doc, 'div', {
     testId: 'level-select-counts',
     className: 'tn-screen__help',
   });
 
-  /* `role="list"` explicitly: `TN-MAP-09` requires the ten to be exposed as a
-     list of ten items, and `list-style: none` on a flex `<ul>` is the one
+  /* `role="list"` explicitly: `TN-MAP-09` requires the places to be exposed as
+     a list with one item each, and `list-style: none` on a flex `<ul>` is the one
      stylesheet change WebKit takes the role away for. */
   const list = element(doc, 'ul', {
     className: 'tn-screen__options tn-levels',

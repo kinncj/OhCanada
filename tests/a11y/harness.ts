@@ -59,6 +59,7 @@ import { assetsBaseUrl, createScreenArt } from '../../app/bootstrap/screen-art';
 /* The adapter file, not the phaser barrel: the picture needs no Phaser, and the
    harness should not load a game engine to scan a DOM screen. */
 import { createCharacterPreview } from '../../app/adapters/phaser/character-preview';
+import { PLACE_COUNT, SHIPPED_JOURNEY } from '../support/journey-count';
 
 const params = new URLSearchParams(window.location.search);
 const ui = document.getElementById('ui');
@@ -268,8 +269,10 @@ const waiting = {
  * **No copy here.** `TN-TITLE`, `TN-MAP`, `TN-FLOW` and `TN-LEVELS` write every
  * string these screens draw, so `app/ui/copy.ts` carries the rows and the shell
  * takes none as an option. What is left is the *state* of the journey, which is
- * data: ten entries in map order, from `TN-LEVELS-2-to-10-spine.md`, **all ten
- * named**. Levels 2 and 10 were numbered slots here until `b48bda1`, because
+ * data: one entry per place, in map order, **read from
+ * `content/game.config.json#/journey`** rather than written out here, so an
+ * eleventh place reaches every scan without an edit to this file (K-0.3). All
+ * of them are named. Levels 2 and 10 were numbered slots here until `b48bda1`, because
  * that file left them unscoped; `peggys-cove` and `the-north` have ids, names
  * and subject lines now, and `level.2.subtitle`, `level.10.title` and
  * `level.10.subtitle` were retired with the state they described.
@@ -283,31 +286,23 @@ const waiting = {
  * unbuilt entry rather than waiting for the config to contain one. A scan whose
  * only input has been deleted is ADR-0024's vacuity wearing a green tick.
  */
-const PLACES: readonly (readonly [number, string])[] = [
-  [1, 'halifax'],
-  [2, 'peggys-cove'],
-  [3, 'quebec-city'],
-  [4, 'ottawa'],
-  [5, 'toronto'],
-  [6, 'winnipeg'],
-  [7, 'prairie-rail'],
-  [8, 'alberta-foothills'],
-  [9, 'vancouver'],
-  [10, 'the-north'],
-];
+const PLACES: readonly (readonly [number, string])[] = SHIPPED_JOURNEY.flatMap((id, index) =>
+  id === null ? [] : [[index + 1, id] as const],
+);
 
 /**
- * `?map=unnamed` appends an eleventh entry with **no id at all**.
+ * `?map=unnamed` appends one more entry, numbered after the last place, with
+ * **no id at all**.
  *
  * The other half of what levels 2 and 10 used to prove. A card for a level whose
  * place is not decided draws its number and no name, and `TN-MAP-04` forbids a
  * placeholder in that space — no "TBD", no "coming soon", not the word
  * `undefined`. Every shipped level is named today, so the entry that reaches
  * that branch is supplied here rather than borrowed from two levels that have
- * since been built. It is appended, never substituted, so the ten-card scans are
+ * since been built. It is appended, never substituted, so the other scans are
  * unaffected by a parameter they do not set.
  */
-const UNNAMED_ENTRY: MapEntry = { number: 11, built: false, unlocked: false };
+const UNNAMED_ENTRY: MapEntry = { number: PLACE_COUNT + 1, built: false, unlocked: false };
 
 const withUnnamed = (entries: readonly MapEntry[]): readonly MapEntry[] =>
   params.get('map') === 'unnamed' ? [...entries, UNNAMED_ENTRY] : entries;
@@ -1165,7 +1160,7 @@ switch (screen) {
                therefore draws no line at all (`OQ-EXAM-5`). */
             ...(params.get('subjects') === '0'
               ? {}
-              : { subjects: { ready: 1, total: 10 } }),
+              : { subjects: { ready: 1, total: SHIPPED_JOURNEY.length } }),
           };
       }
     })();
@@ -1313,7 +1308,7 @@ switch (screen) {
            read than a named row. */
         { id: 'who-we-are', name: null, correct: 2, total: 5 },
       ],
-      subjectsReady: { ready: 1, total: 10 },
+      subjectsReady: { ready: 1, total: SHIPPED_JOURNEY.length },
       /* Right, wrong, unanswered and gone — the four states a review item can
          be in, all on one page, because telling them apart without colour is
          the whole accessibility question here. */
