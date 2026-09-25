@@ -3152,13 +3152,13 @@
       "modifications": "Original work under the rules in assets/style/art-bible.md. Limestone paving flags, a kerb and a grass strip; no reference is traced. The @1x suffix pins it to one scale."
     },
     {
-      "path": "src/svg/kingston/prop-fort-henry@1x.svg",
+      "path": "src/svg/kingston/landmark-fort-henry@1x.svg",
       "kind": "shipped",
       "title": "Fort Henry - a level 5 point-of-interest hero",
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
-      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-fort-henry@1x.svg",
-      "modifications": "Original work. Drawn from assets/refs/kingston/fort-henry-casemates-2010.jpg, checked against fort-henry-parade-and-casemates-1908.jpg, with the stone tone from fort-henry-ditch-and-branch-tower-2021.jpg, under the rules in assets/style/art-bible.md; never traced. No figure, flag, plaque or crest. The @1x suffix pins the source to one scale; the key kingston-prop-fort-henry carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 760 x 290: every mustBeRight feature survives at 25 %; the 120 px silhouette keeps the guns and chimney stacks on a long rampart but not the arches (assets/style/kingston-level.md section 6)."
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/landmark-fort-henry@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/kingston/fort-henry-casemates-2010.jpg, checked against fort-henry-parade-and-casemates-1908.jpg, with the stone tone from fort-henry-ditch-and-branch-tower-2021.jpg, under the rules in assets/style/art-bible.md; never traced. No figure, flag, plaque or crest. The @1x suffix pins the source to one scale; the key kingston-landmark-fort-henry carries no suffix, and its landmark- name makes it the level's stamp (app/bootstrap/screen-art.ts isLandmarkArt). The art-bible section 5 two-size test was run at the shipping size of 760 x 290: every mustBeRight feature survives at 25 %; the 120 px silhouette keeps the guns and chimney stacks on a long rampart but not the arches (assets/style/kingston-level.md section 6)."
     },
     {
       "path": "src/svg/kingston/prop-kingston-city-hall@1x.svg",
@@ -3185,7 +3185,7 @@
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-royal-military-college@1x.svg",
-      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings only: no cadet, crest, badge, flag or lettering. The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540 and passed at both probes."
+      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings only: no cadet, crest, badge, flag or lettering. Redrawn 2026-09-25 from the same elevation after a blind run read it as a city hall: two storeys over a basement row and five bays a side, as photographed, and the tower's round face drawn without hands (assets/style/kingston-level.md section 6). The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540: at 300 and 140 px the tower, its roof, the pavilion roofs and the dormer row survive."
     }
   ]
 }

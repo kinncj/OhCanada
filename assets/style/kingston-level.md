@@ -53,7 +53,7 @@ Nine SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `kingston-layer-30-harbour` | `layer-30-harbour.svg` | 1800 × 460 | open blue water to the ground line, darkening toward the viewer, with three white sloops |
 | `kingston-layer-40-promenade` | `layer-40-promenade.svg` | 1440 × 420 | the lakeshore promenade: a limestone parapet, shade trees, lamps, benches, verge and paving edge |
 | `kingston-ground-lakeshore-paving` | `ground-lakeshore-paving@1x.svg` | 1080 × 640 | ground dressing (ADR-0042): limestone paving flags, a kerb, a grass strip |
-| `kingston-prop-fort-henry` | `prop-fort-henry@1x.svg` | 760 × 290 | **stop 1**: Fort Henry's casemate range on the parade, with the rampart, its railing, chimneys and two guns |
+| `kingston-landmark-fort-henry` | `landmark-fort-henry@1x.svg` | 760 × 290 | **stop 1**: Fort Henry's casemate range on the parade, with the rampart, its railing, chimneys and two guns |
 | `kingston-prop-kingston-city-hall` | `prop-kingston-city-hall@1x.svg` | 800 × 560 | **stop 2**: Kingston City Hall's harbour front, portico and dome |
 | `kingston-prop-kingston-mills` | `prop-kingston-mills@1x.svg` | 720 × 520 | **stop 3**: a Kingston Mills lock chamber and its timber gates, in summer |
 | `kingston-prop-royal-military-college` | `prop-royal-military-college@1x.svg` | 800 × 540 | **stop 4**: the Mackenzie Building of the Royal Military College, on Point Frederick |
@@ -63,8 +63,17 @@ are packed, charged and referenced by nothing. Kingston is summer with no weathe
 level document can name, so neither is authored. There is no character source here: the giver is the existing
 `guide` (Ruling 3) and the player is shared rig art.
 
-**The props are all named `prop-`**, and none is `landmark-`. The four stops are equals in the ruling, and the
-engine does not care.
+**Fort Henry is the level's one `landmark-`; the other three stops are `prop-`.** The first draft named all four
+`prop-` on the reading that the four stops are equals in the ruling and the engine does not care. The engine does
+care, in one place: the level's stamp on the completion card is pressed from the one POI whose art key is
+`<level>-landmark-<name>` (`isLandmarkArt` and `stampLandmark` in `app/bootstrap/screen-art.ts`), and
+`tests/unit/bootstrap/screen-art.test.ts` requires every shipped level to have one. The rename is mechanical: the
+drawing, its size, its `@1x` pin and its contract are unchanged, and a landmark needs nothing a prop does not
+(every other level's landmark is a pinned `@1x` single source built by `single-source`, as Fort Henry already
+was). **Why Fort Henry.** It is stop 1, the one named in the level's territory statement (Ruling 6, p. 30), and the
+first thing on the route; its silhouette (a long rampart with guns and chimney stacks) is the only one of the four
+that no other level's stamp resembles, where City Hall's dome and the college's clock tower both sit close to
+Ottawa's and Québec City's. Changing `content/levels/kingston.json` was the `artKey` value alone.
 
 ---
 
@@ -133,13 +142,13 @@ art was built for.
 
 | id | x | y | artKey | file | world y of its top |
 |---|---|---|---|---|---|
-| `fort-henry` | 1 540 | 1280 | `kingston-prop-fort-henry` | 760 × 290 | 990 |
+| `fort-henry` | 1 540 | 1280 | `kingston-landmark-fort-henry` | 760 × 290 | 990 |
 | `kingston-city-hall` | 3 140 | 1280 | `kingston-prop-kingston-city-hall` | 800 × 560 | 720 |
 | `kingston-mills` | 4 740 | 1280 | `kingston-prop-kingston-mills` | 720 × 520 | 760 |
 | `royal-military-college` | 6 340 | 1280 | `kingston-prop-royal-military-college` | 800 × 540 | 740 |
 
   Every top is well clear of the 120 px system band. City Hall's clock is at world ≈ 871 and the college's at
-  ≈ 876, both above the lower-third HUD at 1280.
+  ≈ 844 (its round face, drawn without hands since the redraw in §6), both above the lower-third HUD at 1280.
 - **`size.x` ≥ 7 680**, which the plan expects, so that every POI's x + radius sits before `size.x − 540`
   (ADR-0074 §4). Every layer and the paving tile, so width is free.
 - **Per 1 440 px promenade tile**, from the tile origin: trees at 180 / 700 / 1 180, lamp standards at
@@ -187,6 +196,8 @@ texture-memory: kingston 28.81 MiB of 36.00 MiB FILES, measured from 13 file(s)
                 CHARGED 30.53 MiB of 36.00 MiB (85%, 5 735 584 B spare) = files + 1.72 MiB character surface
 ```
 
+**Re-measured 2026-09-25 on this branch, after the Fort Henry rename and the college redraw (§6):** `make assets` green with the real level document; transfer payload 0.56 MiB against 8 MiB; Kingston's own art **85 280 B** (+518 B, the college's WebP 7 300 B); decoded files 28.96 MiB, charged 30.68 MiB of 36 MiB (85 %, 5 580 596 B spare). The tables below are the first measurement and are kept as it.
+
 **Transfer payload: 0.54 MiB against 8 MiB — 7 %**, of which the shared character atlas is most.
 
 **Kingston's own art, both scales, each file once — 84 762 B.** That is the number ADR-0075's background cache
@@ -219,7 +230,7 @@ straight edges compress to almost nothing in WebP; the paving strip, 1 080 × 64
 | `kingston-prop-royal-military-college` | **1×, pinned** | 800 × 540 | 1.65 MiB |
 | `kingston-prop-kingston-mills` | **1×, pinned** | 720 × 520 | 1.43 MiB |
 | `kingston-layer-20-farshore` | 1× | 1800 × 154 | 1.06 MiB |
-| `kingston-prop-fort-henry` | **1×, pinned** | 760 × 290 | 0.84 MiB |
+| `kingston-landmark-fort-henry` | **1×, pinned** | 760 × 290 | 0.84 MiB |
 | **files at a 2× device** | | | **28.81 MiB** |
 | + one character surface (ADR-0013) | | 240 × 470 × 4 × 4 | 1.72 MiB |
 | **charged** | | | **30.53 MiB of 36 — 85 %** |
@@ -307,9 +318,9 @@ within a few points, and `limestone` (hsl 26, 13 %, 60 % at its base) drew the f
 
 - **The contract picks the view**, as Ruling 2 asks: the Mackenzie Building, square on. It is the college's
   oldest building and the one every view of Point Frederick shows.
-- **Measured** on the 2007 elevation, a near-orthographic long-lens night exposure: tower 0.139 of the building's
-  width and 0.645 of it tall; pavilions 0.118 wide; façade cornice 0.257 of the width above ground. Drawn 0.137,
-  0.655, 0.118 and 0.253.
+- **Measured** on the 2007 elevation, a near-orthographic long-lens night exposure: tower shaft 0.125 of the
+  building's width and its cap 0.655 of it tall; pavilions 0.123 wide; façade cornice 0.257 of the width above
+  ground; five bays each side of the tower. Drawn 0.125, 0.654, 0.123, 0.261 and five.
 - **Colour traps, both references.** The elevation is floodlit (the stone reads yellow, the mansards olive) and
   the daylight photograph carries a strong magenta cast. Neither was sampled for hue; the daylight one settles
   which roofs are dark (the tower's, `slate`) and which are green (the pavilions and wings, `glacier`, a muted
@@ -317,11 +328,68 @@ within a few points, and `limestone` (hsl 26, 13 %, 60 % at its base) drew the f
 - **Buildings only.** No cadet, no crest over the door or on the tower (the carving is left as plain stone), no
   flag on the tower, no memorial arch. The stop's card teaches the red-white-red flag pattern **in words**; the
   flag is not drawn.
-- **Two-size test**: passes both. At 120 px it is a long block with a tall flat-topped central tower and a steep
-  roof at each end.
+- **Two-size test**: at 300 and 140 px the tower's stages, its roof, the pavilion roofs and the dormer row
+  survive; at 140 px it is a long low block with a tall slender central tower under a steep flat-topped roof and
+  a steep flat-capped roof at each end.
+
+#### The blind run read it as a city hall, and what the redraw did about it
+
+Blind run `2c31c41bb3e4f0ea` (`docs/art-verification.json`, `findingsForArt[0]`) read the first drawing at every
+size as *"Second Empire civic building (city hall) with a central clock tower ...; my best guess is Halifax City
+Hall"*, the same sentence it gave `hotel-du-parlement`. The contract names "a city hall" a FAIL, because
+`kingston-city-hall` is in this level. It is a FAIL here too.
+
+**Redrawn from the elevation, 2026-09-25. Every change is something the photograph shows and the first drawing
+did not:**
+
+1. **Two storeys over a basement row, not three over a rusticated storey.** Between the ground and the wing
+   cornice the elevation shows two tall storeys and a row of small low basement windows. The first drawing
+   followed a contract line that said "three storeys", and fitting four rows of full windows into a wall 0.25 of
+   the building's width tall made the wings an office block. The contract line was wrong about the photograph
+   and has been reworded (`references.json`, `mustBeRight[3]`, with the reason).
+2. **Five bays each side, not four.** The elevation has five. The longer, plainer run of identical bays is the
+   building's institutional rhythm, and it is also simply the count.
+3. **The pavilions' attic storey and paired windows**, above and below the wing cornice, as photographed.
+4. **The tower's own staging**: a small arched door straight onto the ground with no steps and no portico, a
+   stage of paired square windows under a plain segmental hood (its carving left as plain stone), paired arched
+   windows, and a louvred belfry stage under the dentilled cornice. The first drawing had the tower as a plain
+   shaft with windows, which is what every Second Empire city hall's tower is too.
+5. **The clock is de-emphasised, not removed.** The round face stays, true to its measured size and place in the
+   roof, but it is drawn without hands. The hands are thin strokes under the 12 px floor at play size, so
+   dropping them is art-bible rule 4 (drop, never substitute), and without them the face is the same round form
+   as the two pavilion oculi, which is how the night elevation shows all three. The contract's first feature
+   used to call the clock "the one thing on it recognisable at play size", which made the contract ask for the
+   cue the failing reading keys on; that line has been reworded, with the reason written into it
+   (`mustBeRight[0]`). Nothing on `expectedBlindAnswer` was tightened or loosened.
+
+**What was not drawn, and why.** The candidates were the college's site on Point Frederick, with the water, the
+Stone Frigate or the parade square in front. Neither Mackenzie Building photograph shows any of them: the
+elevation shows a strip of pavement and lawn in front, and the daylight photograph shows sky.
+`kingston-harbour-from-fort-henry-2011.jpg` shows Navy Bay and stone buildings on a point across it. Neither the
+photograph nor its record says which building is which, so drawing any of them as the college's setting would
+be a guess. A present-day, licence-clean photograph that shows the Mackenzie Building from the water or across
+the square would open that option.
+
+**What this redraw cannot do.** The verifier's own finding says it: the markers that would say "college" rather
+than "civic building" are cadets, the crest, the flag and the gate arch, and Ruling 2 forbids all four. The
+redraw makes the building truer to its photograph, and it drops the one cue the contract itself was pushing.
+Whether that is enough can only be judged blind. If the next blind run still reads a city hall, the question
+goes to the contract owner, as the verifier asked: what this subject can be asked for, not how to draw it.
+
+**For the harness owner, not changed here: the matcher would have passed the city-hall reading.**
+`contractDefectsForTheOwner[0]` in the same record: the comparison accepts an answer when every content word of
+an accepted phrase appears in it, so *"Second Empire civic building (city hall) with a central clock tower"*
+matched *"a Second Empire clock tower building"*, although the answer's identification is a reading this
+subject's note names a FAIL. The verifier failed it by hand, recording the reading in `forbiddenPresent`, a field
+meant for drawn `neverAdd` items. The gap is the harness's, and it applies to any subject whose accepted list
+holds a descriptive phrase and whose note names a fail reading: `hotel-du-parlement` and `kingston-city-hall`
+are the nearest. The options the verifier gave (a machine-readable list of fail readings per subject, refused the
+way a negation is, or an audit field for a forbidden reading scored as a fail) are both harness changes. The
+accepted phrases on this subject were left as they are: removing them would be tightening the contract to
+force a result, which this redraw was told not to do.
 
 **Shape counts**, reported per art-bible §1 and not a gate (ADR-0025): Fort Henry 337 drawing elements, City Hall 214,
-Kingston Mills 232, the college 280.
+Kingston Mills 232, the college 437 (280 before the redraw: five bays a side, the pavilion attic storeys and the tower's staging).
 
 ---
 

@@ -1691,7 +1691,7 @@
       "id": "fort-henry",
       "subject": "Fort Henry, Kingston: the limestone casemate range on the fort's parade, under the rampart",
       "renders": [
-        "src/svg/kingston/prop-fort-henry@1x.svg"
+        "src/svg/kingston/landmark-fort-henry@1x.svg"
       ],
       "handoff": {
         "builder": "single-source"
@@ -2026,23 +2026,24 @@
       ],
       "mustBeRight": [
         {
-          "feature": "a tall central clock tower rising in stages to a dark slate mansard roof with a round white clock face, two small dormers and a flat top with iron cresting",
-          "why": "It is the vertical the whole building is organised round, and the one thing on it recognisable at play size.",
-          "detail": "MEASURED on kingston/rmc-mackenzie-building-elevation-2007.jpg, a near-orthographic elevation: the tower is 0.139 of the building's width and rises 0.645 of that width above the ground. The shipped art draws 0.137 and 0.655. Arched door at the foot, paired arched windows in the upper stages, the clock in the face of the roof.",
+          "feature": "a tall, slender central stone tower rising in stages from a small arched door, through a stage of paired square-headed windows under a plain segmental hood, a stage of paired arched windows and a louvred belfry stage, to a steep dark slate roof with a round face in it, two small lunette dormers and a flat top with iron cresting",
+          "why": "It is the vertical the whole building is organised round, and its height and staging are what the building has that the level's other stone buildings do not. REWORDED 2026-09-25 after blind run 2c31c41bb3e4f0ea read the first drawing as a city hall at every size: this feature used to be 'a tall central clock tower' and called the clock 'the one thing on it recognisable at play size'. That made the contract ask for the cue the failing reading keys on. The round face is still drawn, true to size and place, but it is no longer the feature this subject rests on.",
+          "detail": "MEASURED on kingston/rmc-mackenzie-building-elevation-2007.jpg, a near-orthographic elevation: the tower cap stands 0.653 of the building's width above the ground; drawn 0.654 (cap top at y 17 of 540, on 800; the cresting stands above it). The roof is 1.09 times as tall as its base is wide; drawn 1.10. The round face's centre is 0.35 of the roof's height above its base and its diameter 0.43 of the roof's base; drawn 0.34 and 0.42. The face is drawn PLAIN, WITHOUT HANDS: the hands are thin strokes under the 12 px floor at play size, art-bible rule 4 (drop, never substitute), and without them the face is the same round form as the pavilion oculi, which is how the elevation shows all three. The door is a plain arch with a fanlight and one low threshold, straight onto the ground: no steps, no portico. The carving in the segmental hood and over the door is left as plain stone.",
           "palette": "path, slate, white, hide"
         },
         {
-          "feature": "a taller end pavilion at each end under a steep green mansard with a round oculus window",
-          "detail": "Each pavilion is 0.118 of the building's width, measured and drawn. The mansards are weathered green in the daylight photograph and drawn in `glacier`, a muted grey-green; never the bright `copper` of Parliament Hill.",
+          "feature": "a taller end pavilion at each end, with paired windows on each storey and an attic storey of paired arched windows above the wing cornice, under a steep green mansard with a round oculus window and a flat cap with iron cresting",
+          "detail": "Each pavilion is 0.123 of the building's width, measured; 0.123 drawn. The attic storey and the paired windows are from the elevation. The mansards are weathered green in the daylight photograph and drawn in `glacier`, a muted grey-green; never the bright `copper` of Parliament Hill.",
           "palette": "glacier, white, slate"
         },
         {
-          "feature": "a mansard roof band in the same green along the wings, with a row of arched dormers and two chimneys",
+          "feature": "a mansard roof band in the same green along the wings, with a row of dark green hooded arched dormers, one over each bay, and two chimneys",
           "palette": "glacier, white, slate, path"
         },
         {
-          "feature": "three storeys of square-headed white-framed sash windows in a regular rhythm, over a rusticated ground storey",
-          "detail": "Rhythm, not count: four bays each side of the tower are drawn. The facade cornice stands 0.257 of the width above the ground, measured; 0.253 drawn.",
+          "feature": "two storeys of square-headed white-framed sash windows in five plain bays each side of the tower, over a basement row of small windows at the ground",
+          "why": "REWORDED 2026-09-25: this read 'three storeys ... over a rusticated ground storey', and the elevation does not show that. Between the ground and the wing cornice it shows two tall storeys and a basement row of small low windows. The first drawing followed the contract and packed four rows of full windows into a wall 0.25 of the building's width tall, which made it an office block. The wing count was four bays and the elevation has five.",
+          "detail": "Five bays each side, measured and drawn (photo bay centres x 268, 367, 466, 565, 662 of 1600). The facade cornice stands 0.257 of the width above the ground, measured; 0.261 drawn. The string course between the storeys, measured 0.15 and drawn 0.15. The basement windows' iron grilles are simplified away (under 12 px, and bars at ground level are the one cue that would say 'prison').",
           "palette": "path, white, slate"
         },
         {
@@ -2054,9 +2055,11 @@
       "simplifyAway": [
         "the carved stonework over the door and on the tower, left as plain stone",
         "the flagstaff on the tower and the flag on it",
-        "the iron cresting on the pavilion and wing mansards, kept only on the tower",
         "window glazing bars, string-course mouldings and every detail under 12 px",
-        "the lamp standards and the parade square's markings in front of the building"
+        "the lamp standards and the parade square's markings in front of the building",
+        "the iron cresting along the wing mansards, kept on the tower and the pavilion caps",
+        "the clock's hands and numerals",
+        "the iron grilles on the basement windows"
       ],
       "neverAdd": [
         "any cadet or figure of any kind, in uniform or not (docs/stories/TN-LEVEL-kingston.md, Ruling 2)",
@@ -2074,10 +2077,18 @@
         "2008) is the daylight reference for the roofs; it carries a magenta cast, so it settles which roofs are dark",
         "(the tower) and which are green (the pavilions and the wings), not their exact hue.",
         "PRESENT STATE: both photographs show the building as drawn; the flag on the tower is simplified away.",
-        "PLACEMENT FLOOR: do not draw it below 380 px wide. DRAWING OBSERVATION, not an identification: at 200 px",
-        "wide the tower, its clock, the pavilion roofs and their oculi and the window rhythm survive; the 120 px",
-        "silhouette is a long block with a tall central tower under a flat-topped steep roof and a steep roof at",
-        "each end."
+        "PLACEMENT FLOOR: do not draw it below 380 px wide. DRAWING OBSERVATION, not an identification: at 300 px",
+        "wide the tower's stages, the round face, the pavilion roofs and their oculi, the dormer row and the five-bay",
+        "rhythm survive; at 140 px the silhouette is a long low block with a tall slender central tower under a steep",
+        "flat-topped roof and a steep flat-capped roof at each end.",
+        "REDRAWN 2026-09-25 after blind run 2c31c41bb3e4f0ea read it as a city hall (Halifax City Hall named) at every",
+        "size. What changed, all from the elevation: two storeys over a basement row instead of three over a rusticated",
+        "storey; five bays each side instead of four; the pavilions' attic storey and paired windows; the louvred belfry",
+        "stage and the plain segmental hood on the tower; the round face drawn without hands. What was NOT added,",
+        "because the two Mackenzie Building photographs do not show it: water, Point Frederick, the Stone Frigate or",
+        "the parade square. kingston/kingston-harbour-from-fort-henry-2011.jpg does show Navy Bay and buildings on a",
+        "point across it, but nothing in that photograph or its record says which building is which, so drawing any",
+        "of them as the college's setting would be a guess. Nothing on expectedBlindAnswer was tightened or loosened."
       ]
     },
     {
