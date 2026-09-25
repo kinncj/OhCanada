@@ -34,7 +34,7 @@ const CONFIG = JSON.parse(
   readFileSync(fileURLToPath(new URL('../../content/game.config.json', import.meta.url)), 'utf8'),
 ) as {
   readonly unlockRules: UnlockRules;
-  /** The map's ten places, in map order — a different list from the unlock order. */
+  /** The map's places, in map order — a different list from the unlock order. */
   readonly journey: readonly (string | null)[];
 };
 

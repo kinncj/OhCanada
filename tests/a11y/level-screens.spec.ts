@@ -935,7 +935,7 @@ test.describe('the level is loading, or did not load', () => {
       const root = await open(page, 'level-error', { place });
       /* The title is the dialog's accessible name, not merely text on it. */
       await expect(root).toHaveAccessibleName(title);
-      /* The other nine places, in the map's words for them, derived like the
+      /* The other places, in the map's words for them, derived like the
          walk above: the list that used to be written out here named eight
          levels on a ten-level map, so the two newest could not have been
          caught naming anybody. Compared in lower case because a card may

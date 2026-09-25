@@ -126,7 +126,7 @@ function stateWordFor(locale: UiLocale, state: StampState): string {
 
 export interface PassportOptions {
   readonly locale: UiLocale;
-  /** The ten entries, in map order. This screen never sorts them. */
+  /** One entry per journey place, in map order. This screen never sorts them. */
   readonly entries: readonly MapEntry[];
   /** The one live region (`app/ui/live-region.ts`). */
   readonly announce?: (message: string, lang?: string) => void;
@@ -212,7 +212,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
 
   /* `role="list"` explicitly, for the reason the map states: `list-style: none`
      on a flex `<ul>` is the one stylesheet change WebKit takes the role away
-     for, and `TN-PASSPORT-09` requires ten list items. */
+     for, and `TN-PASSPORT-09` requires one list item per place. */
   const list = element(doc, 'ul', {
     className: 'tn-screen__options tn-passport',
     testId: 'passport-slots',
@@ -248,7 +248,7 @@ export function createPassport(host: HTMLElement, options: PassportOptions): Pas
     const ready = readyCount();
     const parts = [text(locale, 'map.stamps', { earned: stampCount(), total })];
     /* Both only while they are true, exactly as the map draws them: a finished
-       game neither reports "Levels ready: 10 of 10" nor promises more of
+       game neither reports "Levels ready: N of N" nor promises more of
        something that is finished (ADR-0039). */
     if (ready < total) {
       parts.push(text(locale, 'map.levelsReady', { ready, total }), text(locale, 'map.moreComing'));

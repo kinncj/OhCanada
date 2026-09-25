@@ -332,7 +332,7 @@ describe('the one-time hint, and the notice', () => {
 /**
  * ADR-0066 §2: the strip shows one job at a time. At 200 % text on a 390 px
  * phone an offer and a task sentence together did not fit a third of the
- * screen on ten of ten levels, so while an offer is up the task is a word and a
+ * screen on every level, so while an offer is up the task is a word and a
  * count, and the sentence lives in the menu. Line geometry is `tests/a11y`'s;
  * what is drawn, what is said and what is announced is proved here.
  */

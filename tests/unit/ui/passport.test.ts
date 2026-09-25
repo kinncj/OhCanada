@@ -24,7 +24,7 @@ import { buildPage, press, type FakeElement, type FakePage } from './support/fak
 
 const id = (value: string): LevelId => value as LevelId;
 
-/** The ten of `TN-LEVELS-2-to-10-spine.md`, with 2 and 10 deliberately unscoped. */
+/** The spine of `TN-LEVELS-2-to-10-spine.md`, with 2 and 10 deliberately unscoped. */
 const SPINE: readonly (readonly [number, string | undefined])[] = [
   [1, 'halifax'],
   [2, undefined],
@@ -37,6 +37,12 @@ const SPINE: readonly (readonly [number, string | undefined])[] = [
   [9, 'vancouver'],
   [10, undefined],
 ];
+
+/**
+ * How many slots the fixture journey has. Asserted through this, never as a
+ * literal, so no count here assumes the game has ten places (K-0.3).
+ */
+const TOTAL = SPINE.length;
 
 const entries = (built: readonly string[], stamped: readonly string[]): readonly MapEntry[] =>
   SPINE.map(([number, levelId]) => ({
@@ -110,15 +116,15 @@ describe('the passport', () => {
       "You earn a stamp when you finish a level's task.",
     );
     const counts = at('passport-counts')?.textContent ?? '';
-    expect(counts).toContain('Stamps: 1 of 10');
-    expect(counts).toContain('Levels ready: 4 of 10');
+    expect(counts).toContain(`Stamps: 1 of ${String(TOTAL)}`);
+    expect(counts).toContain(`Levels ready: 4 of ${String(TOTAL)}`);
     expect(counts).toContain('More are coming.');
   });
 
   it('draws each count on its own line, so a screen reader pauses between them', () => {
     const { at } = open();
     const lines = (at('passport-counts')?.children ?? []).map((line) => line.textContent);
-    expect(lines).toEqual(['Stamps: 1 of 10', 'Levels ready: 4 of 10', 'More are coming.']);
+    expect(lines).toEqual([`Stamps: 1 of ${String(TOTAL)}`, `Levels ready: 4 of ${String(TOTAL)}`, 'More are coming.']);
   });
 
   it('says nothing about readiness once every level is made', () => {
@@ -144,25 +150,17 @@ describe('the passport', () => {
     }));
     const { at } = open({ entries: all });
     const lines = (at('passport-counts')?.children ?? []).map((line) => line.textContent);
-    expect(lines).toEqual(['Stamps: 1 of 10']);
+    expect(lines).toEqual([`Stamps: 1 of ${String(TOTAL)}`]);
   });
 
-  it('draws ten slots, in the order the journey takes', () => {
+  it('draws one slot per place, in the order the journey takes', () => {
     const { at } = open();
     const slots = at('passport-slots')?.children ?? [];
-    expect(slots).toHaveLength(10);
-    expect(slots.map((slot) => slot.getAttribute('data-level-handle'))).toEqual([
-      'halifax',
-      '2',
-      'quebec-city',
-      'ottawa',
-      'toronto',
-      'winnipeg',
-      'prairie-rail',
-      'alberta-foothills',
-      'vancouver',
-      '10',
-    ]);
+    expect(slots).toHaveLength(TOTAL);
+    /* An unscoped slot's handle is its number; a scoped one's is its id. */
+    expect(slots.map((slot) => slot.getAttribute('data-level-handle'))).toEqual(
+      SPINE.map(([number, levelId]) => levelId ?? String(number)),
+    );
   });
 
   it('says an earned stamp is earned, in words and with a shape', () => {
@@ -230,9 +228,9 @@ describe('the passport', () => {
     expect(slot?.textContent).not.toContain('undefined');
   });
 
-  it('counts the stamps it draws, and never more than ten', () => {
+  it('counts the stamps it draws, and never more than the places', () => {
     const { at } = open({ entries: entries(BUILT, ['ottawa', 'halifax']) });
-    expect(at('passport-counts')?.textContent).toContain('Stamps: 2 of 10');
+    expect(at('passport-counts')?.textContent).toContain(`Stamps: 2 of ${String(TOTAL)}`);
     const earned = (at('passport-slots')?.children ?? []).filter(
       (slot) => slot.getAttribute('data-state') === 'earned',
     );
@@ -258,7 +256,7 @@ describe('the slots are stops on the same route the map draws', () => {
   it('draws a length of route beside every slot, hidden from assistive technology', () => {
     const { at } = open();
     const rails = at('passport-slots')?.querySelectorAll('.tn-journey') ?? [];
-    expect(rails).toHaveLength(10);
+    expect(rails).toHaveLength(TOTAL);
     for (const rail of rails) {
       expect(rail.getAttribute('aria-hidden')).toBe('true');
       /* A stamp pressed into a page, not a place on a road. */
@@ -319,16 +317,16 @@ describe('a passport with nothing in it', () => {
     expect(at('passport-empty')?.textContent).toContain(
       'Finish a level to earn your first stamp.',
     );
-    expect(at('passport-counts')?.textContent).toContain('Stamps: 0 of 10');
-    /* And no slot is missing from the ten: the journey is still ten places. */
-    expect(at('passport-slots')?.children).toHaveLength(10);
+    expect(at('passport-counts')?.textContent).toContain(`Stamps: 0 of ${String(TOTAL)}`);
+    /* And no slot is missing: the journey is still every place it names. */
+    expect(at('passport-slots')?.children).toHaveLength(TOTAL);
   });
 
-  it('opens with no level data at all, and still draws ten slots', () => {
+  it('opens with no level data at all, and still draws every slot', () => {
     const { at } = open({ entries: entries([], []) });
-    expect(at('passport-slots')?.children).toHaveLength(10);
+    expect(at('passport-slots')?.children).toHaveLength(TOTAL);
     expect(at('passport-empty')).not.toBeNull();
-    expect(at('passport-counts')?.textContent).toContain('Levels ready: 0 of 10');
+    expect(at('passport-counts')?.textContent).toContain(`Levels ready: 0 of ${String(TOTAL)}`);
   });
 
   it('takes the empty state away as soon as there is a stamp', () => {
@@ -354,7 +352,7 @@ describe('the passport for a screen reader and a keyboard', () => {
     ).toContain('You earn a stamp');
   });
 
-  it('exposes the slots as a list of ten items, in journey order', () => {
+  it('exposes the slots as a list with one item per place, in journey order', () => {
     const { at } = open();
     expect(at('passport-slots')?.tagName).toBe('UL');
     for (const slot of at('passport-slots')?.children ?? []) {
@@ -398,7 +396,7 @@ describe('the passport for a screen reader and a keyboard', () => {
   it('announces the screen and the count once, and does not repeat it', () => {
     const { announce, passport } = open();
     expect(announce).toHaveBeenCalledTimes(1);
-    expect(announce).toHaveBeenCalledWith('My passport. Stamps: 1 of 10', 'en');
+    expect(announce).toHaveBeenCalledWith(`My passport. Stamps: 1 of ${String(TOTAL)}`, 'en');
     passport.show();
     expect(announce, 'the arrival was read twice').toHaveBeenCalledTimes(1);
   });
@@ -426,8 +424,8 @@ describe('the passport in French', () => {
     const { at } = open({ locale: 'fr' });
     const page = at('passport')?.textContent ?? '';
     expect(page).toContain('Mon passeport');
-    expect(page).toContain('Tampons : 1 sur 10');
-    expect(page).toContain('Niveaux prêts : 4 sur 10');
+    expect(page).toContain(`Tampons : 1 sur ${String(TOTAL)}`);
+    expect(page).toContain(`Niveaux prêts : 4 sur ${String(TOTAL)}`);
     expect(page).toContain("D'autres arrivent.");
     expect(page).toContain('Obtenu');
     expect(page).toContain('Pas encore obtenu');
@@ -442,7 +440,7 @@ describe('the passport in French', () => {
     passport.setLocale('fr');
     expect(at('stamp-ottawa')?.getAttribute('data-state')).toBe('earned');
     expect(at('stamp-ottawa')?.textContent).toContain('Obtenu');
-    expect(at('passport-counts')?.textContent).toContain('Tampons : 1 sur 10');
+    expect(at('passport-counts')?.textContent).toContain(`Tampons : 1 sur ${String(TOTAL)}`);
     expect(at('passport')?.getAttribute('lang')).toBe('fr');
   });
 
@@ -555,7 +553,7 @@ describe('the practice exam on the passport', () => {
       entries: entries(BUILT, []),
       onOpenExam: () => undefined,
     });
-    expect(at('passport-counts')?.textContent).toContain('Stamps: 0 of 10');
+    expect(at('passport-counts')?.textContent).toContain(`Stamps: 0 of ${String(TOTAL)}`);
     expect(at('stamp-ottawa')?.getAttribute('data-state')).toBe('not-earned');
   });
 });

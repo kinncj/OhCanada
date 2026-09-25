@@ -12,6 +12,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createExamStartScreen, type ExamStartState } from '@ui/exam-start';
 
 import { buildPage, press, type FakeElement, type FakePage } from './support/fake-dom';
+import { SHIPPED_JOURNEY } from '../../support/journey-count';
 
 const READY: ExamStartState = {
   kind: 'ready',
@@ -193,15 +194,19 @@ describe('the timer switch', () => {
 });
 
 describe('how much of the game the exam can cover', () => {
+  /* One subject per journey place, as `app/bootstrap/main.ts` derives it:
+     read from the config, never written here (K-0.3). */
+  const SUBJECTS = SHIPPED_JOURNEY.length;
+
   it('says how many subjects are ready, and that more are coming', () => {
-    const fixture = open({ ...READY, subjects: { ready: 1, total: 10 } });
-    expect(fixture.textAt('exam-subjects')).toBe('Subjects ready: 1 of 10');
+    const fixture = open({ ...READY, subjects: { ready: 1, total: SUBJECTS } });
+    expect(fixture.textAt('exam-subjects')).toBe(`Subjects ready: 1 of ${String(SUBJECTS)}`);
     expect(fixture.texts()).toContain('More are coming.');
     expect(fixture.texts()).toContain('This exam only asks about the subjects that are ready.');
   });
 
   it('stops promising more once there is no more', () => {
-    const fixture = open({ ...READY, subjects: { ready: 10, total: 10 } });
+    const fixture = open({ ...READY, subjects: { ready: SUBJECTS, total: SUBJECTS } });
     expect(fixture.texts()).not.toContain('More are coming.');
     /* ADR-0039: nor a build report, nor a caveat about subjects that are all
        there — a player preparing for a real test reads a caveat as a warning. */
@@ -210,7 +215,7 @@ describe('how much of the game the exam can cover', () => {
   });
 
   it('draws no line at all when the number cannot be derived', () => {
-    /* `OQ-EXAM-5`: nothing in `content/` enumerates the ten subjects, and
+    /* `OQ-EXAM-5`: nothing in `content/` enumerates the subjects, and
        `TN-MAP-04`'s rule holds — a number this screen cannot derive is left out,
        never guessed and never drawn as a placeholder. */
     expect(open().at('exam-subjects')).toBeNull();

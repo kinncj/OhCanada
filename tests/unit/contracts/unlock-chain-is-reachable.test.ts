@@ -40,6 +40,7 @@ import gameConfigDocument from '@content/game.config.json';
 /* Relative, not aliased: there is no `@bootstrap` alias and adding one means
    editing three configs that have to agree (tsconfig, vite, vitest). */
 import { readGameRules } from '../../../app/bootstrap/game-rules';
+import { JOURNEY_LENGTH, journeyPlaces } from '../../../app/bootstrap/journey';
 import {
   journeyLevelIds,
   unlockedLevelIds,
@@ -147,8 +148,16 @@ describe('the map and the chain agree about which places exist', () => {
     ).toEqual([]);
   });
 
-  it('has ten places, because the game has ten levels', () => {
-    expect(journey).toHaveLength(10);
+  it('has at least the floor of places, and the map draws every one of them', () => {
+    /*
+     * The count is the config's (K-0.3). This used to read `toHaveLength(10)`,
+     * which made an eleventh place in `journey` — a content change — fail a
+     * test content does not own. What holds for any length: the shipped
+     * journey reaches the floor the map would otherwise pad to, so the map
+     * draws exactly the places the config names and no filler card.
+     */
+    expect(journey.length).toBeGreaterThanOrEqual(JOURNEY_LENGTH);
+    expect(journeyPlaces(journey)).toBe(journey.length);
   });
 
   it('names each place once', () => {
