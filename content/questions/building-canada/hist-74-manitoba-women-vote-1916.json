@@ -40,10 +40,10 @@
     "quote": "In 1916, Manitoba became the first province to grant voting rights to women."
   },
   "verification": {
-    "status": "unverified",
-    "model": "",
-    "checkedAt": null,
-    "sourceHash": "",
-    "evidence": ""
+    "status": "rejected",
+    "model": "claude-opus-5-5",
+    "checkedAt": "2026-09-25T11:14:18Z",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "evidence": "In 1916, Manitoba became the first province to grant voting rights to women. … Due to the work of Thérèse Casgrain and others, Quebec granted women the vote in 1940."
   }
 }
