@@ -1,6 +1,6 @@
 /**
- * The journey: ten places, and which of them this build has, has opened, and
- * has stamped.
+ * The journey: the places `content/game.config.json#/journey` names, and which
+ * of them this build has, has opened, and has stamped.
  *
  * `app/ui/level-select.ts` renders a {@link MapEntry}; it does not decide one.
  * That split is `TN-MAP`'s rule and the reason this file exists on this side of
@@ -11,8 +11,10 @@
  * `app/domain` and nothing else (ADR-0005), so the unlock rule is run here — in
  * the one place allowed to see both — and the map is handed the result.
  *
- * Everything below is a pure function over data, so the map's ten rows are
- * assertable without a browser, a bundler or a Phaser game.
+ * Everything below is a pure function over data, so the map's rows are
+ * assertable without a browser, a bundler or a Phaser game. How many rows there
+ * are is the config's answer, read through {@link journeyPlaces}; no file in
+ * `app/ui` or `tests/` writes the number down (`docs/plan/kingston.md` K-0.3).
  *
  * ## Two lists, and why the rows are not numbered from the unlock order
  *
@@ -22,7 +24,7 @@
  * built. `unlockedLevelIds` stops at the first level it cannot open, so it
  * stopped at index 0: **no stamp unlocked anything**, and Québec City — built,
  * with art and a level document — was reachable by no sequence of play. One
- * list cannot be both a fixed catalogue of ten places and a progression that
+ * list cannot be both a fixed catalogue of places and a progression that
  * starts where the player starts.
  *
  * So the rows are numbered from `journey`, which is the game's shape, and the
@@ -41,17 +43,31 @@ import type { LevelId } from '@domain/ids';
 import type { MapEntry } from '@ui/level-select';
 
 /**
- * How many places the journey has (CLAUDE.md, Scope: "10 levels, 10 subjects,
- * exam"; `TN-MAP-01`: "the ten levels, in order, each with a state").
+ * The fewest places the map draws (CLAUDE.md, Scope: "10 levels, 10 subjects,
+ * exam"; `TN-MAP-01`: "the levels, in order, each with a state").
  *
- * It is a floor rather than a slice: a config carrying fewer than ten ids still
- * draws ten cards, because a player learning that the game is a journey across
- * Canada should not be shown a shorter Canada because a config is unfinished —
- * and `TN-MAP-04` forbids drawing the shortfall as an error. A config carrying
- * *more* than ten is not truncated either: silently hiding a level would be this
- * file deciding the map is wrong about itself.
+ * It is a floor rather than a slice, and it is **not** the journey's length:
+ * a config carrying fewer ids still draws this many cards, because a player
+ * learning that the game is a journey across Canada should not be shown a
+ * shorter Canada because a config is unfinished — and `TN-MAP-04` forbids
+ * drawing the shortfall as an error. A config carrying *more* is not truncated
+ * either: silently hiding a level would be this file deciding the map is wrong
+ * about itself. Read the count through {@link journeyPlaces}, never from here.
  */
 export const JOURNEY_LENGTH = 10;
+
+/**
+ * How many places the map and the passport draw for this journey: the config's
+ * length, held to the {@link JOURNEY_LENGTH} floor.
+ *
+ * The one place the count is decided. Screens count the entries they are
+ * handed, and tests ask this function about the config they read, so an
+ * eleventh place is a change to `content/game.config.json` and nothing else
+ * (`docs/plan/kingston.md` K-0.3).
+ */
+export function journeyPlaces(journey: readonly unknown[]): number {
+  return Math.max(JOURNEY_LENGTH, journey.length);
+}
 
 export interface JourneyState {
   /** `content/game.config.json#/unlockRules` — the unlock sequence, not the map. */
@@ -71,7 +87,8 @@ export interface JourneyState {
 }
 
 /**
- * The ten entries, in map order, ready to hand to `createShell`.
+ * One entry per place ({@link journeyPlaces}), in map order, ready to hand to
+ * `createShell`.
  *
  * A place with no id — a `null` slot, or a row `journey` does not reach — is a numbered
  * card with no name and no state but "not made yet". That is deliberate:
@@ -85,12 +102,12 @@ export function journeyEntries(state: JourneyState): readonly MapEntry[] {
     unlockedLevelIds(state.rules, state.stamped, state.unlocked),
   );
   const stamped = new Set<LevelId>(state.stamped);
-  const places = Math.max(JOURNEY_LENGTH, state.journey.length);
+  const places = journeyPlaces(state.journey);
 
   return Array.from({ length: places }, (_unused, index): MapEntry => {
     const number = index + 1;
     /* `null` is a place whose id is not fixed; `undefined` is a place past the
-       end of a config that names fewer than ten. The card is the same either
+       end of a config that names fewer than the floor. The card is the same either
        way: a number, and no placeholder (`TN-MAP-04`). */
     const id = state.journey[index] ?? undefined;
     if (id === undefined) return { number, built: false, unlocked: false, stamped: false };

@@ -321,6 +321,44 @@ export function readPinFraction(root) {
 }
 
 /**
+ * The places something other than the journey declares, for an anchor that
+ * lands before its journey slot: `Map<id, rel>`, the file that declares it.
+ *
+ *   - a level document, content/levels/<file>.json, by its `id`;
+ *   - a level story, docs/stories/TN-LEVEL-<id>.md, by its file name.
+ *
+ * The story is what normally exists first: ADR-0065's reach test and the plan
+ * put a level's story in before its config slot, its level document or its
+ * anchor. Art's own sheet (assets/style/map-canada.md) is NOT a declaration.
+ * It is written by the anchor's owner, so a typo there and in the anchor would
+ * agree with each other and prove nothing. An unreadable level document
+ * declares nothing here; the schema pass reports it.
+ */
+export function declaredPlaces(root) {
+  const declared = new Map();
+  const levels = join(root, 'content', 'levels');
+  if (existsSync(levels)) {
+    for (const name of readdirSync(levels).sort()) {
+      if (!name.endsWith('.json')) continue;
+      try {
+        const id = JSON.parse(readFileSync(join(levels, name), 'utf8'))?.id;
+        if (typeof id === 'string' && !declared.has(id)) declared.set(id, `content/levels/${name}`);
+      } catch {
+        /* reported by the schema pass */
+      }
+    }
+  }
+  const stories = join(root, 'docs', 'stories');
+  if (existsSync(stories)) {
+    for (const name of readdirSync(stories).sort()) {
+      const match = /^TN-LEVEL-([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/.exec(name);
+      if (match && !declared.has(match[1])) declared.set(match[1], `docs/stories/${name}`);
+    }
+  }
+  return declared;
+}
+
+/**
  * The claims in a sidecar that its schema cannot state, checked against the two
  * things they are about: the drawing beside it and the places the map shows.
  *
@@ -329,8 +367,12 @@ export function readPinFraction(root) {
  *
  *   1. `svg` names the drawing the sidecar sits beside;
  *   2. `viewBox` is that drawing's own viewBox;
- *   3. there is exactly one anchor per place `game.config.json#/journey` names,
- *      both directions. A `null` slot names no place and takes no anchor.
+ *   3. every place `game.config.json#/journey` names has an anchor, and every
+ *      anchor names a place: the journey's, or one a level document or a level
+ *      story declares (an anchor AHEAD of its journey slot, reported). A `null`
+ *      slot names no place and takes no anchor. A journey place with no anchor
+ *      is reported as AWAITING in a commit and refused under `release`, which
+ *      `make build` sets (ADR-0069 §6, the boundary defect's resolution).
  *   4. every anchor lies inside the viewBox;
  *   5. each inset's frame lies inside the viewBox, its window inside its frame,
  *      its anchors inside its window and name stops the main map anchors, and
@@ -364,9 +406,31 @@ export function readPinFraction(root) {
  * anchor (art's) could only land in one commit by two owners. Keyed on the
  * journey, art anchors a place once the journey names it, and content lands the
  * level document on its own commit.
+ *
+ * THE JOURNEY SLOT AND ITS ANCHOR LAND APART TOO, IN EITHER ORDER (ADR-0069 §6,
+ * amended 2026-09-25). Keyed on the journey alone, the defect moved into the
+ * config: content's journey id and art's anchor still had to share a commit.
+ * So the rule has two strengths:
+ *
+ *   - an anchor AHEAD of the journey (art first) passes when `declared` names
+ *     its id, and is returned in `ahead` so the summary says so. `declared`
+ *     maps an id to the file that declares it: a level document in
+ *     content/levels/ or a level story, docs/stories/TN-LEVEL-<id>.md (see
+ *     `declaredPlaces`). An id nothing declares is still refused, which is the
+ *     check the reverse direction existed for: a mistyped anchor. It is harmless
+ *     to ship, since the map pins journey slots and never reads it.
+ *   - a journey place with no anchor (content first) is returned in `awaiting`
+ *     and does not fail, UNLESS `release` is set. `make build` sets it
+ *     (`validate-content.mjs --release`), and CI builds every pull request, so
+ *     a tree whose map would have a stop it cannot place never merges green and
+ *     never deploys. The gate on the shipped state is the old rule, whole.
  */
-export function checkScreenSidecars({ root, sidecars, places }) {
+export function checkScreenSidecars({ root, sidecars, places, declared = new Map(), release = false }) {
   const failures = [];
+  /** Anchors for places a level document or story declares and the journey does not name yet. */
+  const ahead = [];
+  /** Journey places with no anchor, allowed only outside `release`. */
+  const awaiting = [];
   let anchors = 0;
   let regions = 0;
   let insetCount = 0;
@@ -398,6 +462,8 @@ export function checkScreenSidecars({ root, sidecars, places }) {
   });
   const result = (checked) => ({
     failures,
+    ahead,
+    awaiting,
     anchors,
     regions,
     checked,
@@ -451,18 +517,29 @@ export function checkScreenSidecars({ root, sidecars, places }) {
     const box = { x: doc.viewBox[0], y: doc.viewBox[1], width: doc.viewBox[2], height: doc.viewBox[3] };
     const named = Object.keys(doc.anchors).sort();
     for (const id of places) {
-      if (!named.includes(id)) {
+      if (named.includes(id)) continue;
+      if (release) {
         failures.push(
           `${rel}: no anchor for "${id}", which game.config.json#/journey names. The screen would have a stop ` +
-            'it cannot place on the map.',
+            'it cannot place on the map. A journey place may await its anchor in a commit, never in a build ' +
+            '(ADR-0069 §6): land the anchor, which is art\'s, before this merges.',
         );
+      } else if (!awaiting.includes(id)) {
+        awaiting.push(id);
       }
     }
     for (const id of named) {
       if (!places.includes(id)) {
-        failures.push(
-          `${rel}: anchors."${id}" names no place in game.config.json#/journey (${places.join(', ')}).`,
-        );
+        const by = declared.get(id);
+        if (by === undefined) {
+          failures.push(
+            `${rel}: anchors."${id}" names no place in game.config.json#/journey (${places.join(', ')}), ` +
+              `and neither content/levels/ nor docs/stories/TN-LEVEL-${id}.md declares it. An anchor may ` +
+              'land before its journey slot, never for a place nothing declares (ADR-0069 §6).',
+          );
+        } else if (!ahead.some((entry) => entry.id === id)) {
+          ahead.push({ id, by });
+        }
       }
       const point = doc.anchors[id];
       anchors += 1;

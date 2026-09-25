@@ -5,6 +5,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { hasCopyRow, text } from '@ui/copy';
 
+import { PLACE_COUNT } from '../support/journey-count';
+
 import { closeTheReaderIfItOpens } from './after-the-card';
 import { NEXT_LEVEL_PLAY_LABEL, START_LEVEL } from './start-level';
 import { holdToMove } from './held-drive';
@@ -933,7 +935,7 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await page.getByTestId('menu-passport').click();
     const passport = page.getByTestId('passport');
     await expect(passport).toBeVisible();
-    await expect(passport.getByTestId('passport-counts')).toContainText('1 of 10');
+    await expect(passport.getByTestId('passport-counts')).toContainText(`Stamps: 1 of ${String(PLACE_COUNT)}`);
   });
 
   test('walks past every landmark, earns no stamp, and is told what is left', async ({ page }) => {
@@ -1015,7 +1017,7 @@ test.describe('the level the game opens on gives its task, and finishes it', () 
     await page.getByTestId('menu-passport').click();
     const passport = page.getByTestId('passport');
     await expect(passport).toBeVisible();
-    await expect(passport.getByTestId('passport-counts')).not.toContainText('1 of 10');
+    await expect(passport.getByTestId('passport-counts')).not.toContainText(`Stamps: 1 of ${String(PLACE_COUNT)}`);
   });
 });
 

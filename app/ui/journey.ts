@@ -1,5 +1,5 @@
 /**
- * The route the ten places sit on, drawn beside them.
+ * The route the journey's places sit on, drawn beside them.
  *
  * ## The problem
  *

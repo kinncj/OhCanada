@@ -115,7 +115,7 @@ export interface ShellCreatorOptions {
 export interface ShellOptions {
   /** The live settings, shared with every screen. Locale changes are followed. */
   readonly store: SettingsStore;
-  /** The ten map entries, in map order (`TN-MAP-01`). */
+  /** One map entry per journey place, in map order (`TN-MAP-01`). */
   readonly entries: readonly MapEntry[];
   /** `unlockRules.stampsToUnlockNext`, for a locked card with no other answer. */
   readonly stampsToUnlock: number;
@@ -702,7 +702,7 @@ export function createShell(host: HTMLElement, options: ShellOptions): Shell {
         optionRepaired = false;
         options.onCreateCharacter?.(next);
         /* The creator hands to the map, not straight to a level: the map is
-           where a player learns this is a journey with ten places and that nine
+           where a player learns this is a journey of many places and how many
            are still being made (`TN-FLOW`, seam 2). */
         show('level-select');
       },

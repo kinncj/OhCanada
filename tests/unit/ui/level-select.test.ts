@@ -29,7 +29,7 @@ import { buildPage, type FakeElement, type FakePage } from './support/fake-dom';
 
 const id = (value: string): LevelId => value as LevelId;
 
-/** The ten of `TN-LEVELS-2-to-10-spine.md`, all of them named. */
+/** The spine of `TN-LEVELS-2-to-10-spine.md`, all of them named. */
 const SPINE: readonly (readonly [number, string])[] = [
   [1, 'halifax'],
   [2, 'peggys-cove'],
@@ -42,6 +42,12 @@ const SPINE: readonly (readonly [number, string])[] = [
   [9, 'vancouver'],
   [10, 'the-north'],
 ];
+
+/**
+ * How many cards the fixture journey has. Asserted through this, never as a
+ * literal, so no count here assumes the game has ten places (K-0.3).
+ */
+const TOTAL = SPINE.length;
 
 const entries = (built: readonly string[], unlocked: readonly string[]): readonly MapEntry[] =>
   SPINE.map(([number, levelId]) => ({
@@ -106,8 +112,8 @@ describe('the level select', () => {
   it('says what it is and how much of the game exists', () => {
     const { at } = open();
     expect(at('level-select')?.querySelector('h1')?.textContent).toBe('Choose a level');
-    expect(at('level-select-counts')?.textContent).toContain('Levels ready: 2 of 10');
-    expect(at('level-select-counts')?.textContent).toContain('Stamps: 0 of 10');
+    expect(at('level-select-counts')?.textContent).toContain(`Levels ready: 2 of ${String(TOTAL)}`);
+    expect(at('level-select-counts')?.textContent).toContain(`Stamps: 0 of ${String(TOTAL)}`);
     expect(at('level-select-counts')?.textContent).toContain('More are coming.');
   });
 
@@ -117,7 +123,7 @@ describe('the level select', () => {
        0 of 10 More are coming." */
     const { at } = open();
     const lines = (at('level-select-counts')?.children ?? []).map((line) => line.textContent);
-    expect(lines).toEqual(['Levels ready: 2 of 10', 'Stamps: 0 of 10', 'More are coming.']);
+    expect(lines).toEqual([`Levels ready: 2 of ${String(TOTAL)}`, `Stamps: 0 of ${String(TOTAL)}`, 'More are coming.']);
   });
 
   it('says nothing about readiness once every level is made', () => {
@@ -142,33 +148,22 @@ describe('the level select', () => {
     }));
     const { at, screen } = open({ entries: all });
     const lines = (at('level-select-counts')?.children ?? []).map((line) => line.textContent);
-    expect(lines).toEqual(['Stamps: 0 of 10']);
+    expect(lines).toEqual([`Stamps: 0 of ${String(TOTAL)}`]);
     expect(screen.arrivalMessage).toBe('Choose a level.');
   });
 
-  it('lists ten cards, in the order the journey takes', () => {
+  it('lists one card per place, in the order the journey takes', () => {
     const { at } = open();
     const handles = at('level-select-list')
       ?.querySelectorAll('button')
       .map((button) => button.getAttribute('data-level-handle'));
 
-    expect(handles).toEqual([
-      'halifax',
-      'peggys-cove',
-      'quebec-city',
-      'ottawa',
-      'toronto',
-      'winnipeg',
-      'prairie-rail',
-      'alberta-foothills',
-      'vancouver',
-      'the-north',
-    ]);
+    expect(handles).toEqual(SPINE.map(([, handle]) => handle));
   });
 
   it('shows each card as a list item with its number, place and subject', () => {
     const { at } = open();
-    expect(at('level-select-list')?.querySelectorAll('li').length).toBe(10);
+    expect(at('level-select-list')?.querySelectorAll('li').length).toBe(TOTAL);
 
     const ottawa = at('level-card-ottawa');
     expect(ottawa?.textContent).toContain('Level 4');
@@ -184,10 +179,10 @@ describe('the level select', () => {
     expect(two?.textContent).toContain("Peggy's Cove");
     expect(two?.textContent).toContain('Who we are');
 
-    const ten = at('level-card-the-north');
-    expect(ten?.textContent).toContain('Level 10');
-    expect(ten?.textContent).toContain('The North');
-    expect(ten?.textContent).toContain("Canada's regions");
+    const last = at('level-card-the-north');
+    expect(last?.textContent).toContain(`Level ${String(TOTAL)}`);
+    expect(last?.textContent).toContain('The North');
+    expect(last?.textContent).toContain("Canada's regions");
   });
 
   it('draws no placeholder where a place is not decided', () => {
@@ -218,14 +213,14 @@ describe('the level select', () => {
  * that stops being true, a screen-reader user is missing something a sighted
  * player has, and these are the tests that should fail.
  */
-describe('the ten cards are stops on one route', () => {
+describe('the cards are stops on one route', () => {
   const railOf = (card: FakeElement | null): FakeElement | null =>
     card?.parentElement?.parentElement?.querySelector('.tn-journey') ?? null;
 
   it('draws a length of route beside every card, hidden from assistive technology', () => {
     const { at } = open();
     const rails = at('level-select-list')?.querySelectorAll('.tn-journey') ?? [];
-    expect(rails).toHaveLength(10);
+    expect(rails).toHaveLength(TOTAL);
     for (const rail of rails) expect(rail.getAttribute('aria-hidden')).toBe('true');
   });
 
@@ -235,8 +230,8 @@ describe('the ten cards are stops on one route', () => {
        the journey that are not places. */
     const { at } = open();
     const list = at('level-select-list');
-    expect(list?.querySelectorAll('li')).toHaveLength(10);
-    expect(list?.querySelectorAll('button')).toHaveLength(10);
+    expect(list?.querySelectorAll('li')).toHaveLength(TOTAL);
+    expect(list?.querySelectorAll('button')).toHaveLength(TOTAL);
     expect(list?.querySelectorAll('[tabindex]')).toHaveLength(0);
   });
 
@@ -354,7 +349,7 @@ describe('the map above the route', () => {
     expect(map?.querySelectorAll('button, a, input, select, textarea, [tabindex]')).toHaveLength(0);
     /* The ten cards and Back are still every control on the screen. */
     expect(at('level-select')?.querySelectorAll('button')).toHaveLength(11);
-    expect(at('level-select-list')?.querySelectorAll('li')).toHaveLength(10);
+    expect(at('level-select-list')?.querySelectorAll('li')).toHaveLength(TOTAL);
   });
 
   it('carries no words, in either language, and no text at all', () => {
@@ -379,7 +374,7 @@ describe('the map above the route', () => {
   it('numbers each pin with the number on its card, so a dot can be matched to a place by sight', () => {
     const { at } = open();
     const pins = at('level-select-map')?.querySelectorAll('.tn-map__stop') ?? [];
-    expect(pins).toHaveLength(10);
+    expect(pins).toHaveLength(TOTAL);
     for (const pin of pins) {
       const handle = pin.getAttribute('data-map-handle') ?? '?';
       const numeral = pin.querySelector('.tn-journey__pin')?.getAttribute('data-map-number') ?? '';
@@ -397,7 +392,7 @@ describe('the map above the route', () => {
     });
 
     const pins = at('level-select-map')?.querySelectorAll('.tn-map__stop') ?? [];
-    expect(pins).toHaveLength(10);
+    expect(pins).toHaveLength(TOTAL);
     for (const pin of pins) {
       const handle = pin.getAttribute('data-map-handle') ?? '?';
       const card = at(`level-card-${handle}`);
@@ -592,15 +587,15 @@ describe('a level that is not built yet', () => {
     const notBuilt = at('level-select-list')
       ?.querySelectorAll('[data-state="not-built"]')
       .length;
-    expect(notBuilt).toBe(9);
-    expect(at('level-select-counts')?.textContent).toContain('Levels ready: 1 of 10');
+    expect(notBuilt).toBe(TOTAL - 1);
+    expect(at('level-select-counts')?.textContent).toContain(`Levels ready: 1 of ${String(TOTAL)}`);
   });
 
-  it('shows ten cards even when the game contains no level at all', () => {
+  it('shows every card even when the game contains no level at all', () => {
     const { at } = open({ entries: entries([], []) });
 
-    expect(at('level-select-list')?.querySelectorAll('li').length).toBe(10);
-    expect(at('level-select-counts')?.textContent).toContain('Levels ready: 0 of 10');
+    expect(at('level-select-list')?.querySelectorAll('li').length).toBe(TOTAL);
+    expect(at('level-select-counts')?.textContent).toContain(`Levels ready: 0 of ${String(TOTAL)}`);
     expect(at('level-select')?.textContent?.toLowerCase()).not.toContain('error');
   });
 });
@@ -673,8 +668,8 @@ describe('leaving, focusing and speaking French', () => {
 
     expect(at('level-select')?.querySelector('h1')?.textContent).toBe('Choisir un niveau');
     expect(at('level-select-back')?.textContent).toBe('Retour');
-    expect(at('level-select-counts')?.textContent).toContain('Niveaux prêts : 2 sur 10');
-    expect(at('level-select-counts')?.textContent).toContain('Tampons : 0 sur 10');
+    expect(at('level-select-counts')?.textContent).toContain(`Niveaux prêts : 2 sur ${String(TOTAL)}`);
+    expect(at('level-select-counts')?.textContent).toContain(`Tampons : 0 sur ${String(TOTAL)}`);
     expect(at('level-select-counts')?.textContent).toContain("D'autres arrivent.");
     expect(at('level-card-halifax')?.textContent).toContain('Verrouillé');
     expect(at('level-card-vancouver')?.textContent).toContain('Pas encore créé');
@@ -693,7 +688,7 @@ describe('leaving, focusing and speaking French', () => {
   it('announces the screen and how many levels are ready, in one message', () => {
     const { screen } = open();
     expect(screen.arrivalMessage).toContain('Choose a level');
-    expect(screen.arrivalMessage).toContain('Levels ready: 2 of 10');
+    expect(screen.arrivalMessage).toContain(`Levels ready: 2 of ${String(TOTAL)}`);
   });
 
   it('counts the stamps the player has earned', () => {
@@ -702,7 +697,7 @@ describe('leaving, focusing and speaking French', () => {
         entry.id === id('ottawa') ? { ...entry, stamped: true } : entry,
       ),
     });
-    expect(at('level-select-counts')?.textContent).toContain('Stamps: 1 of 10');
+    expect(at('level-select-counts')?.textContent).toContain(`Stamps: 1 of ${String(TOTAL)}`);
   });
 
   it('leaves nothing behind when it is destroyed', () => {

@@ -142,7 +142,7 @@ export interface MapStopInput {
   readonly id?: LevelId;
   readonly state: string;
   readonly stop: JourneyStop;
-  /** The stop's map number, 1 to 10, drawn on the pin. Absent draws a bare pin. */
+  /** The stop's map number, 1 to the journey's length, drawn on the pin. Absent draws a bare pin. */
   readonly number?: number;
 }
 

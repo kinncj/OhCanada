@@ -9,7 +9,10 @@
  * beside it and the places `content/game.config.json#/journey` names. The
  * anchor rule is keyed on the journey, not on content/levels/ (ADR-0069 §6's
  * boundary defect), so an anchor and its level document land in their owners'
- * own commits.
+ * own commits. And since the 2026-09-25 amendment, the journey slot and its
+ * anchor land apart too, in either order: an anchor may precede its slot when a
+ * level document or story declares the place, and a slot may await its anchor
+ * in a commit but not under `--release`, which `make build` runs.
  *
  * Every case drives the real CLI over a scratch tree built from the REAL map,
  * sidecar, schemas, game config and level documents, with one thing broken. The first case is
@@ -116,6 +119,10 @@ interface RunOptions {
   readonly config?: ((config: GameConfig) => void) | null;
   /** Replaces app/ui/screen-styles.ts in the scratch tree; `null` leaves it out. */
   readonly stylesheet?: string | null;
+  /** Level ids given a story, docs/stories/TN-LEVEL-<id>.md, in the scratch tree. */
+  readonly stories?: readonly string[];
+  /** Runs the gate as `make build` does, `--release`. */
+  readonly release?: boolean;
 }
 
 function run(mutate: (doc: Sidecar) => void, options: RunOptions = {}): Run {
@@ -144,6 +151,13 @@ function run(mutate: (doc: Sidecar) => void, options: RunOptions = {}): Run {
     writeFileSync(join(root, 'app', 'ui', 'screen-styles.ts'), options.stylesheet ?? STYLESHEET, 'utf8');
   }
 
+  if (options.stories !== undefined) {
+    mkdirSync(join(root, 'docs', 'stories'), { recursive: true });
+    for (const id of options.stories) {
+      writeFileSync(join(root, 'docs', 'stories', `TN-LEVEL-${id}.md`), `# ${id}\n`, 'utf8');
+    }
+  }
+
   writeFileSync(join(screens, 'map-canada.svg'), DRAWING, 'utf8');
   const doc = structuredClone(REAL);
   mutate(doc);
@@ -162,7 +176,7 @@ function run(mutate: (doc: Sidecar) => void, options: RunOptions = {}): Run {
     'utf8',
   );
 
-  const args = [SCRIPT, '--root', root];
+  const args = [SCRIPT, '--root', root, ...(options.release === true ? ['--release'] : [])];
   const result = spawnSync(process.execPath, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
   const stdout = result.stdout ?? '';
   return { status: result.status ?? -1, stdout, output: `${stdout}${result.stderr ?? ''}` };
@@ -189,13 +203,31 @@ describe('the screen-art sidecar gate', () => {
     expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
   });
 
-  it('fails when a place the journey names has no anchor', () => {
+  it('fails under --release when a place the journey names has no anchor', () => {
     expectRefused(
-      run((doc) => {
-        delete doc.anchors[FIRST_LEVEL];
-      }),
+      run(
+        (doc) => {
+          delete doc.anchors[FIRST_LEVEL];
+        },
+        { release: true },
+      ),
       `no anchor for "${FIRST_LEVEL}", which game.config.json#/journey names`,
     );
+  });
+
+  it('passes the committed sidecar under --release, and says every place is anchored', () => {
+    const result = run(() => undefined, { release: true });
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain('every journey place anchored (--release)');
+  });
+
+  it('wires --release into make build, so the rule a commit may relax is held on every build', () => {
+    const makefile = readFileSync(join(REPO, 'Makefile'), 'utf8');
+    const build = /^build:.*\n((?:\t.*\n)+)/m.exec(makefile);
+    expect(build?.[1]).toBeDefined();
+    const recipe = build?.[1] ?? '';
+    expect(recipe).toContain('npm run validate-content -- --release');
+    expect(recipe.indexOf('--release')).toBeLessThan(recipe.indexOf('npm run build'));
   });
 
   it('fails on an anchor for a place the journey does not name', () => {
@@ -207,14 +239,15 @@ describe('the screen-art sidecar gate', () => {
     );
   });
 
-  it('fails on an anchor whose place left the journey, though its level document is still there', () => {
-    expectRefused(
-      run(() => undefined, {
-        config: (config) => {
-          config.journey = config.journey.map((slot) => (slot === FIRST_LEVEL ? null : slot));
-        },
-      }),
-      `anchors."${FIRST_LEVEL}" names no place in game.config.json#/journey`,
+  it('passes an anchor whose place left the journey while its level document declares it, and says so', () => {
+    const result = run(() => undefined, {
+      config: (config) => {
+        config.journey = config.journey.map((slot) => (slot === FIRST_LEVEL ? null : slot));
+      },
+    });
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toContain(
+      `1 anchor(s) ahead of the journey (${FIRST_LEVEL}, declared by content/levels/${FIRST_LEVEL}.json)`,
     );
   });
 
@@ -245,6 +278,86 @@ describe('the screen-art sidecar gate', () => {
     );
     expect(result.status, result.output).toBe(0);
     expect(result.stdout).toContain(`against ${PLACES.length - 1} journey place(s)`);
+  });
+
+  /*
+   * ADR-0069 §6's boundary defect, the second half (plan K-0.7). Keyed on the
+   * journey alone, the defect moved into the config: a new journey id
+   * (content's) and its anchor (art's) each failed without the other, so they
+   * still had to share a commit. These cases use Kingston as it stands: a story
+   * and art's published coordinates (assets/style/map-canada.md §6), no journey
+   * slot, no level document. Each failed on the pre-fix gate.
+   */
+  describe('a journey place and its anchor land apart, in either order', () => {
+    const PLACE = 'kingston';
+    const MAIN = { x: 621.0, y: 526.6 };
+    const IN_INSET = { x: 895.2, y: 268.8 };
+    const corridor = (doc: Sidecar): Inset => {
+      const inset = doc.insets?.find((candidate) => Object.hasOwn(candidate.anchors, 'ottawa'));
+      if (inset === undefined) throw new Error('the committed sidecar has no inset anchoring ottawa');
+      return inset;
+    };
+    const anchorIt = (doc: Sidecar): void => {
+      doc.anchors[PLACE] = MAIN;
+      corridor(doc).anchors[PLACE] = IN_INSET;
+    };
+    const slotIt = (config: GameConfig): void => {
+      const at = config.journey.indexOf('ottawa') + 1;
+      config.journey = [...config.journey.slice(0, at), PLACE, ...config.journey.slice(at)];
+    };
+
+    it('has the place with no slot, no level document and no anchor today', () => {
+      expect(PLACES).not.toContain(PLACE);
+      expect(LEVEL_IDS).not.toContain(PLACE);
+      expect(Object.keys(REAL.anchors)).not.toContain(PLACE);
+    });
+
+    it('art first: passes an anchor ahead of its journey slot when a story declares the place, and reports it', () => {
+      const result = run(anchorIt, { stories: [PLACE] });
+      expect(result.status, result.output).toBe(0);
+      expect(result.stdout).toContain(
+        `1 anchor(s) ahead of the journey (${PLACE}, declared by docs/stories/TN-LEVEL-${PLACE}.md)`,
+      );
+      expect(result.stdout).toContain(`against ${PLACES.length} journey place(s)`);
+    });
+
+    it('art first, and still under --release: an anchor ahead of its slot is never drawn', () => {
+      const result = run(anchorIt, { stories: [PLACE], release: true });
+      expect(result.status, result.output).toBe(0);
+      expect(result.stdout).toContain('every journey place anchored (--release)');
+    });
+
+    it('refuses an anchor ahead of the journey that no story or level document declares: a typo', () => {
+      expectRefused(
+        run((doc) => {
+          doc.anchors['kingstn'] = MAIN;
+        }, { stories: [PLACE] }),
+        'anchors."kingstn" names no place in game.config.json#/journey',
+      );
+    });
+
+    it('content first: passes a journey slot awaiting its anchor, and says make build refuses it', () => {
+      const result = run(() => undefined, { config: slotIt });
+      expect(result.status, result.output).toBe(0);
+      expect(result.stdout).toContain(`1 journey place(s) AWAITING an anchor (${PLACE})`);
+      expect(result.stdout).toContain('refused by make build');
+      expect(result.stdout).toContain(`against ${PLACES.length + 1} journey place(s)`);
+    });
+
+    it('content first: the same tree fails under --release, so it cannot be built or deployed', () => {
+      expectRefused(
+        run(() => undefined, { config: slotIt, release: true }),
+        `no anchor for "${PLACE}", which game.config.json#/journey names`,
+      );
+    });
+
+    it('both landed, in either order: passes under --release with nothing ahead and nothing awaiting', () => {
+      const result = run(anchorIt, { config: slotIt, release: true });
+      expect(result.status, result.output).toBe(0);
+      expect(result.stdout).toContain('every journey place anchored (--release)');
+      expect(result.stdout).not.toContain('ahead of the journey');
+      expect(result.stdout).toContain(`against ${PLACES.length + 1} journey place(s)`);
+    });
   });
 
   it('fails on an anchor outside the viewBox', () => {
