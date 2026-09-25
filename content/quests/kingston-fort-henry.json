@@ -106,11 +106,11 @@
               "quote": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812. The Americans were mistaken."
             },
             "verification": {
-              "status": "unverified",
-              "model": "",
-              "checkedAt": null,
-              "sourceHash": "",
-              "evidence": ""
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812. The Americans were mistaken."
             }
           }
         },
@@ -171,11 +171,11 @@
               "quote": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal"
             },
             "verification": {
-              "status": "unverified",
-              "model": "",
-              "checkedAt": null,
-              "sourceHash": "",
-              "evidence": ""
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal, part of a network of forts to prevent the U.S.A. from invading Canada again."
             }
           }
         }
@@ -269,11 +269,11 @@
               "quote": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. He was a lawyer in Kingston, Ontario"
             },
             "verification": {
-              "status": "unverified",
-              "model": "",
-              "checkedAt": null,
-              "sourceHash": "",
-              "evidence": ""
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. He was a lawyer in Kingston, Ontario, a gifted politician and a colourful personality."
             }
           }
         }
