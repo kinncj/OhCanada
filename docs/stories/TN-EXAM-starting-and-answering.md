@@ -21,6 +21,15 @@ has had for its whole life and may have again. **`map.moreComing` is drawn here 
 than `total`**, which `TN-MAP` now states as a rule for all four screens that draw it — this one, the result,
 the level select and the passport.
 
+**Amended 2026-09-25 (K-0.9b) — the subject count is the journey's length, and it becomes eleven when
+Kingston lands.** The total in "Subjects ready: {{ready}} of {{total}}" is `journey.length` in
+`content/game.config.json`, and it is not a number any screen writes. ADR-0068 §8 records the result: "of 10"
+before Kingston, "of 11" after. Kingston brings `building-canada`, the second half of the old `history` bank.
+So the scenarios below say "of 11" and state their premise, which is that the journey names eleven places.
+Until the Kingston landing PR merges, the shipped build still reads "of 10", and that is the same rule. With
+eleven subjects, twenty questions no longer divide evenly. `TN-EXAM-02` now asserts ADR-0068 §8's mix and
+keeps the ten-subject case as the build before Kingston.
+
 ## What an exam is, and what it is not
 
 | | A Study drill (`TN-STUDY`) | An exam (this file) |
@@ -108,7 +117,7 @@ Keys this screen draws and does not own:
 | `exam.timer.*` | `TN-TIMER-the-exam-clock.md` |
 | `exam.result.*`, `exam.again` | `TN-RESULT-exam-results.md` |
 | `exam.leave*`, `exam.resume*`, `exam.new*` | `TN-ATTEMPT-leaving-and-resuming-an-exam.md` |
-| `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md` — the subject names on the result |
+| `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md`, `TN-LEVEL-kingston.md` — the subject names on the result |
 | `storage.warning`, `storage.warning.help` | `TN-SAVE-save-and-reload.md` |
 
 **`map.moreComing` is borrowed on purpose, and `TN-MAP` owns the condition as well as the words.** This
@@ -171,15 +180,24 @@ Feature: Starting a practice exam
     And no number on this screen is written into a copy string
 
   Scenario: The start screen says how much of the game exists
-    Given verified questions exist for one subject only
-    Then it shows "Subjects ready: 1 of 10"
+    Given the journey names eleven places, as it does once Kingston lands
+    And verified questions exist for one subject only
+    Then it shows "Subjects ready: 1 of 11"
     And it shows "More are coming."
     And it shows "This exam only asks about the subjects that are ready."
     And nothing on the screen reads as an error
 
+  Scenario: The subject total is the journey's length, not a number on the screen
+    Given the journey names eleven places
+    Then the total in "Subjects ready" is 11
+    Given a build whose journey names ten places, as before Kingston landed
+    Then the total in "Subjects ready" is 10
+    And no copy string and no screen holds either number
+
   Scenario: Every subject ready promises nothing more, and reports nothing (ADR-0039)
-    Given every subject has a bank
-    Then it does not show "Subjects ready: 10 of 10"
+    Given the journey names eleven places
+    And every subject has a bank
+    Then it does not show "Subjects ready: 11 of 11"
     And it does not show "More are coming."
     And it does not show "This exam only asks about the subjects that are ready."
     And nothing is drawn in their place
@@ -248,19 +266,31 @@ Feature: A representative draw, not a drill
     And the remaining 18 are spread across the other subjects that are ready
     And the exam still asks 20 questions
 
-  Scenario: Ten subjects ready, which is this game today
-    Given every subject has a bank
+  Scenario: Eleven subjects ready, which is this game once Kingston lands (ADR-0068 §8)
+    Given the journey names eleven places
+    And every subject has a bank
+    When I start an exam of 20 questions
+    Then every one of the eleven subjects contributes at least 1 question
+    And nine subjects contribute 2 questions and two contribute 1
+    And across exams started from different seeds, each of the eleven subjects can be one of the two that contribute 1
+    And which two contribute 1 does not follow the journey's order or the size of a bank
+    And no subject is left out for having the smallest bank
+
+  Scenario: Ten subjects ready, which was this game before Kingston landed
+    Given the journey names ten places
+    And every subject has a bank
     When I start an exam of 20 questions
     Then each of the ten subjects contributes 2 questions
     And there is no remainder to spread, because 20 divides evenly by 10
     And no subject is left out for having the smallest bank
-    And the subject with 18 verified questions contributes the same 2 as the one with 96
+    And the subject with the smallest bank contributes the same 2 as the one with the largest
 
   Scenario: One subject ready, which is a build this game has had
-    Given verified questions exist for one subject only
+    Given the journey names eleven places
+    And verified questions exist for one subject only
     When I start an exam of 20 questions
     Then all 20 come from that subject
-    And the start screen already said "Subjects ready: 1 of 10"
+    And the start screen already said "Subjects ready: 1 of 11"
     And nothing about the exam reads as broken
 
   Scenario: The draw does not read the player's review state
@@ -679,13 +709,15 @@ Feature: The exam in French
     And no English word appears in "exam-start"
 
   Scenario: The subject count and its promise are French, on the same condition as the English
-    Given verified questions exist for one subject only
-    Then it shows "Sujets prêts : 1 sur 10"
+    Given the journey names eleven places, as it does once Kingston lands
+    And verified questions exist for one subject only
+    Then it shows "Sujets prêts : 1 sur 11"
     And it shows "D'autres arrivent."
     Given every subject has a bank
-    Then it shows "Sujets prêts : 10 sur 10"
+    Then it does not show "Sujets prêts : 11 sur 11"
     And it does not show "D'autres arrivent."
     And the condition is the same in both languages, because it is one row and one rule
+    And the total is the journey's length in both languages
 
   Scenario: The exam length reads correctly at one
     When the string "exam.rules.length" is rendered with a count of 1
@@ -777,6 +809,11 @@ Feature: The exam in French
   `total` come from there rather than from a caller. Until it does, "of 10" is a number this screen is told
   rather than one it can check. See `OQ-SUBJECTS-1` and `OQ-RESULT-2`, which is the same gap seen from the
   result.
+  **Narrowed 2026-09-25 (K-0.9b).** The composition root now hands the screen `journey.length` as the total
+  (ADR-0068 §8), so the total follows the journey. It reads "of 11" when Kingston lands, and no screen or copy
+  string changes. That is still a count of *places*, used as a count of subjects because each level carries
+  one subject and no two levels share one (`CLAUDE.md`, Scope). This question still stands as far as it asks
+  for subjects to be declared by name.
 - **`OQ-EXAM-6` — should a player be able to choose a subject to be examined on?** Not here: an exam whose
   subjects the player picks is a drill with a score. *Recommendation:* leave it out; if the wish appears, it
   belongs to `TN-STUDY` as a chosen-subject drill (`OQ-STUDY-2`), not to the exam.

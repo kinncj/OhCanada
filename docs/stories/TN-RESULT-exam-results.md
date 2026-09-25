@@ -26,14 +26,25 @@ Read `README.md` in this directory first. `TN-EXAM-starting-and-answering.md` ow
 ## Where a subject's name comes from
 
 The result names a subject with **the same string the map draws as that level's subject line** —
-`level.<id>.subtitle`, owned by `TN-LEVELS-2-to-10-spine.md` and `TN-LEVEL-ottawa.md`. A subject is a level's
-subject; writing a second set of ten subject names is how two screens end up calling the same chapter two
-things. `OQ-RESULT-2` records the one thing that is missing to make this work.
+`level.<id>.subtitle`, owned by `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md` and, for Kingston,
+`TN-LEVEL-kingston.md`. A subject is a level's subject; writing a second set of subject names is how two
+screens end up calling the same chapter two things. `OQ-RESULT-2` records the one thing that is missing to
+make this work.
 
 **Amended 2026-09-13.** Every level has an id and every subject has a bank, so the half of `OQ-RESULT-2` that
 was about levels with no id is gone and the half that matters is sharper: **a level knows its subject and
 nothing goes the other way.** `map.moreComing` on this screen now follows `TN-MAP`'s rule — drawn only while
 `ready` is less than `total`, tested against the count of subjects that sits beside it.
+
+**Amended 2026-09-25 (K-0.9b) — the counts on this screen follow the journey, and it grows to eleven when
+Kingston lands.** The total in "Subjects ready" is `journey.length` (ADR-0068 §8), so it reads "of 11" when
+Kingston lands and "of 10" before. A complete exam can now draw up to eleven by-subject rows. The two
+halves of the old history bank are two rows with two names: `history` is "Early Canada" /
+« Les débuts du Canada » and `building-canada` is "Building Canada" / « La construction du Canada »
+(`TN-LEVEL-kingston.md`, "Rulings (K-0.9)", Ruling 1). With eleven subjects, twenty questions do not divide
+evenly. Nine rows count out of 2 and two rows count out of 1, and which two is decided by chance
+(`TN-EXAM-02`). The scenarios below state their premise, which is that the journey names eleven places.
+Until the Kingston landing PR merges, the shipped build shows ten rows and "of 10", under the same rules.
 
 ## Accessibility and bilingual coverage map
 
@@ -77,7 +88,7 @@ Keys this screen draws and does not own:
 | `common.close`, `common.back` | `TN-SET-settings.md`, `TN-FLOW-first-run-and-return.md` |
 | `passport.open` | `TN-PASSPORT-my-passport.md` |
 | `study.open` | `TN-STUDY-study-mode.md` |
-| `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md` |
+| `level.<id>.subtitle` | `TN-LEVELS-2-to-10-spine.md`, `TN-LEVEL-ottawa.md`, `TN-LEVEL-kingston.md` |
 | `exam.subjectsReady` | `TN-EXAM-starting-and-answering.md` |
 | `map.moreComing` | `TN-MAP-level-select.md` — **and so is the condition it is drawn on** |
 
@@ -202,12 +213,20 @@ Feature: How I did, subject by subject
     Then that row reads "Federal elections: 3 out of 5"
     And the subject's name is the same string the level select draws as that level's subject line
 
-  Scenario: Ten rows is the shape of a complete game
-    Given every subject has a bank
-    And the exam drew 2 questions from each of the ten
-    Then ten rows are shown
-    And each reads "<subject>: <n> out of 2"
+  Scenario: Eleven rows is the shape of a complete game, once Kingston lands
+    Given the journey names eleven places
+    And every subject has a bank
+    And the exam drew from each of the eleven
+    Then eleven rows are shown
+    And nine of them read "<subject>: <n> out of 2" and two read "<subject>: <n> out of 1"
     And their order is the journey's order, so the rows read as the map reads
+
+  Scenario: The two halves of the history are two rows with two names
+    Given the journey names eleven places
+    And the exam drew questions from "history" and from "building-canada"
+    Then "subject-row-history" begins "Early Canada"
+    And "subject-row-building-canada" begins "Building Canada"
+    And no row reads "Canada's history"
 
   Scenario: The rows add up to the exam
     Then the totals across the rows add up to 20
@@ -220,14 +239,16 @@ Feature: How I did, subject by subject
     And no row shows "0 out of 0"
 
   Scenario: The screen says how much of the game the exam could cover
-    Given verified questions exist for one subject only
-    Then it shows "Subjects ready: 1 of 10"
+    Given the journey names eleven places
+    And verified questions exist for one subject only
+    Then it shows "Subjects ready: 1 of 11"
     And it shows "More are coming."
     And nothing on the screen suggests the missing subjects are the player's doing
 
   Scenario: Every subject ready promises nothing more, and reports nothing (ADR-0039)
-    Given every subject has a bank
-    Then it does not show "Subjects ready: 10 of 10"
+    Given the journey names eleven places
+    And every subject has a bank
+    Then it does not show "Subjects ready: 11 of 11"
     And it does not show "More are coming."
     And nothing is drawn in their place
     And this is TN-MAP's rule, which since ADR-0039 covers the count as well as the promise
@@ -507,11 +528,13 @@ Feature: The result honours the accessibility settings
     And every control is fully visible and at least 44 CSS px tall
     And the page does not scroll sideways
 
-  Scenario: Ten rows fit as well as four
+  Scenario: Eleven rows fit as well as four
     Given text scaling is 200 %
-    And the exam drew from all ten subjects
-    Then all ten rows are readable by scrolling down
-    And the longest French subject line, "Les contreforts de l'Alberta", is not truncated in its row
+    And the journey names eleven places
+    And the exam drew from all eleven subjects
+    Then all eleven rows are readable by scrolling down
+    And no French subject line is truncated in its row
+    And "La construction du Canada" and "Les débuts du Canada" are each shown whole in their rows
 
   Scenario: The French lines fit too
     Given text scaling is 200 %
@@ -557,14 +580,23 @@ Feature: The exam result in French
     Then the heading reads "Vos résultats par sujet"
     And a row reads "Les élections fédérales : 3 sur 5"
     And each subject's name is the French subject line the level select draws
-    And a row for the tenth subject reads "Les régions du Canada : 1 sur 2"
+    Given the exam asked 2 questions about Canada's regions and I got 1 right
+    Then the row for the last subject on the journey reads "Les régions du Canada : 1 sur 2"
+
+  Scenario: The two halves of the history are two French rows with two names
+    Given the journey names eleven places
+    And the exam drew questions from "history" and from "building-canada"
+    Then "subject-row-history" begins "Les débuts du Canada"
+    And "subject-row-building-canada" begins "La construction du Canada"
+    And no row reads "L'histoire du Canada"
 
   Scenario: The subject count and its promise are French, on the same condition as the English
-    Given verified questions exist for one subject only
-    Then it shows "Sujets prêts : 1 sur 10"
+    Given the journey names eleven places
+    And verified questions exist for one subject only
+    Then it shows "Sujets prêts : 1 sur 11"
     And it shows "D'autres arrivent."
     Given every subject has a bank
-    Then it shows "Sujets prêts : 10 sur 10"
+    Then it does not show "Sujets prêts : 11 sur 11"
     And it does not show "D'autres arrivent."
 
   Scenario: The unanswered line agrees with its number in French
@@ -628,7 +660,8 @@ Feature: The exam result in French
   missed. A per-row "Practise this subject" would be better advice and needs subject-chosen drills, which
   `OQ-STUDY-2` has not decided. *Recommendation:* one control now, per-row controls when Study can take a
   subject. Do not put a control on a row that opens the same drill as every other row. **Ten rows makes this
-  worse rather than better**: one control under ten rows is the least specific advice the screen could give.
+  worse rather than better, and eleven once Kingston lands**: one control under that many rows is the least
+  specific advice the screen could give.
 - **`OQ-RESULT-4` — does the player ever see how many exams they have taken?** No, deliberately: a count of
   attempts is a shaming number for the player who needed six, and an encouraging one for nobody.
   *Recommendation:* keep the most recent result only (`TN-PASSPORT-06`), and never draw a history, an average
