@@ -238,10 +238,21 @@ coordinates art publishes in `assets/style/map-canada.md` §6, and art reviews t
   it cannot, and a test shows a wider pin in that rule turning a passing sidecar red. That is the one home
   as it stands today; commit 3 (§3.4) still decides whether it stays there.
 
-- **OBLIGATION due=2026-12-23 owner=art** — §6 commit 2. Draw the corridor inset at a magnification of at least
+- ~~**OBLIGATION due=2026-12-23 owner=art** — §6 commit 2. Draw the corridor inset at a magnification of at least
   2.5×, holding Ottawa and Toronto (§5). Record its basis, affine and scale in `assets/style/map-canada.md`
   §6–§7. Publish Kingston's main and inset coordinates there for commit 4. Neither Ottawa nor Toronto keeps a
-  main-map pin.
+  main-map pin.~~
+  **DISCHARGED 2026-09-25** — branch `corridor-inset`, in the commit that strikes this marker. `insets[1]` at
+  exactly 3× (0.3690 px/km): frame (760, 180, 200 × 170) in the Labrador Sea, 50 units above the Atlantic
+  card; window (765, 185, 190 × 160); locator (577.6, 498.7, 63.3 × 53.3). Its affine is the main affine
+  times 3 plus the window's offset, derived and not fitted, and the drawing is the main map's own land under
+  the same `matrix(3 0 0 3 −967.8 −1311.1)`. Ottawa (903.0, 214.2) and Toronto (817.0, 315.8) are pinned in
+  the inset only, **133.1 apart** (was 44.4 on the main map). Kingston's coordinates are published in the art
+  sheet §6 and not anchored: main (621.0, 526.6), inset (895.2, 268.8), 55.1 from Ottawa and 91.2 from
+  Toronto. `validate-content` reports 2 insets, 4 enlarged stops, 2 locators enclosing only their own stops,
+  frames 50 apart and 6 main-map pins at least 126 units from every frame. Hudson Bay was refused as the
+  frame's place (it would hide all of it); the Labrador Sea hides open sea only, and the loupe washes eastern
+  Québec under Québec City's pin, which the page draws above it (art sheet §7.1).
 
 - **OBLIGATION due=2027-01-06 owner=infra** — §6 commit 3. Add pin separation (§3.4), reading the pin fraction
   from its one home. It must be seen to fail on the pre-inset anchors (Ottawa–Toronto 44.4) and pass after
