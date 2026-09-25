@@ -429,20 +429,26 @@ describe('the insets (ADR-0069)', () => {
   });
 
   it('passes a sidecar with no inset, and says there was nothing to measure', () => {
+    /* With no inset every stop is a main-map pin, so the crowded ones are
+       moved to open ground first; §3.4 would refuse them where they are. */
     const result = run((doc) => {
       delete doc.insets;
+      doc.anchors['peggys-cove'] = { x: 760, y: 530 };
+      doc.anchors['toronto'] = { x: 580, y: 570 };
     });
     expect(result.status, result.output).toBe(0);
     expect(result.stdout).toContain('no inset in any sidecar, so the cross-inset checks (ADR-0069 §3.1-3.3) had nothing to measure');
+    expect(result.stdout).toMatch(/the main map 10 pin\(s\) at least [\d.]+ unit\(s\) apart/);
   });
 
-  it('passes two insets that keep apart, and says how far apart', () => {
+  it('passes three insets that keep apart, and says how far apart', () => {
     const result = run((doc) => {
-      doc.insets = [first(doc), winnipegInset(doc)];
+      doc.insets = [...(doc.insets ?? []), winnipegInset(doc, 0)];
     });
     expect(result.status, result.output).toBe(0);
-    expect(result.stdout).toContain('2 inset(s): 3 enlarged stop(s) each in one inset');
-    expect(result.stdout).toContain('1 frame pair(s) at least 30 unit(s) apart');
+    expect(result.stdout).toContain('3 inset(s): 5 enlarged stop(s) each in one inset');
+    expect(result.stdout).toContain('3 frame pair(s) at least 10 unit(s) apart');
+    expect(result.stdout).toContain('insets[2] 1 pin(s), no pair to keep apart');
   });
 
   it('fails when a stop is enlarged in two insets (§3.1)', () => {
@@ -508,5 +514,105 @@ describe('the insets (ADR-0069)', () => {
     expectRefused(run(() => undefined, { stylesheet: null }), "the map pin's size could not be read from app/ui/screen-styles.ts");
     const unsized = STYLESHEET.replace(PIN_RULE, '.tn-map .tn-map__stop .tn-journey__pin--renamed {');
     expectRefused(run(() => undefined, { stylesheet: unsized }), 'no "inline-size: <n>cqi" in the app/ui/screen-styles.ts rule');
+  });
+});
+
+/**
+ * ADR-0069 §3.4: any two pins drawn in the same frame are at least one pin
+ * diameter apart, the diameter being the stylesheet's fraction times the
+ * viewBox width. The fraction is asked of the gate's own reader, never restated.
+ */
+describe('pin separation (ADR-0069 §3.4)', () => {
+  const pinFraction = async (): Promise<number> => {
+    const module = (await import(new URL('../../../scripts/lib/screen-art.mjs', import.meta.url).href)) as {
+      readPinFraction: (root: string) => number | string;
+    };
+    const fraction = module.readPinFraction(REPO);
+    if (typeof fraction === 'string') throw new Error(fraction);
+    return fraction;
+  };
+  const width = REAL.viewBox[2] ?? 0;
+  const quebec = REAL.anchors['quebec-city'] ?? { x: 0, y: 0 };
+
+  it('reports the closest pair in every frame of the shipped tree', () => {
+    const result = run(() => undefined);
+    expect(result.status, result.output).toBe(0);
+    expect(result.stdout).toMatch(/pin separation \(ADR-0069 §3\.4\) against a pin diameter of [\d.]+: the main map 6 pin\(s\) at least [\d.]+ unit\(s\) apart/);
+    expect(result.stdout).toMatch(/insets\[0\] 2 pin\(s\) at least [\d.]+ unit\(s\) apart \(halifax - peggys-cove\)/);
+    expect(result.stdout).toMatch(/insets\[1\] 2 pin\(s\) at least [\d.]+ unit\(s\) apart \(ottawa - toronto\)/);
+  });
+
+  it('fails when two main-map pins are closer than one pin diameter, naming both stops', async () => {
+    const diameter = (await pinFraction()) * width;
+    const result = run((doc) => {
+      doc.anchors['winnipeg'] = { x: quebec.x - (diameter - 1), y: quebec.y };
+    });
+    expectRefused(result, 'anchors."quebec-city" at (658, 476) and anchors."winnipeg" at');
+    expect(result.output).toMatch(/are [\d.]+ unit\(s\) apart on the main map, closer than one pin diameter/);
+  });
+
+  it('fails when two pins in one inset are closer than one pin diameter, naming both stops', async () => {
+    const diameter = (await pinFraction()) * width;
+    const result = run((doc) => {
+      const inset = doc.insets?.[1];
+      const ottawa = inset?.anchors['ottawa'];
+      if (inset === undefined || ottawa === undefined) throw new Error('the committed sidecar has no corridor inset');
+      inset.anchors['toronto'] = { x: ottawa.x - (diameter - 1), y: ottawa.y };
+    });
+    expectRefused(result, 'insets[1].anchors."ottawa" at (903, 214.2) and insets[1].anchors."toronto" at');
+    expect(result.output).toContain('apart on insets[1], closer than one pin diameter');
+  });
+
+  it('fails on the pre-inset anchors, where Ottawa and Toronto touched at 44.4', () => {
+    const result = run((doc) => {
+      doc.insets = doc.insets?.slice(0, 1) ?? [];
+    });
+    expectRefused(
+      result,
+      'anchors."ottawa" at (623.6, 508.4) and anchors."toronto" at (594.9, 542.3) are 44.4 unit(s) apart on the main map',
+    );
+  });
+
+  it('passes two pins exactly one pin diameter apart, and fails them a tenth of a unit closer', async () => {
+    const diameter = (await pinFraction()) * width;
+    const at = run((doc) => {
+      doc.anchors['winnipeg'] = { x: quebec.x - diameter, y: quebec.y };
+    });
+    expect(at.status, at.output).toBe(0);
+    expect(at.stdout).toContain(`the main map 6 pin(s) at least ${diameter.toFixed(1)} unit(s) apart (quebec-city - winnipeg)`);
+
+    const under = run((doc) => {
+      doc.anchors['winnipeg'] = { x: quebec.x - (diameter - 0.1), y: quebec.y };
+    });
+    expectRefused(under, 'anchors."quebec-city" at (658, 476) and anchors."winnipeg" at');
+  });
+
+  it('measures the diameter from the stylesheet: a wider pin fails a pair the shipped pin passes', async () => {
+    const diameter = (await pinFraction()) * width;
+    const apart = (doc: Sidecar): void => {
+      doc.anchors['winnipeg'] = { x: quebec.x - (diameter + 5), y: quebec.y };
+    };
+    const shipped = run(apart);
+    expect(shipped.status, shipped.output).toBe(0);
+
+    const rule = STYLESHEET.indexOf(PIN_RULE);
+    const close = STYLESHEET.indexOf('}', rule);
+    const widened =
+      STYLESHEET.slice(0, rule) +
+      STYLESHEET.slice(rule, close).replace(/(^|[\s;{])inline-size:\s*([0-9.]+)cqi/g, (_m, lead: string, n: string) => `${lead}inline-size: ${String(Number(n) * 1.5)}cqi`) +
+      STYLESHEET.slice(close);
+    expectRefused(run(apart, { stylesheet: widened }), 'anchors."quebec-city" at (658, 476) and anchors."winnipeg" at');
+  });
+
+  it('fails rather than skipping when there is no inset and the pin size cannot be read', () => {
+    expectRefused(
+      run(
+        (doc) => {
+          delete doc.insets;
+        },
+        { stylesheet: null },
+      ),
+      'no two pins against each other (§3.4)',
+    );
   });
 });

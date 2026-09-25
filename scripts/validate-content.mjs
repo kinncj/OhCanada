@@ -20,8 +20,9 @@
  *    against the schema it declares, then cross-checks what no schema can say:
  *    that it describes the drawing beside it, that it anchors every place
  *    game.config.json#/journey names and nothing else, that every coordinate
- *    lands inside the viewBox and the inset it claims, and that its insets keep
- *    apart (ADR-0069 §3.1-3.3; scripts/lib/screen-art.mjs). UI code places
+ *    lands inside the viewBox and the inset it claims, that its insets keep
+ *    apart (ADR-0069 §3.1-3.3), and that no two pins drawn in one frame are
+ *    closer than one pin diameter (§3.4; scripts/lib/screen-art.mjs). UI code places
  *    markers at those coordinates without looking at the map, so they are checked
  *    here rather than trusted there. The directory's other rules - flat, SVG or
  *    sidecar only, not empty - belong to `make assets`, which owns the source tree.
@@ -859,12 +860,32 @@ const insetClause =
         : `${measuredInsets.mainPins} main-map pin(s) at least ${measuredInsets.minClearance} unit(s) from ` +
           `every frame against a pin radius of ${measuredInsets.pinRadius}`);
 
+/**
+ * §3.4's measurement, frame by frame: the closest pair and how far apart. A
+ * frame with one pin says so in words; it has no pair, and "at least N apart"
+ * over no pair would be a count of nothing (ADR-0024).
+ */
+const measuredSeparation = sidecarCheck.separation;
+const separationClause =
+  measuredSeparation.pinDiameter === null
+    ? 'pin separation not measured'
+    : `pin separation (ADR-0069 §3.4) against a pin diameter of ${measuredSeparation.pinDiameter.toFixed(1)}: ` +
+      measuredSeparation.frames
+        .map(({ frame, pins, closest }) =>
+          closest === null
+            ? `${frame} ${pins} pin(s), no pair to keep apart`
+            : `${frame} ${pins} pin(s) at least ${closest.distance.toFixed(1)} unit(s) apart ` +
+              `(${closest.a} - ${closest.b})`,
+        )
+        .join('; ');
+
 const screenArtClause = !screenArt.exists
   ? 'no screen art under assets/src/svg/screens/, so no sidecar to check'
   : sidecarCheck.checked === 0
     ? 'no screen-art sidecar to check'
     : `${sidecarCheck.checked} screen-art sidecar(s) cross-checked: ${sidecarCheck.anchors} anchor(s) ` +
       `against ${journeyPlaces?.length ?? 0} journey place(s) and the drawing's viewBox, ${insetClause}, ` +
+      `${separationClause}, ` +
       `${sidecarCheck.regions} region id(s) found in the drawing`;
 
 console.log(

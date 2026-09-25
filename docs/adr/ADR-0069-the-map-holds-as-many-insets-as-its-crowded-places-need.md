@@ -254,10 +254,29 @@ coordinates art publishes in `assets/style/map-canada.md` §6, and art reviews t
   frame's place (it would hide all of it); the Labrador Sea hides open sea only, and the loupe washes eastern
   Québec under Québec City's pin, which the page draws above it (art sheet §7.1).
 
-- **OBLIGATION due=2027-01-06 owner=infra** — §6 commit 3. Add pin separation (§3.4), reading the pin fraction
+- ~~**OBLIGATION due=2027-01-06 owner=infra** — §6 commit 3. Add pin separation (§3.4), reading the pin fraction
   from its one home. It must be seen to fail on the pre-inset anchors (Ottawa–Toronto 44.4) and pass after
   commit 2. If no single home is possible, record that here and in `docs/architecture.md` as review-only. Do
-  not write a second literal.
+  not write a second literal.~~
+  **DISCHARGED 2026-09-25** — branch `pin-separation`, in the commit that strikes this marker.
+  `scripts/lib/screen-art.mjs` checks every frame: the main map's pins (the stops in no inset) and each
+  inset's own anchors, pair by pair, and refuses a pair closer than one pin diameter, naming both stops,
+  their points, the frame, the distance and the diameter. Exactly one diameter passes ("at least"). **The
+  fraction's one home is the `.tn-map .tn-map__stop .tn-journey__pin` rule of `app/ui/screen-styles.ts`**,
+  the last `cqi` `inline-size` in it, which is the declaration the browser applies. The gate reads it for
+  every sidecar, inset or none, and fails rather than skips when it cannot. A shared constant module was
+  refused because the stylesheet would then interpolate it, and the number would live in a second file.
+  Nothing in `scripts/` or `tests/` writes 4.2. So this rule is gated, not review-only, and
+  `docs/architecture.md` needs no entry. Measured on the shipped tree against a diameter of 45.4, as
+  `make validate-content` now reports it: main map, 6 pins, closest 74.6 (Winnipeg–Prairie Rail);
+  `insets[0]`, 54.0 (Halifax–Peggy's Cove); `insets[1]`, 133.1 (Ottawa–Toronto).
+  `tests/unit/infra/screen-art-gate.test.ts` fails the pre-inset anchors (the corridor inset removed:
+  Ottawa–Toronto "44.4 unit(s) apart on the main map"). It also fails two main-map pins and two inset pins
+  one unit inside the diameter, fails a pair that the shipped pin passes once the stylesheet draws the pin
+  wider, and at the boundary passes a pair exactly one diameter apart and fails it 0.1 closer. Each new case
+  fails on at least one of seven deliberately broken implementations. One thing stays with review: the rule
+  also states the pin's `block-size`, which the gate does not read. A pin whose two sizes differed would not
+  be round, and §3.4 measures a round pin.
 
 - ~~**OBLIGATION due=2026-12-23 owner=infra** — fix the boundary defect in §6. A level document and its map
   anchor must be landable by their own owners in their own commits. Key `screen-art.mjs`'s one-anchor rule on

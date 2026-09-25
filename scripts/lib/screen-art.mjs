@@ -259,6 +259,13 @@ const pointRectGap = (p, r) =>
 const rectGap = (a, b) =>
   Math.max(0, b.x - (a.x + a.width), a.x - (b.x + b.width), b.y - (a.y + a.height), a.y - (b.y + b.height));
 const round = (n) => Math.round(n * 10) / 10;
+/**
+ * Pin separation passes at exactly one diameter (§3.4 says "at least"). The
+ * distance and the diameter are both computed in floating point from numbers
+ * stated to 0.1 units, so a pair placed at exactly the diameter can come out a
+ * few ulps short; this absorbs that and nothing a drawing could show.
+ */
+const SEPARATION_SLACK = 1e-9;
 const fmtPoint = (p) => `(${p.x}, ${p.y})`;
 const fmtRect = (r) => `(${r.x}, ${r.y}, ${r.width} x ${r.height})`;
 
@@ -273,9 +280,20 @@ const PIN_RULE = '.tn-map .tn-map__stop .tn-journey__pin';
  * The pin is sized in `cqi` of the map, whose inline size is the drawing's, so
  * `inline-size: Ncqi` is N % of the viewBox width. The last `cqi` inline-size in
  * the rule wins, as it does in the browser (the `rem` one before it is the
- * fallback for an engine without container units). ADR-0069 §3.4: the fraction
- * has one home and the gate reads it; it is never restated here. Where that
- * home finally lives is §6 commit 3's to decide; until then it is this rule.
+ * fallback for an engine without container units).
+ *
+ * THIS RULE IS THE FRACTION'S ONE HOME (ADR-0069 §3.4, settled in §6 commit 3).
+ * The number is read by two runtimes: the browser, which draws the pin from
+ * this stylesheet, and this Node script, which measures frames and pairs of
+ * pins against it. A shared constant module would need `screen-styles.ts` to
+ * interpolate it into its CSS text, which moves the one home into a second file
+ * and leaves the stylesheet without the number a reader of it expects to see.
+ * Reading the declaration the browser itself applies keeps one literal, in the
+ * place it takes effect, and a pin resized there resizes every check here
+ * (tests/unit/infra/screen-art-gate.test.ts shows a wider pin turning a passing
+ * sidecar red). The fraction is never restated in this file or its tests.
+ * When the rule or its `cqi` inline-size cannot be found, the gate fails; it
+ * never falls back to a number of its own.
  */
 export function readPinFraction(root) {
   const where = `${PIN_STYLESHEET} rule "${PIN_RULE}"`;
@@ -285,7 +303,7 @@ export function readPinFraction(root) {
   } catch (error) {
     return (
       `the map pin's size could not be read from ${PIN_STYLESHEET} (${error.message}), so no frame can ` +
-      'be checked against a main-map pin (ADR-0069 §3.3).'
+      'be checked against a main-map pin (ADR-0069 §3.3) and no two pins against each other (§3.4).'
     );
   }
   const at = text.indexOf(`${PIN_RULE} {`);
@@ -296,7 +314,7 @@ export function readPinFraction(root) {
   if (last === undefined || !(last > 0)) {
     return (
       `no "inline-size: <n>cqi" in the ${where}, so the pin's size is unknown and no frame can be ` +
-      'checked against a main-map pin (ADR-0069 §3.3).'
+      'checked against a main-map pin (ADR-0069 §3.3) and no two pins against each other (§3.4).'
     );
   }
   return last / 100;
@@ -323,10 +341,14 @@ export function readPinFraction(root) {
  *      within a frame's rectangle grown by one pin radius. The pin's size is
  *      read from the stylesheet that draws it (`readPinFraction`), never
  *      restated here;
- *   7. every region id listed is an `id` in the drawing.
+ *   7. pin separation (ADR-0069 §3.4), for every frame: any two pins drawn in
+ *      the same frame are at least one pin diameter apart. The main map's pins
+ *      are the stops in no inset; an inset's pins are its own anchors. The
+ *      diameter is the same stylesheet fraction times the viewBox width;
+ *   8. every region id listed is an `id` in the drawing.
  *
- * The result's `insets` carries what the cross-inset checks measured, so the
- * summary line can say it, and can say in words when there was no inset to
+ * The result's `insets` carries what the cross-inset checks measured, and its
+ * `separation` the closest pair in every frame, so the summary line can say it, and can say in words when there was no inset to
  * measure rather than count a pass over none (ADR-0024).
  *
  * `sidecars` are `{ rel, file, svg, doc }` whose `doc` has ALREADY passed
@@ -355,6 +377,9 @@ export function checkScreenSidecars({ root, sidecars, places }) {
   let minFrameGap = Infinity;
   let minClearance = Infinity;
   let pinRadius = null;
+  let pinDiameter = null;
+  /** One entry per frame drawn: `{ frame, pins, closest }`, `closest` null when it holds under two pins. */
+  const separation = [];
   /** The pin fraction, read once when an inset needs it; a string says why it could not be. */
   let pin;
   const measured = () => ({
@@ -367,15 +392,27 @@ export function checkScreenSidecars({ root, sidecars, places }) {
     minClearance: Number.isFinite(minClearance) ? round(minClearance) : null,
     pinRadius: pinRadius === null ? null : round(pinRadius),
   });
+  const measuredSeparation = () => ({
+    pinDiameter: pinDiameter === null ? null : round(pinDiameter),
+    frames: separation,
+  });
+  const result = (checked) => ({
+    failures,
+    anchors,
+    regions,
+    checked,
+    insets: measured(),
+    separation: measuredSeparation(),
+  });
 
-  if (sidecars.length === 0) return { failures, anchors, regions, checked: 0, insets: measured() };
+  if (sidecars.length === 0) return result(0);
 
   if (places === null) {
     failures.push(
       `${sidecars.map((s) => s.rel).join(', ')}: anchors are checked against the places ` +
         'content/game.config.json#/journey names, and that journey could not be read.',
     );
-    return { failures, anchors, regions, checked: 0, insets: measured() };
+    return result(0);
   }
   if (places.length === 0) {
     failures.push(
@@ -383,7 +420,7 @@ export function checkScreenSidecars({ root, sidecars, places }) {
         'content/game.config.json#/journey names and it names none. ANTI-VACUUM FLOOR (ADR-0024): ' +
         '"every anchor names a place" is vacuously true of no places.',
     );
-    return { failures, anchors, regions, checked: 0, insets: measured() };
+    return result(0);
   }
 
   for (const { rel, svg, doc } of sidecars) {
@@ -507,12 +544,16 @@ export function checkScreenSidecars({ root, sidecars, places }) {
         }
       }
     }
-    if (insets.length > 0) {
-      if (pin === undefined) pin = readPinFraction(root);
-      if (typeof pin === 'string') {
-        failures.push(`${rel}: ${pin}`);
-      } else {
-        const radius = (pin * box.width) / 2;
+    /* The pin is read for every sidecar with anchors, inset or none: §3.4
+       measures the main map's pins whether or not any frame is drawn. */
+    if (pin === undefined) pin = readPinFraction(root);
+    if (typeof pin === 'string') {
+      failures.push(`${rel}: ${pin}`);
+    } else {
+      const diameter = pin * box.width;
+      const radius = diameter / 2;
+      pinDiameter = diameter;
+      if (insets.length > 0) {
         pinRadius = radius;
         for (const [id, point] of Object.entries(doc.anchors)) {
           if (home.has(id)) continue;
@@ -530,6 +571,46 @@ export function checkScreenSidecars({ root, sidecars, places }) {
           });
         }
       }
+
+      /* ADR-0069 §3.4: any two pins drawn in one frame are at least one pin
+         diameter apart. */
+      const frames = [
+        {
+          frame: 'the main map',
+          pins: Object.entries(doc.anchors).filter(([id]) => !home.has(id)),
+          name: (id) => `anchors."${id}"`,
+        },
+        ...insets.map((inset, index) => ({
+          frame: `insets[${index}]`,
+          pins: Object.entries(inset.anchors),
+          name: (id) => `insets[${index}].anchors."${id}"`,
+        })),
+      ];
+      for (const { frame, pins, name } of frames) {
+        let closest = null;
+        for (let i = 0; i < pins.length; i += 1) {
+          for (let j = i + 1; j < pins.length; j += 1) {
+            const [a, p] = pins[i];
+            const [b, q] = pins[j];
+            const distance = Math.hypot(q.x - p.x, q.y - p.y);
+            if (closest === null || distance < closest.distance) closest = { a, b, distance };
+            if (distance < diameter - SEPARATION_SLACK) {
+              failures.push(
+                `${rel}: ${name(a)} at ${fmtPoint(p)} and ${name(b)} at ${fmtPoint(q)} are ${round(distance)} ` +
+                  `unit(s) apart on ${frame}, closer than one pin diameter (${round(diameter)}), so their pins ` +
+                  'overlap. Any two pins drawn in the same frame are at least one pin diameter apart ' +
+                  '(ADR-0069 §3.4). Enlarge them in an inset rather than nudge an anchor, which is a claim ' +
+                  'about where a place is.',
+              );
+            }
+          }
+        }
+        separation.push({
+          frame,
+          pins: pins.length,
+          closest: closest === null ? null : { a: closest.a, b: closest.b, distance: round(closest.distance) },
+        });
+      }
     }
 
     if (svgText !== null && Array.isArray(doc.provincesAndTerritories)) {
@@ -543,5 +624,5 @@ export function checkScreenSidecars({ root, sidecars, places }) {
     }
   }
 
-  return { failures, anchors, regions, checked: sidecars.length, insets: measured() };
+  return result(sidecars.length);
 }
