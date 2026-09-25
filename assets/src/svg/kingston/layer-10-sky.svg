@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="960" viewBox="0 0 1080 960" shape-rendering="geometricPrecision">
+  <title>A clear summer afternoon over Lake Ontario: a flat sky-base field with four soft cumulus banks, stepping to sky-light in the last 50 rows. The one band step is at world y 910, behind the opaque water of layer-30-harbour (from world 900), which is the layer kept beside this one at every tier including low, so no hard step can show against open sky. Row 0 is sky-base, the level theme sky, for the top-band seam. World y 0..960; every cloud is inside x 120..960 so the extreme columns stay flat band colour for the desktop side panel. Every colour is from palette.json.</title>
+  <rect x="0" y="0" width="1080" height="910" fill="#3d8ccb"/>
+  <rect x="0" y="910" width="1080" height="50" fill="#a5d6ee"/>
+  <ellipse cx="300" cy="242" rx="170" ry="30" fill="#dce9f3"/>
+  <ellipse cx="234" cy="226" rx="100" ry="33" fill="#fbfdfe"/>
+  <ellipse cx="366" cy="230" rx="92" ry="28" fill="#fbfdfe"/>
+  <ellipse cx="300" cy="212" rx="112" ry="36" fill="#fbfdfe"/>
+  <ellipse cx="760" cy="157.6" rx="136" ry="24" fill="#dce9f3"/>
+  <ellipse cx="707.2" cy="144.8" rx="80" ry="26.4" fill="#fbfdfe"/>
+  <ellipse cx="812.8" cy="148" rx="73.6" ry="22.4" fill="#fbfdfe"/>
+  <ellipse cx="760" cy="133.6" rx="89.6" ry="28.8" fill="#fbfdfe"/>
+  <ellipse cx="560" cy="449.8" rx="153" ry="27" fill="#dce9f3"/>
+  <ellipse cx="500.6" cy="435.4" rx="90" ry="29.7" fill="#fbfdfe"/>
+  <ellipse cx="619.4" cy="439" rx="82.8" ry="25.2" fill="#fbfdfe"/>
+  <ellipse cx="560" cy="422.8" rx="100.8" ry="32.4" fill="#fbfdfe"/>
+  <ellipse cx="250" cy="656.5" rx="127.5" ry="22.5" fill="#dce9f3"/>
+  <ellipse cx="200.5" cy="644.5" rx="75" ry="24.8" fill="#fbfdfe"/>
+  <ellipse cx="299.5" cy="647.5" rx="69" ry="21" fill="#fbfdfe"/>
+  <ellipse cx="250" cy="634" rx="84" ry="27" fill="#fbfdfe"/>
+</svg>

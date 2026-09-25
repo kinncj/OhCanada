@@ -2979,6 +2979,213 @@
       "licence": "OFL-1.1",
       "source": "https://github.com/antijingoist/opendyslexic/blob/1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7/compiled/OpenDyslexic-Bold.woff2",
       "modifications": "None: byte-identical to the upstream file (sha256 b534a0b84ef3cca941ebdb506ce3f4e0010aa4ef881271bac8b6959dbf694fbf). Shipped unmodified per ADR-0071; the licence text is OFL.txt beside it."
+    },
+    {
+      "path": "refs/kingston/fort-henry-casemates-2010.jpg",
+      "kind": "reference",
+      "title": "Fort Henry, Kingston - the casemate range on the parade, square on, overcast, 21 August 2010",
+      "author": "A J Butler",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fort_Henry_North_Wall_-_panoramio.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/fort-henry-rampart-and-parapet-2010.jpg",
+      "kind": "reference",
+      "title": "Fort Henry, Kingston - the rampart's coping, railing and flagstaff from below, 21 August 2010",
+      "author": "A J Butler",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fort_Henry,_Kingston_-_panoramio.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/fort-henry-ditch-and-branch-tower-2021.jpg",
+      "kind": "reference",
+      "title": "Fort Henry, Kingston - the dry ditch, its limestone walls and a branch tower, with the harbour behind, 27 August 2021",
+      "author": "Thomas Quine",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Fort_Henry,_Kingston_Ontario_(52167941744).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/fort-henry-parade-and-casemates-1908.jpg",
+      "kind": "reference",
+      "title": "Fort Henry, Kingston - the parade and the casemate range, 1908-1912 (Marsden Kemp fonds, Archives of Ontario, I0003975)",
+      "author": "Marsden Kemp (Archives of Ontario)",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Fort_Henry,_Kingston_(I0003975).tif",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/city-hall-harbour-front-2017.jpg",
+      "kind": "reference",
+      "title": "Kingston City Hall - the harbour front from Confederation Park, portico and dome, 15 September 2017",
+      "author": "Mark",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_City_Hall_-_Ontario_(38755261015).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/city-hall-ontario-street-side-2017.jpg",
+      "kind": "reference",
+      "title": "Kingston City Hall - the end pavilion and flank on Ontario Street, 15 September 2017",
+      "author": "Mark",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_City_Hall_-_Ontario_(38971136994).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/city-hall-dome-and-clocks-2011.jpg",
+      "kind": "reference",
+      "title": "Kingston City Hall - the drum, the dome and its clock faces, close up, 1 August 2011",
+      "author": "Daniel Hu",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_City_Hall_-_panoramio.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/kingston-harbour-from-fort-henry-2011.jpg",
+      "kind": "reference",
+      "title": "Kingston harbour from Fort Henry - the limestone waterfront, City Hall's dome and the open lake, 1 August 2011",
+      "author": "Daniel Hu",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_Harbour_from_Fort_Henry_-_panoramio.jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/kingston-mills-upper-gate-2010.jpg",
+      "kind": "reference",
+      "title": "Kingston Mills locks - a drained chamber and its upper gates, walkway, steps and lockstation houses, 17 January 2010",
+      "author": "John Marino (runJMrun)",
+      "licence": "CC0-1.0",
+      "source": "https://www.flickr.com/photos/41024343@N00/4298762028",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/kingston-mills-railway-bridge-and-locks-1900s.jpg",
+      "kind": "reference",
+      "title": "Railway bridge and locks at Kingston Mills, 1898-1920 (Marsden Kemp fonds, Archives of Ontario, I0013085)",
+      "author": "Marsden Kemp (Archives of Ontario)",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Railway_bridge_and_locks_at_Kingston_Mills_(I0013085).tif",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/kingston-mills-lock-and-basin-1900s.jpg",
+      "kind": "reference",
+      "title": "Kingston Mills, view of a lock and its basin, 1898-1920 (Marsden Kemp fonds, Archives of Ontario, I0013087)",
+      "author": "Marsden Kemp (Archives of Ontario)",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_Mills,_view_of_lock_(I0013087).tif",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/rmc-mackenzie-building-elevation-2007.jpg",
+      "kind": "reference",
+      "title": "Royal Military College of Canada - the Mackenzie Building square on, at night, 3 May 2007",
+      "author": "Martin St-Amant (S23678)",
+      "licence": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:RMC_Mackenzie_building_2.JPG",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/rmc-mackenzie-building-daylight-2008.jpg",
+      "kind": "reference",
+      "title": "Royal Military College of Canada - the Mackenzie Building's tower and pavilion roofs in daylight, August 2008",
+      "author": "k_hargrav",
+      "licence": "CC-BY-2.0",
+      "source": "https://www.flickr.com/photos/86391402@N00/2766033517",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "refs/kingston/lake-ontario-to-wolfe-island-2012.jpg",
+      "kind": "reference",
+      "title": "Lake Ontario from Kingston to the island shore and its wind turbines, 21 August 2012",
+      "author": "kezee",
+      "licence": "CC-BY-2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Kingston_(7925724454).jpg",
+      "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
+    },
+    {
+      "path": "src/svg/kingston/layer-10-sky.svg",
+      "kind": "shipped",
+      "title": "Kingston sky - a level 5 parallax layer",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/layer-10-sky.svg",
+      "modifications": "Original work under the rules in assets/style/art-bible.md. A summer sky over the lake; no reference is traced."
+    },
+    {
+      "path": "src/svg/kingston/layer-20-farshore.svg",
+      "kind": "shipped",
+      "title": "Kingston far shore - a level 5 parallax layer",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/layer-20-farshore.svg",
+      "modifications": "Original work. The low island shore and its wind turbines drawn as types from assets/refs/kingston/lake-ontario-to-wolfe-island-2012.jpg under the rules in assets/style/art-bible.md; never traced."
+    },
+    {
+      "path": "src/svg/kingston/layer-30-harbour.svg",
+      "kind": "shipped",
+      "title": "Kingston harbour - a level 5 parallax layer",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/layer-30-harbour.svg",
+      "modifications": "Original work. Open water and three generic sloops, from assets/refs/kingston/kingston-harbour-from-fort-henry-2011.jpg under the rules in assets/style/art-bible.md; never traced. No name, number or livery on any boat."
+    },
+    {
+      "path": "src/svg/kingston/layer-40-promenade.svg",
+      "kind": "shipped",
+      "title": "Kingston lakeshore promenade - a level 5 parallax layer",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/layer-40-promenade.svg",
+      "modifications": "Original work. A limestone parapet, trees, lamps and benches as types, under the rules in assets/style/art-bible.md; never traced. No building, sign or figure."
+    },
+    {
+      "path": "src/svg/kingston/ground-lakeshore-paving@1x.svg",
+      "kind": "shipped",
+      "title": "Kingston lakeshore paving - a level 5 ground dressing strip (ADR-0042)",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/ground-lakeshore-paving@1x.svg",
+      "modifications": "Original work under the rules in assets/style/art-bible.md. Limestone paving flags, a kerb and a grass strip; no reference is traced. The @1x suffix pins it to one scale."
+    },
+    {
+      "path": "src/svg/kingston/prop-fort-henry@1x.svg",
+      "kind": "shipped",
+      "title": "Fort Henry - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-fort-henry@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/kingston/fort-henry-casemates-2010.jpg, checked against fort-henry-parade-and-casemates-1908.jpg, with the stone tone from fort-henry-ditch-and-branch-tower-2021.jpg, under the rules in assets/style/art-bible.md; never traced. No figure, flag, plaque or crest. The @1x suffix pins the source to one scale; the key kingston-prop-fort-henry carries no suffix. The art-bible section 5 two-size test was run at the shipping size of 760 x 290: every mustBeRight feature survives at 25 %; the 120 px silhouette keeps the guns and chimney stacks on a long rampart but not the arches (assets/style/kingston-level.md section 6)."
+    },
+    {
+      "path": "src/svg/kingston/prop-kingston-city-hall@1x.svg",
+      "kind": "shipped",
+      "title": "Kingston City Hall - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-kingston-city-hall@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/kingston/city-hall-harbour-front-2017.jpg to its measured proportions, with the dome from city-hall-dome-and-clocks-2011.jpg and the end pavilion from city-hall-ontario-street-side-2017.jpg, under the rules in assets/style/art-bible.md; never traced. No statue, figure, flag, crest or lettering; the weathervane is simplified away. The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 560 and passed at both probes."
+    },
+    {
+      "path": "src/svg/kingston/prop-kingston-mills@1x.svg",
+      "kind": "shipped",
+      "title": "The Kingston Mills locks - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-kingston-mills@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/kingston/kingston-mills-upper-gate-2010.jpg, checked against kingston-mills-railway-bridge-and-locks-1900s.jpg and kingston-mills-lock-and-basin-1900s.jpg, under the rules in assets/style/art-bible.md; never traced. Drawn in summer with water in the chamber; no figure, boat, sign or number. The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 720 x 520: every mustBeRight feature survives at 25 %; the 120 px silhouette does NOT identify a lock, which is mostly negative space, as canal-lock records for Ottawa (assets/style/kingston-level.md section 6)."
+    },
+    {
+      "path": "src/svg/kingston/prop-royal-military-college@1x.svg",
+      "kind": "shipped",
+      "title": "The Royal Military College of Canada, the Mackenzie Building - a level 5 point-of-interest hero",
+      "author": "TrueNorth contributors",
+      "licence": "CC-BY-4.0",
+      "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-royal-military-college@1x.svg",
+      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings only: no cadet, crest, badge, flag or lettering. The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540 and passed at both probes."
     }
   ]
 }
