@@ -40,9 +40,9 @@
     "quote": "Due to the work of Thérèse Casgrain and others, Quebec granted women the vote in 1940."
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5-5",
-    "checkedAt": "2026-09-25T19:58:42Z",
+    "checkedAt": "2026-09-25T20:02:27Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Due to the work of Thérèse Casgrain and others, Quebec granted women the vote in 1940."
   }

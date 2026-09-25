@@ -40,9 +40,9 @@
     "quote": "Ottawa interned over 8,000 former Austro-Hungarian subjects, mainly Ukrainian men, as “enemy aliens” in 24 labour camps across Canada"
   },
   "verification": {
-    "status": "rejected",
+    "status": "verified",
     "model": "claude-opus-5-5",
-    "checkedAt": "2026-09-25T19:58:42Z",
+    "checkedAt": "2026-09-25T20:02:27Z",
     "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
     "evidence": "Regrettably, from 1914 to 1920, Ottawa interned over 8,000 former Austro-Hungarian subjects, mainly Ukrainian men, as “enemy aliens” in 24 labour camps across Canada, even though Britain advised against the policy. … Regrettably, the state of war and public opinion in B.C. led to the forcible relocation of Canadians of Japanese origin by the federal government and the sale of their property without compensation."
   }
