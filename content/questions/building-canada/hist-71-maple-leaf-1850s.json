@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-71-maple-leaf-1850s",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "When did Canada's soldiers begin using the maple leaf?",
+    "fr": "Quand les soldats du Canada ont-ils commencé à utiliser la feuille d'érable?"
+  },
+  "options": [
+    {
+      "en": "In the 1850s, before Confederation.",
+      "fr": "Dans les années 1850, avant la Confédération."
+    },
+    {
+      "en": "In 1867, the year of Confederation.",
+      "fr": "En 1867, année de la Confédération."
+    },
+    {
+      "en": "In 1917, at the Battle of Vimy Ridge.",
+      "fr": "En 1917, à la bataille de la crête de Vimy."
+    },
+    {
+      "en": "In 1965, when the new flag was raised.",
+      "fr": "En 1965, lorsque le nouveau drapeau a été hissé."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Soldiers here were already wearing the maple leaf in the 1850s, a century before it reached the national flag. Troops in the First World War carried it on their cap badges.",
+    "fr": "Les soldats d'ici portaient déjà la feuille d'érable dans les années 1850, un siècle avant qu'elle n'arrive sur le drapeau national. Les militaires de la Première Guerre mondiale l'avaient sur leur insigne de casquette."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 39,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "Canada’s soldiers began using the maple leaf in the 1850s."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-82-bank-of-canada-1934",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "Why was the Bank of Canada created in 1934?",
+    "fr": "Pourquoi la Banque du Canada a-t-elle été créée en 1934?"
+  },
+  "options": [
+    {
+      "en": "To act as a central bank managing the money supply and bringing stability to the financial system.",
+      "fr": "Pour servir de banque centrale, gérer la masse monétaire et stabiliser le système financier."
+    },
+    {
+      "en": "To lend money directly to farmers in Western Canada, who were hit hardest by low grain prices and drought.",
+      "fr": "Pour prêter directement de l'argent aux agriculteurs de l'Ouest canadien, les plus durement touchés par les bas prix du grain et la sécheresse."
+    },
+    {
+      "en": "To run the stock market, whose crash in 1929 led to the Great Depression.",
+      "fr": "Pour diriger la Bourse, dont le krach de 1929 a mené à la Grande Dépression."
+    },
+    {
+      "en": "To collect federal taxes and pay for unemployment insurance, introduced in 1940.",
+      "fr": "Pour percevoir les impôts fédéraux et financer l'assurance-chômage, créée en 1940."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Parliament set up the Bank of Canada in 1934, after the crash of 1929, so that one central institution would look after how much money is in circulation and keep the financial system steady.",
+    "fr": "Le Parlement a créé la Banque du Canada en 1934, après le krach de 1929, pour qu'une seule institution centrale veille à la quantité d'argent en circulation et maintienne la stabilité du système financier."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 42,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "The Bank of Canada, a central bank to manage the money supply and bring stability to the financial system, was created in 1934."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

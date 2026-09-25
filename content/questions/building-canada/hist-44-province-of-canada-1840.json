@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-44-province-of-canada-1840",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "In what year were Upper and Lower Canada united as the Province of Canada?",
+    "fr": "En quelle année le Haut-Canada et le Bas-Canada ont-ils été unis pour former la province du Canada?"
+  },
+  "options": [
+    {
+      "en": "1840.",
+      "fr": "En 1840."
+    },
+    {
+      "en": "1791.",
+      "fr": "En 1791."
+    },
+    {
+      "en": "1867.",
+      "fr": "En 1867."
+    },
+    {
+      "en": "1812.",
+      "fr": "En 1812."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "The two Canadas were joined into one Province of Canada in 1840. Reformers — La Fontaine and Robert Baldwin here, Joseph Howe in Nova Scotia — then pressed the British governors for responsible government.",
+    "fr": "Les deux Canadas ont été réunis en une seule province du Canada en 1840. Des réformistes — La Fontaine et Robert Baldwin ici, Joseph Howe en Nouvelle-Écosse — ont ensuite fait pression sur les gouverneurs britanniques pour obtenir le gouvernement responsable."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 32,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "In 1840, Upper and Lower Canada were united as the Province of Canada."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}

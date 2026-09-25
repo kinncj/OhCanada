@@ -1,0 +1,49 @@
+{
+  "$schema": "../../schemas/question.schema.json",
+  "id": "hist-56-red-river-not-consulted",
+  "subject": "building-canada",
+  "prompt": {
+    "en": "What happened when Canada took over the northwest region from the Hudson's Bay Company in 1869?",
+    "fr": "Que s'est-il passé lorsque le Canada a pris possession de la région du Nord-Ouest de la Compagnie de la Baie d'Hudson en 1869?"
+  },
+  "options": [
+    {
+      "en": "The 12,000 Métis of the Red River were not consulted, and Louis Riel led an armed uprising that seized Fort Garry.",
+      "fr": "Les 12 000 Métis de la rivière Rouge n'ont pas été consultés, et Louis Riel a mené un soulèvement armé qui s'est emparé de Fort Garry."
+    },
+    {
+      "en": "A treaty was signed with the Métis of the Red River first.",
+      "fr": "Un traité a d'abord été signé avec les Métis de la rivière Rouge."
+    },
+    {
+      "en": "The vast northwest region was left under Hudson's Bay Company rule for another twenty years, with no uprising at Fort Garry.",
+      "fr": "La vaste région du Nord-Ouest est restée sous l'autorité de la Compagnie de la Baie d'Hudson pendant vingt autres années, sans aucun soulèvement à Fort Garry."
+    },
+    {
+      "en": "The region was immediately made a province.",
+      "fr": "La région est immédiatement devenue une province."
+    }
+  ],
+  "correctIndex": 0,
+  "explanation": {
+    "en": "Canada took the region over without asking the 12,000 Métis who lived along the Red River. Louis Riel answered by taking up arms and capturing Fort Garry, the capital of the territory.",
+    "fr": "Le Canada a pris la région sans consulter les 12 000 Métis qui vivaient le long de la rivière Rouge. Louis Riel a répondu en prenant les armes et en s'emparant de Fort Garry, la capitale du territoire."
+  },
+  "source": {
+    "sourceId": "discover-canada",
+    "chapter": "Canada's History",
+    "page": 35,
+    "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+    "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+    "asOf": "2026-09-08T00:00:00Z",
+    "volatile": false,
+    "quote": "the 12,000 Métis of the Red River were not consulted. In response, Louis Riel led an armed uprising and seized Fort Garry, the territorial capital."
+  },
+  "verification": {
+    "status": "unverified",
+    "model": "",
+    "checkedAt": null,
+    "sourceHash": "",
+    "evidence": ""
+  }
+}
