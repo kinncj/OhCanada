@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "vancouver",
   "subject": "symbols",
-  "order": 9,
+  "order": 10,
   "title": {
     "en": "Vancouver",
     "fr": "Vancouver"

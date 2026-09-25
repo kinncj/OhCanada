@@ -1,4 +1,4 @@
-# TN-PASSPORT — My passport: ten stamps, and how much is left
+# TN-PASSPORT — My passport: a stamp for every place on the journey, and how much is left
 
 **Intent.** A player can see everything they have earned in one place, understand at a glance how much of the
 journey is left, and never be told that a level nobody has built yet is something they failed to unlock.
@@ -15,6 +15,16 @@ because it is about what a *build* contains; **the key table below no longer nam
 levels 2 and 10 have ids and their copy rows are keyed on them (`TN-LEVELS`); and **"More are coming." is now
 a false sentence on a complete map**, which is `OQ-PASSPORT-7` and is the first thing in this directory that
 the map filling up broke rather than fixed.
+
+**Amended 2026-09-25 (K-0.9b) — the number of slots is the journey's length, and it becomes eleven when
+Kingston lands.** Kingston takes journey slot 5, between Ottawa and Toronto (ADR-0068 §9). The passport
+draws one slot per place the journey names, and `map.stamps` counts out of that same length
+(`journeyPlaces` in `app/bootstrap/journey.ts`). No screen or copy string holds the number. So the scenarios
+below state their premise, which is that the journey names eleven places, and say "of 11" where they used to
+say "of 10". Until the Kingston landing PR merges, the shipped passport draws ten slots and "of 10", under the
+same rules. **One scenario was also corrected in passing.** `TN-PASSPORT-11` said the French screen shows
+« Niveaux prêts : 10 sur 10 ». Since ADR-0039 that count is drawn only while `ready` is less than `total`, as
+`TN-PASSPORT-01` already said in English.
 
 Read `README.md` in this directory first. `TN-MAP-level-select.md` owns the rule that decides what state a
 level is in and this file reuses it rather than inventing a second vocabulary;
@@ -46,12 +56,12 @@ The rule, in order:
 which is true, and the map is where locks are explained. A fourth word here would be a fourth thing to
 translate and a fourth thing to get wrong.
 
-**The third state is unreachable in today's build and stays in this file.** Ten documents exist, so no slot
-draws "Not made yet" on the shipped game. The state is about what a build contains — a partial checkout, a
-level pulled for a cultural-accuracy report (`docs/content-review.md` §7, which says the depiction is
-disabled *first*), a branch mid-migration — and every one of those is a state a player could meet.
-`TN-PASSPORT-04` keeps its scenarios and says its own premise out loud rather than relying on the shipped
-config to supply it.
+**The third state is unreachable in today's build and stays in this file.** Every place the journey names
+has a document, so no slot draws "Not made yet" on the shipped game. The state is about what a build
+contains — a partial checkout, a level pulled for a cultural-accuracy report (`docs/content-review.md` §7,
+which says the depiction is disabled *first*), a branch mid-migration — and every one of those is a state a
+player could meet. `TN-PASSPORT-04` keeps its scenarios and says its own premise out loud rather than relying
+on the shipped config to supply it.
 
 ## The word for a stamp in French — settled
 
@@ -76,8 +86,9 @@ grade 6 and it is not the word a newcomer will have met at a border. `OQ-PASSPOR
 reviewer may still prefer it.
 
 **This is a change to shipped copy.** `app/ui/copy.ts` carries the French strings above and is not this
-directory's to edit; the change is reported to the UI agent rather than made here. **Ten levels now depend on
-that word**, because every one of them owns a `stamp.<id>.earned` row that uses it (`TN-DONE`).
+directory's to edit; the change is reported to the UI agent rather than made here. **Every level on the
+journey now depends on that word**, because every one of them owns a `stamp.<id>.earned` row that uses it
+(`TN-DONE`). Kingston's row, « Vous avez obtenu le tampon de Kingston. », is in `TN-LEVEL-kingston.md`.
 
 ## Accessibility and bilingual coverage map
 
@@ -123,18 +134,21 @@ Keys this screen draws and does not own:
 |---|---|
 | `map.stamps`, `map.levelsReady`, `map.moreComing`, `map.state.notBuilt`, `map.notBuilt.help`, `map.number` | `TN-MAP-level-select.md` |
 | `level.ottawa.title` | `TN-LEVEL-ottawa.md` |
-| `level.<id>.title`, for the other nine | `TN-LEVELS-2-to-10-spine.md` |
+| `level.kingston.title` | `TN-LEVEL-kingston.md` |
+| `level.<id>.title`, for every other level | `TN-LEVELS-2-to-10-spine.md` |
 | `exam.result.passed.title`, `exam.result.notYet.title`, `exam.result.score`, `exam.result.noTimer`, `exam.result.withTimer` | `TN-RESULT-exam-results.md` |
 | `exam.open` | `TN-EXAM-starting-and-answering.md` |
 | `common.back`, `common.close` | `TN-FLOW-first-run-and-return.md`, `TN-SET-settings.md` |
 
-**That second row used to read `level.<id>.title`, `level.10.title`.** While level 10 had no id, its title was
-keyed on its position in the journey, and this table named the exception. Both of the levels that needed that
-exception shipped on 2026-09-13, so there is one spelling for all ten and **no key on this screen contains a
-level's number** — `TN-WAIT-03` and `TN-DONE-05` now refuse a numbered key outright. `map.number` is not a
-counter-example: it is the string "Level {{n}}", which *displays* a position and is not keyed on one.
+**The `TN-LEVELS` row used to read `level.<id>.title`, `level.10.title`.** While level 10 had no id, its
+title was keyed on its position in the journey, and this table named the exception. Both of the levels that
+needed that exception shipped on 2026-09-13, so there is one spelling for every level and **no key on this
+screen contains a level's number** — `TN-WAIT-03` and `TN-DONE-05` now refuse a numbered key outright.
+Kingston's insertion at slot 5 renumbers six levels and moves no key, which is why the rule exists.
+`map.number` is not a counter-example: it is the string "Level {{n}}", which *displays* a position and is not
+keyed on one.
 
-**`map.stamps` is the count on this screen too**, and that is deliberate: "Stamps: 3 of 10" is the same fact
+**`map.stamps` is the count on this screen too**, and that is deliberate: "Stamps: 3 of 11" is the same fact
 on the map and in the passport, and a second key would let the two disagree. Its shape — noun, number,
 preposition — is `TN-COPY`'s counting rule 1, so it needs no plural rows and cannot draw "1 stamps" in either
 language.
@@ -151,7 +165,8 @@ Feature: The passport screen
 
   Background:
     Given I have a saved game
-    And this build contains ten level documents
+    And the journey names eleven places, as it does once Kingston lands
+    And this build contains a level document for each of them
 
   Scenario: It is reachable from the level's menu
     Given the Ottawa level is playable
@@ -175,28 +190,35 @@ Feature: The passport screen
   Scenario: The screen says what it is and how it works
     Then it shows the heading "My passport"
     And it shows "You earn a stamp when you finish a level's task."
-    And it shows "Stamps: 0 of 10"
-    And it does not show "Levels ready: 10 of 10", because every level is made (ADR-0039)
+    And it shows "Stamps: 0 of 11"
+    And it does not show "Levels ready: 11 of 11", because every level is made (ADR-0039)
 
   Scenario: A complete map does not promise more
     Given every level in the journey has a document
     Then the screen does not show "More are coming."
     And it does not show any sentence promising a level that is not in the journey
     And the same is true of the level select, which draws the same key
-    And a build with fewer than ten documents does show it, as TN-PASSPORT-04 requires
+    And a build with fewer documents than the journey names does show it, as TN-PASSPORT-04 requires
 
-  Scenario: Ten slots, in the order the journey takes
-    Then ten stamp slots are shown
-    And they appear in reading order from level 1 to level 10
+  Scenario: One slot per place, in the order the journey takes
+    Then eleven stamp slots are shown, one for each place the journey names
+    And they appear in reading order from level 1 to level 11
     And the focus order is the same as the reading order
     And each slot shows "Level {{n}}" with its number
     And each slot reports "data-state" equal to "earned", "not-earned" or "not-built"
+
+  Scenario: The number of slots is the journey's length, not a number on the screen
+    Then the number of slots equals the number of places in "journey"
+    And the total in "Stamps" is that same number
+    Given a build whose journey names ten places, as before Kingston landed
+    Then ten slots are shown and the count reads "Stamps: 0 of 10"
+    And no copy string and no screen holds either number
 
   Scenario: One thumb, portrait, no sideways scroll
     Given the viewport is 390 x 844
     Then the page does not scroll sideways
     And every slot and control is at least 44 CSS px wide and tall
-    And reaching the tenth slot needs only a vertical scroll
+    And reaching the last slot needs only a vertical scroll
     And nothing needs a swipe, a drag, a pinch or a double tap
 
   Scenario: Leaving goes back where I came from
@@ -220,7 +242,8 @@ Feature: The passport screen
 ```gherkin
 Feature: An earned stamp
   Background:
-    Given I have earned the Ottawa stamp
+    Given the journey names eleven places
+    And I have earned the Ottawa stamp
     And the element "passport" is visible
 
   Scenario: It says it is earned, in words
@@ -235,34 +258,35 @@ Feature: An earned stamp
     And the picture is not the only way to know which level it is for
 
   Scenario: The count agrees with the slots
-    Then the screen shows "Stamps: 1 of 10"
+    Then the screen shows "Stamps: 1 of 11"
     And exactly one slot reports "data-state" equal to "earned"
 
   Scenario: A stamp is named after a place, not a building
     Then no stamp's label is the name of a landmark, a hotel or a business
     And no slot reads "Peggy's Point Lighthouse", "Canada Place" or "Yukon River sternwheeler"
+    And no slot reads "Fort Henry" or "Royal Military College"
     And the rule is the one in TN-NAMES-01
 
   Scenario: Every slot's label is the level's own title row
-    Then each of the ten slots draws "level.<id>.title" for its level
+    Then each of the eleven slots draws "level.<id>.title" for its level
     And none of them draws a key containing that level's number
     And a slot whose title row is missing draws no place name and no placeholder
 
   Scenario: The stamp survives a reload
     When I close the tab and open the game again and open the passport
     Then "stamp-ottawa" is still there and still reads "Earned"
-    And the count still reads "Stamps: 1 of 10"
+    And the count still reads "Stamps: 1 of 11"
 
   Scenario: A stamp cannot be earned twice
     Given I engage the officer again after finishing the quest
     Then the passport still contains exactly one Ottawa stamp
     And the count is unchanged
 
-  Scenario: The tenth stamp is not a different kind of event
-    Given I have earned nine stamps
-    When I earn the tenth
-    Then the screen shows "Stamps: 10 of 10"
-    And that slot reads "Earned" like the other nine
+  Scenario: The last stamp is not a different kind of event
+    Given I have earned ten stamps
+    When I earn the eleventh
+    Then the screen shows "Stamps: 11 of 11"
+    And that slot reads "Earned" like the other ten
     And no message congratulates me on finishing the game
     And nothing on the screen says there is nothing left to do
 ```
@@ -295,19 +319,21 @@ Feature: A level that exists and has not been finished
     And the level select is where that is explained, as TN-MAP-03 describes
 
   Scenario: A brand-new player sees an honest, empty passport
-    Given I have earned no stamps
+    Given the journey names eleven places
+    And I have earned no stamps
     Then the element "passport-empty" shows "No stamps yet"
     And it shows "Finish a level to earn your first stamp."
-    And the screen shows "Stamps: 0 of 10"
-    And no slot is missing from the ten
+    And the screen shows "Stamps: 0 of 11"
+    And no place on the journey is missing a slot
 ```
 
 ## TN-PASSPORT-04 — A level that is not made yet
 
-**The shipped build has no slot in this state**, because all ten level documents exist. These scenarios name
-their own premise rather than borrowing it from the config, and they stay, because a build with a level
-missing is a state a player can meet — a partial checkout, a branch mid-migration, or a level pulled after a
-cultural-accuracy report, which `docs/content-review.md` §7 requires to happen *before* the discussion.
+**The shipped build has no slot in this state**, because every place the journey names has a level
+document. These scenarios name their own premise rather than borrowing it from the config, and they stay,
+because a build with a level missing is a state a player can meet — a partial checkout, a branch
+mid-migration, or a level pulled after a cultural-accuracy report, which `docs/content-review.md` §7 requires
+to happen *before* the discussion.
 
 ```gherkin
 Feature: The same precedence the map uses
@@ -332,11 +358,12 @@ Feature: The same precedence the map uses
     And no message anywhere on the screen suggests something went wrong
 
   Scenario: A build with one level is a normal state of this game
-    Given exactly one level document exists
-    Then nine slots report "data-state" equal to "not-built"
-    And the screen shows "Levels ready: 1 of 10"
+    Given the journey names eleven places
+    And exactly one level document exists
+    Then ten slots report "data-state" equal to "not-built"
+    And the screen shows "Levels ready: 1 of 11"
     And the screen shows "More are coming."
-    And the stamp count still counts out of 10
+    And the stamp count still counts out of 11, the journey's length
 
   Scenario: A slot with no place name draws no placeholder
     Given a level in this build has no title row in the active language
@@ -377,8 +404,8 @@ Feature: The one place the map's precedence does not apply
   Scenario: A save with more stamps than there are levels
     Given the saved document records a stamp for an id the map does not name
     When I open the passport
-    Then ten slots are still shown
-    And the extra stamp is not drawn as an eleventh slot
+    Then one slot per place on the journey is still shown, and no more
+    And the extra stamp is not drawn as an extra slot
     And the count never exceeds the total
     And the content check has already reported the id, as TN-MAP-06 describes
 
@@ -387,17 +414,25 @@ Feature: The one place the map's precedence does not apply
     Then it is treated as the scenario above, not as a defect the player is told about
     And no screen asks the player to do anything about it
 
+  Scenario: A save written before Kingston landed
+    Given a save that has earned the Halifax to Toronto stamps on a journey of ten places
+    When Kingston lands and I open the passport
+    Then every one of those stamps is still shown as "Earned", in its new position
+    And the Kingston slot reads "Not earned yet"
+    And the count reads "Stamps: 5 of 11"
+    And no stamp is lost, and none is drawn as belonging to another level
+
   Scenario: The passport opens when there is nothing to show
     Given the save has no levels recorded at all
     When I open the passport
-    Then ten slots are shown, none of them earned
+    Then a slot is shown for every place on the journey, none of them earned
     And the empty state is shown
     And no error screen is shown
 
   Scenario: Storage cannot be read
     Given local storage cannot be read or written
     When I open the passport
-    Then ten slots are shown, none earned
+    Then a slot is shown for every place on the journey, none earned
     And "storage-warning" is visible
     And no message claims progress was lost
 ```
@@ -433,8 +468,9 @@ Feature: The one place an exam result is kept
     And nothing on the passport counts down towards losing it
 
   Scenario: An exam earns no stamp
-    Given I passed an exam and have earned no level stamps
-    Then the stamp count still reads "Stamps: 0 of 10"
+    Given the journey names eleven places
+    And I passed an exam and have earned no level stamps
+    Then the stamp count still reads "Stamps: 0 of 11"
     And no slot reports "data-state" equal to "earned"
 
   Scenario: The exam line is not shown where the exam cannot run
@@ -453,7 +489,7 @@ Feature: Keyboard-only passport
 
   Scenario: Every slot is reachable, whatever its state
     When I press "Tab" through the screen
-    Then focus reaches all ten slots, in level order
+    Then focus reaches every slot on the journey, in level order
     And a slot that is not earned and a slot that is not built both receive focus
     And each focused slot has a focus indicator that is not colour alone
 
@@ -506,7 +542,8 @@ Feature: Single-switch passport
 ```gherkin
 Feature: Announcing the passport
   Background:
-    Given the element "passport" is visible
+    Given the journey names eleven places
+    And the element "passport" is visible
 
   Scenario: The screen is named, inside a landmark
     Then "passport" has an accessible name that is not empty
@@ -514,9 +551,9 @@ Feature: Announcing the passport
     And any canvas on the page is "aria-hidden"
     And exactly one element on the page has an "aria-live" attribute
 
-  Scenario: The ten slots are a list, in journey order
-    Then the slots are exposed as a list of ten items
-    And their order in the accessibility tree is level 1 to level 10
+  Scenario: The slots are a list, in journey order
+    Then the slots are exposed as a list of eleven items, one for each place on the journey
+    And their order in the accessibility tree is level 1 to level 11
 
   Scenario: A slot's name carries its number, its place and its state
     Then the accessible name of the Ottawa slot contains "Level 4", "Ottawa" and "Earned"
@@ -527,7 +564,8 @@ Feature: Announcing the passport
   Scenario: A place name with an apostrophe or an accent is read as a place
     Then the second slot's name contains "Peggy's Cove" and is not spelled out
     And the third slot's name contains "Québec City", or "Ville de Québec" in French
-    And the tenth slot's name contains "The North", or "Le Nord" in French
+    And the fifth slot's name contains "Kingston", in both languages
+    And the last slot's name contains "The North", or "Le Nord" in French
 
   Scenario: A stamp picture is not read as a picture
     Then each stamp image is either "aria-hidden" with a text label beside it,
@@ -570,7 +608,7 @@ Feature: The passport honours the accessibility settings
     Then the page does not scroll sideways
     And every slot's number, place name and state word are fully visible
     And no label is truncated with an ellipsis
-    And all ten slots are reachable by scrolling down
+    And every slot on the journey is reachable by scrolling down
     And every control is still at least 44 CSS px wide and tall
 
   Scenario: The longest place name on a slot fits
@@ -599,13 +637,15 @@ Feature: The passport honours the accessibility settings
 Feature: The passport in French
   Background:
     Given the language is French
+    And the journey names eleven places, as it does once Kingston lands
+    And this build contains a level document for each of them
     And the element "passport" is visible
 
   Scenario: The screen is French
     Then the heading reads "Mon passeport"
     And it shows "Vous obtenez un tampon lorsque vous terminez la mission d'un niveau."
-    And it shows "Tampons : 0 sur 10"
-    And it shows "Niveaux prêts : 10 sur 10"
+    And it shows "Tampons : 0 sur 11"
+    And it does not show "Niveaux prêts : 11 sur 11", because every level is made (ADR-0039)
     And there is a space before each colon
     And no English word appears in "passport"
 
@@ -616,7 +656,7 @@ Feature: The passport in French
     And it shows "Terminez un niveau pour obtenir votre premier tampon."
 
   Scenario: The same word is used by the other two screens
-    Then the level select's stamp count reads "Tampons : 0 sur 10"
+    Then the level select's stamp count reads "Tampons : 0 sur 11"
     And the level select's locked sentence reads "Gagnez encore 1 tampon pour ouvrir ce niveau."
     And the quest completion card reads "Vous avez obtenu le tampon d'Ottawa."
     And no screen in the game uses "timbre" for a passport stamp
@@ -632,9 +672,10 @@ Feature: The passport in French
 
   Scenario: Place names are what each language calls the place
     Then level 4 reads "Ottawa" in both languages
+    And level 5 reads "Kingston" in both languages
     And level 3 reads "Ville de Québec" in French
     And level 2 reads "Peggy's Cove" in French, with the same apostrophe as the English
-    And level 10 reads "Le Nord" in French, with its own capitals, because a slot label is a title
+    And level 11, the last, reads "Le Nord" in French, with its own capitals, because a slot label is a title
     And every place name shown has a value in both "en" and "fr"
 
   Scenario: The exam line is French
@@ -679,7 +720,7 @@ Feature: The passport in French
   named places now, for a reason this question could not have anticipated — `TN-LEVELS`' blockers section
   separates a level's *subject* from its *place*, and a village and a river bank were never what §1 blocked.
   `OQ-EXAM-5` and `OQ-RESULT-2` describe the same gap from two other screens and both can be closed the same
-  way.
+  way. **Kingston makes it eleven** (ADR-0068 §9), and the passport counts to whatever the journey names.
 - **`OQ-PASSPORT-3` — is the passport reachable from the title screen?** It is not, today: the routes are the
   level's menu, the level select and the quest completion card, so a returning player has to open the map to
   see their stamps. `OQ-TITLE-2` says the title screen shows no progress, and this file agrees with it.
@@ -694,8 +735,9 @@ Feature: The passport in French
 - **`OQ-PASSPORT-5` — « tampon » or « cachet »?** Settled above as « tampon », and « cachet » is the
   considered alternative: it is what an official seal is called, it is a register above grade 6, and it is not
   the word a newcomer meets at a border. *Recommendation:* keep « tampon » and put both in front of the first
-  French reviewer. What must not come back is « timbre », which is a postage stamp in every register. **Ten
-  stamp sentences now use the word**, so a reversal is ten rows rather than one.
+  French reviewer. What must not come back is « timbre », which is a postage stamp in every register. **One
+  stamp sentence per level on the journey now uses the word**, eleven once Kingston lands, so a reversal
+  changes that many rows rather than one.
 - **`OQ-PASSPORT-6` — does the passport belong in the exam's menu too?** A player in the middle of an exam
   cannot reach it. *Recommendation:* no. The exam's menu carries Settings, the timer control and "Leave the
   exam" (`OQ-TIMER-4`), and a progress screen in the middle of a measurement is a distraction with no purpose.
@@ -709,7 +751,9 @@ Feature: The passport in French
   this screen's side. *Recommendation:* `TN-MAP` owns the key and should own the rule: **draw `map.moreComing`
   only while `ready` is less than `total`**, on both screens, with a scenario in each. The string stays,
   because a partial build still needs it. Routed to `TN-MAP`'s next revision; nothing here changes the
-  wording.
+  wording. **An eleventh is now planned (Kingston, ADR-0068), and the rule is why that changes no sentence.**
+  Kingston's journey slot and its level document land in the same PR (K-2.2), so `ready` equals `total`
+  again on the build that adds it. The screen does not promise Kingston before it exists.
 - **`OQ-PASSPORT-8` — `passport.intro` describes the route six of the ten levels do not have.** "You earn a
   stamp when you finish a level's task." / « Vous obtenez un tampon lorsque vous terminez la mission d'un
   niveau. » Four levels have a quest; **six have none**, and on those the stamp is earned by reaching the end

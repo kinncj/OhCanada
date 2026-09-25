@@ -1,0 +1,464 @@
+{
+  "$schema": "../schemas/quest.schema.json",
+  "id": "kingston-fort-henry",
+  "levelId": "kingston",
+  "giver": "guide",
+  "title": {
+    "en": "A Walk Through Kingston",
+    "fr": "Une promenade à Kingston"
+  },
+  "summary": {
+    "en": "Walk through Kingston with your guide. You stop at Fort Henry, at City Hall, at the Kingston Mills locks and at the Royal Military College. At each one you learn a part of how Canada was built, and then you answer questions about it.",
+    "fr": "Parcourez Kingston avec votre guide. Vous vous arrêtez au fort Henry, à l'hôtel de ville, aux écluses de Kingston Mills et au Collège militaire royal. À chaque halte, vous apprenez une partie de la construction du Canada, puis vous répondez à des questions à ce sujet."
+  },
+  "declinedLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "That is fine. The old stones will wait for us. Come back when you are ready.",
+      "fr": "C'est correct. Les vieilles pierres vont nous attendre. Revenez quand vous voudrez."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "reminderLine": {
+    "speaker": "guide",
+    "expression": "neutral",
+    "text": {
+      "en": "Take your time. Each stop in Kingston tells a part of how Canada was built. Your task on the screen says what to do now.",
+      "fr": "Prenez votre temps. Chaque halte à Kingston raconte une partie de la construction du Canada. Votre mission à l'écran indique ce qu'il faut faire maintenant."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "afterLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "Kingston will be here when you come back. The road goes on along the lake.",
+      "fr": "Kingston sera encore là à votre retour. La route continue le long du lac."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "doneLine": {
+    "speaker": "guide",
+    "expression": "happy",
+    "text": {
+      "en": "You walked through Kingston with me: to Fort Henry, to City Hall, to the Kingston Mills locks and to the Royal Military College. Four stops, and the walk is over.",
+      "fr": "Vous avez parcouru Kingston avec moi : le fort Henry, l'hôtel de ville, les écluses de Kingston Mills et le Collège militaire royal. Quatre haltes, et la promenade est terminée."
+    },
+    "fact": {
+      "factual": false,
+      "source": null,
+      "verification": null
+    }
+  },
+  "steps": [
+    {
+      "id": "meet-the-guide",
+      "kind": "talk",
+      "targetId": "guide",
+      "prompt": {
+        "en": "Meet your guide by the lake",
+        "fr": "Retrouvez votre guide au bord du lac"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "Hello! Welcome to Kingston. It is a fine day for a walk by the water.",
+            "fr": "Bonjour! Bienvenue à Kingston. C'est une belle journée pour marcher au bord de l'eau."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Our story starts in June 1812. The United States invaded Canada. The Americans thought it would be an easy win, but they were wrong.",
+            "fr": "Notre histoire commence en juin 1812. Les États-Unis ont envahi le Canada. Les Américains croyaient gagner facilement, mais ils avaient tort."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's History",
+              "page": 29,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812. The Americans were mistaken."
+            },
+            "verification": {
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "Believing it would be easy to conquer Canada, the United States launched an invasion in June 1812. The Americans were mistaken."
+            }
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "happy",
+          "text": {
+            "en": "We have four stops. At each one I will tell you something, and you can stop and read.",
+            "fr": "Nous avons quatre haltes. À chacune, je vais vous raconter quelque chose, et vous pourrez vous arrêter pour lire."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "walk-to-fort-henry",
+      "kind": "visit",
+      "targetId": "fort-henry",
+      "prompt": {
+        "en": "Walk to Fort Henry",
+        "fr": "Marchez jusqu'au fort Henry"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Look at these thick stone walls. There is a lot to tell here.",
+            "fr": "Regardez ces épais murs de pierre. Il y a beaucoup à raconter ici."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "In 1814, the Duke of Wellington sent some of his best soldiers to defend Canada. Then he picked Bytown, which is Ottawa today, as the end of the Rideau Canal.",
+            "fr": "En 1814, le duc de Wellington a envoyé certains de ses meilleurs soldats pour défendre le Canada. Ensuite, il a choisi Bytown, aujourd'hui Ottawa, comme point d'arrivée du canal Rideau."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's History",
+              "page": 30,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal"
+            },
+            "verification": {
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal, part of a network of forts to prevent the U.S.A. from invading Canada again."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-at-fort-henry",
+      "kind": "read",
+      "targetId": "fort-henry",
+      "prompt": {
+        "en": "Stop and read at Fort Henry",
+        "fr": "Arrêtez-vous pour lire au fort Henry"
+      },
+      "passages": [
+        {
+          "lesson": "history-13-defending-canada-in-1812",
+          "passage": "h13-volunteers-first-nations-and-tecumseh"
+        },
+        {
+          "lesson": "history-13-defending-canada-in-1812",
+          "passage": "h13-isaac-brock"
+        },
+        {
+          "lesson": "history-13-defending-canada-in-1812",
+          "passage": "h13-chateauguay"
+        },
+        {
+          "lesson": "history-13-defending-canada-in-1812",
+          "passage": "h13-britain-paid-for-the-defences"
+        }
+      ]
+    },
+    {
+      "id": "answer-at-fort-henry",
+      "kind": "answer",
+      "targetId": "building-canada",
+      "subject": "building-canada",
+      "count": 4,
+      "questionPool": [
+        "hist-33-us-invasion-june-1812",
+        "hist-34-tecumseh-and-the-shawnee",
+        "hist-35-isaac-brock",
+        "hist-36-chateauguay-1813",
+        "hist-39-wellington-and-bytown",
+        "hist-97-british-paid-for-defences"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about the War of 1812",
+        "fr": "Répondez à 4 questions sur la guerre de 1812"
+      }
+    },
+    {
+      "id": "walk-to-city-hall",
+      "kind": "visit",
+      "targetId": "kingston-city-hall",
+      "prompt": {
+        "en": "Walk on to Kingston City Hall",
+        "fr": "Continuez jusqu'à l'hôtel de ville de Kingston"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Look up at that dome. Here we talk about how Canada became a country.",
+            "fr": "Levez les yeux vers ce dôme. Ici, on parle de la façon dont le Canada est devenu un pays."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        },
+        {
+          "speaker": "guide",
+          "expression": "thinking",
+          "text": {
+            "en": "Sir John A. Macdonald was a lawyer in Kingston. In 1867, he became the first Prime Minister of Canada.",
+            "fr": "Sir John A. Macdonald était avocat à Kingston. En 1867, il est devenu le premier premier ministre du Canada."
+          },
+          "fact": {
+            "factual": true,
+            "source": {
+              "sourceId": "discover-canada",
+              "chapter": "Canada's History",
+              "page": 35,
+              "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "asOf": "2026-09-08T00:00:00Z",
+              "volatile": false,
+              "quote": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. He was a lawyer in Kingston, Ontario"
+            },
+            "verification": {
+              "status": "verified",
+              "model": "claude-opus-5-5",
+              "checkedAt": "2026-09-25T21:30:43Z",
+              "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+              "evidence": "In 1867, Sir John Alexander Macdonald, a Father of Confederation, became Canada’s first Prime Minister. Born in Scotland on January 11, 1815, he came to Upper Canada as a child. He was a lawyer in Kingston, Ontario, a gifted politician and a colourful personality."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-at-city-hall",
+      "kind": "read",
+      "targetId": "kingston-city-hall",
+      "prompt": {
+        "en": "Stop and read at City Hall",
+        "fr": "Arrêtez-vous pour lire à l'hôtel de ville"
+      },
+      "passages": [
+        {
+          "lesson": "history-14-rebellion-and-responsible-government",
+          "passage": "h14-why-the-rebellions-failed"
+        },
+        {
+          "lesson": "history-14-rebellion-and-responsible-government",
+          "passage": "h14-what-responsible-government-means"
+        },
+        {
+          "lesson": "history-14-rebellion-and-responsible-government",
+          "passage": "h14-province-of-canada-1840"
+        },
+        {
+          "lesson": "history-14-rebellion-and-responsible-government",
+          "passage": "h14-nova-scotia-first-with-responsible-government"
+        }
+      ]
+    },
+    {
+      "id": "answer-at-city-hall",
+      "kind": "answer",
+      "targetId": "building-canada",
+      "subject": "building-canada",
+      "count": 4,
+      "questionPool": [
+        "hist-95-rebellions-1837-38",
+        "hist-41-what-responsible-government-means",
+        "hist-44-province-of-canada-1840",
+        "hist-42-nova-scotia-responsible-government",
+        "hist-54-first-prime-minister"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about how Canada became a country",
+        "fr": "Répondez à 4 questions sur la naissance du Canada"
+      }
+    },
+    {
+      "id": "walk-to-the-locks",
+      "kind": "visit",
+      "targetId": "kingston-mills",
+      "prompt": {
+        "en": "Walk to the Kingston Mills locks",
+        "fr": "Marchez jusqu'aux écluses de Kingston Mills"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "Listen to the water in the locks. Now we look at how Canada grew.",
+            "fr": "Écoutez l'eau dans les écluses. Maintenant, voyons comment le Canada s'est agrandi."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-locks",
+      "kind": "read",
+      "targetId": "kingston-mills",
+      "prompt": {
+        "en": "Stop and read at the locks",
+        "fr": "Arrêtez-vous pour lire aux écluses"
+      },
+      "passages": [
+        {
+          "lesson": "history-16-macdonald-riel-and-the-railway",
+          "passage": "h16-red-river-metis-not-consulted"
+        },
+        {
+          "lesson": "history-16-macdonald-riel-and-the-railway",
+          "passage": "h16-manitoba-created"
+        },
+        {
+          "lesson": "history-16-macdonald-riel-and-the-railway",
+          "passage": "h16-british-columbia-and-the-railway-promise"
+        },
+        {
+          "lesson": "history-16-macdonald-riel-and-the-railway",
+          "passage": "h16-the-last-spike-1885"
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-locks",
+      "kind": "answer",
+      "targetId": "building-canada",
+      "subject": "building-canada",
+      "count": 4,
+      "questionPool": [
+        "hist-56-red-river-not-consulted",
+        "hist-57-manitoba-created-1870",
+        "hist-61-bc-joined-1871",
+        "hist-62-last-spike-1885"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about how Canada grew",
+        "fr": "Répondez à 4 questions sur l'expansion du Canada"
+      }
+    },
+    {
+      "id": "walk-to-the-college",
+      "kind": "visit",
+      "targetId": "royal-military-college",
+      "prompt": {
+        "en": "Carry on to the Royal Military College",
+        "fr": "Continuez jusqu'au Collège militaire royal"
+      },
+      "dialogue": [
+        {
+          "speaker": "guide",
+          "expression": "neutral",
+          "text": {
+            "en": "This is our last stop. Here we look at Canada at war and at home, from 1899 to 1945.",
+            "fr": "C'est notre dernière halte. Ici, on s'intéresse au Canada en guerre et au pays, de 1899 à 1945."
+          },
+          "fact": {
+            "factual": false,
+            "source": null,
+            "verification": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "read-at-the-college",
+      "kind": "read",
+      "targetId": "royal-military-college",
+      "prompt": {
+        "en": "Stop and read at the college",
+        "fr": "Arrêtez-vous pour lire au collège"
+      },
+      "passages": [
+        {
+          "lesson": "history-17-the-great-war-and-votes-for-women",
+          "passage": "h17-boer-war-volunteers"
+        },
+        {
+          "lesson": "history-17-the-great-war-and-votes-for-women",
+          "passage": "h17-vimy-ridge"
+        },
+        {
+          "lesson": "history-17-the-great-war-and-votes-for-women",
+          "passage": "h17-armistice-1918"
+        },
+        {
+          "lesson": "history-17-the-great-war-and-votes-for-women",
+          "passage": "h17-federal-vote-for-women-1918"
+        }
+      ]
+    },
+    {
+      "id": "answer-at-the-college",
+      "kind": "answer",
+      "targetId": "building-canada",
+      "subject": "building-canada",
+      "count": 4,
+      "questionPool": [
+        "hist-65-boer-war-volunteers",
+        "hist-67-vimy-ridge-1917",
+        "hist-69-armistice-1918",
+        "hist-75-women-federal-vote-1918"
+      ],
+      "prompt": {
+        "en": "Answer 4 questions about Canada at war and at home",
+        "fr": "Répondez à 4 questions sur le Canada en guerre et au pays"
+      }
+    }
+  ]
+}

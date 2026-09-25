@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "prairie-rail",
   "subject": "modern-canada",
-  "order": 7,
+  "order": 8,
   "title": {
     "en": "The Prairies",
     "fr": "Les Prairies"

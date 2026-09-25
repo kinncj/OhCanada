@@ -490,7 +490,7 @@ of the ten levels and is one string.
 | `level.peggys-cove.title` | Peggy's Cove | Peggy's Cove |
 | `level.peggys-cove.subtitle` | Who we are | Qui nous sommes |
 | `level.quebec-city.title` | Québec City | Ville de Québec |
-| `level.quebec-city.subtitle` | Canada's history | L'histoire du Canada |
+| `level.quebec-city.subtitle` | Early Canada | Les débuts du Canada |
 | `level.toronto.title` | Toronto | Toronto |
 | `level.toronto.subtitle` | Federal elections | Les élections fédérales |
 | `level.winnipeg.title` | Winnipeg | Winnipeg |
@@ -503,6 +503,18 @@ of the ten levels and is one string.
 | `level.vancouver.subtitle` | Canadian symbols | Les symboles canadiens |
 | `level.the-north.title` | The North | Le Nord |
 | `level.the-north.subtitle` | Canada's regions | Les régions du Canada |
+
+**Québec City's subject line was narrowed on 2026-09-25 (K-0.9b), and the change is effective when Kingston
+lands.** It read "Canada's history" / « L'histoire du Canada ». ADR-0068 splits `history` in two: Québec City
+keeps what came before the War of 1812, and Kingston's `building-canada` carries the rest. A subject line is
+also the exam's name for the subject (`TN-RESULT`), so the old words would overlap "Building Canada" on the
+same result screen. The new words and the reasons are in `TN-LEVEL-kingston.md`, "Rulings (K-0.9)",
+Ruling 1: "Early Canada", "Building Canada" and the Prairies' "Modern Canada" read as three eras in order,
+with no date that a row would make false. **This table is the target, not today's build.** `app/ui/copy.ts`
+changes in the Kingston landing PR (K-2.2b, `docs/plan/kingston.md`), so the shipped build draws the old
+words until that PR merges. `OQ-SPINE-2` still applies: the subject line names a remit (ADR-0028), not a
+chapter title. **Kingston's own title and subject line are not in this table.** Kingston has its own level
+story, and `TN-LEVEL-kingston.md` owns its copy rows, in the same way that `TN-LEVEL-ottawa.md` owns Ottawa's.
 
 **Two rows were keyed on a level's *number* until 2026-09-13, and they are keyed on its id now.** While
 levels 2 and 10 had no id, this table carried `level.2.subtitle`, `level.10.title` and `level.10.subtitle` —

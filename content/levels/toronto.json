@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "toronto",
   "subject": "elections",
-  "order": 5,
+  "order": 6,
   "title": {
     "en": "Toronto",
     "fr": "Toronto"

@@ -77,6 +77,30 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   in winter (both CC0). Licences checked against the Commons API on **2026-09-23** before anything was
   fetched; the best-known photograph of the obelisk and the Luc Noppen survey of the Governors' Garden are
   CC BY-SA and were refused on licence.
+- `kingston/` — **added 2026-09-25** for Kingston's four stops and its lakeshore band (`docs/plan/kingston.md`
+  K-2.1): Fort Henry (four views: the casemate range on the parade in 2010 and 1908-12, the rampart, and the
+  dry ditch in 2021), Kingston City Hall (the harbour front and the flank in 2017, the dome close up in 2011),
+  the Kingston Mills locks (one present-day frame and two 1898-1920 photographs), the Royal Military College's
+  Mackenzie Building (a 2007 elevation and a 2008 daylight view), Kingston harbour from Fort Henry, and the lake
+  to the island shore. Fourteen files, licence-checked on **2026-09-25** before download: one CC0, three public
+  domain (Marsden Kemp, Archives of Ontario), four CC BY 2.0 and six CC BY 3.0.
+
+  **Two of the fourteen are colour traps and are labelled as such in `references.json`.**
+  `rmc-mackenzie-building-elevation-2007.jpg` is a floodlit night exposure and a geometry reference only;
+  `rmc-mackenzie-building-daylight-2008.jpg` carries a strong magenta cast and settles which roofs are dark and
+  which green, not their hue. `fort-henry-casemates-2010.jpg` is overcast and lifts the stone to near white, so
+  the stone was sampled on the 2021 and 2011 files instead.
+
+  **ShareAlike cost the most at Kingston Mills.** Every present-day photograph of the locks, the railway bridge
+  and the blockhouse on Commons is CC BY-SA, and an Openverse search across Flickr found one present-day frame
+  under an accepted licence: `kingston-mills-upper-gate-2010.jpg`, marked CC0 1.0 on its author's own Flickr
+  page. Commons holds the same frame under CC BY-SA 2.0 from an earlier Flickr licence; both grants stand, and
+  the CC0 one is used with the author's page as the source. The railway bridge and the blockhouse have no
+  licence-clean present-day photograph and are not drawn. Every photograph of Fort Henry's outer walls from the
+  water is CC BY-SA too, which is why the fort is drawn from its parade. Some files show small, incidental
+  people (the 2017 City Hall front and the 1908-12 parade among them); rule 4 applies, and no person
+  is drawn anywhere in the level.
+
 - `halifax/` — the Level 1 subjects: the Old Town Clock (three views), Pier 21 (three views) and the
   waterfront boardwalk and harbour (three views). Nine files, licence-checked against the Commons API on
   **2026-09-08** before any was downloaded: two CC0, four public domain, two CC BY 2.0, one CC BY 3.0 and one

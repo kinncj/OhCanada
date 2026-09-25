@@ -188,6 +188,10 @@ describe('the copy table', () => {
       'hud.interact.library-of-parliament',
       'hud.interact.warming-hut',
       'hud.interact.dows-lake',
+  'hud.interact.fort-henry',
+  'hud.interact.kingston-city-hall',
+  'hud.interact.kingston-mills',
+  'hud.interact.royal-military-college',
       'hud.interact.streetcar',
       'hud.interact.nathan-phillips-square',
       'hud.interact.footbridge',
@@ -279,7 +283,7 @@ describe('the copy table', () => {
      * and each landmark that opens a card needs a prompt of its own, proposed in
      * TN-REACH like Dow's Lake before them.
      */
-    expect(COPY_GAPS).toHaveLength(84);
+    expect(COPY_GAPS).toHaveLength(88);
     /* Every declared gap is a row that exists and can be drawn: a gap list
        naming a key nobody wrote reports a string the player never sees. */
     for (const key of COPY_GAPS) {

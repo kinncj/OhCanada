@@ -23,6 +23,16 @@ rules is allowed and `TN-NAMES-01` now says so. **One scenario in this file chan
 point-of-interest card is no longer the *only* screen in this level that names the hotel, and pretending
 otherwise would have made a passing scenario into a false one.
 
+**Amended 2026-09-25 (K-0.9b) — the subject line narrows when Kingston lands.** `level.quebec-city.subtitle`
+becomes "Early Canada" / « Les débuts du Canada ». ADR-0068 moves the history from the War of 1812 on into
+`building-canada`, which is Kingston's subject, and this level keeps `history`, what came before. The subject
+line is also the exam's name for this level's subject (`TN-RESULT`), so "Canada's history" would overlap
+"Building Canada" on the same result screen. The words and the reasons are in `TN-LEVEL-kingston.md`,
+"Rulings (K-0.9)", Ruling 1. The row is still owned by `TN-LEVELS` (table below). **The change is effective
+when Kingston lands.** The Kingston landing PR changes `app/ui/copy.ts` (K-2.2b). Until it merges, the
+shipped build still draws "Canada's history" / « L'histoire du Canada », and the two subtitle lines in
+`TN-QUEBEC-01` and `TN-QUEBEC-04` describe the build that PR produces.
+
 Read `README.md` in this directory first. The rows this file does not own:
 
 | What | Key | Owned by |
@@ -112,6 +122,12 @@ Feature: Québec City says what it is getting ready
     And "scene-state" reports "data-mode" equal to "toboggan"
     And the element "hud-mode-label" reads "Sledding"
     And it is not empty
+
+  Scenario: The subject line is this level's half of the history, once Kingston has landed
+    Given the journey names "kingston"
+    Then the level title reads "Québec City" with the subtitle "Early Canada"
+    And the subtitle is not "Canada's history"
+    And it is not the same as "level.kingston.subtitle", as TN-KINGSTON-11 requires
 
   Scenario: This level's quest can be given
     Given the Québec City level is playable
@@ -214,7 +230,12 @@ Feature: The level in French
   Scenario: The HUD is French
     Given the Québec City level is playable
     Then "hud-mode-label" reads "Glissade"
-    And the level title reads "Ville de Québec" with the subtitle "L'histoire du Canada"
+
+  Scenario: The French subject line is this level's half of the history, once Kingston has landed
+    Given the journey names "kingston"
+    Then the level title reads "Ville de Québec" with the subtitle "Les débuts du Canada"
+    And the subtitle is not "L'histoire du Canada"
+    And it is not the same as the French "level.kingston.subtitle", "La construction du Canada"
 
   Scenario: The failure is French, with its article
     Given requests for the Québec City assets fail

@@ -1688,6 +1688,489 @@
       ]
     },
     {
+      "id": "fort-henry",
+      "subject": "Fort Henry, Kingston: the limestone casemate range on the fort's parade, under the rampart",
+      "renders": [
+        "src/svg/kingston/landmark-fort-henry@1x.svg"
+      ],
+      "handoff": {
+        "builder": "single-source"
+      },
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. Built from this subject's own `handoff` declaration (`single-source`), so scripts/lib/art-handoff.mjs needs no RECIPES line for it (docs/plan/kingston.md K-0.8).",
+      "expectedBlindAnswer": [
+        "a fort",
+        "a stone fort",
+        "a fortress",
+        "a stone fortress",
+        "a military fort",
+        "a 19th-century fort",
+        "a British fort",
+        "casemates",
+        "a casemated fort",
+        "a military barracks",
+        "Fort Henry",
+        "Fort Henry, Kingston"
+      ],
+      "expectedBlindAnswerNote": [
+        "ASKED FOR A TYPE, AND THE PLACE IS ACCEPTED, NOT REQUIRED. What is drawn is the parade face of the",
+        "casemate range, which is the view the licence-clean photographs show: every photograph of the fort's",
+        "outer walls from the water on Commons is CC BY-SA and was refused (licenceAudit). A verifier who names",
+        "Fort Henry has read the arches, the rampart and the guns together, and the list accepts that.",
+        "WHAT MUST CARRY IT IS THE FORT: arched casemates under a rampart with guns on it. \"A military barracks\"",
+        "passes because the casemates ARE the fort's barracks and the guns on the roof are drawn; \"barracks\" alone",
+        "does not. \"An arcade\", \"a cloister\", \"a viaduct\", \"an aqueduct\", \"a bridge\", \"a railway station\",",
+        "\"a market hall\" or \"a prison\" is a FAIL - the last because Kingston has a penitentiary, which the",
+        "guide never mentions and this level never draws."
+      ],
+      "referenceFiles": [
+        "kingston/fort-henry-casemates-2010.jpg",
+        "kingston/fort-henry-parade-and-casemates-1908.jpg",
+        "kingston/fort-henry-rampart-and-parapet-2010.jpg",
+        "kingston/fort-henry-ditch-and-branch-tower-2021.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a long two-storey wall of pale grey limestone pierced by tall round-headed arches on square piers",
+          "why": "The casemate arcade is the fort's own face on its parade, and it is what the 2010 and 1908 photographs both show.",
+          "detail": "MEASURED on kingston/fort-henry-casemates-2010.jpg: the wall is 1.37 times as tall as one bay's pitch, and each arch opening is 0.81 of the pitch. The shipped art draws 1.26 and 0.81. A ring of voussoirs round each arch, an impost block on each pier, sparse coursing. Four bays are drawn where the real range has more (rhythm, not count).",
+          "palette": "path, white"
+        },
+        {
+          "feature": "inside each arch, the casemate front: a door and white-framed sash windows, and an upper gallery behind a black iron railing",
+          "detail": "The recess in shade, with the arch head darker still. Upper floor: a door between two windows, behind a railing on the gallery's floor slab. Ground floor: a door between two windows. From kingston/fort-henry-casemates-2010.jpg, corroborated by the 1908 photograph.",
+          "palette": "path, slate, white, hide"
+        },
+        {
+          "feature": "a projecting cornice and the rampart parapet over the arches, with a continuous black iron railing and a row of limestone chimney stacks",
+          "detail": "Both photographs of the parade face show the railing along the rampart's edge; the 1908 one shows the chimney stacks standing up from it.",
+          "palette": "path, white, hide"
+        },
+        {
+          "feature": "two dark iron guns on the rampart, in profile on low carriages",
+          "why": "They are what says fort rather than barracks or arcade, and they are in the photograph: kingston/fort-henry-casemates-2010.jpg shows two guns standing on the rampart above the range.",
+          "detail": "Tapering barrels on low carriages with two wheels, dark iron, behind the railing, pointing out from the parade. Never firing.",
+          "palette": "hide"
+        },
+        {
+          "feature": "a flat gravel parade at the foot",
+          "detail": "The file's bottom edge IS the level ground line."
+        }
+      ],
+      "simplifyAway": [
+        "the portable bleachers, rope barriers and stanchions on the parade in the 2010 photograph",
+        "the flagstaff and the flag on the rampart",
+        "the hand pump and paving on the parade in the 1908 photograph",
+        "window glazing bars, door ironwork, lamp brackets, downpipes and every other detail under 12 px",
+        "the number of bays: four are drawn"
+      ],
+      "neverAdd": [
+        "any figure: a guard, a re-enactor in uniform, a soldier, a drummer, a piper or a visitor. The fort's guard is its best-known sight and it is never drawn (docs/stories/TN-LEVEL-kingston.md, Ruling 2: no figures at any landmark)",
+        "a flag or a flagstaff, including the Union flag flown at the fort (OQ-ART-04 is open)",
+        "a plaque, sign, date or any lettering, including the bronze garrison plaque in the 2021 photographs",
+        "a crest, badge, royal arms or coat of arms",
+        "crenellation, battlements, arrow slits, a drawbridge or a moat of water: the fort's walls are plain-topped and its ditch is dry",
+        "a Martello tower, a lighthouse or a round tower of any kind on the range: the branch towers stand at the ditch, away from the parade, and `martello-tower` is a different subject",
+        "smoke, flame or a gun firing, and a goat or any other animal"
+      ],
+      "notes": [
+        "kingston/fort-henry-casemates-2010.jpg (A J Butler, CC BY 3.0, 21 August 2010) is the PRIMARY reference: the",
+        "parade face of the casemate range, square on, overcast. It is a colour trap for the stone - the overcast",
+        "lifts the limestone to near white - so the stone tone comes from kingston/fort-henry-ditch-and-branch-tower-2021.jpg",
+        "(Thomas Quine, CC BY 2.0, 27 August 2021), which is also what confirms the fort's present state: the walls",
+        "stand as photographed in 1908-12 and 2010. kingston/fort-henry-parade-and-casemates-1908.jpg (Marsden Kemp,",
+        "Archives of Ontario, public domain) corroborates the arches, the gallery railings and the chimney stacks.",
+        "kingston/fort-henry-rampart-and-parapet-2010.jpg is the rampart's coping and railing from below.",
+        "The stone is drawn in `path`, the palette's near-neutral grey, not `limestone`: Kingston's limestone measures",
+        "grey (hsl 55, 7 %, 68 % sunlit on City Hall), and `limestone` is the warm Quebec City ramp. All four",
+        "Kingston landmarks share it; it is one city's one stone.",
+        "PLACEMENT FLOOR: do not draw it below 380 px wide. DRAWING OBSERVATION, not an identification: at 190 px",
+        "wide the four arches, the railing line, both guns and the chimneys survive; the 120 px silhouette is a long",
+        "low block with a ragged top edge (guns and chimneys) and four round openings."
+      ]
+    },
+    {
+      "id": "kingston-city-hall",
+      "subject": "Kingston City Hall, on the harbour at Kingston: its harbour front, portico and dome",
+      "renders": [
+        "src/svg/kingston/prop-kingston-city-hall@1x.svg"
+      ],
+      "handoff": {
+        "builder": "single-source"
+      },
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. Built from this subject's own `handoff` declaration (`single-source`), so scripts/lib/art-handoff.mjs needs no RECIPES line for it (docs/plan/kingston.md K-0.8).",
+      "expectedBlindAnswer": [
+        "a city hall",
+        "a town hall",
+        "a domed city hall",
+        "a domed town hall",
+        "a domed civic building",
+        "a domed public building",
+        "a neoclassical civic building",
+        "a neoclassical domed public building",
+        "Kingston City Hall"
+      ],
+      "expectedBlindAnswerNote": [
+        "THIS SUBJECT MAY BE NAMED AND IS ASKED FOR A TYPE: a civic hall. The dome over a portico, with clocks on the",
+        "dome, is its own silhouette, so a verifier who knows it will name it; nothing in the render says which city.",
+        "NOT ACCEPTED, and on purpose: \"a capitol\", \"a legislature\", \"a parliament\" or \"a government house\".",
+        "The guide never says Kingston was a capital or held a parliament, and no line, card or step may say it",
+        "(docs/stories/TN-LEVEL-kingston.md, Ruling 2); a contract that accepted it would reward the reading the",
+        "level is forbidden to teach. \"A courthouse\" is a partial answer and does not pass: Kingston has a domed",
+        "limestone courthouse too, and it is not this building. \"A church\" or \"a cathedral\" is a FAIL, and it is",
+        "why the weathervane is not drawn: its arms read as a cross at play size.",
+        "THE FAILURES TO WATCH FOR ARE IN THIS SAME GAME: `hotel-du-parlement` and `peace-tower` are seats of",
+        "government with a tower, and `royal-military-college` is in this level. This one is the only DOME in the",
+        "set, dark, over a white drum, with clocks on it."
+      ],
+      "referenceFiles": [
+        "kingston/city-hall-harbour-front-2017.jpg",
+        "kingston/city-hall-ontario-street-side-2017.jpg",
+        "kingston/city-hall-dome-and-clocks-2011.jpg",
+        "kingston/kingston-harbour-from-fort-henry-2011.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a central dome over a white drum ringed by pilasters and tall windows, with a white clock face on the dome and a white lantern with a small dark cap",
+          "why": "It is the building's silhouette from the harbour and from across the water, and the clocks are what make it a civic building.",
+          "detail": "MEASURED on kingston/city-hall-harbour-front-2017.jpg, in facade heights H (ground to the wings' cornice) and portico spans S: the drum runs 1.36 to 1.72 H and is 0.44 S wide, the dome rises to 2.0 H and is 0.39 S wide, the lantern top is at about 2.36 H and 0.14 S wide. The shipped art is built on those numbers. The photograph is taken from low and close, so the near portico is slightly enlarged against the dome; the drawing keeps the photograph's numbers rather than guessing a correction. The dome is dark bronze-brown, sampled at hsl(12, 5 %, 28 %), drawn in `path` shade and base. One clock face on the front of the dome and one on each side seen edge-on.",
+          "palette": "white, path, hide"
+        },
+        {
+          "feature": "a two-storey portico of four columns under a low triangular pediment, with a round-arched door behind it",
+          "detail": "The columns stand from the steps to about 0.81 H, the entablature reaches 0.93 H and the pediment's apex about 1.15 H. The door is round-headed with a fanlight line.",
+          "palette": "white, path, slate"
+        },
+        {
+          "feature": "long wings of round-headed upper windows over a rusticated ground storey, each ending in a taller end pavilion",
+          "detail": "Rhythm, not count: three bays per wing are drawn. The end pavilion stands above the wing's cornice and carries a chimney on the left, as kingston/city-hall-ontario-street-side-2017.jpg shows.",
+          "palette": "path, white, slate"
+        },
+        {
+          "feature": "a small white cupola with a dark cap on the roof of each wing",
+          "palette": "white, path"
+        },
+        {
+          "feature": "pale grey limestone throughout",
+          "detail": "Sampled sunlit at hsl(55, 7 %, 68 %) on kingston/city-hall-dome-and-clocks-2011.jpg, which is `path-light` #afaca5 to within a few points.",
+          "palette": "path"
+        }
+      ],
+      "simplifyAway": [
+        "the weathervane on the lantern's finial: its arms read as a cross at play size",
+        "the market square and market stalls behind the building",
+        "window glazing bars, the dentils, balustrades and carving, and every ornament under 12 px",
+        "the number of bays: three per wing are drawn",
+        "the grey metal roof of the wings, reduced to a thin band above the cornice"
+      ],
+      "neverAdd": [
+        "any statue or figure. There is no statue at City Hall, and the statue that stood in City Park was removed in 2021; a thing that is not there is not drawn, anywhere in this level (docs/stories/TN-LEVEL-kingston.md, Ruling 2)",
+        "a flag or a flagstaff (OQ-ART-04 is open)",
+        "a crest, coat of arms, plaque, date or any lettering",
+        "Confederation Park in front of it: the arch, the fountain, the flower beds, the lamp standards",
+        "a green copper dome, a spire, a pointed arch or a Gothic window: those belong to `peace-tower` and `parliament-hill`",
+        "a steep copper roof or turrets (`chateau-frontenac`), or a mansard clock tower (`hotel-du-parlement` and `royal-military-college`)",
+        "snow: this level is summer"
+      ],
+      "notes": [
+        "kingston/city-hall-harbour-front-2017.jpg (Mark, CC BY 2.0, 15 September 2017) is the PRIMARY reference: the",
+        "harbour front from Confederation Park, which is the elevation drawn and the source of every ratio above.",
+        "kingston/city-hall-ontario-street-side-2017.jpg (same photographer, same day) is the end pavilion and the",
+        "flank; kingston/city-hall-dome-and-clocks-2011.jpg (Daniel Hu, CC BY 3.0) is the drum, the dome and its clocks",
+        "close up, and the stone colour; kingston/kingston-harbour-from-fort-henry-2011.jpg (Daniel Hu, CC BY 3.0)",
+        "shows the building on the harbour among the city's limestone, which is the placement the stop describes.",
+        "PRESENT STATE: the 2017 photographs show no statue, figure or monument on the building or in front of the",
+        "harbour front; the arch and fountain in them belong to the park and are not drawn.",
+        "PLACEMENT FLOOR: do not draw it below 400 px wide. DRAWING OBSERVATION, not an identification: at 200 px",
+        "wide the dome, the clock, the lantern, the portico and the arched window rhythm survive; the 120 px",
+        "silhouette is a long block with a pedimented centre and a tall dome on a drum, flanked by two small cupolas."
+      ]
+    },
+    {
+      "id": "kingston-mills",
+      "subject": "The Kingston Mills locks on the Rideau Canal: a stone lock chamber and its timber gates, in summer",
+      "renders": [
+        "src/svg/kingston/prop-kingston-mills@1x.svg"
+      ],
+      "handoff": {
+        "builder": "single-source"
+      },
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. Built from this subject's own `handoff` declaration (`single-source`), so scripts/lib/art-handoff.mjs needs no RECIPES line for it (docs/plan/kingston.md K-0.8).",
+      "expectedBlindAnswer": [
+        "a canal lock",
+        "a lock",
+        "lock gates",
+        "a lock on a canal",
+        "a set of lock gates",
+        "a lock chamber",
+        "a canal lock in summer",
+        "a lockstation",
+        "a lock on the Rideau Canal",
+        "the Kingston Mills locks"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, as `canal-lock` is. A lock chamber names no canal and no city from its picture alone,",
+        "and the gate must not ask it to: the Rideau Canal and Kingston Mills are accepted, not required.",
+        "WHAT IT MUST CARRY IS THE MECHANISM: two timber gate leaves meeting on a centre seam across a stone",
+        "chamber, with water in it. \"A dam\", \"a weir\", \"a sluice\", \"a spillway\", \"a bridge\", \"a dry dock\",",
+        "\"a pool\" or \"a fountain\" is a FAIL.",
+        "IT MUST NOT BE THE OTTAWA LOCK. `canal-lock` is winter, with ice in the chamber, snow on the coping and two",
+        "white balance beams. This one is summer, with water, a railed walkway across the gate heads, stone steps up",
+        "the wall and the lockstation house on the bank. A verifier who answers \"a canal lock\" to both passes both;",
+        "the contracts differ in what each must show, not in the word."
+      ],
+      "referenceFiles": [
+        "kingston/kingston-mills-upper-gate-2010.jpg",
+        "kingston/kingston-mills-railway-bridge-and-locks-1900s.jpg",
+        "kingston/kingston-mills-lock-and-basin-1900s.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a pair of timber gate leaves meeting on a vertical centre seam, planked and crossed by heavier horizontal rails",
+          "why": "The gates are the lock; the stop's card is about the canal, and a canal is known by its locks.",
+          "detail": "MEASURED on kingston/kingston-mills-upper-gate-2010.jpg: the gate opening is 0.57 as high as it is wide; the shipped art draws 0.60. Five rails per leaf in a lighter tone, vertical plank joints between them, a dark seam where the leaves meet, the left leaf lit and the right in shade. The timber is weathered grey in the reference, sampled at hsl(34, 4 %, 39 %), and is drawn in `path` shade and base, darker than the stone.",
+          "palette": "path, hide"
+        },
+        {
+          "feature": "coursed grey limestone chamber walls with pale coping, their inner faces receding toward the gates",
+          "detail": "Two front faces either side, coursed, with a darker water-stained band low down, and the chamber's inner faces drawn as dark wedges converging on the gates, which is the depth of the chamber in the reference.",
+          "palette": "path, white, hide"
+        },
+        {
+          "feature": "a walkway across the gate heads with a black iron railing",
+          "detail": "A pale deck over the gates with posts and two rails, as in kingston/kingston-mills-upper-gate-2010.jpg.",
+          "palette": "white, path, hide"
+        },
+        {
+          "feature": "a flight of stone steps rising from the coping on the right, with an iron handrail, and a black iron bollard on the coping",
+          "detail": "Both are in the 2010 photograph, on the right of the chamber."
+        },
+        {
+          "feature": "the white clapboard lockstation house with green window trim and a dark roof on the grassy bank behind",
+          "detail": "The 2010 photograph shows two such houses on the bank above the lock; one is drawn.",
+          "palette": "white, pine, slate, grass"
+        },
+        {
+          "feature": "a stone breast wall under the gates, and water in the chamber",
+          "detail": "Summer, so water and not ice: the level is summer. The file's bottom edge is the level ground line.",
+          "palette": "path, water"
+        }
+      ],
+      "simplifyAway": [
+        "the lamp standard behind the gates, the gate machinery and chains, and the timber stair with its steel rail on the left wall",
+        "the second house on the bank and the leafless trees of the winter photograph",
+        "individual stones: courses and staggered joints are the whole masonry",
+        "the other chambers of the flight: one chamber is the subject"
+      ],
+      "neverAdd": [
+        "any figure: no lock staff, visitor, boater or angler (docs/stories/TN-LEVEL-kingston.md, Ruling 2)",
+        "a boat, a canoe, a barge or a steamer, including the steamer in the 1898-1920 photographs",
+        "the railway bridge over the lower locks and the defensible blockhouse beside them: both stand at Kingston Mills, and neither is drawn, because no photograph of either under an accepted licence shows its present state (licenceAudit)",
+        "snow or ice in the chamber or on the coping: this level is summer, and ice is the Ottawa lock's",
+        "a waterfall, spray or foam over the gates",
+        "a name, a lock number, a Parks Canada sign, a plaque or any lettering in either language",
+        "a flag or a flagstaff (OQ-ART-04 is open)"
+      ],
+      "notes": [
+        "kingston/kingston-mills-upper-gate-2010.jpg (John Marino, runJMrun on Flickr, CC0 1.0, 17 January 2010) is",
+        "the PRIMARY reference and the ONLY present-day photograph of Kingston Mills found under an accepted licence.",
+        "It is a winter exposure of a drained chamber: it settles the gates, the walkway, the railing, the steps, the",
+        "bollard and the houses, and nothing about the season, which is the level's. Its Flickr page is captioned",
+        "\"near Kingston Ontario - Kingston Mills locks\" and marked CC0 1.0 today; Commons holds the same frame as",
+        "File:Kingston_Mills_lock.jpg under CC BY-SA 2.0, recorded from Flickr when the author's licence was",
+        "different. A licence cannot be withdrawn, so both grants stand, and this project takes the CC0 one from the",
+        "author's own page, which is the source URL in assets/credits.json. The Commons file is not used.",
+        "kingston/kingston-mills-railway-bridge-and-locks-1900s.jpg and kingston/kingston-mills-lock-and-basin-1900s.jpg",
+        "(Marsden Kemp, Archives of Ontario, public domain, 1898-1920) corroborate the stone chambers and timber gates.",
+        "Every other present-day photograph of the site on Commons, including the four best of the locks and the",
+        "blockhouse, is CC BY-SA and was refused on licence.",
+        "PLACEMENT FLOOR: do not draw it below 360 px wide. DRAWING OBSERVATION, not an identification: at 180 px",
+        "wide the gates, the seam, the railing, the steps and the house survive; the 120 px silhouette is two",
+        "blocks framing a dark gate over water, with a house and a stair above."
+      ]
+    },
+    {
+      "id": "royal-military-college",
+      "subject": "The Royal Military College of Canada on Point Frederick, Kingston: the Mackenzie Building",
+      "renders": [
+        "src/svg/kingston/prop-royal-military-college@1x.svg"
+      ],
+      "handoff": {
+        "builder": "single-source"
+      },
+      "renderRecipe": "Rasterise the file on its own at 1x. It is a POI hero and this is the subject it answers. Built from this subject's own `handoff` declaration (`single-source`), so scripts/lib/art-handoff.mjs needs no RECIPES line for it (docs/plan/kingston.md K-0.8).",
+      "expectedBlindAnswer": [
+        "a college building",
+        "a university building",
+        "a military college",
+        "an academic clock tower building",
+        "an institutional clock tower building",
+        "a Second Empire clock tower building",
+        "a Victorian college building",
+        "a clock tower building",
+        "the Royal Military College of Canada",
+        "the Mackenzie Building, Kingston"
+      ],
+      "expectedBlindAnswerNote": [
+        "THE CONTRACT PICKS THE VIEW, as Ruling 2 asks: the Mackenzie Building, the college's oldest and the one on",
+        "every view of Point Frederick, square on. It is ASKED FOR A TYPE - a Victorian institutional building with a",
+        "central clock tower - and the college is accepted, not required, because nothing in a building without its",
+        "crest, flag or cadets says which institution it is, and those are exactly what the ruling forbids.",
+        "THE FAILURES TO WATCH FOR: \"a parliament\" (`peace-tower`, `hotel-du-parlement`) and \"a city hall\"",
+        "(`kingston-city-hall`, in this same level) are FAILS. What separates it is drawn to be plain: square-headed",
+        "windows, green mansards with round oculi on the end pavilions, a dark slate tower roof with a clock and a",
+        "flat top - no dome, no pointed arch, no spire, no portico. \"A hotel\", \"a hospital\" or \"a prison\" is a FAIL."
+      ],
+      "referenceFiles": [
+        "kingston/rmc-mackenzie-building-elevation-2007.jpg",
+        "kingston/rmc-mackenzie-building-daylight-2008.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a tall, slender central stone tower rising in stages from a small arched door, through a stage of paired square-headed windows under a plain segmental hood, a stage of paired arched windows and a louvred belfry stage, to a steep dark slate roof with a round face in it, two small lunette dormers and a flat top with iron cresting",
+          "why": "It is the vertical the whole building is organised round, and its height and staging are what the building has that the level's other stone buildings do not. REWORDED 2026-09-25 after blind run 2c31c41bb3e4f0ea read the first drawing as a city hall at every size: this feature used to be 'a tall central clock tower' and called the clock 'the one thing on it recognisable at play size'. That made the contract ask for the cue the failing reading keys on. The round face is still drawn, true to size and place, but it is no longer the feature this subject rests on.",
+          "detail": "MEASURED on kingston/rmc-mackenzie-building-elevation-2007.jpg, a near-orthographic elevation: the tower cap stands 0.653 of the building's width above the ground; drawn 0.654 (cap top at y 17 of 540, on 800; the cresting stands above it). The roof is 1.09 times as tall as its base is wide; drawn 1.10. The round face's centre is 0.35 of the roof's height above its base and its diameter 0.43 of the roof's base; drawn 0.34 and 0.42. The face is drawn PLAIN, WITHOUT HANDS: the hands are thin strokes under the 12 px floor at play size, art-bible rule 4 (drop, never substitute), and without them the face is the same round form as the pavilion oculi, which is how the elevation shows all three. The door is a plain arch with a fanlight and one low threshold, straight onto the ground: no steps, no portico. The carving in the segmental hood and over the door is left as plain stone.",
+          "palette": "path, slate, white, hide"
+        },
+        {
+          "feature": "a taller end pavilion at each end, with paired windows on each storey and an attic storey of paired arched windows above the wing cornice, under a steep green mansard with a round oculus window and a flat cap with iron cresting",
+          "detail": "Each pavilion is 0.123 of the building's width, measured; 0.123 drawn. The attic storey and the paired windows are from the elevation. The mansards are weathered green in the daylight photograph and drawn in `glacier`, a muted grey-green; never the bright `copper` of Parliament Hill.",
+          "palette": "glacier, white, slate"
+        },
+        {
+          "feature": "a mansard roof band in the same green along the wings, with a row of dark green hooded arched dormers, one over each bay, and two chimneys",
+          "palette": "glacier, white, slate, path"
+        },
+        {
+          "feature": "two storeys of square-headed white-framed sash windows in five plain bays each side of the tower, over a basement row of small windows at the ground",
+          "why": "REWORDED 2026-09-25: this read 'three storeys ... over a rusticated ground storey', and the elevation does not show that. Between the ground and the wing cornice it shows two tall storeys and a basement row of small low windows. The first drawing followed the contract and packed four rows of full windows into a wall 0.25 of the building's width tall, which made it an office block. The wing count was four bays and the elevation has five.",
+          "detail": "Five bays each side, measured and drawn (photo bay centres x 268, 367, 466, 565, 662 of 1600). The facade cornice stands 0.257 of the width above the ground, measured; 0.261 drawn. The string course between the storeys, measured 0.15 and drawn 0.15. The basement windows' iron grilles are simplified away (under 12 px, and bars at ground level are the one cue that would say 'prison').",
+          "palette": "path, white, slate"
+        },
+        {
+          "feature": "grey limestone",
+          "detail": "The daylight reference has a strong magenta cast and the elevation is a night exposure under sodium light, so neither was sampled for the stone; it is the same `path` grey as the other three Kingston landmarks, which is the same limestone.",
+          "palette": "path"
+        }
+      ],
+      "simplifyAway": [
+        "the carved stonework over the door and on the tower, left as plain stone",
+        "the flagstaff on the tower and the flag on it",
+        "window glazing bars, string-course mouldings and every detail under 12 px",
+        "the lamp standards and the parade square's markings in front of the building",
+        "the iron cresting along the wing mansards, kept on the tower and the pavilion caps",
+        "the clock's hands and numerals",
+        "the iron grilles on the basement windows"
+      ],
+      "neverAdd": [
+        "any cadet or figure of any kind, in uniform or not (docs/stories/TN-LEVEL-kingston.md, Ruling 2)",
+        "a crest, badge, coat of arms, motto or carved device, including the college's own, which is over the door",
+        "a flag or a flagstaff, and in particular the college's flag: the stop teaches where the flag's pattern comes from, and it is taught in words (OQ-ART-04 is open)",
+        "the memorial arch at the college's gate, a cannon, a gun or a parade",
+        "any lettering, date or plaque",
+        "a dome, a portico, a pointed arch, a spire or a Gothic window: those belong to `kingston-city-hall`, `peace-tower` and `parliament-hill`"
+      ],
+      "notes": [
+        "kingston/rmc-mackenzie-building-elevation-2007.jpg (Martin St-Amant, CC BY 3.0, 3 May 2007) is the PRIMARY",
+        "reference and a NIGHT exposure: a long-lens, near-orthographic elevation of the whole front, which is why",
+        "every ratio above comes from it, and a colour trap, because floodlight turns the stone yellow and the",
+        "mansards olive. kingston/rmc-mackenzie-building-daylight-2008.jpg (k_hargrav on Flickr, CC BY 2.0, August",
+        "2008) is the daylight reference for the roofs; it carries a magenta cast, so it settles which roofs are dark",
+        "(the tower) and which are green (the pavilions and the wings), not their exact hue.",
+        "PRESENT STATE: both photographs show the building as drawn; the flag on the tower is simplified away.",
+        "PLACEMENT FLOOR: do not draw it below 380 px wide. DRAWING OBSERVATION, not an identification: at 300 px",
+        "wide the tower's stages, the round face, the pavilion roofs and their oculi, the dormer row and the five-bay",
+        "rhythm survive; at 140 px the silhouette is a long low block with a tall slender central tower under a steep",
+        "flat-topped roof and a steep flat-capped roof at each end.",
+        "REDRAWN 2026-09-25 after blind run 2c31c41bb3e4f0ea read it as a city hall (Halifax City Hall named) at every",
+        "size. What changed, all from the elevation: two storeys over a basement row instead of three over a rusticated",
+        "storey; five bays each side instead of four; the pavilions' attic storey and paired windows; the louvred belfry",
+        "stage and the plain segmental hood on the tower; the round face drawn without hands. What was NOT added,",
+        "because the two Mackenzie Building photographs do not show it: water, Point Frederick, the Stone Frigate or",
+        "the parade square. kingston/kingston-harbour-from-fort-henry-2011.jpg does show Navy Bay and buildings on a",
+        "point across it, but nothing in that photograph or its record says which building is which, so drawing any",
+        "of them as the college's setting would be a guess. Nothing on expectedBlindAnswer was tightened or loosened."
+      ]
+    },
+    {
+      "id": "kingston-lakeshore",
+      "subject": "A lakeshore promenade in summer: a limestone parapet with trees, lamps and benches, and sailboats on open water behind",
+      "renders": [
+        "src/svg/kingston/layer-30-harbour.svg",
+        "src/svg/kingston/layer-40-promenade.svg"
+      ],
+      "handoff": {
+        "builder": "two-parallax-tiles",
+        "farMatch": "harbour",
+        "nearMatch": "promenade",
+        "nearTop": 60,
+        "what": "the harbour tile and the promenade tile"
+      },
+      "renderRecipe": "Composite the two, the harbour tile above the promenade tile, the promenade placed 60 px below the harbour tile's top edge (world y 880 against 820). Both are repeating parallax tiles, so lay each from x = 0 and REPEAT it to the wider of the two (1800 and 1440), and draw the promenade over the harbour where they overlap, which is the order the level uses. Neither file answers the subject alone: water with boats is a lake, and a parapet with trees is a park. Built from this subject's own `handoff` declaration (`two-parallax-tiles`), so scripts/lib/art-handoff.mjs needs no RECIPES line for it (docs/plan/kingston.md K-0.8).",
+      "expectedBlindAnswer": [
+        "a lakeshore promenade",
+        "a lakeside promenade",
+        "a lakefront promenade",
+        "a waterfront promenade",
+        "a harbourfront promenade",
+        "a seaside promenade",
+        "a waterfront walkway",
+        "a lakeside park",
+        "a waterfront park"
+      ],
+      "expectedBlindAnswerNote": [
+        "GENERIC ON PURPOSE, as every repeating band is. These two tiles repeat along the whole level, so nothing on",
+        "them may name the city: Kingston comes from the four POI heroes, never from here. A verifier who names",
+        "Kingston from these tiles would be reporting a defect.",
+        "\"A seaside promenade\" passes: a picture cannot tell a great lake from a sea, and the list is a vocabulary",
+        "for the picture (see `toronto-trail`). \"A canal\", \"a river\", \"a marina\" or \"a harbour wall\" alone is a",
+        "partial answer that does not pass: the promenade the player walks is the subject, and the water is behind it."
+      ],
+      "referenceFiles": [
+        "kingston/kingston-harbour-from-fort-henry-2011.jpg",
+        "kingston/lake-ontario-to-wolfe-island-2012.jpg"
+      ],
+      "mustBeRight": [
+        {
+          "feature": "a low parapet of coursed grey limestone with a pale capping stone along the water's edge",
+          "why": "The city's limestone, at the player's back, is the one material thread from the landmarks to the band.",
+          "palette": "path, white"
+        },
+        {
+          "feature": "broadleaf shade trees, black iron lamp standards with lantern heads, and timber benches along a grass verge",
+          "palette": "grass, wood, hide, white"
+        },
+        {
+          "feature": "pale limestone paving at the foot",
+          "palette": "path"
+        },
+        {
+          "feature": "open blue water behind, darkening toward the viewer, with white sloops under sail",
+          "detail": "Three per harbour tile, as types: white hulls with a plain navy sheer stripe, a mainsail and a jib, no name, number or livery.",
+          "palette": "water, white, cloud, navy"
+        }
+      ],
+      "simplifyAway": [
+        "the marina, its docks and the moored boats in the reference photographs",
+        "the city buildings along the harbour, which are the four landmarks' job and never a repeating tile's"
+      ],
+      "neverAdd": [
+        "any building, fort, dome, clock tower, lighthouse or Martello tower on either tile: Kingston's harbour has a Martello tower standing in the water, and it is not drawn on a tile that repeats",
+        "any figure, walking, sitting or sailing",
+        "any sign, plaque or wordmark, and any blank or faux-text board standing in for one",
+        "a ferry, a cruise boat or any name, number or livery on a boat",
+        "snow or ice: this level is summer"
+      ],
+      "notes": [
+        "kingston/kingston-harbour-from-fort-henry-2011.jpg (Daniel Hu, CC BY 3.0, 1 August 2011) shows the harbour,",
+        "the limestone waterfront and the open lake in summer; kingston/lake-ontario-to-wolfe-island-2012.jpg",
+        "(kezee, CC BY 2.0, 21 August 2012) shows the lake to the island shore across it, with the row of wind",
+        "turbines standing on it, which is layer-20-farshore. That tile is not in this composite: it is 150 rows at",
+        "the horizon, and it carries types only.",
+        "At the LOW preset the level keeps the sky and layer-30-harbour (460 rows of coverage against the",
+        "promenade's 420), so a weak device shows open water behind the landmarks and the paving below."
+      ]
+    },
+    {
       "id": "town-clock",
       "subject": "The Old Town Clock on Citadel Hill, Halifax",
       "renders": [
@@ -5648,6 +6131,6 @@
       "CC-BY-3.0",
       "CC-BY-4.0"
     ],
-    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day. Re-run 2026-09-08 for the six beaver references, by the same method and before any of them was downloaded: three public domain, one CC0, one CC BY 2.0 and one CC BY 2.5. CC-BY-2.5 appears in this list for the first time and it is inside the enum the architect settled - the intersection in assets/refs/README.md already contained it, and the list above had simply never had a member of it. Re-run 2026-09-13 for ten references for three points of interest that had none, by the same method and before any of them was downloaded, and re-checked against the live API on the same day after an interrupted session: six CC0, two public domain, one CC BY 3.0 and one CC BY 2.0. NONE IS YET ATTACHED TO A SUBJECT, and that is deliberate: checkContract refuses a subject with an empty expectedBlindAnswer or mustBeRight, and those are written by the art agent, not by whoever fetched the photographs. The files are credited in assets/credits.json and listed in assets/refs/README.md. A CORRECTION IS PART OF THIS RECORD. The first pass filtered licences with a pattern that expected 'cc-by-3.0' and the API returns 'CC BY 3.0', so every CC BY file was silently dropped and the pass briefly concluded that no Alberta pump jack was under an accepted licence. That was false, it was caught before anything was committed, and every search below was re-run with a filter tested against 'CC BY 3.0', 'CC BY-SA 4.0', 'CC BY-NC 2.0' and 'CC0'. A licence filter that has not been tested on the strings it will actually see is the ratio-without-a-measured-denominator mistake again. A PUMP JACK: alberta-foothills/pump-jack-foothills-county.jpg (CC BY 3.0, Marek Slusarczyk, Foothills County, Alberta, 2007 - a close side view of a working unit in a fenced lease among hay bales, and the primary reference; its author's required credit line is carried in credits.json), pump-jack-dusk-in-snow.jpg (CC BY 2.0, Damien Goodyear, Alberta, 2015 - a clean side profile under a heavy teal-and-orange grade, so a COLOUR TRAP and a geometry reference only), pump-jack-side-elevation.jpg (public domain by the author's release, a preserved unit in Florida - the whole mechanism near-orthographic) and pump-jacks-on-grassland.jpg (public domain, USDA Forest Service, three working units on a North Dakota grassland pad). Passed over: every other Alberta pump jack on Commons is CC BY-SA (Drayton Valley, Clairmont, Falher, Ponoka, Longview, two 'Ölförderung' and 'Oil Field Pump' Flickr files); 'Alberta IMG 5143' is CC BY 2.0 but carries its author's name burned into the image and shows a distant silhouette the Foothills County file already beats; 'Alberta pumpjack 011' to '013' are public domain but show the machine about 60 px tall. The machine is a TYPE and must never be asked to name a province, exactly as ranch-barn is not. A STREETCAR: toronto/streetcar-flank.jpg, streetcar-beside-older-car.jpg and streetcar-front-and-wires.jpg, all CC0. The best full-length three-quarter view on Commons ('New streetcar 4404 heading south on Spadina, 2014 12 20 (4)') was REJECTED ON LICENCE: its page carries cc-by-sa-2.0 from the Flickr review AND PD-Self under a VRT ticket nobody outside Wikimedia can read, and a file whose own page asserts two licences, one of which is ShareAlike, is not established. NATHAN PHILLIPS SQUARE: toronto/square-arches-and-pool.jpg, city-hall-massing-aerial.jpg and square-winter-rink-and-towers.jpg, all CC0; Canada's freedom of panorama covers the building. 'Curved city hall buildings (Unsplash)' was passed over because its page carries the {{Unsplash}} template rather than an explicit CC0 tag. A POLLING STATION INTERIOR WAS NOT FOUND, and the corrected re-run did not change that. Every Canadian polling-station photograph under an accepted licence shows the outside: signage, doors and the yellow arrow (Raysonho CC0, 2014-2023; ishmael n. daro CC BY 2.0, 2015; Roland Tanglao CC BY 2.0, 2011; Dennis Sylvester Hurd CC BY 2.0, 2019). The 2025 CC BY 2.0 files in the election categories are party yard signs. None shows a voting screen or a ballot box, and all of them are mostly lettering, which this project never draws. The only Canadian ballot boxes under an accepted licence are archive photographs, public domain: 1938 and 1959 (BAnQ) and 1942 (Library and Archives Canada, Mackenzie King at the conscription plebiscite). They show lettered metal and cardboard boxes of that era among identifiable people, no voting screen, and not today's equipment, so they are misses and not finds. Every interior photograph under an accepted licence comes from another country's election (United States, New Zealand, Iceland, Peru, Argentina), and drawing Canada's voting screen from one of them would be invention. ATTACHED 2026-09-13 by the art agent, after the art was drawn: the four pump-jack files to subject pump-jack, the three streetcar files to streetcar, and the three Nathan Phillips Square files to nathan-phillips-square. None was rejected at drawing time. Two findings are recorded on the subjects rather than here: pump-jack-foothills-county.jpg is a rear-fulcrum unit and supplies paint only, and the arches in square-arches-and-pool.jpg span the pool north to south, so they are not drawn. Re-run 2026-09-14 for three references for the Alberta ride, by the same method and before any of them was downloaded, with the licence re-read by the fetch itself: one CC0 (a quarter horse broadside), one CC BY 2.0 (a quarter horse under a western saddle) and one public domain (Muybridge's plate 574, a horse at the walk). The Canadian Horse category on Commons was searched first: six of its nine files are CC BY-SA 3.0 or 4.0 and were rejected on licence. The other three were not used and were not rejected on licence: an 1890s book plate, a CC BY 3.0 show-judging photograph that was not examined, and a CC BY 2.0 photograph of Montreal police horses that carries insignia and identifiable officers. A working quarter horse under a western saddle is what an Alberta ranch horse is. The Bar U Ranch saddle-horse barn photographs are CC BY-SA 4.0."
+    "note": "Recorded here rather than per asset because credits.schema.json is additionalProperties:false and has no field for a licence-check date. The accepted set widened on 2026-09-08 when the architect reconciled the credits enum with ADR-0004 in both directions: public-domain and CC BY 1.0/2.0/2.5/3.0 added, CC-BY-SA-4.0 removed. Three of the six references parked under OQ-ART-06 became fetchable and are now in; the other three are ShareAlike and stay out. See assets/refs/README.md. Re-run 2026-09-08 for the ten Quebec City references, by the same method and before any of them was downloaded: seven CC0, one public domain (copyright expired, BAnQ), one CC BY 2.0 (Library and Archives Canada) and one CC BY 3.0. Every one is inside the accepted set above. Three ShareAlike candidates that were better photographs - the Dufferin Terrace ice slide in use, the terrace kiosks in winter, and the Chateau after freezing rain - were rejected on licence, not on quality, exactly as three were for Ottawa. Re-run 2026-09-08 for the fifteen Halifax and Toronto references, by the same method and before any of them was downloaded: five CC0, five public domain, three CC BY 2.0, two CC BY 3.0 and one CC BY 4.0. Every one is inside the accepted set above. The Halifax Town Clock's best photographs and every photograph of the Citadel are CC BY-SA and were rejected on licence, not on quality, for the third level running - and for the Town Clock that cost real quality, because the ShareAlike set includes the only high-resolution near-orthographic elevations. The one CC BY 4.0 file that was available carried the day. Re-run 2026-09-08 for the six beaver references, by the same method and before any of them was downloaded: three public domain, one CC0, one CC BY 2.0 and one CC BY 2.5. CC-BY-2.5 appears in this list for the first time and it is inside the enum the architect settled - the intersection in assets/refs/README.md already contained it, and the list above had simply never had a member of it. Re-run 2026-09-13 for ten references for three points of interest that had none, by the same method and before any of them was downloaded, and re-checked against the live API on the same day after an interrupted session: six CC0, two public domain, one CC BY 3.0 and one CC BY 2.0. NONE IS YET ATTACHED TO A SUBJECT, and that is deliberate: checkContract refuses a subject with an empty expectedBlindAnswer or mustBeRight, and those are written by the art agent, not by whoever fetched the photographs. The files are credited in assets/credits.json and listed in assets/refs/README.md. A CORRECTION IS PART OF THIS RECORD. The first pass filtered licences with a pattern that expected 'cc-by-3.0' and the API returns 'CC BY 3.0', so every CC BY file was silently dropped and the pass briefly concluded that no Alberta pump jack was under an accepted licence. That was false, it was caught before anything was committed, and every search below was re-run with a filter tested against 'CC BY 3.0', 'CC BY-SA 4.0', 'CC BY-NC 2.0' and 'CC0'. A licence filter that has not been tested on the strings it will actually see is the ratio-without-a-measured-denominator mistake again. A PUMP JACK: alberta-foothills/pump-jack-foothills-county.jpg (CC BY 3.0, Marek Slusarczyk, Foothills County, Alberta, 2007 - a close side view of a working unit in a fenced lease among hay bales, and the primary reference; its author's required credit line is carried in credits.json), pump-jack-dusk-in-snow.jpg (CC BY 2.0, Damien Goodyear, Alberta, 2015 - a clean side profile under a heavy teal-and-orange grade, so a COLOUR TRAP and a geometry reference only), pump-jack-side-elevation.jpg (public domain by the author's release, a preserved unit in Florida - the whole mechanism near-orthographic) and pump-jacks-on-grassland.jpg (public domain, USDA Forest Service, three working units on a North Dakota grassland pad). Passed over: every other Alberta pump jack on Commons is CC BY-SA (Drayton Valley, Clairmont, Falher, Ponoka, Longview, two 'Ölförderung' and 'Oil Field Pump' Flickr files); 'Alberta IMG 5143' is CC BY 2.0 but carries its author's name burned into the image and shows a distant silhouette the Foothills County file already beats; 'Alberta pumpjack 011' to '013' are public domain but show the machine about 60 px tall. The machine is a TYPE and must never be asked to name a province, exactly as ranch-barn is not. A STREETCAR: toronto/streetcar-flank.jpg, streetcar-beside-older-car.jpg and streetcar-front-and-wires.jpg, all CC0. The best full-length three-quarter view on Commons ('New streetcar 4404 heading south on Spadina, 2014 12 20 (4)') was REJECTED ON LICENCE: its page carries cc-by-sa-2.0 from the Flickr review AND PD-Self under a VRT ticket nobody outside Wikimedia can read, and a file whose own page asserts two licences, one of which is ShareAlike, is not established. NATHAN PHILLIPS SQUARE: toronto/square-arches-and-pool.jpg, city-hall-massing-aerial.jpg and square-winter-rink-and-towers.jpg, all CC0; Canada's freedom of panorama covers the building. 'Curved city hall buildings (Unsplash)' was passed over because its page carries the {{Unsplash}} template rather than an explicit CC0 tag. A POLLING STATION INTERIOR WAS NOT FOUND, and the corrected re-run did not change that. Every Canadian polling-station photograph under an accepted licence shows the outside: signage, doors and the yellow arrow (Raysonho CC0, 2014-2023; ishmael n. daro CC BY 2.0, 2015; Roland Tanglao CC BY 2.0, 2011; Dennis Sylvester Hurd CC BY 2.0, 2019). The 2025 CC BY 2.0 files in the election categories are party yard signs. None shows a voting screen or a ballot box, and all of them are mostly lettering, which this project never draws. The only Canadian ballot boxes under an accepted licence are archive photographs, public domain: 1938 and 1959 (BAnQ) and 1942 (Library and Archives Canada, Mackenzie King at the conscription plebiscite). They show lettered metal and cardboard boxes of that era among identifiable people, no voting screen, and not today's equipment, so they are misses and not finds. Every interior photograph under an accepted licence comes from another country's election (United States, New Zealand, Iceland, Peru, Argentina), and drawing Canada's voting screen from one of them would be invention. ATTACHED 2026-09-13 by the art agent, after the art was drawn: the four pump-jack files to subject pump-jack, the three streetcar files to streetcar, and the three Nathan Phillips Square files to nathan-phillips-square. None was rejected at drawing time. Two findings are recorded on the subjects rather than here: pump-jack-foothills-county.jpg is a rear-fulcrum unit and supplies paint only, and the arches in square-arches-and-pool.jpg span the pool north to south, so they are not drawn. Re-run 2026-09-14 for three references for the Alberta ride, by the same method and before any of them was downloaded, with the licence re-read by the fetch itself: one CC0 (a quarter horse broadside), one CC BY 2.0 (a quarter horse under a western saddle) and one public domain (Muybridge's plate 574, a horse at the walk). The Canadian Horse category on Commons was searched first: six of its nine files are CC BY-SA 3.0 or 4.0 and were rejected on licence. The other three were not used and were not rejected on licence: an 1890s book plate, a CC BY 3.0 show-judging photograph that was not examined, and a CC BY 2.0 photograph of Montreal police horses that carries insignia and identifiable officers. A working quarter horse under a western saddle is what an Alberta ranch horse is. The Bar U Ranch saddle-horse barn photographs are CC BY-SA 4.0. Re-run 2026-09-25 for Kingston (docs/plan/kingston.md K-2.1), by the same method - the Commons API's extmetadata for every Commons file, and for the two Flickr-only files the author's own photo page and the Openverse record - before anything was downloaded, and re-read the same day after download: fourteen references, one CC0 1.0, three public domain (Marsden Kemp, Archives of Ontario, 1898-1920), four CC BY 2.0 and six CC BY 3.0. Every one is inside the accepted set above. THE COST TO SHAREALIKE WAS HIGHEST AT KINGSTON MILLS: every present-day photograph of the locks and the blockhouse on Commons is CC BY-SA 2.0, 3.0 or 4.0 and was refused, and a search of Openverse across Flickr found exactly one present-day photograph under an accepted licence, runJMrun's CC0 frame of January 2010. It is the same frame Commons holds under CC BY-SA 2.0 from an earlier Flickr licence; both grants stand, and the CC0 one is taken from the author's page. The railway bridge and the blockhouse have NO present-day photograph under an accepted licence, and neither is drawn. Every photograph of Fort Henry's outer walls from the water was also CC BY-SA and was refused; the fort is drawn from its parade instead. Nine better candidates were refused on licence, not on quality."
   }
 }
