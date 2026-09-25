@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "winnipeg",
   "subject": "justice",
-  "order": 6,
+  "order": 7,
   "title": {
     "en": "Winnipeg",
     "fr": "Winnipeg"

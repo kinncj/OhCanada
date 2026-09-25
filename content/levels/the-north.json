@@ -2,7 +2,7 @@
   "$schema": "../schemas/level.schema.json",
   "id": "the-north",
   "subject": "regions",
-  "order": 10,
+  "order": 11,
   "title": {
     "en": "The North",
     "fr": "Le Nord"

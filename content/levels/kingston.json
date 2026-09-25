@@ -1,0 +1,347 @@
+{
+  "$schema": "../schemas/level.schema.json",
+  "id": "kingston",
+  "subject": "building-canada",
+  "order": 5,
+  "title": {
+    "en": "Kingston",
+    "fr": "Kingston"
+  },
+  "size": {
+    "x": 7680,
+    "y": 1920
+  },
+  "spawn": {
+    "x": 1050,
+    "y": 1280
+  },
+  "weather": "none",
+  "playerCostume": "jacket",
+  "theme": {
+    "sky": "#3d8ccb",
+    "ground": "#afaca5",
+    "horizon": "#a5d6ee",
+    "ink": "#1a2036",
+    "inkMuted": "#57647a"
+  },
+  "territory": {
+    "nations": [],
+    "nationsAbsentBecause": "source-names-none",
+    "statement": {
+      "en": "This level is set in Kingston. Discover Canada names Fort Henry at Kingston as part of a costly defence system that Britain paid for, and says it is a popular historic site today.",
+      "fr": "Ce niveau se déroule à Kingston. Découvrir le Canada nomme le fort Henry, à Kingston, parmi les défenses coûteuses payées par la Grande-Bretagne, et dit que c'est aujourd'hui un lieu historique populaire."
+    },
+    "fact": {
+      "factual": true,
+      "source": {
+        "sourceId": "discover-canada",
+        "chapter": "Canada's History",
+        "page": 30,
+        "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+        "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+        "asOf": "2026-09-08T00:00:00Z",
+        "volatile": false,
+        "quote": "The British paid for a costly Canadian defence system, including the Citadels at Halifax and Québec City, the naval drydock at Halifax and Fort Henry at Kingston—today popular historic sites."
+      },
+      "verification": {
+        "status": "unverified",
+        "model": "",
+        "checkedAt": null,
+        "sourceHash": "",
+        "evidence": ""
+      }
+    },
+    "sourcePublisher": {
+      "en": "Immigration, Refugees and Citizenship Canada",
+      "fr": "Immigration, Réfugiés et Citoyenneté Canada"
+    }
+  },
+  "camera": {
+    "followLerp": 0.14,
+    "deadZone": {
+      "x": 70,
+      "y": 120
+    },
+    "offset": {
+      "x": 160,
+      "y": -260
+    },
+    "zoom": 1
+  },
+  "ground": [
+    {
+      "x": 0,
+      "y": 1280
+    },
+    {
+      "x": 1920,
+      "y": 1280
+    },
+    {
+      "x": 3840,
+      "y": 1280
+    },
+    {
+      "x": 5760,
+      "y": 1280
+    },
+    {
+      "x": 7680,
+      "y": 1280
+    }
+  ],
+  "layers": [
+    {
+      "key": "kingston-layer-10-sky",
+      "depth": 10,
+      "scrollFactor": {
+        "x": 0.04,
+        "y": 0.02
+      },
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "repeatX": true
+    },
+    {
+      "key": "kingston-layer-20-farshore",
+      "depth": 20,
+      "scrollFactor": {
+        "x": 0.14,
+        "y": 0.06
+      },
+      "offset": {
+        "x": 0,
+        "y": 780
+      },
+      "repeatX": true
+    },
+    {
+      "key": "kingston-layer-30-harbour",
+      "depth": 30,
+      "scrollFactor": {
+        "x": 0.36,
+        "y": 0.16
+      },
+      "offset": {
+        "x": 0,
+        "y": 820
+      },
+      "repeatX": true
+    },
+    {
+      "key": "kingston-layer-40-promenade",
+      "depth": 40,
+      "scrollFactor": {
+        "x": 1,
+        "y": 1
+      },
+      "offset": {
+        "x": 0,
+        "y": 880
+      },
+      "repeatX": true
+    }
+  ],
+  "groundDressing": { "key": "kingston-ground-lakeshore-paving", "topY": 1280 },
+  "locomotion": [
+    {
+      "mode": "walk",
+      "maxSpeed": 420,
+      "acceleration": 2400,
+      "deceleration": 1900,
+      "turnAcceleration": 2100,
+      "glide": 0.1,
+      "maxSpeedMultiplierDownhill": 1.1,
+      "drive": "held",
+      "jump": {
+        "impulse": 820,
+        "maxHoldMs": 0,
+        "airControl": 0.5,
+        "coyoteMs": 90,
+        "bufferMs": 120,
+        "maxJumps": 1
+      },
+      "interaction": {
+        "reachPx": 200,
+        "requiresStop": false,
+        "whileMoving": true,
+        "approachSpeed": 60
+      },
+      "animation": {
+        "speedInput": "speed",
+        "jumpTrigger": "jump",
+        "landTrigger": "land"
+      },
+      "labelKey": "locomotion.walk.label"
+    }
+  ],
+  "quests": [
+    "kingston-fort-henry"
+  ],
+  "pois": [
+    {
+      "id": "fort-henry",
+      "name": {
+        "en": "Fort Henry",
+        "fr": "Fort Henry"
+      },
+      "blurb": {
+        "en": "Britain paid for a costly system of defences in Canada. Fort Henry at Kingston was part of it. Today it is a popular historic site.",
+        "fr": "La Grande-Bretagne a payé un coûteux système de défense au Canada. Le fort Henry, à Kingston, en faisait partie. C'est aujourd'hui un lieu historique populaire."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 30,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The British paid for a costly Canadian defence system, including the Citadels at Halifax and Québec City, the naval drydock at Halifax and Fort Henry at Kingston—today popular historic sites."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 1540,
+        "y": 1280
+      },
+      "artKey": "kingston-prop-fort-henry",
+      "radiusPx": 250,
+      "questId": "kingston-fort-henry"
+    },
+    {
+      "id": "kingston-city-hall",
+      "name": {
+        "en": "Kingston City Hall",
+        "fr": "Hôtel de ville de Kingston"
+      },
+      "blurb": {
+        "en": "In 1840, Upper Canada and Lower Canada were joined together. They became one province, the Province of Canada.",
+        "fr": "En 1840, le Haut-Canada et le Bas-Canada ont été réunis. Ils sont devenus une seule province, la province du Canada."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 32,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "In 1840, Upper and Lower Canada were united as the Province of Canada."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 3140,
+        "y": 1280
+      },
+      "artKey": "kingston-prop-kingston-city-hall",
+      "radiusPx": 260
+    },
+    {
+      "id": "kingston-mills",
+      "name": {
+        "en": "Kingston Mills locks",
+        "fr": "Écluses de Kingston Mills"
+      },
+      "blurb": {
+        "en": "The Duke of Wellington chose Bytown, which is Ottawa today, as the end point of the Rideau Canal. The canal was part of a network of forts. It was meant to stop the United States from invading Canada again.",
+        "fr": "Le duc de Wellington a choisi Bytown, aujourd'hui Ottawa, comme point d'arrivée du canal Rideau. Le canal faisait partie d'un réseau de forts. Il devait empêcher les États-Unis d'envahir le Canada de nouveau."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canada's History",
+          "page": 30,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "The Duke of Wellington sent some of his best soldiers to defend Canada in 1814. He then chose Bytown (Ottawa) as the endpoint of the Rideau Canal, part of a network of forts to prevent the U.S.A. from invading Canada again."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 4740,
+        "y": 1280
+      },
+      "artKey": "kingston-prop-kingston-mills",
+      "radiusPx": 250
+    },
+    {
+      "id": "royal-military-college",
+      "name": {
+        "en": "Royal Military College of Canada",
+        "fr": "Collège militaire royal du Canada"
+      },
+      "blurb": {
+        "en": "Canada's flag has a red, white and red pattern. That pattern comes from the flag of the Royal Military College in Kingston. The college was founded in 1876.",
+        "fr": "Le drapeau du Canada a un motif rouge, blanc et rouge. Ce motif vient du drapeau du Collège militaire royal, à Kingston. Le collège a été fondé en 1876."
+      },
+      "fact": {
+        "factual": true,
+        "source": {
+          "sourceId": "discover-canada",
+          "chapter": "Canadian Symbols",
+          "page": 79,
+          "url": "https://www.canada.ca/en/immigration-refugees-citizenship/corporate/publications-manuals/discover-canada.html",
+          "sourceHash": "fd51046981916115cc39b989e9eedd3ab2c5943aeb7e0fe4e237e13a0da7c836",
+          "asOf": "2026-09-08T00:00:00Z",
+          "volatile": false,
+          "quote": "A new Canadian flag was raised for the first time in 1965. The red-white-red pattern comes from the flag of the Royal Military College, Kingston, founded in 1876."
+        },
+        "verification": {
+          "status": "unverified",
+          "model": "",
+          "checkedAt": null,
+          "sourceHash": "",
+          "evidence": ""
+        }
+      },
+      "position": {
+        "x": 6340,
+        "y": 1280
+      },
+      "artKey": "kingston-prop-royal-military-college",
+      "radiusPx": 260
+    }
+  ],
+  "characters": [
+    {
+      "characterId": "guide",
+      "position": {
+        "x": 1250,
+        "y": 1280
+      },
+      "facing": "left",
+      "questId": "kingston-fort-henry"
+    }
+  ],
+  "assets": [],
+  "textureBudgetBytes": 37748736
+}
