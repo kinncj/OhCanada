@@ -499,7 +499,7 @@ run that was killed mid-test rebuilds `dist/`, which is the fix for a `sw.js` le
 | `basePath` not matching the publishing repository | ADR-0006 |
 | `dist/sw.js` missing, or statically referenced by the page | this runbook, §3b |
 | `featureFlags.serviceWorker` off: `dist/sw.js` serves fetches, does not unregister, or something still registers a worker | ADR-0034, this runbook §3b |
-| `featureFlags.serviceWorker` on: the worker's precache misses a chunk, reaches outside `dist/`, lacks a revision on an un-hashed file, or exceeds `budgets.initialPayloadBytes`; its level art disagrees with `dist/manifest.json`; or `dist/index.html` does not register it | ADR-0034, this runbook §3c |
+| `featureFlags.serviceWorker` on: the worker's precache misses a chunk, reaches outside `dist/`, lacks a revision on an un-hashed file, or exceeds `budgets.initialPayloadBytes`; its level art disagrees with `dist/manifest.json`, or exceeds `budgets.backgroundCacheBytes` on its own (never added to the precache; the message names the three heaviest levels and the shared files); or `dist/index.html` does not register it. `budgets.backgroundCacheBytes` missing, non-integer or non-positive fails in either mode | ADR-0034, ADR-0075, this runbook §3c; arithmetic in `scripts/lib/worker-budget.mjs` |
 | `dist/manifest.webmanifest` missing, unlinked, off the base path, not portrait, or without a real 192 and 512 PNG and a maskable icon | ADR-0034 (Chromium's install criteria) |
 | A level over `budgets.levelPayloadBytes` | CLAUDE.md budgets, via `scripts/lib/level-payload.mjs` |
 | A level over its `textureBudgetBytes`, or over the 64 MiB decoded-texture ceiling | CLAUDE.md budgets, via `scripts/lib/texture-memory.mjs` |

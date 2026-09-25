@@ -733,3 +733,8 @@ Named here so a later slice picks them up on purpose rather than inventing them 
   is ready" with a Reload button. Listening is a bootstrap concern, because it touches `navigator`; the notice
   is `app/ui` DOM and copy. Not built yet — ADR-0034 carries it as a dated obligation. If `app/bootstrap` later
   takes over registration as well, the build stops writing the inline script in the same change.
+- **What the service worker downloads is budgeted per owner (ADR-0075).** The precache (code, content, fonts,
+  screen art) is held to `budgets.initialPayloadBytes`. Every level's art, which the worker caches in the
+  background, is held to `budgets.backgroundCacheBytes`. The two are never added together, so a gate failure
+  names one key and one owner. `PerformanceBudgets` carries the key and nothing in `app/` reads it. Only
+  `scripts/deploy-check.mjs` does.
