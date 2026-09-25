@@ -12,6 +12,7 @@
   reproduces the shipped Ottawa anchor (623.6, 508.4) to 0.1 units. Kingston (44.23° N, 76.49° W) lands at
   **(621.0, 526.6)**.
 - Slice: L6 (`docs/plan/slices.md`). This ADR is the map half of ADR-0068.
+- Amended 2026-09-25: §6's boundary defect, resolved at the config. See "Amendment, 2026-09-25" at the end.
 - Numbering. See ADR-0068's header. 0069 is the second of the two numbers reserved for this pair, and nothing
   on any ref this repository can see claims it.
 
@@ -297,3 +298,49 @@ coordinates art publishes in `assets/style/map-canada.md` §6, and art reviews t
   test. The Kingston level document itself lands alone, in content's commit, after the slot and the anchor.
   The stale sentence "exactly one anchor per level document" in `app/application/ports/map-anchors.ts`'s
   header is outside infra's files, and it is left for §6 commit 1, which rewrites that port.
+
+## Amendment, 2026-09-25: the boundary defect, resolved at the config
+
+The discharge above keyed the anchor rule on `game.config.json#/journey`, and it moved the defect rather than
+ending it. The rule still failed both ways: a journey id with no anchor, and an anchor naming no journey place.
+So Kingston's journey slot (content's) and its anchor (art's) still had to land in one commit, by two owners
+(`docs/plan/kingston.md` K-0.7). This amendment is what discharges §6's obligation in substance.
+
+**Decision.** The rule has two strengths: one for a commit, one for a release.
+
+1. **An anchor may land before its journey slot.** An anchor whose id the journey does not name passes when a
+   level document (`content/levels/*.json`, by `id`) or a level story (`docs/stories/TN-LEVEL-<id>.md`)
+   declares the place. `make validate-content` reports it: "1 anchor(s) ahead of the journey (kingston,
+   declared by docs/stories/TN-LEVEL-kingston.md)". An id that nothing declares still fails. That was the
+   reverse check's real job: catching a mistyped anchor. Art's own sheet (`assets/style/map-canada.md`) does
+   not count as a declaration. The anchor's owner writes it, so a typo there would agree with the same typo
+   in the anchor. An anchor ahead of its slot is harmless in a release, because the map pins journey slots
+   and never reads it. `--release` allows it too.
+2. **A journey slot may land before its anchor, in a commit only.** `make validate-content` reports such a
+   place as awaiting its anchor ("1 journey place(s) AWAITING an anchor (kingston): allowed in a commit,
+   refused by make build"). It does not fail.
+3. **The release keeps the old rule, whole.** `make build` now runs `validate-content --release` in place of
+   its old `validate-content` prerequisite. Under `--release`, a journey place with no anchor fails. CI runs
+   `make assets build` on every pull request and the deploy runs `make build`. So a tree whose map has a stop
+   it cannot place never merges green and never deploys. The gate is on the final state, not on each commit.
+
+**What this buys.** Content's journey slot and art's anchor are separate commits, in either order. Art first:
+every gate is green at every commit, and the art commit can even merge and deploy alone. Content first: every
+commit passes `make validate-content`, and the pull request goes green once art's commit is in it. For
+Kingston this means K-2.2 carries no art file, and the §6 fallback (content lands art's published coordinates)
+is no longer needed.
+
+**Alternatives considered.** (a) A `pending` list in the config or the sidecar, naming places allowed to be
+unanchored. Rejected: a marker that someone has to remove is a third commit, and a forgotten marker is a
+release gap. The same rule would have to refuse it at release anyway. (b) Deploy-only enforcement, in
+`deploy-pages.yml`. Rejected: a content-first pull request would merge green and turn `main`'s deploy red.
+Putting the check in `make build` catches it on the pull request, because CI builds every one. (c) Keeping art's
+sheet as a declaration. Rejected above.
+
+**Tests.** `tests/unit/infra/screen-art-gate.test.ts`, "a journey place and its anchor land apart, in either
+order", uses Kingston as it stands: a story, art's published coordinates, no slot and no level document. The
+art-first, content-first and both-landed cases, and the `--release` pass on the committed tree, fail on the
+pre-amendment gate. The typo refusal and the content-first `--release` refusal pass on both, and they are the
+guarantees this amendment keeps. A further case asserts that `make build`'s recipe runs `--release` before it
+builds.
+

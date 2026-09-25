@@ -289,7 +289,11 @@ art-handoff-blind: ## Same, printing no subject id: safe to run AS the identifie
 	 key="$${KEYMAP:-$$(mktemp -d -t truenorth-art-keymap-XXXXXX)/keymap.json}"; \
 	 node scripts/verify-art.mjs handoff --quiet --out "$$out" --keymap "$$key"
 
-build: validate-content ## Validate content, build the site, then check the artefact
+# `--release` validates the tree as a release rather than as one commit of it.
+# One rule differs: a stop in the journey with no anchor on the map is allowed
+# in a commit and refused here (ADR-0069 §6). CI builds every pull request.
+build: ## Validate content for release, build the site, then check the artefact
+	npm run validate-content -- --release
 	npm run build
 	node scripts/deploy-check.mjs
 

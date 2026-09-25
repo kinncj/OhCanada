@@ -19,7 +19,9 @@
  * 6. Validates every screen-art sidecar, `assets/src/svg/screens/<name>.anchors.json`,
  *    against the schema it declares, then cross-checks what no schema can say:
  *    that it describes the drawing beside it, that it anchors every place
- *    game.config.json#/journey names and nothing else, that every coordinate
+ *    game.config.json#/journey names (under --release; a commit may leave one
+ *    awaiting its anchor) and nothing that no level document or story declares,
+ *    that every coordinate
  *    lands inside the viewBox and the inset it claims, that its insets keep
  *    apart (ADR-0069 §3.1-3.3), and that no two pins drawn in one frame are
  *    closer than one pin diameter (§3.4; scripts/lib/screen-art.mjs). UI code places
@@ -43,7 +45,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
-import { SIDECAR_SCHEMA, checkScreenSidecars, screenArtTree } from './lib/screen-art.mjs';
+import { SIDECAR_SCHEMA, checkScreenSidecars, declaredPlaces, screenArtTree } from './lib/screen-art.mjs';
 
 const argv = process.argv.slice(2);
 const rootFlag = argv.indexOf('--root');
@@ -64,6 +66,16 @@ const ROOT =
  * the call site, where a reader sees the waiver. Nothing else may.
  */
 const ALLOW_EMPTY_CONTENT = argv.includes('--allow-empty-content');
+
+/**
+ * `--release` checks the tree as it will SHIP rather than as one commit of it.
+ * `make build` passes it, and CI and the deploy both run `make build`. Today it
+ * changes one rule (ADR-0069 §6, the boundary defect's resolution): a journey
+ * place with no map anchor is reported as awaiting its anchor in a commit, so
+ * content's journey slot and art's anchor can land apart in either order, and
+ * is a failure here, so the map never ships a stop it cannot place.
+ */
+const RELEASE = argv.includes('--release');
 const CONTENT_DIR = join(ROOT, 'content');
 const SCHEMA_DIR = join(CONTENT_DIR, 'schemas');
 const CREDITS_FILE = join(ROOT, 'assets', 'credits.json');
@@ -681,6 +693,8 @@ const sidecarCheck = checkScreenSidecars({
   root: ROOT,
   sidecars: checkableSidecars,
   places: journeyPlaces,
+  declared: declaredPlaces(ROOT),
+  release: RELEASE,
 });
 failures.push(...sidecarCheck.failures);
 
@@ -879,12 +893,32 @@ const separationClause =
         )
         .join('; ');
 
+/**
+ * The boundary between the journey (content's) and the anchors (art's), said in
+ * words either way. AWAITING is a pass only outside --release, and says so, so
+ * a reader of a green commit knows the build will refuse it until art lands.
+ */
+const { ahead, awaiting } = sidecarCheck;
+const journeyClause = [
+  awaiting.length === 0
+    ? `every journey place anchored${RELEASE ? ' (--release)' : ''}`
+    : `${awaiting.length} journey place(s) AWAITING an anchor (${awaiting.join(', ')}): allowed in a commit, ` +
+      'refused by make build (--release, ADR-0069 §6)',
+  ...(ahead.length === 0
+    ? []
+    : [
+        `${ahead.length} anchor(s) ahead of the journey (` +
+          `${ahead.map(({ id, by }) => `${id}, declared by ${by}`).join('; ')}), not drawn until the journey names them`,
+      ]),
+].join(', ');
+
 const screenArtClause = !screenArt.exists
   ? 'no screen art under assets/src/svg/screens/, so no sidecar to check'
   : sidecarCheck.checked === 0
     ? 'no screen-art sidecar to check'
     : `${sidecarCheck.checked} screen-art sidecar(s) cross-checked: ${sidecarCheck.anchors} anchor(s) ` +
-      `against ${journeyPlaces?.length ?? 0} journey place(s) and the drawing's viewBox, ${insetClause}, ` +
+      `against ${journeyPlaces?.length ?? 0} journey place(s) and the drawing's viewBox, ${journeyClause}, ` +
+      `${insetClause}, ` +
       `${separationClause}, ` +
       `${sidecarCheck.regions} region id(s) found in the drawing`;
 
