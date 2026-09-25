@@ -2,7 +2,7 @@
 
 `assets/style/art-bible.md` is the house style. This sheet is the map's contract: where the outline comes
 from, what a line on it claims and does not, how it was simplified, where the ten stops are and why, and
-what the map is still waiting on. Drawn 2026-09-13.
+what the map is still waiting on. Drawn 2026-09-13; corridor inset 2026-09-25 (§7.1).
 
 ---
 
@@ -22,8 +22,8 @@ Files (§11 says where they live and how the screen reaches them):
 
 | file | what | size |
 |---|---|---|
-| `assets/src/svg/screens/map-canada.svg` | the art | 250 113 B, 69 746 B gzip |
-| `assets/src/svg/screens/map-canada.anchors.json` | anchors, inset frame, projection | 2 148 B, 841 B gzip (with its `$schema` line) |
+| `assets/src/svg/screens/map-canada.svg` | the art | 252 364 B, 70 351 B gzip |
+| `assets/src/svg/screens/map-canada.anchors.json` | anchors, two inset frames, projection | 3 003 B, 1 023 B gzip (with its `$schema` line) |
 
 ---
 
@@ -114,7 +114,9 @@ Measured at the size a phone draws it, 390 px wide (0.361 of design).
 - **Straits that identify an island stay open** at 4× zoom: the Strait of Belle Isle between Newfoundland and
   Labrador, Northumberland Strait around Prince Edward Island. At 390 px they are about half a CSS pixel.
 - **Neighbours** are drawn without internal boundaries: no US states, no Alaska–Yukon label, nothing.
-- **The inset** (§7) closes inlets narrower than 3.2 px. That merges the Avon River estuary, 2 px wide there,
+- **The corridor inset** (§7.1) is not simplified again. It draws the main map's own land at 3×, so its coast is
+  exactly as coarse as the main map's (1.6 px simplification, shown as 4.8 px), and no detail was added.
+- **The Atlantic inset** (§7) closes inlets narrower than 3.2 px. That merges the Avon River estuary, 2 px wide there,
   which otherwise drew as a stray light line in the inset's corner (§12).
 
 Result: 8 046 points of Canadian coast and boundary, 5 401 of neighbouring coast.
@@ -132,7 +134,8 @@ Result: 8 046 points of Canadian coast and boundary, 5 401 of neighbouring coast
 | province and territory seams | `grass-shade` stroke, 1.6 px, round | see below |
 | neighbouring land | `path-base` / `path-light` / `path-shade` | same construction, neutral so Canada leads |
 | ambient occlusion | `ao-shadow` at 0.16 and 0.12, offset 6 and 10 px | soft stacked shapes, no filter |
-| inset card | `white-base`; loupe `white-base` at 0.30; card shadow `ao-shadow` at 0.28 | |
+| inset card | `white-base`; loupe `white-base` at 0.30; card shadow `ao-shadow` at 0.28 | both insets |
+| corridor inset, lit rim | `grass-light` / `path-light` | the land drawn 1.3 px up and left under the top fill (§7.1) |
 
 **The rim is computed against all land, not per country**, so it lights a coast and never a land border.
 
@@ -150,8 +153,8 @@ to this tree — one coastline path serves the side, the occlusion and the clip 
 ## 6. The anchors
 
 **The sidecar is the contract**, `map-canada.anchors.json`: `anchors.<levelId>.{x,y}` in the SVG's own viewBox,
-plus the inset frame, its window, the locator box and the two inset anchors, plus the affine from EPSG:3978
-metres to the viewBox, so a later point can be placed without re-deriving anything. A sidecar and not id'd
+plus `insets[]` (ADR-0069), each with its frame, window, locator box, anchors and its own affine, plus the main
+affine from EPSG:3978 metres to the viewBox, so a later point can be placed without re-deriving anything. A sidecar and not id'd
 elements, because the page may show the map as an `<img>`, where ids inside the drawing cannot be reached.
 Province shapes do carry ISO 3166-2 ids (`CA-AB` …) for an inline use.
 
@@ -172,7 +175,22 @@ The basis lives here, in a sheet that never ships.
 | `vancouver` | 194.6 | 429.0 | Canada Place, 49.28864 N 123.11112 W | Wikipedia |
 | `the-north` | 193.5 | 250.4 | SS Klondike, Whitehorse, 60.71333 N 135.0475 W | Wikipedia |
 
-Inset anchors: `halifax` (973.7, 462.3), `peggys-cove` (947.2, 509.4).
+Inset anchors. `insets[0]`, the Atlantic (§7): `halifax` (973.7, 462.3), `peggys-cove` (947.2, 509.4).
+`insets[1]`, the corridor (§7.1): `ottawa` (903.0, 214.2), `toronto` (817.0, 315.8). A stop an inset anchors
+is pinned there and nowhere else. Its main-map anchor stays in the sidecar, inside the locator, as the end of
+any leg to a main-map stop.
+
+**Published for ADR-0069 §6 commit 4, and not in the sidecar.** Kingston has no journey slot yet, and
+`validate-content` refuses an anchor that names no journey place. Whoever lands the slot adds both:
+
+| level | where | x | y | the point | coordinate source |
+|---|---|---|---|---|---|
+| `kingston` | `anchors` | 621.0 | 526.6 | 44.23 N 76.49 W, the city point ADR-0069's header places | ADR-0069 (re-projected here: 620.98, 526.64) |
+| `kingston` | `insets[1].anchors` | 895.2 | 268.8 | the same point, by `insets[1].affine` | derived, §7.1 |
+
+Every other anchor on this map is a landmark. If Kingston's level names one for its hero point (Fort Henry, City
+Hall), re-project it with the two affines and replace both rows; the §7.1 check (it must fall in the window and
+its locator, and clear Ottawa and Toronto by a pin) still has to hold.
 
 **Checked against the drawing, and not moved.** Seven anchors fall inside the drawn land. Three are on the
 water's edge in life and fall **0.3–0.4 px outside the drawn coast**: `peggys-cove`, `quebec-city` (the
@@ -204,6 +222,64 @@ between St Margarets Bay and Halifax Harbour, and Halifax at the head of the har
 inset coast is right in shape and coarse in detail. No harbour narrows, island or shoal was added to make it
 look finer (art bible §5, rule 5).
 
+### 7.1 The Ottawa–Toronto corridor (ADR-0069 §5, drawn 2026-09-25)
+
+**Why.** The page's pin is 4.2 % of the drawing's width, 45.4 units across (`app/ui/screen-styles.ts`). On the
+main map Ottawa and Toronto are **44.4** apart, so their pins touched. Kingston, when it lands, is 18.4 from
+Ottawa and 30.5 from Toronto. Neither anchor moves (§6); the corridor is enlarged instead.
+
+**Scale: exactly 3×**, 0.3690 px per km at the standard parallels. ADR-0069 §5's floor is 45.4 ÷ 18.3 ≈ 2.5×,
+set by Kingston–Ottawa, and 3× leaves Kingston's pin about a fifth of a pin clear of Ottawa's. A whole number also makes the
+drawing exact: the inset is the main map's own land under one `matrix(3 0 0 3 …)`, no re-projection and no
+second simplification (§4).
+
+**Frame, window, locator.** Frame (760, 180, 200 × 170, radius 18) and window (765, 185, 190 × 160): the
+Atlantic card's size, stacked above it in the Labrador Sea with 50 units between the two frames. Locator
+(577.6, 498.7, 63.3 × 53.3) is the window ÷ 3, placed so the three corridor stops sit in the middle of the
+window. It encloses Ottawa and Toronto and Kingston's published point, and no other stop: Québec City
+(658.0, 476.0) is 17 units to the right of it and 23 above.
+
+**The affine, derived, not fitted.** A locator point (x, y) lands at (765 + 3(x − 577.6), 185 + 3(y − 498.7)),
+so with the main affine x = a·E + c, y = d·N + f:
+
+| term | derivation | value |
+|---|---|---|
+| a | 3 × main a | 0.00036902351127323003 |
+| c | 3 × main c + 765 − 3 × 577.6 = 3 × 437.8185012367354 − 967.8 | 345.6555037102062 |
+| d | 3 × main d | −0.00036902351127323003 |
+| f | 3 × main f + 185 − 3 × 498.7 = 3 × 487.59728843870863 − 1311.1 | 151.69186531612604 |
+
+The same numbers are the SVG's transform, `matrix(3 0 0 3 −967.8 −1311.1)`: the inset's land and the anchors
+cannot disagree. **Check, from the coordinates in §6** projected to EPSG:3978 (GRS80 LCC, 49° / 77°, origin
+49° N 95° W; this reproduces every main anchor to 0.05 units):
+
+| stop | E, N (m) | main | inset |
+|---|---|---|---|
+| `ottawa` | 1 510 337, −169 517 | 623.60, 508.45 | **903.0, 214.2** |
+| `toronto` | 1 277 371, −444 825 | 594.95, 542.31 | **817.0, 315.8** |
+| `kingston` (published, §6) | 1 489 058, −317 428 | 620.98, 526.64 | 895.2, 268.8 |
+
+**The fit.** Pins in the inset, from the sidecar's rounded values: Ottawa–Toronto **133.1** (2.9 pins),
+Kingston–Ottawa **55.1**, Kingston–Toronto **91.2**, all over 45.4. Every pin sits at least one radius (22.7) inside
+the window: Ottawa's top is 6.5 below the window's top edge, Toronto's bottom 6.5 above its bottom edge, and the
+nearest side is Toronto's left, 29.3 in. The six main-map pins left are at least 126 units from every frame on the gate's
+per-axis measure (`validate-content`, ADR-0069 §3.3), the nearest being Québec City to the corridor frame, 162.1
+in a straight line.
+
+**What it draws.** Sea, then the ao, the 5 px side, the lit rim and the top of both Canada and the neighbours,
+each a `<use>` of the main map's land paths, and the Ontario–Québec boundary (the Ottawa River) as a copy of the
+main seam scaled 3× and kept at 1.6 px so it reads as the same line. Lake Ontario, the St Lawrence's head and the
+Georgian Bay shore show; the international boundary is a change of tone, as on the main map. The rim is the
+land drawn 1.3 px up and left beneath the top fill: Canada's first and the neighbours' second, then both tops,
+so a rim that crosses the border is covered by the other country's top and only a coast is lit (§12).
+
+**What it hides and what it washes.** The frame covers open Labrador Sea and nothing else: Greenland's southern
+tip lies to its left and Newfoundland below it, both clear. The loupe runs from the locator to the frame's left edge across
+eastern Québec, the Gaspé and Labrador, at 0.30 white, and **Québec City's pin lies under it**. The page draws
+pins above the drawing, and Québec City keeps its own main-map pin and numeral, so the wash is ground, not a
+claim. Hudson Bay, the other candidate area ADR-0069 §5 names, was refused: the frame would cover all of it, and
+Hudson and James Bays are half of the silhouette test (§10).
+
 ---
 
 ## 8. What the map shows that no sentence may say
@@ -214,8 +290,8 @@ look finer (art bible §5, rule 5).
 |---|---|---|---|
 | Halifax → Peggy's Cove | 32 | 238° | 4.0 px (inset 54.0) |
 | Peggy's Cove → Québec City | 623 | 297° | 77.8 px |
-| Québec City → Ottawa | 380 | 248° | 47.3 px |
-| Ottawa → Toronto | 354 | 237° | 44.4 px |
+| Québec City → Ottawa | 380 | 248° | 47.3 px (main map, to Ottawa's point in the corridor locator) |
+| Ottawa → Toronto | 354 | 237° | 44.4 px (inset 133.1) |
 | Toronto → Winnipeg | 1 518 | 303° | 188.2 px |
 | Winnipeg → the Prairies | 609 | 283° | 74.6 px |
 | the Prairies → the Alberta foothills | 615 | 269° | 75.1 px |
@@ -281,7 +357,8 @@ changes and the page can show it whether the map is inline or an `<img>`.
 
 ## 10. Cost, and the two-size test
 
-- **Transfer:** 250 113 B SVG, 69 746 B gzip; sidecar 827 B gzip.
+- **Transfer:** 252 364 B SVG, 70 351 B gzip (the corridor inset added 2 251 B, 620 B gzip: it re-uses the
+  main map's land by `<use>`); sidecar 1 023 B gzip.
 - **Decoded:** at design size 1080 × 600 × 4 B = **2 592 000 B, 2.47 MiB**; at 2× 10 368 000 B, 9.89 MiB. On a
   phone, 390 CSS px wide at device pixel ratio 3, the browser rasterises 1170 × 650 = **3 042 000 B, 2.90 MiB**.
   This is the map screen, not a level, so it is charged to no level's 64 MB — and it must stay that way (§11).
@@ -309,8 +386,10 @@ of what it rasterises, so the map is:
 
 **The sidecar has a schema** (OQ-MAPART-3): it declares `content/schemas/map-anchors.schema.json`, and
 `make validate-content` checks what a schema cannot: `svg` and `viewBox` match this drawing, there is one anchor
-per level document and no other, every anchor lies inside the viewBox, the inset nests as it claims with both
-inset stops inside the locator, and every `CA-` code is an id in the drawing.
+per journey place and no other, every anchor lies inside the viewBox, each inset nests as it claims with its
+stops inside its locator and no other stop there, a stop is in one inset at most, frames do not overlap and
+stay a pin radius clear of every main-map pin (ADR-0069 §3.1–§3.3), and every `CA-` code is an id in the
+drawing.
 
 **How the screen reaches it** (wired into the level select by `app/ui/level-map.ts`): the SVG by URL through the UI build,
 `new URL('…/map-canada.svg', import.meta.url)`, into a decorative `<img alt="">`, so Vite content-hashes it and a
@@ -328,6 +407,9 @@ that is 250 kB of JavaScript string, and ids such as `sea` and `inset` would be 
   that said land meets sea where it does not. Now computed against all land.
 - **A light line in the inset's top-left corner.** Not a claim — the Avon River estuary at 2 px, under the size
   rule — but it read as one. Merged into its banks (§4).
+- **The corridor card at (860, 215), straight above the Atlantic card.** Tidier as a column, but its loupe ran
+  from Lake Ontario to x 860 and washed Québec, New Brunswick, Prince Edward Island and Newfoundland, and passed
+  over the Atlantic card's locator. Moved 100 units left and 35 up (§7.1), where the loupe clears the Maritimes.
 - **In scratch previews only, never in the art:** a red marker per stop and a dashed line joining them in
   order, used to judge the legs. Not shipped: markers carry state the page owns, and straight segments read as
   a route travelled.

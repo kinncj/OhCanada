@@ -373,7 +373,10 @@ describe('the insets (ADR-0069)', () => {
   };
 
   it('has an Atlantic inset in the committed sidecar to build its cases from', () => {
-    expect(REAL.insets?.length).toBe(1);
+    // The Atlantic inset first, then the Ottawa–Toronto corridor (ADR-0069 §6 commit 2).
+    expect(REAL.insets?.length).toBe(2);
+    expect(Object.keys(REAL.insets?.[0]?.anchors ?? {}).sort()).toEqual(['halifax', 'peggys-cove']);
+    expect(Object.keys(REAL.insets?.[1]?.anchors ?? {}).sort()).toEqual(['ottawa', 'toronto']);
     expect(REAL.anchors['winnipeg']).toBeDefined();
     expect(REAL.anchors['quebec-city']).toBeDefined();
     expect(STYLESHEET).toContain(PIN_RULE);
@@ -382,8 +385,9 @@ describe('the insets (ADR-0069)', () => {
   it('says what it measured across the committed insets', () => {
     const result = run(() => undefined);
     expect(result.status, result.output).toBe(0);
-    expect(result.stdout).toContain('1 inset(s): 2 enlarged stop(s) each in one inset');
-    expect(result.stdout).toContain("1 locator(s) enclosing only their own inset's stops");
+    expect(result.stdout).toContain('2 inset(s): 4 enlarged stop(s) each in one inset');
+    expect(result.stdout).toContain("2 locator(s) enclosing only their own inset's stops");
+    expect(result.stdout).toMatch(/1 frame pair\(s\) at least [\d.]+ unit\(s\) apart/);
     expect(result.stdout).toMatch(/\d+ main-map pin\(s\) at least [\d.]+ unit\(s\) from every frame against a pin radius of [\d.]+/);
   });
 

@@ -89,6 +89,45 @@
         "f": 671.0379652259264
       },
       "pxPerKmAtStandardParallels": 1.6501
+    },
+    {
+      "frame": {
+        "x": 760,
+        "y": 180,
+        "width": 200,
+        "height": 170,
+        "radius": 18
+      },
+      "window": {
+        "x": 765,
+        "y": 185,
+        "width": 190,
+        "height": 160
+      },
+      "locator": {
+        "x": 577.6,
+        "y": 498.7,
+        "width": 63.3,
+        "height": 53.3
+      },
+      "anchors": {
+        "ottawa": {
+          "x": 903.0,
+          "y": 214.2
+        },
+        "toronto": {
+          "x": 817.0,
+          "y": 315.8
+        }
+      },
+      "magnification": 3,
+      "affine": {
+        "a": 0.00036902351127323003,
+        "c": 345.6555037102062,
+        "d": -0.00036902351127323003,
+        "f": 151.69186531612604
+      },
+      "pxPerKmAtStandardParallels": 0.369
     }
   ],
   "projection": {
