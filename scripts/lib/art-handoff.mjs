@@ -84,8 +84,10 @@
  *
  * `renderRecipe` is prose written for a human draughtsman. It cannot be
  * executed. The table below implements one builder per subject and the gate
- * FAILS if `references.json` grows a subject with renders that this table does
- * not cover. Skipping an unknown subject would be the vacuum: art adds a
+ * FAILS if `references.json` grows a subject with renders that neither this
+ * table nor the subject's own `handoff` field covers. `handoff` names one of
+ * the two data-only shapes (`resolveBuilder`), so art can add a landmark or a
+ * two-tile composite without editing this file. Skipping an unknown subject would be the vacuum: art adds a
  * subject, the harness silently verifies four fifths of the set, and the output
  * looks exactly the same.
  */
@@ -2471,6 +2473,119 @@ export const isRendered = (subject) =>
   (Array.isArray(subject?.renders) && subject.renders.length > 0) || buildsFromRig(subject?.id);
 
 /**
+ * THE CONTRACT MAY NAME ITS SUBJECT'S SHAPE, SO ART ADDS A SUBJECT WITHOUT
+ * EDITING THIS FILE (docs/plan/kingston.md K-0.8).
+ *
+ * Every Québec City stop needed a line here, `'wolfe-montcalm': singleSource()`,
+ * and so did every landmark before it: an art subject could not land without an
+ * infra edit. The two shapes a line here almost always is are factories that
+ * take data and no code (`singleSource`, `twoParallaxTiles`), so the contract
+ * can carry the data:
+ *
+ *   "handoff": { "builder": "single-source" }
+ *   "handoff": { "builder": "two-parallax-tiles", "farMatch": "canalwall",
+ *                "nearMatch": "ice", "nearTop": 580,
+ *                "what": "a canal wall and an ice layer" }
+ *
+ * WHAT DOES NOT CHANGE. The builders are the same functions, so a subject built
+ * from the contract is handed over exactly as one built from the table: the
+ * same rasterising, matte, salted names, length padding and leak scan, and its
+ * `renders[]`, ids and answers are leak tokens as before (`leakTokens` reads the
+ * subject, not the table). `handoff` itself is never handed over and never
+ * printed under --quiet. A subject with renders and neither statement still
+ * FAILS, which is the vacuum the table refused.
+ *
+ * WHAT IS REFUSED, so the data cannot say less than the table did:
+ *   - a subject stated BOTH here (RECIPES) and in the contract. Two statements
+ *     of one thing drift; the table entry goes when the contract takes over;
+ *   - a builder name this file does not know, a parameter it does not take, one
+ *     it needs and was not given, or one of the wrong type;
+ *   - `farMatch` and `nearMatch` selecting the same file, which would composite
+ *     one tile over itself and render;
+ *   - a `handoff` on a subject that declares `renders: []`, which contradicts it.
+ *
+ * Bespoke builders (the figures, the mounted subjects, the comparisons) stay in
+ * the tables above: they are code, and code is infra's.
+ */
+const CONTRACT_BUILDERS = {
+  'single-source': { params: {}, make: () => singleSource() },
+  'two-parallax-tiles': {
+    params: { farMatch: 'text', nearMatch: 'text', nearTop: 'integer', what: 'text' },
+    make: ({ farMatch, nearMatch, nearTop, what }) => twoParallaxTiles({ farMatch, nearMatch, nearTop, what }),
+  },
+};
+
+const PARAM_OK = {
+  text: (value) => typeof value === 'string' && value.trim() !== '',
+  integer: (value) => Number.isInteger(value),
+};
+
+const resolved = new WeakMap();
+
+/**
+ * Where a subject's builder comes from: `{ builder, from, problem }`, `from`
+ * being `'table'`, `'contract'` or `null`. `problem` is a failure message when
+ * the contract's statement is refused (see above), and `builder` is then null.
+ */
+export function resolveBuilder(subject) {
+  if (subject !== null && typeof subject === 'object' && resolved.has(subject)) return resolved.get(subject);
+  const answer = (() => {
+    const id = subject?.id;
+    const tabled = Object.hasOwn(RECIPES, id ?? '') ? RECIPES[id] : undefined;
+    if (!subject || !Object.hasOwn(subject, 'handoff')) {
+      return { builder: tabled ?? null, from: tabled ? 'table' : null, problem: null };
+    }
+    const refuse = (why) => ({ builder: null, from: null, problem: `${id}: \`handoff\` in references.json ${why}` });
+    if (tabled) {
+      return refuse(
+        'and scripts/lib/art-handoff.mjs RECIPES both say how to build it. One statement, not two: ' +
+          'remove the RECIPES entry when the contract takes the subject over.',
+      );
+    }
+    const declared = subject.handoff;
+    if (declared === null || typeof declared !== 'object' || Array.isArray(declared)) {
+      return refuse('is not an object naming a `builder`.');
+    }
+    const kind = Object.hasOwn(CONTRACT_BUILDERS, declared.builder ?? '') ? CONTRACT_BUILDERS[declared.builder] : null;
+    if (!kind) {
+      return refuse(
+        `names builder ${JSON.stringify(declared.builder)}, and the contract can name only ` +
+          `${Object.keys(CONTRACT_BUILDERS).map((name) => `"${name}"`).join(' or ')}. A new shape is code, in this file.`,
+      );
+    }
+    for (const key of Object.keys(declared)) {
+      if (key !== 'builder' && !Object.hasOwn(kind.params, key)) {
+        return refuse(`gives "${declared.builder}" a parameter it does not take: "${key}".`);
+      }
+    }
+    for (const [key, type] of Object.entries(kind.params)) {
+      if (!Object.hasOwn(declared, key)) return refuse(`gives "${declared.builder}" no "${key}".`);
+      if (!PARAM_OK[type](declared[key])) {
+        return refuse(
+          `gives "${declared.builder}" a "${key}" that is not ${type === 'integer' ? 'an integer' : 'non-empty text'}.`,
+        );
+      }
+    }
+    if (Array.isArray(subject.renders) && subject.renders.length === 0) {
+      return refuse('says how to build it, and `renders: []` says there is nothing to build.');
+    }
+    if (declared.builder === 'two-parallax-tiles' && Array.isArray(subject.renders)) {
+      const far = subject.renders.find((r) => r.includes(declared.farMatch));
+      const near = subject.renders.find((r) => r.includes(declared.nearMatch));
+      if (far !== undefined && far === near) {
+        return refuse('has `farMatch` and `nearMatch` selecting the same render, which would lay one tile over itself.');
+      }
+    }
+    return { builder: kind.make(declared), from: 'contract', problem: null };
+  })();
+  if (subject !== null && typeof subject === 'object') resolved.set(subject, answer);
+  return answer;
+}
+
+/** The builder for a subject, from the table or the contract, or null. */
+export const builderFor = (subject) => resolveBuilder(subject).builder;
+
+/**
  * IS A PARALLAX COMPOSITE'S OFFSET STILL THE LEVEL'S OFFSET?
  *
  * Eight entries in `RECIPES` carry a sentence of the form "Confirmed against
@@ -2504,7 +2619,7 @@ export const isRendered = (subject) =>
 export function levelOffsetDrift({ root, references }) {
   const drift = [];
   for (const subject of references.subjects ?? []) {
-    const parallax = RECIPES[subject.id]?.parallax;
+    const parallax = builderFor(subject)?.parallax;
     if (!parallax || !Array.isArray(subject.renders)) continue;
 
     const offsetOf = (match) => {
@@ -2586,14 +2701,20 @@ export function checkContract({ references, failures }) {
       continue;
     }
 
+    const { builder, problem } = resolveBuilder(subject);
+    if (problem) {
+      failures.push(problem);
+      continue;
+    }
     if (subject.renders.length === 0 && !buildsFromRig(id)) {
       unrendered.push({ subjectId: id, why: subject.renderRecipe });
       continue;
     }
-    if (!RECIPES[id]) {
+    if (!builder) {
       failures.push(
-        `${id}: has renders and this harness has no builder for it. ` +
-          `scripts/lib/art-handoff.mjs RECIPES needs one. Skipping an unknown ` +
+        `${id}: has renders and this harness has no builder for it. Name its shape in ` +
+          `references.json (\`handoff\`, see \`resolveBuilder\`), or, for a shape that ` +
+          `is code, scripts/lib/art-handoff.mjs RECIPES needs one. Skipping an unknown ` +
           `subject would verify four fifths of the set and print the same OK.`,
       );
       continue;
@@ -3248,7 +3369,7 @@ export async function buildHandoff({
      * distinct appearances produces two byte-identical renders, which this
      * harness (rightly) refuses as one verdict answering both.
      */
-    const builder = RECIPES[subject.id];
+    const builder = builderFor(subject);
     const copies = builder.distinctFigures
       ? Math.min(Math.max(1, variants), builder.distinctFigures(rig))
       : 1;

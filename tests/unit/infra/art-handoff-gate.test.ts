@@ -2313,6 +2313,130 @@ describe('the anti-vacuum floor', () => {
  * 5. Scoring a verdict
  * ================================================================== */
 
+/* ================================================================== *
+ * The contract names its own shape (docs/plan/kingston.md K-0.8)
+ * ================================================================== */
+
+/*
+ * A new blind-run subject used to need a line in scripts/lib/art-handoff.mjs's
+ * RECIPES, an infra file, even when the line was `singleSource()` with nothing
+ * of its own: Québec City's `wolfe-montcalm` was one. Now the subject's own
+ * `handoff` field in references.json names one of the two data-only shapes.
+ * The first two cases fail on the table-only harness ("this harness has no
+ * builder for it"); the rest are the refusals that keep the data from saying
+ * less than the table did.
+ */
+describe('a subject the contract says how to build', () => {
+  const LANDMARK = 'src/svg/ottawa/landmark-parliament-hill.svg';
+  /** Its own file: two subjects rasterised from one would hand over one picture twice. */
+  const HOTEL = 'src/svg/ottawa/landmark-hotel.svg';
+  const FAR = 'src/svg/ottawa/layer-30-canalwall.svg';
+  const NEAR = 'src/svg/ottawa/layer-40-ice.svg';
+  /** An id no table entry carries, so only the contract can build it. */
+  const fresh = (handoff: unknown, renders: readonly string[] = [HOTEL]) => ({
+    ...PEACE_TOWER,
+    id: 'chateau-laurier',
+    expectedBlindAnswer: ['Chateau Laurier'],
+    renders,
+    handoff,
+  });
+  const TWO_TILES = {
+    builder: 'two-parallax-tiles',
+    farMatch: 'canalwall',
+    nearMatch: 'ice',
+    nearTop: 120,
+    what: 'a wall and an ice layer',
+  };
+  const composite = (handoff: unknown = TWO_TILES) => ({ ...fresh(handoff, [FAR, NEAR]) });
+  const TILES = { [FAR]: svg(300, 200, '#c8a05a'), [NEAR]: svg(200, 150, '#8fb8d8') };
+  const SINGLE = { [LANDMARK]: svg(400, 300, '#c8a05a'), [HOTEL]: svg(320, 260, '#7a5c3a') };
+
+  it('hands over a landmark whose contract names `single-source`, with no table entry', () => {
+    const root = fixture('contract-single', {
+      subjects: [PEACE_TOWER, fresh({ builder: 'single-source' }), UNRENDERED],
+      sources: SINGLE,
+    });
+    const built = handoff(root, [...CHEAP]);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+    const entries = keymap.entries.filter((e) => e.subjectId === 'chateau-laurier');
+    expect(entries.length, 'the contract-built subject was not handed over').toBeGreaterThan(0);
+    for (const entry of entries) expect(entry.sources).toEqual([HOTEL]);
+  });
+
+  it('hands over a two-tile composite whose contract gives its offsets, placed by `nearTop`', () => {
+    const root = fixture('contract-composite', {
+      subjects: [PEACE_TOWER, composite(), UNRENDERED],
+      sources: { [LANDMARK]: svg(400, 300, '#c8a05a'), ...TILES },
+    });
+    const built = handoff(root, [...CHEAP]);
+    expect(built.result.status, built.result.output).toBe(0);
+    const keymap = readKeymap(built.keymapPath) as { entries: KeymapEntry[] };
+    const entry = keymap.entries.find((e) => e.subjectId === 'chateau-laurier' && e.slots.nearTop !== undefined);
+    expect(entry, 'the contract-built composite was not handed over').toBeDefined();
+    expect(entry?.sources).toEqual([FAR, NEAR]);
+    expect(entry?.slots).toMatchObject({ nearTop: 120, farAt: 0, nearAt: 120 });
+  });
+
+  it('names no contract-built subject under --quiet either', () => {
+    const root = fixture('contract-quiet', {
+      subjects: [PEACE_TOWER, fresh({ builder: 'single-source' }), UNRENDERED],
+      sources: SINGLE,
+    });
+    const built = handoff(root, [...CHEAP, '--quiet']);
+    expect(built.result.status, built.result.output).toBe(0);
+    expect(built.result.output).not.toMatch(/chateau|laurier/i);
+  });
+
+  it('refuses a subject stated both in the table and in the contract', () => {
+    const both = { ...PEACE_TOWER, handoff: { builder: 'single-source' } };
+    const result = run(['--root', fixture('contract-and-table', { subjects: [both, UNRENDERED] })]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('RECIPES both say how to build it');
+  });
+
+  it.each([
+    ['an unknown builder', { builder: 'three-tiles' }, 'names builder "three-tiles"'],
+    ['a parameter the builder does not take', { builder: 'single-source', scale: 2 }, 'does not take: "scale"'],
+    ['a missing parameter', { ...TWO_TILES, nearTop: undefined }, 'no "nearTop"'],
+    ['a parameter of the wrong type', { ...TWO_TILES, nearTop: '120' }, '"nearTop" that is not an integer'],
+    ['one render selected twice', { ...TWO_TILES, nearMatch: 'canalwall' }, 'selecting the same render'],
+    ['a handoff that is not an object', 'single-source', 'is not an object naming a `builder`'],
+  ])('refuses %s', (_name, handoffValue, message) => {
+    const declared = JSON.parse(JSON.stringify(handoffValue)) as unknown;
+    const result = run([
+      '--root',
+      fixture('contract-refused', {
+        subjects: [PEACE_TOWER, composite(declared), UNRENDERED],
+        sources: { [LANDMARK]: svg(400, 300, '#c8a05a'), ...TILES },
+      }),
+    ]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain(message);
+  });
+
+  it('refuses a `handoff` on a subject that declares `renders: []`', () => {
+    const result = run([
+      '--root',
+      fixture('contract-no-renders', { subjects: [PEACE_TOWER, fresh({ builder: 'single-source' }, [])], sources: SINGLE }),
+    ]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('`renders: []` says there is nothing to build');
+  });
+
+  it('still refuses a one-source shape on a subject with two sources', () => {
+    const result = run([
+      '--root',
+      fixture('contract-outgrown', {
+        subjects: [PEACE_TOWER, composite({ builder: 'single-source' }), UNRENDERED],
+        sources: { [LANDMARK]: svg(400, 300, '#c8a05a'), ...TILES },
+      }),
+    ]);
+    expect(result.status, result.output).toBe(1);
+    expect(result.stderr).toContain('It needs a composite builder');
+  });
+});
+
 describe('scoring a verdict', () => {
   const root = fixture('scoring');
 
