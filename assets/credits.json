@@ -3098,6 +3098,15 @@
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
     },
     {
+      "path": "refs/kingston/rmc-college-flag-2020.jpg",
+      "kind": "reference",
+      "title": "Flag of the Royal Military College of Canada (adopted 31 July 1920), official 2020 SVG rendering",
+      "author": "Artist of the College of Arms, London; SVG rendering by Christopher Boucher (2020), graphic designer for the Royal Military College of Canada",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Royal_Military_College_of_Canada.svg",
+      "modifications": "Rasterised from the Commons SVG (https://upload.wikimedia.org/wikipedia/commons/9/91/Flag_of_the_Royal_Military_College_of_Canada.svg, sha1 c1f78afdc2ee279fbdf9ac8122ca289716ba016d, fetched 2026-09-26) to 1600 px long edge, sRGB, on white; all metadata stripped. Licence read from the Commons API the same day: {{PD-Canada}} (Crown copyright, first published more than 50 years ago). Commons ALSO marks the file {{trademark}} and {{insignia}}: it is a Prohibited Mark under subparagraph 9(1)(n)(i) of the Trademarks Act, and trademark status is independent of copyright. The game does not reproduce it: the shipped prop shows a simplified depiction, the red-white-red bands with the college's arms reduced to one plain grey shape, with no crown, arm, maple leaves, wreath, motto or lettering (assets/style/kingston-level.md section 6)."
+    },
+    {
       "path": "refs/kingston/lake-ontario-to-wolfe-island-2012.jpg",
       "kind": "reference",
       "title": "Lake Ontario from Kingston to the island shore and its wind turbines, 21 August 2012",
@@ -3185,7 +3194,7 @@
       "author": "TrueNorth contributors",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-royal-military-college@1x.svg",
-      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings only: no cadet, crest, badge, flag or lettering. Redrawn 2026-09-25 from the same elevation after a blind run read it as a city hall: two storeys over a basement row and five bays a side, as photographed, and the tower's round face drawn without hands (assets/style/kingston-level.md section 6). The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540: at 300 and 140 px the tower, its roof, the pavilion roofs and the dormer row survive."
+      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings and the college's own flag only: no cadet, crest, badge or lettering. The flag (added 2026-09-26 under the amendment to Ruling 2) flies from the flagstaff on the tower where both photographs show one, drawn from refs/kingston/rmc-college-flag-2020.jpg as a simplified depiction: three equal vertical red-white-red bands at 3:2, the arms reduced to one plain grey shape, no heraldic detail. Redrawn 2026-09-25 from the same elevation after a blind run read it as a city hall: two storeys over a basement row and five bays a side, as photographed, and the tower's round face drawn without hands (assets/style/kingston-level.md section 6). The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540, and again at 800 x 720 with the flag: at 300 and 140 px the tower, its roof, the pavilion roofs and the dormer row survive, and at 200 px (25 %) the flag's three bands are 8 px each and read."
     }
   ]
 }

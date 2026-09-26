@@ -83,7 +83,11 @@ why. Licences were re-checked against the Wikimedia Commons API on 2026-09-08 be
   the Kingston Mills locks (one present-day frame and two 1898-1920 photographs), the Royal Military College's
   Mackenzie Building (a 2007 elevation and a 2008 daylight view), Kingston harbour from Fort Henry, and the lake
   to the island shore. Fourteen files, licence-checked on **2026-09-25** before download: one CC0, three public
-  domain (Marsden Kemp, Archives of Ontario), four CC BY 2.0 and six CC BY 3.0.
+  domain (Marsden Kemp, Archives of Ontario), four CC BY 2.0 and six CC BY 3.0. **A fifteenth added 2026-09-26**
+  for the amendment to Ruling 2: `rmc-college-flag-2020.jpg`, a 1600 px rasterisation of the Commons SVG of the
+  college's 1920 flag, public domain in Canada and ALSO tagged trademarked and insignia on Commons (a Prohibited
+  Mark, Trademarks Act s. 9(1)(n)(i)). The game draws a simplified depiction of it, never the arms
+  (`assets/style/kingston-level.md` §6).
 
   **Two of the fourteen are colour traps and are labelled as such in `references.json`.**
   `rmc-mackenzie-building-elevation-2007.jpg` is a floodlit night exposure and a geometry reference only;

@@ -56,7 +56,7 @@ Nine SVG sources. `scripts/assets.mjs` reads the level from the path, so everyth
 | `kingston-landmark-fort-henry` | `landmark-fort-henry@1x.svg` | 760 × 290 | **stop 1**: Fort Henry's casemate range on the parade, with the rampart, its railing, chimneys and two guns |
 | `kingston-prop-kingston-city-hall` | `prop-kingston-city-hall@1x.svg` | 800 × 560 | **stop 2**: Kingston City Hall's harbour front, portico and dome |
 | `kingston-prop-kingston-mills` | `prop-kingston-mills@1x.svg` | 720 × 520 | **stop 3**: a Kingston Mills lock chamber and its timber gates, in summer |
-| `kingston-prop-royal-military-college` | `prop-royal-military-college@1x.svg` | 800 × 540 | **stop 4**: the Mackenzie Building of the Royal Military College, on Point Frederick |
+| `kingston-prop-royal-military-college` | `prop-royal-military-college@1x.svg` | 800 × 720 | **stop 4**: the Mackenzie Building of the Royal Military College, on Point Frederick, flying the college's own red-white-red flag (720 rows since 2026-09-26, §6) |
 
 **No POI marker and no particle file.** Québec City's sheet records 0.55 MiB of markers and a snow particle that
 are packed, charged and referenced by nothing. Kingston is summer with no weather, and the markers are not art a
@@ -145,10 +145,12 @@ art was built for.
 | `fort-henry` | 1 540 | 1280 | `kingston-landmark-fort-henry` | 760 × 290 | 990 |
 | `kingston-city-hall` | 3 140 | 1280 | `kingston-prop-kingston-city-hall` | 800 × 560 | 720 |
 | `kingston-mills` | 4 740 | 1280 | `kingston-prop-kingston-mills` | 720 × 520 | 760 |
-| `royal-military-college` | 6 340 | 1280 | `kingston-prop-royal-military-college` | 800 × 540 | 740 |
+| `royal-military-college` | 6 340 | 1280 | `kingston-prop-royal-military-college` | 800 × 720 | 560 |
 
   Every top is well clear of the 120 px system band. City Hall's clock is at world ≈ 871 and the college's at
   ≈ 844 (its round face, drawn without hands since the redraw in §6), both above the lower-third HUD at 1280.
+  The college's flag, added 2026-09-26, flies at world ≈ 575 … 640 at the top of its staff (the file's rows
+  14 … 78); the 180 rows it added are above the building, so no position, radius or ground number changes.
 - **`size.x` ≥ 7 680**, which the plan expects, so that every POI's x + radius sits before `size.x − 540`
   (ADR-0074 §4). Every layer and the paving tile, so width is free.
 - **Per 1 440 px promenade tile**, from the tile origin: trees at 180 / 700 / 1 180, lamp standards at
@@ -171,7 +173,8 @@ art was built for.
 **There is not a single `<filter>`, `<linearGradient>`, `<radialGradient>`, `<text>`, `<image>`, `<style>` or
 `url(…)` in any of the nine sources**; the palette lint inside `make assets` checks it and reported OK over all
 212 sources in the scratch run. Two sources use a `<g transform="translate(0 …)">` to crop a drawing grid to the
-rows it covers (§5).
+rows it covers (§5), and since 2026-09-26 the college uses one the other way, to add 180 rows above its tower for
+the flagstaff (§6).
 
 | effect | plain form — what everyone sees | filtered form, if a tier ever offers one |
 |---|---|---|
@@ -196,7 +199,7 @@ texture-memory: kingston 28.81 MiB of 36.00 MiB FILES, measured from 13 file(s)
                 CHARGED 30.53 MiB of 36.00 MiB (85%, 5 735 584 B spare) = files + 1.72 MiB character surface
 ```
 
-**Re-measured 2026-09-25 on this branch, after the Fort Henry rename and the college redraw (§6):** `make assets` green with the real level document; transfer payload 0.56 MiB against 8 MiB; Kingston's own art **85 280 B** (+518 B, the college's WebP 7 300 B); decoded files 28.96 MiB, charged 30.68 MiB of 36 MiB (85 %, 5 580 596 B spare). The tables below are the first measurement and are kept as it.
+**Re-measured 2026-09-25 on this branch, after the Fort Henry rename and the college redraw (§6):** `make assets` green with the real level document; transfer payload 0.56 MiB against 8 MiB; Kingston's own art **85 280 B** (+518 B, the college's WebP 7 300 B); decoded files 28.96 MiB, charged 30.68 MiB of 36 MiB (85 %, 5 580 596 B spare). **Re-measured 2026-09-26 after the college flag (§6):** `make assets` green; transfer payload still 0.56 MiB against 8 MiB; the college's WebP 8 874 B (+1 574 B on 7 300 B); decoded files **29.51 MiB**, charged **31.23 MiB of 36 MiB (87 %, 5 004 596 B spare)**. The college prop is now 800 × 720 = **2.20 MiB** decoded, exactly 576 000 B (800 × 180 × 4) more than at 540 rows, which is the whole change; the rest of the difference from the 2026-09-25 line is the shared character atlas, which `main` has since grown to 1361 × 1955 (10.15 MiB). The tables below are the first measurement and are kept as it.
 
 **Transfer payload: 0.54 MiB against 8 MiB — 7 %**, of which the shared character atlas is most.
 
@@ -325,9 +328,9 @@ within a few points, and `limestone` (hsl 26, 13 %, 60 % at its base) drew the f
   the daylight photograph carries a strong magenta cast. Neither was sampled for hue; the daylight one settles
   which roofs are dark (the tower's, `slate`) and which are green (the pavilions and wings, `glacier`, a muted
   grey-green, never Parliament Hill's bright `copper`).
-- **Buildings only.** No cadet, no crest over the door or on the tower (the carving is left as plain stone), no
-  flag on the tower, no memorial arch. The stop's card teaches the red-white-red flag pattern **in words**; the
-  flag is not drawn.
+- **The building and the college's own flag.** No cadet, no crest over the door or on the tower (the carving is
+  left as plain stone), no memorial arch. Until 2026-09-26 the flag was not drawn either and the card taught the
+  red-white-red pattern in words only; the amendment to Ruling 2 put it on the tower (below, "The college flag").
 - **Two-size test**: at 300 and 140 px the tower's stages, its roof, the pavilion roofs and the dormer row
   survive; at 140 px it is a long low block with a tall slender central tower under a steep flat-topped roof and
   a steep flat-capped roof at each end.
@@ -370,11 +373,85 @@ photograph nor its record says which building is which, so drawing any of them a
 be a guess. A present-day, licence-clean photograph that shows the Mackenzie Building from the water or across
 the square would open that option.
 
-**What this redraw cannot do.** The verifier's own finding says it: the markers that would say "college" rather
+**What this redraw cannot do** (written 2026-09-25; the flag half of it was overtaken the next day, see "The
+college flag" below). The verifier's own finding says it: the markers that would say "college" rather
 than "civic building" are cadets, the crest, the flag and the gate arch, and Ruling 2 forbids all four. The
 redraw makes the building truer to its photograph, and it drops the one cue the contract itself was pushing.
 Whether that is enough can only be judged blind. If the next blind run still reads a city hall, the question
 goes to the contract owner, as the verifier asked: what this subject can be asked for, not how to draw it.
+
+#### The college flag (amendment to Ruling 2, 2026-09-26)
+
+Blind run `e71e2696` (`docs/art-verification.json`, `findingsForArt[0]`) read the redrawn building at every size
+as *"Parliament Building of Quebec (Hôtel du Parlement)"*, a named FAIL, and asked the contract owner what this
+subject could be asked for, since every marker that says "college" was refused. The project owner amended Ruling 2
+(`docs/stories/TN-LEVEL-kingston.md`, committed in `672efdb`): the guide ties the college to exactly one thing,
+*"The red-white-red pattern comes from the flag of the Royal Military College, Kingston, founded in 1876"*
+(p. 79), so that flag is drawn. Cadets, uniforms and every other insignia stay refused.
+
+**Source.** `refs/kingston/rmc-college-flag-2020.jpg`, a 1600 px rasterisation of the Commons file
+[`Flag_of_the_Royal_Military_College_of_Canada.svg`](https://commons.wikimedia.org/wiki/File:Flag_of_the_Royal_Military_College_of_Canada.svg):
+the flag adopted 31 July 1920, by the Artist of the College of Arms, London, rendered in SVG by Christopher
+Boucher (2020). Public domain in Canada (Crown copyright, published more than 50 years ago). **Commons also tags
+it trademarked and as insignia**: it is a Prohibited Mark under Trademarks Act s. 9(1)(n)(i). That is recorded,
+not resolved, in `credits.json` and `references.json` `licenceAudit`, and the game shows a **simplified
+depiction**, not the mark: the bands, and one plain shape where the arms are.
+
+**Where it flies, and why there.** Both reference photographs place **one flagstaff, rising from the centre of
+the tower's flat top**: the 2007 elevation square on, and the 2008 daylight view from below. So the staff is
+there, at x 400, and nowhere else; no second staff and no staff on a pavilion. Measured on the elevation, the
+staff stands **0.234 of the building's width** above the tower cap; drawn 187 px on 800 (0.234). The flag flies
+to the right, as both photographs show it. **Present state, said plainly:** the 2008 photograph shows the
+National Flag of Canada on that staff, and the 2007 one an unidentifiable red-and-white flag at night. Neither
+shows the college flag on it. The staff's place is photographed; the college flag on it is the amendment's
+choice, because it is the flag the guide names. The file grew **180 rows at the top** (540 → 720) to hold the
+staff; the building is unchanged under a `translate(0 180)`, and its bottom edge is still the ground line.
+
+**What is drawn, measured on the reference.** The Commons SVG is 3:2 (539.4 × 359) in **three equal bands**
+(179.8 each), with the arms spanning 0.25 of the width and 0.625 of the drop, centred. Drawn **96 × 64**, bands
+**32 px each**, in `flag-red` and `white`, with a gentle wave in the top and bottom edges only. The cel light
+and shade run **along** the flag (a lit top edge, a shaded lower edge) and never down it: the first pass shaded a
+vertical fold, and at play size the fold read as extra stripes and blurred the band count. Nothing inside the
+flag is vertical now except the two band edges.
+
+**The arms: one plain shape.** Crown, armoured arm, three maple leaves, red-and-white wreath and the bilingual
+motto scroll are all detail under the 12 px floor at play size and heraldic besides. By art-bible §5 rule 4 they
+are dropped, not substituted: **one plain grey ellipse (`path-base`), 18 × 34 px**, at the arms' place and
+roughly their proportion, with nothing drawn inside it. Grey was chosen because the armoured arm is the arms'
+largest area; red was refused because a red shape in a white band between red bands is the maple leaf flag, and
+green because it would read as a device.
+
+**It must not read as the maple leaf flag, and what separates it.** Equal thirds, not the National Flag's 1:2:1;
+3:2, not 2:1; and no leaf, no red device, nothing in the white band but a small grey mark. The contract names the
+maple leaf flag, and a leaf in any colour, in `neverAdd`.
+
+**The size is exaggerated, and labelled.** The photographed flag's drop is about 0.03 of the building's width;
+drawn 0.08, about 2.3 times, so the bands survive: 32 px at 1×, 8 px at 25 % (200 px wide). Art-bible §5 rule 2
+(exaggerating an identifying feature is simplification). At 25 % the grey shape is about 4 × 8 px, under the
+floor, and reads as a dark mark in the white band rather than as a device, which is what it should do.
+
+**A new risk the flag brings, named in the contract.** A vertical red-white-red tricolour in equal bands is also
+**Peru's** flag, and Peru's state flag carries arms in the white band. "A Peruvian government building" is written
+into `expectedBlindAnswerNote` as a FAIL, beside "a city hall" and "a parliament", which stay FAILs.
+
+**Contract changes** (`references.json`, `royal-military-college`): the flag is `mustBeRight[5]` with its source,
+measurements and exaggeration; `simplifyAway` loses "the flagstaff on the tower and the flag on it" and gains the
+arms-to-one-shape rule and the staff's guy wires and halyard; `neverAdd` loses its flag entry and gains heraldic
+detail on the flag and any maple leaf or second flag, while cadets, figures, uniforms, the building's own carved
+arms and the memorial arch stay refused. **Accepted answers:** "a military college" stays; **"a military academy"
+is added**, because academy is the ordinary English type-word for the same institution and the method doc puts
+a synonym for a depicted thing in the contract, decided by its owner, not in the scorer. Its two content words
+both have to appear, and no named FAIL reading carries "academy" or "college"; "a military building", "a
+barracks" and "a military base" were considered and refused, because Fort Henry in this level is all three. The
+college stays **accepted, not required**: a blind viewer who does not know the college's flag cannot get
+"college" from it, and requiring it would tighten the contract to force a result. The reasoning is written into
+`expectedBlindAnswerNote`.
+
+**Two-size test, again.** At 200 px (25 %) the three bands read and the tower, pavilion roofs and dormer row
+survive as before. As a 120 px black silhouette the staff and a small rectangle on it are added above the
+tower; a silhouette cannot carry the bands, so the flag is a colour feature, as the Fort Henry arches are.
+
+**Owed:** a blind run. Whether a viewer reads "college" from this flag, or "Peru", can only be judged blind.
 
 **For the harness owner, not changed here: the matcher would have passed the city-hall reading.**
 `contractDefectsForTheOwner[0]` in the same record: the comparison accepts an answer when every content word of
@@ -389,7 +466,7 @@ accepted phrases on this subject were left as they are: removing them would be t
 force a result, which this redraw was told not to do.
 
 **Shape counts**, reported per art-bible §1 and not a gate (ADR-0025): Fort Henry 337 drawing elements, City Hall 214,
-Kingston Mills 232, the college 437 (280 before the redraw: five bays a side, the pavilion attic storeys and the tower's staging).
+Kingston Mills 232, the college 449 (437 before the flag, 280 before the redraw: five bays a side, the pavilion attic storeys and the tower's staging; the flag and its staff are 12).
 
 ---
 
@@ -404,17 +481,21 @@ The story's list is a rule, and every item of it is in a `neverAdd`:
 - **No Indigenous person in any form and no object belonging to any nation** (content-review §1, items 2 and 6;
   §4.4). No Métis sash, nothing from §5.2's list.
 - **No Macdonald statue, anywhere.** It was removed in 2021.
-- **No crest, badge or coat of arms** on the college or City Hall, and none at the fort.
-- **No flag anywhere** (OQ-ART-04 is open): not on the fort's rampart, City Hall, the college's tower or the lock.
+- **No crest, badge or coat of arms** on the college or City Hall, and none at the fort. The college's arms
+  appear only on its flag, reduced to one plain shape (§6).
+- **One flag in the level, and only one: the college's own, on its tower** (amendment to Ruling 2,
+  2026-09-26; §6). No flag on the fort's rampart, City Hall or the lock, and no National Flag anywhere
+  (OQ-ART-04 is open).
 - **No lettering, sign, plaque, lock number or livery**, and no blank or faux-text board standing in for one.
 
 ---
 
 ## 8. References, and what could not be sourced under an allowed licence
 
-Fourteen files in `assets/refs/kingston/`, all licence-checked on **2026-09-25** before download and re-read
-after, all credited in `assets/credits.json` with `kind: "reference"`: one CC0, three public domain (Marsden Kemp,
-Archives of Ontario), four CC BY 2.0 and six CC BY 3.0. `references.json` `licenceAudit.note` carries the record.
+Fifteen files in `assets/refs/kingston/`, all licence-checked before download (fourteen on **2026-09-25**, the
+college flag on **2026-09-26**) and re-read after, all credited in `assets/credits.json` with `kind: "reference"`:
+one CC0, four public domain (Marsden Kemp, Archives of Ontario, and the college flag), four CC BY 2.0 and six
+CC BY 3.0. `references.json` `licenceAudit.note` carries the record.
 
 | file | author | licence | date |
 |---|---|---|---|
@@ -431,6 +512,7 @@ Archives of Ontario), four CC BY 2.0 and six CC BY 3.0. `references.json` `licen
 | `kingston-mills-lock-and-basin-1900s.jpg` | Marsden Kemp (Archives of Ontario) | public domain | 1898-1920 |
 | `rmc-mackenzie-building-elevation-2007.jpg` | Martin St-Amant | CC BY 3.0 | 2007-05-03 |
 | `rmc-mackenzie-building-daylight-2008.jpg` | k_hargrav | CC BY 2.0 | 2008-08 |
+| `rmc-college-flag-2020.jpg` | Artist of the College of Arms, London; SVG by Christopher Boucher | public domain (Canada); Commons also marks it trademarked and insignia | flag 1920-07-31, SVG 2020 |
 | `lake-ontario-to-wolfe-island-2012.jpg` | kezee | CC BY 2.0 | 2012-08-21 |
 
 **Could not be sourced under CC0 or CC BY, and so not drawn or drawn another way:**
@@ -452,7 +534,9 @@ Archives of Ontario), four CC BY 2.0 and six CC BY 3.0. `references.json` `licen
 
 ## 9. Open questions this level did not answer
 
-- **OQ-ART-04** — which red is the National Flag? Dodged again: this level draws no flag.
+- **OQ-ART-04** — which red is the National Flag? Still dodged: this level draws no National Flag. The college's
+  flag uses `flag-red`, the palette's flag red, which OQ-ART-04 does not decide either way.
+- **The college flag's blind run is owed** (§6). "A Peruvian government building" is the new reading to watch.
 - **The blind run is owed.** `make art-handoff` builds all five Kingston subjects into the hand-off with
   anonymisation held; none has a verdict. K-2.4 is the art-verifier's, by an agent that saw none of this work.
 - **The Kingston Mills silhouette.** If a blind run fails `kingston-mills` on reading, the first thing to try is
