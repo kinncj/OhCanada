@@ -3098,6 +3098,15 @@
       "modifications": "Downscaled to 1600 px long edge; converted to sRGB; all metadata stripped."
     },
     {
+      "path": "refs/kingston/rmc-college-flag-2020.jpg",
+      "kind": "reference",
+      "title": "Flag of the Royal Military College of Canada (adopted 31 July 1920), official 2020 SVG rendering",
+      "author": "Artist of the College of Arms, London; SVG rendering by Christopher Boucher (2020), graphic designer for the Royal Military College of Canada",
+      "licence": "public-domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Royal_Military_College_of_Canada.svg",
+      "modifications": "Rasterised from the Commons SVG (https://upload.wikimedia.org/wikipedia/commons/9/91/Flag_of_the_Royal_Military_College_of_Canada.svg, sha1 c1f78afdc2ee279fbdf9ac8122ca289716ba016d, fetched 2026-09-26) to 1600 px long edge, sRGB, on white; all metadata stripped. Licence read from the Commons API the same day: {{PD-Canada}} (Crown copyright, first published more than 50 years ago). Commons ALSO marks the file {{trademark}} and {{insignia}}: it is a Prohibited Mark under subparagraph 9(1)(n)(i) of the Trademarks Act, and trademark status is independent of copyright. REPRODUCED IN THE GAME since 2026-09-26: the owner rejected a simplified depiction and accepted the flag only as the official artwork, so the SVG's own paths are imported into src/svg/kingston/prop-royal-military-college@1x.svg (credited there), full arms and motto, exact colours, with a gentle wave (assets/style/kingston-level.md section 6). The prohibited-mark status is recorded, not resolved; shipping it is the owner's decision."
+    },
+    {
       "path": "refs/kingston/lake-ontario-to-wolfe-island-2012.jpg",
       "kind": "reference",
       "title": "Lake Ontario from Kingston to the island shore and its wind turbines, 21 August 2012",
@@ -3182,10 +3191,10 @@
       "path": "src/svg/kingston/prop-royal-military-college@1x.svg",
       "kind": "shipped",
       "title": "The Royal Military College of Canada, the Mackenzie Building - a level 5 point-of-interest hero",
-      "author": "TrueNorth contributors",
+      "author": "TrueNorth contributors (the building); the college flag's artwork by the Artist of the College of Arms, London, SVG by Christopher Boucher (2020)",
       "licence": "CC-BY-4.0",
       "source": "https://github.com/kinncj/OhCanada/blob/main/assets/src/svg/kingston/prop-royal-military-college@1x.svg",
-      "modifications": "Original work. Drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. Buildings only: no cadet, crest, badge, flag or lettering. Redrawn 2026-09-25 from the same elevation after a blind run read it as a city hall: two storeys over a basement row and five bays a side, as photographed, and the tower's round face drawn without hands (assets/style/kingston-level.md section 6). The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at the shipping size of 800 x 540: at 300 and 140 px the tower, its roof, the pavilion roofs and the dormer row survive."
+      "modifications": "The building is original work: drawn from assets/refs/kingston/rmc-mackenzie-building-elevation-2007.jpg to its measured proportions, with the roof colours from rmc-mackenzie-building-daylight-2008.jpg, under the rules in assets/style/art-bible.md; never traced. No cadet, crest, badge or lettering on the building. Redrawn 2026-09-25 from the same elevation after a blind run read it as a city hall: two storeys over a basement row and five bays a side, as photographed, and the tower's round face drawn without hands (assets/style/kingston-level.md section 6). THE COLLEGE FLAG IS NOT ORIGINAL WORK and is not under this entry's CC BY 4.0: it is the official artwork, Flag of the Royal Military College of Canada, by the Artist of the College of Arms, London, SVG by Christopher Boucher (2020), public domain in Canada (Crown copyright, first published more than 50 years ago), https://commons.wikimedia.org/wiki/File:Flag_of_the_Royal_Military_College_of_Canada.svg (https://upload.wikimedia.org/wikipedia/commons/9/91/Flag_of_the_Royal_Military_College_of_Canada.svg, sha1 c1f78afdc2ee279fbdf9ac8122ca289716ba016d). Its paths are imported, not redrawn (2026-09-26, replacing a simplified flag the owner rejected): stylesheet classes turned into fill attributes, transforms and primitives flattened to paths, consecutive same-fill shapes merged (148 shapes to 21 paths), coordinates rounded to 0.1 of a flag unit, the Commons file's 0.6-unit gap under the white band closed, and a gentle sine wave applied to every point; editor metadata and the stylesheet removed. Commons marks it trademarked and insignia: a Prohibited Mark under Trademarks Act s. 9(1)(n)(i), independent of its copyright status. The @1x suffix pins the source to one scale. The art-bible section 5 two-size test was run at 800 x 720: at 300 and 140 px the tower, its roof, the pavilion roofs and the dormer row survive, and at 200 px (25 %) the flag's bands are about 17 px each and the arms survive only as a small coloured device in the white band (red and gold at the top, green in the middle, grey and white below)."
     }
   ]
 }

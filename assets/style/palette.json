@@ -63,9 +63,12 @@
       "sky",
       "cloud",
       "dusk",
-      "snow"
+      "snow",
+      "insignia-rmc-flag",
+      "insignia-rmc-crown",
+      "insignia-rmc-crest"
     ],
-    "exemptionReason": "Atmosphere ramps are vertical band sets, not a lit material, and snow clamps at white. They are authored by hand and are the only ramps the formula does not govern."
+    "exemptionReason": "Atmosphere ramps are vertical band sets, not a lit material, and snow clamps at white. They are authored by hand. The three insignia-rmc ramps are exempt for a different reason: they are not a lit material but the exact colours of an official artwork, the Royal Military College of Canada flag, reproduced unshaded and used by that one flag only (see ramps.insignia-rmc-flag.note)."
   },
   "outline": {
     "appliesTo": "characters only",
@@ -211,6 +214,13 @@
     "white-light": "#ffffff",
     "white-base": "#f0f2f5",
     "white-shade": "#cbd2da",
+    "insignia-rmc-red": "#ed1c24",
+    "insignia-rmc-crimson": "#ee312f",
+    "insignia-rmc-gold": "#ffc82f",
+    "insignia-rmc-silver": "#e3e1dd",
+    "insignia-rmc-blue": "#2a4e91",
+    "insignia-rmc-green": "#43b049",
+    "insignia-rmc-black": "#000000",
     "ink-warm": "#3a2018",
     "ink-cool": "#1a2036",
     "ink-neutral": "#251f23",
@@ -480,6 +490,30 @@
       "shade": "white-shade",
       "derived": false,
       "material": "Lanyards, flag field, paper, snow highlight. Clamps at white, so authored."
+    },
+    "insignia-rmc-flag": {
+      "light": "white-light",
+      "base": "insignia-rmc-red",
+      "shade": "insignia-rmc-black",
+      "derived": false,
+      "material": "The field of the official Royal Military College of Canada flag: the white pale, the two red pales, and the black of the arms' outlines and motto lettering.",
+      "note": "OFFICIAL INSIGNIA, NOT A MATERIAL. These are the colours of the Flag of the Royal Military College of Canada exactly as its official artwork fills them (Commons File:Flag_of_the_Royal_Military_College_of_Canada.svg, sha1 c1f78afdc2ee279fbdf9ac8122ca289716ba016d: Artist of the College of Arms, SVG by Christopher Boucher, 2020; public domain in Canada). The project owner accepted the college flag on kingston's prop-royal-military-college@1x.svg only as the real flag with its real arms, faithful to that artwork (2026-09-26), so its colours are copied, not matched to the nearest house colour: flag-red #d8262c is not the flag's #ed1c24, and a recoloured coat of arms is an approximated insignia, which restrictedMarks names worse than none. The artwork is flat, so these ramps are not lit and not derived: the light/base/shade slots are filled in order of lightness only because a ramp has three slots, and no SVG may use them to cel-shade anything. They may be used by that one flag and by nothing else; any other use is a palette defect. The white is the existing white-light (#ffffff), which the artwork also uses. Commons marks the artwork a prohibited mark (Trademarks Act s. 9(1)(n)(i)); see assets/style/kingston-level.md section 6 and credits.json."
+    },
+    "insignia-rmc-crown": {
+      "light": "insignia-rmc-gold",
+      "base": "insignia-rmc-crimson",
+      "shade": "insignia-rmc-blue",
+      "derived": false,
+      "material": "The crown in the official Royal Military College of Canada arms: gold, the crimson cap (also the wreath's and the scroll ends' red), and the one blue jewel.",
+      "note": "Official insignia, exact and unshaded. See ramps.insignia-rmc-flag.note."
+    },
+    "insignia-rmc-crest": {
+      "light": "insignia-rmc-silver",
+      "base": "insignia-rmc-green",
+      "shade": "insignia-rmc-black",
+      "derived": false,
+      "material": "The crest in the official Royal Military College of Canada arms: the silver armoured arm, the three green maple leaves (also the crown's green jewels), and black outline.",
+      "note": "Official insignia, exact and unshaded. See ramps.insignia-rmc-flag.note."
     }
   },
   "inks": {
