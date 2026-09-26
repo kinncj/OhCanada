@@ -87,7 +87,7 @@ the notes under the table).
 | 1 | `fort-henry` | Fort Henry on Point Henry: the limestone walls of the fort, as photographed. **No figures.** | Fort Henry / Fort Henry | Britain paid for costly defences in Canada, including Fort Henry at Kingston. Today these are popular historic sites. (p. 30) | `hist-97` |
 | 2 | `kingston-city-hall` | Kingston City Hall, the domed limestone building on the harbour, as photographed. **No statue, and no figure.** | Kingston City Hall / Hôtel de ville de Kingston | In 1840, Upper Canada and Lower Canada were joined into one Province of Canada. (p. 32) | `hist-44` |
 | 3 | `kingston-mills` | The Kingston Mills locks on the Rideau Canal: the stone lock chambers and the wooden gates, as photographed. **No figures.** | Kingston Mills locks / Écluses de Kingston Mills | After the War of 1812, the Duke of Wellington chose Bytown (Ottawa) as the end of the Rideau Canal. The canal was part of a set of forts meant to stop another American invasion. (p. 30) | `hist-39`, only if the verifier grants it as asked at Kingston (Ruling 5) |
-| 4 | `royal-military-college` | The Royal Military College of Canada on Point Frederick, drawn from photographs. The contract picks the view. **Buildings only. No cadets, crest or badge.** | Royal Military College of Canada / Collège militaire royal du Canada | Canada's red-white-red flag pattern comes from the flag of the Royal Military College in Kingston, founded in 1876. (p. 79) | None. `sym-05` is graded at Vancouver (ADR-0030 §2), so this stop asks nothing of its own (ADR-0048) |
+| 4 | `royal-military-college` | The Royal Military College of Canada on Point Frederick, drawn from photographs. The contract picks the view. **The buildings and the college's own red-white-red flag, flown as the photographs show it (amended 2026-09-26, below). No cadets. No crest or badge beyond what the flag itself carries, simplified.** | Royal Military College of Canada / Collège militaire royal du Canada | Canada's red-white-red flag pattern comes from the flag of the Royal Military College in Kingston, founded in 1876. (p. 79) | None. `sym-05` is graded at Vancouver (ADR-0030 §2), so this stop asks nothing of its own (ADR-0048) |
 
 **Why City Hall now tells the Province of Canada, and not Macdonald.** Before this ruling, City Hall's card
 said that Macdonald was a lawyer in Kingston. A card that names a person at a building makes the player think
@@ -262,7 +262,16 @@ what each draws are in Ruling 2's table. The giver uses the existing `guide` rig
 - **No figures at any landmark.** No soldier re-enactors at Fort Henry, no cadets at the college, no lock
   staff at Kingston Mills. A uniform on a figure is a claim about an organisation that this level has no
   source for.
-- **No crest, badge or coat of arms** on the college or on City Hall.
+- **No crest, badge or coat of arms** on the college or on City Hall. The college's flag is the one exception: see the amendment below.
+
+**Amendment to Ruling 2, 2026-09-26, by the project owner** ("do whatever the official guide says"). The guide
+connects the Royal Military College to exactly one thing: *"The red-white-red pattern comes from the flag of the
+Royal Military College, Kingston, founded in 1876"* (p. 79). That flag is the college's link to the guide and the
+subject of this stop's blurb, so it is drawn, flown as dated photographs show it and simplified by the art bible's
+rules. Without it, blind runs `2c31c41bb3e4f0ea` and `e71e2696` read the building as a city hall and then as a
+parliament, both named FAILs, because a Second Empire civic building says nothing about a college. The flag is a
+claim the guide makes, so drawing it adds nothing the source does not say. Cadets, uniforms and any other
+insignia stay refused.
 
 ## Player-facing copy (ratified by Ruling 1)
 
